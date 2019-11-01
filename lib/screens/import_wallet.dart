@@ -17,23 +17,24 @@ class ImportWalletScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Icon(
                   Icons.note,
                   color: globals.white,
+                  size: 25,
                 ),
                 Expanded(
                     child: Text(
                   'Please type in your 12 seed phrase in the, correct sequence to restore and import your wallet',
-                  //overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.headline,
                 ))
               ],
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 ButtonTheme(
                   shape: StadiumBorder(),
@@ -73,7 +74,7 @@ class ImportWalletScreen extends StatelessWidget {
             Container(
               child: RaisedButton(
                 child: Text(
-                  'Import Wallet',
+                  'Confirm',
                   style: Theme.of(context).textTheme.button,
                 ),
                 onPressed: () {

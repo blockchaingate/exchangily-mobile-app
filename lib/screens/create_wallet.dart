@@ -11,7 +11,7 @@ class CreateWalletScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Create Wallet'),
-        backgroundColor: globals.secondary,
+        backgroundColor: globals.secondaryColor,
       ),
       body: Container(
         padding: EdgeInsets.all(10),
@@ -44,9 +44,11 @@ class CreateWalletScreen extends StatelessWidget {
               minWidth: double.infinity,
               child: MaterialButton(
                 padding: EdgeInsets.all(15),
-                color: globals.primary,
+                color: globals.primaryColor,
                 textColor: Colors.white,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, '/wallet');
+                },
                 child: Text(
                   'Create New Wallet',
                   style: Theme.of(context).textTheme.button,
