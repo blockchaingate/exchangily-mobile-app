@@ -47,7 +47,7 @@ class CreateWalletScreen extends StatelessWidget {
                 color: globals.primaryColor,
                 textColor: Colors.white,
                 onPressed: () {
-                  Navigator.pushNamed(context, '/wallet');
+                  Navigator.pushNamed(context, '/totalBalance');
                 },
                 child: Text(
                   'Create New Wallet',

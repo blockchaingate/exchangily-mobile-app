@@ -1,5 +1,5 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
-import 'package:exchangilymobileapp/services/create_wallet.dart';
+import 'package:exchangilymobileapp/services/wallet.dart';
 import 'package:exchangilymobileapp/shared/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,15 +12,15 @@ import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:hex/hex.dart';
 
-class WalletScreen extends StatefulWidget {
-  const WalletScreen({Key key}) : super(key: key);
+class TotalBalance extends StatefulWidget {
+  const TotalBalance({Key key}) : super(key: key);
 
   @override
-  _WalletScreenState createState() => _WalletScreenState();
+  _TotalBalanceState createState() => _TotalBalanceState();
 }
 
-class _WalletScreenState extends State<WalletScreen> {
-  CreateWalletService createWalletService = CreateWalletService();
+class _TotalBalanceState extends State<TotalBalance> {
+  WalletService walletService = WalletService();
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
 
@@ -131,7 +131,6 @@ class _WalletScreenState extends State<WalletScreen> {
       textAlign: TextAlign.center,
       decoration: InputDecoration(
           filled: true, // Filled needs to be true before fillColor
-          // fillColor: globals.grey,
           // Border gives nice padding as well
           border: OutlineInputBorder(
               borderSide: BorderSide(color: globals.white, width: 2)),
@@ -255,62 +254,69 @@ class _WalletScreenState extends State<WalletScreen> {
   Widget _coinDetailsCard(pairName, available, exgAmount, usdValue) => Card(
         color: globals.walletCardColor,
         elevation: elevation,
-        child: Container(
-          padding: EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              new Container(
-                padding: EdgeInsets.all(8),
-                decoration: new BoxDecoration(
-                    color: globals.iconBackgroundColor,
-                    borderRadius: new BorderRadius.circular(50),
-                    boxShadow: [
-                      new BoxShadow(
-                          color: globals.iconBackgroundColor,
-                          offset: new Offset(1.0, 3.0),
-                          blurRadius: 5.0,
-                          spreadRadius: 2.0),
-                    ]),
-                child: Image.asset('assets/images/wallet-page/$pairName.png'),
-                width: 40,
-                height: 40,
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '$pairName'.toUpperCase(),
-                    style: Theme.of(context).textTheme.display1,
-                  ),
-                  Text('Available',
-                      style: Theme.of(context).textTheme.display2),
-                  Text('$available', style: TextStyle(color: globals.red))
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(''),
-                  Text('Exchange Amount',
-                      style: Theme.of(context).textTheme.display2),
-                  Text('$exgAmount',
-                      style: TextStyle(color: globals.primaryColor))
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(''),
-                  Text('Value(USD)',
-                      style: Theme.of(context).textTheme.display2),
-                  Text('$usdValue', style: TextStyle(color: globals.green))
-                ],
-              ),
-            ],
+        child: InkWell(
+          splashColor: Colors.blue.withAlpha(30),
+          onTap: () {
+            print('card tapped');
+            Navigator.pushNamed(context, '/wallet');
+          },
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                new Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: new BoxDecoration(
+                      color: globals.iconBackgroundColor,
+                      borderRadius: new BorderRadius.circular(50),
+                      boxShadow: [
+                        new BoxShadow(
+                            color: globals.iconBackgroundColor,
+                            offset: new Offset(1.0, 3.0),
+                            blurRadius: 5.0,
+                            spreadRadius: 2.0),
+                      ]),
+                  child: Image.asset('assets/images/wallet-page/$pairName.png'),
+                  width: 40,
+                  height: 40,
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      '$pairName'.toUpperCase(),
+                      style: Theme.of(context).textTheme.display1,
+                    ),
+                    Text('Available',
+                        style: Theme.of(context).textTheme.display2),
+                    Text('$available', style: TextStyle(color: globals.red))
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(''),
+                    Text('Exchange Amount',
+                        style: Theme.of(context).textTheme.display2),
+                    Text('$exgAmount',
+                        style: TextStyle(color: globals.primaryColor))
+                  ],
+                ),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(''),
+                    Text('Value(USD)',
+                        style: Theme.of(context).textTheme.display2),
+                    Text('$usdValue', style: TextStyle(color: globals.green))
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );

@@ -7,7 +7,7 @@ class StartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color primary = globals.primary;
+    Color primary = globals.primaryColor;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -58,8 +58,8 @@ class StartScreen extends StatelessWidget {
                 // Chinese Lang Button
                 RaisedButton(
                   shape: StadiumBorder(
-                      side: BorderSide(color: globals.primary, width: 2)),
-                  color: globals.secondary,
+                      side: BorderSide(color: globals.primaryColor, width: 2)),
+                  color: globals.secondaryColor,
                   child: Text('中文'),
                   onPressed: () {},
                 )

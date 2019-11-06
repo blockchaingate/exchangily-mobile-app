@@ -3,7 +3,7 @@ import 'package:bip32/bip32.dart' as bip32;
 import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
 import 'package:web3dart/credentials.dart';
 
-class CreateWalletService {
+class WalletService {
   String exgAddress = '';
   String fabAddress = '';
   String btcAddress = '';
@@ -28,6 +28,7 @@ class CreateWalletService {
   }
 
   // Get ETH Address
+
   getEthAddress(privateKey) async {
     Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
@@ -36,7 +37,7 @@ class CreateWalletService {
     return address.hex;
   }
 
-  // Fix
+  // Fix Length
 
   fixLength(String str, int length) {}
 
@@ -44,19 +45,19 @@ class CreateWalletService {
 
   trimHexPrefix(String str) {}
 
-  // Eth
+  // Get Eth
 
   getEthNonce(String address) {}
 
-  // Btc
+  // Get Btc
 
   getBtcUtxos(String address) {}
 
-  // Fab
+  // Get Fab
 
   getFabUtxos(String txHex) {}
 
-  // Post Btc
+  // Get Post Btc
 
   postBtcTx(String txHex) {}
 
@@ -68,7 +69,7 @@ class CreateWalletService {
 
   postFabTx(String txHex) {}
 
-  // Fab Transaction Json
+  // Get Fab Transaction Json
 
   getFabTransactionJson(String txid) {}
 

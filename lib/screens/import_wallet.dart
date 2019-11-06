@@ -10,7 +10,7 @@ class ImportWalletScreen extends StatelessWidget {
       appBar: AppBar(
           centerTitle: true,
           title: Text('Import Wallet'),
-          backgroundColor: globals.secondary),
+          backgroundColor: globals.secondaryColor),
       body: Container(
         padding: EdgeInsets.all(10),
         child: Column(
@@ -41,7 +41,7 @@ class ImportWalletScreen extends StatelessWidget {
                   minWidth: 120,
                   padding: EdgeInsets.all(10),
                   child: MaterialButton(
-                    color: globals.primary,
+                    color: globals.primaryColor,
                     textColor: globals.white,
                     child: Text('dfds'),
                     onPressed: () {},
@@ -52,7 +52,7 @@ class ImportWalletScreen extends StatelessWidget {
                   child: MaterialButton(
                     minWidth: 120,
                     padding: EdgeInsets.all(10),
-                    color: globals.primary,
+                    color: globals.primaryColor,
                     textColor: globals.white,
                     child: Text('dfds'),
                     onPressed: () {},
@@ -63,7 +63,7 @@ class ImportWalletScreen extends StatelessWidget {
                   minWidth: 120,
                   padding: EdgeInsets.all(10),
                   child: MaterialButton(
-                    color: globals.primary,
+                    color: globals.primaryColor,
                     textColor: globals.white,
                     child: Text('dfds'),
                     onPressed: () {},
