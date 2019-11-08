@@ -1,119 +1,102 @@
-import 'package:bitcoin_flutter/bitcoin_flutter.dart';
-import 'package:exchangilymobileapp/services/wallet.dart';
+import 'package:exchangilymobileapp/services/models.dart';
+import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/shared/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
-import 'package:flutter/services.dart';
-import 'package:pointycastle/pointycastle.dart';
 import '../shared/globals.dart' as globals;
 
-import 'package:bip39/bip39.dart' as bip39;
-import 'package:bip32/bip32.dart' as bip32;
-import 'package:hex/hex.dart';
-
-class TotalBalance extends StatefulWidget {
-  const TotalBalance({Key key}) : super(key: key);
+class Balance extends StatefulWidget {
+  const Balance({Key key}) : super(key: key);
 
   @override
-  _TotalBalanceState createState() => _TotalBalanceState();
+  _BalanceState createState() => _BalanceState();
 }
 
-class _TotalBalanceState extends State<TotalBalance> {
-  WalletService walletService = WalletService();
+class _BalanceState extends State<Balance> {
+  DatabaseService walletService = DatabaseService();
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
+  List<WalletInfo> walletInfo;
 
   @override
-  Widget build(BuildContext context) {
-    /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  void initState() {
+    super.initState();
+  }
+
+  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                                                                   Widget Final Named Values
 
     --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-    final randomMnemonic =
-        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-    final seed = bip39.mnemonicToSeed(randomMnemonic);
-    final root = bip32.BIP32.fromSeed(seed);
-    final bitCoinChild = root.derivePath("m/44'/1'/0'/0/0");
-    final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
-    final fabCoinChild = root.derivePath("m/44'/1150'/0'/0/0");
-    final fabPublicKey = fabCoinChild.publicKey;
-    final privateKey = HEX.encode(ethCoinChild.privateKey);
-    final String pairName = 'btc';
-    final double availableCoins = 124.24587;
-    final double amountInExchange = 3000;
-    final double usdValue = 235413.251;
-
+  Widget build(BuildContext context) {
     /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                                                                  Widget Main Scaffold
 
     --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-    return Scaffold(
-      key: key,
-      body: Column(
-        children: <Widget>[
-          new Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image:
-                        AssetImage('assets/images/wallet-page/background.png'),
-                    fit: BoxFit.cover)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+   // return FutureBuilder(
+    //  future: walletService.getAllBalances(),
+    //  builder: (BuildContext context, AsyncSnapshot snap) {
+     //   if (snap.hasData) {
+      //    walletInfo = snap.data;
+          return Scaffold(
+            key: key,
+            body: Column(
               children: <Widget>[
                 new Container(
-                  child: Image.asset(
-                    'assets/images/start-page/logo.png',
-                    width: 250,
-                    height: 150,
-                    color: globals.white,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage(
+                              'assets/images/wallet-page/background.png'),
+                          fit: BoxFit.cover)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      new Container(
+                        child: Image.asset(
+                          'assets/images/start-page/logo.png',
+                          width: 250,
+                          height: 150,
+                          color: globals.white,
+                        ),
+                      ),
+                      new Container(
+                          padding: EdgeInsets.all(25),
+                          margin: EdgeInsets.only(top: 45),
+                          child: _totalBalanceCard()),
+                    ],
                   ),
                 ),
                 new Container(
-                    padding: EdgeInsets.all(25),
-                    margin: EdgeInsets.only(top: 45),
-                    child: _totalBalanceCard()),
+                  margin: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      _hideSmallAmount(),
+                      new ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: walletInfo.length,
+                        itemBuilder: (BuildContext context, int index) =>
+                            buildListBody(context, index, walletInfo),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
-          ),
-          new Container(
-            margin: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                _hideSmallAmount(),
-                _coinDetailsCard(
-                    pairName, availableCoins, amountInExchange, usdValue)
-              ],
-            ),
-          )
-        ],
-      ),
-      bottomNavigationBar: AppBottomNav(),
-    );
-  }
-
-  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                                                                                  Copy Address Function
-
-  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-  copyAddress(String walletAddress) {
-    Clipboard.setData(new ClipboardData(text: walletAddress));
-    key.currentState.showSnackBar(new SnackBar(
-      backgroundColor: globals.white,
-      content: new Text(
-        'Copied to Clipboard',
-        textAlign: TextAlign.center,
-        style: TextStyle(color: globals.primaryColor),
-      ),
-    ));
+            bottomNavigationBar: AppBottomNav(),
+          );
+        }
+        // else {
+        //   return Scaffold(
+        //       body: AlertDialog(
+        //     title: Text('No good'),
+        //     content: Text('$snap'),
+        //   ));
+        // }
+     // },
+  //  );
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -125,7 +108,7 @@ class _TotalBalanceState extends State<TotalBalance> {
   addressField(coinName, walletAddress) {
     return TextField(
       onTap: () {
-        copyAddress(walletAddress);
+        // copyAddress(walletAddress);
       },
       readOnly: true,
       textAlign: TextAlign.center,
@@ -150,12 +133,11 @@ class _TotalBalanceState extends State<TotalBalance> {
                                                                                   Card List View
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-  // Widget _cardList() => ListView.builder(
-  //       itemBuilder: (context, position) {
-  //         //  return _coinDetailsCard('df');
-  //       },
-  //       itemCount: 4,
-  //     );
+  Widget buildListBody(BuildContext context, int index, List<WalletInfo> info) {
+    var name = info[index].name;
+    return _coinDetailsCard(
+        '$name', info[index].availableBalance, 1000, info[index].usdValue);
+  }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -299,7 +281,7 @@ class _TotalBalanceState extends State<TotalBalance> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(''),
-                    Text('Exchange Amount',
+                    Text('Assets in exchange',
                         style: Theme.of(context).textTheme.display2),
                     Text('$exgAmount',
                         style: TextStyle(color: globals.primaryColor))

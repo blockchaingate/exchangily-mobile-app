@@ -1,5 +1,5 @@
 import 'package:exchangilymobileapp/services/models.dart';
-import 'package:exchangilymobileapp/services/wallet.dart';
+import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/shared/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class WalletScreen extends StatefulWidget {
 }
 
 class _WalletScreenState extends State<WalletScreen> {
-  WalletService walletService = WalletService();
+  DatabaseService walletService = DatabaseService();
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
 
