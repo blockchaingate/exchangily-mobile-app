@@ -15,60 +15,40 @@ import 'package:flutter/material.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
-
+    print(settings.name);
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => StartScreen());
       case '/importWallet':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => ImportWalletScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => ImportWalletScreen());
+
       case '/backupSeed':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => BackupSeedWalletScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => BackupSeedWalletScreen());
+
       case '/confirmSeed':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => ConfirmSeedtWalletScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => ConfirmSeedtWalletScreen());
+
       case '/createWallet':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => CreateWalletScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => CreateWalletScreen());
+
       case '/balance':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => BalanceScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => BalanceScreen());
+
       case '/walletOverview':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => WalletOverviewScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => WalletOverviewScreen());
+
       case '/receive':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => ReceiveWalletScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => ReceiveWalletScreen());
+
       case '/send':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => SendWalletScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => SendWalletScreen());
+
       case '/moveToExchange':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => MoveToExchangeScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => MoveToExchangeScreen());
+
       case '/withdrawToWallet':
-        if (args is String) {
-          return MaterialPageRoute(builder: (_) => WithdrawToWalletScreen());
-        }
-        return _errorRoute();
+        return MaterialPageRoute(builder: (_) => WithdrawToWalletScreen());
+
       default:
         return _errorRoute();
     }
