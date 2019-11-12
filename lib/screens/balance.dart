@@ -3,16 +3,17 @@ import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/shared/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../shared/globals.dart' as globals;
 
-class Balance extends StatefulWidget {
-  const Balance({Key key}) : super(key: key);
+class BalanceScreen extends StatefulWidget {
+  const BalanceScreen({Key key}) : super(key: key);
 
   @override
-  _BalanceState createState() => _BalanceState();
+  _BalanceScreenState createState() => _BalanceScreenState();
 }
 
-class _BalanceState extends State<Balance> {
+class _BalanceScreenState extends State<BalanceScreen> {
   DatabaseService walletService = DatabaseService();
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
@@ -23,80 +24,65 @@ class _BalanceState extends State<Balance> {
     super.initState();
   }
 
-  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                                                                                  Widget Final Named Values
-
-    --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
   Widget build(BuildContext context) {
-    /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                                                                                 Widget Main Scaffold
-
-    --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-   // return FutureBuilder(
-    //  future: walletService.getAllBalances(),
-    //  builder: (BuildContext context, AsyncSnapshot snap) {
-     //   if (snap.hasData) {
-      //    walletInfo = snap.data;
-          return Scaffold(
-            key: key,
-            body: Column(
+    walletInfo = Provider.of<List<WalletInfo>>(context);
+    return Scaffold(
+      key: key,
+      body: Column(
+        children: <Widget>[
+          new Container(
+            width: double.infinity,
+            height: 240,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image:
+                        AssetImage('assets/images/wallet-page/background.png'),
+                    fit: BoxFit.cover)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 new Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(
-                              'assets/images/wallet-page/background.png'),
-                          fit: BoxFit.cover)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      new Container(
-                        child: Image.asset(
-                          'assets/images/start-page/logo.png',
-                          width: 250,
-                          height: 150,
-                          color: globals.white,
-                        ),
-                      ),
-                      new Container(
-                          padding: EdgeInsets.all(25),
-                          margin: EdgeInsets.only(top: 45),
-                          child: _totalBalanceCard()),
-                    ],
+                  padding: EdgeInsets.only(top: 45, bottom: 10),
+                  child: Image.asset(
+                    'assets/images/start-page/logo.png',
+                    width: 250,
+                    //height: 120,
+                    color: globals.white,
                   ),
                 ),
                 new Container(
-                  margin: EdgeInsets.all(10),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      _hideSmallAmount(),
-                      new ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: walletInfo.length,
-                        itemBuilder: (BuildContext context, int index) =>
-                            buildListBody(context, index, walletInfo),
-                      ),
-                    ],
-                  ),
-                )
+                    padding: EdgeInsets.all(25),
+                    //margin: EdgeInsets.only(top: 15),
+                    child: Stack(
+                      //   fit: StackFit.passthrough,
+                      //   overflow: Overflow.visible,
+                      //  alignment: Alignment.bottomCenter,
+                      children: <Widget>[
+                        Positioned(child: _totalBalanceCard())
+                      ],
+                    )),
               ],
             ),
-            bottomNavigationBar: AppBottomNav(),
-          );
-        }
-        // else {
-        //   return Scaffold(
-        //       body: AlertDialog(
-        //     title: Text('No good'),
-        //     content: Text('$snap'),
-        //   ));
-        // }
-     // },
-  //  );
+          ),
+          new Container(
+            margin: EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                _hideSmallAmount(),
+                new ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: walletInfo.length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      buildListBody(context, index, walletInfo),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+      bottomNavigationBar: AppBottomNav(),
+    );
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -133,10 +119,11 @@ class _BalanceState extends State<Balance> {
                                                                                   Card List View
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-  Widget buildListBody(BuildContext context, int index, List<WalletInfo> info) {
-    var name = info[index].name;
-    return _coinDetailsCard(
-        '$name', info[index].availableBalance, 1000, info[index].usdValue);
+  Widget buildListBody(
+      BuildContext context, int index, List<WalletInfo> walletInfo) {
+    var name = walletInfo[index].coinName;
+    return _coinDetailsCard('$name', walletInfo[index].availableBalance, 1000,
+        walletInfo[index].usdValue, walletInfo[index].logoColor, index);
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -229,18 +216,19 @@ class _BalanceState extends State<Balance> {
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                                                                  Coin Details Wallet Card
+                                                Coin Details Wallet Card
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _coinDetailsCard(pairName, available, exgAmount, usdValue) => Card(
+  Widget _coinDetailsCard(
+          pairName, available, exgAmount, usdValue, color, index) =>
+      Card(
         color: globals.walletCardColor,
         elevation: elevation,
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
-            print('card tapped');
-            Navigator.pushNamed(context, '/wallet');
+            Navigator.pushNamed(context, '/walletOverview', arguments: 'test');
           },
           child: Container(
             padding: EdgeInsets.all(10),
@@ -248,21 +236,21 @@ class _BalanceState extends State<Balance> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 new Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: new BoxDecoration(
-                      color: globals.iconBackgroundColor,
-                      borderRadius: new BorderRadius.circular(50),
-                      boxShadow: [
-                        new BoxShadow(
-                            color: globals.iconBackgroundColor,
-                            offset: new Offset(1.0, 3.0),
-                            blurRadius: 5.0,
-                            spreadRadius: 2.0),
-                      ]),
-                  child: Image.asset('assets/images/wallet-page/$pairName.png'),
-                  width: 40,
-                  height: 40,
-                ),
+                    padding: EdgeInsets.all(8),
+                    decoration: new BoxDecoration(
+                        color: color,
+                        borderRadius: new BorderRadius.circular(50),
+                        boxShadow: [
+                          new BoxShadow(
+                              color: color,
+                              offset: new Offset(1.0, 3.0),
+                              blurRadius: 5.0,
+                              spreadRadius: 2.0),
+                        ]),
+                    child:
+                        Image.asset('assets/images/wallet-page/$pairName.png'),
+                    width: 40,
+                    height: 40),
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -52,7 +52,7 @@ class StartScreen extends StatelessWidget {
                 RaisedButton(
                   child: Text('English'),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/importWallet');
+                    Navigator.of(context).pushNamed('/importWallet');
                   },
                 ),
                 // Chinese Lang Button

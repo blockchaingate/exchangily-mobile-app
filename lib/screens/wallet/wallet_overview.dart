@@ -1,30 +1,22 @@
-import 'package:exchangilymobileapp/services/models.dart';
-import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/shared/bottom_nav.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
+import 'package:exchangilymobileapp/services/models.dart';
 
-class WalletScreen extends StatefulWidget {
-  const WalletScreen({Key key}) : super(key: key);
+class WalletOverviewScreen extends StatelessWidget {
+  // final WalletInfo walletInfo;
+  final String argument;
+  WalletOverviewScreen({Key key, this.argument}) : super(key: key);
 
-  @override
-  _WalletScreenState createState() => _WalletScreenState();
-}
-
-class _WalletScreenState extends State<WalletScreen> {
-  DatabaseService walletService = DatabaseService();
-  final key = new GlobalKey<ScaffoldState>();
+  final List<WalletFeatures> _features = [
+    WalletFeatures('Receive', Icons.arrow_downward, 'receive'),
+    WalletFeatures('Send', Icons.arrow_upward, 'send'),
+    WalletFeatures('Move & Trade', Icons.dialer_sip, 'moveToExchange'),
+    WalletFeatures('Withdraw to Wallet', Icons.check_box, 'withdrawToWallet'),
+  ];
   final double elevation = 5;
-
   @override
   Widget build(BuildContext context) {
-    /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                               Widget Main Scaffold
-
-    --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
     return Scaffold(
       key: key,
       body: Column(
@@ -69,7 +61,7 @@ class _WalletScreenState extends State<WalletScreen> {
                           padding: EdgeInsets.only(left: 5),
                           child: Row(
                             children: <Widget>[
-                              Text('EXG',
+                              Text('$argument',
                                   style: Theme.of(context).textTheme.headline),
                               Icon(
                                 Icons.arrow_forward,
@@ -81,7 +73,7 @@ class _WalletScreenState extends State<WalletScreen> {
                             ],
                           ),
                         ),
-                        _totalBalanceCard(),
+                        //  buildTotalBalanceCard(context, walletInfo)
                       ],
                     ))
               ],
@@ -99,7 +91,10 @@ class _WalletScreenState extends State<WalletScreen> {
                     )),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[_featuresCard(0), _featuresCard(1)],
+                  children: <Widget>[
+                    _featuresCard(context, 0),
+                    _featuresCard(context, 1)
+                  ],
                 ),
                 Padding(
                     padding: EdgeInsets.all(10),
@@ -109,7 +104,10 @@ class _WalletScreenState extends State<WalletScreen> {
                     )),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[_featuresCard(2), _featuresCard(3)])
+                    children: <Widget>[
+                      _featuresCard(context, 2),
+                      _featuresCard(context, 3)
+                    ])
               ],
             ),
           )
@@ -119,14 +117,13 @@ class _WalletScreenState extends State<WalletScreen> {
     );
   }
 
-  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+  Widget buildTotalBalanceCard(BuildContext context, WalletInfo info) {
+    print(info);
+    return Text('hellow');
+    //return _totalBalanceCard(context, info.coinName, info.availableBalance);
+  }
 
-                                                                                  Total Balance Card
-
-  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-  Widget _totalBalanceCard() => Card(
-        // margin: EdgeInsets.all(15),
+  Widget _totalBalanceCard(context, name, balance) => Card(
         elevation: elevation,
         color: globals.walletCardColor,
         child: Container(
@@ -140,14 +137,14 @@ class _WalletScreenState extends State<WalletScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        'Exg Total Balance',
+                        '$name' + 'Total Balance',
                         style: Theme.of(context)
                             .textTheme
                             .headline
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                       Icon(Icons.refresh),
-                      Text('516484165 USD')
+                      Text('$balance')
                     ],
                   ),
                 ),
@@ -171,20 +168,7 @@ class _WalletScreenState extends State<WalletScreen> {
             )),
       );
 
-  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                                                                                  Features Wallet Card
-
-  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-  List<WalletFeatures> _features = [
-    WalletFeatures('Receive', Icons.arrow_downward, 'receive'),
-    WalletFeatures('Send', Icons.arrow_upward, 'send'),
-    WalletFeatures('Move & Trade', Icons.dialer_sip, 'moveToExchange'),
-    WalletFeatures('Withdraw to Wallet', Icons.check_box, 'withdrawToWallet'),
-  ];
-
-  Widget _featuresCard(index) => Card(
+  Widget _featuresCard(context, index) => Card(
         color: globals.walletCardColor,
         elevation: elevation,
         child: InkWell(
@@ -212,4 +196,6 @@ class _WalletScreenState extends State<WalletScreen> {
           ),
         ),
       );
-} // Wallet Screen State Ends Here
+
+  // Widget ends
+} // class ends

@@ -13,10 +13,12 @@ class WalletFeatures {
 // Wallet Model
 
 class WalletInfo {
-  String name;
+  String coinName;
   String address;
   double availableBalance;
   double usdValue;
+  Color logoColor;
 
-  WalletInfo(this.name, this.address, this.availableBalance, this.usdValue);
+  WalletInfo(this.coinName, this.address, this.availableBalance, this.usdValue,
+      this.logoColor);
 }

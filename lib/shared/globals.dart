@@ -9,3 +9,5 @@ final Color white = Colors.white;
 final Color grey = Colors.grey;
 final Color green = Colors.green;
 final Color red = Colors.red;
+final Color exgLogoColor = Color.fromRGBO(207, 101, 68, .85);
+final Color fabLogoColor = Color.fromRGBO(162, 48, 203, .85);

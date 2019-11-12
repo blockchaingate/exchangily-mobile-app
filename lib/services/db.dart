@@ -7,6 +7,7 @@ import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
 import 'package:web3dart/credentials.dart';
 import 'package:http/http.dart' as http;
 import '../services/models.dart';
+import '../shared/globals.dart' as globals;
 
 class DatabaseService {
   static final randomMnemonic =
@@ -18,6 +19,7 @@ class DatabaseService {
   static final fabCoinChild = root.derivePath("m/44'/1150'/0'/0/0");
   final fabPublicKey = fabCoinChild.publicKey;
   final privateKey = HEX.encode(ethCoinChild.privateKey);
+  final client = new http.Client();
 
   String exgAddress = '';
   String fabAddress = '';
@@ -31,9 +33,12 @@ class DatabaseService {
   double ethBalance = 0;
   double usdtBalance = 0;
 
-  static const apiUrl = 'https://btctest.fabcoinapi.com/';
   String randonMnemonic = bip39.generateMnemonic();
+  final apiUrl = 'https://btctest.fabcoinapi.com/';
   List<WalletInfo> _walletInfo;
+  List _childrens = [
+    {'btc': bitCoinChild, 'fab': fabCoinChild}
+  ];
 
   // Get Address
 
@@ -56,16 +61,12 @@ class DatabaseService {
   // Get All Balances
 
   Future<List<WalletInfo>> getAllBalances() async {
+    _childrens.map((f) => {getAddress(f, testnet)});
     await getBtcBalance();
-    return _walletInfo;
-  }
+    await getFabBalance();
+    await getExgBalance();
 
-  getBtcUtxos(String address) async {
-    var url = apiUrl + 'getutxos/' + address;
-    var client = new http.Client();
-    var response = await client.get(url);
-    var json = jsonDecode(response.body);
-    return json;
+    return _walletInfo;
   }
 
   // Get Btc balance
@@ -73,10 +74,50 @@ class DatabaseService {
   getBtcBalance() async {
     btcAddress = getAddress(bitCoinChild, testnet);
     var url = apiUrl + 'getbalance/' + btcAddress;
-    var client = new http.Client();
     var response = await client.get(url);
     btcBalance = double.parse(response.body) / 1e8;
-    _walletInfo = [WalletInfo('btc', btcAddress, btcBalance, 1245.214)];
+    _walletInfo = [
+      WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor)
+    ];
+  }
+
+// Get Fab Balance
+
+  getFabBalance() async {
+    fabAddress = getAddress(fabCoinChild, testnet);
+    var url = apiUrl + 'getbalance/' + fabAddress;
+    var response = await client.get(url);
+    fabBalance = double.parse(response.body) / 1e8;
+    _walletInfo.add(WalletInfo(
+        'fab', fabAddress, fabBalance, 214212.112, globals.fabLogoColor));
+  }
+
+  // Get Exg Balance
+
+  getExgBalance() async {
+    var exgSmartContractAddress = '0x867480ba8e577402fa44f43c33875ce74bdc5df6';
+    var body = {
+      'address': this.trimHexPrefix(exgSmartContractAddress),
+      'data': '70a08231' + this.fixLength(this.trimHexPrefix(exgAddress), 64)
+    };
+    var response = await client
+        .post('https://fabtest.fabcoinapi.com/callcontract', body: body);
+    var json = jsonDecode(response.body);
+    var unlockBalance = json['executionResult']['output'];
+    var unlockInt = int.parse("0x$unlockBalance");
+    exgBalance = unlockInt / 1e18;
+    _walletInfo.add(WalletInfo('exg', exgSmartContractAddress, exgBalance,
+        34212.782, globals.exgLogoColor));
+  }
+
+  // Get BTC Utxos
+
+  getBtcUtxos(String address) async {
+    var url = apiUrl + 'getutxos/' + address;
+    var client = new http.Client();
+    var response = await client.get(url);
+    var json = jsonDecode(response.body);
+    return json;
   }
 
   // Get Fab Utxos
@@ -93,11 +134,27 @@ class DatabaseService {
 
   // Fix Length
 
-  fixLength(String str, int length) {}
+  fixLength(String str, int length) {
+    var retStr = '';
+    int len = str.length;
+    int len2 = length - len;
+    if (len2 > 0) {
+      for (int i = 0; i < len2; i++) {
+        retStr += '0';
+      }
+    }
+    retStr += str;
+    return retStr;
+  }
 
   // Trim Hex
 
-  trimHexPrefix(String str) {}
+  trimHexPrefix(String str) {
+    if (str.startsWith('0x')) {
+      str = str.substring(2);
+    }
+    return str;
+  }
 
   // Get Eth Nonce
 

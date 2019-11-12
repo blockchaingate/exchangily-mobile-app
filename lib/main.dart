@@ -1,20 +1,11 @@
-import 'package:exchangilymobileapp/screens/backup_seed.dart';
-import 'package:exchangilymobileapp/screens/create_wallet.dart';
-import 'package:exchangilymobileapp/screens/confirm_seed.dart';
 import 'package:exchangilymobileapp/screens/choose_language.dart';
-import 'package:exchangilymobileapp/screens/wallet/move_and_trade.dart';
-import 'package:exchangilymobileapp/screens/wallet/receive.dart';
-import 'package:exchangilymobileapp/screens/wallet/send.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet.dart';
-import 'package:exchangilymobileapp/screens/wallet/withdraw_to_wallet.dart';
 import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/services/models.dart';
+import 'package:exchangilymobileapp/services/route_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 import 'package:provider/provider.dart';
-
 import './shared/globals.dart' as globals;
-import 'screens/balance.dart';
 
 void main() {
   debugPaintSizeEnabled = false;
@@ -30,18 +21,9 @@ class MyApp extends StatelessWidget {
               value: DatabaseService().getAllBalances())
         ],
         child: MaterialApp(
+          initialRoute: '/',
+          onGenerateRoute: RouteGenerator.generateRoute,
           title: 'Flutter Demo',
-          routes: {
-            '/backupSeed': (context) => BackupSeedWalletScreen(),
-            '/createWallet': (context) => CreateWalletScreen(),
-            '/confirmSeed': (context) => ConfirmSeedtWalletScreen(),
-            '/balance': (context) => Balance(),
-            '/wallet': (context) => WalletScreen(),
-            '/receive': (context) => ReceiveWalletScreen(),
-            '/send': (context) => SendWalletScreen(),
-            '/moveToExchange': (context) => MoveToExchangeScreen(),
-            '/withdrawToWallet': (context) => WithdrawToWalletScreen(),
-          },
           theme: ThemeData(
             buttonTheme: ButtonThemeData(
                 minWidth: double.infinity,
