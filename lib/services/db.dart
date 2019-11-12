@@ -77,7 +77,8 @@ class DatabaseService {
     var response = await client.get(url);
     btcBalance = double.parse(response.body) / 1e8;
     _walletInfo = [
-      WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor)
+      WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor,
+          'bitcoin')
     ];
   }
 
@@ -88,8 +89,8 @@ class DatabaseService {
     var url = apiUrl + 'getbalance/' + fabAddress;
     var response = await client.get(url);
     fabBalance = double.parse(response.body) / 1e8;
-    _walletInfo.add(WalletInfo(
-        'fab', fabAddress, fabBalance, 214212.112, globals.fabLogoColor));
+    _walletInfo.add(WalletInfo('fab', fabAddress, fabBalance, 214212.112,
+        globals.fabLogoColor, 'fast access blockchain'));
   }
 
   // Get Exg Balance
@@ -107,7 +108,7 @@ class DatabaseService {
     var unlockInt = int.parse("0x$unlockBalance");
     exgBalance = unlockInt / 1e18;
     _walletInfo.add(WalletInfo('exg', exgSmartContractAddress, exgBalance,
-        34212.782, globals.exgLogoColor));
+        34212.782, globals.exgLogoColor, 'exchangily'));
   }
 
   // Get BTC Utxos

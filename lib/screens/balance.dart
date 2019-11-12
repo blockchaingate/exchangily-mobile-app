@@ -121,7 +121,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
   Widget buildListBody(
       BuildContext context, int index, List<WalletInfo> walletInfo) {
-    var name = walletInfo[index].coinName;
+    var name = walletInfo[index].tickerName;
     return _coinDetailsCard('$name', walletInfo[index].availableBalance, 1000,
         walletInfo[index].usdValue, walletInfo[index].logoColor, index);
   }
@@ -228,7 +228,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
-            Navigator.pushNamed(context, '/walletOverview', arguments: 'test');
+            Navigator.pushNamed(context, '/walletOverview',
+                arguments: walletInfo[index]);
           },
           child: Container(
             padding: EdgeInsets.all(10),

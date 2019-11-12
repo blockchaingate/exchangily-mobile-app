@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.0"
+  barcode_scan:
+    dependency: "direct main"
+    description:
+      name: barcode_scan
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.8"
   bip32:
     dependency: "direct main"
     description:
@@ -158,6 +165,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.4"
+  path_provider:
+    dependency: "direct main"
+    description:
+      name: path_provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
   pedantic:
     dependency: transitive
     description:
@@ -179,6 +193,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0+1"
+  qr:
+    dependency: "direct main"
+    description:
+      name: qr
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.0"
+  qr_flutter:
+    dependency: "direct main"
+    description:
+      name: qr_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   quiver:
     dependency: transitive
     description:
@@ -263,3 +291,4 @@ packages:
     version: "1.2.1"
 sdks:
   dart: ">=2.3.2 <3.0.0"
+  flutter: ">=1.7.0 <2.0.0"

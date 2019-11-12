@@ -1,11 +1,20 @@
-import 'package:exchangilymobileapp/services/models.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as prefix0;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../../shared/globals.dart' as globals;
 
 class ReceiveWalletScreen extends StatefulWidget {
-  const ReceiveWalletScreen({Key key}) : super(key: key);
+  final String address;
+  final String filePath;
+  const ReceiveWalletScreen({Key key, this.address, this.filePath})
+      : super(key: key);
 
   @override
   _ReceiveWalletScreenState createState() => _ReceiveWalletScreenState();
@@ -13,9 +22,14 @@ class ReceiveWalletScreen extends StatefulWidget {
 
 class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   final key = new GlobalKey<ScaffoldState>();
+
+  String _filePath;
+  GlobalKey globalKey = new GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: key,
       appBar: AppBar(
         title: Text('Receive'),
         centerTitle: true,
@@ -33,8 +47,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text('Address', style: Theme.of(context).textTheme.display1),
-                //.copyWith(fontWeight: FontWeight.bold)),
-                Text('sdjfhaohdf84392rhfnidsakjfn209834fn',
+                Text(widget.address,
                     style: Theme.of(context).textTheme.headline),
                 Container(
                   width: 200,
@@ -50,7 +63,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                       ],
                     ),
                     onPressed: () {
-                      copyAddress("walletAddress");
+                      copyAddress(widget.address);
                     },
                     textColor: globals.white,
                   ),
@@ -73,10 +86,23 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     decoration: BoxDecoration(
                         border: Border.all(
                             width: 1.0, color: globals.primaryColor)),
-                    child: Image.asset(
-                      'assets/images/wallet-page/barcode.png',
-                      // width: 250,
-                      // height: 100,
+                    child: SizedBox(
+                      height: 500.0,
+                      child: Center(
+                          child: Container(
+                              child: QrImage(
+                                  data: widget.address,
+                                  version: QrVersions.auto,
+                                  size: 300,
+                                  errorStateBuilder: (context, err) {
+                                    return Container(
+                                      child: Center(
+                                        child: Text(
+                                            'Uh oh! Something went wrong...',
+                                            textAlign: TextAlign.center),
+                                      ),
+                                    );
+                                  }))),
                     )),
                 RaisedButton(
                   onPressed: () {},
@@ -92,11 +118,13 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                                                                  Copy Address Function
+                                                        Copy Address Function
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   copyAddress(String walletAddress) {
+    print(walletAddress);
+    _captureAndSharePng();
     Clipboard.setData(new ClipboardData(text: walletAddress));
     key.currentState.showSnackBar(new SnackBar(
       backgroundColor: globals.white,
@@ -106,5 +134,31 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         style: TextStyle(color: globals.primaryColor),
       ),
     ));
+  }
+
+  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                        Capture and Share PNG
+
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+  Future<void> _captureAndSharePng() async {
+    try {
+      RenderRepaintBoundary boundary =
+          globalKey.currentContext.findRenderObject();
+      var image = await boundary.toImage();
+      ByteData byteData =
+          await image.toByteData(format: prefix0.ImageByteFormat.png);
+      Uint8List pngBytes = byteData.buffer.asUint8List();
+
+      final tempDir = await getTemporaryDirectory();
+      final file = await new File('${tempDir.path}/image.png').create();
+      await file.writeAsBytes(pngBytes);
+
+      final channel = const MethodChannel(('channel:me.alfian.share/share'));
+      channel.invokeMethod('shareFile', 'image.png');
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

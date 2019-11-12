@@ -4,9 +4,8 @@ import '../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/services/models.dart';
 
 class WalletOverviewScreen extends StatelessWidget {
-  // final WalletInfo walletInfo;
-  final String argument;
-  WalletOverviewScreen({Key key, this.argument}) : super(key: key);
+  final WalletInfo walletInfo;
+  WalletOverviewScreen({Key key, this.walletInfo}) : super(key: key);
 
   final List<WalletFeatures> _features = [
     WalletFeatures('Receive', Icons.arrow_downward, 'receive'),
@@ -15,8 +14,11 @@ class WalletOverviewScreen extends StatelessWidget {
     WalletFeatures('Withdraw to Wallet', Icons.check_box, 'withdrawToWallet'),
   ];
   final double elevation = 5;
+
   @override
   Widget build(BuildContext context) {
+    String tickerName = walletInfo.tickerName;
+    String coinName = walletInfo.name;
     return Scaffold(
       key: key,
       body: Column(
@@ -31,7 +33,7 @@ class WalletOverviewScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Container(
+                new Container(
                     padding: EdgeInsets.symmetric(vertical: 20, horizontal: 5),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -61,19 +63,19 @@ class WalletOverviewScreen extends StatelessWidget {
                           padding: EdgeInsets.only(left: 5),
                           child: Row(
                             children: <Widget>[
-                              Text('$argument',
+                              Text('$tickerName',
                                   style: Theme.of(context).textTheme.headline),
                               Icon(
                                 Icons.arrow_forward,
                                 size: 17,
                                 color: globals.white,
                               ),
-                              Text('Exchange',
+                              Text('$coinName',
                                   style: Theme.of(context).textTheme.headline)
                             ],
                           ),
                         ),
-                        //  buildTotalBalanceCard(context, walletInfo)
+                        buildTotalBalanceCard(context, walletInfo)
                       ],
                     ))
               ],
@@ -118,9 +120,7 @@ class WalletOverviewScreen extends StatelessWidget {
   }
 
   Widget buildTotalBalanceCard(BuildContext context, WalletInfo info) {
-    print(info);
-    return Text('hellow');
-    //return _totalBalanceCard(context, info.coinName, info.availableBalance);
+    return _totalBalanceCard(context, info.tickerName, info.availableBalance);
   }
 
   Widget _totalBalanceCard(context, name, balance) => Card(
@@ -137,7 +137,7 @@ class WalletOverviewScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        '$name' + 'Total Balance',
+                        '$name '.toUpperCase() + 'Total Balance',
                         style: Theme.of(context)
                             .textTheme
                             .headline
@@ -175,7 +175,8 @@ class WalletOverviewScreen extends StatelessWidget {
           splashColor: globals.primaryColor.withAlpha(30),
           onTap: () {
             var route = _features[index].route;
-            Navigator.pushNamed(context, '/$route');
+            Navigator.pushNamed(context, '/$route',
+                arguments: walletInfo.address);
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

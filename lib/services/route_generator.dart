@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
-    print(settings.name);
+    print(args);
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => StartScreen());
@@ -35,10 +35,14 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => BalanceScreen());
 
       case '/walletOverview':
-        return MaterialPageRoute(builder: (_) => WalletOverviewScreen());
+        return MaterialPageRoute(
+            builder: (_) => WalletOverviewScreen(walletInfo: args));
 
       case '/receive':
-        return MaterialPageRoute(builder: (_) => ReceiveWalletScreen());
+        return MaterialPageRoute(
+            builder: (_) => ReceiveWalletScreen(
+                  address: args,
+                ));
 
       case '/send':
         return MaterialPageRoute(builder: (_) => SendWalletScreen());
