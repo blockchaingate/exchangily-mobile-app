@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui' as prefix0;
+import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,27 +9,23 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../shared/globals.dart' as globals;
+import 'package:share/share.dart';
 
 class ReceiveWalletScreen extends StatefulWidget {
   final String address;
-  final String filePath;
-  const ReceiveWalletScreen({Key key, this.address, this.filePath})
-      : super(key: key);
+  ReceiveWalletScreen({Key key, this.address}) : super(key: key);
 
   @override
   _ReceiveWalletScreenState createState() => _ReceiveWalletScreenState();
 }
 
 class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
-  final key = new GlobalKey<ScaffoldState>();
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  GlobalKey _globalKey = new GlobalKey();
 
-  String _filePath;
-  GlobalKey globalKey = new GlobalKey();
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: key,
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Receive'),
         centerTitle: true,
@@ -89,25 +85,44 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     child: SizedBox(
                       height: 500.0,
                       child: Center(
-                          child: Container(
-                              child: QrImage(
-                                  data: widget.address,
-                                  version: QrVersions.auto,
-                                  size: 300,
-                                  errorStateBuilder: (context, err) {
-                                    return Container(
-                                      child: Center(
-                                        child: Text(
-                                            'Uh oh! Something went wrong...',
-                                            textAlign: TextAlign.center),
-                                      ),
-                                    );
-                                  }))),
+                        child: Container(
+                          child: RepaintBoundary(
+                            key: _globalKey,
+                            child: QrImage(
+                                data: widget.address,
+                                version: QrVersions.auto,
+                                size: 300,
+                                gapless: true,
+                                errorStateBuilder: (context, err) {
+                                  return Container(
+                                    child: Center(
+                                      child: Text(
+                                          'Uh oh! Something went wrong...',
+                                          textAlign: TextAlign.center),
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ),
+                      ),
                     )),
                 RaisedButton(
-                  onPressed: () {},
-                  child: Text('Save and Share QR code'),
-                )
+                    child: Text('Save and Share QR code'),
+                    onPressed: () {
+                      String receiveFileName = 'share.png';
+                      getApplicationDocumentsDirectory().then((dir) {
+                        String filePath = "${dir.path}/$receiveFileName";
+                        File file = File(filePath);
+
+                        Future.delayed(new Duration(milliseconds: 30), () {
+                          _capturePng().then((byteData) {
+                            file.writeAsBytes(byteData).then((onFile) {
+                              Share.shareFile(onFile, text: widget.address);
+                            });
+                          });
+                        });
+                      });
+                    })
               ],
             ),
           ),
@@ -124,9 +139,8 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
 
   copyAddress(String walletAddress) {
     print(walletAddress);
-    _captureAndSharePng();
     Clipboard.setData(new ClipboardData(text: walletAddress));
-    key.currentState.showSnackBar(new SnackBar(
+    scaffoldKey.currentState.showSnackBar(new SnackBar(
       backgroundColor: globals.white,
       content: new Text(
         'Copied to Clipboard',
@@ -138,27 +152,21 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                                        Capture and Share PNG
+                                                        Save and Share PNG
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Future<void> _captureAndSharePng() async {
+  Future<Uint8List> _capturePng() async {
     try {
       RenderRepaintBoundary boundary =
-          globalKey.currentContext.findRenderObject();
-      var image = await boundary.toImage();
-      ByteData byteData =
-          await image.toByteData(format: prefix0.ImageByteFormat.png);
+          _globalKey.currentContext.findRenderObject();
+      var image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
       Uint8List pngBytes = byteData.buffer.asUint8List();
-
-      final tempDir = await getTemporaryDirectory();
-      final file = await new File('${tempDir.path}/image.png').create();
-      await file.writeAsBytes(pngBytes);
-
-      final channel = const MethodChannel(('channel:me.alfian.share/share'));
-      channel.invokeMethod('shareFile', 'image.png');
+      return pngBytes;
     } catch (e) {
       print(e.toString());
+      return null;
     }
   }
 }

@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           initialRoute: '/',
           onGenerateRoute: RouteGenerator.generateRoute,
-          title: 'Flutter Demo',
+          title: 'Exchangily Wallet',
           theme: ThemeData(
             buttonTheme: ButtonThemeData(
                 minWidth: double.infinity,

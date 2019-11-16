@@ -20,10 +20,20 @@ dependencies:
   http: ^0.12.0+2
   font_awesome_flutter: 8.4.0
   provider: 3.1.0+1
-  path_provider: 0.4.1
-  barcode_scan: ^0.0.4
+  path_provider: 1.4.2
+  barcode_scan: 1.0.0
+  # Generate QR Code Image
   qr_flutter: ^3.1.0
   qr: 1.2.0
+  image_picker_saver: 0.3.0
+  image_gallery_saver: 1.2.2
+
+  # Share files
+  share:
+    git:
+      url: https://github.com/bbedward/plugins.git
+      path: packages/share
+      ref: master
 
 dev_dependencies:
   flutter_test:
