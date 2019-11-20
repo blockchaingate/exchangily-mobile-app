@@ -11,6 +11,9 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_overview.dart';
 import 'package:exchangilymobileapp/screens/wallet/withdraw_to_wallet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:exchangilymobileapp/screens/market/main.dart';
+import 'package:exchangilymobileapp/screens/trade/main.dart';
+import 'package:exchangilymobileapp/screens/wallet/add_gas.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -55,6 +58,15 @@ class RouteGenerator {
 
       case '/withdrawToWallet':
         return MaterialPageRoute(builder: (_) => WithdrawToWalletScreen());
+
+      case '/market':
+        return MaterialPageRoute(builder: (_) => Market());
+
+      case '/trade':
+        return MaterialPageRoute(builder: (_) => Trade('EXG/USDT'));
+
+      case '/addGas':
+        return MaterialPageRoute(builder: (_) => AddGas());
 
       default:
         return _errorRoute();

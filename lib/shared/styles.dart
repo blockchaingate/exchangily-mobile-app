@@ -7,7 +7,7 @@ class Styles {
       fontSize: FontSizes.medium,
       fontWeight: FontWeight.w200,
       color: Colors.black
-    )
+    );
   }
 }
 
