@@ -1,3 +1,4 @@
+import 'package:bip32/bip32.dart';
 import 'package:flutter/material.dart';
 
 // Wallet Features Model
@@ -22,4 +23,12 @@ class WalletInfo {
 
   WalletInfo(this.tickerName, this.address, this.availableBalance,
       this.usdValue, this.logoColor, this.name);
+}
+
+// Coin type
+class CoinType {
+  String tickerName;
+  BIP32 childType;
+
+  CoinType(this.tickerName, this.childType);
 }

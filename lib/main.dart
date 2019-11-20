@@ -43,7 +43,8 @@ class MyApp extends StatelessWidget {
                     color: globals.white,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.25),
-                display2: TextStyle(fontSize: 14, color: globals.grey)),
+                display2: TextStyle(fontSize: 14, color: globals.grey),
+                display3: TextStyle(fontSize: 18, color: globals.white)),
           ),
           home: Scaffold(
               body: Container(

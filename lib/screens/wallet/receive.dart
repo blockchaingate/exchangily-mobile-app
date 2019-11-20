@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:exchangilymobileapp/services/models.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -12,8 +13,8 @@ import '../../shared/globals.dart' as globals;
 import 'package:share/share.dart';
 
 class ReceiveWalletScreen extends StatefulWidget {
-  final String address;
-  ReceiveWalletScreen({Key key, this.address}) : super(key: key);
+  final WalletInfo walletInfo;
+  ReceiveWalletScreen({Key key, this.walletInfo}) : super(key: key);
 
   @override
   _ReceiveWalletScreenState createState() => _ReceiveWalletScreenState();
@@ -43,7 +44,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text('Address', style: Theme.of(context).textTheme.display1),
-                Text(widget.address,
+                Text(widget.walletInfo.address,
                     style: Theme.of(context).textTheme.headline),
                 Container(
                   width: 200,
@@ -59,7 +60,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                       ],
                     ),
                     onPressed: () {
-                      copyAddress(widget.address);
+                      copyAddress(widget.walletInfo.address);
                     },
                     textColor: globals.white,
                   ),
@@ -67,6 +68,11 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               ],
             ),
           ),
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                    QR Code Image and Share Button Container
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------*/
           Container(
             width: double.infinity,
             height: 350,
@@ -89,7 +95,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                           child: RepaintBoundary(
                             key: _globalKey,
                             child: QrImage(
-                                data: widget.address,
+                                data: widget.walletInfo.address,
                                 version: QrVersions.auto,
                                 size: 300,
                                 gapless: true,
@@ -117,7 +123,8 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                         Future.delayed(new Duration(milliseconds: 30), () {
                           _capturePng().then((byteData) {
                             file.writeAsBytes(byteData).then((onFile) {
-                              Share.shareFile(onFile, text: widget.address);
+                              Share.shareFile(onFile,
+                                  text: widget.walletInfo.address);
                             });
                           });
                         });

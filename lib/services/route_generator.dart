@@ -41,11 +41,14 @@ class RouteGenerator {
       case '/receive':
         return MaterialPageRoute(
             builder: (_) => ReceiveWalletScreen(
-                  address: args,
+                  walletInfo: args,
                 ));
 
       case '/send':
-        return MaterialPageRoute(builder: (_) => SendWalletScreen());
+        return MaterialPageRoute(
+            builder: (_) => SendWalletScreen(
+                  walletInfo: args,
+                ));
 
       case '/moveToExchange':
         return MaterialPageRoute(builder: (_) => MoveToExchangeScreen());

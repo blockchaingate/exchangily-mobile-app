@@ -20,7 +20,8 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget iconText = Row(
+    // Top Text Row Widget
+    Widget topTextRow = Row(
       children: <Widget>[
         Expanded(
             child: Text(
@@ -30,7 +31,8 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
         )),
       ],
     );
-    Widget confirmButton = Container(
+// Finish Wallet Backup Button Widget
+    Widget finishWalletBackupButton = Container(
       padding: EdgeInsets.all(15),
       child: RaisedButton(
         child: Text(
@@ -52,7 +54,7 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: ListView(
           children: <Widget>[
-            iconText,
+            topTextRow,
             Container(
               margin: EdgeInsets.symmetric(
                 vertical: 40,
@@ -60,7 +62,7 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
               child: _buttonGrid(),
             ),
-            confirmButton
+            finishWalletBackupButton
           ],
         ),
       ),

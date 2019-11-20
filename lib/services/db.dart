@@ -34,10 +34,12 @@ class DatabaseService {
   double usdtBalance = 0;
 
   String randonMnemonic = bip39.generateMnemonic();
-  final apiUrl = 'https://btctest.fabcoinapi.com/';
+  String ticker;
+  final apiUrl = 'https://$ticker+test.fabcoinapi.com/';
   List<WalletInfo> _walletInfo;
-  List _childrens = [
-    {'btc': bitCoinChild, 'fab': fabCoinChild}
+  List<CoinType> _childrens = [
+    CoinType('btc', bitCoinChild),
+    CoinType('fab', fabCoinChild)
   ];
 
   // Get Address
@@ -74,6 +76,7 @@ class DatabaseService {
   getBtcBalance() async {
     btcAddress = getAddress(bitCoinChild, testnet);
     var url = apiUrl + 'getbalance/' + btcAddress;
+    print(url);
     var response = await client.get(url);
     btcBalance = double.parse(response.body) / 1e8;
     _walletInfo = [
@@ -87,6 +90,7 @@ class DatabaseService {
   getFabBalance() async {
     fabAddress = getAddress(fabCoinChild, testnet);
     var url = apiUrl + 'getbalance/' + fabAddress;
+    print(url);
     var response = await client.get(url);
     fabBalance = double.parse(response.body) / 1e8;
     _walletInfo.add(WalletInfo('fab', fabAddress, fabBalance, 214212.112,
@@ -157,49 +161,142 @@ class DatabaseService {
     return str;
   }
 
-  // Get Eth Nonce
-
-  getEthNonce(String address) {}
-
-  // Get Btc Utxos
-
-  // Post Btc Tx
-
-  postBtcTx(String txHex) {}
-
-  // Post Eth Tx
-
-  postEthTx(String txHex) {}
-
-  // Post Fab Tx
-
-  postFabTx(String txHex) {}
-
-  // Get Fab Transaction Json
-
-  getFabTransactionJson(String txid) {}
-
-  // Fab Transaction Locked
-
-  isFabTransactionLocked() {}
-
-  // Number -> Buffer
-
-  number2Buffer(num) {}
-
-  // Hex -> buffer
-
-  hex2Buffer(hexString) {}
-
-  // Convert Liu -> Fab Coin
-
-  convertLiuToFabcoin(amount) {}
-
-  // Get Fab Transaction Hex
-
-  getFabTransactionHex() {}
-
   // Send transaction
 
-  sendTransaction() {}
+  sendTransaction(String coin, List addressIndexList, String toAddress,
+      double amount, options, bool doSubmit) async {
+    var totalInput = 0;
+    var finished = false;
+    var gasPrice = 10.2;
+    var gasLimit = 21000;
+    var satoshisPerBytes = 14;
+    var txHex = '';
+    var txHash = '';
+    var errMsg = '';
+
+    var receivePrivateKeyArr = [];
+
+    var tokenType = options['tokenType'] ?? '';
+    var contractAddress = options['contractAddress'] ?? '';
+    var changeAddress = '';
+    final root = bip32.BIP32.fromSeed(seed);
+    if (coin == 'BTC') {
+      var bytesPerInput = 148;
+      var amountNum = amount * 1e8;
+      amountNum += (2 * 34 + 10);
+      final txb = new TransactionBuilder(network: testnet);
+
+      print('addressIndexList:');
+      print(addressIndexList);
+      print(addressIndexList.length);
+
+      for (var i = 0; i < addressIndexList.length; i++) {
+        var index = addressIndexList[i];
+        var bitCoinChild = root.derivePath("m/44'/1'/0'/0/" + index.toString());
+        final fromAddress = getAddress(bitCoinChild, testnet);
+        if (i == 0) {
+          changeAddress = fromAddress;
+        }
+        final privateKey = bitCoinChild.privateKey;
+        var utxos = await this.getBtcUtxos(fromAddress);
+        print('utxos:');
+        print(utxos);
+        if ((utxos == null) || (utxos.length == 0)) {
+          continue;
+        }
+        for (var j = 0; j < utxos.length; j++) {
+          var tx = utxos[j];
+          if (tx['idx'] < 0) {
+            continue;
+          }
+          txb.addInput(tx['txid'], tx['idx']);
+          print('amountNum=' + amountNum.toString());
+          amountNum -= tx['value'];
+          print('amountNum1' + amountNum.toString());
+          print('amountNum3' + amountNum.toString());
+          totalInput += tx['value'];
+          receivePrivateKeyArr.add(privateKey);
+          if (amountNum <= 0) {
+            finished = true;
+            break;
+          }
+        }
+      }
+
+      print('finished=' + finished.toString());
+      if (!finished) {
+        txHex = '';
+        txHash = '';
+        errMsg = 'not enough fund.';
+        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
+      }
+
+      var transFee =
+          (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
+              2 * 34 +
+              10;
+      var output1 = (totalInput - amount * 1e8 - transFee).round();
+      var output2 = (amount * 1e8).round();
+      print('111');
+      txb.addOutput(changeAddress, output1);
+      print('222');
+      txb.addOutput(toAddress, output2);
+      print('333');
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+        var privateKey = receivePrivateKeyArr[i];
+        print('here we going');
+        var alice = ECPair.fromPrivateKey(privateKey,
+            compressed: true, network: testnet);
+        print('alice network:');
+        print(alice.network);
+        txb.sign(i, alice);
+      }
+      txHex = txb.build().toHex();
+      if (doSubmit) {
+        var res = await postBtcTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+      } else {}
+    } // btc tx ends
+  }
 }
+
+// Get Eth Nonce
+
+getEthNonce(String address) {}
+
+// Post Btc Tx
+
+postBtcTx(String txHex) {}
+
+// Post Eth Tx
+
+postEthTx(String txHex) {}
+
+// Post Fab Tx
+
+postFabTx(String txHex) {}
+
+// Get Fab Transaction Json
+
+getFabTransactionJson(String txid) {}
+
+// Fab Transaction Locked
+
+isFabTransactionLocked() {}
+
+// Number -> Buffer
+
+number2Buffer(num) {}
+
+// Hex -> buffer
+
+hex2Buffer(hexString) {}
+
+// Convert Liu -> Fab Coin
+
+convertLiuToFabcoin(amount) {}
+
+// Get Fab Transaction Hex
+
+getFabTransactionHex() {}

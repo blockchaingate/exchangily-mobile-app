@@ -55,8 +55,10 @@ class WalletOverviewScreen extends StatelessWidget {
                     color: globals.white,
                   ),
                 ),
-                new Container(
+                Container(
                     padding: EdgeInsets.symmetric(vertical: 0, horizontal: 25),
+                    height: 120,
+                    alignment: FractionalOffset(0.0, 2.0),
                     child: Column(
                       children: <Widget>[
                         Container(
@@ -175,8 +177,7 @@ class WalletOverviewScreen extends StatelessWidget {
           splashColor: globals.primaryColor.withAlpha(30),
           onTap: () {
             var route = _features[index].route;
-            Navigator.pushNamed(context, '/$route',
-                arguments: walletInfo.address);
+            Navigator.pushNamed(context, '/$route', arguments: walletInfo);
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -197,6 +198,4 @@ class WalletOverviewScreen extends StatelessWidget {
           ),
         ),
       );
-
-  // Widget ends
-} // class ends
+}
