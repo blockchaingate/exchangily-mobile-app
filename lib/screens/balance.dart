@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../shared/globals.dart' as globals;
+import 'wallet/gas.dart';
 
 class BalanceScreen extends StatefulWidget {
   const BalanceScreen({Key key}) : super(key: key);
@@ -32,7 +33,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
         children: <Widget>[
           new Container(
             width: double.infinity,
-            height: 240,
+            height: 270,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image:
@@ -161,7 +162,8 @@ class _BalanceScreenState extends State<BalanceScreen> {
                   Text('Total Balance',
                       style: Theme.of(context).textTheme.headline),
                   Text('123456 USD',
-                      style: Theme.of(context).textTheme.headline)
+                      style: Theme.of(context).textTheme.headline),
+                  Gas()
                 ],
               ),
               Icon(Icons.refresh)

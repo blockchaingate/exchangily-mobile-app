@@ -13,6 +13,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/trade/main.dart';
+import 'package:exchangilymobileapp/screens/wallet/add_gas.dart';
+
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
@@ -59,6 +61,9 @@ class RouteGenerator {
 
       case '/trade':
         return MaterialPageRoute(builder: (_) => Trade('EXG/USDT'));
+
+      case '/addGas':
+        return MaterialPageRoute(builder: (_) => AddGas());
 
       default:
         return _errorRoute();
