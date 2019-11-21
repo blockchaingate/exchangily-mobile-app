@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
-
-class AddGas extends StatelessWidget {
+import '../../services/wallet_service.dart';
+class AddGas extends StatelessWidget with WalletService {
   const AddGas({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final myController = TextEditingController();
     return
       Scaffold(
         appBar: CupertinoNavigationBar(
@@ -47,6 +48,7 @@ class AddGas extends StatelessWidget {
                         hintText: 'Enter the amount',
                         hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
                     ),
+                    controller: myController,
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
                   ),
                   SizedBox(height: 20),
@@ -54,8 +56,10 @@ class AddGas extends StatelessWidget {
                     padding: EdgeInsets.all(15),
                     color: globals.primaryColor,
                     textColor: Colors.white,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/balance');
+                    onPressed: () async{
+                      var res = await AddGasDo(double.parse(myController.text));
+                      print('res=');
+                      print(res);
                     },
                     child: Text(
                       'Confirm',

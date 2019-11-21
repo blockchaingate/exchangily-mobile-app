@@ -19,14 +19,48 @@ import 'dart:math';
 import 'package:logger/logger.dart';
 import 'dart:developer' as developer;
 import 'package:web3dart/web3dart.dart';
-import 'package:http/http.dart'; //You can also import the browser version
 import 'package:web3dart/web3dart.dart';
 import "package:pointycastle/pointycastle.dart";
 import 'package:http/http.dart' as http;
-mixin WalletService {
-  Future<int> addGas() async {
 
-    return 0;
+mixin WalletService {
+
+  Future<String> getScarAddress() async{
+    var url = 'https://kanbantest.fabcoinapi.com/' + 'kanban/getScarAddress';
+    var client = new http.Client();
+    var response = await client.get(url);
+    return response.body;
+  }
+
+  Future AddGasDo(double amount) async {
+    var satoshisPerBytes = 14;
+    var randomMnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    var seed = bip39.mnemonicToSeed(randomMnemonic);
+    // final root = bip32.BIP32.fromSeed(seed);
+    var scarContractAddress = await getScarAddress();
+    scarContractAddress = this.trimHexPrefix(scarContractAddress);
+    print('scarContractAddress=');
+    print(scarContractAddress);
+    var fxnDepositCallHex = '4a58db19';
+    var contractInfo  = await getFabSmartContract(scarContractAddress, fxnDepositCallHex);
+
+    print('contractInfo===');
+    print(contractInfo['totalFee']);
+    print(contractInfo['contract']);
+    print('end of contractInfo');
+    var res1 = await getFabTransactionHex(seed, [0], contractInfo['contract'], amount, contractInfo['totalFee'], satoshisPerBytes);
+    var txHex = res1['txHex'];
+    var errMsg = res1['errMsg'];
+    var txHash = '';
+    if (txHex != null && txHex != '') {
+
+        var res = await this.postFabTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+
+    }
+
+    return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
   }
 
 
@@ -221,6 +255,7 @@ mixin WalletService {
       var index = addressIndexList[i];
       var fabCoinChild = root.derivePath("m/44'/1150'/0'/0/" + index.toString());
       final fromAddress = getAddress(fabCoinChild, testnet);
+      print('from address=' + fromAddress);
       if(i == 0) {
         changeAddress = fromAddress;
       }
@@ -414,7 +449,7 @@ mixin WalletService {
 
       var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
-      var httpClient = new Client();
+      var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
 
       print('amountNum=');
@@ -463,9 +498,9 @@ mixin WalletService {
           + this.fixLength(this.trimHexPrefix(amountSent.toRadixString(16)), 64);
       contractAddress = this.trimHexPrefix(contractAddress);
 
-      var contractInfo  = await getFabSmartContract(contractAddress, fxnCallHex, doSubmit);
+      var contractInfo  = await getFabSmartContract(contractAddress, fxnCallHex);
 
-      var res1 = await getFabTransactionHex(seed, addressIndexList, contractInfo.contract, 0, contractInfo.totalFee, satoshisPerBytes);
+      var res1 = await getFabTransactionHex(seed, addressIndexList, contractInfo['contract'], 0, contractInfo['totalFee'], satoshisPerBytes);
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
       if (txHex != null && txHex != '') {
@@ -494,7 +529,7 @@ mixin WalletService {
           + this.fixLength(this.trimHexPrefix(amountSent.toRadixString(16)), 64);
       var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
-      var httpClient = new Client();
+      var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
 
       final signed = await ethClient.signTransaction(
@@ -522,7 +557,7 @@ mixin WalletService {
     return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
   }
 
-  getFabSmartContract(String contractAddress, String fxnCallHex, bool doSubmit) async{
+  getFabSmartContract(String contractAddress, String fxnCallHex) async{
     var gasLimit = 800000;
     var gasPrice = 40;
     var totalAmount = gasLimit * gasPrice / 1e8;
@@ -546,10 +581,11 @@ mixin WalletService {
 
     totalFee += this.convertLiuToFabcoin(contractSize * 10);
 
-    return {
-      contract: contract,
-      totalFee: totalFee
+    var res = {
+      'contract': contract,
+      'totalFee': totalFee
     };
+    return res;
   }
 
 
