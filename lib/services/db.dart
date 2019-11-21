@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:bip32/bip32.dart' as bip32;
+import '../packages/bip32/bip32_base.dart' as bip32;
 import 'package:hex/hex.dart';
 import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
 import 'package:web3dart/credentials.dart';

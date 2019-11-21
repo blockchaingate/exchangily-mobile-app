@@ -2,7 +2,7 @@ import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:bip32/bip32.dart' as bip32;
+import '../packages/bip32/bip32_base.dart' as bip32;
 import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
 import 'package:bitcoin_flutter/src/transaction_builder.dart';
@@ -23,7 +23,7 @@ import 'package:http/http.dart'; //You can also import the browser version
 import 'package:web3dart/web3dart.dart';
 import "package:pointycastle/pointycastle.dart";
 import 'package:http/http.dart' as http;
-mixin TradeService {
+mixin WalletService {
   Future<int> addGas() async {
 
     return 0;
@@ -462,30 +462,10 @@ mixin TradeService {
           + this.fixLength(this.trimHexPrefix(toAddress), 64)
           + this.fixLength(this.trimHexPrefix(amountSent.toRadixString(16)), 64);
       contractAddress = this.trimHexPrefix(contractAddress);
-      var gasLimit = 800000;
-      var gasPrice = 40;
-      var totalAmount = gasLimit * gasPrice / 1e8;
-      // let cFee = 3000 / 1e8 // fee for the transaction
 
-      var totalFee = totalAmount;
-      var chunks = new List<dynamic>();
-      chunks.add(84);
-      chunks.add(Uint8List.fromList(this.number2Buffer(gasLimit)));
-      chunks.add(Uint8List.fromList(this.number2Buffer(gasPrice)));
-      chunks.add(Uint8List.fromList(this.hex2Buffer(fxnCallHex)));
-      chunks.add(Uint8List.fromList(this.hex2Buffer(contractAddress)));
-      chunks.add(194);
+      var contractInfo  = await getFabSmartContract(contractAddress, fxnCallHex, doSubmit);
 
-      print('chunks=');
-      print(chunks);
-      var contract = script.compile(chunks);
-      print('contract=');
-      print(contract);
-      var contractSize = contract.toString().length;
-
-      totalFee += this.convertLiuToFabcoin(contractSize * 10);
-
-      var res1 = await getFabTransactionHex(seed, addressIndexList, contract, 0, totalFee, satoshisPerBytes);
+      var res1 = await getFabTransactionHex(seed, addressIndexList, contractInfo.contract, 0, contractInfo.totalFee, satoshisPerBytes);
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
       if (txHex != null && txHex != '') {
@@ -541,4 +521,36 @@ mixin TradeService {
 
     return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
   }
+
+  getFabSmartContract(String contractAddress, String fxnCallHex, bool doSubmit) async{
+    var gasLimit = 800000;
+    var gasPrice = 40;
+    var totalAmount = gasLimit * gasPrice / 1e8;
+    // let cFee = 3000 / 1e8 // fee for the transaction
+
+    var totalFee = totalAmount;
+    var chunks = new List<dynamic>();
+    chunks.add(84);
+    chunks.add(Uint8List.fromList(this.number2Buffer(gasLimit)));
+    chunks.add(Uint8List.fromList(this.number2Buffer(gasPrice)));
+    chunks.add(Uint8List.fromList(this.hex2Buffer(fxnCallHex)));
+    chunks.add(Uint8List.fromList(this.hex2Buffer(contractAddress)));
+    chunks.add(194);
+
+    print('chunks=');
+    print(chunks);
+    var contract = script.compile(chunks);
+    print('contract=');
+    print(contract);
+    var contractSize = contract.toString().length;
+
+    totalFee += this.convertLiuToFabcoin(contractSize * 10);
+
+    return {
+      contract: contract,
+      totalFee: totalFee
+    };
+  }
+
+
 }
