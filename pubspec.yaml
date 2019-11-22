@@ -12,7 +12,6 @@ dependencies:
 
   cupertino_icons: ^0.1.2
   bip39: ^1.0.3
-  bip32: ^1.0.5
   bitcoin_flutter: ^1.0.7
   pointycastle: ^1.0.1
   logger: ^0.7.0+2

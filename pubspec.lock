@@ -30,7 +30,7 @@ packages:
     source: hosted
     version: "1.0.0"
   bip32:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: bip32
       url: "https://pub.dartlang.org"

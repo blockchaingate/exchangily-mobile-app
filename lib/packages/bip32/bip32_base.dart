@@ -102,13 +102,11 @@ class BIP32 {
     final IL = I.sublist(0, 32);
     final IR = I.sublist(32);
     if (!ecc.isPrivate(IL)) {
-      print('ecc.isPrivate(IL)');
       return derive(index + 1);
     }
 
     BIP32 hd;
     if (!isNeutered()) {
-      print(privateKey);
       final ki = ecc.privateAdd(privateKey, IL);
       if (ki == null) return derive(index + 1);
       hd = BIP32.fromPrivateKey(ki, IR, network);
