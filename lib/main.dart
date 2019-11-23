@@ -1,7 +1,8 @@
 import 'package:exchangilymobileapp/screens/choose_language.dart';
 import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/services/models.dart';
-import 'package:exchangilymobileapp/services/route_generator.dart';
+import 'package:exchangilymobileapp/routes.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 import 'package:provider/provider.dart';
@@ -13,12 +14,16 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  WalletService walletService = WalletService();
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
           FutureProvider<List<WalletInfo>>.value(
-              value: DatabaseService().getAllBalances())
+              value: DatabaseService().getAllBalances()),
+          FutureProvider<String>.value(
+            value: WalletService().getClipBoardData(),
+          )
         ],
         child: MaterialApp(
           initialRoute: '/',

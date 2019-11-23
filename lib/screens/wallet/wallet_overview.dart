@@ -145,8 +145,14 @@ class WalletOverviewScreen extends StatelessWidget {
                             .headline
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
-                      Icon(Icons.refresh),
-                      Text('$balance')
+                      Icon(
+                        Icons.refresh,
+                        color: globals.primaryColor,
+                      ),
+                      Text(
+                        '$balance',
+                        style: Theme.of(context).textTheme.headline,
+                      )
                     ],
                   ),
                 ),

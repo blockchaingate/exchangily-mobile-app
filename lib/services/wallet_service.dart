@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -23,27 +24,33 @@ import 'package:http/http.dart'; //You can also import the browser version
 import 'package:web3dart/web3dart.dart';
 import "package:pointycastle/pointycastle.dart";
 import 'package:http/http.dart' as http;
-mixin TradeService {
-  Future<int> addGas() async {
 
+class WalletService {
+  Future<int> addGas() async {
     return 0;
   }
 
+  Future<String> getClipBoardData() async {
+    ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
+    return data.text;
+  }
 
-  String getAddress (node, [network]) {
-    return P2PKH(data: new P2PKHData(pubkey: node.publicKey), network: network).data.address;
+  String getAddress(node, [network]) {
+    return P2PKH(data: new P2PKHData(pubkey: node.publicKey), network: network)
+        .data
+        .address;
   }
 
   convertLiuToFabcoin(amount) {
     return (amount * 1e-8);
   }
 
-  fixLength( String str, int length ) {
+  fixLength(String str, int length) {
     var retStr = '';
     int len = str.length;
     int len2 = length - len;
     if (len2 > 0) {
-      for(int i=0;i<len2; i++) {
+      for (int i = 0; i < len2; i++) {
         retStr += '0';
       }
     }
@@ -52,7 +59,7 @@ mixin TradeService {
   }
 
   trimHexPrefix(String str) {
-    if(str.startsWith('0x')) {
+    if (str.startsWith('0x')) {
       str = str.substring(2);
     }
     return str;
@@ -67,7 +74,7 @@ mixin TradeService {
       print(num);
       print(buffer.length);
       print(num & 0xff);
-      buffer.add (num & 0xff);
+      buffer.add(num & 0xff);
       print('buffer=');
       print(buffer);
       num = num >> 8;
@@ -75,23 +82,21 @@ mixin TradeService {
 
     var top = buffer[buffer.length - 1];
     if (top & 0x80 != 0) {
-      buffer.add (neg ? 0x80 : 0x00) ;
-    }
-    else if (neg) {
-      buffer.add(top | 0x80) ;
+      buffer.add(neg ? 0x80 : 0x00);
+    } else if (neg) {
+      buffer.add(top | 0x80);
     }
     return buffer;
   }
 
   hex2Buffer(hexString) {
-
     var buffer = new List<int>();
     for (var i = 0; i < hexString.length; i += 2) {
-      var val = (int.parse(hexString[i],radix: 16) << 4) | int.parse(hexString[i + 1], radix: 16);
+      var val = (int.parse(hexString[i], radix: 16) << 4) |
+          int.parse(hexString[i + 1], radix: 16);
       buffer.add(val);
     }
     return buffer;
-
   }
 
   getFabUtxos(String address) async {
@@ -124,12 +129,11 @@ mixin TradeService {
     if (json != null) {
       if (json['txid'] != null) {
         txHash = '0x' + json['txid'];
-      }
-      else if(json['Error'] != null) {
+      } else if (json['Error'] != null) {
         errMsg = json['Error'];
       }
     }
-    return {'txHash':txHash, 'errMsg': errMsg};
+    return {'txHash': txHash, 'errMsg': errMsg};
   }
 
   getFabTransactionJson(String txid) async {
@@ -142,7 +146,7 @@ mixin TradeService {
   }
 
   isFabTransactionLocked(String txid, int idx) async {
-    if(idx != 0) {
+    if (idx != 0) {
       return false;
     }
     var response = await getFabTransactionJson(txid);
@@ -157,14 +161,14 @@ mixin TradeService {
     }
     return false;
   }
+
   postEthTx(String txHex) async {
     var url = 'https://ethtest.fabcoinapi.com/' + 'sendsignedtransaction';
-    var data = {
-      'signedtx': txHex
-    };
+    var data = {'signedtx': txHex};
 
     var client = new http.Client();
-    var response = await client.post(url,headers: {"responseType": "text"}, body:data);
+    var response =
+        await client.post(url, headers: {"responseType": "text"}, body: data);
 
     var txHash = response.body;
     var errMsg = '';
@@ -172,7 +176,7 @@ mixin TradeService {
       errMsg = txHash;
       txHash = '';
     }
-    return {'txHash':txHash, 'errMsg': errMsg};
+    return {'txHash': txHash, 'errMsg': errMsg};
   }
 
   postFabTx(String txHex) async {
@@ -184,27 +188,28 @@ mixin TradeService {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
       if (json != null) {
-        if ( (json['txid'] != null) && (json['txid'] != '') ) {
+        if ((json['txid'] != null) && (json['txid'] != '')) {
           txHash = json['txid'];
-        } else
-        if (json['Error'] != '') {
+        } else if (json['Error'] != '') {
           errMsg = json['Error'];
         }
       }
     }
 
-    return {'txHash':txHash, 'errMsg': errMsg};
+    return {'txHash': txHash, 'errMsg': errMsg};
   }
 
-  getEthNonce(String address) async{
-    var url = 'https://ethtest.fabcoinapi.com/' + 'getnonce/' + address + '/latest';
+  getEthNonce(String address) async {
+    var url =
+        'https://ethtest.fabcoinapi.com/' + 'getnonce/' + address + '/latest';
     var client = new http.Client();
     var response = await client.get(url);
     return int.parse(response.body);
   }
 
-  getFabTransactionHex(seed, addressIndexList, toAddress, double amount, double extraTransactionFee, int satoshisPerBytes) async{
-    final txb = new TransactionBuilder(network:testnet);
+  getFabTransactionHex(seed, addressIndexList, toAddress, double amount,
+      double extraTransactionFee, int satoshisPerBytes) async {
+    final txb = new TransactionBuilder(network: testnet);
     final root = bip32.BIP32.fromSeed(seed);
     var totalInput = 0;
     var changeAddress = '';
@@ -219,14 +224,15 @@ mixin TradeService {
 
     for (var i = 0; i < addressIndexList.length; i++) {
       var index = addressIndexList[i];
-      var fabCoinChild = root.derivePath("m/44'/1150'/0'/0/" + index.toString());
+      var fabCoinChild =
+          root.derivePath("m/44'/1150'/0'/0/" + index.toString());
       final fromAddress = getAddress(fabCoinChild, testnet);
-      if(i == 0) {
+      if (i == 0) {
         changeAddress = fromAddress;
       }
       final privateKey = fabCoinChild.privateKey;
       var utxos = await this.getFabUtxos(fromAddress);
-      if((utxos != null) && (utxos.length > 0)) {
+      if ((utxos != null) && (utxos.length > 0)) {
         for (var j = 0; j < utxos.length; i++) {
           var utxo = utxos[i];
           var idx = utxo['idx'];
@@ -251,28 +257,35 @@ mixin TradeService {
 
       if (!finished) {
         print('not enough fab coin to make the transaction.');
-        return {'txHex': '', 'errMsg': 'not enough fab coin to make the transaction.'};
+        return {
+          'txHex': '',
+          'errMsg': 'not enough fab coin to make the transaction.'
+        };
       }
 
       var transFee = (receivePrivateKeyArr.length) * feePerInput + 2 * 34 + 10;
 
-      var output1 = (totalInput
-          - amount * 1e8 - extraTransactionFee * 1e8
-          - transFee).round();
+      var output1 =
+          (totalInput - amount * 1e8 - extraTransactionFee * 1e8 - transFee)
+              .round();
       var output2 = (amount * 1e8).round();
 
       if (output1 < 0 || output2 < 0) {
         print('output1 or output2 should be greater than 0.');
-        return {'txHex': '', 'errMsg': 'output1 or output2 should be greater than 0.'};
+        return {
+          'txHex': '',
+          'errMsg': 'output1 or output2 should be greater than 0.'
+        };
       }
 
       txb.addOutput(changeAddress, output1);
       txb.addOutput(toAddress, output2);
 
-      for (var i = 0; i < receivePrivateKeyArr.length; i ++) {
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
         print('there we go');
-        var alice = ECPair.fromPrivateKey(privateKey, compressed:true, network:testnet);
+        var alice = ECPair.fromPrivateKey(privateKey,
+            compressed: true, network: testnet);
         print('alice.network=');
         print(alice.network);
         txb.sign(i, alice);
@@ -283,7 +296,8 @@ mixin TradeService {
     }
   }
 
-  sendTransaction(String coin, seed, List addressIndexList, String toAddress, double amount, options, bool doSubmit) async {
+  sendTransaction(String coin, seed, List addressIndexList, String toAddress,
+      double amount, options, bool doSubmit) async {
     var totalInput = 0;
     var finished = false;
     var gasPrice = 10.2;
@@ -299,11 +313,11 @@ mixin TradeService {
     var contractAddress = options['contractAddress'] ?? '';
     var changeAddress = '';
     final root = bip32.BIP32.fromSeed(seed);
-    if(coin == 'BTC') {
+    if (coin == 'BTC') {
       var bytesPerInput = 148;
       var amountNum = amount * 1e8;
       amountNum += (2 * 34 + 10);
-      final txb = new TransactionBuilder(network:testnet);
+      final txb = new TransactionBuilder(network: testnet);
       // txb.setVersion(1);
 
       print('addressIndexList=');
@@ -313,19 +327,19 @@ mixin TradeService {
         var index = addressIndexList[i];
         var bitCoinChild = root.derivePath("m/44'/1'/0'/0/" + index.toString());
         final fromAddress = getAddress(bitCoinChild, testnet);
-        if(i == 0) {
+        if (i == 0) {
           changeAddress = fromAddress;
         }
         final privateKey = bitCoinChild.privateKey;
         var utxos = await this.getBtcUtxos(fromAddress);
         print('utxos=');
         print(utxos);
-        if((utxos == null) || (utxos.length == 0)) {
+        if ((utxos == null) || (utxos.length == 0)) {
           continue;
         }
         for (var j = 0; j < utxos.length; j++) {
           var tx = utxos[j];
-          if(tx['idx'] < 0) {
+          if (tx['idx'] < 0) {
             continue;
           }
           txb.addInput(tx['txid'], tx['idx']);
@@ -340,27 +354,26 @@ mixin TradeService {
             finished = true;
             break;
           }
-        }  fixLength( String str, int length ) {
-    var retStr = '';
-    int len = str.length;
-    int len2 = length - len;
-    if (len2 > 0) {
-      for(int i=0;i<len2; i++) {
-        retStr += '0';
-      }
-    }
-    retStr += str;
-    return retStr;
-  }
+        }
+        fixLength(String str, int length) {
+          var retStr = '';
+          int len = str.length;
+          int len2 = length - len;
+          if (len2 > 0) {
+            for (int i = 0; i < len2; i++) {
+              retStr += '0';
+            }
+          }
+          retStr += str;
+          return retStr;
+        }
 
-  trimHexPrefix(String str) {
-      if(str.startsWith('0x')) {
-        str = str.substring(2);
-      }
-      return str;
-  }
-
-
+        trimHexPrefix(String str) {
+          if (str.startsWith('0x')) {
+            str = str.substring(2);
+          }
+          return str;
+        }
       }
 
       print('finished=' + finished.toString());
@@ -371,7 +384,10 @@ mixin TradeService {
         return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
       }
 
-      var transFee = (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes + 2 * 34 + 10;
+      var transFee =
+          (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
+              2 * 34 +
+              10;
       var output1 = (totalInput - amount * 1e8 - transFee).round();
       var output2 = (amount * 1e8).round();
       print('111');
@@ -379,28 +395,23 @@ mixin TradeService {
       print('222');
       txb.addOutput(toAddress, output2);
       print('333');
-      for (var i = 0; i < receivePrivateKeyArr.length; i ++) {
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
         print('there we go');
-        var alice = ECPair.fromPrivateKey(privateKey, compressed:true, network:testnet);
+        var alice = ECPair.fromPrivateKey(privateKey,
+            compressed: true, network: testnet);
         print('alice.network=');
         print(alice.network);
         txb.sign(i, alice);
       }
 
       txHex = txb.build().toHex();
-      if(doSubmit) {
+      if (doSubmit) {
         var res = await postBtcTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-      }
-      else {
-
-      }
-
-    }
-
-    else if(coin == 'ETH') {
+      } else {}
+    } else if (coin == 'ETH') {
       // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
       final ropstenChainId = 3;
       final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
@@ -412,7 +423,8 @@ mixin TradeService {
       final addressHex = address.hex;
       final nonce = await getEthNonce(addressHex);
 
-      var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
+      var apiUrl =
+          "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
       var httpClient = new Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
@@ -422,13 +434,15 @@ mixin TradeService {
       final signed = await ethClient.signTransaction(
           credentials,
           Transaction(
-            nonce:nonce,
+            nonce: nonce,
             to: EthereumAddress.fromHex(toAddress),
-            gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice.round()),
+            gasPrice:
+                EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice.round()),
             maxGas: gasLimit,
             value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountNum),
-          ), chainId:ropstenChainId,fetchChainIdFromNetworkId:false
-      );
+          ),
+          chainId: ropstenChainId,
+          fetchChainIdFromNetworkId: false);
       print('signed=');
       txHex = '0x' + HEX.encode(signed);
 
@@ -436,11 +450,10 @@ mixin TradeService {
         var res = await postEthTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-      } else {
-      }
-    }
-    else if(coin == 'FAB') {
-      var res1 = await getFabTransactionHex(seed, addressIndexList, toAddress, amount, 0, satoshisPerBytes);
+      } else {}
+    } else if (coin == 'FAB') {
+      var res1 = await getFabTransactionHex(
+          seed, addressIndexList, toAddress, amount, 0, satoshisPerBytes);
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
       if ((errMsg == '') && (txHex != '')) {
@@ -450,17 +463,14 @@ mixin TradeService {
           print(res);
           txHash = res['txHash'];
           errMsg = res['errMsg'];
-        } else {
-        }
+        } else {}
       }
-    }
-
-    else if (tokenType == 'FAB') {
+    } else if (tokenType == 'FAB') {
       var transferAbi = 'a9059cbb';
       var amountSent = (amount * 1e18).round();
-      var fxnCallHex = transferAbi
-          + this.fixLength(this.trimHexPrefix(toAddress), 64)
-          + this.fixLength(this.trimHexPrefix(amountSent.toRadixString(16)), 64);
+      var fxnCallHex = transferAbi +
+          this.fixLength(this.trimHexPrefix(toAddress), 64) +
+          this.fixLength(this.trimHexPrefix(amountSent.toRadixString(16)), 64);
       contractAddress = this.trimHexPrefix(contractAddress);
       var gasLimit = 800000;
       var gasPrice = 40;
@@ -485,7 +495,8 @@ mixin TradeService {
 
       totalFee += this.convertLiuToFabcoin(contractSize * 10);
 
-      var res1 = await getFabTransactionHex(seed, addressIndexList, contract, 0, totalFee, satoshisPerBytes);
+      var res1 = await getFabTransactionHex(
+          seed, addressIndexList, contract, 0, totalFee, satoshisPerBytes);
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
       if (txHex != null && txHex != '') {
@@ -493,11 +504,9 @@ mixin TradeService {
           var res = await this.postFabTx(txHex);
           txHash = res['txHash'];
           errMsg = res['errMsg'];
-        } else {
-        }
+        } else {}
       }
-    }
-    else if (tokenType == 'ETH') {
+    } else if (tokenType == 'ETH') {
       final ropstenChainId = 3;
       final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
@@ -509,10 +518,11 @@ mixin TradeService {
       gasLimit = 100000;
       var amountSent = (amount * 1e6).round();
       var transferAbi = 'a9059cbb';
-      var fxnCallHex = transferAbi
-          + this.fixLength(this.trimHexPrefix(toAddress), 64)
-          + this.fixLength(this.trimHexPrefix(amountSent.toRadixString(16)), 64);
-      var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
+      var fxnCallHex = transferAbi +
+          this.fixLength(this.trimHexPrefix(toAddress), 64) +
+          this.fixLength(this.trimHexPrefix(amountSent.toRadixString(16)), 64);
+      var apiUrl =
+          "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
       var httpClient = new Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
@@ -520,14 +530,15 @@ mixin TradeService {
       final signed = await ethClient.signTransaction(
           credentials,
           Transaction(
-              nonce:nonce,
+              nonce: nonce,
               to: EthereumAddress.fromHex(contractAddress),
-              gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice.round()),
+              gasPrice: EtherAmount.fromUnitAndValue(
+                  EtherUnit.gwei, gasPrice.round()),
               maxGas: gasLimit,
               value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
-              data: Uint8List.fromList(this.hex2Buffer(fxnCallHex))
-          ), chainId:ropstenChainId,fetchChainIdFromNetworkId:false
-      );
+              data: Uint8List.fromList(this.hex2Buffer(fxnCallHex))),
+          chainId: ropstenChainId,
+          fetchChainIdFromNetworkId: false);
       print('signed=');
       txHex = '0x' + HEX.encode(signed);
 
@@ -535,8 +546,7 @@ mixin TradeService {
         var res = await postEthTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-      } else {
-      }
+      } else {}
     }
 
     return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};

@@ -88,36 +88,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                                                                  All Wallet Addresses in UI
-
-  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-  addressField(coinName, walletAddress) {
-    return TextField(
-      onTap: () {
-        // copyAddress(walletAddress);
-      },
-      readOnly: true,
-      textAlign: TextAlign.center,
-      decoration: InputDecoration(
-          filled: true, // Filled needs to be true before fillColor
-          // Border gives nice padding as well
-          border: OutlineInputBorder(
-              borderSide: BorderSide(color: globals.white, width: 2)),
-          // Hint Styles
-          hintText: walletAddress,
-          hintStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: globals.primaryColor, // Wallet address color
-          ),
-          helperText: '$coinName address',
-          helperStyle: TextStyle(color: globals.white)),
-    );
-  }
-
-  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                                                                                  Card List View
+                                          Card List View
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
   Widget buildListBody(

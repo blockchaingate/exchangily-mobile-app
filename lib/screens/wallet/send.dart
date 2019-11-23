@@ -1,9 +1,11 @@
 import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/services/models.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
 
 class SendWalletScreen extends StatefulWidget {
@@ -15,7 +17,8 @@ class SendWalletScreen extends StatefulWidget {
 }
 
 class _SendWalletScreenState extends State<SendWalletScreen> {
-  DatabaseService walletService = DatabaseService();
+  DatabaseService dbService = DatabaseService();
+  WalletService walletService = WalletService();
   final _receiverWalletAddressTextController = TextEditingController();
   final _sendAmountTextController = TextEditingController();
 
@@ -45,20 +48,31 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                     Receiver's Wallet Address Container
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
           Container(
+            width: 200,
             margin: EdgeInsets.only(bottom: 10),
             color: globals.walletCardColor,
             padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
             child: TextField(
+              maxLines: 1,
               controller: _receiverWalletAddressTextController,
               decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.add,
-                    size: 30,
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.content_paste),
+                    onPressed: () async {
+                      String data = Provider.of<String>(context);
+                      _receiverWalletAddressTextController.text =
+                          data.toString();
+                      print(data);
+                    },
+                    iconSize: 25,
                     color: globals.primaryColor,
                   ),
-                  hintText: 'Wallet Address',
-                  hintStyle: Theme.of(context).textTheme.display2),
+                  //  hintText: 'mkNBEVvoYmhKW5CShLk9oaQtobkuyCpuXk',r
+                  //   hintStyle: Theme.of(context).textTheme.display2,
+                  labelText: 'Receiver Wallet Address',
+                  labelStyle: Theme.of(context).textTheme.display2),
               style: Theme.of(context).textTheme.display2,
             ),
           ),
@@ -79,7 +93,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                     controller: _sendAmountTextController,
                     keyboardType: TextInputType.number, // numnber keyboard
                     inputFormatters: <TextInputFormatter>[
-                      BlacklistingTextInputFormatter(new RegExp('[\\-|\\ \\,]'))
+                      WhitelistingTextInputFormatter(
+                          RegExp('^\$|^(0|([1-9][0-9]{0,}))(\\.[0-9]{0,})?\$'))
                     ],
                     decoration: InputDecoration(
                         hintText: '0.00000',
@@ -179,17 +194,18 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
             child: RaisedButton(
               child: Text('Send'),
               onPressed: () {
-                var amount = _sendAmountTextController.text;
-                walletService.sendTransaction(
+                const options = {};
+                var amount = double.parse(_sendAmountTextController.text);
+                dbService.sendTransaction(
                     widget.walletInfo.tickerName.toUpperCase(),
                     [0],
                     _receiverWalletAddressTextController.text,
-                    5,
-                    'options',
+                    amount,
+                    options,
                     false);
               },
             ),
-          )
+          ),
         ],
       ),
     );

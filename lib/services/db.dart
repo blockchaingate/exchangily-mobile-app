@@ -35,12 +35,14 @@ class DatabaseService {
 
   String randonMnemonic = bip39.generateMnemonic();
   String ticker;
-  final apiUrl = 'https://$ticker+test.fabcoinapi.com/';
   List<WalletInfo> _walletInfo;
   List<CoinType> _childrens = [
     CoinType('btc', bitCoinChild),
     CoinType('fab', fabCoinChild)
   ];
+  final btcApiUrl = "https://btctest.fabcoinapi.com/";
+  final fabApiUrl = "https://fabtest.fabcoinapi.com/";
+  final exgApiUrl = "https://exgtest.fabcoinapi.com/";
 
   // Get Address
 
@@ -64,9 +66,10 @@ class DatabaseService {
 
   Future<List<WalletInfo>> getAllBalances() async {
     _childrens.map((f) => {getAddress(f, testnet)});
+
     await getBtcBalance();
-    await getFabBalance();
-    await getExgBalance();
+    //await getFabBalance();
+    //await getExgBalance();
 
     return _walletInfo;
   }
@@ -75,7 +78,7 @@ class DatabaseService {
 
   getBtcBalance() async {
     btcAddress = getAddress(bitCoinChild, testnet);
-    var url = apiUrl + 'getbalance/' + btcAddress;
+    var url = btcApiUrl + 'getbalance/' + btcAddress;
     print(url);
     var response = await client.get(url);
     btcBalance = double.parse(response.body) / 1e8;
@@ -89,7 +92,7 @@ class DatabaseService {
 
   getFabBalance() async {
     fabAddress = getAddress(fabCoinChild, testnet);
-    var url = apiUrl + 'getbalance/' + fabAddress;
+    var url = fabApiUrl + 'getbalance/' + fabAddress;
     print(url);
     var response = await client.get(url);
     fabBalance = double.parse(response.body) / 1e8;
@@ -118,7 +121,7 @@ class DatabaseService {
   // Get BTC Utxos
 
   getBtcUtxos(String address) async {
-    var url = apiUrl + 'getutxos/' + address;
+    var url = btcApiUrl + 'getutxos/' + address;
     var client = new http.Client();
     var response = await client.get(url);
     var json = jsonDecode(response.body);
@@ -128,7 +131,7 @@ class DatabaseService {
   // Get Fab Utxos
 
   Future getFabUtxos(String address) async {
-    var url = apiUrl + 'getutxos/' + address;
+    var url = btcApiUrl + 'getutxos/' + address;
     print(url);
     var client = new http.Client();
     var response = await client.get(url);

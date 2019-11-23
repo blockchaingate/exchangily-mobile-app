@@ -34,105 +34,117 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Container(
-            width: double.infinity,
-            height: 150,
-            color: globals.walletCardColor,
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text('Address', style: Theme.of(context).textTheme.display1),
-                Text(widget.walletInfo.address,
-                    style: Theme.of(context).textTheme.headline),
-                Container(
-                  width: 200,
-                  child: RaisedButton(
-                    padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(Icons.content_copy),
-                        Text('copy address'),
-                      ],
-                    ),
-                    onPressed: () {
-                      copyAddress(widget.walletInfo.address);
-                    },
-                    textColor: globals.white,
-                  ),
-                )
-              ],
-            ),
-          ),
+          buildCopyAddressContainer(context),
+          buildQrImageContainer(),
+        ],
+      ),
+    );
+  }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                     QR Code Image and Share Button Container
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-          Container(
-            width: double.infinity,
-            height: 350,
-            color: globals.walletCardColor,
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                    width: 250,
-                    height: 250,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 1.0, color: globals.primaryColor)),
-                    child: SizedBox(
-                      height: 500.0,
-                      child: Center(
-                        child: Container(
-                          child: RepaintBoundary(
-                            key: _globalKey,
-                            child: QrImage(
-                                data: widget.walletInfo.address,
-                                version: QrVersions.auto,
-                                size: 300,
-                                gapless: true,
-                                errorStateBuilder: (context, err) {
-                                  return Container(
-                                    child: Center(
-                                      child: Text(
-                                          'Uh oh! Something went wrong...',
-                                          textAlign: TextAlign.center),
-                                    ),
-                                  );
-                                }),
-                          ),
-                        ),
-                      ),
-                    )),
-                RaisedButton(
-                    child: Text('Save and Share QR code'),
-                    onPressed: () {
-                      String receiveFileName = 'share.png';
-                      getApplicationDocumentsDirectory().then((dir) {
-                        String filePath = "${dir.path}/$receiveFileName";
-                        File file = File(filePath);
 
-                        Future.delayed(new Duration(milliseconds: 30), () {
-                          _capturePng().then((byteData) {
-                            file.writeAsBytes(byteData).then((onFile) {
-                              Share.shareFile(onFile,
-                                  text: widget.walletInfo.address);
-                            });
-                          });
-                        });
+  Container buildQrImageContainer() {
+    return Container(
+      width: double.infinity,
+      height: 350,
+      color: globals.walletCardColor,
+      padding: EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Container(
+              width: 250,
+              height: 250,
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1.0, color: globals.primaryColor)),
+              child: SizedBox(
+                height: 500.0,
+                child: Center(
+                  child: Container(
+                    child: RepaintBoundary(
+                      key: _globalKey,
+                      child: QrImage(
+                          data: widget.walletInfo.address,
+                          version: QrVersions.auto,
+                          size: 300,
+                          gapless: true,
+                          errorStateBuilder: (context, err) {
+                            return Container(
+                              child: Center(
+                                child: Text('Uh oh! Something went wrong...',
+                                    textAlign: TextAlign.center),
+                              ),
+                            );
+                          }),
+                    ),
+                  ),
+                ),
+              )),
+          RaisedButton(
+              child: Text('Save and Share QR code'),
+              onPressed: () {
+                String receiveFileName = 'share.png';
+                getApplicationDocumentsDirectory().then((dir) {
+                  String filePath = "${dir.path}/$receiveFileName";
+                  File file = File(filePath);
+
+                  Future.delayed(new Duration(milliseconds: 30), () {
+                    _capturePng().then((byteData) {
+                      file.writeAsBytes(byteData).then((onFile) {
+                        Share.shareFile(onFile,
+                            text: widget.walletInfo.address);
                       });
-                    })
-              ],
+                    });
+                  });
+                });
+              })
+        ],
+      ),
+    );
+  }
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                                        Copy Address Build Container
+
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+  Container buildCopyAddressContainer(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: 150,
+      color: globals.walletCardColor,
+      padding: EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text('Address', style: Theme.of(context).textTheme.display1),
+          Text(widget.walletInfo.address,
+              style: Theme.of(context).textTheme.headline),
+          Container(
+            width: 200,
+            child: RaisedButton(
+              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(Icons.content_copy),
+                  Text('copy address'),
+                ],
+              ),
+              onPressed: () {
+                copyAddress(widget.walletInfo.address);
+              },
+              textColor: globals.white,
             ),
-          ),
+          )
         ],
       ),
     );

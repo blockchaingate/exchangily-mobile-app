@@ -32,3 +32,18 @@ class CoinType {
 
   CoinType(this.tickerName, this.childType);
 }
+
+// Class Wallet
+
+class Wallet {
+  String id;
+  String name;
+  String pwdHash;
+  String pinHash;
+  String encryptedSeed;
+  String encryptedMnemonic;
+  DateTime dateCreated;
+  DateTime lastUpdated;
+}
+
+// My Coin

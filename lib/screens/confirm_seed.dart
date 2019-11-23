@@ -82,6 +82,7 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
         i = i + 1;
         return Container(
             child: TextField(
+          maxLines: 2,
           autocorrect: false,
           decoration: InputDecoration(
             fillColor: globals.primaryColor,
