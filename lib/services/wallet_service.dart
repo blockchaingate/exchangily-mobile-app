@@ -1,6 +1,4 @@
-import 'package:web_socket_channel/io.dart';
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:bip39/bip39.dart' as bip39;
 import '../packages/bip32/bip32_base.dart' as bip32;
 import 'package:bitcoin_flutter/src/models/networks.dart';
@@ -10,27 +8,137 @@ import 'package:bitcoin_flutter/src/ecpair.dart';
 import 'package:bitcoin_flutter/src/utils/script.dart' as script;
 import 'package:hex/hex.dart';
 import "package:pointycastle/pointycastle.dart";
-import "package:pointycastle/digests/sha256.dart";
-import 'package:flutter/foundation.dart';
-import 'dart:developer';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:math';
-import 'package:logger/logger.dart';
-import 'dart:developer' as developer;
 import 'package:web3dart/web3dart.dart';
-import 'package:web3dart/web3dart.dart';
-import "package:pointycastle/pointycastle.dart";
 import 'package:http/http.dart' as http;
+import '../environments/environment.dart';
+import '../environments/coins.dart';
+import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
+import '../utils/abi_util.dart';
+import '../utils/string_util.dart';
+import '../utils/kanban.util.dart';
+import '../utils/keypair_util.dart';
 
 mixin WalletService {
 
-  Future<String> getScarAddress() async{
-    var url = 'https://kanbantest.fabcoinapi.com/' + 'kanban/getScarAddress';
-    var client = new http.Client();
-    var response = await client.get(url);
-    return response.body;
+  getOfficalAddress(String coinName) {
+    var address = environment['addresses']['exchangilyOfficial'].where((addr) => addr['name'] == coinName).toList();
+    if(address != null) {
+      return address[0]['address'];
+    }
+    return null;
   }
+
+  getCoinTypeIdByName(String coinName) {
+    var coins = coin_list.where((coin) => coin['name'] == coinName).toList();
+    if(coins != null) {
+      return coins[0]['id'];
+    }
+    return 0;
+  }
+
+  getOriginalMessage(int coinType, String txHash, BigInt amount, String address) {
+
+    var buf = '';
+    buf += fixLength(coinType.toString(), 4);
+    buf += fixLength(txHash, 64);
+    var hexString = amount.toRadixString(16);
+    buf += fixLength(hexString, 64);
+    buf += fixLength(address, 64);
+
+    return buf;
+  }
+
+
+
+
+  signedMessage(String originalMessage, seed, coinName, tokenType) async {
+    var r = '';
+    var s = '';
+    var v = '';
+
+    final root = bip32.BIP32.fromSeed(
+        seed,
+        bip32.NetworkType(wif: testnet.wif, bip32: new bip32.Bip32Type(public: testnet.bip32.public, private: testnet.bip32.private))
+    );
+
+    var signedMess;
+    if (coinName == 'ETH' || tokenType == 'ETH') {
+
+      final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
+      var privateKey = ethCoinChild.privateKey;
+      //var credentials = EthPrivateKey.fromHex(privateKey);
+      var credentials = EthPrivateKey(privateKey);
+      signedMess = await credentials.signPersonalMessage(stringToUint8List(originalMessage));
+
+    } else
+    if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
+      var hdWallet = new HDWallet.fromSeed(seed);
+
+      var coinType = 1150;
+      if(coinName == 'BTC') {
+        coinType = 1;
+      }
+      var btcWallet = hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+      signedMess = btcWallet.sign(originalMessage);
+    }
+
+    if (signedMess != null) {
+      String ss = HEX.encode(signedMess);
+      r = ss.substring(0,64);
+      s = ss.substring(64,128);
+      v = ss.substring(128);
+    }
+
+    return {
+      'r': r,
+      's': s,
+      'v': v
+    };
+  }
+
+  Future depositDo(String coinName, String tokenType, double amount) async {
+    var randomMnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    var seed = bip39.mnemonicToSeed(randomMnemonic);
+    var officalAddress = getOfficalAddress(coinName);
+    if(officalAddress == null) {
+      return -1;
+    }
+    var resST = sendTransaction(coinName, seed, [0], officalAddress, amount, {}, false);
+    if(resST['errMsg'] != '') {
+      return -2;
+    }
+    if(resST['txHex'] == '' || resST['txHash'] == '') {
+      return -3;
+    }
+
+    var txHash = resST['txHash'];
+    var amountInLink = BigInt.from(amount * 1e18);
+
+    var coinType = getCoinTypeIdByName(coinName);
+    if(coinType == 0) {
+      return -4;
+    }
+
+    var keyPairKanban = getExgKeyPair(seed);
+    var addressInKanban = keyPairKanban["address"];
+    var originalMessage = getOriginalMessage(coinType, trimHexPrefix(txHash)
+        , amountInLink, trimHexPrefix(addressInKanban));
+
+    var signedMessage = await this.signedMessage(originalMessage, seed, coinName, tokenType);
+
+    var coinPoolAddress = await getCoinPoolAddress();
+
+    var abiHex = getDepositFuncABI(coinType, txHash, amountInLink, addressInKanban, signedMessage);
+    var nonce = await getNonce(addressInKanban);
+    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex, addressInKanban["privateKey"], coinPoolAddress, nonce);
+
+    var res = await submitDeposit(txHash, txKanbanHex);
+    return res;
+  }
+
+
 
   Future AddGasDo(double amount) async {
     var satoshisPerBytes = 14;
@@ -38,7 +146,7 @@ mixin WalletService {
     var seed = bip39.mnemonicToSeed(randomMnemonic);
     // final root = bip32.BIP32.fromSeed(seed);
     var scarContractAddress = await getScarAddress();
-    scarContractAddress = this.trimHexPrefix(scarContractAddress);
+    scarContractAddress = trimHexPrefix(scarContractAddress);
     print('scarContractAddress=');
     print(scarContractAddress);
     var fxnDepositCallHex = '4a58db19';
@@ -72,61 +180,6 @@ mixin WalletService {
     return (amount * 1e-8);
   }
 
-  fixLength( String str, int length ) {
-    var retStr = '';
-    int len = str.length;
-    int len2 = length - len;
-    if (len2 > 0) {
-      for(int i=0;i<len2; i++) {
-        retStr += '0';
-      }
-    }
-    retStr += str;
-    return retStr;
-  }
-
-  trimHexPrefix(String str) {
-    if(str.startsWith('0x')) {
-      str = str.substring(2);
-    }
-    return str;
-  }
-
-  number2Buffer(num) {
-    var buffer = new List<int>();
-    var neg = (num < 0);
-    num = num.abs();
-    while (num > 0) {
-      print('num=');
-      print(num);
-      print(buffer.length);
-      print(num & 0xff);
-      buffer.add (num & 0xff);
-      print('buffer=');
-      print(buffer);
-      num = num >> 8;
-    }
-
-    var top = buffer[buffer.length - 1];
-    if (top & 0x80 != 0) {
-      buffer.add (neg ? 0x80 : 0x00) ;
-    }
-    else if (neg) {
-      buffer.add(top | 0x80) ;
-    }
-    return buffer;
-  }
-
-  hex2Buffer(hexString) {
-
-    var buffer = new List<int>();
-    for (var i = 0; i < hexString.length; i += 2) {
-      var val = (int.parse(hexString[i],radix: 16) << 4) | int.parse(hexString[i + 1], radix: 16);
-      buffer.add(val);
-    }
-    return buffer;
-
-  }
 
   getFabUtxos(String address) async {
     var url = 'https://fabtest.fabcoinapi.com/' + 'getutxos/' + address;
@@ -191,6 +244,8 @@ mixin WalletService {
     }
     return false;
   }
+
+
   postEthTx(String txHex) async {
     var url = 'https://ethtest.fabcoinapi.com/' + 'sendsignedtransaction';
     var data = {
@@ -387,13 +442,12 @@ mixin WalletService {
     retStr += str;
     return retStr;
   }
-
-  trimHexPrefix(String str) {
-      if(str.startsWith('0x')) {
-        str = str.substring(2);
+        trimHexPrefix(String str) {
+          if(str.startsWith('0x')) {
+            str = str.substring(2);
+          }
+          return str;
       }
-      return str;
-  }
 
 
       }
@@ -494,9 +548,9 @@ mixin WalletService {
       var transferAbi = 'a9059cbb';
       var amountSent = (amount * 1e18).round();
       var fxnCallHex = transferAbi
-          + this.fixLength(this.trimHexPrefix(toAddress), 64)
-          + this.fixLength(this.trimHexPrefix(amountSent.toRadixString(16)), 64);
-      contractAddress = this.trimHexPrefix(contractAddress);
+          + fixLength(trimHexPrefix(toAddress), 64)
+          + fixLength(trimHexPrefix(amountSent.toRadixString(16)), 64);
+      contractAddress = trimHexPrefix(contractAddress);
 
       var contractInfo  = await getFabSmartContract(contractAddress, fxnCallHex);
 
@@ -525,8 +579,8 @@ mixin WalletService {
       var amountSent = (amount * 1e6).round();
       var transferAbi = 'a9059cbb';
       var fxnCallHex = transferAbi
-          + this.fixLength(this.trimHexPrefix(toAddress), 64)
-          + this.fixLength(this.trimHexPrefix(amountSent.toRadixString(16)), 64);
+          + fixLength(trimHexPrefix(toAddress), 64)
+          + fixLength(trimHexPrefix(amountSent.toRadixString(16)), 64);
       var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
       var httpClient = new http.Client();
@@ -540,7 +594,7 @@ mixin WalletService {
               gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice.round()),
               maxGas: gasLimit,
               value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
-              data: Uint8List.fromList(this.hex2Buffer(fxnCallHex))
+              data: Uint8List.fromList(hex2Buffer(fxnCallHex))
           ), chainId:ropstenChainId,fetchChainIdFromNetworkId:false
       );
       print('signed=');
@@ -566,10 +620,10 @@ mixin WalletService {
     var totalFee = totalAmount;
     var chunks = new List<dynamic>();
     chunks.add(84);
-    chunks.add(Uint8List.fromList(this.number2Buffer(gasLimit)));
-    chunks.add(Uint8List.fromList(this.number2Buffer(gasPrice)));
-    chunks.add(Uint8List.fromList(this.hex2Buffer(fxnCallHex)));
-    chunks.add(Uint8List.fromList(this.hex2Buffer(contractAddress)));
+    chunks.add(Uint8List.fromList(number2Buffer(gasLimit)));
+    chunks.add(Uint8List.fromList(number2Buffer(gasPrice)));
+    chunks.add(Uint8List.fromList(hex2Buffer(fxnCallHex)));
+    chunks.add(Uint8List.fromList(hex2Buffer(contractAddress)));
     chunks.add(194);
 
     print('chunks=');

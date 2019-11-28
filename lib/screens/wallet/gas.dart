@@ -1,7 +1,8 @@
 import "package:flutter/material.dart";
 import '../../shared/globals.dart' as globals;
+import '../../services/wallet_service.dart';
 
-class Gas extends  StatefulWidget  {
+class Gas extends  StatefulWidget with WalletService  {
 
   Gas({Key key}) : super(key: key);
   @override
