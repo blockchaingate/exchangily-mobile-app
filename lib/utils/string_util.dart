@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:hex/hex.dart';
 
 hex2Buffer(hexString) {
 
@@ -46,6 +47,10 @@ number2Buffer(num) {
 stringToUint8List(String s) {
   List<int> list = utf8.encode(s);
   return Uint8List.fromList(list);
+}
+
+uint8ListToString(Uint8List list) {
+  return HEX.encode(list);
 }
 
 fixLength( String str, int length ) {

@@ -23,6 +23,7 @@ dependencies:
   pattern_formatter: ^0.0.3
   path_provider: 1.4.2
   barcode_scan: 1.0.0
+  keccak: ^1.0.3
   web_socket_channel: ^1.1.0
   json_serializable: ^2.2.1
   # Generate QR Code Image

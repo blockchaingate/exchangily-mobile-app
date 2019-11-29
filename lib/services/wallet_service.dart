@@ -19,6 +19,7 @@ import '../utils/abi_util.dart';
 import '../utils/string_util.dart';
 import '../utils/kanban.util.dart';
 import '../utils/keypair_util.dart';
+import '../utils/eth_util.dart';
 
 mixin WalletService {
 
@@ -105,7 +106,7 @@ mixin WalletService {
     if(officalAddress == null) {
       return -1;
     }
-    var resST = sendTransaction(coinName, seed, [0], officalAddress, amount, {}, false);
+    var resST = await sendTransaction(coinName, seed, [0], officalAddress, amount, {}, false);
     if(resST['errMsg'] != '') {
       return -2;
     }
@@ -132,7 +133,12 @@ mixin WalletService {
 
     var abiHex = getDepositFuncABI(coinType, txHash, amountInLink, addressInKanban, signedMessage);
     var nonce = await getNonce(addressInKanban);
-    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex, addressInKanban["privateKey"], coinPoolAddress, nonce);
+    print('nonce=');
+    print(nonce);
+    print(abiHex);
+    print(keyPairKanban["privateKey"]);
+    print(coinPoolAddress);
+    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex, uint8ListToString(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
     var res = await submitDeposit(txHash, txKanbanHex);
     return res;
@@ -374,6 +380,11 @@ mixin WalletService {
   }
 
   sendTransaction(String coin, seed, List addressIndexList, String toAddress, double amount, options, bool doSubmit) async {
+    print('coin=' + coin);
+    print(seed);
+    print(addressIndexList);
+    print(toAddress);
+    print(amount);
     var totalInput = 0;
     var finished = false;
     var gasPrice = 10.2;
@@ -430,26 +441,7 @@ mixin WalletService {
             finished = true;
             break;
           }
-        }  fixLength( String str, int length ) {
-    var retStr = '';
-    int len = str.length;
-    int len2 = length - len;
-    if (len2 > 0) {
-      for(int i=0;i<len2; i++) {
-        retStr += '0';
-      }
-    }
-    retStr += str;
-    return retStr;
-  }
-        trimHexPrefix(String str) {
-          if(str.startsWith('0x')) {
-            str = str.substring(2);
-          }
-          return str;
-      }
-
-
+        }
       }
 
       print('finished=' + finished.toString());
@@ -519,13 +511,15 @@ mixin WalletService {
           ), chainId:ropstenChainId,fetchChainIdFromNetworkId:false
       );
       print('signed=');
+      print(signed);
       txHex = '0x' + HEX.encode(signed);
-
+      print(txHex);
       if (doSubmit) {
         var res = await postEthTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {
+        txHash = getTransactionHash(HEX.encode(signed));
       }
     }
     else if(coin == 'FAB') {

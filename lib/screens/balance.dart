@@ -29,7 +29,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
     walletInfo = Provider.of<List<WalletInfo>>(context);
     return Scaffold(
       key: key,
-      body: Column(
+      body: ListView(
         children: <Widget>[
           new Container(
             width: double.infinity,
@@ -271,11 +271,37 @@ class _BalanceScreenState extends State<BalanceScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(''),
                     Text('Assets in exchange',
                         style: Theme.of(context).textTheme.display2),
                     Text('$exgAmount',
-                        style: TextStyle(color: globals.primaryColor))
+                        style: TextStyle(color: globals.primaryColor)),
+                    Row(
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.arrow_downward),
+                          tooltip: 'Deposit',
+                          onPressed: () {
+                            print('walletInfo[index]=');
+                            print(walletInfo[index]);
+                            Navigator.pushNamed(context, '/deposit', arguments: walletInfo[index]);
+                          }
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.arrow_upward),
+                            tooltip: 'Withdraw',
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/withdraw', arguments: walletInfo[index]);
+                            }
+                        ),
+                        IconButton(
+                            icon: Icon(Icons.vertical_align_bottom),
+                            tooltip: 'Redeposit',
+                            onPressed: () {
+
+                            }
+                        ),
+                      ],
+                    )
                   ],
                 ),
                 Column(

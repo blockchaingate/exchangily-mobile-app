@@ -4,14 +4,16 @@ import 'package:http/http.dart' as http;
 
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink, String addressInKanban, signedMessage) {
   var abiHex = "a9059cbb";
-  abiHex += trimHexPrefix(signedMessage.v.toString());
+  print('signedMessage=');
+  print(signedMessage);
+  abiHex += trimHexPrefix(signedMessage["v"]);
   abiHex += fixLength(coinType.toString(), 62);
   abiHex += trimHexPrefix(txHash);
   var amountHex = amountInLink.toRadixString(16);
   abiHex += fixLength(amountHex, 64);
   abiHex += fixLength(trimHexPrefix(addressInKanban), 64);
-  abiHex += trimHexPrefix(signedMessage.r.toString());
-  abiHex += trimHexPrefix(signedMessage.s.toString());
+  abiHex += trimHexPrefix(signedMessage["r"]);
+  abiHex += trimHexPrefix(signedMessage["s"]);
   return abiHex;
 }
 
@@ -34,5 +36,5 @@ Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoo
       data: stringToUint8List(abiHex)
     ),
   );
-  return signed;
+  return uint8ListToString(signed);
 }

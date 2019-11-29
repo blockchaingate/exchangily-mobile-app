@@ -29,7 +29,7 @@ Future<int> getNonce(String address) async{
   var client = new http.Client();
   var response = await client.get(url);
   var json = jsonDecode(response.body);
-  return json.transactionCount;
+  return json["transactionCount"];
 }
 
 Future<int> submitDeposit(String rawTransaction, String rawKanbanTransaction) async {
@@ -41,5 +41,7 @@ Future<int> submitDeposit(String rawTransaction, String rawKanbanTransaction) as
 
   var client = new http.Client();
   var response = await client.post(url, body: data);
+  print('response from submitDeposit');
+  print(response.body);
   return 0;
 }
