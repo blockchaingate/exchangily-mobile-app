@@ -39,6 +39,8 @@ Future<int> submitDeposit(String rawTransaction, String rawKanbanTransaction) as
     'rawKanbanTransaction': rawKanbanTransaction
   };
 
+  print('rawTransaction:' + rawTransaction);
+  print('rawKanbanTransaction:' + rawKanbanTransaction);
   var client = new http.Client();
   var response = await client.post(url, body: data);
   print('response from submitDeposit');

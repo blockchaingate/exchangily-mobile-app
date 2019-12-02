@@ -114,6 +114,7 @@ mixin WalletService {
       return -3;
     }
 
+    var txHex = resST['txHex'];
     var txHash = resST['txHash'];
     var amountInLink = BigInt.from(amount * 1e18);
 
@@ -133,14 +134,16 @@ mixin WalletService {
 
     var abiHex = getDepositFuncABI(coinType, txHash, amountInLink, addressInKanban, signedMessage);
     var nonce = await getNonce(addressInKanban);
-    print('nonce=');
-    print(nonce);
-    print(abiHex);
-    print(keyPairKanban["privateKey"]);
+    print('nonce=' + nonce.toString());
+    print('signedMessage.r=' + signedMessage["r"]);
+    print('signedMessage.v=' + signedMessage["s"]);
+    print('signedMessage.s=' + signedMessage["v"]);
+    print('abiHex=' + abiHex);
     print(coinPoolAddress);
+    print('txHash=' + txHash);
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex, uint8ListToString(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
-    var res = await submitDeposit(txHash, txKanbanHex);
+    var res = await submitDeposit(txHex, txKanbanHex);
     return res;
   }
 
