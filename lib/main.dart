@@ -5,8 +5,12 @@ import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import './shared/globals.dart' as globals;
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'localizations.dart';
+// import 'package:flutter_cupertino_localizations/flutter_cupertino_localizations.dart';
 
 void main() {
   debugPaintSizeEnabled = false;
@@ -14,18 +18,35 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  WalletService walletService = WalletService();
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown
+    ]); // Force user to use only portrait mode until the development of other screen size design
     return MultiProvider(
         providers: [
           FutureProvider<List<WalletInfo>>.value(
               value: DatabaseService().getAllBalances()),
-          FutureProvider<String>.value(
-            value: WalletService().getClipBoardData(),
-          )
         ],
         child: MaterialApp(
+          localizationsDelegates: [
+            AppLocalizationsDelegate(),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate
+          ],
+          // locale: Langua,
+          supportedLocales: [
+            const Locale("en", "US"), // English
+            const Locale("hi", ""), // Hindi India
+            const Locale.fromSubtags(
+                languageCode: 'zh', scriptCode: 'Hans'), // Chinese Simplified
+            const Locale.fromSubtags(
+                languageCode: 'zh', scriptCode: 'Hant'), // Chinese Traditional
+          ],
+          onGenerateTitle: (BuildContext context) =>
+              AppLocalizations.of(context).title,
           initialRoute: '/',
           onGenerateRoute: RouteGenerator.generateRoute,
           title: 'Exchangily Wallet',

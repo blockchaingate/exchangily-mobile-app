@@ -10,6 +10,10 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_localizations:
+    sdk: flutter
+  flutter_cupertino_localizations: ^1.0.1
+
   cupertino_icons: ^0.1.2
   bip39: ^1.0.3
   bip32: ^1.0.5
@@ -23,14 +27,17 @@ dependencies:
   rxdart: ^0.21.0
   pattern_formatter: ^0.0.3
   path_provider: 1.4.2
-  barcode_scan: 1.0.0
   web_socket_channel: ^1.1.0
   json_serializable: ^2.2.1
   # Generate QR Code Image
   qr_flutter: ^3.1.0
   qr: 1.2.0
-  image_picker_saver: 0.3.0
-  image_gallery_saver: 1.2.2
+
+  # Barcode Scan
+  barcode_scan: 1.0.0
+
+  # Flushbar instead of Snackbar for notifications
+  flushbar: ^1.9.1
 
   # Share files
   share:
@@ -40,6 +47,7 @@ dependencies:
       ref: master
 
 dev_dependencies:
+  intl_translation: "^0.17.0"
   flutter_test:
     sdk: flutter
 
@@ -48,6 +56,8 @@ flutter:
   assets:
     - assets/images/start-page/
     - assets/images/wallet-page/
+  #  - lib/l10n/en.json
+  #  - lib/l10n/zh.json
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

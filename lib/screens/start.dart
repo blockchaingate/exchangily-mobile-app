@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../shared/globals.dart' as globals;
 
 class StartScreen extends StatelessWidget {
@@ -7,8 +8,6 @@ class StartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color primary = globals.primaryColor;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[

@@ -1,0 +1,21 @@
+{
+  "@@last_modified": "2019-12-02T12:50:27.486565",
+  "title": "Exchangily",
+  "@title": {
+    "description": "Title_of_the_Exchangily_App",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "confirm_button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupSeedPhrase": "Backup Seed Phrase",
+  "@backupSeedPhrase": {
+    "description": "backup_seed_phrase",
+    "type": "text",
+    "placeholders": {}
+  }
+}

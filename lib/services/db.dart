@@ -257,49 +257,71 @@ class DatabaseService {
       txHex = txb.build().toHex();
       if (doSubmit) {
         var res = await postBtcTx(txHex);
+        print("RES and Hex");
+        print(res);
+        print(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-      } else {}
+      } else {
+        print('not right');
+      }
     } // btc tx ends
   }
-}
 
 // Get Eth Nonce
 
-getEthNonce(String address) {}
+  getEthNonce(String address) {}
 
 // Post Btc Tx
 
-postBtcTx(String txHex) {}
+  postBtcTx(String txHex) async {
+    var url = btcApiUrl + 'sendrawtransaction/' + txHex;
+    var client = new http.Client();
+    var response = await client.get(url);
+    var json = jsonDecode(response.body);
+    var txHash = '';
+    var errMsg = '';
+    print('json=');
+    print(json);
+    if (json != null) {
+      if (json['txid'] != null) {
+        txHash = '0x' + json['txid'];
+      } else if (json['Error'] != null) {
+        errMsg = json['Error'];
+      }
+    }
+    return {'txHash': txHash, 'errMsg': errMsg};
+  }
 
 // Post Eth Tx
 
-postEthTx(String txHex) {}
+  postEthTx(String txHex) {}
 
 // Post Fab Tx
 
-postFabTx(String txHex) {}
+  postFabTx(String txHex) {}
 
 // Get Fab Transaction Json
 
-getFabTransactionJson(String txid) {}
+  getFabTransactionJson(String txid) {}
 
 // Fab Transaction Locked
 
-isFabTransactionLocked() {}
+  isFabTransactionLocked() {}
 
 // Number -> Buffer
 
-number2Buffer(num) {}
+  number2Buffer(num) {}
 
 // Hex -> buffer
 
-hex2Buffer(hexString) {}
+  hex2Buffer(hexString) {}
 
 // Convert Liu -> Fab Coin
 
-convertLiuToFabcoin(amount) {}
+  convertLiuToFabcoin(amount) {}
 
 // Get Fab Transaction Hex
 
-getFabTransactionHex() {}
+  getFabTransactionHex() {}
+}

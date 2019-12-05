@@ -30,11 +30,6 @@ class WalletService {
     return 0;
   }
 
-  Future<String> getClipBoardData() async {
-    ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
-    return data.text;
-  }
-
   String getAddress(node, [network]) {
     return P2PKH(data: new P2PKHData(pubkey: node.publicKey), network: network)
         .data
@@ -296,6 +291,8 @@ class WalletService {
     }
   }
 
+  // Send Transaction
+
   sendTransaction(String coin, seed, List addressIndexList, String toAddress,
       double amount, options, bool doSubmit) async {
     var totalInput = 0;
@@ -410,8 +407,14 @@ class WalletService {
         var res = await postBtcTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-      } else {}
-    } else if (coin == 'ETH') {
+      } else {
+        print('not right');
+      }
+    }
+
+    // ETH Transaction
+
+    else if (coin == 'ETH') {
       // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
       final ropstenChainId = 3;
       final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");

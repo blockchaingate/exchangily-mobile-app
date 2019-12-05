@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:exchangilymobileapp/services/models.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -157,16 +158,27 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   copyAddress(String walletAddress) {
-    print(walletAddress);
     Clipboard.setData(new ClipboardData(text: walletAddress));
-    scaffoldKey.currentState.showSnackBar(new SnackBar(
-      backgroundColor: globals.white,
-      content: new Text(
-        'Copied to Clipboard',
-        textAlign: TextAlign.center,
-        style: TextStyle(color: globals.primaryColor),
+    Flushbar(
+      backgroundColor: globals.secondaryColor.withOpacity(0.75),
+      title: 'Copied Successfully',
+      message: 'Address copied to the Clipboard',
+      icon: Icon(
+        Icons.done,
+        size: 24,
+        color: globals.primaryColor,
       ),
-    ));
+      leftBarIndicatorColor: globals.green,
+      duration: Duration(seconds: 2),
+    ).show(context);
+    // scaffoldKey.currentState.showSnackBar(new SnackBar(
+    //   backgroundColor: globals.white,
+    //   content: new Text(
+    //     'Copied to Clipboard',
+    //     textAlign: TextAlign.center,
+    //     style: TextStyle(color: globals.primaryColor),
+    //   ),
+    // ));
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
