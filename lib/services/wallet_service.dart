@@ -141,7 +141,7 @@ mixin WalletService {
     print('abiHex=' + abiHex);
     print(coinPoolAddress);
     print('txHash=' + txHash);
-    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex, uint8ListToString(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
+    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex, HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
     var res = await submitDeposit(txHex, txKanbanHex);
     return res;
@@ -522,7 +522,7 @@ mixin WalletService {
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {
-        txHash = getTransactionHash(HEX.encode(signed));
+        txHash = getTransactionHash(signed);
       }
     }
     else if(coin == 'FAB') {
