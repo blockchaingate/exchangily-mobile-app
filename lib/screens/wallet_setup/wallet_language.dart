@@ -51,7 +51,7 @@ class WalletLanguageScreen extends StatelessWidget {
                 RaisedButton(
                   child: Text('English'),
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/importWallet');
+                    Navigator.of(context).pushNamed('/walletSetup');
                   },
                 ),
                 // Chinese Lang Button

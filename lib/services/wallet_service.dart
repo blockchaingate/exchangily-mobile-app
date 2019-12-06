@@ -24,8 +24,107 @@ import 'package:http/http.dart'; //You can also import the browser version
 import 'package:web3dart/web3dart.dart';
 import "package:pointycastle/pointycastle.dart";
 import 'package:http/http.dart' as http;
+import '../shared/globals.dart' as globals;
+
+import 'models.dart';
 
 class WalletService {
+  static final randomMnemonic =
+      'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+  static final seed = bip39.mnemonicToSeed(randomMnemonic);
+  static final root = bip32.BIP32.fromSeed(seed);
+  static final bitCoinChild = root.derivePath("m/44'/1'/0'/0/0");
+  static final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
+  static final fabCoinChild = root.derivePath("m/44'/1150'/0'/0/0");
+  final fabPublicKey = fabCoinChild.publicKey;
+  final privateKey = HEX.encode(ethCoinChild.privateKey);
+  final client = new http.Client();
+
+  String exgAddress = '';
+  String fabAddress = '';
+  String btcAddress = '';
+  String ethAddress = '';
+  String usdtAddress = '';
+
+  double exgBalance = 0;
+  double fabBalance = 0;
+  double btcBalance = 0;
+  double ethBalance = 0;
+  double usdtBalance = 0;
+
+  String randonMnemonic = bip39.generateMnemonic();
+  String ticker;
+  List<WalletInfo> _walletInfo;
+
+  static String btcApiUrl = "https://btctest.fabcoinapi.com/";
+  static String fabApiUrl = "https://fabtest.fabcoinapi.com/";
+  static String ethApiUrl = "https://ethtest.fabcoinapi.com/";
+
+  List<CoinType> _childrens = [
+    CoinType('btc', bitCoinChild, btcApiUrl),
+    CoinType('fab', fabCoinChild, fabApiUrl)
+  ];
+
+  // Get All Balances
+
+  Future<List<WalletInfo>> getAllBalances() async {
+    try {
+      _childrens.map((f) => {getAddress(f, testnet)});
+
+      await getBtcBalance();
+      await getFabBalance();
+      //await getExgBalance();
+
+      return _walletInfo;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  // Get Btc balance
+
+  getBtcBalance() async {
+    btcAddress = getAddress(bitCoinChild, testnet);
+    var url = btcApiUrl + 'getbalance/' + btcAddress;
+    print(url);
+    var response = await client.get(url);
+    btcBalance = double.parse(response.body) / 1e8;
+    _walletInfo = [
+      WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor,
+          'bitcoin')
+    ];
+  }
+
+// Get Fab Balance
+
+  getFabBalance() async {
+    fabAddress = getAddress(fabCoinChild, testnet);
+    var url = fabApiUrl + 'getbalance/' + fabAddress;
+    print(url);
+    var response = await client.get(url);
+    fabBalance = double.parse(response.body) / 1e8;
+    _walletInfo.add(WalletInfo('fab', fabAddress, fabBalance, 214212.112,
+        globals.fabLogoColor, 'fast access blockchain'));
+  }
+
+  // Get Exg Balance
+
+  getExgBalance() async {
+    var exgSmartContractAddress = '0x867480ba8e577402fa44f43c33875ce74bdc5df6';
+    var body = {
+      'address': this.trimHexPrefix(exgSmartContractAddress),
+      'data': '70a08231' + this.fixLength(this.trimHexPrefix(exgAddress), 64)
+    };
+    var response = await client.post('$fabApiUrl + callcontract', body: body);
+    var json = jsonDecode(response.body);
+    var unlockBalance = json['executionResult']['output'];
+    var unlockInt = int.parse("0x$unlockBalance");
+    exgBalance = unlockInt / 1e18;
+    _walletInfo.add(WalletInfo('exg', exgSmartContractAddress, exgBalance,
+        34212.782, globals.exgLogoColor, 'exchangily'));
+  }
+
   Future<int> addGas() async {
     return 0;
   }
@@ -95,7 +194,7 @@ class WalletService {
   }
 
   getFabUtxos(String address) async {
-    var url = 'https://fabtest.fabcoinapi.com/' + 'getutxos/' + address;
+    var url = fabApiUrl + 'getutxos/' + address;
     print(url);
     var client = new http.Client();
     var response = await client.get(url);
@@ -104,7 +203,7 @@ class WalletService {
   }
 
   getBtcUtxos(String address) async {
-    var url = 'https://btctest.fabcoinapi.com/' + 'getutxos/' + address;
+    var url = btcApiUrl + 'getutxos/' + address;
     print(url);
     var client = new http.Client();
     var response = await client.get(url);
@@ -113,7 +212,7 @@ class WalletService {
   }
 
   postBtcTx(String txHex) async {
-    var url = 'https://btctest.fabcoinapi.com/' + 'sendrawtransaction/' + txHex;
+    var url = btcApiUrl + 'sendrawtransaction/' + txHex;
     var client = new http.Client();
     var response = await client.get(url);
     var json = jsonDecode(response.body);
@@ -133,7 +232,7 @@ class WalletService {
 
   getFabTransactionJson(String txid) async {
     txid = trimHexPrefix(txid);
-    var url = 'https://fabtest.fabcoinapi.com/' + 'gettransactionjson/' + txid;
+    var url = fabApiUrl + 'gettransactionjson/' + txid;
     var client = new http.Client();
     var response = await client.get(url);
     var json = jsonDecode(response.body);
@@ -158,7 +257,7 @@ class WalletService {
   }
 
   postEthTx(String txHex) async {
-    var url = 'https://ethtest.fabcoinapi.com/' + 'sendsignedtransaction';
+    var url = ethApiUrl + 'sendsignedtransaction';
     var data = {'signedtx': txHex};
 
     var client = new http.Client();
@@ -175,7 +274,7 @@ class WalletService {
   }
 
   postFabTx(String txHex) async {
-    var url = 'https://fabtest.fabcoinapi.com/' + 'sendrawtransaction/' + txHex;
+    var url = fabApiUrl + 'sendrawtransaction/' + txHex;
     var txHash = '';
     var errMsg = '';
     var client = new http.Client();
@@ -195,8 +294,7 @@ class WalletService {
   }
 
   getEthNonce(String address) async {
-    var url =
-        'https://ethtest.fabcoinapi.com/' + 'getnonce/' + address + '/latest';
+    var url = ethApiUrl + 'getnonce/' + address + '/latest';
     var client = new http.Client();
     var response = await client.get(url);
     return int.parse(response.body);
@@ -293,7 +391,7 @@ class WalletService {
 
   // Send Transaction
 
-  sendTransaction(String coin, seed, List addressIndexList, String toAddress,
+  sendTransaction(String coin, List addressIndexList, String toAddress,
       double amount, options, bool doSubmit) async {
     var totalInput = 0;
     var finished = false;
@@ -309,7 +407,6 @@ class WalletService {
     var tokenType = options['tokenType'] ?? '';
     var contractAddress = options['contractAddress'] ?? '';
     var changeAddress = '';
-    final root = bip32.BIP32.fromSeed(seed);
     if (coin == 'BTC') {
       var bytesPerInput = 148;
       var amountNum = amount * 1e8;
@@ -352,6 +449,7 @@ class WalletService {
             break;
           }
         }
+
         fixLength(String str, int length) {
           var retStr = '';
           int len = str.length;

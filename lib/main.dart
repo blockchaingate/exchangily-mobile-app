@@ -1,5 +1,4 @@
 import 'package:exchangilymobileapp/screens/wallet_setup/wallet_language.dart';
-import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/services/models.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -14,20 +13,20 @@ import 'localizations.dart';
 
 void main() {
   debugPaintSizeEnabled = false;
-  runApp(MyApp());
+  // Force user to use only portrait mode until the development of other screen size design
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown
-    ]); // Force user to use only portrait mode until the development of other screen size design
     return MultiProvider(
         providers: [
           FutureProvider<List<WalletInfo>>.value(
-              value: DatabaseService().getAllBalances()),
+              value: WalletService().getAllBalances()),
         ],
         child: MaterialApp(
           localizationsDelegates: [

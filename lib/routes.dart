@@ -9,6 +9,7 @@ import 'package:exchangilymobileapp/screens/wallet_features/receive.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/wallet_features.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/withdraw_to_wallet.dart';
+import 'package:exchangilymobileapp/screens/wallet_setup/wallet_setup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
@@ -22,6 +23,8 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => WalletLanguageScreen());
+      case '/walletSetup':
+        return MaterialPageRoute(builder: (_) => WalletSetupScreen());
       case '/importWallet':
         return MaterialPageRoute(builder: (_) => ImportWalletScreen());
 

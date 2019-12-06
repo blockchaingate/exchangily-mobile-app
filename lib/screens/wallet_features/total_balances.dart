@@ -1,5 +1,5 @@
 import 'package:exchangilymobileapp/services/models.dart';
-import 'package:exchangilymobileapp/services/db.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +15,7 @@ class TotalBalancesScreen extends StatefulWidget {
 }
 
 class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
-  DatabaseService walletService = DatabaseService();
+  WalletService walletService = WalletService();
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
   List<WalletInfo> walletInfo;
@@ -27,63 +27,67 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   Widget build(BuildContext context) {
     walletInfo = Provider.of<List<WalletInfo>>(context);
-    return Scaffold(
-      key: key,
-      body: Column(
-        children: <Widget>[
-          new Container(
-            width: double.infinity,
-            height: 270,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image:
-                        AssetImage('assets/images/wallet-page/background.png'),
-                    fit: BoxFit.cover)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new Container(
-                  padding: EdgeInsets.only(top: 45, bottom: 10),
-                  child: Image.asset(
-                    'assets/images/start-page/logo.png',
-                    width: 250,
-                    //height: 120,
-                    color: globals.white,
+    if (walletInfo == null) {
+      Navigator.of(context).pushNamed('walletSetup');
+    } else {
+      return Scaffold(
+        key: key,
+        body: Column(
+          children: <Widget>[
+            new Container(
+              width: double.infinity,
+              height: 270,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/wallet-page/background.png'),
+                      fit: BoxFit.cover)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  new Container(
+                    padding: EdgeInsets.only(top: 45, bottom: 10),
+                    child: Image.asset(
+                      'assets/images/start-page/logo.png',
+                      width: 250,
+                      //height: 120,
+                      color: globals.white,
+                    ),
                   ),
-                ),
-                new Container(
-                    padding: EdgeInsets.all(25),
-                    //margin: EdgeInsets.only(top: 15),
-                    child: Stack(
-                      //   fit: StackFit.passthrough,
-                      //   overflow: Overflow.visible,
-                      //  alignment: Alignment.bottomCenter,
-                      children: <Widget>[
-                        Positioned(child: _totalBalanceCard())
-                      ],
-                    )),
-              ],
+                  new Container(
+                      padding: EdgeInsets.all(25),
+                      //margin: EdgeInsets.only(top: 15),
+                      child: Stack(
+                        //   fit: StackFit.passthrough,
+                        //   overflow: Overflow.visible,
+                        //  alignment: Alignment.bottomCenter,
+                        children: <Widget>[
+                          Positioned(child: _totalBalanceCard())
+                        ],
+                      )),
+                ],
+              ),
             ),
-          ),
-          new Container(
-            margin: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                _hideSmallAmount(),
-                new ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: walletInfo.length,
-                  itemBuilder: (BuildContext context, int index) =>
-                      buildListBody(context, index, walletInfo),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-      bottomNavigationBar: AppBottomNav(),
-    );
+            new Container(
+              margin: EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  _hideSmallAmount(),
+                  new ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: walletInfo.length,
+                    itemBuilder: (BuildContext context, int index) =>
+                        buildListBody(context, index, walletInfo),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+        bottomNavigationBar: AppBottomNav(),
+      );
+    }
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -134,7 +138,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                       style: Theme.of(context).textTheme.headline),
                   Text('123456 USD',
                       style: Theme.of(context).textTheme.headline),
-                  AddGas()
+                  //AddGas()
                 ],
               ),
               Icon(Icons.refresh)

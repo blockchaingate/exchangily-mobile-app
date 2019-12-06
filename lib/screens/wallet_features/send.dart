@@ -1,5 +1,4 @@
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/services/models.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,7 +19,6 @@ class SendWalletScreen extends StatefulWidget {
 
 class _SendWalletScreenState extends State<SendWalletScreen> {
   final scaffoldKey = new GlobalKey<ScaffoldState>();
-  DatabaseService dbService = DatabaseService();
   WalletService walletService = WalletService();
   final _receiverWalletAddressTextController = TextEditingController();
   final _sendAmountTextController = TextEditingController();
@@ -239,6 +237,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                   child: Text('Send'),
                   onPressed: () {
                     const options = {};
+
                     double amount =
                         double.tryParse(_sendAmountTextController.text);
                     var address = _receiverWalletAddressTextController.text;
@@ -249,14 +248,15 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                       print(address);
                       showInfoFlushbar('Empty Address',
                           'Please enter an address', Icons.cancel, globals.red);
-                    } else if (amount == null) {
+                    } else if (amount == null ||
+                        amount > widget.walletInfo.availableBalance) {
                       showInfoFlushbar(
                           'Invalid Amount',
                           'Please enter a valid amount',
                           Icons.cancel,
                           globals.red);
                     } else {
-                      dbService.sendTransaction(
+                      walletService.sendTransaction(
                           widget.walletInfo.tickerName.toUpperCase(),
                           [0],
                           address,
