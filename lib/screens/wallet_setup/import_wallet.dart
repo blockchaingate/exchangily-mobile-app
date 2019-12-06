@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../shared/globals.dart' as globals;
+import '../../shared/globals.dart' as globals;
 
 class ImportWalletScreen extends StatelessWidget {
   const ImportWalletScreen({Key key}) : super(key: key);

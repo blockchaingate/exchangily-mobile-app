@@ -1,9 +1,8 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/material.dart';
-import '../shared/globals.dart' as globals;
+import '../../shared/globals.dart' as globals;
 
-class BackupSeedWalletScreen extends StatelessWidget {
-  const BackupSeedWalletScreen({Key key}) : super(key: key);
+class ConfirmSeedtWalletScreen extends StatelessWidget {
+  const ConfirmSeedtWalletScreen({Key key}) : super(key: key);
   static final randomMnemonic = [
     'culture',
     'sound',
@@ -21,32 +20,27 @@ class BackupSeedWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget iconText = Row(
+    // Top Text Row Widget
+    Widget topTextRow = Row(
       children: <Widget>[
-        Padding(
-            padding: EdgeInsets.all(10),
-            child: Icon(
-              Icons.note_add,
-              color: globals.primaryColor,
-              size: 30,
-            )),
         Expanded(
             child: Text(
-          'Below are the 12 mnemonics to help you recover your wallet.Please make sure the phone or password is safely stored and write these 12 mnemonics down on the paper as this is the only way to recover your phone wallet',
+          'Please type in your 12 seed phrase in the, correct sequence to restore and import your wallet',
+          textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline,
         )),
       ],
     );
-
-    Widget confirmButton = Container(
+// Finish Wallet Backup Button Widget
+    Widget finishWalletBackupButton = Container(
       padding: EdgeInsets.all(15),
       child: RaisedButton(
         child: Text(
-          AppLocalizations.of(context).confirm,
+          'Finish Wallet Backup',
           style: Theme.of(context).textTheme.button,
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed('/confirmSeed');
+          Navigator.of(context).pushNamed('/createWallet');
         },
       ),
     );
@@ -54,13 +48,13 @@ class BackupSeedWalletScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).backupSeedPhrase),
+          title: Text('Confirm Seed Phrase'),
           backgroundColor: globals.secondaryColor),
       body: Container(
         padding: EdgeInsets.all(10),
         child: ListView(
           children: <Widget>[
-            iconText,
+            topTextRow,
             Container(
               margin: EdgeInsets.symmetric(
                 vertical: 40,
@@ -68,7 +62,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
               child: _buttonGrid(),
             ),
-            confirmButton
+            finishWalletBackupButton
           ],
         ),
       ),
@@ -85,20 +79,15 @@ class BackupSeedWalletScreen extends StatelessWidget {
       children: _buildButtonGrid(12));
 
   List<Container> _buildButtonGrid(int count) => List.generate(count, (i) {
-        var index = i + 1;
-        var singleWord = randomMnemonic[i];
+        i = i + 1;
         return Container(
             child: TextField(
-          textAlign: TextAlign.center,
-          //controller: myController,
-          enableInteractiveSelection: false, // readonly
-          // enabled: false, // if false use cant see the selection border around
-          readOnly: true,
+          maxLines: 2,
           autocorrect: false,
           decoration: InputDecoration(
             fillColor: globals.primaryColor,
             filled: true,
-            hintText: '$index  ' '$singleWord',
+            hintText: '$i',
             hintStyle: TextStyle(color: globals.white),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: globals.white, width: 2),

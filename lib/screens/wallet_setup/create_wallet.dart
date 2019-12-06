@@ -1,4 +1,4 @@
-import '../shared/globals.dart' as globals;
+import '../../shared/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

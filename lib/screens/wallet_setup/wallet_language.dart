@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../shared/globals.dart' as globals;
+import 'package:flutter/services.dart';
+import '../../shared/globals.dart' as globals;
 
-class ChooseLanguageScreen extends StatelessWidget {
-  const ChooseLanguageScreen({Key key}) : super(key: key);
+class WalletLanguageScreen extends StatelessWidget {
+  const WalletLanguageScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,7 @@ class ChooseLanguageScreen extends StatelessWidget {
                 RaisedButton(
                   child: Text('English'),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/backupSeed');
+                    Navigator.of(context).pushNamed('/importWallet');
                   },
                 ),
                 // Chinese Lang Button

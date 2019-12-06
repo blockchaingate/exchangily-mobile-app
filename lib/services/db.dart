@@ -36,13 +36,16 @@ class DatabaseService {
   String randonMnemonic = bip39.generateMnemonic();
   String ticker;
   List<WalletInfo> _walletInfo;
+
+  static String btcApiUrl = "https://btctest.fabcoinapi.com/";
+  static String fabApiUrl = "https://fabtest.fabcoinapi.com/";
+  static String exgApiUrl = "https://exgtest.fabcoinapi.com/";
+
   List<CoinType> _childrens = [
-    CoinType('btc', bitCoinChild),
-    CoinType('fab', fabCoinChild)
+    CoinType('btc', bitCoinChild, btcApiUrl),
+    CoinType('fab', fabCoinChild, fabApiUrl),
+    CoinType('fab', fabCoinChild, exgApiUrl),
   ];
-  final btcApiUrl = "https://btctest.fabcoinapi.com/";
-  final fabApiUrl = "https://fabtest.fabcoinapi.com/";
-  final exgApiUrl = "https://exgtest.fabcoinapi.com/";
 
   // Get Address
 
@@ -65,13 +68,18 @@ class DatabaseService {
   // Get All Balances
 
   Future<List<WalletInfo>> getAllBalances() async {
-    _childrens.map((f) => {getAddress(f, testnet)});
+    try {
+      _childrens.map((f) => {getAddress(f, testnet)});
 
-    await getBtcBalance();
-    //await getFabBalance();
-    //await getExgBalance();
+      await getBtcBalance();
+      await getFabBalance();
+      //await getExgBalance();
 
-    return _walletInfo;
+      return _walletInfo;
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 
   // Get Btc balance

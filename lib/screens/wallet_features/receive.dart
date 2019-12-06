@@ -171,14 +171,6 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
       leftBarIndicatorColor: globals.green,
       duration: Duration(seconds: 2),
     ).show(context);
-    // scaffoldKey.currentState.showSnackBar(new SnackBar(
-    //   backgroundColor: globals.white,
-    //   content: new Text(
-    //     'Copied to Clipboard',
-    //     textAlign: TextAlign.center,
-    //     style: TextStyle(color: globals.primaryColor),
-    //   ),
-    // ));
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------

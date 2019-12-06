@@ -4,17 +4,17 @@ import 'package:exchangilymobileapp/shared/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../shared/globals.dart' as globals;
-import 'wallet/gas.dart';
+import '../../shared/globals.dart' as globals;
+import './add_gas.dart';
 
-class BalanceScreen extends StatefulWidget {
-  const BalanceScreen({Key key}) : super(key: key);
+class TotalBalancesScreen extends StatefulWidget {
+  const TotalBalancesScreen({Key key}) : super(key: key);
 
   @override
-  _BalanceScreenState createState() => _BalanceScreenState();
+  _TotalBalancesScreenState createState() => _TotalBalancesScreenState();
 }
 
-class _BalanceScreenState extends State<BalanceScreen> {
+class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
   DatabaseService walletService = DatabaseService();
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
@@ -134,7 +134,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                       style: Theme.of(context).textTheme.headline),
                   Text('123456 USD',
                       style: Theme.of(context).textTheme.headline),
-                  Gas()
+                  AddGas()
                 ],
               ),
               Icon(Icons.refresh)

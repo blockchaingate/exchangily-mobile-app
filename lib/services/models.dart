@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 
 // Wallet Features Model
 
-class WalletFeatures {
+class WalletFeatureName {
   String name;
   IconData icon;
   String route;
+  Color shadowColor;
 
-  WalletFeatures(this.name, this.icon, this.route);
+  WalletFeatureName(this.name, this.icon, this.route, this.shadowColor);
 }
 
 // Wallet Model
@@ -29,8 +30,9 @@ class WalletInfo {
 class CoinType {
   String tickerName;
   BIP32 childType;
+  String apiUrl;
 
-  CoinType(this.tickerName, this.childType);
+  CoinType(this.tickerName, this.childType, this.apiUrl);
 }
 
 // Class Wallet

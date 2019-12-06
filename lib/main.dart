@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/screens/choose_language.dart';
+import 'package:exchangilymobileapp/screens/wallet_setup/wallet_language.dart';
 import 'package:exchangilymobileapp/services/db.dart';
 import 'package:exchangilymobileapp/services/models.dart';
 import 'package:exchangilymobileapp/routes.dart';
@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
               body: Container(
             margin: EdgeInsets.fromLTRB(10, 15, 10, 0),
             padding: EdgeInsets.all(44),
-            child: (ChooseLanguageScreen()),
+            child: (WalletLanguageScreen()),
           )),
         ));
   }
