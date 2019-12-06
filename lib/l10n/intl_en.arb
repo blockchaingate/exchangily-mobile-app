@@ -1,0 +1,20 @@
+{
+    "title": "Exchangily",
+    "@title": {
+      "description": "Title for the Exchangily App",
+      "type": "text",
+      "placeholders": {}
+    },
+    "confirm": "Confirm",
+    "@confirm": {
+      "description": "confirm_button",
+      "type": "text",
+      "placeholders": {}
+    },
+    "backupSeedPhrase": "Backup Seed Phrase",
+    "@backupSeedPhrase": {
+        "description": "backup_seed_phrase",
+        "type": "text",
+        "placeholders": {}
+    }
+  }

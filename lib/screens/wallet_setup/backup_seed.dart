@@ -1,5 +1,6 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/material.dart';
-import '../shared/globals.dart' as globals;
+import '../../shared/globals.dart' as globals;
 
 class BackupSeedWalletScreen extends StatelessWidget {
   const BackupSeedWalletScreen({Key key}) : super(key: key);
@@ -36,11 +37,12 @@ class BackupSeedWalletScreen extends StatelessWidget {
         )),
       ],
     );
+
     Widget confirmButton = Container(
       padding: EdgeInsets.all(15),
       child: RaisedButton(
         child: Text(
-          'Next',
+          AppLocalizations.of(context).confirm,
           style: Theme.of(context).textTheme.button,
         ),
         onPressed: () {
@@ -52,7 +54,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
-          title: Text('Backup Seed Phrase'),
+          title: Text(AppLocalizations.of(context).backupSeedPhrase),
           backgroundColor: globals.secondaryColor),
       body: Container(
         padding: EdgeInsets.all(10),

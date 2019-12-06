@@ -1,15 +1,23 @@
-import 'package:exchangilymobileapp/screens/choose_language.dart';
-import 'package:exchangilymobileapp/services/db.dart';
+import 'package:exchangilymobileapp/screens/wallet_setup/wallet_language.dart';
 import 'package:exchangilymobileapp/services/models.dart';
-import 'package:exchangilymobileapp/services/route_generator.dart';
+import 'package:exchangilymobileapp/routes.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import './shared/globals.dart' as globals;
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'localizations.dart';
+// import 'package:flutter_cupertino_localizations/flutter_cupertino_localizations.dart';
 
 void main() {
   debugPaintSizeEnabled = false;
-  runApp(MyApp());
+  // Force user to use only portrait mode until the development of other screen size design
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -18,9 +26,26 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           FutureProvider<List<WalletInfo>>.value(
-              value: DatabaseService().getAllBalances())
+              value: WalletService().getAllBalances()),
         ],
         child: MaterialApp(
+          localizationsDelegates: [
+            AppLocalizationsDelegate(),
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate
+          ],
+          // locale: Langua,
+          supportedLocales: [
+            const Locale("en", "US"), // English
+            const Locale("hi", ""), // Hindi India
+            const Locale.fromSubtags(
+                languageCode: 'zh', scriptCode: 'Hans'), // Chinese Simplified
+            const Locale.fromSubtags(
+                languageCode: 'zh', scriptCode: 'Hant'), // Chinese Traditional
+          ],
+          onGenerateTitle: (BuildContext context) =>
+              AppLocalizations.of(context).title,
           initialRoute: '/',
           onGenerateRoute: RouteGenerator.generateRoute,
           title: 'Exchangily Wallet',
@@ -43,13 +68,14 @@ class MyApp extends StatelessWidget {
                     color: globals.white,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.25),
-                display2: TextStyle(fontSize: 14, color: globals.grey)),
+                display2: TextStyle(fontSize: 14, color: globals.grey),
+                display3: TextStyle(fontSize: 18, color: globals.white)),
           ),
           home: Scaffold(
               body: Container(
             margin: EdgeInsets.fromLTRB(10, 15, 10, 0),
             padding: EdgeInsets.all(44),
-            child: (ChooseLanguageScreen()),
+            child: (WalletLanguageScreen()),
           )),
         ));
   }
