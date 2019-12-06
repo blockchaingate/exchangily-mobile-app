@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 import '../../services/wallet_service.dart';
-class AddGas extends StatelessWidget with WalletService {
+class AddGas extends StatelessWidget{
   const AddGas({Key key}) : super(key: key);
 
   @override

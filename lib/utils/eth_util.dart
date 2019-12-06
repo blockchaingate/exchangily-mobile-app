@@ -3,6 +3,9 @@ import "string_util.dart";
 import 'package:web3dart/crypto.dart';
 import 'package:hex/hex.dart';
 import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 getTransactionHash(Uint8List signTransaction) {
 
   /*
@@ -20,6 +23,12 @@ getTransactionHash(Uint8List signTransaction) {
   return hash;
 }
 
+Future getEthTransactionStatus(String txid) async {
+  var url = "https://ethtest.fabcoinapi.com/"  + 'gettransactionstatus/' + txid;
+  var client = new http.Client();
+  var response = await client.get(url);
+  return response;
+}
 
 /*
 import 'package:web3dart/crypto.dart';

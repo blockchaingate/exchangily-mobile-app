@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 import '../../services/wallet_service.dart';
 import '../../services/models.dart';
-class Deposit extends StatelessWidget with WalletService {
+class Deposit extends StatelessWidget {
   final WalletInfo walletInfo;
   const Deposit({Key key,this.walletInfo}) : super(key: key);
 
@@ -59,7 +59,9 @@ class Deposit extends StatelessWidget with WalletService {
                     color: globals.primaryColor,
                     textColor: Colors.white,
                     onPressed: () async{
-                      var res = await depositDo('ETH', '', double.parse(myController.text));
+                      // var res = await depositDo('ETH', '', double.parse(myController.text));
+                      // var res = await depositDo('USDT', 'ETH', double.parse(myController.text));
+                      var res = await depositDo('BTC', '', double.parse(myController.text));
                       print('res from await depositDo=');
                       print(res);
                     },

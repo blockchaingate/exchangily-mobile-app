@@ -4,7 +4,7 @@ import '../../shared/globals.dart' as globals;
 import '../../services/wallet_service.dart';
 import '../../services/models.dart';
 
-class Withdraw extends StatelessWidget with WalletService {
+class Withdraw extends StatelessWidget {
   final WalletInfo walletInfo;
   const Withdraw({Key key,this.walletInfo}) : super(key: key);
 
