@@ -1,10 +1,12 @@
 import 'package:keccak/keccak.dart';
-import "string_util.dart";
-import 'package:web3dart/crypto.dart';
 import 'package:hex/hex.dart';
 import 'dart:typed_data';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import '../environments/environment.dart';
+import 'dart:async';
+import 'package:web3dart/web3dart.dart';
+
+
 
 getTransactionHash(Uint8List signTransaction) {
 
@@ -30,6 +32,22 @@ Future getEthTransactionStatus(String txid) async {
   return response;
 }
 
+getEthNode(root) {
+  var node = root.derivePath("m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+  return node;
+}
+
+
+getEthAddressForNode(node) async {
+  var privateKey = node.privateKey;
+
+  Credentials credentials = EthPrivateKey.fromHex(HEX.encode(privateKey));
+
+  final address = await credentials.extractAddress();
+
+  var ethAddress = address.hex;
+  return ethAddress;
+}
 /*
 import 'package:web3dart/crypto.dart';
 import 'package:hex/hex.dart';

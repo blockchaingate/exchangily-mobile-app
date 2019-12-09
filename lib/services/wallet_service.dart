@@ -1,3 +1,5 @@
+import 'package:exchangilymobileapp/utils/btc_util.dart';
+import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:web_socket_channel/io.dart';
@@ -26,6 +28,7 @@ import '../utils/kanban.util.dart';
 import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
 import '../utils/coin_util.dart';
+import '../environments/environment.dart';
 
 import 'models.dart';
 
@@ -34,9 +37,9 @@ class WalletService {
       'culture sound obey clean pretty medal churn behind chief cactus alley ready';
   static final seed = bip39.mnemonicToSeed(randomMnemonic);
   static final root = bip32.BIP32.fromSeed(seed);
-  static final bitCoinChild = root.derivePath("m/44'/1'/0'/0/0");
-  static final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
-  static final fabCoinChild = root.derivePath("m/44'/1150'/0'/0/0");
+  static final bitCoinChild = getBtcNode(root);
+  static final ethCoinChild = getEthNode(root);
+  static final fabCoinChild = getFabNode(root);
   final fabPublicKey = fabCoinChild.publicKey;
   final privateKey = HEX.encode(ethCoinChild.privateKey);
   final client = new http.Client();
@@ -53,7 +56,6 @@ class WalletService {
   double ethBalance = 0;
   double usdtBalance = 0;
 
-  String randonMnemonic = bip39.generateMnemonic();
   String ticker;
   List<WalletInfo> _walletInfo;
 
@@ -87,11 +89,8 @@ class WalletService {
   // Get Btc balance
 
   getBtcBalance() async {
-    btcAddress = getAddress(bitCoinChild, testnet);
-    var url = btcApiUrl + 'getbalance/' + btcAddress;
-    print(url);
-    var response = await client.get(url);
-    btcBalance = double.parse(response.body) / 1e8;
+    btcAddress = getBtcAddressForNode(bitCoinChild);
+    btcBalance = await getBtcBalanceByAddress(btcAddress);
     _walletInfo = [
       WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor,
           'bitcoin')
@@ -101,7 +100,12 @@ class WalletService {
   // Get ETH balance
 
   getEthBalance() async {
-    ethAddress = getAddress(ethCoinChild, testnet);
+
+    
+    ethAddress = getEthAddressForNode(ethCoinChild);
+
+    print('ethAddress=' + ethAddress);
+    // ethAddress = getAddress(ethCoinChild, testnet);
     var url = ethApiUrl + 'getbalance/' + ethAddress;
     print(url);
     var response = await client.get(url);
@@ -115,7 +119,7 @@ class WalletService {
 // Get Fab Balance
 
   getFabBalance() async {
-    fabAddress = getAddress(fabCoinChild, testnet);
+    fabAddress = getBtcAddressForNode(fabCoinChild);
     var url = fabApiUrl + 'getbalance/' + fabAddress;
     print(url);
     var response = await client.get(url);
@@ -147,23 +151,11 @@ class WalletService {
     return 0;
   }
 
-  String getAddress(node, [network]) {
-    return P2PKH(data: new P2PKHData(pubkey: node.publicKey), network: network)
-        .data
-        .address;
-  }
+
 
 // Get Official Address
 
-  getOfficalAddress(String coinName) {
-    var address = environment.environment['addresses']['exchangilyOfficial']
-        .where((addr) => addr['name'] == coinName)
-        .toList();
-    if (address != null) {
-      return address[0]['address'];
-    }
-    return null;
-  }
+
 
 // Get Coin Type Id By Name
 
@@ -428,7 +420,7 @@ class WalletService {
       var index = addressIndexList[i];
       var fabCoinChild =
           root.derivePath("m/44'/1150'/0'/0/" + index.toString());
-      final fromAddress = getAddress(fabCoinChild, testnet);
+      final fromAddress = getBtcAddressForNode(fabCoinChild);
       print('from address=' + fromAddress);
       if (i == 0) {
         changeAddress = fromAddress;
@@ -533,7 +525,7 @@ class WalletService {
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
         var bitCoinChild = root.derivePath("m/44'/1'/0'/0/" + index.toString());
-        final fromAddress = getAddress(bitCoinChild, testnet);
+        final fromAddress = getBtcAddressForNode(bitCoinChild);
         if (i == 0) {
           changeAddress = fromAddress;
         }

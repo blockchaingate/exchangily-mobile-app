@@ -4,6 +4,7 @@ import 'package:hex/hex.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import '../utils/string_util.dart';
+import '../environments/environment.dart';
 
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
   print('originalMessage=');
@@ -58,3 +59,20 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     'v': v
   };
 }
+
+getOfficalAddress(String coinName) {
+  var address = environment['addresses']['exchangilyOfficial'];
+  print('getOfficalAddress=');
+  print(address);
+  /*
+      .where((addr) => addr['name'] == coinName)
+      .toList();
+
+
+  if (address != null) {
+    return address[0]['address'];
+  }
+   */
+  return null;
+}
+

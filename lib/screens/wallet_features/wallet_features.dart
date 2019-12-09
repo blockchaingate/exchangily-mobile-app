@@ -25,9 +25,11 @@ class WalletFeaturesScreen extends StatelessWidget {
     double containerWidth = 150;
     double containerHeight = 115;
 
+    print('walletInfo.tickerName=');
+    print(walletInfo.tickerName);
     return Scaffold(
       key: key,
-      body: Column(
+      body: ListView(
         children: <Widget>[
           new Container(
             width: double.infinity,
@@ -135,7 +137,24 @@ class WalletFeaturesScreen extends StatelessWidget {
                     ])
               ],
             ),
+          ),
+          Visibility(
+            visible: (walletInfo.tickerName == 'fab'),
+            child:
+              Container(
+                width: 190,
+                child: RaisedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/smartContract');
+                  },
+                  child: Text(
+                      'Smart Contract',
+                      style: TextStyle(fontSize: 15)
+                  ),
+                ),
+              )
           )
+
         ],
       ),
       bottomNavigationBar: AppBottomNav(),
