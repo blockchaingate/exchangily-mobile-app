@@ -6,6 +6,8 @@ import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import '../utils/string_util.dart';
 
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
+  print('originalMessage=');
+  print(originalMessage);
   var r = '';
   var s = '';
   var v = '';
@@ -36,11 +38,18 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     signedMess = btcWallet.sign(originalMessage);
   }
 
+  print("signedMess=");
+  print(signedMess);
   if (signedMess != null) {
     String ss = HEX.encode(signedMess);
+    print("ss=");
+    print(ss);
     r = ss.substring(0,64);
     s = ss.substring(64,128);
     v = ss.substring(128);
+    if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
+      v = '20';
+    }
   }
 
   return {

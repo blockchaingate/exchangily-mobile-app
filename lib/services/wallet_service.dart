@@ -4,6 +4,7 @@ import '../packages/bip32/bip32_base.dart' as bip32;
 import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
 import 'package:bitcoin_flutter/src/transaction_builder.dart';
+import 'package:bitcoin_flutter/src/transaction.dart' as btcTransaction;
 import 'package:bitcoin_flutter/src/ecpair.dart';
 import 'package:bitcoin_flutter/src/utils/script.dart' as script;
 import 'package:hex/hex.dart';
@@ -66,10 +67,13 @@ import '../utils/coin_util.dart';
     }
     var resST = await sendTransaction(coinName, seed, [0], officalAddress, amount, option, false);
 
-    print('resST.errMsg');
+    print('resST.errMsg1=');
     print(resST['errMsg']);
+    print('resST.txHex=');
     print(resST['txHex']);
+    print('resST.txHash=');
     print(resST['txHash']);
+    print('endddd');
     if(resST['errMsg'] != '') {
       print(resST['errMsg']);
       return -2;
@@ -85,6 +89,8 @@ import '../utils/coin_util.dart';
     var amountInLink = BigInt.from(amount * 1e18);
 
     var coinType = getCoinTypeIdByName(coinName);
+    print('coinType=');
+    print(coinType);
     if(coinType == 0) {
       return -4;
     }
@@ -438,14 +444,15 @@ import '../utils/coin_util.dart';
         txb.sign(i, alice);
       }
 
-      txHex = txb.build().toHex();
+      var tx = txb.build();
+      txHex = tx.toHex();
       if(doSubmit) {
         var res = await postBtcTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       }
       else {
-
+        txHash = '0x' + tx.getId();
       }
 
     }
@@ -503,6 +510,8 @@ import '../utils/coin_util.dart';
           txHash = res['txHash'];
           errMsg = res['errMsg'];
         } else {
+          var tx = btcTransaction.Transaction.fromHex(txHex);
+          txHash = '0x' + tx.getId();
         }
       }
     }
@@ -526,6 +535,8 @@ import '../utils/coin_util.dart';
           txHash = res['txHash'];
           errMsg = res['errMsg'];
         } else {
+          var tx = btcTransaction.Transaction.fromHex(txHex);
+          txHash = '0x' + tx.getId();
         }
       }
     }
