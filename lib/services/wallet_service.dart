@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
@@ -15,11 +16,11 @@ import 'dart:typed_data';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import '../shared/globals.dart' as globals;
-import '../environments/environment.dart';
-import '../environments/coins.dart';
+import '../environments/environment.dart' as environment;
+import '../environments/coins.dart' as coinList;
 import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import '../utils/abi_util.dart';
-import '../utils/string_util.dart';
+import '../utils/string_util.dart' as stringUtils;
 import '../utils/kanban.util.dart';
 import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
@@ -59,25 +60,26 @@ class WalletService {
   static String fabApiUrl = "https://fabtest.fabcoinapi.com/";
   static String ethApiUrl = "https://ethtest.fabcoinapi.com/";
 
-  List<CoinType> _childrens = [
-   //  CoinType('btc', bitCoinChild, btcApiUrl),
-    // CoinType('fab', fabCoinChild, fabApiUrl)
-  ];
+  // List<CoinType> _childrens = [
+  //   //  CoinType('btc', bitCoinChild, btcApiUrl),
+  //   // CoinType('fab', fabCoinChild, fabApiUrl)
+  // ];
 
   // Get All Balances
 
   Future<List<WalletInfo>> getAllBalances() async {
     try {
-      _childrens.map((f) => {getAddress(f, testnet)});
+      //
+      // _childrens.map((f) => {getAddress(f, testnet)});
 
       await getBtcBalance();
       await getFabBalance();
       //await getExgBalance();
+      // await getEthBalance();
 
       return _walletInfo;
     } catch (e) {
       print(e);
-      return null;
     }
   }
 
@@ -92,6 +94,20 @@ class WalletService {
     _walletInfo = [
       WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor,
           'bitcoin')
+    ];
+  }
+
+  // Get ETH balance
+
+  getEthBalance() async {
+    ethAddress = getAddress(ethCoinChild, testnet);
+    var url = ethApiUrl + 'getbalance/' + ethAddress;
+    print(url);
+    var response = await client.get(url);
+    ethBalance = double.parse(response.body) / 1e8;
+    _walletInfo = [
+      WalletInfo('eth', ethAddress, ethBalance, 25415.214, globals.primaryColor,
+          'ethereum')
     ];
   }
 
@@ -112,8 +128,9 @@ class WalletService {
   getExgBalance() async {
     var exgSmartContractAddress = '0x867480ba8e577402fa44f43c33875ce74bdc5df6';
     var body = {
-      'address': this.trimHexPrefix(exgSmartContractAddress),
-      'data': '70a08231' + this.fixLength(this.trimHexPrefix(exgAddress), 64)
+      'address': stringUtils.trimHexPrefix(exgSmartContractAddress),
+      'data': '70a08231' +
+          stringUtils.fixLength(stringUtils.trimHexPrefix(exgAddress), 64)
     };
     var response = await client.post('$fabApiUrl + callcontract', body: body);
     var json = jsonDecode(response.body);
@@ -124,6 +141,7 @@ class WalletService {
         34212.782, globals.exgLogoColor, 'exchangily'));
   }
 
+// Add Gas
   Future<int> addGas() async {
     return 0;
   }
@@ -134,68 +152,72 @@ class WalletService {
         .address;
   }
 
+// Get Official Address
+
   getOfficalAddress(String coinName) {
-    var address = environment['addresses']['exchangilyOfficial'].where((addr) => addr['name'] == coinName).toList();
-    if(address != null) {
+    var address = environment.environment['addresses']['exchangilyOfficial']
+        .where((addr) => addr['name'] == coinName)
+        .toList();
+    if (address != null) {
       return address[0]['address'];
     }
     return null;
   }
 
+// Get Coin Type Id By Name
+
   getCoinTypeIdByName(String coinName) {
-    var coins = coin_list.where((coin) => coin['name'] == coinName).toList();
-    if(coins != null) {
+    var coins =
+        coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
+    if (coins != null) {
       return coins[0]['id'];
     }
     return 0;
   }
 
-  getOriginalMessage(int coinType, String txHash, BigInt amount, String address) {
+// Get Original Message
 
+  getOriginalMessage(
+      int coinType, String txHash, BigInt amount, String address) {
     var buf = '';
-    buf += fixLength(coinType.toString(), 4);
-    buf += fixLength(txHash, 64);
+    buf += stringUtils.fixLength(coinType.toString(), 4);
+    buf += stringUtils.fixLength(txHash, 64);
     var hexString = amount.toRadixString(16);
-    buf += fixLength(hexString, 64);
-    buf += fixLength(address, 64);
+    buf += stringUtils.fixLength(hexString, 64);
+    buf += stringUtils.fixLength(address, 64);
 
     return buf;
   }
 
-  fixLength(String str, int length) {
-    var retStr = '';
-    int len = str.length;
-    int len2 = length - len;
-    if (len2 > 0) {
-      for (int i = 0; i < len2; i++) {
-        retStr += '0';
-      }
-
-
-
+// Future Deposit Do
 
   Future depositDo(String coinName, String tokenType, double amount) async {
-    var randomMnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    var randomMnemonic =
+        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
     var seed = bip39.mnemonicToSeed(randomMnemonic);
     var officalAddress = getOfficalAddress(coinName);
-    if(officalAddress == null) {
+    if (officalAddress == null) {
       return -1;
     }
     var option = {};
-    if(coinName == 'USDT') {
-      option = {'tokenType': tokenType,'contractAddress':'0x1c35eCBc06ae6061d925A2fC2920779a1896282c'};
+    if (coinName == 'USDT') {
+      option = {
+        'tokenType': tokenType,
+        'contractAddress': '0x1c35eCBc06ae6061d925A2fC2920779a1896282c'
+      };
     }
-    var resST = await sendTransaction(coinName, seed, [0], officalAddress, amount, option, false);
+    var resST = await sendTransaction(
+        coinName, [0], officalAddress, amount, option, false);
 
     print('resST.errMsg');
     print(resST['errMsg']);
     print(resST['txHex']);
     print(resST['txHash']);
-    if(resST['errMsg'] != '') {
+    if (resST['errMsg'] != '') {
       print(resST['errMsg']);
       return -2;
     }
-    if(resST['txHex'] == '' || resST['txHash'] == '') {
+    if (resST['txHex'] == '' || resST['txHash'] == '') {
       print(resST['txHex']);
       print(resST['txHash']);
       return -3;
@@ -205,24 +227,26 @@ class WalletService {
     var txHash = resST['txHash'];
     var amountInLink = BigInt.from(amount * 1e18);
 
-  trimHexPrefix(String str) {
-    if (str.startsWith('0x')) {
-      str = str.substring(2);
     var coinType = getCoinTypeIdByName(coinName);
-    if(coinType == 0) {
+    if (coinType == 0) {
       return -4;
     }
 
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
-    var originalMessage = getOriginalMessage(coinType, trimHexPrefix(txHash)
-        , amountInLink, trimHexPrefix(addressInKanban));
+    var originalMessage = getOriginalMessage(
+        coinType,
+        stringUtils.trimHexPrefix(txHash),
+        amountInLink,
+        stringUtils.trimHexPrefix(addressInKanban));
 
-    var signedMess = await signedMessage(originalMessage, seed, coinName, tokenType);
+    var signedMess =
+        await signedMessage(originalMessage, seed, coinName, tokenType);
 
     var coinPoolAddress = await getCoinPoolAddress();
 
-    var abiHex = getDepositFuncABI(coinType, txHash, amountInLink, addressInKanban, signedMess);
+    var abiHex = getDepositFuncABI(
+        coinType, txHash, amountInLink, addressInKanban, signedMess);
     var nonce = await getNonce(addressInKanban);
     print('nonce=' + nonce.toString());
     print('signedMessage.r=' + signedMess["r"]);
@@ -231,82 +255,51 @@ class WalletService {
     print('abiHex=' + abiHex);
     print(coinPoolAddress);
     print('txHash=' + txHash);
-    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex, HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
+    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
+        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
     var res = await submitDeposit(txHex, txKanbanHex);
     return res;
   }
 
-  number2Buffer(num) {
-    var buffer = new List<int>();
-    var neg = (num < 0);
-    num = num.abs();
-    while (num > 0) {
-      print('num=');
-      print(num);
-      print(buffer.length);
-      print(num & 0xff);
-      buffer.add(num & 0xff);
-      print('buffer=');
-      print(buffer);
-      num = num >> 8;
-    }
-
-    var top = buffer[buffer.length - 1];
-    if (top & 0x80 != 0) {
-      buffer.add(neg ? 0x80 : 0x00);
-    } else if (neg) {
-      buffer.add(top | 0x80);
-
-
+// Future Add Gas Do
   Future AddGasDo(double amount) async {
     var satoshisPerBytes = 14;
-    var randomMnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    var randomMnemonic =
+        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
     var seed = bip39.mnemonicToSeed(randomMnemonic);
     // final root = bip32.BIP32.fromSeed(seed);
     var scarContractAddress = await getScarAddress();
-    scarContractAddress = trimHexPrefix(scarContractAddress);
+    scarContractAddress = stringUtils.trimHexPrefix(scarContractAddress);
     print('scarContractAddress=');
     print(scarContractAddress);
     var fxnDepositCallHex = '4a58db19';
-    var contractInfo  = await getFabSmartContract(scarContractAddress, fxnDepositCallHex);
+    var contractInfo =
+        await getFabSmartContract(scarContractAddress, fxnDepositCallHex);
 
     print('contractInfo===');
     print(contractInfo['totalFee']);
     print(contractInfo['contract']);
     print('end of contractInfo');
-    var res1 = await getFabTransactionHex(seed, [0], contractInfo['contract'], amount, contractInfo['totalFee'], satoshisPerBytes);
+    var res1 = await getFabTransactionHex(seed, [0], contractInfo['contract'],
+        amount, contractInfo['totalFee'], satoshisPerBytes);
     var txHex = res1['txHex'];
     var errMsg = res1['errMsg'];
     var txHash = '';
     if (txHex != null && txHex != '') {
-
-        var res = await postFabTx(txHex);
-        txHash = res['txHash'];
-        errMsg = res['errMsg'];
-
+      var res = await postFabTx(txHex);
+      txHash = res['txHash'];
+      errMsg = res['errMsg'];
     }
 
     return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
-  }
-
-  hex2Buffer(hexString) {
-    var buffer = new List<int>();
-    for (var i = 0; i < hexString.length; i += 2) {
-      var val = (int.parse(hexString[i], radix: 16) << 4) |
-          int.parse(hexString[i + 1], radix: 16);
-      buffer.add(val);
-    }
-    return buffer;
-
-  String getAddress (node, [network]) {
-    return P2PKH(data: new P2PKHData(pubkey: node.publicKey), network: network).data.address;
   }
 
   convertLiuToFabcoin(amount) {
     return (amount * 1e-8);
   }
 
+  // Get FabUtxos
 
   getFabUtxos(String address) async {
     var url = fabApiUrl + 'getutxos/' + address;
@@ -317,6 +310,7 @@ class WalletService {
     return json;
   }
 
+// Get BtcUtxos
   getBtcUtxos(String address) async {
     var url = btcApiUrl + 'getutxos/' + address;
     print(url);
@@ -325,6 +319,8 @@ class WalletService {
     var json = jsonDecode(response.body);
     return json;
   }
+
+  // Post Btc Transaction
 
   postBtcTx(String txHex) async {
     var url = btcApiUrl + 'sendrawtransaction/' + txHex;
@@ -346,7 +342,7 @@ class WalletService {
   }
 
   getFabTransactionJson(String txid) async {
-    txid = trimHexPrefix(txid);
+    txid = stringUtils.trimHexPrefix(txid);
     var url = fabApiUrl + 'gettransactionjson/' + txid;
     var client = new http.Client();
     var response = await client.get(url);
@@ -436,12 +432,12 @@ class WalletService {
           root.derivePath("m/44'/1150'/0'/0/" + index.toString());
       final fromAddress = getAddress(fabCoinChild, testnet);
       print('from address=' + fromAddress);
-      if(i == 0) {
+      if (i == 0) {
         changeAddress = fromAddress;
       }
       final privateKey = fabCoinChild.privateKey;
       var utxos = await getFabUtxos(fromAddress);
-      if((utxos != null) && (utxos.length > 0)) {
+      if ((utxos != null) && (utxos.length > 0)) {
         for (var j = 0; j < utxos.length; i++) {
           var utxo = utxos[i];
           var idx = utxo['idx'];
@@ -504,10 +500,11 @@ class WalletService {
       return {'txHex': txHex, 'errMsg': ''};
     }
   }
+  // Send Transaction
 
-  sendTransaction(String coin, seed, List addressIndexList, String toAddress, double amount, options, bool doSubmit) async {
+  Future sendTransaction(String coin, List addressIndexList, String toAddress,
+      double amount, options, bool doSubmit) async {
     print('coin=' + coin);
-    print(seed);
     print(addressIndexList);
     print(toAddress);
     print(amount);
@@ -623,6 +620,7 @@ class WalletService {
         var res = await postBtcTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
+        return {'txHash': txHash, 'errMsg': errMsg};
       } else {
         print('not right');
       }
@@ -673,9 +671,9 @@ class WalletService {
       } else {
         txHash = getTransactionHash(signed);
       }
-    }
-    else if(coin == 'FAB') {
-      var res1 = await getFabTransactionHex(seed, addressIndexList, toAddress, amount, 0, satoshisPerBytes);
+    } else if (coin == 'FAB') {
+      var res1 = await getFabTransactionHex(
+          seed, addressIndexList, toAddress, amount, 0, satoshisPerBytes);
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
       if ((errMsg == '') && (txHex != '')) {
@@ -690,14 +688,21 @@ class WalletService {
     } else if (tokenType == 'FAB') {
       var transferAbi = 'a9059cbb';
       var amountSent = (amount * 1e18).round();
-      var fxnCallHex = transferAbi
-          + fixLength(trimHexPrefix(toAddress), 64)
-          + fixLength(trimHexPrefix(amountSent.toRadixString(16)), 64);
-      contractAddress = trimHexPrefix(contractAddress);
+      var fxnCallHex = transferAbi +
+          stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
+          stringUtils.fixLength(
+              stringUtils.trimHexPrefix(amountSent.toRadixString(16)), 64);
+      contractAddress = stringUtils.trimHexPrefix(contractAddress);
 
-      var contractInfo  = await getFabSmartContract(contractAddress, fxnCallHex);
+      var contractInfo = await getFabSmartContract(contractAddress, fxnCallHex);
 
-      var res1 = await getFabTransactionHex(seed, addressIndexList, contractInfo['contract'], 0, contractInfo['totalFee'], satoshisPerBytes);
+      var res1 = await getFabTransactionHex(
+          seed,
+          addressIndexList,
+          contractInfo['contract'],
+          0,
+          contractInfo['totalFee'],
+          satoshisPerBytes);
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
       if (txHex != null && txHex != '') {
@@ -719,10 +724,12 @@ class WalletService {
       gasLimit = 100000;
       var amountSent = (amount * 1e6).round();
       var transferAbi = 'a9059cbb';
-      var fxnCallHex = transferAbi
-          + fixLength(trimHexPrefix(toAddress), 64)
-          + fixLength(trimHexPrefix(amountSent.toRadixString(16)), 64);
-      var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
+      var fxnCallHex = transferAbi +
+          stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
+          stringUtils.fixLength(
+              stringUtils.trimHexPrefix(amountSent.toRadixString(16)), 64);
+      var apiUrl =
+          "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
       var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
@@ -736,9 +743,9 @@ class WalletService {
                   EtherUnit.gwei, gasPrice.round()),
               maxGas: gasLimit,
               value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
-              data: Uint8List.fromList(hex2Buffer(fxnCallHex))
-          ), chainId:ropstenChainId,fetchChainIdFromNetworkId:false
-      );
+              data: Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex))),
+          chainId: ropstenChainId,
+          fetchChainIdFromNetworkId: false);
       print('signed=');
       txHex = '0x' + HEX.encode(signed);
 
@@ -754,7 +761,7 @@ class WalletService {
     return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
   }
 
-  getFabSmartContract(String contractAddress, String fxnCallHex) async{
+  getFabSmartContract(String contractAddress, String fxnCallHex) async {
     var gasLimit = 800000;
     var gasPrice = 40;
     var totalAmount = gasLimit * gasPrice / 1e8;
@@ -763,10 +770,10 @@ class WalletService {
     var totalFee = totalAmount;
     var chunks = new List<dynamic>();
     chunks.add(84);
-    chunks.add(Uint8List.fromList(number2Buffer(gasLimit)));
-    chunks.add(Uint8List.fromList(number2Buffer(gasPrice)));
-    chunks.add(Uint8List.fromList(hex2Buffer(fxnCallHex)));
-    chunks.add(Uint8List.fromList(hex2Buffer(contractAddress)));
+    chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasLimit)));
+    chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasPrice)));
+    chunks.add(Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex)));
+    chunks.add(Uint8List.fromList(stringUtils.hex2Buffer(contractAddress)));
     chunks.add(194);
 
     print('chunks=');
@@ -778,10 +785,7 @@ class WalletService {
 
     totalFee += convertLiuToFabcoin(contractSize * 10);
 
-    var res = {
-      'contract': contract,
-      'totalFee': totalFee
-    };
+    var res = {'contract': contract, 'totalFee': totalFee};
     return res;
   }
-
+}

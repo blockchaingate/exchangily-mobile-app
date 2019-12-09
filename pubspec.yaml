@@ -27,17 +27,15 @@ dependencies:
 
   pattern_formatter: ^0.0.3
   path_provider: 1.4.2
-  barcode_scan: 1.0.0
+
   keccak: ^1.0.3
   web_socket_channel: ^1.1.0
   json_serializable: ^2.2.1
   # Generate QR Code Image
   qr_flutter: ^3.1.0
   qr: 1.2.0
-
   # Barcode Scan
   barcode_scan: 1.0.0
-
   # Flushbar instead of Snackbar for notifications
   flushbar: ^1.9.1
 

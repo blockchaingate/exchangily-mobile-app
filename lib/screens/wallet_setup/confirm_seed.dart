@@ -25,7 +25,7 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
       children: <Widget>[
         Expanded(
             child: Text(
-          'Please type in your 12 seed phrase in the, correct sequence to restore and import your wallet',
+          'Please type in your 12 word seed phrase in the correct sequence to confirm',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline,
         )),

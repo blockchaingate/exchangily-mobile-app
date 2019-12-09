@@ -14,9 +14,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/trade/main.dart';
-import 'package:exchangilymobileapp/screens/wallet/add_gas.dart';
-import 'package:exchangilymobileapp/screens/wallet/deposit.dart';
-import 'package:exchangilymobileapp/screens/wallet/withdraw.dart';
+import 'package:exchangilymobileapp/screens/wallet_features/add_gas.dart';
+import 'package:exchangilymobileapp/screens/wallet_features/deposit.dart';
+import 'package:exchangilymobileapp/screens/wallet_features/withdraw.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/add_gas.dart';
 
 class RouteGenerator {

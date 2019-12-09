@@ -6,6 +6,31 @@ class ImportWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Top Text Row Widget
+    Widget topTextRow = Row(
+      children: <Widget>[
+        Expanded(
+            child: Text(
+          'Please type in your 12 word seed phrase in the correct sequence to import wallet',
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headline,
+        )),
+      ],
+    );
+// Finish Wallet Backup Button Widget
+    Widget finishWalletBackupButton = Container(
+      padding: EdgeInsets.all(15),
+      child: RaisedButton(
+        child: Text(
+          'Confirm',
+          style: Theme.of(context).textTheme.button,
+        ),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/importWallet');
+        },
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
@@ -13,78 +38,50 @@ class ImportWalletScreen extends StatelessWidget {
           backgroundColor: globals.secondaryColor),
       body: Container(
         padding: EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: ListView(
           children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Icon(
-                  Icons.note,
-                  color: globals.white,
-                  size: 25,
-                ),
-                Expanded(
-                    child: Text(
-                  'Please type in your 12 seed phrase in the, correct sequence to restore and import your wallet',
-                  style: Theme.of(context).textTheme.headline,
-                ))
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                ButtonTheme(
-                  shape: StadiumBorder(),
-                  minWidth: 120,
-                  padding: EdgeInsets.all(10),
-                  child: MaterialButton(
-                    color: globals.primaryColor,
-                    textColor: globals.white,
-                    child: Text('dfds'),
-                    onPressed: () {},
-                  ),
-                ),
-                ButtonTheme(
-                  shape: StadiumBorder(),
-                  child: MaterialButton(
-                    minWidth: 120,
-                    padding: EdgeInsets.all(10),
-                    color: globals.primaryColor,
-                    textColor: globals.white,
-                    child: Text('dfds'),
-                    onPressed: () {},
-                  ),
-                ),
-                ButtonTheme(
-                  shape: StadiumBorder(),
-                  minWidth: 120,
-                  padding: EdgeInsets.all(10),
-                  child: MaterialButton(
-                    color: globals.primaryColor,
-                    textColor: globals.white,
-                    child: Text('dfds'),
-                    onPressed: () {},
-                  ),
-                )
-              ],
-            ),
+            topTextRow,
             Container(
-              child: RaisedButton(
-                child: Text(
-                  'Confirm',
-                  style: Theme.of(context).textTheme.button,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/createWallet');
-                },
+              margin: EdgeInsets.symmetric(
+                vertical: 40,
               ),
-            )
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+              child: _buttonGrid(),
+            ),
+            finishWalletBackupButton
           ],
         ),
       ),
     );
   }
+
+  Widget _buttonGrid() => GridView.extent(
+      maxCrossAxisExtent: 125,
+      padding: const EdgeInsets.all(2),
+      mainAxisSpacing: 15,
+      crossAxisSpacing: 10,
+      shrinkWrap: true,
+      childAspectRatio: 2,
+      children: _buildButtonGrid(12));
+
+  List<Container> _buildButtonGrid(int count) => List.generate(count, (i) {
+        i = i + 1;
+        return Container(
+            child: TextField(
+          maxLines: 2,
+          autocorrect: false,
+          decoration: InputDecoration(
+            fillColor: globals.primaryColor,
+            filled: true,
+            hintText: '$i',
+            hintStyle: TextStyle(color: globals.white),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: globals.white, width: 2),
+                borderRadius: BorderRadius.circular(30.0)),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+          ),
+        ));
+      });
 }
