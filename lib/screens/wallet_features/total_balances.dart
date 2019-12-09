@@ -1,21 +1,21 @@
 import 'package:exchangilymobileapp/services/models.dart';
-import 'package:exchangilymobileapp/services/db.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../shared/globals.dart' as globals;
-import 'wallet/gas.dart';
+import '../../shared/globals.dart' as globals;
+import './add_gas.dart';
 
-class BalanceScreen extends StatefulWidget {
-  const BalanceScreen({Key key}) : super(key: key);
+class TotalBalancesScreen extends StatefulWidget {
+  const TotalBalancesScreen({Key key}) : super(key: key);
 
   @override
-  _BalanceScreenState createState() => _BalanceScreenState();
+  _TotalBalancesScreenState createState() => _TotalBalancesScreenState();
 }
 
-class _BalanceScreenState extends State<BalanceScreen> {
-  DatabaseService walletService = DatabaseService();
+class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
+  WalletService walletService = WalletService();
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
   List<WalletInfo> walletInfo;
@@ -27,97 +27,72 @@ class _BalanceScreenState extends State<BalanceScreen> {
 
   Widget build(BuildContext context) {
     walletInfo = Provider.of<List<WalletInfo>>(context);
-    return Scaffold(
-      key: key,
-      body: ListView(
-        children: <Widget>[
-          new Container(
-            width: double.infinity,
-            height: 270,
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image:
-                        AssetImage('assets/images/wallet-page/background.png'),
-                    fit: BoxFit.cover)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                new Container(
-                  padding: EdgeInsets.only(top: 45, bottom: 10),
-                  child: Image.asset(
-                    'assets/images/start-page/logo.png',
-                    width: 250,
-                    //height: 120,
-                    color: globals.white,
+    if (walletInfo == null) {
+      Navigator.of(context).pushNamed('walletSetup');
+    } else {
+      return Scaffold(
+        key: key,
+        body: Column(
+          children: <Widget>[
+            new Container(
+              width: double.infinity,
+              height: 270,
+              decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                          'assets/images/wallet-page/background.png'),
+                      fit: BoxFit.cover)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  new Container(
+                    padding: EdgeInsets.only(top: 45, bottom: 10),
+                    child: Image.asset(
+                      'assets/images/start-page/logo.png',
+                      width: 250,
+                      //height: 120,
+                      color: globals.white,
+                    ),
                   ),
-                ),
-                new Container(
-                    padding: EdgeInsets.all(25),
-                    //margin: EdgeInsets.only(top: 15),
-                    child: Stack(
-                      //   fit: StackFit.passthrough,
-                      //   overflow: Overflow.visible,
-                      //  alignment: Alignment.bottomCenter,
-                      children: <Widget>[
-                        Positioned(child: _totalBalanceCard())
-                      ],
-                    )),
-              ],
+                  new Container(
+                      padding: EdgeInsets.all(25),
+                      //margin: EdgeInsets.only(top: 15),
+                      child: Stack(
+                        //   fit: StackFit.passthrough,
+                        //   overflow: Overflow.visible,
+                        //  alignment: Alignment.bottomCenter,
+                        children: <Widget>[
+                          Positioned(child: _totalBalanceCard())
+                        ],
+                      )),
+                ],
+              ),
             ),
-          ),
-          new Container(
-            margin: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                _hideSmallAmount(),
-                new ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: walletInfo.length,
-                  itemBuilder: (BuildContext context, int index) =>
-                      buildListBody(context, index, walletInfo),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-      bottomNavigationBar: AppBottomNav(),
-    );
+            new Container(
+              margin: EdgeInsets.all(10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  _hideSmallAmount(),
+                  new ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: walletInfo.length,
+                    itemBuilder: (BuildContext context, int index) =>
+                        buildListBody(context, index, walletInfo),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+        bottomNavigationBar: AppBottomNav(),
+      );
+    }
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                                                                  All Wallet Addresses in UI
-
-  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-  addressField(coinName, walletAddress) {
-    return TextField(
-      onTap: () {
-        // copyAddress(walletAddress);
-      },
-      readOnly: true,
-      textAlign: TextAlign.center,
-      decoration: InputDecoration(
-          filled: true, // Filled needs to be true before fillColor
-          // Border gives nice padding as well
-          border: OutlineInputBorder(
-              borderSide: BorderSide(color: globals.white, width: 2)),
-          // Hint Styles
-          hintText: walletAddress,
-          hintStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: globals.primaryColor, // Wallet address color
-          ),
-          helperText: '$coinName address',
-          helperStyle: TextStyle(color: globals.white)),
-    );
-  }
-
-  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                                                                                  Card List View
+                                          Card List View
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
   Widget buildListBody(
@@ -163,7 +138,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
                       style: Theme.of(context).textTheme.headline),
                   Text('123456 USD',
                       style: Theme.of(context).textTheme.headline),
-                  Gas()
+                  //AddGas()
                 ],
               ),
               Icon(Icons.refresh)
@@ -278,28 +253,25 @@ class _BalanceScreenState extends State<BalanceScreen> {
                     Row(
                       children: <Widget>[
                         IconButton(
-                          icon: Icon(Icons.arrow_downward),
-                          tooltip: 'Deposit',
-                          onPressed: () {
-                            print('walletInfo[index]=');
-                            print(walletInfo[index]);
-                            Navigator.pushNamed(context, '/deposit', arguments: walletInfo[index]);
-                          }
-                        ),
+                            icon: Icon(Icons.arrow_downward),
+                            tooltip: 'Deposit',
+                            onPressed: () {
+                              print('walletInfo[index]=');
+                              print(walletInfo[index]);
+                              Navigator.pushNamed(context, '/deposit',
+                                  arguments: walletInfo[index]);
+                            }),
                         IconButton(
                             icon: Icon(Icons.arrow_upward),
                             tooltip: 'Withdraw',
                             onPressed: () {
-                              Navigator.pushNamed(context, '/withdraw', arguments: walletInfo[index]);
-                            }
-                        ),
+                              Navigator.pushNamed(context, '/withdraw',
+                                  arguments: walletInfo[index]);
+                            }),
                         IconButton(
                             icon: Icon(Icons.vertical_align_bottom),
                             tooltip: 'Redeposit',
-                            onPressed: () {
-
-                            }
-                        ),
+                            onPressed: () {}),
                       ],
                     )
                   ],

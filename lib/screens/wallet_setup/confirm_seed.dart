@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../shared/globals.dart' as globals;
+import '../../shared/globals.dart' as globals;
 
 class ConfirmSeedtWalletScreen extends StatelessWidget {
   const ConfirmSeedtWalletScreen({Key key}) : super(key: key);
@@ -20,17 +20,19 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget iconText = Row(
+    // Top Text Row Widget
+    Widget topTextRow = Row(
       children: <Widget>[
         Expanded(
             child: Text(
-          'Please type in your 12 seed phrase in the, correct sequence to restore and import your wallet',
+          'Please type in your 12 word seed phrase in the correct sequence to confirm',
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.headline,
         )),
       ],
     );
-    Widget confirmButton = Container(
+// Finish Wallet Backup Button Widget
+    Widget finishWalletBackupButton = Container(
       padding: EdgeInsets.all(15),
       child: RaisedButton(
         child: Text(
@@ -52,7 +54,7 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: ListView(
           children: <Widget>[
-            iconText,
+            topTextRow,
             Container(
               margin: EdgeInsets.symmetric(
                 vertical: 40,
@@ -60,7 +62,7 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
               child: _buttonGrid(),
             ),
-            confirmButton
+            finishWalletBackupButton
           ],
         ),
       ),
@@ -80,6 +82,7 @@ class ConfirmSeedtWalletScreen extends StatelessWidget {
         i = i + 1;
         return Container(
             child: TextField(
+          maxLines: 2,
           autocorrect: false,
           decoration: InputDecoration(
             fillColor: globals.primaryColor,
