@@ -17,7 +17,8 @@ import 'package:exchangilymobileapp/screens/trade/main.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/add_gas.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/deposit.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/withdraw.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/add_gas.dart';
+import 'package:exchangilymobileapp/screens/wallet_features/smart_contract.dart';
+
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -74,6 +75,9 @@ class RouteGenerator {
 
       case '/addGas':
         return MaterialPageRoute(builder: (_) => AddGas());
+
+      case '/smartContract':
+        return MaterialPageRoute(builder: (_) => SmartContract());
 
       case '/deposit':
         return MaterialPageRoute(builder: (_) => Deposit(walletInfo: args));

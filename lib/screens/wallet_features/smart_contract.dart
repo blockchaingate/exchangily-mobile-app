@@ -2,8 +2,50 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 
-class AddGas extends StatelessWidget {
-  const AddGas({Key key}) : super(key: key);
+class SmartContract extends  StatefulWidget {
+  const SmartContract({Key key}) : super(key: key);
+
+  @override
+  _SmartContractState createState() => _SmartContractState();
+}
+
+class _SmartContractState extends State<SmartContract> {
+
+  List _functions =
+  ["Cluj-Napoca", "Bucuresti", "Timisoara", "Brasov", "Constanta"];
+
+  String _currentFunction;
+  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  @override
+  void initState() {
+    _dropDownMenuItems = getDropDownMenuItems();
+    _currentFunction = _dropDownMenuItems[0].value;
+    super.initState();
+  }
+
+  // here we are creating the list needed for the DropDownButton
+  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String function in _functions) {
+      // here we are creating the drop down menu items, you can customize the item right here
+      // but I'll just use a simple text for this
+      items.add(new DropdownMenuItem(
+          value: function,
+          child: new Text(
+              function,
+              style: TextStyle(color: Colors.white70),
+          )
+      ));
+    }
+    return items;
+  }
+
+  void changedDropDownItem(String selectedFunction) {
+    print("Selected function $selectedFunction, we are going to refresh the UI");
+    setState(() {
+      _currentFunction = selectedFunction;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +66,7 @@ class AddGas extends StatelessWidget {
             },
           ),
           middle: Text(
-            "Add Gas",
+            "Smart Contract",
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0XFF1f2233),
@@ -35,7 +77,7 @@ class AddGas extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text("Amount:",
+                Text("Smart contract address:",
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 TextField(
@@ -43,11 +85,21 @@ class AddGas extends StatelessWidget {
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(
                             color: Color(0XFF871fff), width: 1.0)),
-                    hintText: 'Enter the amount',
+                    hintText: 'Enter the address',
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
                   controller: myController,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
+                ),
+                SizedBox(height: 20),
+                Text("Function:",
+                    style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                SizedBox(height: 10),
+                new DropdownButton(
+                  isExpanded: true,
+                  value: _currentFunction,
+                  items: _dropDownMenuItems,
+                  onChanged: changedDropDownItem,
                 ),
                 SizedBox(height: 20),
                 MaterialButton(

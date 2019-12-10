@@ -1,11 +1,19 @@
+import 'package:exchangilymobileapp/utils/fab_util.dart';
+
 import '../packages/bip32/bip32_base.dart' as bip32;
 import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:hex/hex.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import '../utils/string_util.dart';
+import '../environments/environment.dart';
+import './btc_util.dart';
+import './eth_util.dart';
+import "package:pointycastle/pointycastle.dart";
 
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
+  print('originalMessage=');
+  print(originalMessage);
   var r = '';
   var s = '';
   var v = '';
@@ -36,11 +44,18 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     signedMess = btcWallet.sign(originalMessage);
   }
 
+  print("signedMess=");
+  print(signedMess);
   if (signedMess != null) {
     String ss = HEX.encode(signedMess);
+    print("ss=");
+    print(ss);
     r = ss.substring(0,64);
     s = ss.substring(64,128);
     v = ss.substring(128);
+    if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
+      v = '20';
+    }
   }
 
   return {
@@ -48,4 +63,76 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     's': s,
     'v': v
   };
+}
+
+getOfficalAddress(String coinName) {
+  var address = environment['addresses']['exchangilyOfficial'];
+  print('getOfficalAddress=');
+  print(address);
+  /*
+      .where((addr) => addr['name'] == coinName)
+      .toList();
+
+
+  if (address != null) {
+    return address[0]['address'];
+  }
+   */
+  return null;
+}
+
+/*
+usage:
+getAddressForCoin(root, 'BTC');
+getAddressForCoin(root, 'ETH');
+getAddressForCoin(root, 'FAB');
+getAddressForCoin(root, 'USDT', tokenType: 'ETH');
+getAddressForCoin(root, 'EXG', tokenType: 'FAB');
+ */
+getAddressForCoin(root, coinName, {tokenType='', index = 0}) {
+  if(coinName == 'BTC') {
+    var node = getBtcNode(root, index: index);
+    return getBtcAddressForNode(node);
+  } else
+  if ((coinName == 'ETH') || (tokenType == 'ETH')) {
+    var node = getEthNode(root, index: index);
+    return getEthAddressForNode(node);
+  } else
+  if (coinName == 'FAB') {
+    var node = getFabNode(root, index: index);
+    return getBtcAddressForNode(node);
+  } else
+  if (tokenType == 'FAB') {
+    var node = getFabNode(root, index: index);
+    var fabPublicKey = node.publicKey;
+    Digest sha256 = new Digest("SHA-256");
+    var pass1 = sha256.process(fabPublicKey);
+    Digest ripemd160 = new Digest("RIPEMD-160");
+    var pass2 = ripemd160.process(pass1);
+    var fabTokenAddr = '0x' + HEX.encode(pass2);
+    return fabTokenAddr;
+  }
+  return '';
+}
+
+
+getBalanceForCoin(root, coinName, {tokenType='', index = 0}) {
+  var address = getAddressForCoin(root, coinName, tokenType: tokenType, index: index);
+  if (coinName == 'BTC') {
+    return getBtcBalanceByAddress(address);
+  } else
+  if (coinName == 'ETH') {
+    return getEthBalanceByAddress(address);
+  } else
+  if (coinName == 'FAB') {
+    return getFabBalanceByAddress(address);
+  } else
+  if (tokenType == 'ETH') {
+    return getEthTokenBalanceByAddress(address, tokenType);
+  } else
+  if (tokenType == 'FAB') {
+    return getFabTokenBalanceByAddress(address, tokenType);
+  }
+
+  return {'balance': -1, 'lockbalance': -1};
 }

@@ -8,8 +8,8 @@ import 'dart:typed_data';
 
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink, String addressInKanban, signedMessage) {
   var abiHex = "379eb862";
-  print('signedMessage=');
-  print(signedMessage);
+  print('signedMessage.v=');
+  print(signedMessage["v"]);
   abiHex += trimHexPrefix(signedMessage["v"]);
   abiHex += fixLength(coinType.toString(), 62);
   abiHex += trimHexPrefix(txHash);
