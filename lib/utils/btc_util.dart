@@ -16,10 +16,10 @@ Future getBtcBalanceByAddress(String address) async{
   var url =  btcBaseUrl + 'getbalance/' + address;
   var response = await http.get(url);
   var btcBalance = double.parse(response.body) / 1e8;
-  return btcBalance;
+  return {'balance':btcBalance,'lockbalance': 0};
 }
 
-getBtcNode(root, {int index = 0}) {
+getBtcNode(root, {index = 0}) {
   var node = root.derivePath("m/44'/" + environment["CoinType"]["BTC"].toString() + "'/0'/0/" + index.toString());
   return node;
 }

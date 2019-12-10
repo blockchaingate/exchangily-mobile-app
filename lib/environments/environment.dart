@@ -2,7 +2,7 @@
 
 const bool isProduction = false;
 
-var devConfig = {
+const Map devConfig = const {
 
   "chains": {
     "ETH": {
@@ -61,7 +61,7 @@ var devConfig = {
   }
 };
 
-var productionConfig = {
+const Map productionConfig = const {
   "chains": {
     "ETH": {
       "chain": 'mainnet',
