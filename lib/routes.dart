@@ -35,7 +35,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => BackupSeedWalletScreen());
 
       case '/confirmSeed':
-        return MaterialPageRoute(builder: (_) => ConfirmSeedtWalletScreen());
+        return MaterialPageRoute(
+            builder: (_) => ConfirmSeedtWalletScreen(mnemonic: args));
 
       case '/createWallet':
         return MaterialPageRoute(builder: (_) => CreateWalletScreen());

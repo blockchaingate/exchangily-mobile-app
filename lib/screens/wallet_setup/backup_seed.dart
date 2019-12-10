@@ -1,26 +1,19 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
+import 'package:bip39/bip39.dart' as bip39;
 
 class BackupSeedWalletScreen extends StatelessWidget {
   const BackupSeedWalletScreen({Key key}) : super(key: key);
-  static final randomMnemonic = [
-    'culture',
-    'sound',
-    'obey',
-    'clean',
-    'pretty',
-    'medal',
-    'churn',
-    'behind',
-    'chief',
-    'cactus',
-    'alley',
-    'ready'
-  ];
+  static final randomMnemonic = bip39.generateMnemonic();
+  static List<String> mnemonic = [];
 
   @override
   Widget build(BuildContext context) {
+    mnemonic = randomMnemonic
+        .split(" ")
+        .toList(); // convert string to list to iterate and display single word as a textbox
+    print(mnemonic);
     Widget iconText = Row(
       children: <Widget>[
         Padding(
@@ -32,7 +25,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
             )),
         Expanded(
             child: Text(
-          'Below are the 12 mnemonics to help you recover your wallet.Please make sure the phone or password is safely stored and write these 12 mnemonics down on the paper as this is the only way to recover your phone wallet',
+          'Below are the 12 mnemonics to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet',
           style: Theme.of(context).textTheme.headline,
         )),
       ],
@@ -46,7 +39,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.button,
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed('/confirmSeed');
+          Navigator.of(context).pushNamed('/confirmSeed', arguments: mnemonic);
         },
       ),
     );
@@ -86,7 +79,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
 
   List<Container> _buildButtonGrid(int count) => List.generate(count, (i) {
         var index = i + 1;
-        var singleWord = randomMnemonic[i];
+        var singleWord = mnemonic[i];
         return Container(
             child: TextField(
           textAlign: TextAlign.center,
@@ -98,7 +91,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
           decoration: InputDecoration(
             fillColor: globals.primaryColor,
             filled: true,
-            hintText: '$index  ' '$singleWord',
+            hintText: '$index)  ' '$singleWord',
             hintStyle: TextStyle(color: globals.white),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: globals.white, width: 2),

@@ -258,20 +258,13 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                           Icons.cancel,
                           globals.red);
                     } else {
-                      walletService
-                          .sendTransaction(
-                              widget.walletInfo.tickerName.toUpperCase(),
-                              [0],
-                              address,
-                              amount,
-                              options,
-                              true)
-                          .then((txid) => (_) {
-                                getBtcTransactionStatus(txid);
-                                print(txid);
-                              })
-                          .catchError((err) => print(err));
-                      // getBtcTransactionStatus(txid)
+                      walletService.sendTransaction(
+                          widget.walletInfo.tickerName.toUpperCase(),
+                          [0],
+                          address,
+                          amount,
+                          options,
+                          true);
                     }
                   },
                 ),
