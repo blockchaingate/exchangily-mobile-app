@@ -51,7 +51,7 @@ Future getEthBalanceByAddress(String address) async{
 
 Future getEthTokenBalanceByAddress(String address, String coinName) async{
 
-  var smartContractAddress = environment["addresses"]["smartContract"]["coinName"];
+  var smartContractAddress = environment["addresses"]["smartContract"][coinName];
   var url =  ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
   var response = await http.get(url);
   var balance = jsonDecode(response.body);

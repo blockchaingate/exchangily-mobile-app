@@ -41,7 +41,7 @@ Future getFabTokenBalanceForABI(String balanceInfoABI, String smartContractAddre
 }
 Future getFabTokenBalanceByAddress(String address, String coinName) async{
 
-  var smartContractAddress = environment["addresses"]["smartContract"]["coinName"];
+  var smartContractAddress = environment["addresses"]["smartContract"][coinName];
 
   String balanceInfoABI = '70a08231';
   var tokenBalance = getFabTokenBalanceForABI(balanceInfoABI, smartContractAddress, address);
