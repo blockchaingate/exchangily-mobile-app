@@ -3,7 +3,7 @@ import 'package:exchangilymobileapp/screens/wallet_features/total_balances.dart'
 import 'package:exchangilymobileapp/screens/wallet_setup/confirm_seed.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/create_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/import_wallet.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/wallet_language.dart';
+import 'package:exchangilymobileapp/screens/wallet_setup/choose_wallet_language.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/move_and_trade.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/receive.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/send.dart';
@@ -18,7 +18,6 @@ import 'package:exchangilymobileapp/screens/wallet_features/add_gas.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/deposit.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/withdraw.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/smart_contract.dart';
-
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {

@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/screens/wallet_setup/wallet_language.dart';
+import 'package:exchangilymobileapp/screens/wallet_setup/choose_wallet_language.dart';
 import 'package:exchangilymobileapp/services/models.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
