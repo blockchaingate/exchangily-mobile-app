@@ -1,9 +1,14 @@
+import 'package:encrypt/encrypt.dart' as prefix0;
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../shared/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pointycastle/api.dart';
+import 'package:provider/provider.dart';
 
 class CreateWalletScreen extends StatefulWidget {
   final List<String> mnemonic;
@@ -16,6 +21,8 @@ class CreateWalletScreen extends StatefulWidget {
 class _CreateWalletScreenState extends State<CreateWalletScreen> {
   TextEditingController _passTextController = TextEditingController();
   TextEditingController _confirmPassTextController = TextEditingController();
+  WalletService walletService = WalletService();
+  final storage = new FlutterSecureStorage(); // Create Storage
 
   @override
   void dispose() {
@@ -39,7 +46,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text(
-              'Enter password which contains at least 1 uppercase, 1 lowercase, 1 number and 1 special character',
+              'Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character',
               style: Theme.of(context).textTheme.headline,
               textAlign: TextAlign.left,
             ),
@@ -68,11 +75,8 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
   Widget _buildPasswordTextField() {
     return TextField(
       controller: _passTextController,
-      // inputFormatters: <TextInputFormatter>[
-      //   WhitelistingTextInputFormatter(RegExp(
-      //       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$'))
-      // ],
-      // obscureText: true,
+      obscureText: true,
+      maxLength: 16,
       style: Theme.of(context).textTheme.headline,
       decoration: InputDecoration(
         labelText: 'Enter Password',
@@ -91,7 +95,8 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
   Widget _buildConfirmPasswordTextField() {
     return TextField(
       controller: _confirmPassTextController,
-      // obscureText: true,
+      obscureText: true,
+      maxLength: 16,
       style: TextStyle(fontSize: 15, color: Colors.white),
       decoration: InputDecoration(
           labelText: 'Confirm password',
@@ -117,6 +122,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
         textColor: Colors.white,
         onPressed: () {
           validatePassword();
+          //secureSeed();
         },
         child: Text(
           'Create New Wallet',
@@ -128,21 +134,9 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                    Check Password
+                                    Validate Pass And Secure Seed
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-  checkPassword() {
-    if (_passTextController.text != _confirmPassTextController.text) {
-      showInfoFlushbar(
-          'Password Mismatch',
-          'Please retype the same password in both fields',
-          Icons.cancel,
-          Colors.red);
-    } else {
-      //Navigator.pushNamed(context, '/balance');
-    }
-  }
 
   validatePassword() {
     Pattern pattern =
@@ -150,7 +144,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
     RegExp regex = new RegExp(pattern);
     print(_passTextController.text);
     if (_passTextController.text.isEmpty) {
-      showInfoFlushbar('Empty Password', 'Please fill the password',
+      showInfoFlushbar('Empty Password', 'Please fill both password fields',
           Icons.cancel, Colors.red);
     } else {
       if (!regex.hasMatch(_passTextController.text))
@@ -166,9 +160,37 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
             Icons.cancel,
             Colors.red);
       } else {
-        Navigator.pushNamed(context, '/balance');
+        secureSeed();
+        //Navigator.pushNamed(context, '/balance');
+
       }
     }
+  }
+
+  secureSeed() {
+    String randomMnemonic = Provider.of<String>(context);
+    String userTypedKey = _passTextController.text;
+
+    final key = prefix0.Key.fromLength(32);
+    final iv = prefix0.IV.fromUtf8(userTypedKey);
+    final encrypter = prefix0.Encrypter(prefix0.AES(key));
+
+    final encrypted = encrypter.encrypt(randomMnemonic, iv: iv);
+    final decrypted = encrypter.decrypt(encrypted, iv: iv);
+    print(decrypted);
+    print(encrypted.base64);
+    print(decrypted);
+    walletService.saveEncryptedData(encrypted.base64);
+    walletService.readEncryptedData();
+    // walletService
+    //     .writeStorage(userTypedKey, encrypted.base64)
+    //     .whenComplete(readKey());
+  }
+
+  readKey() async {
+    await walletService
+        .readStorage(_passTextController.text)
+        .then((onValue) => {print(onValue)});
   }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------

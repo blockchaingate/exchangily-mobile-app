@@ -2,6 +2,7 @@ import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:bip39/bip39.dart' as bip39;
@@ -29,8 +30,9 @@ import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
 import '../utils/coin_util.dart';
 import '../environments/environment.dart';
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'models.dart';
+import 'dart:io';
 
 class WalletService {
   static final randomMnemonic =
@@ -43,6 +45,7 @@ class WalletService {
   final fabPublicKey = fabCoinChild.publicKey;
   final privateKey = HEX.encode(ethCoinChild.privateKey);
   final client = new http.Client();
+  final storage = new FlutterSecureStorage(); // Create Storage
 
   String exgAddress = '';
   String fabAddress = '';
@@ -67,6 +70,46 @@ class WalletService {
   //   //  CoinType('btc', bitCoinChild, btcApiUrl),
   //   // CoinType('fab', fabCoinChild, fabApiUrl)
   // ];
+
+  // Get Random Mnemoni
+  String getRandomMnemonic() {
+    return bip39.generateMnemonic();
+  }
+
+  // Save Encrypted Data to Storage
+  saveEncryptedData(String data) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/my_file.byte');
+      final text = data;
+      await file.writeAsString(text);
+      print('saved');
+    } catch (e) {
+      print("Couldn't write file!!");
+    }
+  }
+
+  // Read Encrypted Data from Storage
+  readEncryptedData() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/my_file.byte');
+      String text = await file.readAsString();
+      print(text);
+    } catch (e) {
+      print("Couldn't read file");
+    }
+  }
+
+  // Write Storage
+  Future writeStorage(String key, String value) async {
+    storage.write(key: key, value: randomMnemonic).asStream();
+  }
+
+  // Read Storage
+  Future readStorage(String key) async {
+    storage.read(key: key).asStream();
+  }
 
   // Get All Balances
 
@@ -100,8 +143,6 @@ class WalletService {
   // Get ETH balance
 
   getEthBalance() async {
-
-    
     ethAddress = getEthAddressForNode(ethCoinChild);
 
     print('ethAddress=' + ethAddress);
@@ -151,11 +192,7 @@ class WalletService {
     return 0;
   }
 
-
-
 // Get Official Address
-
-
 
 // Get Coin Type Id By Name
 
@@ -615,7 +652,6 @@ class WalletService {
       } else {
         txHash = '0x' + tx.getId();
       }
-
     }
 
     // ETH Transaction

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../shared/globals.dart' as globals;
 
-class WalletLanguageScreen extends StatelessWidget {
-  const WalletLanguageScreen({Key key}) : super(key: key);
+class ChooseWalletLanguageScreen extends StatelessWidget {
+  const ChooseWalletLanguageScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

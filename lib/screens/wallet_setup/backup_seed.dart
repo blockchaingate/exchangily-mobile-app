@@ -1,15 +1,17 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:bip39/bip39.dart' as bip39;
 
 class BackupSeedWalletScreen extends StatelessWidget {
   const BackupSeedWalletScreen({Key key}) : super(key: key);
-  static final randomMnemonic = bip39.generateMnemonic();
   static List<String> mnemonic = [];
 
   @override
   Widget build(BuildContext context) {
+    final randomMnemonic = Provider.of<String>(context);
     mnemonic = randomMnemonic
         .split(" ")
         .toList(); // convert string to list to iterate and display single word as a textbox

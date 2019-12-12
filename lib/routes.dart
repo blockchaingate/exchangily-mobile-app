@@ -25,7 +25,7 @@ class RouteGenerator {
     print(args);
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => WalletLanguageScreen());
+        return MaterialPageRoute(builder: (_) => ChooseWalletLanguageScreen());
       case '/walletSetup':
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
       case '/importWallet':

@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../shared/globals.dart' as globals;
 
 class ConfirmSeedtWalletScreen extends StatefulWidget {
@@ -151,6 +152,9 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
           _mnemonicTextController.add(TextEditingController());
           return Container(
             child: TextField(
+              inputFormatters: <TextInputFormatter>[
+                WhitelistingTextInputFormatter(RegExp(r'([a-z]{0,})$'))
+              ],
               style: TextStyle(color: globals.white),
               controller: _mnemonicTextController[i],
               maxLines: 2,
