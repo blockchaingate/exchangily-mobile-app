@@ -86,13 +86,13 @@ getAddressForCoin(root, 'FAB');
 getAddressForCoin(root, 'USDT', tokenType: 'ETH');
 getAddressForCoin(root, 'EXG', tokenType: 'FAB');
  */
-getAddressForCoin(root, coinName, {tokenType = '', index = 0}) {
+ Future getAddressForCoin(root, coinName, {tokenType = '', index = 0}) async{
   if (coinName == 'BTC') {
     var node = getBtcNode(root, index: index);
     return getBtcAddressForNode(node);
   } else if ((coinName == 'ETH') || (tokenType == 'ETH')) {
     var node = getEthNode(root, index: index);
-    return getEthAddressForNode(node);
+    return await getEthAddressForNode(node);
   } else if (coinName == 'FAB') {
     var node = getFabNode(root, index: index);
     return getBtcAddressForNode(node);
@@ -109,19 +109,19 @@ getAddressForCoin(root, coinName, {tokenType = '', index = 0}) {
   return '';
 }
 
-getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) {
+Future getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) async{
   var address =
-      getAddressForCoin(root, coinName, tokenType: tokenType, index: index);
+      await getAddressForCoin(root, coinName, tokenType: tokenType, index: index);
   if (coinName == 'BTC') {
-    return getBtcBalanceByAddress(address);
+    return await getBtcBalanceByAddress(address);
   } else if (coinName == 'ETH') {
-    return getEthBalanceByAddress(address);
+    return await getEthBalanceByAddress(address);
   } else if (coinName == 'FAB') {
-    return getFabBalanceByAddress(address);
+    return  await getFabBalanceByAddress(address);
   } else if (tokenType == 'ETH') {
-    return getEthTokenBalanceByAddress(address, tokenType);
+    return await getEthTokenBalanceByAddress(address, tokenType);
   } else if (tokenType == 'FAB') {
-    return getFabTokenBalanceByAddress(address, tokenType);
+    return await getFabTokenBalanceByAddress(address, tokenType);
   }
 
   return {'balance': -1, 'lockbalance': -1};

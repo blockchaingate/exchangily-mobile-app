@@ -76,19 +76,27 @@ class WalletService {
   // Get Wallet Addresses
   getWalletAddrreses(root) async {
     List listOfCoins = ['BTC', 'FAB'];
-    print(listOfCoins.length);
-    String address;
+    
     for (var i = 0; i < listOfCoins.length; i++) {
-      listOfCoins.forEach((coinName) => _walletInfo
-          .add(WalletInfo(address: getAddressForCoin(root, coinName))));
-      address = _walletInfo[i].address;
-      print(address);
-      // _walletInfo.add(WalletInfo(
-      //     availableBalance: getBalanceForCoin(root, listOfCoins[i])));
-      // print(_walletInfo[i].availableBalance);
+      var name = listOfCoins[i];
+      var address = await getAddressForCoin(root, name);
+
+       _walletInfo
+          .add(WalletInfo(address: address));
+    
+      print('Coin Name $name + Coin Address $address');
+      var bal = await getBalanceForCoin(root, name);
+      _walletInfo.add(WalletInfo(
+          availableBalance: bal["balance"]));
+      print(_walletInfo[i].availableBalance);
     }
-    print(getBalanceForCoin(root, 'BTC'));
-    print(getBalanceForCoin(root, 'FAB'));
+    // print('before bal');
+    // var bal = await getBalanceForCoin(root, 'BTC');
+    // var fabBal = await getBalanceForCoin(root, 'FAB');
+    // print(bal);
+    // print(fabBal);
+    // print('after bal');
+    //print(getBalanceForCoin(root, 'FAB'));
     //print(getBalanceForCoin(root, 'USDT'));
   }
 
