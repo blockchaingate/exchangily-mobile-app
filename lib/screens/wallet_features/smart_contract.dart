@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../shared/globals.dart' as globals;
+import 'package:exchangilymobileapp/shared/globals.dart' as globals;
+import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:exchangilymobileapp/environments/environment.dart';
 
 class SmartContract extends  StatefulWidget {
   const SmartContract({Key key}) : super(key: key);
@@ -11,28 +13,31 @@ class SmartContract extends  StatefulWidget {
 
 class _SmartContractState extends State<SmartContract> {
 
-  List _functions =
-  ["Cluj-Napoca", "Bucuresti", "Timisoara", "Brasov", "Constanta"];
 
   String _currentFunction;
+  String _smartContractName;
+  TextEditingController myController = TextEditingController();
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   @override
   void initState() {
-    _dropDownMenuItems = getDropDownMenuItems();
-    _currentFunction = _dropDownMenuItems[0].value;
+    myController.value = TextEditingValue(text: environment['addresses']['smartContract']['FABLOCK']);
+    onSmartContractAddressChanged(myController.value.text);
+
     super.initState();
   }
 
   // here we are creating the list needed for the DropDownButton
-  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+  Future getDropDownMenuItems(abis) async{
+
+    // var smartContractABI = await getSmartContractABI('');
     List<DropdownMenuItem<String>> items = new List();
-    for (String function in _functions) {
+    for (var abi in abis) {
       // here we are creating the drop down menu items, you can customize the item right here
       // but I'll just use a simple text for this
       items.add(new DropdownMenuItem(
-          value: function,
+          value: abi['name'],
           child: new Text(
-              function,
+            abi['name'],
               style: TextStyle(color: Colors.white70),
           )
       ));
@@ -42,14 +47,35 @@ class _SmartContractState extends State<SmartContract> {
 
   void changedDropDownItem(String selectedFunction) {
     print("Selected function $selectedFunction, we are going to refresh the UI");
+
     setState(() {
-      _currentFunction = selectedFunction;
+     //  _currentFunction = selectedFunction;
+    });
+  }
+
+  onSmartContractAddressChanged(String address) async{
+    print('address is:$address');
+    var smartContractABI = await getSmartContractABI(address);
+    print(smartContractABI['Name']);
+
+    var funcs = await getDropDownMenuItems(smartContractABI['abi']);
+    var _currentFunc;
+    if ((funcs != null) && (funcs.length > 0)) {
+      _currentFunc = funcs[0].value;
+    }
+
+    setState(() => {
+      this._smartContractName = smartContractABI['Name'],
+      this._dropDownMenuItems = funcs,
+      this._currentFunction = _currentFunc
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final myController = TextEditingController();
+
+
+    //onSmartContractAddressChanged(myController.value.text);
     return Scaffold(
         appBar: CupertinoNavigationBar(
           padding: EdgeInsetsDirectional.only(start: 0),
@@ -74,8 +100,7 @@ class _SmartContractState extends State<SmartContract> {
         backgroundColor: Color(0xFF1F2233),
         body: Container(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+            child: ListView(
               children: <Widget>[
                 Text("Smart contract address:",
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
@@ -90,7 +115,18 @@ class _SmartContractState extends State<SmartContract> {
                   ),
                   controller: myController,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
+                  onChanged: (text) {
+                    print('onTap');
+                    onSmartContractAddressChanged(text);
+                  },
                 ),
+                SizedBox(height: 20),
+
+                Text("Smart contract name:",
+                    style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                SizedBox(height: 10),
+                Text("$_smartContractName",
+                    style: new TextStyle(color: Colors.white, fontSize: 18.0)),
                 SizedBox(height: 20),
                 Text("Function:",
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),

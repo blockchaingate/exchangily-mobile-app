@@ -39,6 +39,14 @@ Future getFabTokenBalanceForABI(String balanceInfoABI, String smartContractAddre
   var tokenBalance = unlockInt / 1e18;
   return tokenBalance;
 }
+
+Future getSmartContractABI(String smartContractAddress) async {
+  var url = fabBaseUrl  + 'getabiforcontract/' + smartContractAddress;
+  var response = await http.get(url);
+  Map<String, dynamic> resJson = jsonDecode(response.body);
+  return resJson;
+}
+
 Future getFabTokenBalanceByAddress(String address, String coinName) async{
 
   var smartContractAddress = environment["addresses"]["smartContract"][coinName];
