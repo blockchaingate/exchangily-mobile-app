@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
-import '../../services/wallet_service.dart';
-import '../../services/models.dart';
+import '../../models/wallet.dart';
 
 class Deposit extends StatelessWidget {
   final WalletInfo walletInfo;

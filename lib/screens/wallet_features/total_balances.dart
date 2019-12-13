@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/services/models.dart';
+import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,6 +22,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   @override
   void initState() {
+    walletService.getAllWalletAddresses();
     super.initState();
   }
 

@@ -1,7 +1,7 @@
 import 'package:exchangilymobileapp/shared/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
-import 'package:exchangilymobileapp/services/models.dart';
+import 'package:exchangilymobileapp/models/wallet.dart';
 
 class WalletFeaturesScreen extends StatelessWidget {
   final WalletInfo walletInfo;
@@ -139,22 +139,16 @@ class WalletFeaturesScreen extends StatelessWidget {
             ),
           ),
           Visibility(
-            visible: (walletInfo.tickerName == 'fab'),
-            child:
-              Container(
+              visible: (walletInfo.tickerName == 'fab'),
+              child: Container(
                 width: 190,
                 child: RaisedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/smartContract');
                   },
-                  child: Text(
-                      'Smart Contract',
-                      style: TextStyle(fontSize: 15)
-                  ),
+                  child: Text('Smart Contract', style: TextStyle(fontSize: 15)),
                 ),
-              )
-          )
-
+              ))
         ],
       ),
       bottomNavigationBar: AppBottomNav(),
