@@ -41,7 +41,7 @@ class RouteGenerator {
       case '/createWallet':
         return MaterialPageRoute(builder: (_) => CreateWalletScreen());
 
-      case '/balance':
+      case '/totalBalance':
         return MaterialPageRoute(builder: (_) => TotalBalancesScreen());
 
       case '/walletOverview':

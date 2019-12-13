@@ -18,39 +18,26 @@ import '../utils/string_util.dart' as stringUtils;
 import '../utils/kanban.util.dart';
 import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
+import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/wallet.dart';
 import 'dart:io';
+import 'package:bitcoin_flutter/src/models/networks.dart';
+import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
+import 'package:bitcoin_flutter/src/transaction_builder.dart';
+import 'package:bitcoin_flutter/src/transaction.dart' as btcTransaction;
+import 'package:bitcoin_flutter/src/ecpair.dart';
+import 'package:bitcoin_flutter/src/utils/script.dart' as script;
+import '../environments/environment.dart' as environment;
+import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
+import 'package:web_socket_channel/io.dart';
 
 class WalletService {
-  static final randomMnemonic =
-      'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-  static final seed = bip39.mnemonicToSeed(randomMnemonic);
-  static final root = bip32.BIP32.fromSeed(seed);
-  static final bitCoinChild = getBtcNode(root);
-  static final ethCoinChild = getEthNode(root);
-  static final fabCoinChild = getFabNode(root);
-  final fabPublicKey = fabCoinChild.publicKey;
-  final privateKey = HEX.encode(ethCoinChild.privateKey);
   final client = new http.Client();
-  final storage = new FlutterSecureStorage(); // Create Storage
 
-  String exgAddress = '';
-  String fabAddress = '';
-  String btcAddress = '';
-  String ethAddress = '';
-  String usdtAddress = '';
-
-  double exgBalance = 0;
-  double fabBalance = 0;
-  double btcBalance = 0;
-  double ethBalance = 0;
-  double usdtBalance = 0;
-
-  String ticker;
-  List<WalletInfo> _walletInfo;
-  static List<String> _listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
+  List<WalletInfo> _walletInfo = [];
+  List<String> _listOfCoins = ['BTC', 'FAB', 'ETH', 'USDT', 'EXG'];
 
   static String btcApiUrl = "https://btctest.fabcoinapi.com/";
   static String fabApiUrl = "https://fabtest.fabcoinapi.com/";
@@ -86,63 +73,62 @@ class WalletService {
     }
   }
 
-  // Write Storage (Not Using)
-  Future writeStorage(String key, String value) async {
-    storage.write(key: key, value: randomMnemonic).asStream();
-  }
-
-  // Read Storage (Not Using)
-  Future readStorage(String key) async {
-    storage.read(key: key).asStream();
+  // Get Wallet Addresses
+  getWalletAddrreses(root) async {
+    List listOfCoins = ['BTC', 'FAB'];
+    print(listOfCoins.length);
+    String address;
+    for (var i = 0; i < listOfCoins.length; i++) {
+      listOfCoins.forEach((coinName) => _walletInfo
+          .add(WalletInfo(address: getAddressForCoin(root, coinName))));
+      address = _walletInfo[i].address;
+      print(address);
+      // _walletInfo.add(WalletInfo(
+      //     availableBalance: getBalanceForCoin(root, listOfCoins[i])));
+      // print(_walletInfo[i].availableBalance);
+    }
+    print(getBalanceForCoin(root, 'BTC'));
+    print(getBalanceForCoin(root, 'FAB'));
+    //print(getBalanceForCoin(root, 'USDT'));
   }
 
   // Get All Balances
 
-  Future<WalletInfo> getAllWalletAddresses() async {
-    _listOfCoins.forEach((String coinName) => {
-          _walletInfo.add(
-              coinName, getAddressForCoin(root, coinName), 'bitcoin')
-        });
-  }
-
   Future<List<WalletInfo>> getAllBalances() async {
+    final seed = bip39.mnemonicToSeed(bip39.generateMnemonic());
+    final root = bip32.BIP32.fromSeed(seed);
     try {
-      //
-      // _childrens.map((f) => {getAddress(f, testnet)});
-
-      await getBtcBalance();
-      await getFabBalance();
-      //await getExgBalance();
-      // await getEthBalance();
+      getWalletAddrreses(root);
 
       return _walletInfo;
     } catch (e) {
       print(e);
+      return null;
     }
   }
 
   // Get Btc balance
 
   getBtcBalance() async {
-    btcAddress = getBtcAddressForNode(bitCoinChild);
-    btcBalance = await getBtcBalanceByAddress(btcAddress);
-    _walletInfo = [
-      WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor,
-          'bitcoin')
-    ];
+    // btcAddress = getBtcAddressForNode(bitCoinChild);
+    // btcBalance = await getBtcBalanceByAddress(btcAddress);
+    // _walletInfo = [
+    //   WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor,
+    //       'bitcoin')
+    // ];
   }
 
   // Get ETH balance
 
   getEthBalance() async {
-    ethAddress = getEthAddressForNode(ethCoinChild);
+    // ethAddress = getEthAddressForNode(ethCoinChild);
 
-    print('ethAddress=' + ethAddress);
+    // print('ethAddress=' + ethAddress);
     // ethAddress = getAddress(ethCoinChild, testnet);
-    var url = ethApiUrl + 'getbalance/' + ethAddress;
-    print(url);
-    var response = await client.get(url);
-    ethBalance = double.parse(response.body) / 1e8;
+    // var url = ethApiUrl + 'getbalance/' + ethAddress;
+    // print(url);
+    // var response = await client.get(url);
+    //ethBalance = double.parse(response.body) / 1e8;
     // _walletInfo = [
     //   WalletInfo('eth', ethAddress, ethBalance, 25415.214, globals.primaryColor,
     //       'ethereum')
@@ -152,11 +138,11 @@ class WalletService {
 // Get Fab Balance
 
   getFabBalance() async {
-    fabAddress = getBtcAddressForNode(fabCoinChild);
-    var url = fabApiUrl + 'getbalance/' + fabAddress;
-    print(url);
-    var response = await client.get(url);
-    fabBalance = double.parse(response.body) / 1e8;
+    // fabAddress = getBtcAddressForNode(fabCoinChild);
+    //  var url = fabApiUrl + 'getbalance/' + fabAddress;
+    // print(url);
+    //  var response = await client.get(url);
+    //  fabBalance = double.parse(response.body) / 1e8;
     // _walletInfo.add(WalletInfo('fab', fabAddress, fabBalance, 214212.112,
     //     globals.fabLogoColor, 'fast access blockchain'));
   }
@@ -165,16 +151,16 @@ class WalletService {
 
   getExgBalance() async {
     var exgSmartContractAddress = '0x867480ba8e577402fa44f43c33875ce74bdc5df6';
-    var body = {
-      'address': stringUtils.trimHexPrefix(exgSmartContractAddress),
-      'data': '70a08231' +
-          stringUtils.fixLength(stringUtils.trimHexPrefix(exgAddress), 64)
-    };
-    var response = await client.post('$fabApiUrl + callcontract', body: body);
-    var json = jsonDecode(response.body);
-    var unlockBalance = json['executionResult']['output'];
-    var unlockInt = int.parse("0x$unlockBalance");
-    exgBalance = unlockInt / 1e18;
+    //  var body = {
+    //    'address': stringUtils.trimHexPrefix(exgSmartContractAddress),
+    //    'data': '70a08231' +
+    //     stringUtils.fixLength(stringUtils.trimHexPrefix(exgAddress), 64)
+    // };
+    // var response = await client.post('$fabApiUrl + callcontract', body: body);
+    //  var json = jsonDecode(response.body);
+    //  var unlockBalance = json['executionResult']['output'];
+    //  var unlockInt = int.parse("0x$unlockBalance");
+    // exgBalance = unlockInt / 1e18;
     // _walletInfo.add(WalletInfo('exg', exgSmartContractAddress, exgBalance,
     //     34212.782, globals.exgLogoColor, 'exchangily'));
   }
@@ -430,100 +416,102 @@ class WalletService {
     return int.parse(response.body);
   }
 
-  // getFabTransactionHex(seed, addressIndexList, toAddress, double amount,
-  //     double extraTransactionFee, int satoshisPerBytes) async {
-  //   final txb = new TransactionBuilder(network: testnet);
-  //   final root = bip32.BIP32.fromSeed(seed);
-  //   var totalInput = 0;
-  //   var changeAddress = '';
-  //   var finished = false;
-  //   var receivePrivateKeyArr = [];
+  getFabTransactionHex(seed, addressIndexList, toAddress, double amount,
+      double extraTransactionFee, int satoshisPerBytes) async {
+    final txb = new TransactionBuilder(network: testnet);
+    final root = bip32.BIP32.fromSeed(seed);
+    var totalInput = 0;
+    var changeAddress = '';
+    var finished = false;
+    var receivePrivateKeyArr = [];
 
-  //   var totalAmount = amount + extraTransactionFee;
-  //   var amountNum = totalAmount * 1e8;
+    var totalAmount = amount + extraTransactionFee;
+    var amountNum = totalAmount * 1e8;
 
-  //   var bytesPerInput = 148;
-  //   var feePerInput = bytesPerInput * satoshisPerBytes;
+    var bytesPerInput = 148;
+    var feePerInput = bytesPerInput * satoshisPerBytes;
 
-  //   for (var i = 0; i < addressIndexList.length; i++) {
-  //     var index = addressIndexList[i];
-  //     var fabCoinChild =
-  //         root.derivePath("m/44'/1150'/0'/0/" + index.toString());
-  //     final fromAddress = getBtcAddressForNode(fabCoinChild);
-  //     print('from address=' + fromAddress);
-  //     if (i == 0) {
-  //       changeAddress = fromAddress;
-  //     }
-  //     final privateKey = fabCoinChild.privateKey;
-  //     var utxos = await getFabUtxos(fromAddress);
-  //     if ((utxos != null) && (utxos.length > 0)) {
-  //       for (var j = 0; j < utxos.length; i++) {
-  //         var utxo = utxos[i];
-  //         var idx = utxo['idx'];
-  //         var txid = utxo['txid'];
-  //         var value = utxo['value'];
-  //         var isLocked = await isFabTransactionLocked(txid, idx);
-  //         if (isLocked) {
-  //           continue;
-  //         }
-  //         txb.addInput(txid, idx);
-  //         receivePrivateKeyArr.add(privateKey);
-  //         totalInput += value;
+    for (var i = 0; i < addressIndexList.length; i++) {
+      var index = addressIndexList[i];
+      var fabCoinChild =
+          root.derivePath("m/44'/1150'/0'/0/" + index.toString());
+      final fromAddress = getBtcAddressForNode(fabCoinChild);
+      print('from address=' + fromAddress);
+      if (i == 0) {
+        changeAddress = fromAddress;
+      }
+      final privateKey = fabCoinChild.privateKey;
+      var utxos = await getFabUtxos(fromAddress);
+      if ((utxos != null) && (utxos.length > 0)) {
+        for (var j = 0; j < utxos.length; i++) {
+          var utxo = utxos[i];
+          var idx = utxo['idx'];
+          var txid = utxo['txid'];
+          var value = utxo['value'];
+          var isLocked = await isFabTransactionLocked(txid, idx);
+          if (isLocked) {
+            continue;
+          }
+          txb.addInput(txid, idx);
+          receivePrivateKeyArr.add(privateKey);
+          totalInput += value;
 
-  //         amountNum -= value;
-  //         amountNum += feePerInput;
-  //         if (amountNum <= 0) {
-  //           finished = true;
-  //           break;
-  //         }
-  //       }
-  //     }
+          amountNum -= value;
+          amountNum += feePerInput;
+          if (amountNum <= 0) {
+            finished = true;
+            break;
+          }
+        }
+      }
 
-  //     if (!finished) {
-  //       print('not enough fab coin to make the transaction.');
-  //       return {
-  //         'txHex': '',
-  //         'errMsg': 'not enough fab coin to make the transaction.'
-  //       };
-  //     }
+      if (!finished) {
+        print('not enough fab coin to make the transaction.');
+        return {
+          'txHex': '',
+          'errMsg': 'not enough fab coin to make the transaction.'
+        };
+      }
 
-  //     var transFee = (receivePrivateKeyArr.length) * feePerInput + 2 * 34 + 10;
+      var transFee = (receivePrivateKeyArr.length) * feePerInput + 2 * 34 + 10;
 
-  //     var output1 =
-  //         (totalInput - amount * 1e8 - extraTransactionFee * 1e8 - transFee)
-  //             .round();
-  //     var output2 = (amount * 1e8).round();
+      var output1 =
+          (totalInput - amount * 1e8 - extraTransactionFee * 1e8 - transFee)
+              .round();
+      var output2 = (amount * 1e8).round();
 
-  //     if (output1 < 0 || output2 < 0) {
-  //       print('output1 or output2 should be greater than 0.');
-  //       return {
-  //         'txHex': '',
-  //         'errMsg': 'output1 or output2 should be greater than 0.'
-  //       };
-  //     }
+      if (output1 < 0 || output2 < 0) {
+        print('output1 or output2 should be greater than 0.');
+        return {
+          'txHex': '',
+          'errMsg': 'output1 or output2 should be greater than 0.'
+        };
+      }
 
-  //     txb.addOutput(changeAddress, output1);
-  //     txb.addOutput(toAddress, output2);
+      txb.addOutput(changeAddress, output1);
+      txb.addOutput(toAddress, output2);
 
-  //     for (var i = 0; i < receivePrivateKeyArr.length; i++) {
-  //       var privateKey = receivePrivateKeyArr[i];
-  //       print('there we go');
-  //       var alice = ECPair.fromPrivateKey(privateKey,
-  //           compressed: true, network: testnet);
-  //       print('alice.network=');
-  //       print(alice.network);
-  //       txb.sign(i, alice);
-  //     }
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+        var privateKey = receivePrivateKeyArr[i];
+        print('there we go');
+        var alice = ECPair.fromPrivateKey(privateKey,
+            compressed: true, network: testnet);
+        print('alice.network=');
+        print(alice.network);
+        txb.sign(i, alice);
+      }
 
-  //     var txHex = txb.build().toHex();
-  //     return {'txHex': txHex, 'errMsg': ''};
-  //   }
-  // }
+      var txHex = txb.build().toHex();
+      return {'txHex': txHex, 'errMsg': ''};
+    }
+  }
 
   // Send Transaction
 
   Future sendTransaction(String coin, List addressIndexList, String toAddress,
       double amount, options, bool doSubmit) async {
+    final seed = bip39.mnemonicToSeed(bip39.generateMnemonic());
+    final root = bip32.BIP32.fromSeed(seed);
     print('coin=' + coin);
     print(addressIndexList);
     print(toAddress);

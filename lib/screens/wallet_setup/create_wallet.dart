@@ -1,5 +1,6 @@
 import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -160,9 +161,10 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
             Icons.cancel,
             Colors.red);
       } else {
-        secureSeed();
-        //Navigator.pushNamed(context, '/balance');
-
+        // secureSeed();
+        print('else');
+        walletService.getAllBalances();
+        // Navigator.pushNamed(context, '/totalBalance');
       }
     }
   }
@@ -185,12 +187,6 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
     // walletService
     //     .writeStorage(userTypedKey, encrypted.base64)
     //     .whenComplete(readKey());
-  }
-
-  readKey() async {
-    await walletService
-        .readStorage(_passTextController.text)
-        .then((onValue) => {print(onValue)});
   }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------

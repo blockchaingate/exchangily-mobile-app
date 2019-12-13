@@ -22,73 +22,89 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   @override
   void initState() {
-    walletService.getAllWalletAddresses();
+    //walletService.getAllWalletAddresses();
     super.initState();
   }
 
   Widget build(BuildContext context) {
     walletInfo = Provider.of<List<WalletInfo>>(context);
     if (walletInfo == null) {
-      Navigator.of(context).pushNamed('walletSetup');
+      Navigator.of(context).pushNamed('/walletSetup');
+      return null;
     } else {
       return Scaffold(
         key: key,
         body: Column(
           children: <Widget>[
-            new Container(
-              width: double.infinity,
-              height: 270,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage(
-                          'assets/images/wallet-page/background.png'),
-                      fit: BoxFit.cover)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  new Container(
-                    padding: EdgeInsets.only(top: 45, bottom: 10),
-                    child: Image.asset(
-                      'assets/images/start-page/logo.png',
-                      width: 250,
-                      //height: 120,
-                      color: globals.white,
-                    ),
-                  ),
-                  new Container(
-                      padding: EdgeInsets.all(25),
-                      //margin: EdgeInsets.only(top: 15),
-                      child: Stack(
-                        //   fit: StackFit.passthrough,
-                        //   overflow: Overflow.visible,
-                        //  alignment: Alignment.bottomCenter,
-                        children: <Widget>[
-                          Positioned(child: _totalBalanceCard())
-                        ],
-                      )),
-                ],
-              ),
-            ),
-            new Container(
-              margin: EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  _hideSmallAmount(),
-                  new ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: walletInfo.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        buildListBody(context, index, walletInfo),
-                  ),
-                ],
-              ),
-            )
+            _buildBackgroundAndLogoContainer(),
+            _buildWalletListContainer()
           ],
         ),
         bottomNavigationBar: AppBottomNav(),
       );
     }
+  }
+  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                          Build Wallet List Container
+
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+  Container _buildWalletListContainer() {
+    return new Container(
+      margin: EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          _hideSmallAmount(),
+          new ListView.builder(
+            shrinkWrap: true,
+            itemCount: walletInfo.length,
+            itemBuilder: (BuildContext context, int index) =>
+                buildListBody(context, index, walletInfo),
+          ),
+        ],
+      ),
+    );
+  }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                          Build Background and Logo Container
+
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+  Container _buildBackgroundAndLogoContainer() {
+    return new Container(
+      width: double.infinity,
+      height: 270,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage('assets/images/wallet-page/background.png'),
+              fit: BoxFit.cover)),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          new Container(
+            padding: EdgeInsets.only(top: 45, bottom: 10),
+            child: Image.asset(
+              'assets/images/start-page/logo.png',
+              width: 250,
+              //height: 120,
+              color: globals.white,
+            ),
+          ),
+          new Container(
+              padding: EdgeInsets.all(25),
+              //margin: EdgeInsets.only(top: 15),
+              child: Stack(
+                //   fit: StackFit.passthrough,
+                //   overflow: Overflow.visible,
+                //  alignment: Alignment.bottomCenter,
+                children: <Widget>[Positioned(child: _totalBalanceCard())],
+              )),
+        ],
+      ),
+    );
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
