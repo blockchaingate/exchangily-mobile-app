@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:exchangilymobileapp/services/models.dart';
+import '../../models/wallet.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +26,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   GlobalKey _globalKey = new GlobalKey();
 
   Widget build(BuildContext context) {
+    print('Wallet info in receive ${widget.walletInfo.address}');
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(

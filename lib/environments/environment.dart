@@ -1,28 +1,18 @@
-
-
 const bool isProduction = false;
 
 const Map devConfig = const {
-
   "chains": {
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
-      "web3Provider": 'https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef'
+      "web3Provider":
+          'https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef'
     },
     "FAB": {
-      "chain": {
-        "name": 'test',
-        "networkId": 212,
-        "chainId": 212
-      }
+      "chain": {"name": 'test', "networkId": 212, "chainId": 212}
     }
   },
-  "CoinType": {
-    "BTC": 1,
-    "ETH": 60,
-    "FAB": 1150
-  },
+  "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150},
   'endpoints': {
     'kanban': 'https://kanbantest.fabcoinapi.com/',
     'btc': 'https://btctest.fabcoinapi.com/',
@@ -35,28 +25,12 @@ const Map devConfig = const {
       "EXG": '0x311acf4666477a22c2f16c53b88c1734ee227fc6',
       "USDT": '0x1c35eCBc06ae6061d925A2fC2920779a1896282c',
     },
-
     'exchangilyOfficial': [
-      {
-        'name':'EXG',
-        'address':'0xdcd0f23125f74ef621dfa3310625f8af0dcd971b'
-      },
-      {
-        'name':'FAB',
-        'address':'n1eXG5oe6wJ6h43akutyGfphqQsY1UfAUR'
-      },
-      {
-        'name':'BTC',
-        'address':'muQDw5hVmFgD1GrrWvUt6kjrzauC4Msaki'
-      },
-      {
-        'name':'ETH',
-        'address':'0x02c55515e62a0b25d2447c6d70369186b8f10359'
-      },
-      {
-        'name':'USDT',
-        'address':'0x02c55515e62a0b25d2447c6d70369186b8f10359'
-      }
+      {'name': 'EXG', 'address': '0xdcd0f23125f74ef621dfa3310625f8af0dcd971b'},
+      {'name': 'FAB', 'address': 'n1eXG5oe6wJ6h43akutyGfphqQsY1UfAUR'},
+      {'name': 'BTC', 'address': 'muQDw5hVmFgD1GrrWvUt6kjrzauC4Msaki'},
+      {'name': 'ETH', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
+      {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'}
     ]
   }
 };
@@ -66,21 +40,14 @@ const Map productionConfig = const {
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',
-      "web3Provider": 'https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef'
+      "web3Provider":
+          'https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef'
     },
     "FAB": {
-      "chain": {
-        "name": 'mainnet',
-        "networkId": 0,
-        "chainId": 0
-      }
+      "chain": {"name": 'mainnet', "networkId": 0, "chainId": 0}
     }
   },
-  "CoinType": {
-    "BTC": 0,
-    "ETH": 60,
-    "FAB": 1150
-  },
+  "CoinType": {"BTC": 0, "ETH": 60, "FAB": 1150},
   'endpoints': {
     'kanban': 'https://kanbantest.fabcoinapi.com/',
     'btc': 'https://btctest.fabcoinapi.com/',
@@ -94,26 +61,11 @@ const Map productionConfig = const {
       "USDT": '0xdac17f958d2ee523a2206206994597c13d831ec7',
     },
     'exchangilyOfficial': [
-      {
-        'name':'EXG',
-        'address':'0xdcd0f23125f74ef621dfa3310625f8af0dcd971b'
-      },
-      {
-        'name':'FAB',
-        'address':'n1eXG5oe6wJ6h43akutyGfphqQsY1UfAUR'
-      },
-      {
-        'name':'BTC',
-        'address':'muQDw5hVmFgD1GrrWvUt6kjrzauC4Msaki'
-      },
-      {
-        'name':'ETH',
-        'address':'0x02c55515e62a0b25d2447c6d70369186b8f10359'
-      },
-      {
-        'name':'USDT',
-        'address':'0x02c55515e62a0b25d2447c6d70369186b8f10359'
-      }
+      {'name': 'EXG', 'address': '0xdcd0f23125f74ef621dfa3310625f8af0dcd971b'},
+      {'name': 'FAB', 'address': 'n1eXG5oe6wJ6h43akutyGfphqQsY1UfAUR'},
+      {'name': 'BTC', 'address': 'muQDw5hVmFgD1GrrWvUt6kjrzauC4Msaki'},
+      {'name': 'ETH', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
+      {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'}
     ]
   }
 };

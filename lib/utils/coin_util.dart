@@ -20,27 +20,28 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
 
   final root = bip32.BIP32.fromSeed(
       seed,
-      bip32.NetworkType(wif: testnet.wif, bip32: new bip32.Bip32Type(public: testnet.bip32.public, private: testnet.bip32.private))
-  );
+      bip32.NetworkType(
+          wif: testnet.wif,
+          bip32: new bip32.Bip32Type(
+              public: testnet.bip32.public, private: testnet.bip32.private)));
 
   var signedMess;
   if (coinName == 'ETH' || tokenType == 'ETH') {
-
     final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
     var privateKey = ethCoinChild.privateKey;
     //var credentials = EthPrivateKey.fromHex(privateKey);
     var credentials = EthPrivateKey(privateKey);
-    signedMess = await credentials.signPersonalMessage(stringToUint8List(originalMessage));
-
-  } else
-  if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
+    signedMess = await credentials
+        .signPersonalMessage(stringToUint8List(originalMessage));
+  } else if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
     var hdWallet = new HDWallet.fromSeed(seed);
 
     var coinType = 1150;
-    if(coinName == 'BTC') {
+    if (coinName == 'BTC') {
       coinType = 1;
     }
-    var btcWallet = hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+    var btcWallet =
+        hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
     signedMess = btcWallet.sign(originalMessage);
   }
 
@@ -50,19 +51,15 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     String ss = HEX.encode(signedMess);
     print("ss=");
     print(ss);
-    r = ss.substring(0,64);
-    s = ss.substring(64,128);
+    r = ss.substring(0, 64);
+    s = ss.substring(64, 128);
     v = ss.substring(128);
     if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
       v = '20';
     }
   }
 
-  return {
-    'r': r,
-    's': s,
-    'v': v
-  };
+  return {'r': r, 's': s, 'v': v};
 }
 
 getOfficalAddress(String coinName) {
@@ -89,20 +86,17 @@ getAddressForCoin(root, 'FAB');
 getAddressForCoin(root, 'USDT', tokenType: 'ETH');
 getAddressForCoin(root, 'EXG', tokenType: 'FAB');
  */
-getAddressForCoin(root, coinName, {tokenType='', index = 0}) {
-  if(coinName == 'BTC') {
+Future getAddressForCoin(root, coinName, {tokenType = '', index = 0}) async {
+  if (coinName == 'BTC') {
     var node = getBtcNode(root, index: index);
     return getBtcAddressForNode(node);
-  } else
-  if ((coinName == 'ETH') || (tokenType == 'ETH')) {
+  } else if ((coinName == 'ETH') || (tokenType == 'ETH')) {
     var node = getEthNode(root, index: index);
-    return getEthAddressForNode(node);
-  } else
-  if (coinName == 'FAB') {
+    return await getEthAddressForNode(node);
+  } else if (coinName == 'FAB') {
     var node = getFabNode(root, index: index);
     return getBtcAddressForNode(node);
-  } else
-  if (tokenType == 'FAB') {
+  } else if (tokenType == 'FAB') {
     var node = getFabNode(root, index: index);
     var fabPublicKey = node.publicKey;
     Digest sha256 = new Digest("SHA-256");
@@ -115,23 +109,19 @@ getAddressForCoin(root, coinName, {tokenType='', index = 0}) {
   return '';
 }
 
-
-getBalanceForCoin(root, coinName, {tokenType='', index = 0}) {
-  var address = getAddressForCoin(root, coinName, tokenType: tokenType, index: index);
+Future getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) async {
+  var address = await getAddressForCoin(root, coinName,
+      tokenType: tokenType, index: index);
   if (coinName == 'BTC') {
-    return getBtcBalanceByAddress(address);
-  } else
-  if (coinName == 'ETH') {
-    return getEthBalanceByAddress(address);
-  } else
-  if (coinName == 'FAB') {
-    return getFabBalanceByAddress(address);
-  } else
-  if (tokenType == 'ETH') {
-    return getEthTokenBalanceByAddress(address, tokenType);
-  } else
-  if (tokenType == 'FAB') {
-    return getFabTokenBalanceByAddress(address, tokenType);
+    return await getBtcBalanceByAddress(address);
+  } else if (coinName == 'ETH') {
+    return await getEthBalanceByAddress(address);
+  } else if (coinName == 'FAB') {
+    return await getFabBalanceByAddress(address);
+  } else if (tokenType == 'ETH') {
+    return await getEthTokenBalanceByAddress(address, tokenType);
+  } else if (tokenType == 'FAB') {
+    return await getFabTokenBalanceByAddress(address, tokenType);
   }
 
   return {'balance': -1, 'lockbalance': -1};

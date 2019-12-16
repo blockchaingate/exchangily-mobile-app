@@ -3,7 +3,7 @@ import 'package:exchangilymobileapp/screens/wallet_features/total_balances.dart'
 import 'package:exchangilymobileapp/screens/wallet_setup/confirm_seed.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/create_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/import_wallet.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/wallet_language.dart';
+import 'package:exchangilymobileapp/screens/wallet_setup/choose_wallet_language.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/move_and_trade.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/receive.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/send.dart';
@@ -19,14 +19,13 @@ import 'package:exchangilymobileapp/screens/wallet_features/deposit.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/withdraw.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/smart_contract.dart';
 
-
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
     print(args);
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => WalletLanguageScreen());
+        return MaterialPageRoute(builder: (_) => ChooseWalletLanguageScreen());
       case '/walletSetup':
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
       case '/importWallet':
@@ -36,15 +35,16 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => BackupSeedWalletScreen());
 
       case '/confirmSeed':
-        return MaterialPageRoute(builder: (_) => ConfirmSeedtWalletScreen());
+        return MaterialPageRoute(
+            builder: (_) => ConfirmSeedtWalletScreen(mnemonic: args));
 
       case '/createWallet':
         return MaterialPageRoute(builder: (_) => CreateWalletScreen());
 
-      case '/balance':
+      case '/totalBalance':
         return MaterialPageRoute(builder: (_) => TotalBalancesScreen());
 
-      case '/walletOverview':
+      case '/walletFeatures':
         return MaterialPageRoute(
             builder: (_) => WalletFeaturesScreen(walletInfo: args));
 
@@ -85,18 +85,18 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Withdraw(walletInfo: args));
 
       default:
-        return _errorRoute();
+        return _errorRoute(settings);
     }
   }
 
-  static Route _errorRoute() {
+  static Route _errorRoute(settings) {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
           title: Text('Error'),
         ),
         body: Center(
-          child: Text('ERROR'),
+          child: Text('No route defined for ${settings.name}'),
         ),
       );
     });

@@ -7,27 +7,27 @@ import 'dart:async';
 import 'package:web3dart/web3dart.dart';
 import 'dart:convert';
 
-
 final String ethBaseUrl = environment["endpoints"]["eth"];
 getTransactionHash(Uint8List signTransaction) {
-
   var p = keccak(signTransaction);
   var hash = "0x" + HEX.encode(p);
   return hash;
 }
 
 Future getEthTransactionStatus(String txid) async {
-  var url = ethBaseUrl  + 'gettransactionstatus/' + txid;
+  var url = ethBaseUrl + 'gettransactionstatus/' + txid;
   var client = new http.Client();
   var response = await client.get(url);
   return response;
 }
 
 getEthNode(root, {index = 0}) {
-  var node = root.derivePath("m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/" + index.toString());
+  var node = root.derivePath("m/44'/" +
+      environment["CoinType"]["ETH"].toString() +
+      "'/0'/0/" +
+      index.toString());
   return node;
 }
-
 
 getEthAddressForNode(node) async {
   var privateKey = node.privateKey;
@@ -40,21 +40,20 @@ getEthAddressForNode(node) async {
   return ethAddress;
 }
 
-Future getEthBalanceByAddress(String address) async{
-  var url =  ethBaseUrl + 'getbalance/' + address;
+Future getEthBalanceByAddress(String address) async {
+  var url = ethBaseUrl + 'getbalance/' + address;
   var response = await http.get(url);
   Map<String, dynamic> balance = jsonDecode(response.body);
   var ethBalance = int.parse(balance['balance']) / 1e18;
-  return {'balance':ethBalance,'lockbalance': 0};
+  return {'balance': ethBalance, 'lockbalance': 0};
 }
 
-
-Future getEthTokenBalanceByAddress(String address, String coinName) async{
-
-  var smartContractAddress = environment["addresses"]["smartContract"][coinName];
-  var url =  ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
+Future getEthTokenBalanceByAddress(String address, String coinName) async {
+  var smartContractAddress =
+      environment["addresses"]["smartContract"][coinName];
+  var url = ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
   var response = await http.get(url);
   var balance = jsonDecode(response.body);
   var tokenBalance = int.parse(balance['balance']) / 1e6;
-  return {'balance':tokenBalance,'lockbalance': 0};
+  return {'balance': tokenBalance, 'lockbalance': 0};
 }

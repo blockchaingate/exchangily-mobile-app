@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 
 abstract class StringValidator {
-  // need to define my own class
+  // need to define your own class
   bool isValid(String value);
 }
 

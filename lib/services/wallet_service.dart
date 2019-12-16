@@ -1,17 +1,10 @@
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:bip39/bip39.dart' as bip39;
 import '../packages/bip32/bip32_base.dart' as bip32;
-import 'package:bitcoin_flutter/src/models/networks.dart';
-import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
-import 'package:bitcoin_flutter/src/transaction_builder.dart';
-import 'package:bitcoin_flutter/src/transaction.dart' as btcTransaction;
-import 'package:bitcoin_flutter/src/ecpair.dart';
-import 'package:bitcoin_flutter/src/utils/script.dart' as script;
 import 'package:hex/hex.dart';
 import "package:pointycastle/pointycastle.dart";
 import 'dart:convert';
@@ -19,131 +12,188 @@ import 'dart:typed_data';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
 import '../shared/globals.dart' as globals;
-import '../environments/environment.dart' as environment;
 import '../environments/coins.dart' as coinList;
-import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import '../utils/abi_util.dart';
 import '../utils/string_util.dart' as stringUtils;
 import '../utils/kanban.util.dart';
 import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
+import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
-import '../environments/environment.dart';
-
-import 'models.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../models/wallet.dart';
+import 'dart:io';
+import 'package:bitcoin_flutter/src/models/networks.dart';
+import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
+import 'package:bitcoin_flutter/src/transaction_builder.dart';
+import 'package:bitcoin_flutter/src/transaction.dart' as btcTransaction;
+import 'package:bitcoin_flutter/src/ecpair.dart';
+import 'package:bitcoin_flutter/src/utils/script.dart' as script;
+import '../environments/environment.dart' as environment;
+import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
+import 'package:web_socket_channel/io.dart';
 
 class WalletService {
-  static final randomMnemonic =
-      'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-  static final seed = bip39.mnemonicToSeed(randomMnemonic);
-  static final root = bip32.BIP32.fromSeed(seed);
-  static final bitCoinChild = getBtcNode(root);
-  static final ethCoinChild = getEthNode(root);
-  static final fabCoinChild = getFabNode(root);
-  final fabPublicKey = fabCoinChild.publicKey;
-  final privateKey = HEX.encode(ethCoinChild.privateKey);
   final client = new http.Client();
 
-  String exgAddress = '';
-  String fabAddress = '';
-  String btcAddress = '';
-  String ethAddress = '';
-  String usdtAddress = '';
-
-  double exgBalance = 0;
-  double fabBalance = 0;
-  double btcBalance = 0;
-  double ethBalance = 0;
-  double usdtBalance = 0;
-
-  String ticker;
-  List<WalletInfo> _walletInfo;
+  List<WalletInfo> _walletInfo = [];
 
   static String btcApiUrl = "https://btctest.fabcoinapi.com/";
   static String fabApiUrl = "https://fabtest.fabcoinapi.com/";
   static String ethApiUrl = "https://ethtest.fabcoinapi.com/";
 
-  // List<CoinType> _childrens = [
-  //   //  CoinType('btc', bitCoinChild, btcApiUrl),
-  //   // CoinType('fab', fabCoinChild, fabApiUrl)
-  // ];
+  // Get Random Mnemonic
+  String getRandomMnemonic() {
+    return bip39.generateMnemonic();
+  }
 
-  // Get All Balances
+  // Save Encrypted Data to Storage
+  saveEncryptedData(String data) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/my_file.byte');
+      final text = data;
+      await file.writeAsString(text);
+      print('saved');
+    } catch (e) {
+      print("Couldn't write file!!");
+    }
+  }
+
+  // Read Encrypted Data from Storage
+  readEncryptedData() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/my_file.byte');
+      String text = await file.readAsString();
+      print(text);
+    } catch (e) {
+      print("Couldn't read file");
+    }
+  }
+
+  /*--------------------------------------------------
+      ||
+                      Future GetAllBalances
+      ||
+      --------------------------------------------------*/
 
   Future<List<WalletInfo>> getAllBalances() async {
+    final seed = bip39.mnemonicToSeed(getRandomMnemonic());
+    print('Mnemonic in the wallet service ${getRandomMnemonic()}');
+    final root = bip32.BIP32.fromSeed(seed);
     try {
-      //
-      // _childrens.map((f) => {getAddress(f, testnet)});
+      List<String> listOfCoins = ['BTC', 'FAB', 'ETH'];
 
-      await getBtcBalance();
-      await getFabBalance();
-      //await getExgBalance();
-      // await getEthBalance();
+      for (int i = 0; i < listOfCoins.length; i++) {
+        var tickerName = listOfCoins[i];
+        print(
+            'Ticker names is $tickerName and Length of list of coins is ${listOfCoins.length}');
+        if (tickerName == 'BTC') {
+          print('in $tickerName');
+          var addr = await getAddressForCoin(root, tickerName);
+          var bal = await getBalanceForCoin(root, tickerName);
+          print('address $addr and balance $bal');
+          _walletInfo.add(WalletInfo(
+              tickerName: tickerName,
+              address: addr,
+              availableBalance: bal['balance'],
+              name: 'bitcoin',
+              logoColor: globals.primaryColor));
+          print(
+              'Wallet info address: ${_walletInfo[i].address}, name is ${_walletInfo[i].name}');
+        } else if (tickerName == 'FAB') {
+          print('in $tickerName');
+          var addr = await getAddressForCoin(root, tickerName);
+          var bal = await getBalanceForCoin(root, tickerName);
+          _walletInfo.add(WalletInfo(
+              tickerName: tickerName,
+              address: addr,
+              availableBalance: bal['balance'],
+              name: 'fast access blockchain',
+              logoColor: globals.primaryColor));
+          print(
+              'Wallet info address: ${_walletInfo[i].address}, name is ${_walletInfo[i].name}');
+        } else if (tickerName == 'ETH') {
+          var addr = await getAddressForCoin(root, tickerName);
+          var bal = await getBalanceForCoin(root, tickerName);
+          _walletInfo.add(WalletInfo(
+              tickerName: tickerName,
+              address: addr,
+              availableBalance: bal['balance'],
+              name: 'ethereum',
+              logoColor: globals.primaryColor));
+          print(
+              'Wallet info address: ${_walletInfo[i].address}, name is ${_walletInfo[i].name}');
+        }
+      }
 
+      var len = _walletInfo.length;
+      print('Final Length  $len');
       return _walletInfo;
     } catch (e) {
       print(e);
+      print('Wallet Service Get all balances Failed so in the catch method');
+      return null;
     }
   }
 
   // Get Btc balance
 
   getBtcBalance() async {
-    btcAddress = getBtcAddressForNode(bitCoinChild);
-    btcBalance = await getBtcBalanceByAddress(btcAddress);
-    _walletInfo = [
-      WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor,
-          'bitcoin')
-    ];
+    // btcAddress = getBtcAddressForNode(bitCoinChild);
+    // btcBalance = await getBtcBalanceByAddress(btcAddress);
+    // _walletInfo = [
+    //   WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor,
+    //       'bitcoin')
+    // ];
   }
 
   // Get ETH balance
 
   getEthBalance() async {
+    // ethAddress = getEthAddressForNode(ethCoinChild);
 
-    
-    ethAddress = getEthAddressForNode(ethCoinChild);
-
-    print('ethAddress=' + ethAddress);
+    // print('ethAddress=' + ethAddress);
     // ethAddress = getAddress(ethCoinChild, testnet);
-    var url = ethApiUrl + 'getbalance/' + ethAddress;
-    print(url);
-    var response = await client.get(url);
-    ethBalance = double.parse(response.body) / 1e8;
-    _walletInfo = [
-      WalletInfo('eth', ethAddress, ethBalance, 25415.214, globals.primaryColor,
-          'ethereum')
-    ];
+    // var url = ethApiUrl + 'getbalance/' + ethAddress;
+    // print(url);
+    // var response = await client.get(url);
+    //ethBalance = double.parse(response.body) / 1e8;
+    // _walletInfo = [
+    //   WalletInfo('eth', ethAddress, ethBalance, 25415.214, globals.primaryColor,
+    //       'ethereum')
+    // ];
   }
 
 // Get Fab Balance
 
   getFabBalance() async {
-    fabAddress = getBtcAddressForNode(fabCoinChild);
-    var url = fabApiUrl + 'getbalance/' + fabAddress;
-    print(url);
-    var response = await client.get(url);
-    fabBalance = double.parse(response.body) / 1e8;
-    _walletInfo.add(WalletInfo('fab', fabAddress, fabBalance, 214212.112,
-        globals.fabLogoColor, 'fast access blockchain'));
+    // fabAddress = getBtcAddressForNode(fabCoinChild);
+    //  var url = fabApiUrl + 'getbalance/' + fabAddress;
+    // print(url);
+    //  var response = await client.get(url);
+    //  fabBalance = double.parse(response.body) / 1e8;
+    // _walletInfo.add(WalletInfo('fab', fabAddress, fabBalance, 214212.112,
+    //     globals.fabLogoColor, 'fast access blockchain'));
   }
 
   // Get Exg Balance
 
   getExgBalance() async {
     var exgSmartContractAddress = '0x867480ba8e577402fa44f43c33875ce74bdc5df6';
-    var body = {
-      'address': stringUtils.trimHexPrefix(exgSmartContractAddress),
-      'data': '70a08231' +
-          stringUtils.fixLength(stringUtils.trimHexPrefix(exgAddress), 64)
-    };
-    var response = await client.post('$fabApiUrl + callcontract', body: body);
-    var json = jsonDecode(response.body);
-    var unlockBalance = json['executionResult']['output'];
-    var unlockInt = int.parse("0x$unlockBalance");
-    exgBalance = unlockInt / 1e18;
-    _walletInfo.add(WalletInfo('exg', exgSmartContractAddress, exgBalance,
-        34212.782, globals.exgLogoColor, 'exchangily'));
+    //  var body = {
+    //    'address': stringUtils.trimHexPrefix(exgSmartContractAddress),
+    //    'data': '70a08231' +
+    //     stringUtils.fixLength(stringUtils.trimHexPrefix(exgAddress), 64)
+    // };
+    // var response = await client.post('$fabApiUrl + callcontract', body: body);
+    //  var json = jsonDecode(response.body);
+    //  var unlockBalance = json['executionResult']['output'];
+    //  var unlockInt = int.parse("0x$unlockBalance");
+    // exgBalance = unlockInt / 1e18;
+    // _walletInfo.add(WalletInfo('exg', exgSmartContractAddress, exgBalance,
+    //     34212.782, globals.exgLogoColor, 'exchangily'));
   }
 
 // Add Gas
@@ -151,11 +201,7 @@ class WalletService {
     return 0;
   }
 
-
-
 // Get Official Address
-
-
 
 // Get Coin Type Id By Name
 
@@ -484,10 +530,13 @@ class WalletService {
       return {'txHex': txHex, 'errMsg': ''};
     }
   }
+
   // Send Transaction
 
   Future sendTransaction(String coin, List addressIndexList, String toAddress,
       double amount, options, bool doSubmit) async {
+    final seed = bip39.mnemonicToSeed(bip39.generateMnemonic());
+    final root = bip32.BIP32.fromSeed(seed);
     print('coin=' + coin);
     print(addressIndexList);
     print(toAddress);
@@ -590,7 +639,6 @@ class WalletService {
       } else {
         txHash = '0x' + tx.getId();
       }
-
     }
 
     // ETH Transaction

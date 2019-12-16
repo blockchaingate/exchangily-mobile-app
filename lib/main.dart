@@ -1,20 +1,25 @@
 
 import 'package:exchangilymobileapp/screens/wallet_setup/wallet_language.dart';
 import 'package:exchangilymobileapp/services/models.dart';
+
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import './shared/globals.dart' as globals;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localizations.dart';
 
+import 'models/wallet.dart';
 // import 'package:flutter_cupertino_localizations/flutter_cupertino_localizations.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
+  Logger.level = Level.verbose;
   // Force user to use only portrait mode until the development of other screen size design
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
@@ -29,6 +34,7 @@ class MyApp extends StatelessWidget {
         providers: [
           FutureProvider<List<WalletInfo>>.value(
               value: WalletService().getAllBalances()),
+          Provider<String>.value(value: WalletService().getRandomMnemonic())
         ],
         child: MaterialApp(
           localizationsDelegates: [
@@ -48,7 +54,7 @@ class MyApp extends StatelessWidget {
           ],
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context).title,
-          initialRoute: '/',
+
           onGenerateRoute: RouteGenerator.generateRoute,
           title: 'Exchangily Wallet',
           theme: ThemeData(
@@ -73,12 +79,8 @@ class MyApp extends StatelessWidget {
                 display2: TextStyle(fontSize: 14, color: globals.grey),
                 display3: TextStyle(fontSize: 18, color: globals.white)),
           ),
-          home: Scaffold(
-              body: Container(
-            margin: EdgeInsets.fromLTRB(10, 15, 10, 0),
-            padding: EdgeInsets.all(44),
-            child: (WalletLanguageScreen()),
-          )),
+          // Removed the home and scaffold because initial route has set
+          initialRoute: '/',
         ));
   }
 }

@@ -1,5 +1,5 @@
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:exchangilymobileapp/services/models.dart';
+import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 
@@ -258,20 +258,13 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                           Icons.cancel,
                           globals.red);
                     } else {
-                      walletService
-                          .sendTransaction(
-                              widget.walletInfo.tickerName.toUpperCase(),
-                              [0],
-                              address,
-                              amount,
-                              options,
-                              true)
-                          .then((txid) => (_) {
-                                getBtcTransactionStatus(txid);
-                                print(txid);
-                              })
-                          .catchError((err) => print(err));
-                      // getBtcTransactionStatus(txid)
+                      walletService.sendTransaction(
+                          widget.walletInfo.tickerName.toUpperCase(),
+                          [0],
+                          address,
+                          amount,
+                          options,
+                          true);
                     }
                   },
                 ),
