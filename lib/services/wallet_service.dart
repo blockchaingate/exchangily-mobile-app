@@ -238,13 +238,7 @@ class WalletService {
     var abiHex = getDepositFuncABI(
         coinType, txHash, amountInLink, addressInKanban, signedMess);
     var nonce = await getNonce(addressInKanban);
-    print('nonce=' + nonce.toString());
-    print('signedMessage.r=' + signedMess["r"]);
-    print('signedMessage.v=' + signedMess["s"]);
-    print('signedMessage.s=' + signedMess["v"]);
-    print('abiHex=' + abiHex);
-    print(coinPoolAddress);
-    print('txHash=' + txHash);
+
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
@@ -555,25 +549,6 @@ class WalletService {
           }
         }
 
-        fixLength(String str, int length) {
-          var retStr = '';
-          int len = str.length;
-          int len2 = length - len;
-          if (len2 > 0) {
-            for (int i = 0; i < len2; i++) {
-              retStr += '0';
-            }
-          }
-          retStr += str;
-          return retStr;
-        }
-
-        trimHexPrefix(String str) {
-          if (str.startsWith('0x')) {
-            str = str.substring(2);
-          }
-          return str;
-        }
       }
 
       print('finished=' + finished.toString());
@@ -760,6 +735,8 @@ class WalletService {
   }
 
   getFabSmartContract(String contractAddress, String fxnCallHex) async {
+    contractAddress = stringUtils.trimHexPrefix(contractAddress);
+    fxnCallHex = stringUtils.trimHexPrefix(fxnCallHex);
     var gasLimit = 800000;
     var gasPrice = 40;
     var totalAmount = gasLimit * gasPrice / 1e8;

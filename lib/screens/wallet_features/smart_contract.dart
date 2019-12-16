@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart' as stringUtils;
+import 'package:bip39/bip39.dart' as bip39;
+import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/utils/kanban.util.dart';
+import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:hex/hex.dart';
 
 class SmartContract extends  StatefulWidget {
   const SmartContract({Key key}) : super(key: key);
@@ -13,15 +19,20 @@ class SmartContract extends  StatefulWidget {
 
 class _SmartContractState extends State<SmartContract> {
 
-
   String _currentFunction;
   String _smartContractName;
-  TextEditingController myController = TextEditingController();
+  var abis;
+  var functionHex;
+  var abi;
+  var inputs = [];
+  var payable = false;
+  TextEditingController smartContractAddressController = TextEditingController();
+  TextEditingController payableController = TextEditingController();
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   @override
   void initState() {
-    myController.value = TextEditingValue(text: environment['addresses']['smartContract']['FABLOCK']);
-    onSmartContractAddressChanged(myController.value.text);
+    smartContractAddressController.value = TextEditingValue(text: environment['addresses']['smartContract']['FABLOCK']);
+    onSmartContractAddressChanged(smartContractAddressController.value.text);
 
     super.initState();
   }
@@ -34,22 +45,45 @@ class _SmartContractState extends State<SmartContract> {
     for (var abi in abis) {
       // here we are creating the drop down menu items, you can customize the item right here
       // but I'll just use a simple text for this
-      items.add(new DropdownMenuItem(
-          value: abi['name'],
-          child: new Text(
-            abi['name'],
+      if (abi['type'] == 'function') {
+        items.add(new DropdownMenuItem(
+            value: abi['name'],
+            child: new Text(
+              abi['name'],
               style: TextStyle(color: Colors.white70),
-          )
-      ));
+            )
+        ));
+      }
+
     }
     return items;
   }
 
   void changedDropDownItem(String selectedFunction) {
     print("Selected function $selectedFunction, we are going to refresh the UI");
+    var _inputs;
+    var _payable = false;
+    for (var i = 0; i < abis.length; i++) {
+      var item = abis[i];
+      if(item['name'] == selectedFunction) {
+        _inputs = item['inputs'];
+        abi = item;
+        for(var j = 0; j < _inputs.length; j++) {
+          _inputs[j]['controller'] = new TextEditingController();
+        }
+        if (item['stateMutability'] == 'payable') {
+          _payable = true;
+        }
+        break;
+      }
+    }
 
+    print('_inputs=');
+    print(_inputs);
     setState(() {
-     //  _currentFunction = selectedFunction;
+      payable = _payable;
+      inputs = _inputs;
+      _currentFunction = selectedFunction;
     });
   }
 
@@ -58,7 +92,9 @@ class _SmartContractState extends State<SmartContract> {
     var smartContractABI = await getSmartContractABI(address);
     print(smartContractABI['Name']);
 
-    var funcs = await getDropDownMenuItems(smartContractABI['abi']);
+    abis = smartContractABI['abi'];
+    functionHex = smartContractABI['functionHex'];
+    var funcs = await getDropDownMenuItems(abis);
     var _currentFunc;
     if ((funcs != null) && (funcs.length > 0)) {
       _currentFunc = funcs[0].value;
@@ -113,7 +149,7 @@ class _SmartContractState extends State<SmartContract> {
                     hintText: 'Enter the address',
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
-                  controller: myController,
+                  controller: smartContractAddressController,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                   onChanged: (text) {
                     print('onTap');
@@ -138,6 +174,52 @@ class _SmartContractState extends State<SmartContract> {
                   onChanged: changedDropDownItem,
                 ),
                 SizedBox(height: 20),
+                Column(
+                  children: <Widget>[
+                    for ( var input in inputs )
+                      Column(
+                        children: <Widget>[
+                          Text(input['name'],
+                              style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                          SizedBox(height: 10),
+                          TextField(
+                            controller: input['controller'],
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: Color(0XFF871fff), width: 1.0)),
+                              hintText: '',
+                              hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                            ),
+                            style: TextStyle(fontSize: 16.0, color: Colors.white),
+
+                          ),
+                        ],
+                      ),
+                    if (payable)
+                      Column(
+                        children: <Widget>[
+                          Text("Payable value",
+                              style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                          SizedBox(height: 10),
+                          TextField(
+                            controller: payableController,
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: new BorderSide(
+                                      color: Color(0XFF871fff), width: 1.0)),
+                              hintText: '',
+                              hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                            ),
+                            style: TextStyle(fontSize: 16.0, color: Colors.white),
+
+                          ),
+                        ],
+                      )
+
+                  ],
+                ),
+                SizedBox(height: 20),
                 MaterialButton(
                   padding: EdgeInsets.all(15),
                   color: globals.primaryColor,
@@ -145,6 +227,21 @@ class _SmartContractState extends State<SmartContract> {
                   onPressed: () async {
                     // var res = await AddGasDo(double.parse(myController.text));
                     print('res=');
+                    print(abi);
+                    for(var i = 0; i < inputs.length; i++) {
+                      var text = inputs[i]['controller'].text;
+                      print(text);
+                    }
+                    if(payable) {
+                      print('payableController.text=');
+                      print(payableController.text);
+                    }
+
+                    if(abi['stateMutability'] == 'view') {
+                      callContract();
+                    } else {
+                      execContract();
+                    }
                     //   print(res);
                   },
                   child: Text(
@@ -154,5 +251,105 @@ class _SmartContractState extends State<SmartContract> {
                 )
               ],
             )));
+  }
+
+  formABI() {
+    var abiHex = '';
+    if(functionHex != null) {
+      for (var i = 0; i < functionHex.length; i++) {
+        if (functionHex[i]['name'] == _currentFunction) {
+          abiHex = functionHex[i]['hex'];
+        }
+      }
+    }
+    print('abiHex=' + abiHex);
+
+    for(var i = 0; i < inputs.length; i++) {
+      var text = inputs[i]['controller'].value.text;
+      print(text);
+      final number = int.parse(text, radix: 10);
+      var hexString = number.toRadixString(16);
+      abiHex += stringUtils.fixLength(hexString, 64);
+    }
+
+    return abiHex;
+/*
+    var buf = '';
+    buf += stringUtils.fixLength(coinType.toString(), 4);
+    buf += stringUtils.fixLength(txHash, 64);
+    var hexString = amount.toRadixString(16);
+    buf += stringUtils.fixLength(hexString, 64);
+    buf += stringUtils.fixLength(address, 64);
+*/
+
+
+  }
+
+  callContract() {
+
+  }
+
+  execContract() async{
+    var abiHex = formABI();
+    abiHex = stringUtils.trimHexPrefix(abiHex);
+
+    double value = 0;
+    if(payable) {
+      print('payableController.text=');
+      value = double.parse(payableController.value.text);
+    }
+
+    var randomMnemonic =
+        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    var seed = bip39.mnemonicToSeed(randomMnemonic);
+
+    /*
+    var keyPairKanban = getExgKeyPair(seed);
+
+    var addressInKanban = keyPairKanban["address"];
+    var nonce = await getNonce(addressInKanban);
+
+    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
+        HEX.encode(keyPairKanban["privateKey"]), smartContractAddressController.value.text, nonce);
+    */
+
+    var walletServ = new WalletService();
+    print('abiHex=' + abiHex);
+    print('contractAddress=' + smartContractAddressController.value.text);
+    var contractInfo =
+    await walletServ.getFabSmartContract(smartContractAddressController.value.text, abiHex);
+
+    print('contractInfo===');
+    print(contractInfo['totalFee']);
+    print(contractInfo['contract']);
+    print('end of contractInfo');
+    var res1 = await walletServ.getFabTransactionHex(seed, [0], contractInfo['contract'],
+        value, contractInfo['totalFee'], 14);
+    var txHex = res1['txHex'];
+    var errMsg = res1['errMsg'];
+    var txHash = '';
+    if (txHex != null && txHex != '') {
+      var res = await walletServ.postFabTx(txHex);
+      txHash = res['txHash'];
+      errMsg = res['errMsg'];
+      print('txHash=' + txHash);
+    }
+
+    /*
+    EthereumAddress contractAddr =
+    EthereumAddress.fromHex(smartContractAddressController.value.text);
+    final contract =
+    DeployedContract(abis, contractAddr);
+    var params = [];
+    for(var i = 0; i < inputs.length; i++) {
+      params.add(inputs[i]['controller'].value.text);
+    }
+    Transaction.callContract(
+      contract: contract,
+      function: abi,
+      parameters: params,
+    );
+
+     */
   }
 }
