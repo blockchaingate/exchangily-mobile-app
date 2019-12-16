@@ -48,7 +48,7 @@ dependencies:
   provider: 3.1.0+1
 
   # Pattern Formatter
-  pattern_formatter: ^0.0.3
+  pattern_formatter: ^1.0.1
 
   # Path Provider
   path_provider: 1.4.2
@@ -74,6 +74,9 @@ dependencies:
 
   # Secure Storage
   flutter_secure_storage: 3.3.1+1
+
+  # dependency injection
+  get_it: ^1.0.3
 
   # Share files
   share:

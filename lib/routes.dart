@@ -44,7 +44,7 @@ class RouteGenerator {
       case '/totalBalance':
         return MaterialPageRoute(builder: (_) => TotalBalancesScreen());
 
-      case '/walletOverview':
+      case '/walletFeatures':
         return MaterialPageRoute(
             builder: (_) => WalletFeaturesScreen(walletInfo: args));
 
@@ -85,18 +85,18 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Withdraw(walletInfo: args));
 
       default:
-        return _errorRoute();
+        return _errorRoute(settings);
     }
   }
 
-  static Route _errorRoute() {
+  static Route _errorRoute(settings) {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
           title: Text('Error'),
         ),
         body: Center(
-          child: Text('ERROR'),
+          child: Text('No route defined for ${settings.name}'),
         ),
       );
     });

@@ -35,9 +35,16 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
       return Scaffold(
         key: key,
         body: Column(
+          mainAxisAlignment:
+              MainAxisAlignment.start, // Expanded works after adding this
           children: <Widget>[
-            _buildBackgroundAndLogoContainer(),
-            _buildWalletListContainer()
+            _buildBackgroundAndLogoContainer(walletInfo),
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                children: <Widget>[_buildWalletListContainer(walletInfo)],
+              ),
+            )
           ],
         ),
         bottomNavigationBar: AppBottomNav(),
@@ -50,19 +57,26 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Container _buildWalletListContainer() {
+  Container _buildWalletListContainer(List<WalletInfo> walletInfo) {
     return new Container(
       margin: EdgeInsets.all(10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           _hideSmallAmount(),
-          new ListView.builder(
-            shrinkWrap: true,
-            itemCount: walletInfo.length,
-            itemBuilder: (BuildContext context, int index) =>
-                buildListBody(context, index, walletInfo),
-          ),
+          ListView.builder(
+              shrinkWrap: true,
+              itemCount: walletInfo.length,
+              itemBuilder: (BuildContext context, int index) {
+                var name = walletInfo[index].tickerName.toLowerCase();
+                return _coinDetailsCard(
+                    '$name',
+                    walletInfo[index].availableBalance,
+                    1000,
+                    walletInfo[index].usdValue,
+                    walletInfo[index].logoColor,
+                    index);
+              }),
         ],
       ),
     );
@@ -73,7 +87,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Container _buildBackgroundAndLogoContainer() {
+  Container _buildBackgroundAndLogoContainer(walletInfo) {
     return new Container(
       width: double.infinity,
       height: 270,
@@ -100,7 +114,9 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                 //   fit: StackFit.passthrough,
                 //   overflow: Overflow.visible,
                 //  alignment: Alignment.bottomCenter,
-                children: <Widget>[Positioned(child: _totalBalanceCard())],
+                children: <Widget>[
+                  Positioned(child: _totalBalanceCard(walletInfo))
+                ],
               )),
         ],
       ),
@@ -109,23 +125,11 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                          Card List View
-
-  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-  Widget buildListBody(
-      BuildContext context, int index, List<WalletInfo> walletInfo) {
-    var name = walletInfo[index].tickerName;
-    return _coinDetailsCard('$name', walletInfo[index].availableBalance, 1000,
-        walletInfo[index].usdValue, walletInfo[index].logoColor, index);
-  }
-
-  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
                                                                                   Copy Address Function
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _totalBalanceCard() => Card(
+  Widget _totalBalanceCard(walletInfo) => Card(
         // margin: EdgeInsets.all(15),
         elevation: elevation,
         color: globals.walletCardColor,
@@ -153,7 +157,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                 children: <Widget>[
                   Text('Total Balance',
                       style: Theme.of(context).textTheme.headline),
-                  Text('123456 USD',
+                  Text('${walletInfo[0].availableBalance}',
                       style: Theme.of(context).textTheme.headline),
                   //AddGas()
                 ],
@@ -222,7 +226,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
         child: InkWell(
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
-            Navigator.pushNamed(context, '/walletOverview',
+            Navigator.pushNamed(context, '/walletFeatures',
                 arguments: walletInfo[index]);
           },
           child: Container(
@@ -233,11 +237,11 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                 new Container(
                     padding: EdgeInsets.all(8),
                     decoration: new BoxDecoration(
-                        color: color,
+                        color: globals.walletCardColor,
                         borderRadius: new BorderRadius.circular(50),
                         boxShadow: [
                           new BoxShadow(
-                              color: color,
+                              color: globals.walletCardColor,
                               offset: new Offset(1.0, 3.0),
                               blurRadius: 5.0,
                               spreadRadius: 2.0),

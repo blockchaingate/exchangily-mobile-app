@@ -86,7 +86,7 @@ getAddressForCoin(root, 'FAB');
 getAddressForCoin(root, 'USDT', tokenType: 'ETH');
 getAddressForCoin(root, 'EXG', tokenType: 'FAB');
  */
- Future getAddressForCoin(root, coinName, {tokenType = '', index = 0}) async{
+Future getAddressForCoin(root, coinName, {tokenType = '', index = 0}) async {
   if (coinName == 'BTC') {
     var node = getBtcNode(root, index: index);
     return getBtcAddressForNode(node);
@@ -109,15 +109,15 @@ getAddressForCoin(root, 'EXG', tokenType: 'FAB');
   return '';
 }
 
-Future getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) async{
-  var address =
-      await getAddressForCoin(root, coinName, tokenType: tokenType, index: index);
+Future getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) async {
+  var address = await getAddressForCoin(root, coinName,
+      tokenType: tokenType, index: index);
   if (coinName == 'BTC') {
     return await getBtcBalanceByAddress(address);
   } else if (coinName == 'ETH') {
     return await getEthBalanceByAddress(address);
   } else if (coinName == 'FAB') {
-    return  await getFabBalanceByAddress(address);
+    return await getFabBalanceByAddress(address);
   } else if (tokenType == 'ETH') {
     return await getEthTokenBalanceByAddress(address, tokenType);
   } else if (tokenType == 'FAB') {

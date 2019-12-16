@@ -37,7 +37,6 @@ class WalletService {
   final client = new http.Client();
 
   List<WalletInfo> _walletInfo = [];
-  List<String> _listOfCoins = ['BTC', 'FAB', 'ETH', 'USDT', 'EXG'];
 
   static String btcApiUrl = "https://btctest.fabcoinapi.com/";
   static String fabApiUrl = "https://fabtest.fabcoinapi.com/";
@@ -73,44 +72,68 @@ class WalletService {
     }
   }
 
-  // Get Wallet Addresses
-  getWalletAddrreses(root) async {
-    List listOfCoins = ['BTC', 'FAB'];
-    
-    for (var i = 0; i < listOfCoins.length; i++) {
-      var name = listOfCoins[i];
-      var address = await getAddressForCoin(root, name);
-
-       _walletInfo
-          .add(WalletInfo(address: address));
-    
-      print('Coin Name $name + Coin Address $address');
-      var bal = await getBalanceForCoin(root, name);
-      _walletInfo.add(WalletInfo(
-          availableBalance: bal["balance"]));
-      print(_walletInfo[i].availableBalance);
-    }
-    // print('before bal');
-    // var bal = await getBalanceForCoin(root, 'BTC');
-    // var fabBal = await getBalanceForCoin(root, 'FAB');
-    // print(bal);
-    // print(fabBal);
-    // print('after bal');
-    //print(getBalanceForCoin(root, 'FAB'));
-    //print(getBalanceForCoin(root, 'USDT'));
-  }
-
-  // Get All Balances
+  /*--------------------------------------------------
+      ||
+                      Future GetAllBalances
+      ||
+      --------------------------------------------------*/
 
   Future<List<WalletInfo>> getAllBalances() async {
-    final seed = bip39.mnemonicToSeed(bip39.generateMnemonic());
+    final seed = bip39.mnemonicToSeed(getRandomMnemonic());
+    print('Mnemonic in the wallet service ${getRandomMnemonic()}');
     final root = bip32.BIP32.fromSeed(seed);
     try {
-      getWalletAddrreses(root);
+      List<String> listOfCoins = ['BTC', 'FAB', 'ETH'];
 
+      for (int i = 0; i < listOfCoins.length; i++) {
+        var tickerName = listOfCoins[i];
+        print(
+            'Ticker names is $tickerName and Length of list of coins is ${listOfCoins.length}');
+        if (tickerName == 'BTC') {
+          print('in $tickerName');
+          var addr = await getAddressForCoin(root, tickerName);
+          var bal = await getBalanceForCoin(root, tickerName);
+          print('address $addr and balance $bal');
+          _walletInfo.add(WalletInfo(
+              tickerName: tickerName,
+              address: addr,
+              availableBalance: bal['balance'],
+              name: 'bitcoin',
+              logoColor: globals.primaryColor));
+          print(
+              'Wallet info address: ${_walletInfo[i].address}, name is ${_walletInfo[i].name}');
+        } else if (tickerName == 'FAB') {
+          print('in $tickerName');
+          var addr = await getAddressForCoin(root, tickerName);
+          var bal = await getBalanceForCoin(root, tickerName);
+          _walletInfo.add(WalletInfo(
+              tickerName: tickerName,
+              address: addr,
+              availableBalance: bal['balance'],
+              name: 'fast access blockchain',
+              logoColor: globals.primaryColor));
+          print(
+              'Wallet info address: ${_walletInfo[i].address}, name is ${_walletInfo[i].name}');
+        } else if (tickerName == 'ETH') {
+          var addr = await getAddressForCoin(root, tickerName);
+          var bal = await getBalanceForCoin(root, tickerName);
+          _walletInfo.add(WalletInfo(
+              tickerName: tickerName,
+              address: addr,
+              availableBalance: bal['balance'],
+              name: 'ethereum',
+              logoColor: globals.primaryColor));
+          print(
+              'Wallet info address: ${_walletInfo[i].address}, name is ${_walletInfo[i].name}');
+        }
+      }
+
+      var len = _walletInfo.length;
+      print('Final Length  $len');
       return _walletInfo;
     } catch (e) {
       print(e);
+      print('Wallet Service Get all balances Failed so in the catch method');
       return null;
     }
   }

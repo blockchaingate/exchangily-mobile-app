@@ -25,8 +25,8 @@ class WalletFeaturesScreen extends StatelessWidget {
     double containerWidth = 150;
     double containerHeight = 115;
 
-    print('walletInfo.tickerName=');
-    print(walletInfo.tickerName);
+    print('walletInfo.tickerName=${walletInfo.tickerName}');
+    print('walletInfo.Address=${walletInfo.address}');
     return Scaffold(
       key: key,
       body: ListView(

@@ -39,7 +39,7 @@ class WalletInfo {
 
   String get tickerName => _tickerName;
 
-  set ticketName(String tickerName) {
+  set tickerName(String tickerName) {
     this._tickerName = tickerName;
   }
 

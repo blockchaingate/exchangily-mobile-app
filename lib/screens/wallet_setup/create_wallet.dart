@@ -1,4 +1,5 @@
 import 'package:encrypt/encrypt.dart' as prefix0;
+import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:flushbar/flushbar.dart';
@@ -20,6 +21,7 @@ class CreateWalletScreen extends StatefulWidget {
 }
 
 class _CreateWalletScreenState extends State<CreateWalletScreen> {
+  List<WalletInfo> _walletInfo;
   TextEditingController _passTextController = TextEditingController();
   TextEditingController _confirmPassTextController = TextEditingController();
   WalletService walletService = WalletService();
@@ -122,7 +124,8 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
         color: globals.primaryColor,
         textColor: Colors.white,
         onPressed: () {
-          validatePassword();
+          Navigator.pushNamed(context, '/totalBalance', arguments: _walletInfo);
+          //  validatePassword();
           //secureSeed();
         },
         child: Text(
@@ -163,10 +166,19 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
       } else {
         // secureSeed();
         print('else');
-        walletService.getAllBalances();
-        // Navigator.pushNamed(context, '/totalBalance');
+        getBalances();
       }
     }
+  }
+
+  getBalances() async {
+    // print('1');
+    _walletInfo = await walletService.getAllBalances();
+    // print(_walletInfo.length);
+    //  print(_walletInfo[0].name);
+    //  print('2');
+    Navigator.pushNamed(context, '/totalBalance', arguments: _walletInfo);
+    // print('3');
   }
 
   secureSeed() {
@@ -183,7 +195,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
     print(encrypted.base64);
     print(decrypted);
     walletService.saveEncryptedData(encrypted.base64);
-    walletService.readEncryptedData();
+    // walletService.readEncryptedData();
     // walletService
     //     .writeStorage(userTypedKey, encrypted.base64)
     //     .whenComplete(readKey());

@@ -26,6 +26,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   GlobalKey _globalKey = new GlobalKey();
 
   Widget build(BuildContext context) {
+    print('Wallet info in receive ${widget.walletInfo.address}');
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
