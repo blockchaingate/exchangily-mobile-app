@@ -119,9 +119,9 @@ Future getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) async {
   } else if (coinName == 'FAB') {
     return await getFabBalanceByAddress(address);
   } else if (tokenType == 'ETH') {
-    return await getEthTokenBalanceByAddress(address, tokenType);
+    return await getEthTokenBalanceByAddress(address, coinName);
   } else if (tokenType == 'FAB') {
-    return await getFabTokenBalanceByAddress(address, tokenType);
+    return await getFabTokenBalanceByAddress(address, coinName);
   }
 
   return {'balance': -1, 'lockbalance': -1};

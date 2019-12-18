@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:bip39/bip39.dart' as bip39;
@@ -23,6 +24,7 @@ import '../utils/coin_util.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/wallet.dart';
 import 'dart:io';
+import 'dart:convert';
 import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
 import 'package:bitcoin_flutter/src/transaction_builder.dart';
@@ -41,6 +43,9 @@ class WalletService {
   static String btcApiUrl = "https://btctest.fabcoinapi.com/";
   static String fabApiUrl = "https://fabtest.fabcoinapi.com/";
   static String ethApiUrl = "https://ethtest.fabcoinapi.com/";
+  String usdCoinPriceApiUrl =
+      'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
+  List<double> totalUsdBalance = [];
 
   // Get Random Mnemonic
   String getRandomMnemonic() {
@@ -82,28 +87,29 @@ class WalletService {
     final seed = bip39.mnemonicToSeed(getRandomMnemonic());
     print('Mnemonic in the wallet service ${getRandomMnemonic()}');
     final root = bip32.BIP32.fromSeed(seed);
+    var usdVal = await getCoinsUsdValue();
     try {
-      List<String> listOfCoins = ['BTC', 'FAB', 'ETH'];
+      List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
 
       for (int i = 0; i < listOfCoins.length; i++) {
         var tickerName = listOfCoins[i];
-        print(
-            'Ticker names is $tickerName and Length of list of coins is ${listOfCoins.length}');
         if (tickerName == 'BTC') {
-          print('in $tickerName');
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
-          print('address $addr and balance $bal');
+          double currentUsdValue = usdVal['bitcoin']['usd'];
+          print(currentUsdValue);
+          var calculatedBal =
+              calculateUsdBalance(currentUsdValue, bal['balance']);
+          print('printing calculated bal $calculatedBal');
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
               availableBalance: bal['balance'],
+              usdValue: calculatedBal,
               name: 'bitcoin',
-              logoColor: globals.primaryColor));
-          print(
-              'Wallet info address: ${_walletInfo[i].address}, name is ${_walletInfo[i].name}');
+              logoColor: Color.alphaBlend(Colors.blue, Colors.lightBlue)));
+          printValuesAfter(i, tickerName);
         } else if (tickerName == 'FAB') {
-          print('in $tickerName');
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
           _walletInfo.add(WalletInfo(
@@ -112,8 +118,7 @@ class WalletService {
               availableBalance: bal['balance'],
               name: 'fast access blockchain',
               logoColor: globals.primaryColor));
-          print(
-              'Wallet info address: ${_walletInfo[i].address}, name is ${_walletInfo[i].name}');
+          printValuesAfter(i, tickerName);
         } else if (tickerName == 'ETH') {
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
@@ -123,77 +128,78 @@ class WalletService {
               availableBalance: bal['balance'],
               name: 'ethereum',
               logoColor: globals.primaryColor));
-          print(
-              'Wallet info address: ${_walletInfo[i].address}, name is ${_walletInfo[i].name}');
+          printValuesAfter(i, tickerName);
+        } else if (tickerName == 'USDT') {
+          var addr =
+              await getAddressForCoin(root, tickerName, tokenType: 'ETH');
+          var bal = await getBalanceForCoin(root, tickerName, tokenType: 'ETH');
+          _walletInfo.add(WalletInfo(
+              tickerName: tickerName,
+              address: addr,
+              availableBalance: bal['balance'],
+              name: 'usd token',
+              logoColor: globals.primaryColor));
+          printValuesAfter(i, tickerName);
+        } else if (tickerName == 'EXG') {
+          var addr =
+              await getAddressForCoin(root, tickerName, tokenType: 'FAB');
+          var bal = await getBalanceForCoin(root, tickerName, tokenType: 'FAB');
+          _walletInfo.add(WalletInfo(
+              tickerName: tickerName,
+              address: addr,
+              availableBalance: bal['balance'],
+              usdValue: 0.2,
+              name: 'exchangily',
+              logoColor: globals.primaryColor));
+          printValuesAfter(i, tickerName);
         }
       }
-
-      var len = _walletInfo.length;
-      print('Final Length  $len');
       return _walletInfo;
     } catch (e) {
       print(e);
-      print('Wallet Service Get all balances Failed so in the catch method');
+      print('Wallet Service Get all balances Failed');
       return null;
     }
   }
 
-  // Get Btc balance
-
-  getBtcBalance() async {
-    // btcAddress = getBtcAddressForNode(bitCoinChild);
-    // btcBalance = await getBtcBalanceByAddress(btcAddress);
-    // _walletInfo = [
-    //   WalletInfo('btc', btcAddress, btcBalance, 12345.214, globals.primaryColor,
-    //       'bitcoin')
-    // ];
+  void printValuesAfter(i, name) {
+    //   print('in $name');
+    //  print(
+    //      '${_walletInfo[i].name} address: ${_walletInfo[i].address} -Coin bal is ${_walletInfo[i].availableBalance} and usd Bal is ${_walletInfo[i].usdValue}');
   }
 
-  // Get ETH balance
-
-  getEthBalance() async {
-    // ethAddress = getEthAddressForNode(ethCoinChild);
-
-    // print('ethAddress=' + ethAddress);
-    // ethAddress = getAddress(ethCoinChild, testnet);
-    // var url = ethApiUrl + 'getbalance/' + ethAddress;
-    // print(url);
-    // var response = await client.get(url);
-    //ethBalance = double.parse(response.body) / 1e8;
-    // _walletInfo = [
-    //   WalletInfo('eth', ethAddress, ethBalance, 25415.214, globals.primaryColor,
-    //       'ethereum')
-    // ];
+  calculateUsdBalance(double usdValueByApi, double actualWalletBalance) {
+    actualWalletBalance = 0.005;
+    if (actualWalletBalance != 0) {
+      double total = (usdValueByApi * actualWalletBalance);
+      totalUsdBalance.add(total);
+      print(totalUsdBalance.length);
+      return total;
+    } else {
+      print('Wallet Balance is Zero');
+    }
   }
 
-// Get Fab Balance
-
-  getFabBalance() async {
-    // fabAddress = getBtcAddressForNode(fabCoinChild);
-    //  var url = fabApiUrl + 'getbalance/' + fabAddress;
-    // print(url);
-    //  var response = await client.get(url);
-    //  fabBalance = double.parse(response.body) / 1e8;
-    // _walletInfo.add(WalletInfo('fab', fabAddress, fabBalance, 214212.112,
-    //     globals.fabLogoColor, 'fast access blockchain'));
+  getTotalUsdBalance() {
+    double sum;
+    print('Total usd balance list count ${totalUsdBalance.length}');
+    if (totalUsdBalance.length != 0) {
+      for (var i; i < totalUsdBalance.length; i++) {
+        sum = sum + totalUsdBalance[i];
+      }
+      print('Sum $sum');
+      return totalUsdBalance;
+    }
+    return 0.0;
   }
 
-  // Get Exg Balance
-
-  getExgBalance() async {
-    var exgSmartContractAddress = '0x867480ba8e577402fa44f43c33875ce74bdc5df6';
-    //  var body = {
-    //    'address': stringUtils.trimHexPrefix(exgSmartContractAddress),
-    //    'data': '70a08231' +
-    //     stringUtils.fixLength(stringUtils.trimHexPrefix(exgAddress), 64)
-    // };
-    // var response = await client.post('$fabApiUrl + callcontract', body: body);
-    //  var json = jsonDecode(response.body);
-    //  var unlockBalance = json['executionResult']['output'];
-    //  var unlockInt = int.parse("0x$unlockBalance");
-    // exgBalance = unlockInt / 1e18;
-    // _walletInfo.add(WalletInfo('exg', exgSmartContractAddress, exgBalance,
-    //     34212.782, globals.exgLogoColor, 'exchangily'));
+  Future getCoinsUsdValue() async {
+    final res = await http.get(usdCoinPriceApiUrl);
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    } else {
+      throw Exception('Failed to load the data from the API');
+    }
   }
 
 // Add Gas

@@ -26,7 +26,7 @@ class Deposit extends StatelessWidget {
             },
           ),
           middle: Text(
-            "Deposit for ${walletInfo.name}",
+            "Transfer ${walletInfo.name} to Exchange",
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0XFF1f2233),

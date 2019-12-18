@@ -12,6 +12,30 @@ class WalletFeatureName {
   WalletFeatureName(this.name, this.icon, this.route, this.shadowColor);
 }
 
+class CoinName {
+  final String name;
+  final CoinUsdValue coinUsdValue;
+
+  const CoinName({this.name, this.coinUsdValue});
+
+  factory CoinName.fromJson(Map<String, dynamic> data) {
+    return CoinName(
+        name: data['name'],
+        coinUsdValue: CoinUsdValue.fromJson(data['coinUsdValue']));
+  }
+}
+
+class CoinUsdValue {
+  final String usd;
+  final double value;
+
+  const CoinUsdValue({this.usd, this.value});
+
+  factory CoinUsdValue.fromJson(Map<String, dynamic> data) {
+    return CoinUsdValue(usd: data['usd'], value: data['value']);
+  }
+}
+
 // Wallet Model
 
 class WalletInfo {

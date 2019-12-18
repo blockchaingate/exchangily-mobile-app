@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
-import './add_gas.dart';
 
 class TotalBalancesScreen extends StatefulWidget {
   const TotalBalancesScreen({Key key}) : super(key: key);
@@ -19,10 +18,11 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
   List<WalletInfo> walletInfo;
+  double totalUsdBalance = 0;
 
   @override
   void initState() {
-    //walletService.getAllWalletAddresses();
+    totalUsdBalance = walletService.getTotalUsdBalance();
     super.initState();
   }
 
@@ -35,10 +35,12 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
       return Scaffold(
         key: key,
         body: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.start, // Expanded works after adding this
           children: <Widget>[
             _buildBackgroundAndLogoContainer(walletInfo),
+            Container(
+              padding: EdgeInsets.only(right: 10, top: 10),
+              child: _hideSmallAmount(),
+            ),
             Expanded(
               child: ListView(
                 scrollDirection: Axis.vertical,
@@ -59,11 +61,10 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   Container _buildWalletListContainer(List<WalletInfo> walletInfo) {
     return new Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.symmetric(horizontal: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          _hideSmallAmount(),
           ListView.builder(
               shrinkWrap: true,
               itemCount: walletInfo.length,
@@ -90,7 +91,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
   Container _buildBackgroundAndLogoContainer(walletInfo) {
     return new Container(
       width: double.infinity,
-      height: 270,
+      height: 250,
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/wallet-page/background.png'),
@@ -125,8 +126,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                                                                  Copy Address Function
-
+                                                                                  Total Balance Card
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Widget _totalBalanceCard(walletInfo) => Card(
@@ -142,13 +142,13 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
               new Container(
                 padding: EdgeInsets.all(8),
                 decoration: new BoxDecoration(
-                    color: globals.iconBackgroundColor,
-                    borderRadius: new BorderRadius.circular(50)),
+                    //    color: globals.iconBackgroundColor,
+                    borderRadius: new BorderRadius.circular(30)),
                 child: Image.asset(
                   'assets/images/wallet-page/dollar-sign.png',
                   width: 50,
                   height: 50,
-                  //  color: globals.white,
+                  color: globals.iconBackgroundColor, // image background color
                   fit: BoxFit.cover,
                 ),
               ),
@@ -156,13 +156,26 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Text('Total Balance',
-                      style: Theme.of(context).textTheme.headline),
-                  Text('${walletInfo[0].availableBalance}',
-                      style: Theme.of(context).textTheme.headline),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline
+                          .copyWith(fontWeight: FontWeight.bold)),
+                  Text('$totalUsdBalance USD',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline
+                          .copyWith(fontWeight: FontWeight.bold)),
                   //AddGas()
                 ],
               ),
-              Icon(Icons.refresh)
+              InkWell(
+                  onTap: () {
+                    totalUsdBalance = walletService.getTotalUsdBalance();
+                  },
+                  child: Icon(
+                    Icons.refresh,
+                    color: globals.white,
+                  ))
             ],
           ),
         ),
@@ -219,7 +232,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Widget _coinDetailsCard(
-          pairName, available, exgAmount, usdValue, color, index) =>
+          tickerName, available, exgAmount, usdValue, color, index) =>
       Card(
         color: globals.walletCardColor,
         elevation: elevation,
@@ -232,22 +245,24 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
           child: Container(
             padding: EdgeInsets.all(10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                new Container(
+                Container(
+                    margin: EdgeInsets.only(right: 12),
                     padding: EdgeInsets.all(8),
                     decoration: new BoxDecoration(
                         color: globals.walletCardColor,
                         borderRadius: new BorderRadius.circular(50),
                         boxShadow: [
                           new BoxShadow(
-                              color: globals.walletCardColor,
+                              color: color,
                               offset: new Offset(1.0, 3.0),
                               blurRadius: 5.0,
                               spreadRadius: 2.0),
                         ]),
-                    child:
-                        Image.asset('assets/images/wallet-page/$pairName.png'),
+                    child: Image.asset(
+                        'assets/images/wallet-page/$tickerName.png'),
                     width: 40,
                     height: 40),
                 Column(
@@ -255,57 +270,68 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      '$pairName'.toUpperCase(),
+                      '$tickerName'.toUpperCase(),
                       style: Theme.of(context).textTheme.display1,
                     ),
                     Text('Available',
                         style: Theme.of(context).textTheme.display2),
-                    Text('$available', style: TextStyle(color: globals.red))
+                    Text('$available',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: globals.red))
                   ],
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Assets in exchange',
-                        style: Theme.of(context).textTheme.display2),
-                    Text('$exgAmount',
-                        style: TextStyle(color: globals.primaryColor)),
-                    Row(
-                      children: <Widget>[
-                        IconButton(
-                            icon: Icon(Icons.arrow_downward),
-                            tooltip: 'Deposit',
-                            onPressed: () {
-                              print('walletInfo[index]=');
-                              print(walletInfo[index]);
-                              Navigator.pushNamed(context, '/deposit',
-                                  arguments: walletInfo[index]);
-                            }),
-                        IconButton(
-                            icon: Icon(Icons.arrow_upward),
-                            tooltip: 'Withdraw',
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/withdraw',
-                                  arguments: walletInfo[index]);
-                            }),
-                        IconButton(
-                            icon: Icon(Icons.vertical_align_bottom),
-                            tooltip: 'Redeposit',
-                            onPressed: () {}),
-                      ],
-                    )
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 0),
+                        child: Text('Assets in exchange',
+                            style: Theme.of(context).textTheme.display2),
+                      ),
+                      Text('$exgAmount',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: globals.primaryColor)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          IconButton(
+                              icon: Icon(Icons.arrow_downward),
+                              tooltip: 'Deposit',
+                              onPressed: () {
+                                print('walletInfo[index]=');
+                                print(walletInfo[index]);
+                                Navigator.pushNamed(context, '/deposit',
+                                    arguments: walletInfo[index]);
+                              }),
+                          // IconButton(
+                          //     icon: Icon(Icons.arrow_upward),
+                          //     tooltip: 'Withdraw',
+                          //     onPressed: () {
+                          //       Navigator.pushNamed(context, '/withdraw',
+                          //           arguments: walletInfo[index]);
+                          //     }),
+                          IconButton(
+                              icon: Icon(Icons.info_outline),
+                              tooltip: 'Redeposit',
+                              onPressed: () {}),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(''),
-                    Text('Value(USD)',
-                        style: Theme.of(context).textTheme.display2),
-                    Text('$usdValue', style: TextStyle(color: globals.green))
-                  ],
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text('Value(USD)',
+                          style: Theme.of(context).textTheme.display2),
+                      Text('$usdValue', style: TextStyle(color: globals.green))
+                    ],
+                  ),
                 ),
               ],
             ),
