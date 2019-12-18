@@ -139,14 +139,14 @@ class WalletFeaturesScreen extends StatelessWidget {
             ),
           ),
           Visibility(
-              visible: (walletInfo.tickerName == 'fab'),
+              visible: (walletInfo.tickerName == 'FAB'),
               child: Container(
                 width: 190,
                 child: RaisedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/smartContract');
                   },
-                  child: Text('Smart Contract', style: TextStyle(fontSize: 15)),
+                  child: Text(walletInfo.tickerName + 'Smart Contract', style: TextStyle(fontSize: 15)),
                 ),
               ))
         ],

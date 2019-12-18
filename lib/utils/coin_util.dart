@@ -11,6 +11,39 @@ import './btc_util.dart';
 import './eth_util.dart';
 import "package:pointycastle/pointycastle.dart";
 
+
+import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
+
+
+encodeSignature(signature, recovery, compressed, segwitType) {
+  if (segwitType != null) {
+    recovery += 8;
+    if (segwitType == 'p2wpkh') recovery += 4;
+  } else {
+    if (compressed) recovery += 4;
+  }
+  recovery += 27;
+  return recovery;
+}
+
+/*
+Future signedBitcoinMessage(String originalMessage, String wif) async {
+  print('originalMessage=');
+  print(originalMessage);
+  var hdWallet = Wallet.fromWIF(wif);
+  var compressed = false;
+  var sigwitType;
+  var signedMess = await hdWallet.sign(originalMessage);
+  var recovery = 0;
+  var r = encodeSignature(signedMess, recovery, compressed, sigwitType);
+  print('r=');
+  print(r);
+  print('signedMess=');
+  print(signedMess);
+  return signedMess;
+}
+*/
+
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
   print('originalMessage=');
   print(originalMessage);
@@ -33,6 +66,11 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     var credentials = EthPrivateKey(privateKey);
     signedMess = await credentials
         .signPersonalMessage(stringToUint8List(originalMessage));
+
+    String ss = HEX.encode(signedMess);
+    r = ss.substring(0, 64);
+    s = ss.substring(64, 128);
+    v = ss.substring(128);
   } else if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
     var hdWallet = new HDWallet.fromSeed(seed);
 
@@ -42,21 +80,21 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     }
     var btcWallet =
         hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
-    signedMess = btcWallet.sign(originalMessage);
+    signedMess = await btcWallet.sign(originalMessage);
+    var recovery = 0;
+    var compressed = false;
+    var sigwitType;
+    v = encodeSignature(signedMess, recovery, compressed, sigwitType);
+    String ss = HEX.encode(signedMess);
+    r = ss.substring(0, 64);
+    s = ss.substring(64, 128);  
   }
 
   print("signedMess=");
   print(signedMess);
   if (signedMess != null) {
-    String ss = HEX.encode(signedMess);
-    print("ss=");
-    print(ss);
-    r = ss.substring(0, 64);
-    s = ss.substring(64, 128);
-    v = ss.substring(128);
-    if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
-      v = '20';
-    }
+
+
   }
 
   return {'r': r, 's': s, 'v': v};
