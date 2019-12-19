@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:exchangilymobileapp/logger.dart';
+
 import '../../models/wallet.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,11 +24,12 @@ class ReceiveWalletScreen extends StatefulWidget {
 }
 
 class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
+  final log = getLogger('Receive');
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   GlobalKey _globalKey = new GlobalKey();
 
   Widget build(BuildContext context) {
-    print('Wallet info in receive ${widget.walletInfo.address}');
+    log.i('Address ${widget.walletInfo.address}');
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(

@@ -30,7 +30,7 @@ dependencies:
   encrypt: ^3.3.0
 
   # Logger
-  logger: ^0.7.0+2
+  logger: ^0.6.0
 
   # Web 3 Dart
   web3dart: ^1.2.1
@@ -48,7 +48,7 @@ dependencies:
   provider: 3.1.0+1
 
   # Pattern Formatter
-  pattern_formatter: ^1.0.1
+  pattern_formatter: ^1.0.0
 
   # Path Provider
   path_provider: 1.4.2
@@ -75,8 +75,11 @@ dependencies:
   # Secure Storage
   flutter_secure_storage: 3.3.1+1
 
-  # dependency injection
+  # Dependency injection
   get_it: ^1.0.3
+
+  # Device Preview
+  device_preview:
 
   # Share files
   share:
@@ -97,7 +100,6 @@ flutter:
     - assets/images/wallet-page/
   #  - lib/l10n/en.json
   #  - lib/l10n/zh.json
-
   # example:
   # fonts:
   #   - family: Schyler

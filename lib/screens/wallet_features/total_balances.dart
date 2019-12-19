@@ -1,8 +1,11 @@
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/shared/bottom_nav.dart';
+import 'package:exchangilymobileapp/widgets/app_drawer.dart';
+import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
 
@@ -14,6 +17,8 @@ class TotalBalancesScreen extends StatefulWidget {
 }
 
 class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
+  final log = getLogger('TotalBalances');
+
   WalletService walletService = WalletService();
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
@@ -22,23 +27,25 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   @override
   void initState() {
-    totalUsdBalance = walletService.getTotalUsdBalance();
     super.initState();
+    //  totalUsdBalance = walletService.totalWalletUsdBalance();
   }
 
   Widget build(BuildContext context) {
     walletInfo = Provider.of<List<WalletInfo>>(context);
     if (walletInfo == null) {
-      Navigator.of(context).pushNamed('/walletSetup');
+      log.e('ERROR $walletInfo');
+      Navigator.of(context).pushNamed('/createWallet');
       return null;
     } else {
       return Scaffold(
         key: key,
+        drawer: AppDrawer(),
         body: Column(
           children: <Widget>[
             _buildBackgroundAndLogoContainer(walletInfo),
             Container(
-              padding: EdgeInsets.only(right: 10, top: 10),
+              padding: EdgeInsets.only(right: 10, top: 15),
               child: _hideSmallAmount(),
             ),
             Expanded(
@@ -90,37 +97,55 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   Container _buildBackgroundAndLogoContainer(walletInfo) {
     return new Container(
-      width: double.infinity,
-      height: 250,
+      // width: double.infinity,
+      height: 210,
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/wallet-page/background.png'),
               fit: BoxFit.cover)),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          new Container(
-            padding: EdgeInsets.only(top: 45, bottom: 10),
-            child: Image.asset(
-              'assets/images/start-page/logo.png',
-              width: 250,
-              //height: 120,
-              color: globals.white,
-            ),
-          ),
-          new Container(
-              padding: EdgeInsets.all(25),
-              //margin: EdgeInsets.only(top: 15),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
               child: Stack(
-                //   fit: StackFit.passthrough,
-                //   overflow: Overflow.visible,
-                //  alignment: Alignment.bottomCenter,
+                overflow: Overflow.visible,
                 children: <Widget>[
-                  Positioned(child: _totalBalanceCard(walletInfo))
+                  Positioned(
+                    top: 5,
+                    right: 5,
+                    child: IconButton(
+                      icon: Icon(Icons.menu, color: globals.white, size: 40),
+                      onPressed: () {
+                        log.i('trying to open the drawer');
+                        key.currentState.openDrawer();
+                      },
+                    ),
+                  )
                 ],
-              )),
-        ],
-      ),
+              ),
+            ),
+            Expanded(
+              child: Stack(children: <Widget>[
+                Positioned(
+                  child: Image.asset(
+                    'assets/images/start-page/logo.png',
+                    width: 250,
+                    color: globals.white,
+                  ),
+                ),
+              ]),
+            ),
+            Expanded(
+              child: Stack(
+                //fit: StackFit.passthrough,
+                overflow: Overflow.visible,
+                alignment: Alignment.bottomCenter,
+                children: <Widget>[
+                  Positioned(bottom: -15, child: _totalBalanceCard(walletInfo))
+                ],
+              ),
+            ),
+          ]),
     );
   }
 
@@ -134,6 +159,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
         elevation: elevation,
         color: globals.walletCardColor,
         child: Container(
+          width: 270,
           padding: EdgeInsets.all(10),
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -170,7 +196,12 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
               ),
               InkWell(
                   onTap: () {
-                    totalUsdBalance = walletService.getTotalUsdBalance();
+                    totalUsdBalance = walletService.totalWalletUsdBalance();
+                    log.v('This is Verbose');
+                    log.d('This is a debug message $totalUsdBalance');
+                    log.i('This is info, should be used for public calls');
+                    log.w('This is warning which might become a problem');
+                    log.e('Some is wrong, this is ERROR');
                   },
                   child: Icon(
                     Icons.refresh,
@@ -197,7 +228,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
               children: <Widget>[
                 Icon(
                   Icons.add_alert,
-                  semanticLabel: 'Hide Small Amount Assests',
+                  semanticLabel: 'Hide Small Amount Assets',
                   color: globals.primaryColor,
                 ),
                 Container(
@@ -257,24 +288,26 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                         boxShadow: [
                           new BoxShadow(
                               color: color,
-                              offset: new Offset(1.0, 3.0),
-                              blurRadius: 5.0,
-                              spreadRadius: 2.0),
+                              offset: new Offset(1.0, 5.0),
+                              blurRadius: 10.0,
+                              spreadRadius: 1.0),
                         ]),
                     child: Image.asset(
                         'assets/images/wallet-page/$tickerName.png'),
                     width: 40,
                     height: 40),
                 Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
                       '$tickerName'.toUpperCase(),
                       style: Theme.of(context).textTheme.display1,
                     ),
-                    Text('Available',
-                        style: Theme.of(context).textTheme.display2),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text('Available',
+                          style: Theme.of(context).textTheme.display2),
+                    ),
                     Text('$available',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: globals.red))
@@ -288,21 +321,20 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 0),
                         child: Text('Assets in exchange',
+                            textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.display2),
                       ),
                       Text('$exgAmount',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: globals.primaryColor)),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           IconButton(
                               icon: Icon(Icons.arrow_downward),
                               tooltip: 'Deposit',
                               onPressed: () {
-                                print('walletInfo[index]=');
-                                print(walletInfo[index]);
                                 Navigator.pushNamed(context, '/deposit',
                                     arguments: walletInfo[index]);
                               }),
@@ -324,11 +356,13 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                 ),
                 Expanded(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text('Value(USD)',
-                          style: Theme.of(context).textTheme.display2),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5.0),
+                        child: Text('Value(USD)',
+                            style: Theme.of(context).textTheme.display2),
+                      ),
                       Text('$usdValue', style: TextStyle(color: globals.green))
                     ],
                   ),

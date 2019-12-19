@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +37,7 @@ import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import 'package:web_socket_channel/io.dart';
 
 class WalletService {
+  final log = getLogger('Wallet Service');
   final client = new http.Client();
 
   List<WalletInfo> _walletInfo = [];
@@ -59,9 +61,9 @@ class WalletService {
       final file = File('${directory.path}/my_file.byte');
       final text = data;
       await file.writeAsString(text);
-      print('saved');
+      log.i('saved');
     } catch (e) {
-      print("Couldn't write file!!");
+      log.e("Couldn't write file!! $e");
     }
   }
 
@@ -71,9 +73,9 @@ class WalletService {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/my_file.byte');
       String text = await file.readAsString();
-      print(text);
+      log.i(text);
     } catch (e) {
-      print("Couldn't read file");
+      log.e("Couldn't read file $e");
     }
   }
 
@@ -85,7 +87,7 @@ class WalletService {
 
   Future<List<WalletInfo>> getAllBalances() async {
     final seed = bip39.mnemonicToSeed(getRandomMnemonic());
-    print('Mnemonic in the wallet service ${getRandomMnemonic()}');
+    log.i('Mnemonic in the wallet service ${getRandomMnemonic()}');
     final root = bip32.BIP32.fromSeed(seed);
     var usdVal = await getCoinsUsdValue();
     try {
@@ -97,10 +99,12 @@ class WalletService {
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
           double currentUsdValue = usdVal['bitcoin']['usd'];
-          print(currentUsdValue);
+          log.i(
+              'Current btc price in get all balances method $currentUsdValue');
           var calculatedBal =
               calculateUsdBalance(currentUsdValue, bal['balance']);
-          print('printing calculated bal $calculatedBal');
+          log.i(
+              'printing calculated bal in get all balances method $calculatedBal');
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
@@ -156,15 +160,15 @@ class WalletService {
       }
       return _walletInfo;
     } catch (e) {
-      print(e);
-      print('Wallet Service Get all balances Failed');
+      log.e(e);
+      log.i('Wallet Service Get all balances Failed');
       return null;
     }
   }
 
   void printValuesAfter(i, name) {
-    //   print('in $name');
-    //  print(
+    // log.i('in $name');
+    //  log.i(
     //      '${_walletInfo[i].name} address: ${_walletInfo[i].address} -Coin bal is ${_walletInfo[i].availableBalance} and usd Bal is ${_walletInfo[i].usdValue}');
   }
 
@@ -173,21 +177,21 @@ class WalletService {
     if (actualWalletBalance != 0) {
       double total = (usdValueByApi * actualWalletBalance);
       totalUsdBalance.add(total);
-      print(totalUsdBalance.length);
+      log.i('calculate usd balance methoud ${totalUsdBalance.length}');
       return total;
     } else {
-      print('Wallet Balance is Zero');
+      log.i('Wallet Balance is Zero');
     }
   }
 
-  getTotalUsdBalance() {
+  totalWalletUsdBalance() {
     double sum;
-    print('Total usd balance list count ${totalUsdBalance.length}');
+    log.i('Total usd balance list count ${totalUsdBalance.length}');
     if (totalUsdBalance.length != 0) {
       for (var i; i < totalUsdBalance.length; i++) {
         sum = sum + totalUsdBalance[i];
       }
-      print('Sum $sum');
+      log.i('Sum $sum');
       return totalUsdBalance;
     }
     return 0.0;

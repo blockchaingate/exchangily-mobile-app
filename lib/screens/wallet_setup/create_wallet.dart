@@ -1,4 +1,5 @@
 import 'package:encrypt/encrypt.dart' as prefix0;
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
@@ -21,6 +22,7 @@ class CreateWalletScreen extends StatefulWidget {
 }
 
 class _CreateWalletScreenState extends State<CreateWalletScreen> {
+  final log = getLogger('Create Wallet');
   List<WalletInfo> _walletInfo;
   TextEditingController _passTextController = TextEditingController();
   TextEditingController _confirmPassTextController = TextEditingController();
@@ -146,7 +148,7 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
     Pattern pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regex = new RegExp(pattern);
-    print(_passTextController.text);
+    log.i(_passTextController.text);
     if (_passTextController.text.isEmpty) {
       showInfoFlushbar('Empty Password', 'Please fill both password fields',
           Icons.cancel, Colors.red);
@@ -165,20 +167,15 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
             Colors.red);
       } else {
         // secureSeed();
-        print('else');
+        log.i('else');
         getBalances();
       }
     }
   }
 
   getBalances() async {
-    // print('1');
     _walletInfo = await walletService.getAllBalances();
-    // print(_walletInfo.length);
-    //  print(_walletInfo[0].name);
-    //  print('2');
     Navigator.pushNamed(context, '/totalBalance', arguments: _walletInfo);
-    // print('3');
   }
 
   secureSeed() {
@@ -191,9 +188,9 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
 
     final encrypted = encrypter.encrypt(randomMnemonic, iv: iv);
     final decrypted = encrypter.decrypt(encrypted, iv: iv);
-    print(decrypted);
-    print(encrypted.base64);
-    print(decrypted);
+    log.i(decrypted);
+    log.i(encrypted.base64);
+    log.i(decrypted);
     walletService.saveEncryptedData(encrypted.base64);
     // walletService.readEncryptedData();
     // walletService

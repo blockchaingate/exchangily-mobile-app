@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +14,7 @@ class ConfirmSeedtWalletScreen extends StatefulWidget {
 }
 
 class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
+  final log = getLogger('Confirm Seed');
   List<TextEditingController> _mnemonicTextController = new List();
   List<String> userTypedMnemonic = [];
   FocusNode _focusNode;
@@ -124,20 +126,20 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
       // So we use listEqual for deep checking which is one many methods
       if (listEquals(widget.mnemonic, userTypedMnemonic)) {
         Navigator.of(context).pushNamed('/createWallet');
-        print('if');
-        print(widget.mnemonic);
-        print('user typed');
-        print(userTypedMnemonic);
+        log.i('if');
+        log.i(widget.mnemonic);
+        log.i('user typed');
+        log.i(userTypedMnemonic);
         // userTypedMnemonic.clear();
       } else {
         Navigator.of(context).pushNamed(
             '/createWallet'); // Remove this after next screen has finished
         // May be in future we should display where user made a mistake in typing
         // For example text field index 5 should turn red if user made a mistake there
-        print('else');
-        print(widget.mnemonic);
-        print('user typed');
-        print(userTypedMnemonic);
+        log.i('else');
+        log.i(widget.mnemonic);
+        log.i('user typed');
+        log.i(userTypedMnemonic);
       }
     });
   }

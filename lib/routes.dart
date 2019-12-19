@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/backup_seed.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/total_balances.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/confirm_seed.dart';
@@ -19,10 +20,13 @@ import 'package:exchangilymobileapp/screens/wallet_features/deposit.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/withdraw.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/smart_contract.dart';
 
+final log = getLogger('Routes');
+
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
+    log.i(
+        'generateRoute | name: ${settings.name} arguments:${settings.arguments}');
     final args = settings.arguments;
-    print(args);
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageScreen());

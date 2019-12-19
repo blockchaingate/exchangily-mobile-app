@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/screens/wallet_setup/choose_wallet_language.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
@@ -15,11 +15,11 @@ import 'models/wallet.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
-  Logger.level = Level.verbose;
+  Logger.level = Level.info;
   // Force user to use only portrait mode until the development of other screen size design
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(MyApp());
+    runApp(DevicePreview(builder: (context) => MyApp()));
   });
 }
 
@@ -33,6 +33,8 @@ class MyApp extends StatelessWidget {
           Provider<String>.value(value: WalletService().getRandomMnemonic())
         ],
         child: MaterialApp(
+          // locale: DevicePreview.of(context).locale,
+          builder: DevicePreview.appBuilder,
           localizationsDelegates: [
             AppLocalizationsDelegate(),
             GlobalMaterialLocalizations.delegate,
