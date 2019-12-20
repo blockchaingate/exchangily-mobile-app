@@ -29,7 +29,7 @@ import 'package:bitcoin_flutter/src/transaction_builder.dart';
 import 'package:bitcoin_flutter/src/transaction.dart' as btcTransaction;
 import 'package:bitcoin_flutter/src/ecpair.dart';
 import 'package:bitcoin_flutter/src/utils/script.dart' as script;
-import '../environments/environment.dart' as environment;
+import '../environments/environment.dart';
 import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -44,7 +44,8 @@ class WalletService {
 
   // Get Random Mnemonic
   String getRandomMnemonic() {
-    return bip39.generateMnemonic();
+    //return bip39.generateMnemonic();
+    return "culture sound obey clean pretty medal churn behind chief cactus alley ready";
   }
 
   // Save Encrypted Data to Storage
@@ -239,14 +240,14 @@ class WalletService {
       return -1;
     }
     var option = {};
-    if (coinName == 'USDT') {
+    if ((coinName != null) && (coinName != '')) {
       option = {
         'tokenType': tokenType,
-        'contractAddress': '0x1c35eCBc06ae6061d925A2fC2920779a1896282c'
+        'contractAddress': environment["addresses"]["smartContract"][coinName]
       };
     }
     var resST = await sendTransaction(
-        coinName, [0], officalAddress, amount, option, false);
+        coinName, seed, [0], officalAddress, amount, option, false);
 
     if (resST['errMsg'] != '') {
       print(resST['errMsg']);
@@ -260,7 +261,12 @@ class WalletService {
 
     var txHex = resST['txHex'];
     var txHash = resST['txHash'];
+    print('txHash=' + txHash);
     var amountInLink = BigInt.from(amount * 1e18);
+    // var amountInLink = BigInt.from(resST["amountSent"]);
+
+    print('amountInLink=');
+    print(amountInLink);
 
     var coinType = getCoinTypeIdByName(coinName);
 
@@ -276,13 +282,25 @@ class WalletService {
         amountInLink,
         stringUtils.trimHexPrefix(addressInKanban));
 
+    // originalMessage = 'hello world';
+
+    print('originalMessage=');
+    print(originalMessage);
+    // return -10;
     var signedMess =
         await signedMessage(originalMessage, seed, coinName, tokenType);
-
+    print('signedMess');
+    print(signedMess["r"]);
+    print(signedMess["s"]);
+    print(signedMess["v"]);
+    return -10;
     var coinPoolAddress = await getCoinPoolAddress();
 
     var abiHex = getDepositFuncABI(
         coinType, txHash, amountInLink, addressInKanban, signedMess);
+
+    print('abiHex=');
+    print(abiHex);
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
@@ -443,7 +461,7 @@ class WalletService {
 
   getFabTransactionHex(seed, addressIndexList, toAddress, double amount,
       double extraTransactionFee, int satoshisPerBytes) async {
-    final txb = new TransactionBuilder(network: testnet);
+    final txb = new TransactionBuilder(network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);
     var totalInput = 0;
     var changeAddress = '';
@@ -459,7 +477,7 @@ class WalletService {
     for (var i = 0; i < addressIndexList.length; i++) {
       var index = addressIndexList[i];
       var fabCoinChild =
-          root.derivePath("m/44'/1150'/0'/0/" + index.toString());
+          root.derivePath("m/44'/" + environment["CoinType"]["FAB"].toString() + "'/0'/0/" + index.toString());
       final fromAddress = getBtcAddressForNode(fabCoinChild);
       print('from address=' + fromAddress);
       if (i == 0) {
@@ -520,7 +538,7 @@ class WalletService {
         var privateKey = receivePrivateKeyArr[i];
         print('there we go');
         var alice = ECPair.fromPrivateKey(privateKey,
-            compressed: true, network: testnet);
+            compressed: true, network: environment["chains"]["BTC"]["network"]);
         print('alice.network=');
         print(alice.network);
         txb.sign(i, alice);
@@ -533,9 +551,9 @@ class WalletService {
 
   // Send Transaction
 
-  Future sendTransaction(String coin, List addressIndexList, String toAddress,
+  Future sendTransaction(String coin, seed, List addressIndexList, String toAddress,
       double amount, options, bool doSubmit) async {
-    final seed = bip39.mnemonicToSeed(bip39.generateMnemonic());
+    //final seed = bip39.mnemonicToSeed(bip39.generateMnemonic());
     final root = bip32.BIP32.fromSeed(seed);
     print('coin=' + coin);
     print(addressIndexList);
@@ -549,7 +567,7 @@ class WalletService {
     var txHex = '';
     var txHash = '';
     var errMsg = '';
-
+    var amountSent = 0;
     var receivePrivateKeyArr = [];
 
     var tokenType = options['tokenType'] ?? '';
@@ -559,7 +577,7 @@ class WalletService {
       var bytesPerInput = 148;
       var amountNum = amount * 1e8;
       amountNum += (2 * 34 + 10);
-      final txb = new TransactionBuilder(network: testnet);
+      final txb = new TransactionBuilder(network: environment["chains"]["BTC"]["network"]);
       // txb.setVersion(1);
 
       print('addressIndexList=');
@@ -567,7 +585,7 @@ class WalletService {
       print(addressIndexList.length);
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
-        var bitCoinChild = root.derivePath("m/44'/1'/0'/0/" + index.toString());
+        var bitCoinChild = root.derivePath("m/44'/" + environment["CoinType"]["BTC"].toString() + "'/0'/0/" + index.toString());
         final fromAddress = getBtcAddressForNode(bitCoinChild);
         if (i == 0) {
           changeAddress = fromAddress;
@@ -623,7 +641,7 @@ class WalletService {
         var privateKey = receivePrivateKeyArr[i];
         print('there we go');
         var alice = ECPair.fromPrivateKey(privateKey,
-            compressed: true, network: testnet);
+            compressed: true, network: environment["chains"]["BTC"]["network"]);
         print('alice.network=');
         print(alice.network);
         txb.sign(i, alice);
@@ -705,7 +723,7 @@ class WalletService {
       }
     } else if (tokenType == 'FAB') {
       var transferAbi = 'a9059cbb';
-      var amountSent = (amount * 1e18).round();
+      amountSent = (amount * 1e18).round();
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(
@@ -742,7 +760,8 @@ class WalletService {
       final address = await credentials.extractAddress();
       final addressHex = address.hex;
       final nonce = await getEthNonce(addressHex);
-      gasLimit = 100000;
+      gasLimit = 800000;
+      gasPrice = 40;
       var amountSent = (amount * 1e6).round();
       var transferAbi = 'a9059cbb';
       var fxnCallHex = transferAbi +
@@ -779,7 +798,7 @@ class WalletService {
       }
     }
 
-    return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
+    return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountSent': amountSent};
   }
 
   getFabSmartContract(String contractAddress, String fxnCallHex) async {

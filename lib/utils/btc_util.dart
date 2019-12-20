@@ -25,12 +25,7 @@ getBtcNode(root, {index = 0}) {
 }
 
 String getBtcAddressForNode(node) {
-
-  var network = testnet;
-  if(isProduction) {
-    network = bitcoin;
-  }
-  return P2PKH(data: new P2PKHData(pubkey: node.publicKey), network: network)
+  return P2PKH(data: new P2PKHData(pubkey: node.publicKey), network: environment["chains"]["BTC"]["network"])
       .data
       .address;
 }

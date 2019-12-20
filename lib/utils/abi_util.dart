@@ -6,6 +6,8 @@ import 'package:web3dart/crypto.dart';
 import 'package:web3dart/src/utils/rlp.dart' as rlp;
 import 'dart:typed_data';
 
+// {"success":true,"data":{"transactionID":"3ba8d681cddea5376c9b6ab2963ff243160fa086ec0681a67a3206ad80284d76"}}
+
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink, String addressInKanban, signedMessage) {
   var abiHex = "379eb862";
   print('signedMessage.v=');
@@ -14,6 +16,8 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink, String addre
   abiHex += fixLength(coinType.toString(), 62);
   abiHex += trimHexPrefix(txHash);
   var amountHex = amountInLink.toRadixString(16);
+  print('amountHex=');
+  print(fixLength(amountHex, 64));
   abiHex += fixLength(amountHex, 64);
   abiHex += fixLength(trimHexPrefix(addressInKanban), 64);
   abiHex += trimHexPrefix(signedMessage["r"]);
@@ -65,7 +69,7 @@ Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoo
 
   var transaction = Transaction(
       to: EthereumAddress.fromHex(coinPoolAddress),
-      gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 4),
+      gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 6),
       maxGas: 20000000,
       nonce: nonce,
       value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),

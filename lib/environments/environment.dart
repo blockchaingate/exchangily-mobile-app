@@ -1,7 +1,12 @@
+import 'package:bitcoin_flutter/src/models/networks.dart';
+
 const bool isProduction = false;
 
-const Map devConfig = const {
+Map devConfig =  {
   "chains": {
+    "BTC": {
+      "network": testnet
+    },
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
@@ -22,7 +27,7 @@ const Map devConfig = const {
   "addresses": {
     "smartContract": {
       "FABLOCK": '0xa7d4a4e23bf7dd7a1e03eda9eb7c28a016fd54aa',
-      "EXG": '0x311acf4666477a22c2f16c53b88c1734ee227fc6',
+      "EXG": '0x867480ba8e577402fa44f43c33875ce74bdc5df6',
       "USDT": '0x1c35eCBc06ae6061d925A2fC2920779a1896282c',
     },
     'exchangilyOfficial': [
@@ -35,8 +40,11 @@ const Map devConfig = const {
   }
 };
 
-const Map productionConfig = const {
+Map productionConfig = {
   "chains": {
+    "BTC": {
+      "network": bitcoin
+    },
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',

@@ -1,3 +1,4 @@
+import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 
 import '../packages/bip32/bip32_base.dart' as bip32;
@@ -23,7 +24,7 @@ encodeSignature(signature, recovery, compressed, segwitType) {
     if (compressed) recovery += 4;
   }
   recovery += 27;
-  return recovery;
+  return recovery.toRadixString(16) ;
 }
 
 /*
@@ -54,13 +55,14 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
   final root = bip32.BIP32.fromSeed(
       seed,
       bip32.NetworkType(
-          wif: testnet.wif,
+          wif: environment["chains"]["BTC"]["network"].wif,
           bip32: new bip32.Bip32Type(
-              public: testnet.bip32.public, private: testnet.bip32.private)));
+              public: environment["chains"]["BTC"]["network"].bip32.public, private: environment["chains"]["BTC"]["network"].bip32.private)));
 
   var signedMess;
   if (coinName == 'ETH' || tokenType == 'ETH') {
-    final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
+    var coinType = environment["CoinType"]["ETH"];
+    final ethCoinChild = root.derivePath("m/44'/"+ coinType.toString() + "'/0'/0/0");
     var privateKey = ethCoinChild.privateKey;
     //var credentials = EthPrivateKey.fromHex(privateKey);
     var credentials = EthPrivateKey(privateKey);
@@ -72,17 +74,22 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     s = ss.substring(64, 128);
     v = ss.substring(128);
   } else if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
-    var hdWallet = new HDWallet.fromSeed(seed);
+    //var hdWallet = new HDWallet.fromSeed(seed, network: testnet);
 
-    var coinType = 1150;
+    var coinType = environment["CoinType"]["FAB"];
     if (coinName == 'BTC') {
-      coinType = 1;
+      coinType = environment["CoinType"]["BTC"];
     }
-    var btcWallet =
-        hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+
+    var bitCoinChild = root.derivePath("m/44'/"+ coinType.toString() + "'/0'/0/0");
+    //var btcWallet =
+    //    hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+    var btcWallet = new HDWallet.fromBase58(bitCoinChild.toBase58(), network: environment["chains"]["BTC"]["network"]);
+    print('privateKey=');
+    print(HEX.decode(btcWallet.privKey));
     signedMess = await btcWallet.sign(originalMessage);
     var recovery = 0;
-    var compressed = false;
+    var compressed = true;
     var sigwitType;
     v = encodeSignature(signedMess, recovery, compressed, sigwitType);
     String ss = HEX.encode(signedMess);
@@ -90,8 +97,6 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     s = ss.substring(64, 128);  
   }
 
-  print("signedMess=");
-  print(signedMess);
   if (signedMess != null) {
 
 
@@ -101,10 +106,7 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
 }
 
 getOfficalAddress(String coinName) {
-  var address = environment['addresses']['exchangilyOfficial'];
-  print('getOfficalAddress=');
-  print(address);
-  /*
+  var address = environment['addresses']['exchangilyOfficial']
       .where((addr) => addr['name'] == coinName)
       .toList();
 
@@ -112,7 +114,6 @@ getOfficalAddress(String coinName) {
   if (address != null) {
     return address[0]['address'];
   }
-   */
   return null;
 }
 

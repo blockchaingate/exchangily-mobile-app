@@ -258,8 +258,10 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                           Icons.cancel,
                           globals.red);
                     } else {
+                      var seed;
                       walletService.sendTransaction(
                           widget.walletInfo.tickerName.toUpperCase(),
+                          seed,
                           [0],
                           address,
                           amount,
