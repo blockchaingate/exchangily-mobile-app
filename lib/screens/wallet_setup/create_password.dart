@@ -1,28 +1,21 @@
-import 'package:encrypt/encrypt.dart' as prefix0;
+import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/utils/coin_util.dart';
-import 'package:exchangilymobileapp/view_models/create_wallet_view_model.dart';
-import 'package:flushbar/flushbar.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
+import 'package:exchangilymobileapp/view_models/create_password_view_model.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pointycastle/api.dart';
-import 'package:provider/provider.dart';
 
-class CreateWalletScreen extends StatefulWidget {
+class CreatePasswordScreen extends StatefulWidget {
   final List<String> mnemonic;
-  const CreateWalletScreen({Key key, this.mnemonic}) : super(key: key);
+  const CreatePasswordScreen({Key key, this.mnemonic}) : super(key: key);
 
   @override
-  _CreateWalletScreenState createState() => _CreateWalletScreenState();
+  _CreatePasswordScreenState createState() => _CreatePasswordScreenState();
 }
 
-class _CreateWalletScreenState extends State<CreateWalletScreen> {
+class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   final log = getLogger('Create Wallet');
 
   TextEditingController _passTextController = TextEditingController();
@@ -38,40 +31,40 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CreateWalletViewModel>.value(
-      value: CreateWalletViewModel(walletService: Provider.of(context)),
-      child: Consumer<CreateWalletViewModel>(
-        builder: (context, model, child) => Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text('Create Wallet'),
-            backgroundColor: globals.secondaryColor,
-          ),
-          body: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Text(
-                  'Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character',
-                  style: Theme.of(context).textTheme.headline,
-                  textAlign: TextAlign.left,
-                ),
-                _buildPasswordTextField(),
-                _buildConfirmPasswordTextField(),
-                model.busy
+    return BaseScreen<CreatePasswordViewModel>(
+      builder: (context, model, child) => Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Create Wallet'),
+          backgroundColor: globals.secondaryColor,
+        ),
+        body: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                'Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character',
+                style: Theme.of(context).textTheme.headline,
+                textAlign: TextAlign.left,
+              ),
+              _buildPasswordTextField(),
+              _buildConfirmPasswordTextField(),
+              Center(
+                child: model.state == ViewState.Busy
+                    //  model.busy
                     ? CircularProgressIndicator()
                     : _buildCreateNewWalletButton(model),
-                Text(
-                  'Note: For Password reset you have Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline
-                      .copyWith(fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
+              ),
+              Text(
+                'Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline
+                    .copyWith(fontWeight: FontWeight.bold),
+              )
+            ],
           ),
         ),
       ),
@@ -132,12 +125,15 @@ class _CreateWalletScreenState extends State<CreateWalletScreen> {
         padding: EdgeInsets.all(15),
         color: globals.primaryColor,
         textColor: Colors.white,
-        onPressed: () {
+        onPressed: () async {
           var passSuccess = model.validatePassword(_passTextController.text,
               _confirmPassTextController.text, context);
+          log.w('pass success $passSuccess');
           if (passSuccess) {
             log.w('in if true');
-            model.getBalances(context);
+            var _walletInfo = await model.getAllCoins();
+            Navigator.pushNamed(context, '/totalBalance',
+                arguments: _walletInfo);
           }
         },
         child: Text(

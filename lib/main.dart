@@ -34,13 +34,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: providers
-        // [
-        // FutureProvider<List<WalletInfo>>.value(
-        //  value: WalletService().getAllBalances()),
-        //Provider<String>.value(value: WalletService().getRandomMnemonic())
-        //],
-        ,
+        providers: [
+          // FutureProvider<List<WalletInfo>>.value(
+          //  value: WalletService().getAllBalances()),
+          FutureProvider<String>.value(
+              value: WalletService().getRandomMnemonic())
+        ],
         child: MaterialApp(
           // locale: DevicePreview.of(context).locale,
           //  builder: DevicePreview.appBuilder,

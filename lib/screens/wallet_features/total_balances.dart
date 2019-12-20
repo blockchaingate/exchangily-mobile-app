@@ -200,8 +200,9 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
               InkWell(
                   onTap: () {
                     setState(() {
-                      totalUsdBalance =
-                          walletService.calculateTotalUsdBalance();
+                      walletService
+                          .calculateTotalUsdBalance()
+                          .listen((onData) => {log.w('On data $onData')});
                     });
                   },
                   child: Icon(

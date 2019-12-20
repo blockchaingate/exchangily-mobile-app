@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:flutter/material.dart';
 
 class BaseModel extends ChangeNotifier {
@@ -10,6 +11,3 @@ class BaseModel extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-/// Represents the state of the view
-enum ViewState { Idle, Busy }

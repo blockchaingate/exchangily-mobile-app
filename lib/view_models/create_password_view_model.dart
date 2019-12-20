@@ -1,6 +1,9 @@
+import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/view_models/base_model.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -8,23 +11,31 @@ import 'package:provider/provider.dart';
 import '../shared/globals.dart' as globals;
 import 'package:encrypt/encrypt.dart' as prefix0;
 
-class CreateWalletViewModel extends ChangeNotifier {
+class CreatePasswordViewModel extends BaseModel {
+  final WalletService _walletService = locator<WalletService>();
+
   List<WalletInfo> _walletInfo;
   final log = getLogger('Create Wallet View Model');
-  WalletService _walletService;
   final storage = new FlutterSecureStorage(); // Create Storage
-  bool _busy;
+  String errorMessage;
 
-  CreateWalletViewModel({@required WalletService walletService})
-      : _walletService = walletService;
+  bool _busy;
 
   bool get busy => _busy;
 
   Future<List<WalletInfo>> getAllCoins() async {
+    log.w('Future get all coins started');
+    setState(ViewState.Busy);
     setBusy(true);
-    var success = await _walletService.getAllCoins();
+    _walletInfo = await _walletService.getAllCoins();
+    if (_walletInfo == null) {
+      errorMessage = 'No Coin Data';
+      setState(ViewState.Idle);
+    }
+    log.w('wallet info length ${_walletInfo.length}');
     setBusy(false);
-    return success;
+    setState(ViewState.Idle);
+    return _walletInfo;
   }
 
   validatePassword(pass, confirmPass, context) {
@@ -35,21 +46,24 @@ class CreateWalletViewModel extends ChangeNotifier {
     if (pass.isEmpty) {
       showInfoFlushbar('Empty Password', 'Please fill both password fields',
           Icons.cancel, Colors.red, context);
+      return false;
     } else {
-      if (!regex.hasMatch(pass))
+      if (!regex.hasMatch(pass)) {
         showInfoFlushbar(
             'Password Conditions Mismatch,',
             'Please enter the password that satisfy above conditions',
             Icons.cancel,
             Colors.red,
             context);
-      else if (pass != confirmPass) {
+        return false;
+      } else if (pass != confirmPass) {
         showInfoFlushbar(
             'Password Mismatch',
             'Please retype the same password in both fields',
             Icons.cancel,
             Colors.red,
             context);
+        return false;
       } else {
         //  var walletSuccess = await getAllCoins();
 
@@ -60,13 +74,6 @@ class CreateWalletViewModel extends ChangeNotifier {
         return true;
       }
     }
-  }
-
-  getBalances(context, pass) async {
-    // var mnemonic = Provider.of<String>(context);
-    _walletInfo = await getAllCoins();
-    log.w('wallet info length ${_walletInfo.length}');
-    Navigator.pushNamed(context, '/totalBalance', arguments: _walletInfo);
   }
 
   secureSeed(context, pass) {

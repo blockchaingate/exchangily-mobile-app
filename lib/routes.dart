@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/backup_seed.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/total_balances.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/confirm_seed.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/create_wallet.dart';
+import 'package:exchangilymobileapp/screens/wallet_setup/create_password.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/import_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/choose_wallet_language.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/move_and_trade.dart';
@@ -43,7 +43,7 @@ class RouteGenerator {
             builder: (_) => ConfirmSeedtWalletScreen(mnemonic: args));
 
       case '/createWallet':
-        return MaterialPageRoute(builder: (_) => CreateWalletScreen());
+        return MaterialPageRoute(builder: (_) => CreatePasswordScreen());
 
       case '/totalBalance':
         return MaterialPageRoute(

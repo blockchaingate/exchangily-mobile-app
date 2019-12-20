@@ -50,10 +50,10 @@ class WalletService {
   var sum;
 
   // Get Random Mnemonic
-  String getRandomMnemonic() {
+  Future<String> getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
     log.w('get random method - $randomMnemonic');
-    return randomMnemonic;
+    return Future.value(randomMnemonic);
   }
 
   // Save Encrypted Data to Storage
@@ -75,7 +75,7 @@ class WalletService {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/my_file.byte');
       String text = await file.readAsString();
-      log.i(text);
+      log.w('read encypted - $text');
     } catch (e) {
       log.e("Couldn't read file $e");
     }
@@ -91,7 +91,6 @@ class WalletService {
     seed = bip39.mnemonicToSeed(mnemonic);
     log.w(seed);
     return seed;
-    // getAllBalances();
   }
 
   Future<List<WalletInfo>> getAllCoins() async {
@@ -102,6 +101,8 @@ class WalletService {
     log.w('Seed in wallet service get all balanced method $seed');
     final root = bip32.BIP32.fromSeed(seed);
     var usdVal = await _api.getCoinsUsdValue();
+    double currentUsdValue = usdVal['bitcoin']['usd'];
+    log.i('Current btc price in get all balances method $currentUsdValue');
     try {
       List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
 
@@ -110,9 +111,6 @@ class WalletService {
         if (tickerName == 'BTC') {
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
-          double currentUsdValue = usdVal['bitcoin']['usd'];
-          log.i(
-              'Current btc price in get all balances method $currentUsdValue');
           var calculatedUsdBal =
               calculateUsdBalance(currentUsdValue, bal['balance']);
           log.i(
@@ -198,18 +196,19 @@ class WalletService {
     }
   }
 
-  calculateTotalUsdBalance() {
-    sum = 0;
-    if (totalUsdBalance.length != 0) {
+  Stream<double> calculateTotalUsdBalance() {
+    getAllCoins();
+    double sum = 0;
+    if (_walletInfo.length != 0) {
       log.w('Total usd balance list count ${totalUsdBalance.length}');
       for (var i = 0; i < totalUsdBalance.length; i++) {
         sum = sum + totalUsdBalance[i];
       }
       log.w('Sum $sum');
-      return sum;
+      return Stream.value(sum);
     }
     log.w('totalUsdBalance List empty');
-    return 0.0;
+    return Stream.value(0.0);
   }
 
 // Add Gas
