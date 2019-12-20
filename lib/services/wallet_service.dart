@@ -1,4 +1,6 @@
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,20 +40,20 @@ import 'package:web_socket_channel/io.dart';
 
 class WalletService {
   final log = getLogger('Wallet Service');
-  final client = new http.Client();
+  Api _api = locator<Api>();
 
   List<WalletInfo> _walletInfo = [];
 
-  static String btcApiUrl = "https://btctest.fabcoinapi.com/";
-  static String fabApiUrl = "https://fabtest.fabcoinapi.com/";
-  static String ethApiUrl = "https://ethtest.fabcoinapi.com/";
-  String usdCoinPriceApiUrl =
-      'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
   List<double> totalUsdBalance = [];
+  String randomMnemonic = '';
+  var seed;
+  var sum;
 
   // Get Random Mnemonic
   String getRandomMnemonic() {
-    return bip39.generateMnemonic();
+    randomMnemonic = bip39.generateMnemonic();
+    log.w('get random method - $randomMnemonic');
+    return randomMnemonic;
   }
 
   // Save Encrypted Data to Storage
@@ -61,9 +63,9 @@ class WalletService {
       final file = File('${directory.path}/my_file.byte');
       final text = data;
       await file.writeAsString(text);
-      log.i('saved');
+      log.w('Encrypted data saved in storage');
     } catch (e) {
-      log.e("Couldn't write file!! $e");
+      log.e("Couldn't write encrypted datra to file!! $e");
     }
   }
 
@@ -85,11 +87,21 @@ class WalletService {
       ||
       --------------------------------------------------*/
 
-  Future<List<WalletInfo>> getAllBalances() async {
-    final seed = bip39.mnemonicToSeed(getRandomMnemonic());
-    log.i('Mnemonic in the wallet service ${getRandomMnemonic()}');
+  generateSeedFromUser(String mnemonic) {
+    seed = bip39.mnemonicToSeed(mnemonic);
+    log.w(seed);
+    return seed;
+    // getAllBalances();
+  }
+
+  Future<List<WalletInfo>> getAllCoins() async {
+    log.w('enter in getallbalances');
+    log.w('wallet info length ${_walletInfo.length}');
+    _walletInfo.clear();
+    log.w('Cleared wallet info length ${_walletInfo.length}');
+    log.w('Seed in wallet service get all balanced method $seed');
     final root = bip32.BIP32.fromSeed(seed);
-    var usdVal = await getCoinsUsdValue();
+    var usdVal = await _api.getCoinsUsdValue();
     try {
       List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
 
@@ -101,15 +113,15 @@ class WalletService {
           double currentUsdValue = usdVal['bitcoin']['usd'];
           log.i(
               'Current btc price in get all balances method $currentUsdValue');
-          var calculatedBal =
+          var calculatedUsdBal =
               calculateUsdBalance(currentUsdValue, bal['balance']);
           log.i(
-              'printing calculated bal in get all balances method $calculatedBal');
+              'printing calculated bal in get all balances method $calculatedUsdBal');
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
               availableBalance: bal['balance'],
-              usdValue: calculatedBal,
+              usdValue: calculatedUsdBal,
               name: 'bitcoin',
               logoColor: Color.alphaBlend(Colors.blue, Colors.lightBlue)));
           printValuesAfter(i, tickerName);
@@ -176,34 +188,28 @@ class WalletService {
     actualWalletBalance = 0.005;
     if (actualWalletBalance != 0) {
       double total = (usdValueByApi * actualWalletBalance);
+      totalUsdBalance.clear();
       totalUsdBalance.add(total);
-      log.i('calculate usd balance methoud ${totalUsdBalance.length}');
+      log.w(
+          'calculate usd balance method ${totalUsdBalance.length}, $totalUsdBalance');
       return total;
     } else {
       log.i('Wallet Balance is Zero');
     }
   }
 
-  totalWalletUsdBalance() {
-    double sum;
-    log.i('Total usd balance list count ${totalUsdBalance.length}');
+  calculateTotalUsdBalance() {
+    sum = 0;
     if (totalUsdBalance.length != 0) {
-      for (var i; i < totalUsdBalance.length; i++) {
+      log.w('Total usd balance list count ${totalUsdBalance.length}');
+      for (var i = 0; i < totalUsdBalance.length; i++) {
         sum = sum + totalUsdBalance[i];
       }
-      log.i('Sum $sum');
-      return totalUsdBalance;
+      log.w('Sum $sum');
+      return sum;
     }
+    log.w('totalUsdBalance List empty');
     return 0.0;
-  }
-
-  Future getCoinsUsdValue() async {
-    final res = await http.get(usdCoinPriceApiUrl);
-    if (res.statusCode == 200) {
-      return jsonDecode(res.body);
-    } else {
-      throw Exception('Failed to load the data from the API');
-    }
   }
 
 // Add Gas
@@ -241,9 +247,6 @@ class WalletService {
 // Future Deposit Do
 
   Future depositDo(String coinName, String tokenType, double amount) async {
-    var randomMnemonic =
-        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-    var seed = bip39.mnemonicToSeed(randomMnemonic);
     var officalAddress = getOfficalAddress(coinName);
     if (officalAddress == null) {
       return -1;
@@ -311,10 +314,6 @@ class WalletService {
 // Future Add Gas Do
   Future AddGasDo(double amount) async {
     var satoshisPerBytes = 14;
-    var randomMnemonic =
-        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-    var seed = bip39.mnemonicToSeed(randomMnemonic);
-    // final root = bip32.BIP32.fromSeed(seed);
     var scarContractAddress = await getScarAddress();
     scarContractAddress = stringUtils.trimHexPrefix(scarContractAddress);
     print('scarContractAddress=');
@@ -333,7 +332,7 @@ class WalletService {
     var errMsg = res1['errMsg'];
     var txHash = '';
     if (txHex != null && txHex != '') {
-      var res = await postFabTx(txHex);
+      var res = await _api.postFabTx(txHex);
       txHash = res['txHash'];
       errMsg = res['errMsg'];
     }
@@ -345,62 +344,11 @@ class WalletService {
     return (amount * 1e-8);
   }
 
-  // Get FabUtxos
-
-  getFabUtxos(String address) async {
-    var url = fabApiUrl + 'getutxos/' + address;
-    print(url);
-    var client = new http.Client();
-    var response = await client.get(url);
-    var json = jsonDecode(response.body);
-    return json;
-  }
-
-// Get BtcUtxos
-  getBtcUtxos(String address) async {
-    var url = btcApiUrl + 'getutxos/' + address;
-    print(url);
-    var client = new http.Client();
-    var response = await client.get(url);
-    var json = jsonDecode(response.body);
-    return json;
-  }
-
-  // Post Btc Transaction
-
-  postBtcTx(String txHex) async {
-    var url = btcApiUrl + 'sendrawtransaction/' + txHex;
-    var client = new http.Client();
-    var response = await client.get(url);
-    var json = jsonDecode(response.body);
-    var txHash = '';
-    var errMsg = '';
-    print('json=');
-    print(json);
-    if (json != null) {
-      if (json['txid'] != null) {
-        txHash = '0x' + json['txid'];
-      } else if (json['Error'] != null) {
-        errMsg = json['Error'];
-      }
-    }
-    return {'txHash': txHash, 'errMsg': errMsg};
-  }
-
-  getFabTransactionJson(String txid) async {
-    txid = stringUtils.trimHexPrefix(txid);
-    var url = fabApiUrl + 'gettransactionjson/' + txid;
-    var client = new http.Client();
-    var response = await client.get(url);
-    var json = jsonDecode(response.body);
-    return json;
-  }
-
   isFabTransactionLocked(String txid, int idx) async {
     if (idx != 0) {
       return false;
     }
-    var response = await getFabTransactionJson(txid);
+    var response = await _api.getFabTransactionJson(txid);
 
     if ((response['vin'] != null) && (response['vin'].length > 0)) {
       var vin = response['vin'][0];
@@ -411,50 +359,6 @@ class WalletService {
       }
     }
     return false;
-  }
-
-  postEthTx(String txHex) async {
-    var url = ethApiUrl + 'sendsignedtransaction';
-    var data = {'signedtx': txHex};
-
-    var client = new http.Client();
-    var response =
-        await client.post(url, headers: {"responseType": "text"}, body: data);
-
-    var txHash = response.body;
-    var errMsg = '';
-    if (txHash.indexOf('txerError') >= 0) {
-      errMsg = txHash;
-      txHash = '';
-    }
-    return {'txHash': txHash, 'errMsg': errMsg};
-  }
-
-  postFabTx(String txHex) async {
-    var url = fabApiUrl + 'sendrawtransaction/' + txHex;
-    var txHash = '';
-    var errMsg = '';
-    var client = new http.Client();
-    if (txHex != '') {
-      var response = await client.get(url);
-      var json = jsonDecode(response.body);
-      if (json != null) {
-        if ((json['txid'] != null) && (json['txid'] != '')) {
-          txHash = json['txid'];
-        } else if (json['Error'] != '') {
-          errMsg = json['Error'];
-        }
-      }
-    }
-
-    return {'txHash': txHash, 'errMsg': errMsg};
-  }
-
-  getEthNonce(String address) async {
-    var url = ethApiUrl + 'getnonce/' + address + '/latest';
-    var client = new http.Client();
-    var response = await client.get(url);
-    return int.parse(response.body);
   }
 
   getFabTransactionHex(seed, addressIndexList, toAddress, double amount,
@@ -482,7 +386,7 @@ class WalletService {
         changeAddress = fromAddress;
       }
       final privateKey = fabCoinChild.privateKey;
-      var utxos = await getFabUtxos(fromAddress);
+      var utxos = await _api.getFabUtxos(fromAddress);
       if ((utxos != null) && (utxos.length > 0)) {
         for (var j = 0; j < utxos.length; i++) {
           var utxo = utxos[i];
@@ -589,7 +493,7 @@ class WalletService {
           changeAddress = fromAddress;
         }
         final privateKey = bitCoinChild.privateKey;
-        var utxos = await getBtcUtxos(fromAddress);
+        var utxos = await _api.getBtcUtxos(fromAddress);
         print('utxos=');
         print(utxos);
         if ((utxos == null) || (utxos.length == 0)) {
@@ -667,7 +571,7 @@ class WalletService {
       var tx = txb.build();
       txHex = tx.toHex();
       if (doSubmit) {
-        var res = await postBtcTx(txHex);
+        var res = await _api.postBtcTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg};
@@ -688,7 +592,7 @@ class WalletService {
 
       final address = await credentials.extractAddress();
       final addressHex = address.hex;
-      final nonce = await getEthNonce(addressHex);
+      final nonce = await _api.getEthNonce(addressHex);
 
       var apiUrl =
           "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
@@ -715,7 +619,7 @@ class WalletService {
       txHex = '0x' + HEX.encode(signed);
       print(txHex);
       if (doSubmit) {
-        var res = await postEthTx(txHex);
+        var res = await _api.postEthTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {
@@ -728,7 +632,7 @@ class WalletService {
       errMsg = res1['errMsg'];
       if ((errMsg == '') && (txHex != '')) {
         if (doSubmit) {
-          var res = await postFabTx(txHex);
+          var res = await _api.postFabTx(txHex);
           print('res therrrr');
           print(res);
           txHash = res['txHash'];
@@ -760,7 +664,7 @@ class WalletService {
       errMsg = res1['errMsg'];
       if (txHex != null && txHex != '') {
         if (doSubmit) {
-          var res = await postFabTx(txHex);
+          var res = await _api.postFabTx(txHex);
           txHash = res['txHash'];
           errMsg = res['errMsg'];
         } else {
@@ -776,7 +680,7 @@ class WalletService {
 
       final address = await credentials.extractAddress();
       final addressHex = address.hex;
-      final nonce = await getEthNonce(addressHex);
+      final nonce = await _api.getEthNonce(addressHex);
       gasLimit = 100000;
       var amountSent = (amount * 1e6).round();
       var transferAbi = 'a9059cbb';
@@ -806,7 +710,7 @@ class WalletService {
       txHex = '0x' + HEX.encode(signed);
 
       if (doSubmit) {
-        var res = await postEthTx(txHex);
+        var res = await _api.postEthTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {

@@ -12,8 +12,10 @@ class BackupSeedWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WalletService walletService = WalletService();
     final log = getLogger('Backup Seed');
     final randomMnemonic = Provider.of<String>(context);
+    log.w(randomMnemonic);
     mnemonic = randomMnemonic
         .split(" ")
         .toList(); // convert string to list to iterate and display single word as a textbox
@@ -85,7 +87,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
         var singleWord = mnemonic[i];
         return Container(
             child: TextField(
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.left,
           //controller: myController,
           enableInteractiveSelection: false, // readonly
           // enabled: false, // if false use cant see the selection border around
@@ -94,7 +96,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
           decoration: InputDecoration(
             fillColor: globals.primaryColor,
             filled: true,
-            hintText: '$index)  ' '$singleWord',
+            hintText: '$singleWord',
             hintStyle: TextStyle(color: globals.white),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: globals.white, width: 2),

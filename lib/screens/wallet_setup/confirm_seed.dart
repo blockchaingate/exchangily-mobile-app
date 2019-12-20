@@ -126,20 +126,21 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
       // So we use listEqual for deep checking which is one many methods
       if (listEquals(widget.mnemonic, userTypedMnemonic)) {
         Navigator.of(context).pushNamed('/createWallet');
-        log.i('if');
-        log.i(widget.mnemonic);
-        log.i('user typed');
-        log.i(userTypedMnemonic);
+        log.w('if');
+        log.w(widget.mnemonic);
+        log.w('user typed');
+        log.w(userTypedMnemonic);
         // userTypedMnemonic.clear();
+
       } else {
         Navigator.of(context).pushNamed(
             '/createWallet'); // Remove this after next screen has finished
         // May be in future we should display where user made a mistake in typing
         // For example text field index 5 should turn red if user made a mistake there
-        log.i('else');
-        log.i(widget.mnemonic);
-        log.i('user typed');
-        log.i(userTypedMnemonic);
+        log.w('else');
+        log.w(widget.mnemonic);
+        log.w('user typed');
+        log.w(userTypedMnemonic);
       }
     });
   }
@@ -159,7 +160,7 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
               ],
               style: TextStyle(color: globals.white),
               controller: _mnemonicTextController[i],
-              maxLines: 2,
+              //maxLines: 2,
               autocorrect: false,
               decoration: InputDecoration(
                 fillColor: globals.primaryColor,

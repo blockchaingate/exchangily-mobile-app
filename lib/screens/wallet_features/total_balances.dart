@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
 
 class TotalBalancesScreen extends StatefulWidget {
-  const TotalBalancesScreen({Key key}) : super(key: key);
+  final List<WalletInfo> walletInfo;
+  const TotalBalancesScreen({Key key, this.walletInfo}) : super(key: key);
 
   @override
   _TotalBalancesScreenState createState() => _TotalBalancesScreenState();
@@ -22,17 +23,19 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
   WalletService walletService = WalletService();
   final key = new GlobalKey<ScaffoldState>();
   final double elevation = 5;
-  List<WalletInfo> walletInfo;
   double totalUsdBalance = 0;
 
   @override
   void initState() {
+    setState(() {
+      //  totalUsdBalance = walletService.calculateTotalUsdBalance();
+    });
     super.initState();
-    //  totalUsdBalance = walletService.totalWalletUsdBalance();
   }
 
   Widget build(BuildContext context) {
-    walletInfo = Provider.of<List<WalletInfo>>(context);
+    final List<WalletInfo> walletInfo = widget.walletInfo;
+    // walletInfo = Provider.of<List<WalletInfo>>(context);
     if (walletInfo == null) {
       log.e('ERROR $walletInfo');
       Navigator.of(context).pushNamed('/createWallet');
@@ -43,7 +46,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
         drawer: AppDrawer(),
         body: Column(
           children: <Widget>[
-            _buildBackgroundAndLogoContainer(walletInfo),
+            _buildBackgroundAndLogoContainer(34),
             Container(
               padding: EdgeInsets.only(right: 10, top: 15),
               child: _hideSmallAmount(),
@@ -83,7 +86,8 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                     1000,
                     walletInfo[index].usdValue,
                     walletInfo[index].logoColor,
-                    index);
+                    index,
+                    walletInfo);
               }),
         ],
       ),
@@ -95,7 +99,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Container _buildBackgroundAndLogoContainer(walletInfo) {
+  Container _buildBackgroundAndLogoContainer(totalUsdBal) {
     return new Container(
       // width: double.infinity,
       height: 210,
@@ -141,7 +145,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                 overflow: Overflow.visible,
                 alignment: Alignment.bottomCenter,
                 children: <Widget>[
-                  Positioned(bottom: -15, child: _totalBalanceCard(walletInfo))
+                  Positioned(bottom: -15, child: _totalBalanceCard(totalUsdBal))
                 ],
               ),
             ),
@@ -154,8 +158,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                                                                                   Total Balance Card
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _totalBalanceCard(walletInfo) => Card(
-        // margin: EdgeInsets.all(15),
+  Widget _totalBalanceCard(totalBalance) => Card(
         elevation: elevation,
         color: globals.walletCardColor,
         child: Container(
@@ -186,7 +189,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                           .textTheme
                           .headline
                           .copyWith(fontWeight: FontWeight.bold)),
-                  Text('$totalUsdBalance USD',
+                  Text('$totalBalance. USD',
                       style: Theme.of(context)
                           .textTheme
                           .headline
@@ -196,12 +199,10 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
               ),
               InkWell(
                   onTap: () {
-                    totalUsdBalance = walletService.totalWalletUsdBalance();
-                    log.v('This is Verbose');
-                    log.d('This is a debug message $totalUsdBalance');
-                    log.i('This is info, should be used for public calls');
-                    log.w('This is warning which might become a problem');
-                    log.e('Some is wrong, this is ERROR');
+                    setState(() {
+                      totalUsdBalance =
+                          walletService.calculateTotalUsdBalance();
+                    });
                   },
                   child: Icon(
                     Icons.refresh,
@@ -262,8 +263,8 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _coinDetailsCard(
-          tickerName, available, exgAmount, usdValue, color, index) =>
+  Widget _coinDetailsCard(tickerName, available, exgAmount, usdValue, color,
+          index, walletInfo) =>
       Card(
         color: globals.walletCardColor,
         elevation: elevation,
