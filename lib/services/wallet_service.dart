@@ -294,7 +294,7 @@ class WalletService {
     print(signedMess["r"]);
     print(signedMess["s"]);
     print(signedMess["v"]);
-
+    return -10;
     var coinPoolAddress = await getCoinPoolAddress();
 
     var abiHex = getDepositFuncABI(
@@ -308,7 +308,7 @@ class WalletService {
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
     print('txKanbanHex=');
     print(txKanbanHex);
-    return -10;
+    // return -10;
     var res = await submitDeposit(txHex, txKanbanHex);
     return res;
   }

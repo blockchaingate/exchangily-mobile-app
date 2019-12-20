@@ -11,11 +11,10 @@ import '../environments/environment.dart';
 import './btc_util.dart';
 import './eth_util.dart';
 import "package:pointycastle/pointycastle.dart";
-
-
+import 'dart:typed_data';
+import 'dart:convert';
 import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
-
-
+import 'package:web3dart/crypto.dart';
 encodeSignature(signature, recovery, compressed, segwitType) {
   if (segwitType != null) {
     recovery += 8;
@@ -45,6 +44,50 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 }
 */
 
+const _ethMessagePrefix = '\u0019Ethereum Signed Message:\n';
+const _btcMessagePrefix = '\x18Bitcoin Signed Message:\n';
+Uint8List uint8ListFromList(List<int> data) {
+  if (data is Uint8List) return data;
+
+  return Uint8List.fromList(data);
+}
+
+Uint8List _padTo32(Uint8List data) {
+  assert(data.length <= 32);
+  if (data.length == 32) return data;
+
+  // todo there must be a faster way to do this?
+  return Uint8List(32)..setRange(32 - data.length, 32, data);
+}
+
+Future<Uint8List> signPersonalMessageWith(String _messagePrefix, Uint8List privateKey, Uint8List payload, {int chainId}) async {
+  final prefix = _messagePrefix + payload.length.toString();
+  final prefixBytes = ascii.encode(prefix);
+
+  // will be a Uint8List, see the documentation of Uint8List.+
+  final concat = uint8ListFromList(prefixBytes + payload);
+
+  //final signature = await credential.signToSignature(concat, chainId: chainId);
+
+  var  signature = sign(keccak256(concat), privateKey);
+
+  // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
+  // be aware that signature.v already is recovery + 27
+  final chainIdV =
+  chainId != null ? (signature.v - 27 + (chainId * 2 + 35)) : signature.v;
+
+  signature = MsgSignature(signature.r, signature.s, chainIdV);
+
+
+  final r = _padTo32(intToBytes(signature.r));
+  final s = _padTo32(intToBytes(signature.s));
+  final v = intToBytes(BigInt.from(signature.v));
+
+  // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
+  return uint8ListFromList(r + s + v);
+  //return credential.sign(concat, chainId: chainId);
+}
+
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
   print('originalMessage=');
   print(originalMessage);
@@ -66,10 +109,19 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     var privateKey = ethCoinChild.privateKey;
     //var credentials = EthPrivateKey.fromHex(privateKey);
     var credentials = EthPrivateKey(privateKey);
-    signedMess = await credentials
+
+
+    var signedMessOrig = await credentials
         .signPersonalMessage(stringToUint8List(originalMessage));
 
+    signedMess = await signPersonalMessageWith(_ethMessagePrefix, privateKey, stringToUint8List(originalMessage));
     String ss = HEX.encode(signedMess);
+    String ss2 = HEX.encode(signedMessOrig);
+    if (ss == ss2) {
+      print('signiture is right');
+    } else {
+      print('signiture is wrong');
+    }
     r = ss.substring(0, 64);
     s = ss.substring(64, 128);
     v = ss.substring(128);
@@ -84,6 +136,16 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     var bitCoinChild = root.derivePath("m/44'/"+ coinType.toString() + "'/0'/0/0");
     //var btcWallet =
     //    hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+    var privateKey = bitCoinChild.privateKey;
+    var credentials = EthPrivateKey(privateKey);
+
+
+    signedMess = await signPersonalMessageWith(_btcMessagePrefix, privateKey, stringToUint8List(originalMessage));
+    String ss = HEX.encode(signedMess);
+    r = ss.substring(0, 64);
+    s = ss.substring(64, 128);
+    v = ss.substring(128);
+    /*
     var btcWallet = new HDWallet.fromBase58(bitCoinChild.toBase58(), network: environment["chains"]["BTC"]["network"]);
     print('privateKey=');
     print(HEX.decode(btcWallet.privKey));
@@ -94,7 +156,9 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     v = encodeSignature(signedMess, recovery, compressed, sigwitType);
     String ss = HEX.encode(signedMess);
     r = ss.substring(0, 64);
-    s = ss.substring(64, 128);  
+    s = ss.substring(64, 128);
+
+     */
   }
 
   if (signedMess != null) {
