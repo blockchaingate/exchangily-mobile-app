@@ -261,6 +261,7 @@ class WalletService {
 
     var txHex = resST['txHex'];
     var txHash = resST['txHash'];
+    txHash = '0x8b9cc0f8dbd9cde140ccdf8be4591602b34ae8a9bfa69b4c3e65c44373168c7f';
     print('txHash=' + txHash);
     var amountInLink = BigInt.from(amount * 1e18);
     // var amountInLink = BigInt.from(resST["amountSent"]);
@@ -293,7 +294,7 @@ class WalletService {
     print(signedMess["r"]);
     print(signedMess["s"]);
     print(signedMess["v"]);
-    return -10;
+
     var coinPoolAddress = await getCoinPoolAddress();
 
     var abiHex = getDepositFuncABI(
@@ -305,7 +306,9 @@ class WalletService {
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
-
+    print('txKanbanHex=');
+    print(txKanbanHex);
+    return -10;
     var res = await submitDeposit(txHex, txKanbanHex);
     return res;
   }
@@ -664,7 +667,7 @@ class WalletService {
     else if (coin == 'ETH') {
       // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
       final ropstenChainId = 3;
-      final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
+      final ethCoinChild = root.derivePath("m/44'/"+ environment["CoinType"]["ETH"].toString() +"'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       var amountNum = (amount * 1e18).round();
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
@@ -753,7 +756,7 @@ class WalletService {
       }
     } else if (tokenType == 'ETH') {
       final ropstenChainId = 3;
-      final ethCoinChild = root.derivePath("m/44'/60'/0'/0/0");
+      final ethCoinChild = root.derivePath("m/44'/" + environment["CoinType"]["ETH"] + "'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
