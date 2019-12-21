@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/view_models/create_password_view_model.dart';
+import 'package:exchangilymobileapp/view_state/create_password_view_state.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,26 +16,22 @@ class CreatePasswordScreen extends StatefulWidget {
 }
 
 class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
-  final log = getLogger('Create Wallet');
+  final log = getLogger('Create Password');
 
   TextEditingController _passTextController = TextEditingController();
   TextEditingController _confirmPassTextController = TextEditingController();
   WalletService walletService = WalletService();
 
   @override
-  void dispose() {
-    _passTextController.dispose();
-    _confirmPassTextController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BaseScreen<CreatePasswordViewModel>(
+    return BaseScreen<CreatePasswordScreenState>(
+      // onModelReady: (model) {
+      //   log.w('message $model');
+      // },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Create Wallet'),
+          title: Text('Secure Wallet With The Password'),
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
@@ -132,8 +128,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           if (passSuccess) {
             log.w('in if true');
             var _walletInfo = await model.getAllCoins();
-            Navigator.pushNamed(context, '/totalBalance',
-                arguments: _walletInfo);
+            if (_walletInfo == null) {
+              log.w('Navigating back to previous page as wallet info is null');
+              Navigator.pop(context);
+            } else {
+              Navigator.pushNamed(context, '/totalBalance',
+                  arguments: _walletInfo);
+            }
           }
         },
         child: Text(

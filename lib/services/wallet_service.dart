@@ -3,6 +3,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -37,6 +38,7 @@ import 'package:bitcoin_flutter/src/utils/script.dart' as script;
 import '../environments/environment.dart' as environment;
 import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:encrypt/encrypt.dart' as prefix0;
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -48,6 +50,7 @@ class WalletService {
   String randomMnemonic = '';
   var seed;
   var sum;
+  var root;
 
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
@@ -62,6 +65,7 @@ class WalletService {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/my_file.byte');
       final text = data;
+      log.w(data);
       await file.writeAsString(text);
       log.w('Encrypted data saved in storage');
     } catch (e) {
@@ -70,14 +74,30 @@ class WalletService {
   }
 
   // Read Encrypted Data from Storage
-  readEncryptedData() async {
+  Future<String> readEncryptedData(String userPass) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/my_file.byte');
-      String text = await file.readAsString();
-      log.w('read encypted - $text');
+
+      String test = await file.readAsString();
+
+      prefix0.Encrypted encryptedText = prefix0.Encrypted.fromBase64(test);
+
+      // log.w('encypted text $test');
+      final key = prefix0.Key.fromLength(32);
+
+      final iv = prefix0.IV.fromUtf8(userPass);
+
+      final encrypter = prefix0.Encrypter(prefix0.AES(key));
+      // log.w('user key $userPass');
+      //final encrypted = encrypter.encrypt(randomMnemonic, iv: iv);
+      final decrypted = encrypter.decrypt(encryptedText, iv: iv);
+      //log.w('decrypted phrase - $decrypted');
+      return Future.value(decrypted);
+      // log.w('read encypted - $encryptedText');
     } catch (e) {
-      log.e("Couldn't read file $e");
+      log.e("Couldn't read file -$e");
+      return Future.value('failed');
     }
   }
 
@@ -99,7 +119,7 @@ class WalletService {
     _walletInfo.clear();
     log.w('Cleared wallet info length ${_walletInfo.length}');
     log.w('Seed in wallet service get all balanced method $seed');
-    final root = bip32.BIP32.fromSeed(seed);
+    root = bip32.BIP32.fromSeed(seed);
     var usdVal = await _api.getCoinsUsdValue();
     double currentUsdValue = usdVal['bitcoin']['usd'];
     log.i('Current btc price in get all balances method $currentUsdValue');
@@ -176,6 +196,26 @@ class WalletService {
     }
   }
 
+  /* ---------------------------------------------------
+                Flushbar Notification bar
+    -------------------------------------------------- */
+
+  void showInfoFlushbar(String title, String message, IconData iconData,
+      Color leftBarColor, BuildContext context) {
+    Flushbar(
+      backgroundColor: globals.secondaryColor.withOpacity(0.75),
+      title: title,
+      message: message,
+      icon: Icon(
+        iconData,
+        size: 24,
+        color: globals.primaryColor,
+      ),
+      leftBarIndicatorColor: leftBarColor,
+      duration: Duration(seconds: 3),
+    ).show(context);
+  }
+
   void printValuesAfter(i, name) {
     // log.i('in $name');
     //  log.i(
@@ -196,27 +236,24 @@ class WalletService {
     }
   }
 
-  Stream<double> calculateTotalUsdBalance() {
-    getAllCoins();
-    double sum = 0;
+  calculateTotalUsdBalance() {
+    sum = 0;
     if (_walletInfo.length != 0) {
       log.w('Total usd balance list count ${totalUsdBalance.length}');
       for (var i = 0; i < totalUsdBalance.length; i++) {
         sum = sum + totalUsdBalance[i];
       }
       log.w('Sum $sum');
-      return Stream.value(sum);
+      return sum;
     }
     log.w('totalUsdBalance List empty');
-    return Stream.value(0.0);
+    return 0.0;
   }
 
 // Add Gas
   Future<int> addGas() async {
     return 0;
   }
-
-// Get Official Address
 
 // Get Coin Type Id By Name
 

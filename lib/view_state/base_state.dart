@@ -1,7 +1,7 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:flutter/material.dart';
 
-class BaseModel extends ChangeNotifier {
+class BaseState extends ChangeNotifier {
   ViewState _state = ViewState.Idle;
 
   ViewState get state => _state;

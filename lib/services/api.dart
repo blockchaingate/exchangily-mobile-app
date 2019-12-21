@@ -26,7 +26,6 @@ class Api {
   }
 
   // Get FabUtxos
-
   Future getFabUtxos(String address) async {
     var url = fabUrl + 'getutxos/' + address;
     print(url);
@@ -89,7 +88,7 @@ class Api {
     return {'txHash': txHash, 'errMsg': errMsg};
   }
 
-  // Fab Post
+  // Fab Post Tx
   Future postFabTx(String txHex) async {
     var url = fabUrl + 'sendrawtransaction/' + txHex;
     var txHash = '';

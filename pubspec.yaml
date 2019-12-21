@@ -81,6 +81,9 @@ dependencies:
   # Device Preview
   device_preview:
 
+  # rflutter Alert
+  rflutter_alert: ^1.0.3
+
   # Share files
   share:
     git:

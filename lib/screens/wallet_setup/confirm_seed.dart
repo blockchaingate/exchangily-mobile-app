@@ -1,4 +1,6 @@
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +21,7 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
   List<String> userTypedMnemonic = [];
   FocusNode _focusNode;
   final int _count = 12;
+  WalletService _walletService = locator<WalletService>();
 
   @override
   void initState() {
@@ -133,14 +136,20 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
         // userTypedMnemonic.clear();
 
       } else {
-        Navigator.of(context).pushNamed(
-            '/createWallet'); // Remove this after next screen has finished
+        //  Navigator.of(context).pushNamed(
+        //       '/createWallet'); // Remove this after next screen has finished
         // May be in future we should display where user made a mistake in typing
         // For example text field index 5 should turn red if user made a mistake there
         log.w('else');
         log.w(widget.mnemonic);
         log.w('user typed');
         log.w(userTypedMnemonic);
+        _walletService.showInfoFlushbar(
+            'Seed Empty',
+            'Please fill all the text fields',
+            Icons.cancel,
+            Colors.red,
+            context);
       }
     });
   }

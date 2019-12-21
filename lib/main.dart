@@ -1,4 +1,5 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/provider_setup.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -35,14 +36,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          // FutureProvider<List<WalletInfo>>.value(
-          //  value: WalletService().getAllBalances()),
           FutureProvider<String>.value(
               value: WalletService().getRandomMnemonic())
         ],
         child: MaterialApp(
           // locale: DevicePreview.of(context).locale,
-          //  builder: DevicePreview.appBuilder,
+          builder: (context, widget) => Navigator(
+              onGenerateRoute: (settings) => MaterialPageRoute(
+                  builder: (context) => DialogManager(
+                        child: widget,
+                      ))),
+
           localizationsDelegates: [
             AppLocalizationsDelegate(),
             GlobalMaterialLocalizations.delegate,
