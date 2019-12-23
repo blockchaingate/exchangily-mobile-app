@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/alert/alert_request.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -14,6 +15,7 @@ class DialogManager extends StatefulWidget {
 }
 
 class _DialogManagerState extends State<DialogManager> {
+  final log = getLogger('DialogManager');
   DialogService _dialogService = locator<DialogService>();
   WalletService _walletService = locator<WalletService>();
   TextEditingController controller = TextEditingController();
@@ -22,6 +24,7 @@ class _DialogManagerState extends State<DialogManager> {
   void initState() {
     super.initState();
     _dialogService.registerDialogListener(_showdDialog);
+    controller.text = '';
   }
 
   @override
@@ -34,15 +37,15 @@ class _DialogManagerState extends State<DialogManager> {
         context: context,
         title: request.title,
         desc: request.description,
-        closeFunction: () =>
-            _dialogService.dialogComplete(AlertResponse(confirmed: false)),
+        closeFunction: () => _dialogService.dialogComplete(
+            AlertResponse(fieldOne: 'Closed', confirmed: false)),
         content: Column(
           children: <Widget>[
             TextField(
               controller: controller,
               obscureText: true,
               decoration: InputDecoration(
-                icon: Icon(Icons.account_circle),
+                icon: Icon(Icons.security),
                 labelText: 'Password',
               ),
             ),
@@ -51,15 +54,19 @@ class _DialogManagerState extends State<DialogManager> {
         buttons: [
           DialogButton(
             onPressed: () {
-              _walletService.readEncryptedData(controller.text).then((data) => {
-                    if (data != '' && data != null)
-                      {
-// _walletService.generateSeedFromUser(mnemonic)
-                      }
-                    //_dialogService.dialogComplete(AlertResponse(confirmed: true));
-                  });
-
-              // Navigator.of(context).pop();
+              _walletService.readEncryptedData(controller.text).then((data) {
+                if (data != '' && data != null) {
+                  _dialogService.dialogComplete(
+                      AlertResponse(fieldOne: data, confirmed: true));
+                  controller.text = '';
+                  Navigator.of(context).pop();
+                } else {
+                  _dialogService
+                      .dialogComplete(AlertResponse(confirmed: false));
+                  controller.text = '';
+                  Navigator.of(context).pop();
+                }
+              });
             },
             child: Text(
               request.buttonTitle,

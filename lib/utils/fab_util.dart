@@ -53,7 +53,7 @@ Future getFabTokenBalanceForABI(
 }
 
 Future getSmartContractABI(String smartContractAddress) async {
-  var url = fabBaseUrl  + 'getabiforcontract/' + smartContractAddress;
+  var url = fabBaseUrl + 'getabiforcontract/' + smartContractAddress;
   var response = await http.get(url);
   Map<String, dynamic> resJson = jsonDecode(response.body);
   return resJson;
@@ -62,13 +62,18 @@ Future getSmartContractABI(String smartContractAddress) async {
 Future getFabTokenBalanceByAddress(String address, String coinName) async {
   var smartContractAddress =
       environment["addresses"]["smartContract"][coinName];
-  String balanceInfoABI = '70a08231';
-  var tokenBalance = await getFabTokenBalanceForABI(
-      balanceInfoABI, smartContractAddress, address);
 
-  balanceInfoABI = '43eb7b44';
-  var tokenLockedBalance = await getFabTokenBalanceForABI(
-      balanceInfoABI, smartContractAddress, address);
+  Future getFabTokenBalanceByAddress(String address, String coinName) async {
+    var smartContractAddress =
+        environment["addresses"]["smartContract"][coinName];
+    String balanceInfoABI = '70a08231';
+    var tokenBalance = await getFabTokenBalanceForABI(
+        balanceInfoABI, smartContractAddress, address);
 
-  return {'balance': tokenBalance, 'lockbalance': tokenLockedBalance};
+    balanceInfoABI = '43eb7b44';
+    var tokenLockedBalance = await getFabTokenBalanceForABI(
+        balanceInfoABI, smartContractAddress, address);
+
+    return {'balance': tokenBalance, 'lockbalance': tokenLockedBalance};
+  }
 }

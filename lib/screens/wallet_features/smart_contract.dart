@@ -12,7 +12,9 @@ import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:hex/hex.dart';
 
-class SmartContract extends  StatefulWidget {
+import '../../service_locator.dart';
+
+class SmartContract extends StatefulWidget {
   const SmartContract({Key key}) : super(key: key);
 
   @override
@@ -28,20 +30,21 @@ class _SmartContractState extends State<SmartContract> {
   var abi;
   var inputs = [];
   var payable = false;
-  TextEditingController smartContractAddressController = TextEditingController();
+  TextEditingController smartContractAddressController =
+      TextEditingController();
   TextEditingController payableController = TextEditingController();
   List<DropdownMenuItem<String>> _dropDownMenuItems;
   @override
   void initState() {
-    smartContractAddressController.value = TextEditingValue(text: environment['addresses']['smartContract']['FABLOCK']);
+    smartContractAddressController.value = TextEditingValue(
+        text: environment['addresses']['smartContract']['FABLOCK']);
     onSmartContractAddressChanged(smartContractAddressController.value.text);
 
     super.initState();
   }
 
   // here we are creating the list needed for the DropDownButton
-  Future getDropDownMenuItems(abis) async{
-
+  Future getDropDownMenuItems(abis) async {
     // var smartContractABI = await getSmartContractABI('');
     List<DropdownMenuItem<String>> items = new List();
     for (var abi in abis) {
@@ -53,24 +56,23 @@ class _SmartContractState extends State<SmartContract> {
             child: new Text(
               abi['name'],
               style: TextStyle(color: Colors.white70),
-            )
-        ));
+            )));
       }
-
     }
     return items;
   }
 
   void changedDropDownItem(String selectedFunction) {
-    print("Selected function $selectedFunction, we are going to refresh the UI");
+    print(
+        "Selected function $selectedFunction, we are going to refresh the UI");
     var _inputs;
     var _payable = false;
     for (var i = 0; i < abis.length; i++) {
       var item = abis[i];
-      if(item['name'] == selectedFunction) {
+      if (item['name'] == selectedFunction) {
         _inputs = item['inputs'];
         abi = item;
-        for(var j = 0; j < _inputs.length; j++) {
+        for (var j = 0; j < _inputs.length; j++) {
           _inputs[j]['controller'] = new TextEditingController();
         }
         if (item['stateMutability'] == 'payable') {
@@ -89,7 +91,7 @@ class _SmartContractState extends State<SmartContract> {
     });
   }
 
-  onSmartContractAddressChanged(String address) async{
+  onSmartContractAddressChanged(String address) async {
     print('address is:$address');
     var smartContractABI = await getSmartContractABI(address);
     print(smartContractABI['Name']);
@@ -103,16 +105,14 @@ class _SmartContractState extends State<SmartContract> {
     }
 
     setState(() => {
-      this._smartContractName = smartContractABI['Name'],
-      this._dropDownMenuItems = funcs,
-      this._currentFunction = _currentFunc
-    });
+          this._smartContractName = smartContractABI['Name'],
+          this._dropDownMenuItems = funcs,
+          this._currentFunction = _currentFunc
+        });
   }
 
   @override
   Widget build(BuildContext context) {
-
-
     //onSmartContractAddressChanged(myController.value.text);
     return Scaffold(
         appBar: CupertinoNavigationBar(
@@ -159,7 +159,6 @@ class _SmartContractState extends State<SmartContract> {
                   },
                 ),
                 SizedBox(height: 20),
-
                 Text("Smart contract name:",
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
@@ -178,11 +177,12 @@ class _SmartContractState extends State<SmartContract> {
                 SizedBox(height: 20),
                 Column(
                   children: <Widget>[
-                    for ( var input in inputs )
+                    for (var input in inputs)
                       Column(
                         children: <Widget>[
                           Text(input['name'],
-                              style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                              style: new TextStyle(
+                                  color: Colors.grey, fontSize: 18.0)),
                           SizedBox(height: 10),
                           TextField(
                             controller: input['controller'],
@@ -191,10 +191,11 @@ class _SmartContractState extends State<SmartContract> {
                                   borderSide: new BorderSide(
                                       color: Color(0XFF871fff), width: 1.0)),
                               hintText: '',
-                              hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                              hintStyle:
+                                  TextStyle(fontSize: 20.0, color: Colors.grey),
                             ),
-                            style: TextStyle(fontSize: 16.0, color: Colors.white),
-
+                            style:
+                                TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
                         ],
                       ),
@@ -202,7 +203,8 @@ class _SmartContractState extends State<SmartContract> {
                       Column(
                         children: <Widget>[
                           Text("Payable value",
-                              style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                              style: new TextStyle(
+                                  color: Colors.grey, fontSize: 18.0)),
                           SizedBox(height: 10),
                           TextField(
                             controller: payableController,
@@ -211,14 +213,14 @@ class _SmartContractState extends State<SmartContract> {
                                   borderSide: new BorderSide(
                                       color: Color(0XFF871fff), width: 1.0)),
                               hintText: '',
-                              hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                              hintStyle:
+                                  TextStyle(fontSize: 20.0, color: Colors.grey),
                             ),
-                            style: TextStyle(fontSize: 16.0, color: Colors.white),
-
+                            style:
+                                TextStyle(fontSize: 16.0, color: Colors.white),
                           ),
                         ],
                       )
-
                   ],
                 ),
                 SizedBox(height: 20),
@@ -230,16 +232,16 @@ class _SmartContractState extends State<SmartContract> {
                     // var res = await AddGasDo(double.parse(myController.text));
                     print('res=');
                     print(abi);
-                    for(var i = 0; i < inputs.length; i++) {
+                    for (var i = 0; i < inputs.length; i++) {
                       var text = inputs[i]['controller'].text;
                       print(text);
                     }
-                    if(payable) {
+                    if (payable) {
                       print('payableController.text=');
                       print(payableController.text);
                     }
 
-                    if(abi['stateMutability'] == 'view') {
+                    if (abi['stateMutability'] == 'view') {
                       callContract();
                     } else {
                       execContract();
@@ -257,7 +259,7 @@ class _SmartContractState extends State<SmartContract> {
 
   formABI() {
     var abiHex = '';
-    if(functionHex != null) {
+    if (functionHex != null) {
       for (var i = 0; i < functionHex.length; i++) {
         if (functionHex[i]['name'] == _currentFunction) {
           abiHex = functionHex[i]['hex'];
@@ -266,7 +268,7 @@ class _SmartContractState extends State<SmartContract> {
     }
     print('abiHex=' + abiHex);
 
-    for(var i = 0; i < inputs.length; i++) {
+    for (var i = 0; i < inputs.length; i++) {
       var text = inputs[i]['controller'].value.text;
       print(text);
       final number = int.parse(text, radix: 10);
@@ -283,20 +285,16 @@ class _SmartContractState extends State<SmartContract> {
     buf += stringUtils.fixLength(hexString, 64);
     buf += stringUtils.fixLength(address, 64);
 */
-
-
   }
 
-  callContract() {
+  callContract() {}
 
-  }
-
-  execContract() async{
+  execContract() async {
     var abiHex = formABI();
     abiHex = stringUtils.trimHexPrefix(abiHex);
 
     double value = 0;
-    if(payable) {
+    if (payable) {
       print('payableController.text=');
       value = double.parse(payableController.value.text);
     }
@@ -318,15 +316,15 @@ class _SmartContractState extends State<SmartContract> {
     var walletServ = new WalletService();
     print('abiHex=' + abiHex);
     print('contractAddress=' + smartContractAddressController.value.text);
-    var contractInfo =
-    await walletServ.getFabSmartContract(smartContractAddressController.value.text, abiHex);
+    var contractInfo = await walletServ.getFabSmartContract(
+        smartContractAddressController.value.text, abiHex);
 
     print('contractInfo===');
     print(contractInfo['totalFee']);
     print(contractInfo['contract']);
     print('end of contractInfo');
-    var res1 = await walletServ.getFabTransactionHex(seed, [0], contractInfo['contract'],
-        value, contractInfo['totalFee'], 14);
+    var res1 = await walletServ.getFabTransactionHex(seed, [0],
+        contractInfo['contract'], value, contractInfo['totalFee'], 14);
     var txHex = res1['txHex'];
     var errMsg = res1['errMsg'];
     var txHash = '';

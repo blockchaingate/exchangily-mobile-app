@@ -136,8 +136,8 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
         // userTypedMnemonic.clear();
 
       } else {
-        //  Navigator.of(context).pushNamed(
-        //       '/createWallet'); // Remove this after next screen has finished
+        // Remove this after next screen has finished
+        Navigator.of(context).pushNamed('/createWallet');
         // May be in future we should display where user made a mistake in typing
         // For example text field index 5 should turn red if user made a mistake there
         log.w('else');
