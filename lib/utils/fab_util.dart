@@ -41,16 +41,18 @@ Future getFabTokenBalanceForABI(
   var url = fabBaseUrl + 'callcontract';
   try {
     var response = await http.post(url, body: body);
-    log.i('response');
-    log.w(response.body);
+
     var json = jsonDecode(response.body);
     var unlockBalance = json['executionResult']['output'];
+
+
     if (unlockBalance == null || unlockBalance == '') {
       return 0;
     }
     // var unlockInt = int.parse(unlockBalance, radix: 16);
-    var unlockInt = int.parse("0x$unlockBalance");
-    tokenBalance = unlockInt / 1e18;
+    var unlockInt = BigInt.parse(unlockBalance, radix: 16);
+
+    tokenBalance = unlockInt.toDouble() / 1e18;
   } catch (e) {}
   return tokenBalance;
 }
