@@ -1,6 +1,6 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
 
-const bool isProduction = true;
+const bool isProduction = false;
 
 Map devConfig =  {
   "chains": {
