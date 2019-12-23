@@ -54,7 +54,10 @@ class WalletService {
 
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
-    randomMnemonic = bip39.generateMnemonic();
+    // randomMnemonic = bip39.generateMnemonic();
+    randomMnemonic =
+        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+
     log.w('get random method - $randomMnemonic');
     return Future.value(randomMnemonic);
   }
@@ -125,7 +128,7 @@ class WalletService {
     double currentUsdValue = usdVal['bitcoin']['usd'];
     log.i('Current btc price in get all balances method $currentUsdValue');
     try {
-      List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT'];
+      List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
       log.w('List of coins length ${listOfCoins.length}');
       for (int i = 0; i < listOfCoins.length; i++) {
         var tickerName = listOfCoins[i];
