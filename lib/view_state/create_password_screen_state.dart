@@ -14,8 +14,8 @@ class CreatePasswordScreenState extends BaseState {
   final VaultService _vaultService = locator<VaultService>();
 
   List<WalletInfo> _walletInfo;
-  final log = getLogger('Create Wallet View Model');
-  String errorMessage;
+  final log = getLogger('Create Password View Model');
+  String errorMessage = '';
 
 /* ---------------------------------------------------
                     Get All Coins Future
@@ -28,7 +28,9 @@ class CreatePasswordScreenState extends BaseState {
         .timeout(Duration(seconds: 15), onTimeout: () {
       log.e('TIMEOUT');
       setState(ViewState.Idle);
-      return null;
+      _walletInfo = [];
+
+      return _walletInfo;
     });
     if (_walletInfo == null) {
       errorMessage = 'No Coin Data';
@@ -37,19 +39,21 @@ class CreatePasswordScreenState extends BaseState {
       log.w('wallet info length ${_walletInfo.length}');
       setState(ViewState.Idle);
     }
-
     return _walletInfo;
   }
 
+  showNotification(context, title, message) {
+    _walletService.showInfoFlushbar(
+        title, message, Icons.cancel, Colors.red, context);
+  }
 /* ---------------------------------------------------
                       Validate Pass
     -------------------------------------------------- */
 
-  validatePassword(pass, confirmPass, context) {
+  bool validatePassword(pass, confirmPass, context) {
     Pattern pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regex = new RegExp(pattern);
-    log.w(pass);
     if (pass.isEmpty) {
       _walletService.showInfoFlushbar(
           'Empty Password',

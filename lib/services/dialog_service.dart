@@ -12,9 +12,9 @@ class DialogService {
     _showDialogListener = showDialogListener;
   }
 
-  // Calls the dialog listener and returns and a future that will wait for the dialog to complete
+  // Calls the dialog listener and returns a future that will wait for the dialog to complete
   Future<AlertResponse> showDialog(
-      {String title, String description, String buttonTitle = "Ok"}) {
+      {String title, String description, String buttonTitle = "Confirm"}) {
     _dialogCompleter = Completer<AlertResponse>();
     _showDialogListener(AlertRequest(
         title: title, description: description, buttonTitle: buttonTitle));
