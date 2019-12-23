@@ -48,7 +48,7 @@ class WalletService {
 
   List<double> totalUsdBalance = [];
   String randomMnemonic = '';
-  var seed;
+  Uint8List seed;
   var sum;
   var root;
 
@@ -97,7 +97,7 @@ class WalletService {
       // log.w('read encypted - $encryptedText');
     } catch (e) {
       log.e("Couldn't read file -$e");
-      return Future.value('failed');
+      return Future.value('');
     }
   }
 
@@ -117,6 +117,7 @@ class WalletService {
     log.w('enter in getallbalances');
     log.w('wallet info length ${_walletInfo.length}');
     _walletInfo.clear();
+    _walletInfo = [];
     log.w('Cleared wallet info length ${_walletInfo.length}');
     log.w('Seed in wallet service get all balanced method $seed');
     root = bip32.BIP32.fromSeed(seed);
@@ -124,17 +125,18 @@ class WalletService {
     double currentUsdValue = usdVal['bitcoin']['usd'];
     log.i('Current btc price in get all balances method $currentUsdValue');
     try {
-      List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
-
+      List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT'];
+      log.w('List of coins length ${listOfCoins.length}');
       for (int i = 0; i < listOfCoins.length; i++) {
         var tickerName = listOfCoins[i];
         if (tickerName == 'BTC') {
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
+          log.w('address - $addr and balance - $bal');
           var calculatedUsdBal =
               calculateUsdBalance(currentUsdValue, bal['balance']);
-          log.i(
-              'printing calculated bal in get all balances method $calculatedUsdBal');
+          log.i('printing calculated bal $calculatedUsdBal');
+
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
@@ -191,8 +193,9 @@ class WalletService {
       return _walletInfo;
     } catch (e) {
       log.e(e);
-      log.i('Wallet Service Get all balances Failed');
-      return null;
+      _walletInfo = [];
+      log.i('Catch GetAllbalances Failed');
+      return _walletInfo;
     }
   }
 
