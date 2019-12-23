@@ -33,9 +33,11 @@ class CreatePasswordScreenState extends BaseState {
     if (_walletInfo == null) {
       errorMessage = 'No Coin Data';
       setState(ViewState.Idle);
+    } else {
+      log.w('wallet info length ${_walletInfo.length}');
+      setState(ViewState.Idle);
     }
-    log.w('wallet info length ${_walletInfo.length}');
-    setState(ViewState.Idle);
+
     return _walletInfo;
   }
 

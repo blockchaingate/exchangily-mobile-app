@@ -21,8 +21,11 @@ getFabNode(root, {index = 0}) {
 
 Future getFabBalanceByAddress(String address) async {
   var url = fabBaseUrl + 'getbalance/' + address;
-  var response = await http.get(url);
-  var fabBalance = double.parse(response.body) / 1e8;
+  var fabBalance = 0.0;
+  try {
+    var response = await http.get(url);
+    fabBalance = double.parse(response.body) / 1e8;
+  } catch(e) {}
   return {'balance': fabBalance, 'lockbalance': 0};
 }
 
@@ -32,18 +35,20 @@ Future getFabTokenBalanceForABI(
     'address': trimHexPrefix(smartContractAddress),
     'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
   };
-
+  var tokenBalance = 0.0;
   var url = fabBaseUrl + 'callcontract';
-  var response = await http.post(url, body: body);
+  try {
+    var response = await http.post(url, body: body);
 
-  var json = jsonDecode(response.body);
-  var unlockBalance = json['executionResult']['output'];
-  if (unlockBalance == null || unlockBalance == '') {
-    return 0;
-  }
-  // var unlockInt = int.parse(unlockBalance, radix: 16);
-  var unlockInt = int.parse("0x$unlockBalance");
-  var tokenBalance = unlockInt / 1e18;
+    var json = jsonDecode(response.body);
+    var unlockBalance = json['executionResult']['output'];
+    if (unlockBalance == null || unlockBalance == '') {
+      return 0;
+    }
+    // var unlockInt = int.parse(unlockBalance, radix: 16);
+    var unlockInt = int.parse("0x$unlockBalance");
+    tokenBalance = unlockInt / 1e18;
+  } catch(e) {}
   return tokenBalance;
 }
 
@@ -53,10 +58,6 @@ Future getSmartContractABI(String smartContractAddress) async {
   Map<String, dynamic> resJson = jsonDecode(response.body);
   return resJson;
 }
-
-Future getFabTokenBalanceByAddress(String address, String coinName) async{
-
-  var smartContractAddress = environment["addresses"]["smartContract"][coinName];
 
 Future getFabTokenBalanceByAddress(String address, String coinName) async {
   var smartContractAddress =

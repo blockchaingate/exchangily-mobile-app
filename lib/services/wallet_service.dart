@@ -130,7 +130,9 @@ class WalletService {
         var tickerName = listOfCoins[i];
         if (tickerName == 'BTC') {
           var addr = await getAddressForCoin(root, tickerName);
+
           var bal = await getBalanceForCoin(root, tickerName);
+
           var calculatedUsdBal =
               calculateUsdBalance(currentUsdValue, bal['balance']);
           log.i(
@@ -166,7 +168,9 @@ class WalletService {
         } else if (tickerName == 'USDT') {
           var addr =
               await getAddressForCoin(root, tickerName, tokenType: 'ETH');
+          print('addr=' + addr);
           var bal = await getBalanceForCoin(root, tickerName, tokenType: 'ETH');
+          print(bal);
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
@@ -187,6 +191,7 @@ class WalletService {
               logoColor: globals.primaryColor));
           printValuesAfter(i, tickerName);
         }
+
       }
       return _walletInfo;
     } catch (e) {

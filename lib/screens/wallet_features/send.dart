@@ -268,6 +268,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                             globals.red,
                             context);
                       } else {
+                        /*
                         walletService.sendTransaction(
                             widget.walletInfo.tickerName.toUpperCase(),
                             [0],
@@ -275,6 +276,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                             amount,
                             options,
                             true);
+
+                         */
                         print('Navigating to Check pass');
                         model.checkPass();
                         // Navigator.pushNamed(context, '/checkPassword');
