@@ -56,6 +56,7 @@ class WalletService {
   Future<String> getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
     log.w('get random method - $randomMnemonic');
+    randomMnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
     return Future.value(randomMnemonic);
   }
 
@@ -299,6 +300,8 @@ class WalletService {
         'contractAddress': environment["addresses"]["smartContract"][coinName]
       };
     }
+    var mnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    var seed = generateSeedFromUser(mnemonic);
     var resST = await sendTransaction(
         coinName, seed, [0], officalAddress, amount, option, false);
 
