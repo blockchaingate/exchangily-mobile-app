@@ -1,14 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../shared/globals.dart' as globals;
 
 class ChooseWalletLanguageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 15, 10, 0),
-      padding: EdgeInsets.all(44),
+      padding: EdgeInsets.all(40),
       color: globals.walletCardColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -26,19 +24,21 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
           ),
           // Language Text and Icon Container
           new Container(
-            width: 300,
-            height: 50,
             margin: EdgeInsets.only(bottom: 10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Icon(
-                  Icons.language,
-                  color: Colors.white,
+                Padding(
+                  padding: const EdgeInsets.only(right: 1.0),
+                  child: Icon(
+                    Icons.language,
+                    color: Colors.white,
+                  ),
                 ),
-                Text('Please choose the language',
-                    style: TextStyle(
-                        color: Colors.white, letterSpacing: 1.25, fontSize: 15))
+                Expanded(
+                  child: Text('Please choose the language',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.display3),
+                )
               ],
             ),
           ),

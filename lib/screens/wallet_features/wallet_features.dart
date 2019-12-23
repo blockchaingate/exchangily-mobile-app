@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/shared/bottom_nav.dart';
+import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/models/wallet.dart';
@@ -24,9 +24,6 @@ class WalletFeaturesScreen extends StatelessWidget {
     String coinName = walletInfo.name;
     double containerWidth = 150;
     double containerHeight = 115;
-
-    print('walletInfo.tickerName=${walletInfo.tickerName}');
-    print('walletInfo.Address=${walletInfo.address}');
     return Scaffold(
       key: key,
       body: ListView(

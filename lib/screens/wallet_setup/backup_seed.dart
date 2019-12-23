@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,40 +12,12 @@ class BackupSeedWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final log = getLogger('Backup Seed');
     final randomMnemonic = Provider.of<String>(context);
+    log.w(randomMnemonic);
     mnemonic = randomMnemonic
         .split(" ")
         .toList(); // convert string to list to iterate and display single word as a textbox
-    print(mnemonic);
-    Widget iconText = Row(
-      children: <Widget>[
-        Padding(
-            padding: EdgeInsets.all(10),
-            child: Icon(
-              Icons.note_add,
-              color: globals.primaryColor,
-              size: 30,
-            )),
-        Expanded(
-            child: Text(
-          'Below are the 12 mnemonics to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet',
-          style: Theme.of(context).textTheme.headline,
-        )),
-      ],
-    );
-
-    Widget confirmButton = Container(
-      padding: EdgeInsets.all(15),
-      child: RaisedButton(
-        child: Text(
-          AppLocalizations.of(context).confirm,
-          style: Theme.of(context).textTheme.button,
-        ),
-        onPressed: () {
-          Navigator.of(context).pushNamed('/confirmSeed', arguments: mnemonic);
-        },
-      ),
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -55,7 +28,22 @@ class BackupSeedWalletScreen extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: ListView(
           children: <Widget>[
-            iconText,
+            Row(
+              children: <Widget>[
+                Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Icon(
+                      Icons.note_add,
+                      color: globals.primaryColor,
+                      size: 30,
+                    )),
+                Expanded(
+                    child: Text(
+                  'Below are the 12 mnemonics to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet',
+                  style: Theme.of(context).textTheme.headline,
+                )),
+              ],
+            ),
             Container(
               margin: EdgeInsets.symmetric(
                 vertical: 40,
@@ -63,7 +51,19 @@ class BackupSeedWalletScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
               child: _buttonGrid(),
             ),
-            confirmButton
+            Container(
+              padding: EdgeInsets.all(15),
+              child: RaisedButton(
+                child: Text(
+                  AppLocalizations.of(context).confirm,
+                  style: Theme.of(context).textTheme.button,
+                ),
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed('/confirmSeed', arguments: mnemonic);
+                },
+              ),
+            )
           ],
         ),
       ),
@@ -84,7 +84,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
         var singleWord = mnemonic[i];
         return Container(
             child: TextField(
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.left,
           //controller: myController,
           enableInteractiveSelection: false, // readonly
           // enabled: false, // if false use cant see the selection border around
@@ -93,7 +93,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
           decoration: InputDecoration(
             fillColor: globals.primaryColor,
             filled: true,
-            hintText: '$index)  ' '$singleWord',
+            hintText: '$singleWord',
             hintStyle: TextStyle(color: globals.white),
             focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: globals.white, width: 2),

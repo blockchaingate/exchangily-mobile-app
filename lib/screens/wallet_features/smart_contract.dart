@@ -1,3 +1,5 @@
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
@@ -18,7 +20,7 @@ class SmartContract extends  StatefulWidget {
 }
 
 class _SmartContractState extends State<SmartContract> {
-
+  Api _api = locator<Api>();
   String _currentFunction;
   String _smartContractName;
   var abis;
@@ -329,7 +331,7 @@ class _SmartContractState extends State<SmartContract> {
     var errMsg = res1['errMsg'];
     var txHash = '';
     if (txHex != null && txHex != '') {
-      var res = await walletServ.postFabTx(txHex);
+      var res = await _api.postFabTx(txHex);
       txHash = res['txHash'];
       errMsg = res['errMsg'];
       print('txHash=' + txHash);

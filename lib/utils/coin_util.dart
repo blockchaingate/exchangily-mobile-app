@@ -339,16 +339,21 @@ Future getAddressForCoin(root, coinName, {tokenType = '', index = 0}) async {
 Future getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) async {
   var address = await getAddressForCoin(root, coinName,
       tokenType: tokenType, index: index);
-  if (coinName == 'BTC') {
-    return await getBtcBalanceByAddress(address);
-  } else if (coinName == 'ETH') {
-    return await getEthBalanceByAddress(address);
-  } else if (coinName == 'FAB') {
-    return await getFabBalanceByAddress(address);
-  } else if (tokenType == 'ETH') {
-    return await getEthTokenBalanceByAddress(address, tokenType);
-  } else if (tokenType == 'FAB') {
-    return await getFabTokenBalanceByAddress(address, tokenType);
+  try {
+    if (coinName == 'BTC') {
+      return await getBtcBalanceByAddress(address);
+    } else if (coinName == 'ETH') {
+      return await getEthBalanceByAddress(address);
+    } else if (coinName == 'FAB') {
+      return await getFabBalanceByAddress(address);
+    } else if (tokenType == 'ETH') {
+      return await getEthTokenBalanceByAddress(address, coinName);
+    } else if (tokenType == 'FAB') {
+      return await getFabTokenBalanceByAddress(address, coinName);
+    }
+  }
+  catch(e) {
+
   }
 
   return {'balance': -1, 'lockbalance': -1};
