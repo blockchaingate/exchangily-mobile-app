@@ -1,4 +1,6 @@
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
+import '../../service_locator.dart';
 import '../../shared/globals.dart' as globals;
 
 class ImportWalletScreen extends StatelessWidget {
@@ -6,6 +8,7 @@ class ImportWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WalletService _walletService = locator<WalletService>();
     // Top Text Row Widget
     Widget topTextRow = Row(
       children: <Widget>[
@@ -26,7 +29,9 @@ class ImportWalletScreen extends StatelessWidget {
           style: Theme.of(context).textTheme.button,
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed('/importWallet');
+          // Navigator.of(context).pushNamed('/importWallet');
+          _walletService.showInfoFlushbar('Import not working',
+              'Please Check back later', Icons.cancel, Colors.red, context);
         },
       ),
     );

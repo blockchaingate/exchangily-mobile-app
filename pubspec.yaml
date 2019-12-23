@@ -30,7 +30,7 @@ dependencies:
   encrypt: ^3.3.0
 
   # Logger
-  logger: ^0.7.0+2
+  logger: ^0.6.0
 
   # Web 3 Dart
   web3dart: ^1.2.1
@@ -75,8 +75,14 @@ dependencies:
   # Secure Storage
   flutter_secure_storage: 3.3.1+1
 
-  # dependency injection
+  # Dependency injection
   get_it: ^1.0.3
+
+  # Device Preview
+  device_preview:
+
+  # rflutter Alert
+  rflutter_alert: ^1.0.3
 
   # Share files
   share:
@@ -97,14 +103,6 @@ flutter:
     - assets/images/wallet-page/
   #  - lib/l10n/en.json
   #  - lib/l10n/zh.json
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
   #   - family: Schyler

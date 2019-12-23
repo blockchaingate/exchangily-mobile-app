@@ -30,11 +30,10 @@ class WalletSetupScreen extends StatelessWidget {
           // Button Container
           Container(
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 5),
+                  child: Container(
+                    margin: EdgeInsets.only(right: 2),
                     child: RaisedButton(
                       child: Text('Create Wallet',
                           style: Theme.of(context).textTheme.display3),

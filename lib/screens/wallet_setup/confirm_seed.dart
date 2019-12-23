@@ -1,3 +1,6 @@
+import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,10 +16,12 @@ class ConfirmSeedtWalletScreen extends StatefulWidget {
 }
 
 class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
+  final log = getLogger('Confirm Seed');
   List<TextEditingController> _mnemonicTextController = new List();
   List<String> userTypedMnemonic = [];
   FocusNode _focusNode;
   final int _count = 12;
+  WalletService _walletService = locator<WalletService>();
 
   @override
   void initState() {
@@ -124,20 +129,27 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
       // So we use listEqual for deep checking which is one many methods
       if (listEquals(widget.mnemonic, userTypedMnemonic)) {
         Navigator.of(context).pushNamed('/createWallet');
-        print('if');
-        print(widget.mnemonic);
-        print('user typed');
-        print(userTypedMnemonic);
+        log.w('if');
+        log.w(widget.mnemonic);
+        log.w('user typed');
+        log.w(userTypedMnemonic);
         // userTypedMnemonic.clear();
+
       } else {
-        Navigator.of(context).pushNamed(
-            '/createWallet'); // Remove this after next screen has finished
+        //  Navigator.of(context).pushNamed(
+        //       '/createWallet'); // Remove this after next screen has finished
         // May be in future we should display where user made a mistake in typing
         // For example text field index 5 should turn red if user made a mistake there
-        print('else');
-        print(widget.mnemonic);
-        print('user typed');
-        print(userTypedMnemonic);
+        log.w('else');
+        log.w(widget.mnemonic);
+        log.w('user typed');
+        log.w(userTypedMnemonic);
+        _walletService.showInfoFlushbar(
+            'Seed Empty',
+            'Please fill all the text fields',
+            Icons.cancel,
+            Colors.red,
+            context);
       }
     });
   }
@@ -157,7 +169,7 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
               ],
               style: TextStyle(color: globals.white),
               controller: _mnemonicTextController[i],
-              maxLines: 2,
+              //maxLines: 2,
               autocorrect: false,
               decoration: InputDecoration(
                 fillColor: globals.primaryColor,

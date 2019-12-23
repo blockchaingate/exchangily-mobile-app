@@ -44,7 +44,7 @@ Future getEthBalanceByAddress(String address) async {
   var url = ethBaseUrl + 'getbalance/' + address;
   var response = await http.get(url);
   Map<String, dynamic> balance = jsonDecode(response.body);
-  var ethBalance = int.parse(balance['balance']) / 1e18;
+  var ethBalance = double.parse(balance['balance']) / 1e18;
   return {'balance': ethBalance, 'lockbalance': 0};
 }
 
@@ -54,6 +54,7 @@ Future getEthTokenBalanceByAddress(String address, String coinName) async {
   var url = ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
   var response = await http.get(url);
   var balance = jsonDecode(response.body);
-  var tokenBalance = int.parse(balance['balance']) / 1e6;
+
+  var tokenBalance = double.parse(balance['balance']) / 1e6;
   return {'balance': tokenBalance, 'lockbalance': 0};
 }

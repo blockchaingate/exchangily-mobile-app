@@ -1,4 +1,8 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
+import 'package:exchangilymobileapp/provider_setup.dart';
 import 'package:exchangilymobileapp/routes.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
@@ -15,11 +19,16 @@ import 'models/wallet.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
-  Logger.level = Level.verbose;
+  serviceLocator();
+  Logger.level = Level.info;
   // Force user to use only portrait mode until the development of other screen size design
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(MyApp());
+    runApp(
+        //   DevicePreview(builder: (context) =>
+        MyApp()
+        // )
+        );
   });
 }
 
@@ -28,11 +37,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
-          FutureProvider<List<WalletInfo>>.value(
-              value: WalletService().getAllBalances()),
-          Provider<String>.value(value: WalletService().getRandomMnemonic())
+          FutureProvider<String>.value(
+              value: WalletService().getRandomMnemonic())
         ],
         child: MaterialApp(
+          // locale: DevicePreview.of(context).locale,
+          builder: (context, widget) => Navigator(
+              onGenerateRoute: (settings) => MaterialPageRoute(
+                  builder: (context) => DialogManager(
+                        child: widget,
+                      ))),
+
           localizationsDelegates: [
             AppLocalizationsDelegate(),
             GlobalMaterialLocalizations.delegate,
