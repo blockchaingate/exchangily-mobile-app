@@ -35,14 +35,10 @@ class CreatePasswordScreenState extends BaseState {
     if (_walletInfo == null) {
       errorMessage = 'No Coin Data';
       setState(ViewState.Idle);
-    }
-    if (_walletInfo.length == 0) {
-      log.w('list empty');
-      errorMessage = 'Failed to create the wallet';
+    } else {
+      log.w('wallet info length ${_walletInfo.length}');
       setState(ViewState.Idle);
     }
-    log.w('wallet info length ${_walletInfo.length}');
-    setState(ViewState.Idle);
     return _walletInfo;
   }
 

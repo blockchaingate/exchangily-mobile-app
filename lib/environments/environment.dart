@@ -57,10 +57,10 @@ Map productionConfig = {
   },
   "CoinType": {"BTC": 0, "ETH": 60, "FAB": 1150},
   'endpoints': {
-    'kanban': 'https://kanbantest.fabcoinapi.com/',
-    'btc': 'https://btctest.fabcoinapi.com/',
-    'fab': 'https://fabtest.fabcoinapi.com/',
-    'eth': 'https://ethtest.fabcoinapi.com/'
+    'kanban': 'https://kanbanprod.fabcoinapi.com/',
+    'btc': 'https://btcprod.fabcoinapi.com/',
+    'fab': 'https://fabprod.fabcoinapi.com/',
+    'eth': 'https://ethprod.fabcoinapi.com/'
   },
   'addresses': {
     "smartContract": {

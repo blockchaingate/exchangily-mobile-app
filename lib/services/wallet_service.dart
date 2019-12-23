@@ -135,7 +135,7 @@ class WalletService {
         if (tickerName == 'BTC') {
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
-          log.w('address - $addr and balance - $bal');
+          //   log.w('address - $addr and balance - $bal');
           var calculatedUsdBal =
               calculateUsdBalance(currentUsdValue, bal['balance']);
           log.i('printing calculated bal $calculatedUsdBal');
@@ -515,7 +515,6 @@ class WalletService {
 
   Future sendTransaction(String coin, seed, List addressIndexList,
       String toAddress, double amount, options, bool doSubmit) async {
-    //final seed = bip39.mnemonicToSeed(bip39.generateMnemonic());
     final root = bip32.BIP32.fromSeed(seed);
     print('coin=' + coin);
     print(addressIndexList);

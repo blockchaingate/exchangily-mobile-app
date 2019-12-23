@@ -14,7 +14,7 @@ class SendScreenState extends BaseState {
   WalletService walletService = locator<WalletService>();
   var options = {};
 
-  Future checkPass(tickerName, walletAddress, amount, context) async {
+  Future checkPass(tickerName, toWalletAddress, amount, context) async {
     log.w('dialog called');
     var res = await _dialogService.showDialog(
         title: 'Enter Password',
@@ -27,7 +27,7 @@ class SendScreenState extends BaseState {
       Uint8List seed = walletService.generateSeedFromUser(mnemonic);
       log.w(seed);
       walletService.sendTransaction(
-          tickerName, seed, [0], walletAddress, amount, options, true);
+          tickerName, seed, [0], toWalletAddress, amount, options, true);
     } else {
       if (res.fieldOne != 'Closed') {
         log.w('Wrong password');

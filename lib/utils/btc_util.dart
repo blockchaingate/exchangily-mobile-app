@@ -6,16 +6,23 @@ import 'package:bitcoin_flutter/src/models/networks.dart';
 final String btcBaseUrl = environment["endpoints"]["btc"];
 
 Future getBtcTransactionStatus(String txid) async {
+  var response;
   var url = btcBaseUrl  + 'gettransactionjson/' + txid;
   var client = new http.Client();
-  var response = await client.get(url);
+  try {
+    response = await client.get(url);
+  } catch(e) {}
+
   return response;
 }
 
 Future getBtcBalanceByAddress(String address) async{
   var url =  btcBaseUrl + 'getbalance/' + address;
-  var response = await http.get(url);
-  var btcBalance = double.parse(response.body) / 1e8;
+  var btcBalance = 0.0;
+  try {
+    var response = await http.get(url);
+    btcBalance = double.parse(response.body) / 1e8;
+  } catch(e) {}
   return {'balance':btcBalance,'lockbalance': 0};
 }
 

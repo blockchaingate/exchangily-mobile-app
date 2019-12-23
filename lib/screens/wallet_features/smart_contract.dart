@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,6 @@ class SmartContract extends StatefulWidget {
 
 class _SmartContractState extends State<SmartContract> {
   Api _api = locator<Api>();
-
   String _currentFunction;
   String _smartContractName;
   var abis;
