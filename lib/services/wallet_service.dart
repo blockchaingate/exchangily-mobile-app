@@ -54,7 +54,10 @@ class WalletService {
 
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
-    randomMnemonic = bip39.generateMnemonic();
+    // randomMnemonic = bip39.generateMnemonic();
+    randomMnemonic =
+        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+
     log.w('get random method - $randomMnemonic');
     randomMnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
     return Future.value(randomMnemonic);
@@ -123,10 +126,12 @@ class WalletService {
     log.w('Seed in wallet service get all balanced method $seed');
     root = bip32.BIP32.fromSeed(seed);
     var usdVal = await _api.getCoinsUsdValue();
-    double currentUsdValue = usdVal['bitcoin']['usd'];
-    log.i('Current btc price in get all balances method $currentUsdValue');
+    double currentBtcUsdValue = usdVal['bitcoin']['usd'];
+    double currentEthUsdValue = usdVal['ethereum']['usd'];
+    double currentFabUsdValue = usdVal['fabcoin']['usd'];
+    double currentTetherUsdValue = usdVal['tether']['usd'];
     try {
-      List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT'];
+      List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
       log.w('List of coins length ${listOfCoins.length}');
       for (int i = 0; i < listOfCoins.length; i++) {
         var tickerName = listOfCoins[i];
@@ -135,7 +140,7 @@ class WalletService {
           var bal = await getBalanceForCoin(root, tickerName);
           //   log.w('address - $addr and balance - $bal');
           var calculatedUsdBal =
-              calculateUsdBalance(currentUsdValue, bal['balance']);
+              calculateUsdBalance(currentBtcUsdValue, bal['balance']);
           log.i('printing calculated bal $calculatedUsdBal');
 
           _walletInfo.add(WalletInfo(
@@ -149,9 +154,12 @@ class WalletService {
         } else if (tickerName == 'FAB') {
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
+          var calculatedUsdBal =
+              calculateUsdBalance(currentFabUsdValue, bal['balance']);
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
+              usdValue: calculatedUsdBal,
               availableBalance: bal['balance'],
               name: 'fast access blockchain',
               logoColor: globals.primaryColor));
@@ -159,9 +167,12 @@ class WalletService {
         } else if (tickerName == 'ETH') {
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
+          var calculatedUsdBal =
+              calculateUsdBalance(currentEthUsdValue, bal['balance']);
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
+              usdValue: calculatedUsdBal,
               availableBalance: bal['balance'],
               name: 'ethereum',
               logoColor: globals.primaryColor));
@@ -170,9 +181,12 @@ class WalletService {
           var addr =
               await getAddressForCoin(root, tickerName, tokenType: 'ETH');
           var bal = await getBalanceForCoin(root, tickerName, tokenType: 'ETH');
+          var calculatedUsdBal =
+              calculateUsdBalance(currentTetherUsdValue, bal['balance']);
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
+              usdValue: calculatedUsdBal,
               availableBalance: bal['balance'],
               name: 'usd token',
               logoColor: globals.primaryColor));
@@ -181,11 +195,12 @@ class WalletService {
           var addr =
               await getAddressForCoin(root, tickerName, tokenType: 'FAB');
           var bal = await getBalanceForCoin(root, tickerName, tokenType: 'FAB');
+          var calculatedUsdBal = calculateUsdBalance(0.2, bal['balance']);
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
               availableBalance: bal['balance'],
-              usdValue: 0.2,
+              usdValue: calculatedUsdBal,
               name: 'exchangily',
               logoColor: globals.primaryColor));
           printValuesAfter(i, tickerName);
@@ -227,8 +242,10 @@ class WalletService {
   }
 
   calculateUsdBalance(double usdValueByApi, double actualWalletBalance) {
-    actualWalletBalance = 0.005;
-    if (actualWalletBalance != 0) {
+    log.w('usdVal =$usdValueByApi, actualwallet bal $actualWalletBalance');
+    if (actualWalletBalance != 0 &&
+        usdValueByApi != 0 &&
+        usdValueByApi != null) {
       double total = (usdValueByApi * actualWalletBalance);
       totalUsdBalance.clear();
       totalUsdBalance.add(total);

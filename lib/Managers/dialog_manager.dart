@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import '../shared/globals.dart' as globals;
 
 class DialogManager extends StatefulWidget {
   final Widget child;
@@ -34,6 +35,15 @@ class _DialogManagerState extends State<DialogManager> {
 
   void _showdDialog(AlertRequest request) {
     Alert(
+        style: AlertStyle(
+            animationType: AnimationType.grow,
+            isOverlayTapDismiss: true,
+            backgroundColor: globals.walletCardColor,
+            descStyle: Theme.of(context).textTheme.display2,
+            titleStyle: Theme.of(context)
+                .textTheme
+                .display3
+                .copyWith(fontWeight: FontWeight.bold)),
         context: context,
         title: request.title,
         desc: request.description,
@@ -45,14 +55,22 @@ class _DialogManagerState extends State<DialogManager> {
               controller: controller,
               obscureText: true,
               decoration: InputDecoration(
-                icon: Icon(Icons.security),
-                labelText: 'Password',
+                labelStyle: Theme.of(context)
+                    .textTheme
+                    .display2
+                    .copyWith(color: globals.white),
+                icon: Icon(
+                  Icons.security,
+                  color: globals.primaryColor,
+                ),
+                labelText: 'Type your wallet password',
               ),
             ),
           ],
         ),
         buttons: [
           DialogButton(
+            color: globals.primaryColor,
             onPressed: () {
               _walletService.readEncryptedData(controller.text).then((data) {
                 if (data != '' && data != null) {
