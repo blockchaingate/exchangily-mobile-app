@@ -1,14 +1,11 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/view_state/total_balances_view_state.dart';
+import 'package:exchangilymobileapp/view_state/total_balances_screen_state.dart';
 import 'package:exchangilymobileapp/widgets/app_drawer.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
 
 class TotalBalancesScreen extends StatefulWidget {
@@ -28,7 +25,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
     final List<WalletInfo> walletInfo = widget.walletInfo;
     return BaseScreen<TotalBalancesScreenState>(
         onModelReady: (model) {
-          model.getTotal();
+          model.refreshTotal();
         },
         builder: (context, model, child) => Scaffold(
               key: key,
@@ -182,7 +179,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
               InkWell(
                   onTap: () {
                     setState(() {
-                      model.getTotal();
+                      // model.refreshTotal();
                     });
                   },
                   child: Icon(

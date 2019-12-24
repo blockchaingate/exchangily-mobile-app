@@ -4,7 +4,7 @@ import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/view_state/create_password_screen_state.dart';
 import 'package:exchangilymobileapp/view_state/send_state.dart';
-import 'package:exchangilymobileapp/view_state/total_balances_view_state.dart';
+import 'package:exchangilymobileapp/view_state/total_balances_screen_state.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt locator = GetIt();

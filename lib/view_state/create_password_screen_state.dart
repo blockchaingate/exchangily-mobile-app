@@ -14,7 +14,7 @@ class CreatePasswordScreenState extends BaseState {
   final VaultService _vaultService = locator<VaultService>();
 
   List<WalletInfo> _walletInfo;
-  final log = getLogger('Create Password View Model');
+  final log = getLogger('CreatePasswordScreenState');
   String errorMessage = '';
 
 /* ---------------------------------------------------
@@ -36,10 +36,16 @@ class CreatePasswordScreenState extends BaseState {
       errorMessage = 'No Coin Data';
       setState(ViewState.Idle);
     } else {
+      errorMessage = 'Something wrong happened while creating the list';
       log.w('wallet info length ${_walletInfo.length}');
       setState(ViewState.Idle);
     }
     return _walletInfo;
+  }
+
+  getCoinAddresses() async {
+    //   String addr = await _walletService.getCoinAddresses();
+    // log.w(addr);
   }
 
   showNotification(context, title, message) {

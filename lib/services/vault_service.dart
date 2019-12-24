@@ -11,7 +11,7 @@ class VaultService {
 
   Future secureSeed(context, pass) async {
     String randomMnemonic = Provider.of<String>(context);
-    _walletService.generateSeedFromUser(randomMnemonic);
+    _walletService.generateSeed(randomMnemonic);
 
     String userTypedKey = pass;
 
@@ -25,6 +25,7 @@ class VaultService {
     // log.w('encrypted phrase - ${encrypted.base64}');
     // log.w('decrypted phrase with user key - $decrypted');
     await _walletService.saveEncryptedData(encrypted.base64);
+    randomMnemonic = '';
     //log.w('Printing encrypted data from vault service $test');
     // walletService
     //     .writeStorage(userTypedKey, encrypted.base64)

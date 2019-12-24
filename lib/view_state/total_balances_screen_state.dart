@@ -9,7 +9,7 @@ class TotalBalancesScreenState extends BaseState {
   double totalUsdBalance = 0;
 
   WalletService walletService = locator<WalletService>();
-  getTotal() {
+  refreshTotal() {
     totalUsdBalance = walletService.calculateTotalUsdBalance();
     log.w(totalUsdBalance);
     return totalUsdBalance;

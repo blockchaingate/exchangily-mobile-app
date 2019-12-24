@@ -24,7 +24,7 @@ class SendScreenState extends BaseState {
       log.w('Pass matched');
       log.w('${res.fieldOne}');
       String mnemonic = res.fieldOne;
-      Uint8List seed = walletService.generateSeedFromUser(mnemonic);
+      Uint8List seed = walletService.generateSeed(mnemonic);
       log.w(seed);
       walletService.sendTransaction(
           tickerName, seed, [0], toWalletAddress, amount, options, true);
