@@ -4,6 +4,8 @@ import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 
 import '../packages/bip32/bip32_base.dart' as bip32;
+
+import '../packages/bip32/utils/ecurve.dart' as ecc;
 import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:hex/hex.dart';
 import 'package:web3dart/web3dart.dart';
@@ -23,10 +25,18 @@ import "package:pointycastle/ecc/curves/secp256k1.dart";
 import "package:pointycastle/digests/sha256.dart";
 import "package:pointycastle/signers/ecdsa_signer.dart";
 import 'package:pointycastle/macs/hmac.dart';
+import 'dart:typed_data';
+import 'dart:convert';
+import 'varuint.dart';
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
 final log = getLogger('coin_util');
+
+Uint8List hash256(Uint8List buffer) {
+  Uint8List _tmp = new SHA256Digest().process(buffer);
+  return new SHA256Digest().process(_tmp);
+}
 
 encodeSignature(signature, recovery, compressed, segwitType) {
   if (segwitType != null) {
@@ -202,6 +212,19 @@ Future<Uint8List> signPersonalMessageWith(
   //return credential.sign(concat, chainId: chainId);
 }
 
+Uint8List magicHash(String message, [NetworkType network]) {
+  network = network ?? bitcoin;
+  Uint8List messagePrefix = utf8.encode(network.messagePrefix);
+  int messageVISize = encodingLength(message.length);
+  int length = messagePrefix.length + messageVISize + message.length;
+  Uint8List buffer = new Uint8List(length);
+  buffer.setRange(0, messagePrefix.length, messagePrefix);
+  encode(message.length, buffer, messagePrefix.length);
+  buffer.setRange(
+      messagePrefix.length + messageVISize, length, utf8.encode(message));
+  return hash256(buffer);
+}
+
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
   print('originalMessage=');
   print(originalMessage);
@@ -263,11 +286,17 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     s = ss.substring(64, 128);
     v = ss.substring(128);
 
-    var btcWallet = new HDWallet.fromBase58(bitCoinChild.toBase58(),
-        network: environment["chains"]["BTC"]["network"]);
+    /*
+    var btcWallet = new HDWallet.fromBase58(bitCoinChild.toBase58(), network: environment["chains"]["BTC"]["network"]);
     print('privateKey=');
     print(HEX.decode(btcWallet.privKey));
     signedMess = await btcWallet.sign(originalMessage);
+    */
+
+    Uint8List messageHash =
+        magicHash(originalMessage, environment["chains"]["BTC"]["network"]);
+    signedMess = await ecc.sign(messageHash, privateKey);
+
     var recovery = 0;
     var compressed = true;
     var sigwitType;

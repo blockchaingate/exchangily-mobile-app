@@ -8,10 +8,11 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart' as stringUtils;
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:hex/hex.dart';
-
+import 'dart:typed_data';
 import '../../service_locator.dart';
 
 class SmartContract extends StatefulWidget {
@@ -28,6 +29,10 @@ class _SmartContractState extends State<SmartContract> {
   var abis;
   var functionHex;
   var abi;
+
+  DialogService _dialogService = locator<DialogService>();
+  WalletService walletService = locator<WalletService>();
+
   var inputs = [];
   var payable = false;
   TextEditingController smartContractAddressController =
@@ -289,6 +294,51 @@ class _SmartContractState extends State<SmartContract> {
 
   callContract() {}
 
+  checkPass(abiHex, value, context) async{
+    log.w('dialog called');
+    var res = await _dialogService.showDialog(
+        title: 'Enter Password',
+        description:
+        'Type the same password which you entered while creating the wallet');
+    if (res.confirmed) {
+      log.w('Pass matched');
+      log.w('${res.fieldOne}');
+      String mnemonic = res.fieldOne;
+      Uint8List seed = walletService.generateSeedFromUser(mnemonic);
+
+      print('contractAddress=' + smartContractAddressController.value.text);
+      var contractInfo = await walletService.getFabSmartContract(
+          smartContractAddressController.value.text, abiHex);
+
+      print('contractInfo===');
+      print(contractInfo['totalFee']);
+      print(contractInfo['contract']);
+      print('end of contractInfo');
+      var res1 = await walletService.getFabTransactionHex(seed, [0],
+          contractInfo['contract'], value, contractInfo['totalFee'], 14);
+      var txHex = res1['txHex'];
+      var errMsg = res1['errMsg'];
+      var txHash = '';
+      if (txHex != null && txHex != '') {
+        var res = await _api.postFabTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+        print('txHash=' + txHash);
+      }
+    } else {
+      if (res.fieldOne != 'Closed') {
+        log.w('Wrong password');
+        showNotification(context);
+      }
+    }
+    log.w('dialog closed');
+  }
+
+  showNotification(context) {
+    walletService.showInfoFlushbar('Password Mismatch',
+        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+  }
+
   execContract() async {
     var abiHex = formABI();
     abiHex = stringUtils.trimHexPrefix(abiHex);
@@ -299,41 +349,15 @@ class _SmartContractState extends State<SmartContract> {
       value = double.parse(payableController.value.text);
     }
 
+    checkPass(abiHex, value, context);
+
+    /*
     var randomMnemonic =
         'culture sound obey clean pretty medal churn behind chief cactus alley ready';
     var seed = bip39.mnemonicToSeed(randomMnemonic);
 
-    /*
-    var keyPairKanban = getExgKeyPair(seed);
-
-    var addressInKanban = keyPairKanban["address"];
-    var nonce = await getNonce(addressInKanban);
-
-    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), smartContractAddressController.value.text, nonce);
     */
 
-    var walletServ = new WalletService();
-    print('abiHex=' + abiHex);
-    print('contractAddress=' + smartContractAddressController.value.text);
-    var contractInfo = await walletServ.getFabSmartContract(
-        smartContractAddressController.value.text, abiHex);
-
-    print('contractInfo===');
-    print(contractInfo['totalFee']);
-    print(contractInfo['contract']);
-    print('end of contractInfo');
-    var res1 = await walletServ.getFabTransactionHex(seed, [0],
-        contractInfo['contract'], value, contractInfo['totalFee'], 14);
-    var txHex = res1['txHex'];
-    var errMsg = res1['errMsg'];
-    var txHash = '';
-    if (txHex != null && txHex != '') {
-      var res = await _api.postFabTx(txHex);
-      txHash = res['txHash'];
-      errMsg = res['errMsg'];
-      print('txHash=' + txHash);
-    }
 
     /*
     EthereumAddress contractAddr =
