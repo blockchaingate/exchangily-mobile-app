@@ -38,7 +38,7 @@ class WalletSetupScreen extends StatelessWidget {
                       child: Text('Create Wallet',
                           style: Theme.of(context).textTheme.display3),
                       onPressed: () {
-                        Navigator.of(context).pushNamed('/backupSeed');
+                        Navigator.of(context).pushNamed('/backupMnemonic');
                       },
                     ),
                   ),

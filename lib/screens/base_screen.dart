@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/view_state/base_state.dart';
+import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

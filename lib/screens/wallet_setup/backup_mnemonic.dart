@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:bip39/bip39.dart' as bip39;
 
-class BackupSeedWalletScreen extends StatelessWidget {
-  const BackupSeedWalletScreen({Key key}) : super(key: key);
+class BackupMnemonicWalletScreen extends StatelessWidget {
+  const BackupMnemonicWalletScreen({Key key}) : super(key: key);
   static List<String> mnemonic = [];
 
   @override
@@ -60,7 +60,7 @@ class BackupSeedWalletScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.of(context)
-                      .pushNamed('/confirmSeed', arguments: mnemonic);
+                      .pushNamed('/confirmMnemonic', arguments: mnemonic);
                 },
               ),
             )

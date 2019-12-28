@@ -294,17 +294,17 @@ class _SmartContractState extends State<SmartContract> {
 
   callContract() {}
 
-  checkPass(abiHex, value, context) async{
+  checkPass(abiHex, value, context) async {
     log.w('dialog called');
     var res = await _dialogService.showDialog(
         title: 'Enter Password',
         description:
-        'Type the same password which you entered while creating the wallet');
+            'Type the same password which you entered while creating the wallet');
     if (res.confirmed) {
       log.w('Pass matched');
       log.w('${res.fieldOne}');
       String mnemonic = res.fieldOne;
-      Uint8List seed = walletService.generateSeedFromUser(mnemonic);
+      Uint8List seed = walletService.generateSeed(mnemonic);
 
       print('contractAddress=' + smartContractAddressController.value.text);
       var contractInfo = await walletService.getFabSmartContract(
@@ -357,7 +357,6 @@ class _SmartContractState extends State<SmartContract> {
     var seed = bip39.mnemonicToSeed(randomMnemonic);
 
     */
-
 
     /*
     EthereumAddress contractAddr =

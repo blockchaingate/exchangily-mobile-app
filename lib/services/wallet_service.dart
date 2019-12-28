@@ -58,10 +58,9 @@ class WalletService {
   Future<String> getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
     // randomMnemonic =
-    //   'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    //     'culture sound obey clean pretty medal churn behind chief cactus alley ready';
 
     log.w('get random method - $randomMnemonic');
-    randomMnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
     return Future.value(randomMnemonic);
   }
 
@@ -97,11 +96,7 @@ class WalletService {
     }
   }
 
-  /*--------------------------------------------------
-      ||
-                      Future GetAllBalances
-      ||
-      --------------------------------------------------*/
+  // Generate Seed
 
   generateSeed(String mnemonic) {
     seed = bip39.mnemonicToSeed(mnemonic);
@@ -139,14 +134,46 @@ class WalletService {
     }
   }
 
+// So i don't need above function with all those if else statements because
+// function below giving me the same output without any if statements
+// I may add tokenType in the WalletInfo class as a new property
+  Future test() async {
+    root = bip32.BIP32.fromSeed(seed);
+    List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
+    for (int i = 0; i < listOfCoins.length; i++) {
+      var tickerName = listOfCoins[i];
+
+      var addr =
+          await getAddressForCoin(root, tickerName, tokenType: tokenType[i]);
+      log.w('name $tickerName - address $addr');
+    }
+  }
+
 // Future Get Coin Balance By Address
   Future coinBalanceByAddress(
       String name, String address, String tokenType) async {
+    double newBal;
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
 
-    _walletInfo.add(WalletInfo(tickerName: name, address: address));
-    log.w('name $name - balance $bal - walletinfo - ${_walletInfo.length}');
+    newBal = bal['balance'];
+    if (newBal.isNaN) {
+      return 0.0;
+    }
+    return newBal;
+  }
+
+  // Get Current Market Price For The Coin By Name
+
+  getCoinMarketPrice(String name) async {
+    double currentUsdValue;
+    var usdVal = await _api.getCoinsUsdValue();
+    if (name == 'exchangily') {
+      return currentUsdValue = 0.2;
+    }
+    currentUsdValue = usdVal[name]['usd'];
+    log.w('USD VAL of $name - $currentUsdValue');
+    return currentUsdValue;
   }
 
 // Future GetAllCoins
@@ -154,19 +181,18 @@ class WalletService {
     log.w('enter in getallbalances');
     log.w('wallet info length ${_walletInfo.length}');
     _walletInfo.clear();
-    _walletInfo = [];
     log.w('Cleared wallet info length ${_walletInfo.length}');
     log.w('Seed in wallet service get all balanced method $seed');
     root = bip32.BIP32.fromSeed(seed);
     var usdVal = await _api.getCoinsUsdValue();
     log.w('USD VAL $usdVal');
-    double currentBtcUsdValue = await usdVal['bitcoin']['usd'];
+    double currentBtcUsdValue = usdVal['bitcoin']['usd'];
     log.w('BTC USD VAL $currentBtcUsdValue');
-    double currentEthUsdValue = await usdVal['ethereum']['usd'];
+    double currentEthUsdValue = usdVal['ethereum']['usd'];
     log.w('ETH USD VAL $currentEthUsdValue');
-    double currentFabUsdValue = await usdVal['fabcoin']['usd'];
+    double currentFabUsdValue = usdVal['fabcoin']['usd'];
     log.w('FAB USD VAL $currentFabUsdValue');
-    double currentTetherUsdValue = await usdVal['tether']['usd'];
+    double currentTetherUsdValue = usdVal['tether']['usd'];
     log.w('USDT USD VAL $currentTetherUsdValue');
     try {
       List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
@@ -179,7 +205,7 @@ class WalletService {
           var bal = await getBalanceForCoin(root, tickerName);
           double newBal = bal['balance'];
           log.w('address - $addr and balance - $newBal');
-
+          totalUsdBalance.clear();
           calculateCoinUsdBalance(currentBtcUsdValue, newBal);
 
           log.i('printing calculated bal $coinUsdBalance');
@@ -203,7 +229,7 @@ class WalletService {
               address: addr,
               usdValue: coinUsdBalance,
               availableBalance: bal['balance'],
-              name: 'fast access blockchain',
+              name: 'fabcoin',
               logoColor: globals.primaryColor));
           printValuesAfter(i, tickerName);
         } else if (tickerName == 'ETH') {
@@ -230,7 +256,7 @@ class WalletService {
               address: addr,
               usdValue: coinUsdBalance,
               availableBalance: bal['balance'],
-              name: 'usd token',
+              name: 'tether',
               logoColor: globals.primaryColor));
           printValuesAfter(i, tickerName);
         } else if (tickerName == 'EXG') {
@@ -291,11 +317,12 @@ class WalletService {
         usdValueByApi != 0 &&
         usdValueByApi != null) {
       coinUsdBalance = (usdValueByApi * actualWalletBalance);
-      totalUsdBalance.clear();
+
       totalUsdBalance.add(coinUsdBalance);
-      log.w('Total Usd balance $coinUsdBalance');
+      log.w('Total Usd balance $totalUsdBalance');
     } else {
-      log.i('Wallet Balance is Zero');
+      coinUsdBalance = 0.0;
+      log.i('Problem fetching the wallet balance');
     }
   }
 
@@ -303,7 +330,7 @@ class WalletService {
 
   calculateTotalUsdBalance() {
     sum = 0;
-    if (_walletInfo.length != 0) {
+    if (totalUsdBalance.isNotEmpty) {
       log.w('Total usd balance list count ${totalUsdBalance.length}');
       for (var i = 0; i < totalUsdBalance.length; i++) {
         sum = sum + totalUsdBalance[i];
@@ -359,8 +386,9 @@ class WalletService {
         'contractAddress': environment["addresses"]["smartContract"][coinName]
       };
     }
-    var mnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-    var seed = generateSeedFromUser(mnemonic);
+    var mnemonic =
+        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    var seed = generateSeed(mnemonic);
     var resST = await sendTransaction(
         coinName, seed, [0], officalAddress, amount, option, false);
 

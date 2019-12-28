@@ -6,16 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../shared/globals.dart' as globals;
 
-class ConfirmSeedtWalletScreen extends StatefulWidget {
+class ConfirmMnemonictWalletScreen extends StatefulWidget {
   final List<String> mnemonic;
-  const ConfirmSeedtWalletScreen({Key key, this.mnemonic}) : super(key: key);
+  const ConfirmMnemonictWalletScreen({Key key, this.mnemonic})
+      : super(key: key);
 
   @override
-  _ConfirmSeedtWalletScreenState createState() =>
-      _ConfirmSeedtWalletScreenState();
+  _ConfirmMnemonictWalletScreenState createState() =>
+      _ConfirmMnemonictWalletScreenState();
 }
 
-class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
+class _ConfirmMnemonictWalletScreenState
+    extends State<ConfirmMnemonictWalletScreen> {
   final log = getLogger('Confirm Seed');
   List<TextEditingController> _mnemonicTextController = new List();
   List<String> userTypedMnemonic = [];
@@ -137,7 +139,7 @@ class _ConfirmSeedtWalletScreenState extends State<ConfirmSeedtWalletScreen> {
 
       } else {
         // Remove this after next screen has finished
-        // Navigator.of(context).pushNamed('/createWallet');
+        // Navigator.of(context).pushNamed('/createPassword');
         // May be in future we should display where user made a mistake in typing
         // For example text field index 5 should turn red if user made a mistake there
         log.w('else');
