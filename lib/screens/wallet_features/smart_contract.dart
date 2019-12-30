@@ -6,14 +6,9 @@ import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart' as stringUtils;
-import 'package:bip39/bip39.dart' as bip39;
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
-import 'package:exchangilymobileapp/utils/kanban.util.dart';
-import 'package:exchangilymobileapp/utils/fab_util.dart';
-import 'package:hex/hex.dart';
 import 'dart:typed_data';
-import '../../service_locator.dart';
 
 class SmartContract extends StatefulWidget {
   const SmartContract({Key key}) : super(key: key);

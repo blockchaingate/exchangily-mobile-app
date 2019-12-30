@@ -2,12 +2,40 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 import '../../models/wallet.dart';
-import '../../services/wallet_service.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'dart:typed_data';
 
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
 class Deposit extends StatelessWidget {
   final WalletInfo walletInfo;
-  const Deposit({Key key, this.walletInfo}) : super(key: key);
+
+
+  DialogService _dialogService = locator<DialogService>();
+  WalletService walletService = locator<WalletService>();
+  Deposit({Key key, this.walletInfo}) : super(key: key);
+
+  checkPass(double amount, context) async{
+    var res = await _dialogService.showDialog(
+        title: 'Enter Password',
+        description:
+        'Type the same password which you entered while creating the wallet');
+    if (res.confirmed) {
+      String mnemonic = res.fieldOne;
+      Uint8List seed = walletService.generateSeedFromUser(mnemonic);
+      walletService.depositDo(seed, this.walletInfo.tickerName, this.walletInfo.tokenType, amount);
+    } else {
+      if (res.fieldOne != 'Closed') {
+        showNotification(context);
+      }
+    }
+  }
+
+  showNotification(context) {
+    walletService.showInfoFlushbar('Password Mismatch',
+        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,13 +87,15 @@ class Deposit extends StatelessWidget {
                   color: globals.primaryColor,
                   textColor: Colors.white,
                   onPressed: () async {
-                    var res = await new WalletService().depositDo('ETH', '', double.parse(myController.text));
+
+                    //var res = await new WalletService().depositDo('ETH', '', double.parse(myController.text));
                     // var res = await new WalletService().depositDo('USDT', 'ETH', double.parse(myController.text));
                     // var res = await new WalletService().depositDo('FAB', '', double.parse(myController.text));
                     //var res = await new WalletService().depositDo('EXG', 'FAB', double.parse(myController.text));
                     // var res = await new WalletService().depositDo('BTC', '', double.parse(myController.text));
-                    print('res from await depositDo=');
-                    print(res);
+                    //print('res from await depositDo=');
+                    //print(res);
+                    checkPass(double.parse(myController.text), context);
                   },
                   child: Text(
                     'Confirm',
