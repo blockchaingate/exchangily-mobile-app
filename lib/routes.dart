@@ -1,7 +1,7 @@
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/backup_seed.dart';
+import 'package:exchangilymobileapp/screens/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/total_balances.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/confirm_seed.dart';
+import 'package:exchangilymobileapp/screens/wallet_setup/confirm_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/create_password.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/import_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/choose_wallet_language.dart';
@@ -35,14 +35,14 @@ class RouteGenerator {
       case '/importWallet':
         return MaterialPageRoute(builder: (_) => ImportWalletScreen());
 
-      case '/backupSeed':
-        return MaterialPageRoute(builder: (_) => BackupSeedWalletScreen());
+      case '/backupMnemonic':
+        return MaterialPageRoute(builder: (_) => BackupMnemonicWalletScreen());
 
-      case '/confirmSeed':
+      case '/confirmMnemonic':
         return MaterialPageRoute(
-            builder: (_) => ConfirmSeedtWalletScreen(mnemonic: args));
+            builder: (_) => ConfirmMnemonictWalletScreen(mnemonic: args));
 
-      case '/createWallet':
+      case '/createPassword':
         return MaterialPageRoute(builder: (_) => CreatePasswordScreen());
 
       case '/totalBalance':
@@ -98,10 +98,11 @@ class RouteGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Error'),
+          title: Text('Error', style: TextStyle(color: Colors.white)),
         ),
         body: Center(
-          child: Text('No route defined for ${settings.name}'),
+          child: Text('No route defined for ${settings.name}',
+              style: TextStyle(color: Colors.white)),
         ),
       );
     });

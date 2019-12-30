@@ -4,7 +4,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/view_state/base_state.dart';
+import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import '../shared/globals.dart' as globals;
@@ -14,7 +14,7 @@ class CreatePasswordScreenState extends BaseState {
   final VaultService _vaultService = locator<VaultService>();
 
   List<WalletInfo> _walletInfo;
-  final log = getLogger('Create Password View Model');
+  final log = getLogger('CreatePasswordScreenState');
   String errorMessage = '';
 
 /* ---------------------------------------------------
@@ -29,13 +29,14 @@ class CreatePasswordScreenState extends BaseState {
       log.e('TIMEOUT');
       setState(ViewState.Idle);
       _walletInfo = [];
-
+      errorMessage = 'Server Timeout';
       return _walletInfo;
     });
     if (_walletInfo == null) {
       errorMessage = 'No Coin Data';
       setState(ViewState.Idle);
     } else {
+      errorMessage = 'Something went wrong';
       log.w('wallet info length ${_walletInfo.length}');
       setState(ViewState.Idle);
     }

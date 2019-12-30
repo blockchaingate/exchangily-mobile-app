@@ -4,7 +4,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/view_state/base_state.dart';
+import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/material.dart';
 import '../shared/globals.dart' as globals;
 
@@ -24,7 +24,7 @@ class SendScreenState extends BaseState {
       log.w('Pass matched');
       log.w('${res.fieldOne}');
       String mnemonic = res.fieldOne;
-      Uint8List seed = walletService.generateSeedFromUser(mnemonic);
+      Uint8List seed = walletService.generateSeed(mnemonic);
       log.w(seed);
       walletService.sendTransaction(
           tickerName, seed, [0], toWalletAddress, amount, options, true);

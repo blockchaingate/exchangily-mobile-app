@@ -18,7 +18,7 @@ class AddGas extends StatelessWidget {
         'Type the same password which you entered while creating the wallet');
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
-      Uint8List seed = walletService.generateSeedFromUser(mnemonic);
+      Uint8List seed = walletService.generateSeed(mnemonic);
       var ret = await walletService.AddGasDo(seed, amount);
 
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}

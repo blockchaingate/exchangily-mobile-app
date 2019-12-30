@@ -52,9 +52,11 @@ class _DialogManagerState extends State<DialogManager> {
         content: Column(
           children: <Widget>[
             TextField(
+              style: TextStyle(color: globals.white),
               controller: controller,
               obscureText: true,
               decoration: InputDecoration(
+                
                 labelStyle: Theme.of(context)
                     .textTheme
                     .display2

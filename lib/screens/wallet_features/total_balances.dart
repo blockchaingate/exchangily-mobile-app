@@ -1,14 +1,12 @@
+import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/view_state/total_balances_view_state.dart';
+import 'package:exchangilymobileapp/screen_state/total_balances_screen_state.dart';
 import 'package:exchangilymobileapp/widgets/app_drawer.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
 import 'gas.dart';
 class TotalBalancesScreen extends StatefulWidget {
@@ -28,7 +26,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
     final List<WalletInfo> walletInfo = widget.walletInfo;
     return BaseScreen<TotalBalancesScreenState>(
         onModelReady: (model) {
-          model.getTotal();
+          model.total();
         },
         builder: (context, model, child) => Scaffold(
               key: key,
@@ -180,15 +178,22 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                 ),
               ),
               InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    await model.refreshBalance(widget.walletInfo);
                     setState(() {
-                      model.getTotal();
+                      model.total();
                     });
                   },
-                  child: Icon(
-                    Icons.refresh,
-                    color: globals.white,
-                  ))
+                  child: model.state == ViewState.Busy
+                      ? SizedBox(
+                          child: CircularProgressIndicator(),
+                          width: 20,
+                          height: 20,
+                        )
+                      : Icon(
+                          Icons.refresh,
+                          color: globals.white,
+                        ))
             ],
           ),
         ),

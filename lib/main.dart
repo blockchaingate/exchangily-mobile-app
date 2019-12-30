@@ -1,6 +1,5 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
-import 'package:exchangilymobileapp/provider_setup.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';

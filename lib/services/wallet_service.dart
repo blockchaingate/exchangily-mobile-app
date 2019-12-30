@@ -50,16 +50,17 @@ class WalletService {
   String randomMnemonic = '';
   Uint8List seed;
   var sum;
+  var coinUsdBalance;
   var root;
+  List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
 
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
-    // randomMnemonic = bip39.generateMnemonic();
-    randomMnemonic =
-        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    randomMnemonic = bip39.generateMnemonic();
+    // randomMnemonic =
+    //     'culture sound obey clean pretty medal churn behind chief cactus alley ready';
 
     log.w('get random method - $randomMnemonic');
-    randomMnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
     return Future.value(randomMnemonic);
   }
 
@@ -69,7 +70,6 @@ class WalletService {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/my_file.byte');
       final text = data;
-      log.w(data);
       await file.writeAsString(text);
       log.w('Encrypted data saved in storage');
     } catch (e) {
@@ -84,95 +84,163 @@ class WalletService {
       final file = File('${directory.path}/my_file.byte');
 
       String test = await file.readAsString();
-
       prefix0.Encrypted encryptedText = prefix0.Encrypted.fromBase64(test);
-
-      // log.w('encypted text $test');
       final key = prefix0.Key.fromLength(32);
-
       final iv = prefix0.IV.fromUtf8(userPass);
-
       final encrypter = prefix0.Encrypter(prefix0.AES(key));
-      // log.w('user key $userPass');
-      //final encrypted = encrypter.encrypt(randomMnemonic, iv: iv);
       final decrypted = encrypter.decrypt(encryptedText, iv: iv);
-      //log.w('decrypted phrase - $decrypted');
       return Future.value(decrypted);
-      // log.w('read encypted - $encryptedText');
     } catch (e) {
       log.e("Couldn't read file -$e");
       return Future.value('');
     }
   }
 
-  /*--------------------------------------------------
-      ||
-                      Future GetAllBalances
-      ||
-      --------------------------------------------------*/
+  // Generate Seed
 
-  generateSeedFromUser(String mnemonic) {
+  generateSeed(String mnemonic) {
     seed = bip39.mnemonicToSeed(mnemonic);
     log.w(seed);
     return seed;
   }
 
+// Future Get Coin Addresses
+  Future getCoinAddresses() async {
+    root = bip32.BIP32.fromSeed(seed);
+    _walletInfo.clear();
+    for (int i = 0; i < listOfCoins.length; i++) {
+      var tickerName = listOfCoins[i];
+      if (tickerName == 'BTC') {
+        var addr = await getAddressForCoin(root, tickerName);
+        log.w('name $tickerName - address $addr');
+        await coinBalanceByAddress(tickerName, addr, '');
+      } else if (tickerName == 'ETH') {
+        var addr = await getAddressForCoin(root, tickerName);
+        log.w('name $tickerName - address $addr');
+        await coinBalanceByAddress(tickerName, addr, '');
+      } else if (tickerName == 'FAB') {
+        var addr = await getAddressForCoin(root, tickerName);
+        log.w('name $tickerName - address $addr');
+        await coinBalanceByAddress(tickerName, addr, '');
+      } else if (tickerName == 'USDT') {
+        var addr = await getAddressForCoin(root, tickerName, tokenType: 'ETH');
+        log.w('name $tickerName - address $addr');
+        await coinBalanceByAddress(tickerName, addr, 'ETH');
+      } else if (tickerName == 'EXG') {
+        var addr = await getAddressForCoin(root, tickerName, tokenType: 'FAB');
+        log.w('name $tickerName - address $addr');
+        await coinBalanceByAddress(tickerName, addr, 'FAB');
+      }
+    }
+  }
+
+// So i don't need above function with all those if else statements because
+// function below giving me the same output without any if statements
+// I may add tokenType in the WalletInfo class as a new property
+  Future test() async {
+    root = bip32.BIP32.fromSeed(seed);
+    List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
+    for (int i = 0; i < listOfCoins.length; i++) {
+      var tickerName = listOfCoins[i];
+
+      var addr =
+          await getAddressForCoin(root, tickerName, tokenType: tokenType[i]);
+      log.w('name $tickerName - address $addr');
+    }
+  }
+
+// Future Get Coin Balance By Address
+  Future coinBalanceByAddress(
+      String name, String address, String tokenType) async {
+    double newBal;
+    var bal =
+        await getCoinBalanceByAddress(name, address, tokenType: tokenType);
+
+    newBal = bal['balance'];
+    if (newBal.isNaN) {
+      return 0.0;
+    }
+    return newBal;
+  }
+
+  // Get Current Market Price For The Coin By Name
+
+  getCoinMarketPrice(String name) async {
+    double currentUsdValue;
+    var usdVal = await _api.getCoinsUsdValue();
+    if (name == 'exchangily') {
+      return currentUsdValue = 0.2;
+    }
+    currentUsdValue = usdVal[name]['usd'];
+    log.w('USD VAL of $name - $currentUsdValue');
+    return currentUsdValue;
+  }
+
+// Future GetAllCoins
   Future<List<WalletInfo>> getAllCoins() async {
     log.w('enter in getallbalances');
     log.w('wallet info length ${_walletInfo.length}');
     _walletInfo.clear();
-    _walletInfo = [];
     log.w('Cleared wallet info length ${_walletInfo.length}');
     log.w('Seed in wallet service get all balanced method $seed');
     root = bip32.BIP32.fromSeed(seed);
     var usdVal = await _api.getCoinsUsdValue();
+    log.w('USD VAL $usdVal');
     double currentBtcUsdValue = usdVal['bitcoin']['usd'];
+    log.w('BTC USD VAL $currentBtcUsdValue');
     double currentEthUsdValue = usdVal['ethereum']['usd'];
+    log.w('ETH USD VAL $currentEthUsdValue');
     double currentFabUsdValue = usdVal['fabcoin']['usd'];
+    log.w('FAB USD VAL $currentFabUsdValue');
     double currentTetherUsdValue = usdVal['tether']['usd'];
+    log.w('USDT USD VAL $currentTetherUsdValue');
     try {
       List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
       log.w('List of coins length ${listOfCoins.length}');
       for (int i = 0; i < listOfCoins.length; i++) {
         var tickerName = listOfCoins[i];
         if (tickerName == 'BTC') {
+          log.w('In BTC');
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
-          //   log.w('address - $addr and balance - $bal');
-          var calculatedUsdBal =
-              calculateUsdBalance(currentBtcUsdValue, bal['balance']);
-          log.i('printing calculated bal $calculatedUsdBal');
+          double newBal = bal['balance'];
+          log.w('address - $addr and balance - $newBal');
+          totalUsdBalance.clear();
+          calculateCoinUsdBalance(currentBtcUsdValue, newBal);
+
+          log.i('printing calculated bal $coinUsdBalance');
 
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
               availableBalance: bal['balance'],
-              usdValue: calculatedUsdBal,
+              usdValue: coinUsdBalance,
               name: 'bitcoin',
               logoColor: Color.alphaBlend(Colors.blue, Colors.lightBlue)));
           printValuesAfter(i, tickerName);
         } else if (tickerName == 'FAB') {
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
-          var calculatedUsdBal =
-              calculateUsdBalance(currentFabUsdValue, bal['balance']);
+
+          calculateCoinUsdBalance(currentFabUsdValue, bal['balance']);
+
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
-              usdValue: calculatedUsdBal,
+              usdValue: coinUsdBalance,
               availableBalance: bal['balance'],
-              name: 'fast access blockchain',
+              name: 'fabcoin',
               logoColor: globals.primaryColor));
           printValuesAfter(i, tickerName);
         } else if (tickerName == 'ETH') {
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
-          var calculatedUsdBal =
-              calculateUsdBalance(currentEthUsdValue, bal['balance']);
+
+          calculateCoinUsdBalance(currentEthUsdValue, bal['balance']);
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
-              usdValue: calculatedUsdBal,
+              usdValue: coinUsdBalance,
               availableBalance: bal['balance'],
               name: 'ethereum',
               logoColor: globals.primaryColor));
@@ -181,26 +249,26 @@ class WalletService {
           var addr =
               await getAddressForCoin(root, tickerName, tokenType: 'ETH');
           var bal = await getBalanceForCoin(root, tickerName, tokenType: 'ETH');
-          var calculatedUsdBal =
-              calculateUsdBalance(currentTetherUsdValue, bal['balance']);
+
+          calculateCoinUsdBalance(currentTetherUsdValue, bal['balance']);
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
-              usdValue: calculatedUsdBal,
+              usdValue: coinUsdBalance,
               availableBalance: bal['balance'],
-              name: 'usd token',
+              name: 'tether',
               logoColor: globals.primaryColor));
           printValuesAfter(i, tickerName);
         } else if (tickerName == 'EXG') {
           var addr =
               await getAddressForCoin(root, tickerName, tokenType: 'FAB');
           var bal = await getBalanceForCoin(root, tickerName, tokenType: 'FAB');
-          var calculatedUsdBal = calculateUsdBalance(0.2, bal['balance']);
+          calculateCoinUsdBalance(0.2, bal['balance']);
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
               availableBalance: bal['balance'],
-              usdValue: calculatedUsdBal,
+              usdValue: coinUsdBalance,
               name: 'exchangily',
               logoColor: globals.primaryColor));
           printValuesAfter(i, tickerName);
@@ -236,30 +304,33 @@ class WalletService {
   }
 
   void printValuesAfter(i, name) {
-    // log.i('in $name');
-    //  log.i(
-    //      '${_walletInfo[i].name} address: ${_walletInfo[i].address} -Coin bal is ${_walletInfo[i].availableBalance} and usd Bal is ${_walletInfo[i].usdValue}');
+    //log.i('in $name');
+    // log.i(
+    //     '${_walletInfo[i].name} address: ${_walletInfo[i].address} -Coin bal is ${_walletInfo[i].availableBalance} and usd Bal is ${_walletInfo[i].usdValue}');
   }
 
-  calculateUsdBalance(double usdValueByApi, double actualWalletBalance) {
+  // Calculate Only Usd Balance For Individual Coin
+  calculateCoinUsdBalance(
+      double usdValueByApi, double actualWalletBalance) async {
     log.w('usdVal =$usdValueByApi, actualwallet bal $actualWalletBalance');
     if (actualWalletBalance != 0 &&
         usdValueByApi != 0 &&
         usdValueByApi != null) {
-      double total = (usdValueByApi * actualWalletBalance);
-      totalUsdBalance.clear();
-      totalUsdBalance.add(total);
-      log.w(
-          'calculate usd balance method ${totalUsdBalance.length}, $totalUsdBalance');
-      return total;
+      coinUsdBalance = (usdValueByApi * actualWalletBalance);
+
+      totalUsdBalance.add(coinUsdBalance);
+      log.w('Total Usd balance $totalUsdBalance');
     } else {
-      log.i('Wallet Balance is Zero');
+      coinUsdBalance = 0.0;
+      log.i('Problem fetching the wallet balance');
     }
   }
 
+  // Calculate Total Usd Balance
+
   calculateTotalUsdBalance() {
     sum = 0;
-    if (_walletInfo.length != 0) {
+    if (totalUsdBalance.isNotEmpty) {
       log.w('Total usd balance list count ${totalUsdBalance.length}');
       for (var i = 0; i < totalUsdBalance.length; i++) {
         sum = sum + totalUsdBalance[i];
@@ -731,8 +802,8 @@ class WalletService {
       }
     } else if (tokenType == 'ETH') {
       final ropstenChainId = 3;
-      final ethCoinChild = root
-          .derivePath("m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
+      final ethCoinChild = root.derivePath(
+          "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 

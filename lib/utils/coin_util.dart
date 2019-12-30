@@ -1,4 +1,6 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
+import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 
 import '../packages/bip32/bip32_base.dart' as bip32;
@@ -29,6 +31,7 @@ import 'varuint.dart';
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
+final log = getLogger('coin_util');
 
 Uint8List hash256(Uint8List buffer) {
   Uint8List _tmp = new SHA256Digest().process(buffer);
@@ -371,7 +374,8 @@ getAddressForCoin(root, 'FAB');
 getAddressForCoin(root, 'USDT', tokenType: 'ETH');
 getAddressForCoin(root, 'EXG', tokenType: 'FAB');
  */
-Future getAddressForCoin(root, coinName, {tokenType = '', index = 0}) async {
+Future getAddressForCoin(root, String coinName,
+    {tokenType = '', index = 0}) async {
   if (coinName == 'BTC') {
     var node = getBtcNode(root, index: index);
     return getBtcAddressForNode(node);
@@ -392,6 +396,28 @@ Future getAddressForCoin(root, coinName, {tokenType = '', index = 0}) async {
     return fabTokenAddr;
   }
   return '';
+}
+
+// Future Coin Balances With Addresses
+Future getCoinBalanceByAddress(String coinName, String address,
+    {tokenType = ''}) async {
+  try {
+    if (coinName == 'BTC') {
+      return await getBtcBalanceByAddress(address);
+    } else if (coinName == 'ETH') {
+      return await getEthBalanceByAddress(address);
+    } else if (coinName == 'FAB') {
+      return await getFabBalanceByAddress(address);
+    } else if (tokenType == 'ETH') {
+      return await getEthTokenBalanceByAddress(address, coinName);
+    } else if (tokenType == 'FAB') {
+      return await getFabTokenBalanceByAddress(address, coinName);
+    }
+  } catch (e) {
+    log.e(e);
+  }
+
+  return {'balance': -1, 'lockbalance': -1};
 }
 
 Future getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) async {

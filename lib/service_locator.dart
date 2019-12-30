@@ -1,10 +1,11 @@
+import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_state.dart';
 import 'package:exchangilymobileapp/services/api.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/view_state/create_password_screen_state.dart';
-import 'package:exchangilymobileapp/view_state/send_state.dart';
-import 'package:exchangilymobileapp/view_state/total_balances_view_state.dart';
+import 'package:exchangilymobileapp/screen_state/create_password_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/send_state.dart';
+import 'package:exchangilymobileapp/screen_state/total_balances_screen_state.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt locator = GetIt();
@@ -20,4 +21,5 @@ void serviceLocator() {
   locator.registerFactory(() => CreatePasswordScreenState());
   locator.registerFactory(() => TotalBalancesScreenState());
   locator.registerFactory(() => SendScreenState());
+  locator.registerFactory(() => ConfirmMnemonicScreenState());
 }

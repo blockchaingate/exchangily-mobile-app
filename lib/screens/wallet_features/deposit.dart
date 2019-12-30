@@ -11,19 +11,18 @@ import 'dart:typed_data';
 class Deposit extends StatelessWidget {
   final WalletInfo walletInfo;
 
-
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   Deposit({Key key, this.walletInfo}) : super(key: key);
 
-  checkPass(double amount, context) async{
+  checkPass(double amount, context) async {
     var res = await _dialogService.showDialog(
         title: 'Enter Password',
         description:
-        'Type the same password which you entered while creating the wallet');
+            'Type the same password which you entered while creating the wallet');
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
-      Uint8List seed = walletService.generateSeedFromUser(mnemonic);
+      Uint8List seed = walletService.generateSeed(mnemonic);
       var tokenType = this.walletInfo.tokenType;
       var coinName = this.walletInfo.tickerName;
       if (coinName == 'USDT') {
@@ -99,7 +98,6 @@ class Deposit extends StatelessWidget {
                   color: globals.primaryColor,
                   textColor: Colors.white,
                   onPressed: () async {
-
                     //var res = await new WalletService().depositDo('ETH', '', double.parse(myController.text));
                     // var res = await new WalletService().depositDo('USDT', 'ETH', double.parse(myController.text));
                     // var res = await new WalletService().depositDo('FAB', '', double.parse(myController.text));

@@ -45,7 +45,6 @@ Future getFabTokenBalanceForABI(
     var json = jsonDecode(response.body);
     var unlockBalance = json['executionResult']['output'];
 
-
     if (unlockBalance == null || unlockBalance == '') {
       return 0;
     }
@@ -70,7 +69,6 @@ Future getFabTokenBalanceByAddress(String address, String coinName) async {
   String balanceInfoABI = '70a08231';
   var tokenBalance = await getFabTokenBalanceForABI(
       balanceInfoABI, smartContractAddress, address);
-  log.w(tokenBalance);
   balanceInfoABI = '43eb7b44';
   var tokenLockedBalance = await getFabTokenBalanceForABI(
       balanceInfoABI, smartContractAddress, address);

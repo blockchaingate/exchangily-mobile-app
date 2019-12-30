@@ -3,7 +3,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/view_state/create_password_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/create_password_screen_state.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class CreatePasswordScreen extends StatefulWidget {
 
 class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   final log = getLogger('Create Password');
-
+  FocusNode passFocus = FocusNode();
   TextEditingController _passTextController = TextEditingController();
   TextEditingController _confirmPassTextController = TextEditingController();
   WalletService walletService = WalletService();
@@ -32,7 +32,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Secure the wallet with password'),
+          title: Text('Secure your wallet'),
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
@@ -81,6 +81,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
   Widget _buildPasswordTextField() {
     return TextField(
+        focusNode: passFocus,
         autofocus: true,
         controller: _passTextController,
         obscureText: true,
@@ -132,9 +133,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           FocusScope.of(context).requestFocus(FocusNode());
           var passSuccess = model.validatePassword(_passTextController.text,
               _confirmPassTextController.text, context);
+          _passTextController.text = '';
+          _confirmPassTextController.text = '';
+          model.errorMessage = '';
           if (passSuccess) {
             log.w('in if true');
             List<WalletInfo> _walletInfo = await model.getAllCoins();
+
             if (_walletInfo == null) {
               log.w('Navigating back to previous page as wallet info is null');
               model.showNotification(context, 'No Data', 'Server Error');
