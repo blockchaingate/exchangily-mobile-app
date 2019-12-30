@@ -3,6 +3,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screen_state/total_balances_screen_state.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/app_drawer.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
@@ -133,7 +134,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                                                                  Total Balance Card
+                              Total Balance Card
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Widget _totalBalanceCard(model) => Card(
@@ -143,22 +144,21 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
           width: 270,
           padding: EdgeInsets.all(10),
           child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(4),
                 decoration: new BoxDecoration(
                     //    color: globals.iconBackgroundColor,
                     borderRadius: new BorderRadius.circular(30)),
                 child: Image.asset(
                   'assets/images/wallet-page/dollar-sign.png',
-                  width: 50,
-                  height: 50,
+                  width: 40,
+                  height: 40,
                   color: globals.iconBackgroundColor, // image background color
                   fit: BoxFit.cover,
                 ),
               ),
+              UIHelper.horizontalSpaceSmall,
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -168,11 +168,10 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                             .textTheme
                             .headline
                             .copyWith(fontWeight: FontWeight.bold)),
+                    UIHelper.verticalSpaceSmall,
                     Text('${model.totalUsdBalance} USD',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline
-                            .copyWith(fontWeight: FontWeight.bold)),
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headline),
                     //AddGas()
                   ],
                 ),
@@ -193,6 +192,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                       : Icon(
                           Icons.refresh,
                           color: globals.white,
+                          size: 30,
                         ))
             ],
           ),

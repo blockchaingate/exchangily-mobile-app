@@ -56,9 +56,9 @@ class WalletService {
 
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
-    randomMnemonic = bip39.generateMnemonic();
-    // randomMnemonic =
-    //     'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    // randomMnemonic = bip39.generateMnemonic();
+    randomMnemonic =
+        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
 
     log.w('get random method - $randomMnemonic');
     return Future.value(randomMnemonic);
@@ -322,7 +322,7 @@ class WalletService {
       log.w('Total Usd balance $totalUsdBalance');
     } else {
       coinUsdBalance = 0.0;
-      log.i('Problem fetching the wallet balance');
+      log.i('calculateCoinUsdBalance - Wallet balance 0');
     }
   }
 

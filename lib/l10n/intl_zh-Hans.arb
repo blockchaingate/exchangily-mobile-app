@@ -11,9 +11,9 @@
         "type": "text",
         "placeholders": {}
     },
-    "backupSeedPhrase": "备份种子代码",
-    "@backupSeedPhrase": {
-        "description": "backup_seed_phrase",
+    "backupMnemonic": "备份种子代码",
+    "@backupMnemonic": {
+        "description": "backup_mnemonic",
         "type": "text",
         "placeholders": {}
     }

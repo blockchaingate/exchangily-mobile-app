@@ -23,16 +23,16 @@ class AppLocalizations {
   // Generic Items
   String get title {
     return Intl.message('Exchangily',
-        name: 'title', desc: 'Title_of_the_Exchangily_App');
+        name: 'title', desc: 'title_exchangily_app');
   }
 
   String get confirm {
     return Intl.message('Confirm', name: 'confirm', desc: 'confirm_button');
   }
 
-  String get backupSeedPhrase {
-    return Intl.message('Backup Seed Phrase',
-        name: 'backupSeedPhrase', desc: 'backup_seed_phrase');
+  String get backupMnemonic {
+    return Intl.message('Backup Mnemonic',
+        name: 'backupMnemonic', desc: 'backup_mnemonic');
   }
 }
 

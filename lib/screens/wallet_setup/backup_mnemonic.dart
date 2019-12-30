@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
@@ -12,7 +13,7 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('Backup Seed');
+    final log = getLogger('Backup Mnemonic');
     final randomMnemonic = Provider.of<String>(context);
     log.w(randomMnemonic);
     mnemonic = randomMnemonic
@@ -22,12 +23,13 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).backupSeedPhrase),
+          title: Text(AppLocalizations.of(context).backupMnemonic),
           backgroundColor: globals.secondaryColor),
       body: Container(
         padding: EdgeInsets.all(10),
-        child: ListView(
+        child: Column(
           children: <Widget>[
+            UIHelper.verticalSpaceMedium,
             Row(
               children: <Widget>[
                 Padding(
@@ -39,18 +41,20 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
                     )),
                 Expanded(
                     child: Text(
-                  'Below are the 12 mnemonics to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet',
+                  'Below are the 12 words mnemonic to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet',
                   style: Theme.of(context).textTheme.headline,
                 )),
               ],
             ),
+            UIHelper.verticalSpaceSmall,
             Container(
               margin: EdgeInsets.symmetric(
-                vertical: 40,
+                vertical: 10,
               ),
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
               child: _buttonGrid(),
             ),
+            UIHelper.verticalSpaceSmall,
             Container(
               padding: EdgeInsets.all(15),
               child: RaisedButton(
@@ -80,7 +84,6 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
       children: _buildButtonGrid(12));
 
   List<Container> _buildButtonGrid(int count) => List.generate(count, (i) {
-        var index = i + 1;
         var singleWord = mnemonic[i];
         return Container(
             child: TextField(

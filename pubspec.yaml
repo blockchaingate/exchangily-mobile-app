@@ -1,10 +1,13 @@
 name: exchangilymobileapp
-description: A new Flutter project.
+description: Decentralized Wallet App.
 
 version: 1.0.0+1
 
 environment:
   sdk: ">=2.3.2 <3.0.0"
+
+module:
+  androidX: true
 
 dependencies:
   flutter:

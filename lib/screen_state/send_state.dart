@@ -26,8 +26,11 @@ class SendScreenState extends BaseState {
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
       log.w(seed);
-      walletService.sendTransaction(
+      var ret = await walletService.sendTransaction(
           tickerName, seed, [0], toWalletAddress, amount, options, true);
+      //  Navigator.pushNamed(context, '/walletFeatures');
+      log.w(ret["errMsg"]);
+      log.w(ret["txHash"]);
     } else {
       if (res.fieldOne != 'Closed') {
         log.w('Wrong password');
