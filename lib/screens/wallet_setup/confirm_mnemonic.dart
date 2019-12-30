@@ -130,7 +130,7 @@ class _ConfirmMnemonictWalletScreenState
       // Two sets are not equal, even if they contain exactly the same objects as elements.
       // So we use listEqual for deep checking which is one many methods
       if (listEquals(widget.mnemonic, userTypedMnemonic)) {
-        Navigator.of(context).pushNamed('/createWallet');
+        Navigator.of(context).pushNamed('/createPassword');
         log.w('if');
         log.w(widget.mnemonic);
         log.w('user typed');
