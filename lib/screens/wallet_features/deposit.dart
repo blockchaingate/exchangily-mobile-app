@@ -59,11 +59,11 @@ class Deposit extends StatelessWidget {
                   color: globals.primaryColor,
                   textColor: Colors.white,
                   onPressed: () async {
-                    // var res = await new WalletService().depositDo('ETH', '', double.parse(myController.text));
+                    var res = await new WalletService().depositDo('ETH', '', double.parse(myController.text));
                     // var res = await new WalletService().depositDo('USDT', 'ETH', double.parse(myController.text));
                     // var res = await new WalletService().depositDo('FAB', '', double.parse(myController.text));
-                    // var res = await new WalletService().depositDo('EXG', 'FAB', double.parse(myController.text));
-                    var res = await new WalletService().depositDo('BTC', '', double.parse(myController.text));
+                    //var res = await new WalletService().depositDo('EXG', 'FAB', double.parse(myController.text));
+                    // var res = await new WalletService().depositDo('BTC', '', double.parse(myController.text));
                     print('res from await depositDo=');
                     print(res);
                   },
