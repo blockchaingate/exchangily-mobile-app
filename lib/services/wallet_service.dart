@@ -56,11 +56,13 @@ class WalletService {
 
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
-    // randomMnemonic = bip39.generateMnemonic();
-    randomMnemonic =
-        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    randomMnemonic = bip39.generateMnemonic();
 
-    log.w('get random method - $randomMnemonic');
+    if (isLocal) {
+      randomMnemonic =
+          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    }
+
     return Future.value(randomMnemonic);
   }
 
@@ -374,11 +376,15 @@ class WalletService {
 
 // Future Deposit Do
 
-  Future depositDo(
+  Future<Map<String, dynamic>> depositDo(
       seed, String coinName, String tokenType, double amount) async {
+    var errRes = new Map();
+    errRes['success'] = false;
+
     var officalAddress = getOfficalAddress(coinName);
     if (officalAddress == null) {
-      return -1;
+      errRes['data'] = 'no official address';
+      return errRes;
     }
     var option = {};
     if ((coinName != null) && (coinName != '')) {
@@ -394,12 +400,15 @@ class WalletService {
 
     if (resST['errMsg'] != '') {
       print(resST['errMsg']);
-      return -2;
+      errRes['data'] = resST['errMsg'];
+      return errRes;
     }
+
     if (resST['txHex'] == '' || resST['txHash'] == '') {
       print(resST['txHex']);
       print(resST['txHash']);
-      return -3;
+      errRes['data'] = 'no txHex or txHash';
+      return errRes;
     }
 
     var txHex = resST['txHex'];
@@ -416,7 +425,8 @@ class WalletService {
     var coinType = getCoinTypeIdByName(coinName);
 
     if (coinType == 0) {
-      return -4;
+      errRes['data'] = 'invalid coinType for ' + coinName;
+      return errRes;
     }
 
     var keyPairKanban = getExgKeyPair(seed);
@@ -427,38 +437,27 @@ class WalletService {
         amountInLink,
         stringUtils.trimHexPrefix(addressInKanban));
 
-    // originalMessage = 'hello world';
-
-    print('originalMessage=');
-    print(originalMessage);
-    // return -10;
     var signedMess =
         await signedMessage(originalMessage, seed, coinName, tokenType);
-    print('signedMess');
-    print(signedMess["r"]);
-    print(signedMess["s"]);
-    print(signedMess["v"]);
-    //return -10;
+
     var coinPoolAddress = await getCoinPoolAddress();
 
     var abiHex = getDepositFuncABI(
         coinType, txHash, amountInLink, addressInKanban, signedMess);
 
-    print('abiHex=');
-    print(abiHex);
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
-    print('txKanbanHex=');
-    print(txKanbanHex);
-    // return -10;
+
     var res = await submitDeposit(txHex, txKanbanHex);
+    print('res from depositDo');
+    print(res);
     return res;
   }
 
 // Future Add Gas Do
-  Future AddGasDo(double amount) async {
+  Future<Map<String, dynamic>> AddGasDo(seed, double amount) async {
     var satoshisPerBytes = 14;
     var scarContractAddress = await getScarAddress();
     scarContractAddress = stringUtils.trimHexPrefix(scarContractAddress);
@@ -468,14 +467,12 @@ class WalletService {
     var contractInfo =
         await getFabSmartContract(scarContractAddress, fxnDepositCallHex);
 
-    print('contractInfo===');
-    print(contractInfo['totalFee']);
-    print(contractInfo['contract']);
-    print('end of contractInfo');
     var res1 = await getFabTransactionHex(seed, [0], contractInfo['contract'],
         amount, contractInfo['totalFee'], satoshisPerBytes);
     var txHex = res1['txHex'];
     var errMsg = res1['errMsg'];
+    print('errMsg=');
+    print(errMsg);
     var txHash = '';
     if (txHex != null && txHex != '') {
       var res = await _api.postFabTx(txHex);

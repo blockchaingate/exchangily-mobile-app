@@ -32,7 +32,7 @@ Future<int> getNonce(String address) async{
   return json["transactionCount"];
 }
 
-Future<int> submitDeposit(String rawTransaction, String rawKanbanTransaction) async {
+Future<Map<String, dynamic>> submitDeposit(String rawTransaction, String rawKanbanTransaction) async {
   var url = 'https://kanbantest.fabcoinapi.com/' + 'submitDeposit';
   var data = {
     'rawTransaction': rawTransaction,
@@ -44,6 +44,7 @@ Future<int> submitDeposit(String rawTransaction, String rawKanbanTransaction) as
   var client = new http.Client();
   var response = await client.post(url, body: data);
   print('response from submitDeposit');
-  print(response.body);
-  return 0;
+  Map<String, dynamic> res = jsonDecode(response.body);
+  print(res);
+  return res;
 }
