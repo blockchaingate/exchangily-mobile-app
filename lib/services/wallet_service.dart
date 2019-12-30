@@ -303,10 +303,15 @@ class WalletService {
 
 // Future Deposit Do
 
-  Future depositDo(seed, String coinName, String tokenType, double amount) async {
+  Future<Map<String, dynamic>> depositDo(seed, String coinName, String tokenType, double amount) async {
+
+    var errRes = new Map();
+    errRes['success'] = false;
+
     var officalAddress = getOfficalAddress(coinName);
     if (officalAddress == null) {
-      return -1;
+      errRes['data'] = 'no official address';
+      return errRes;
     }
     var option = {};
     if ((coinName != null) && (coinName != '')) {
@@ -322,12 +327,15 @@ class WalletService {
 
     if (resST['errMsg'] != '') {
       print(resST['errMsg']);
-      return -2;
+      errRes['data'] = resST['errMsg'];
+      return errRes;
     }
+
     if (resST['txHex'] == '' || resST['txHash'] == '') {
       print(resST['txHex']);
       print(resST['txHash']);
-      return -3;
+      errRes['data'] = 'no txHex or txHash';
+      return errRes;
     }
 
     var txHex = resST['txHex'];
@@ -344,7 +352,8 @@ class WalletService {
     var coinType = getCoinTypeIdByName(coinName);
 
     if (coinType == 0) {
-      return -4;
+      errRes['data'] = 'invalid coinType for ' + coinName;
+      return errRes;
     }
 
     var keyPairKanban = getExgKeyPair(seed);
@@ -355,33 +364,23 @@ class WalletService {
         amountInLink,
         stringUtils.trimHexPrefix(addressInKanban));
 
-    // originalMessage = 'hello world';
 
-    print('originalMessage=');
-    print(originalMessage);
-    // return -10;
     var signedMess =
         await signedMessage(originalMessage, seed, coinName, tokenType);
-    print('signedMess');
-    print(signedMess["r"]);
-    print(signedMess["s"]);
-    print(signedMess["v"]);
-    //return -10;
+
     var coinPoolAddress = await getCoinPoolAddress();
 
     var abiHex = getDepositFuncABI(
         coinType, txHash, amountInLink, addressInKanban, signedMess);
 
-    print('abiHex=');
-    print(abiHex);
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
-    print('txKanbanHex=');
-    print(txKanbanHex);
-    // return -10;
+
     var res = await submitDeposit(txHex, txKanbanHex);
+    print('res from depositDo');
+    print(res);
     return res;
   }
 
