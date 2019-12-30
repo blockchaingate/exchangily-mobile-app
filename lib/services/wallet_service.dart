@@ -303,7 +303,7 @@ class WalletService {
 
 // Future Deposit Do
 
-  Future depositDo(String coinName, String tokenType, double amount) async {
+  Future depositDo(seed, String coinName, String tokenType, double amount) async {
     var officalAddress = getOfficalAddress(coinName);
     if (officalAddress == null) {
       return -1;
@@ -315,8 +315,8 @@ class WalletService {
         'contractAddress': environment["addresses"]["smartContract"][coinName]
       };
     }
-    var mnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-    var seed = generateSeedFromUser(mnemonic);
+    //var mnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    //var seed = generateSeedFromUser(mnemonic);
     var resST = await sendTransaction(
         coinName, seed, [0], officalAddress, amount, option, false);
 

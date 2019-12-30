@@ -40,6 +40,7 @@ class CoinUsdValue {
 
 class WalletInfo {
   String _tickerName;
+  String _tokenType;
   String _address;
   double _availableBalance;
   double _usdValue;
@@ -65,6 +66,12 @@ class WalletInfo {
 
   set tickerName(String tickerName) {
     this._tickerName = tickerName;
+  }
+
+  String get tokenType => _tokenType;
+
+  set tokenType(String tokenType) {
+    this._tokenType = tokenType;
   }
 
   String get address => _address;
