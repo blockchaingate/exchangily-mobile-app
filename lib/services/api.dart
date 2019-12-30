@@ -12,9 +12,9 @@ class Api {
   static const usdCoinPriceUrl =
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
 
-  static const btcUrl = "https://btctest.fabcoinapi.com/";
-  static const fabUrl = "https://fabtest.fabcoinapi.com/";
-  static const ethUrl = "https://ethtest.fabcoinapi.com/";
+  static var btcUrl = environment["endpoints"]["btc"];
+  static var fabUrl = environment["endpoints"]["fab"];
+  static var ethUrl = environment["endpoints"]["eth"];
 
 // Get Coin Usd Price
   Future getCoinsUsdValue() async {
@@ -29,9 +29,14 @@ class Api {
   Future getFabUtxos(String address) async {
     var url = fabUrl + 'getutxos/' + address;
     print(url);
-    var client = new http.Client();
-    var response = await client.get(url);
-    var json = jsonDecode(response.body);
+    var json;
+    try {
+      var response = await client.get(url);
+      json = jsonDecode(response.body);
+    }
+    catch(e) {
+
+    }
     return json;
   }
 
@@ -39,16 +44,22 @@ class Api {
   Future getBtcUtxos(String address) async {
     var url = btcUrl + 'getutxos/' + address;
     print(url);
-    var response = await client.get(url);
-    var json = jsonDecode(response.body);
+    var json;
+    try {
+      var response = await client.get(url);
+      json = jsonDecode(response.body);
+    } catch(e) {}
     return json;
   }
 
   // Post Btc Transaction
   Future postBtcTx(String txHex) async {
     var url = btcUrl + 'sendrawtransaction/' + txHex;
-    var response = await client.get(url);
-    var json = jsonDecode(response.body);
+    var json;
+    try {
+      var response = await client.get(url);
+      json = jsonDecode(response.body);
+    } catch(e) {}
     var txHash = '';
     var errMsg = '';
     print('json=');
@@ -67,9 +78,11 @@ class Api {
   Future getFabTransactionJson(String txid) async {
     txid = stringUtils.trimHexPrefix(txid);
     var url = fabUrl + 'gettransactionjson/' + txid;
-    var response = await client.get(url);
-    var json = jsonDecode(response.body);
-    log.w('getFabTransactionJson - response $response, json -$json');
+    var json;
+    try {
+      var response = await client.get(url);
+      json = jsonDecode(response.body);
+    } catch(e) {}
     return json;
   }
 
@@ -77,13 +90,19 @@ class Api {
   Future postEthTx(String txHex) async {
     var url = ethUrl + 'sendsignedtransaction';
     var data = {'signedtx': txHex};
-    var response =
-        await client.post(url, headers: {"responseType": "text"}, body: data);
-    var txHash = response.body;
     var errMsg = '';
-    if (txHash.indexOf('txerError') >= 0) {
-      errMsg = txHash;
-      txHash = '';
+    var txHash;
+    try {
+      var response =
+      await client.post(url, headers: {"responseType": "text"}, body: data);
+      txHash = response.body;
+
+      if (txHash.indexOf('txerError') >= 0) {
+        errMsg = txHash;
+        txHash = '';
+      }
+    } catch(e) {
+      errMsg = 'connection error';
     }
     return {'txHash': txHash, 'errMsg': errMsg};
   }
@@ -94,14 +113,18 @@ class Api {
     var txHash = '';
     var errMsg = '';
     if (txHex != '') {
-      var response = await client.get(url);
-      var json = jsonDecode(response.body);
-      if (json != null) {
-        if ((json['txid'] != null) && (json['txid'] != '')) {
-          txHash = json['txid'];
-        } else if (json['Error'] != '') {
-          errMsg = json['Error'];
+      try {
+        var response = await client.get(url);
+        var json = jsonDecode(response.body);
+        if (json != null) {
+          if ((json['txid'] != null) && (json['txid'] != '')) {
+            txHash = json['txid'];
+          } else if (json['Error'] != '') {
+            errMsg = json['Error'];
+          }
         }
+      } catch(e) {
+        errMsg = 'connection error';
       }
     }
 
@@ -111,7 +134,13 @@ class Api {
 // Eth Nonce
   Future getEthNonce(String address) async {
     var url = ethUrl + 'getnonce/' + address + '/latest';
-    var response = await client.get(url);
-    return int.parse(response.body);
+    var nonce = 0;
+    try {
+      var response = await client.get(url);
+      nonce = int.parse(response.body);
+    } catch(e) {
+
+    }
+    return nonce;
   }
 }

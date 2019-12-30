@@ -57,10 +57,12 @@ class WalletService {
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
-    // randomMnemonic =
-    //     'culture sound obey clean pretty medal churn behind chief cactus alley ready';
 
-    log.w('get random method - $randomMnemonic');
+    if(isLocal) {
+      randomMnemonic =
+          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    }
+
     return Future.value(randomMnemonic);
   }
 
