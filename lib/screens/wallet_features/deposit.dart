@@ -34,7 +34,7 @@ class Deposit extends StatelessWidget {
       var ret = await walletService.depositDo(seed, coinName, tokenType, amount);
 
       walletService.showInfoFlushbar(ret["success"]?'Deposit transaction was made successfully':'Deposit transaction failed',
-          ret["success"]?'transactionID:' + ret['data']['transactionID']:'', Icons.cancel, globals.red, context);
+          ret["success"]?'transactionID:' + ret['data']['transactionID']:ret['data'], Icons.cancel, globals.red, context);
 
     } else {
       if (res.fieldOne != 'Closed') {

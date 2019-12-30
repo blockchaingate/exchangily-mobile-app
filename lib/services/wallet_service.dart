@@ -471,6 +471,8 @@ class WalletService {
         amount, contractInfo['totalFee'], satoshisPerBytes);
     var txHex = res1['txHex'];
     var errMsg = res1['errMsg'];
+    print('errMsg=');
+    print(errMsg);
     var txHash = '';
     if (txHex != null && txHex != '') {
       var res = await _api.postFabTx(txHex);

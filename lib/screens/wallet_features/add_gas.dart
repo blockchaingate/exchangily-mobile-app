@@ -22,8 +22,10 @@ class AddGas extends StatelessWidget {
       var ret = await walletService.AddGasDo(seed, amount);
 
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
+      print('retfffff=');
+      print(ret);
       walletService.showInfoFlushbar((ret["errMsg"] == '')?'Add gas transaction was made successfully':'Add gas transaction failed',
-          (ret["errMsg"] == '')?'transactionID:' + ret['txHash']:'', Icons.cancel, globals.red, context);
+          (ret["errMsg"] == '')?'transactionID:' + ret['txHash']:ret["errMsg"], Icons.cancel, globals.red, context);
 
     } else {
       if (res.fieldOne != 'Closed') {
