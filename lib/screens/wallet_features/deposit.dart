@@ -24,10 +24,18 @@ class Deposit extends StatelessWidget {
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeedFromUser(mnemonic);
-      var ret = await walletService.depositDo(seed, this.walletInfo.tickerName, this.walletInfo.tokenType, amount);
+      var tokenType = this.walletInfo.tokenType;
+      var coinName = this.walletInfo.tickerName;
+      if (coinName == 'USDT') {
+        tokenType = 'ETH';
+      }
+      if (coinName == 'EXG') {
+        tokenType = 'FAB';
+      }
+      var ret = await walletService.depositDo(seed, coinName, tokenType, amount);
 
       walletService.showInfoFlushbar(ret["success"]?'Deposit transaction was made successfully':'Deposit transaction failed',
-          'transactionID:' + ret['data']['transactionID'], Icons.cancel, globals.red, context);
+          ret["success"]?'transactionID:' + ret['data']['transactionID']:'', Icons.cancel, globals.red, context);
 
     } else {
       if (res.fieldOne != 'Closed') {

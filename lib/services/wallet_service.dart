@@ -385,7 +385,7 @@ class WalletService {
   }
 
 // Future Add Gas Do
-  Future AddGasDo(double amount) async {
+  Future<Map<String, dynamic>> AddGasDo(seed, double amount) async {
     var satoshisPerBytes = 14;
     var scarContractAddress = await getScarAddress();
     scarContractAddress = stringUtils.trimHexPrefix(scarContractAddress);
@@ -395,10 +395,7 @@ class WalletService {
     var contractInfo =
         await getFabSmartContract(scarContractAddress, fxnDepositCallHex);
 
-    print('contractInfo===');
-    print(contractInfo['totalFee']);
-    print(contractInfo['contract']);
-    print('end of contractInfo');
+
     var res1 = await getFabTransactionHex(seed, [0], contractInfo['contract'],
         amount, contractInfo['totalFee'], satoshisPerBytes);
     var txHex = res1['txHex'];

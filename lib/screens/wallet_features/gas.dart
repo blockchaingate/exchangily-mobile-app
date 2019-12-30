@@ -20,7 +20,35 @@ class _GasState extends State<Gas> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return
+
+      Row(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              Navigator.pushNamed(context, '/addGas');
+            },
+            child:
+            Icon(
+              Icons.add_circle_outline,
+              semanticLabel: 'Add gas',
+              color: globals.primaryColor,
+            )
+          ),
+          Container(
+            padding: EdgeInsets.only(left: 5),
+            child: Text(
+              "Gas:$_gasAmount",
+              style: Theme.of(context)
+                  .textTheme
+                  .display2
+                  .copyWith(wordSpacing: 1.25),
+            ),
+          )
+        ],
+      )
+      /*
+      Row(
       children: <Widget>[
 
     Container(
@@ -46,6 +74,7 @@ class _GasState extends State<Gas> {
         ),
 
       ],
-    );
+    )
+    */;
   }
 }

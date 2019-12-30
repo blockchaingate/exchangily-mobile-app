@@ -1,9 +1,41 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
-
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'dart:typed_data';
 class AddGas extends StatelessWidget {
-  const AddGas({Key key}) : super(key: key);
+
+  DialogService _dialogService = locator<DialogService>();
+  WalletService walletService = locator<WalletService>();
+  AddGas({Key key}) : super(key: key);
+
+  checkPass(double amount, context) async{
+    var res = await _dialogService.showDialog(
+        title: 'Enter Password',
+        description:
+        'Type the same password which you entered while creating the wallet');
+    if (res.confirmed) {
+      String mnemonic = res.fieldOne;
+      Uint8List seed = walletService.generateSeedFromUser(mnemonic);
+      var ret = await walletService.AddGasDo(seed, amount);
+
+      //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
+      walletService.showInfoFlushbar((ret["errMsg"] == '')?'Add gas transaction was made successfully':'Add gas transaction failed',
+          (ret["errMsg"] == '')?'transactionID:' + ret['txHash']:'', Icons.cancel, globals.red, context);
+
+    } else {
+      if (res.fieldOne != 'Closed') {
+        showNotification(context);
+      }
+    }
+  }
+
+  showNotification(context) {
+    walletService.showInfoFlushbar('Password Mismatch',
+        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +88,7 @@ class AddGas extends StatelessWidget {
                   textColor: Colors.white,
                   onPressed: () async {
                     // var res = await AddGasDo(double.parse(myController.text));
-                    print('res=');
+                    checkPass(double.parse(myController.text), context);
                     //   print(res);
                   },
                   child: Text(

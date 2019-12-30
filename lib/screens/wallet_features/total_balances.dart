@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
-
+import 'gas.dart';
 class TotalBalancesScreen extends StatefulWidget {
   final List<WalletInfo> walletInfo;
   const TotalBalancesScreen({Key key, this.walletInfo}) : super(key: key);
@@ -206,25 +206,54 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
         children: <Widget>[
           Container(
             margin: EdgeInsets.all(5),
-            child: Row(
-              children: <Widget>[
-                Icon(
-                  Icons.add_alert,
-                  semanticLabel: 'Hide Small Amount Assets',
-                  color: globals.primaryColor,
-                ),
-                Container(
-                  padding: EdgeInsets.only(left: 5),
-                  child: Text(
-                    'Hide Small Amount Assests',
-                    style: Theme.of(context)
-                        .textTheme
-                        .display2
-                        .copyWith(wordSpacing: 1.25),
+            child:
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.add_alert,
+                        semanticLabel: 'Hide Small Amount Assets',
+                        color: globals.primaryColor,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(
+                          'Hide Small Amount Assests',
+                          style: Theme.of(context)
+                              .textTheme
+                              .display2
+                              .copyWith(wordSpacing: 1.25),
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
+                  Gas()
+                  /*
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.add_circle_outline,
+                        semanticLabel: 'Add gas',
+                        color: globals.primaryColor,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(
+                          'Gas:',
+                          style: Theme.of(context)
+                              .textTheme
+                              .display2
+                              .copyWith(wordSpacing: 1.25),
+                        ),
+                      )
+                    ],
+                  )
+
+                   */
+                ],)
+,
           ),
           Container(
             decoration: new BoxDecoration(
