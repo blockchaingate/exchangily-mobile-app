@@ -131,7 +131,6 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         onPressed: () async {
           // Remove the on screen keyboard by shifting focus to unused focus node
           FocusScope.of(context).requestFocus(FocusNode());
-          log.i('INFO MNEMONIC ${widget.mnemonic}');
           var passSuccess = model.validatePassword(_passTextController.text,
               _confirmPassTextController.text, context, widget.mnemonic);
 

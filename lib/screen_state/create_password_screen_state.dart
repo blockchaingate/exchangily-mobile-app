@@ -79,7 +79,6 @@ class CreatePasswordScreenState extends BaseState {
             context);
         return false;
       } else {
-        log.e('sdfasfas $mnemonic');
         _vaultService.secureSeed(context, pass, mnemonic);
         log.w('In else');
         return true;
