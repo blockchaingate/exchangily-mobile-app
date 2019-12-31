@@ -37,7 +37,8 @@ Map devConfig =  {
       {'name': 'ETH', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
       {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'}
     ]
-  }
+  },
+  "websocket": "wss://kanbantest.fabcoinapi.com/ws/"
 };
 
 Map productionConfig = {
@@ -75,7 +76,8 @@ Map productionConfig = {
       {'name': 'ETH', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
       {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'}
     ]
-  }
+  },
+  "websocket": "wss://kanbanprod.fabcoinapi.com/ws/"
 };
 
 final environment = isProduction ? productionConfig : devConfig;

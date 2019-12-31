@@ -34,6 +34,12 @@ class _MarketState extends State<Market>  with TradeService{
     // print(prices);
     List<Price> list = Decoder.fromJsonArray(prices);
     for(var item in list) {
+      item.open = item.open / 1e18;
+      item.close = item.close / 1e18;
+      item.volume = item.volume / 1e18;
+      item.price = item.price / 1e18;
+      item.high = item.high / 1e18;
+      item.low = item.low / 1e18;
       item.change = 0;
       if(item.open > 0) {
         item.change = (item.close - item.open) / item.open * 100;

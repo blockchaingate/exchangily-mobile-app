@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../shared/globals.dart' as globals;
-
+import 'package:exchangilymobileapp/environments/environment.dart';
 class ConfirmMnemonictWalletScreen extends StatefulWidget {
   final List<String> mnemonic;
   const ConfirmMnemonictWalletScreen({Key key, this.mnemonic})
@@ -129,7 +129,7 @@ class _ConfirmMnemonictWalletScreenState
       // Collections in Dart have no inherent equality.
       // Two sets are not equal, even if they contain exactly the same objects as elements.
       // So we use listEqual for deep checking which is one many methods
-      if (listEquals(widget.mnemonic, userTypedMnemonic)) {
+      if (isLocal || listEquals(widget.mnemonic, userTypedMnemonic)) {
         Navigator.of(context).pushNamed('/createPassword');
         log.w('if');
         log.w(widget.mnemonic);
