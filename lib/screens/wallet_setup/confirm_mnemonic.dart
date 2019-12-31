@@ -111,7 +111,7 @@ class _ConfirmMnemonictWalletScreenState
       if (listEquals(widget.mnemonic, userTypedMnemonic)) {
         Navigator.of(context).pushNamed('/createPassword');
       } else {
-        // Navigator.of(context).pushNamed('/createPassword');
+        //  Navigator.of(context).pushNamed('/createPassword');
         // May be in future we should display where user made a mistake in typing
         // For example text field index 5 should turn red if user made a mistake there
         _walletService.showInfoFlushbar(

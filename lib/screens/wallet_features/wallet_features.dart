@@ -1,3 +1,7 @@
+import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +22,16 @@ class WalletFeaturesScreen extends StatelessWidget {
         'withdrawToWallet', Colors.cyan),
   ];
   final double elevation = 5;
+  var state;
+  double balance;
+  WalletService walletService = locator<WalletService>();
+  final log = getLogger('WalletFeatures');
 
   @override
   Widget build(BuildContext context) {
     String tickerName = walletInfo.tickerName;
     String coinName = walletInfo.name;
+    balance = walletInfo.availableBalance;
     double containerWidth = 150;
     double containerHeight = 115;
     return Scaffold(
@@ -76,11 +85,8 @@ class WalletFeaturesScreen extends StatelessWidget {
                             children: <Widget>[
                               Positioned(
                                 //   bottom: -15,
-                                child: _buildTotalBalanceCard(
-                                    context,
-                                    walletInfo.tickerName,
-                                    walletInfo.availableBalance,
-                                    walletInfo.usdValue),
+                                child: _buildTotalBalanceCard(context,
+                                    walletInfo.tickerName, walletInfo.usdValue),
                               )
                             ],
                           ),
@@ -160,7 +166,7 @@ class WalletFeaturesScreen extends StatelessWidget {
 
   // Build Total Balance Card
 
-  Widget _buildTotalBalanceCard(context, name, balance, usdBal) => Card(
+  Widget _buildTotalBalanceCard(context, name, usdBal) => Card(
         elevation: elevation,
         color: globals.walletCardColor,
         child: Container(
@@ -178,13 +184,24 @@ class WalletFeaturesScreen extends StatelessWidget {
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(8.0, 0.0, 2.0, 0.0),
-                    child: Icon(
-                      Icons.refresh,
-                      size: 30,
-                      color: globals.primaryColor,
-                    ),
-                  ),
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 2.0, 0.0),
+                      child: InkWell(
+                          onTap: () async {
+                            state = ViewState.Busy;
+                            await refreshBalance(
+                                walletInfo.address, walletInfo.tickerName);
+                          },
+                          child: state == ViewState.Busy
+                              ? SizedBox(
+                                  child: CircularProgressIndicator(),
+                                  width: 20,
+                                  height: 20,
+                                )
+                              : Icon(
+                                  Icons.refresh,
+                                  color: globals.white,
+                                  size: 30,
+                                ))),
                   Expanded(
                     child: Text(
                       '$usdBal USD',
@@ -215,7 +232,7 @@ class WalletFeaturesScreen extends StatelessWidget {
         ),
       );
 
-// Four Features Card
+  // Four Features Card
 
   Widget _featuresCard(context, index) => Card(
         color: globals.walletCardColor,
@@ -257,4 +274,12 @@ class WalletFeaturesScreen extends StatelessWidget {
           ),
         ),
       );
+
+// Temp
+  refreshBalance(String address, String tickerName) async {
+    var bal = await walletService.coinBalanceByAddress(tickerName, address, '');
+    log.w(bal);
+    balance = bal;
+    state = ViewState.Idle;
+  }
 }

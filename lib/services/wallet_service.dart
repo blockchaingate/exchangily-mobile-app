@@ -107,39 +107,39 @@ class WalletService {
   }
 
 // Future Get Coin Addresses
-  Future getCoinAddresses() async {
-    root = bip32.BIP32.fromSeed(seed);
-    _walletInfo.clear();
-    for (int i = 0; i < listOfCoins.length; i++) {
-      var tickerName = listOfCoins[i];
-      if (tickerName == 'BTC') {
-        var addr = await getAddressForCoin(root, tickerName);
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, '');
-      } else if (tickerName == 'ETH') {
-        var addr = await getAddressForCoin(root, tickerName);
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, '');
-      } else if (tickerName == 'FAB') {
-        var addr = await getAddressForCoin(root, tickerName);
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, '');
-      } else if (tickerName == 'USDT') {
-        var addr = await getAddressForCoin(root, tickerName, tokenType: 'ETH');
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, 'ETH');
-      } else if (tickerName == 'EXG') {
-        var addr = await getAddressForCoin(root, tickerName, tokenType: 'FAB');
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, 'FAB');
-      }
-    }
-  }
+  // Future getCoinAddresses() async {
+  //   root = bip32.BIP32.fromSeed(seed);
+  //   _walletInfo.clear();
+  //   for (int i = 0; i < listOfCoins.length; i++) {
+  //     var tickerName = listOfCoins[i];
+  //     if (tickerName == 'BTC') {
+  //       var addr = await getAddressForCoin(root, tickerName);
+  //       log.w('name $tickerName - address $addr');
+  //       await coinBalanceByAddress(tickerName, addr, '');
+  //     } else if (tickerName == 'ETH') {
+  //       var addr = await getAddressForCoin(root, tickerName);
+  //       log.w('name $tickerName - address $addr');
+  //       await coinBalanceByAddress(tickerName, addr, '');
+  //     } else if (tickerName == 'FAB') {
+  //       var addr = await getAddressForCoin(root, tickerName);
+  //       log.w('name $tickerName - address $addr');
+  //       await coinBalanceByAddress(tickerName, addr, '');
+  //     } else if (tickerName == 'USDT') {
+  //       var addr = await getAddressForCoin(root, tickerName, tokenType: 'ETH');
+  //       log.w('name $tickerName - address $addr');
+  //       await coinBalanceByAddress(tickerName, addr, 'ETH');
+  //     } else if (tickerName == 'EXG') {
+  //       var addr = await getAddressForCoin(root, tickerName, tokenType: 'FAB');
+  //       log.w('name $tickerName - address $addr');
+  //       await coinBalanceByAddress(tickerName, addr, 'FAB');
+  //     }
+  //   }
+  // }
 
 // So i don't need above function with all those if else statements because
 // function below giving me the same output without any if statements
 // I may add tokenType in the WalletInfo class as a new property
-  Future test() async {
+  Future getCoinAddresses() async {
     root = bip32.BIP32.fromSeed(seed);
     List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
     for (int i = 0; i < listOfCoins.length; i++) {
@@ -454,6 +454,30 @@ class WalletService {
     print('res from depositDo');
     print(res);
     return res;
+  }
+
+  /* --------------------------------------------
+              Methods Called in Send State 
+  ----------------------------------------------*/
+
+// Get Fab Transaction Status
+  Future getFabTxStatus(String txId) async {
+    await getFabTransactionStatus(txId);
+  }
+
+// Get Fab Transaction Balance
+  Future getFabBalance(String address) async {
+    await getFabBalanceByAddress(address);
+  }
+
+  // Get ETH Transaction Status
+  Future getEthTxStatus(String txId) async {
+    await getFabTransactionStatus(txId);
+  }
+
+// Get ETH Transaction Balance
+  Future getEthBalance(String address) async {
+    await getFabBalanceByAddress(address);
   }
 
 // Future Add Gas Do

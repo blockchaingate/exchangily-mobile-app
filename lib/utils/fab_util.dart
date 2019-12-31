@@ -1,4 +1,6 @@
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 import './string_util.dart';
@@ -6,6 +8,8 @@ import 'dart:convert';
 
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final log = getLogger('fab_util');
+Api _api = locator<Api>();
+
 Future getFabTransactionStatus(String txid) async {
   var url = fabBaseUrl + 'gettransactionjson/' + txid;
   var client = new http.Client();
@@ -27,7 +31,10 @@ Future getFabBalanceByAddress(String address) async {
   try {
     var response = await http.get(url);
     fabBalance = double.parse(response.body) / 1e8;
-  } catch (e) {}
+    log.w(fabBalance);
+  } catch (e) {
+    log.e(e);
+  }
   return {'balance': fabBalance, 'lockbalance': 0};
 }
 

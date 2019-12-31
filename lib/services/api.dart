@@ -11,10 +11,14 @@ class Api {
 
   static const usdCoinPriceUrl =
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
+  static const gasBalance =
+      'https://kanbantest.fabcoinapi.com/kanban/getBalance/0xa2a3720c00c2872397e6d98f41305066cbf0f8b3';
+  static const assetsBalance =
+      'https://kanbantest.fabcoinapi.com/exchangily/getBalances/0xa2a3720c00c2872397e6d98f41305066cbf0f8b3';
 
-  static var btcUrl = environment["endpoints"]["btc"];
-  static var fabUrl = environment["endpoints"]["fab"];
-  static var ethUrl = environment["endpoints"]["eth"];
+  final btcBaseUrl = environment["endpoints"]["btc"];
+  final fabBaseUrl = environment["endpoints"]["fab"];
+  final ethBaseUrl = environment["endpoints"]["eth"];
 
 // Get Coin Usd Price
   Future getCoinsUsdValue() async {
@@ -27,43 +31,41 @@ class Api {
 
   // Get FabUtxos
   Future getFabUtxos(String address) async {
-    var url = fabUrl + 'getutxos/' + address;
-    print(url);
+    var url = fabBaseUrl + 'getutxos/' + address;
+    log.w(url);
     var json;
     try {
       var response = await client.get(url);
       json = jsonDecode(response.body);
-    }
-    catch(e) {
-
+    } catch (e) {
+      log.e(e);
     }
     return json;
   }
 
 // Get BtcUtxos
   Future getBtcUtxos(String address) async {
-    var url = btcUrl + 'getutxos/' + address;
-    print(url);
+    var url = btcBaseUrl + 'getutxos/' + address;
+    log.w(url);
     var json;
     try {
       var response = await client.get(url);
       json = jsonDecode(response.body);
-    } catch(e) {}
+    } catch (e) {}
     return json;
   }
 
   // Post Btc Transaction
   Future postBtcTx(String txHex) async {
-    var url = btcUrl + 'sendrawtransaction/' + txHex;
+    var url = btcBaseUrl + 'sendrawtransaction/' + txHex;
     var json;
     try {
       var response = await client.get(url);
       json = jsonDecode(response.body);
-    } catch(e) {}
+    } catch (e) {}
     var txHash = '';
     var errMsg = '';
-    print('json=');
-    print(json);
+    log.w('json= $json');
     if (json != null) {
       if (json['txid'] != null) {
         txHash = '0x' + json['txid'];
@@ -77,31 +79,31 @@ class Api {
 // Get Fab Transaction
   Future getFabTransactionJson(String txid) async {
     txid = stringUtils.trimHexPrefix(txid);
-    var url = fabUrl + 'gettransactionjson/' + txid;
+    var url = fabBaseUrl + 'gettransactionjson/' + txid;
     var json;
     try {
       var response = await client.get(url);
       json = jsonDecode(response.body);
-    } catch(e) {}
+    } catch (e) {}
     return json;
   }
 
   // Eth Post
   Future postEthTx(String txHex) async {
-    var url = ethUrl + 'sendsignedtransaction';
+    var url = ethBaseUrl + 'sendsignedtransaction';
     var data = {'signedtx': txHex};
     var errMsg = '';
     var txHash;
     try {
       var response =
-      await client.post(url, headers: {"responseType": "text"}, body: data);
+          await client.post(url, headers: {"responseType": "text"}, body: data);
       txHash = response.body;
 
       if (txHash.indexOf('txerError') >= 0) {
         errMsg = txHash;
         txHash = '';
       }
-    } catch(e) {
+    } catch (e) {
       errMsg = 'connection error';
     }
     return {'txHash': txHash, 'errMsg': errMsg};
@@ -109,7 +111,7 @@ class Api {
 
   // Fab Post Tx
   Future postFabTx(String txHex) async {
-    var url = fabUrl + 'sendrawtransaction/' + txHex;
+    var url = fabBaseUrl + 'sendrawtransaction/' + txHex;
     var txHash = '';
     var errMsg = '';
     if (txHex != '') {
@@ -123,7 +125,7 @@ class Api {
             errMsg = json['Error'];
           }
         }
-      } catch(e) {
+      } catch (e) {
         errMsg = 'connection error';
       }
     }
@@ -133,14 +135,12 @@ class Api {
 
 // Eth Nonce
   Future getEthNonce(String address) async {
-    var url = ethUrl + 'getnonce/' + address + '/latest';
+    var url = ethBaseUrl + 'getnonce/' + address + '/latest';
     var nonce = 0;
     try {
       var response = await client.get(url);
       nonce = int.parse(response.body);
-    } catch(e) {
-
-    }
+    } catch (e) {}
     return nonce;
   }
 }

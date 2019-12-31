@@ -6,9 +6,6 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.3.2 <3.0.0"
 
-module:
-  androidX: true
-
 dependencies:
   flutter:
     sdk: flutter
@@ -101,6 +98,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  # module:
+  #   androidX: true
+  #   androidPackage: my.package
+  #   iosBundleIdentifier: my.package
+
   assets:
     - assets/images/start-page/
     - assets/images/wallet-page/

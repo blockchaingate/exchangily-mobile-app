@@ -47,8 +47,11 @@ class _DialogManagerState extends State<DialogManager> {
         context: context,
         title: request.title,
         desc: request.description,
-        closeFunction: () => _dialogService.dialogComplete(
-            AlertResponse(fieldOne: 'Closed', confirmed: false)),
+        closeFunction: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+          _dialogService.dialogComplete(
+              AlertResponse(fieldOne: 'Closed', confirmed: false));
+        },
         content: Column(
           children: <Widget>[
             TextField(
@@ -56,7 +59,6 @@ class _DialogManagerState extends State<DialogManager> {
               controller: controller,
               obscureText: true,
               decoration: InputDecoration(
-                
                 labelStyle: Theme.of(context)
                     .textTheme
                     .display2
@@ -74,6 +76,7 @@ class _DialogManagerState extends State<DialogManager> {
           DialogButton(
             color: globals.primaryColor,
             onPressed: () {
+              FocusScope.of(context).requestFocus(FocusNode());
               _walletService.readEncryptedData(controller.text).then((data) {
                 if (data != '' && data != null) {
                   _dialogService.dialogComplete(
