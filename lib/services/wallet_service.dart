@@ -57,12 +57,11 @@ class WalletService {
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
-
-    if (isLocal) {
-      randomMnemonic =
-          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-    }
-
+    // if (isLocal) {
+    // randomMnemonic =
+    //'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    // }
+    //log.w(randomMnemonic);
     return Future.value(randomMnemonic);
   }
 
@@ -106,39 +105,6 @@ class WalletService {
     return seed;
   }
 
-// Future Get Coin Addresses
-  // Future getCoinAddresses() async {
-  //   root = bip32.BIP32.fromSeed(seed);
-  //   _walletInfo.clear();
-  //   for (int i = 0; i < listOfCoins.length; i++) {
-  //     var tickerName = listOfCoins[i];
-  //     if (tickerName == 'BTC') {
-  //       var addr = await getAddressForCoin(root, tickerName);
-  //       log.w('name $tickerName - address $addr');
-  //       await coinBalanceByAddress(tickerName, addr, '');
-  //     } else if (tickerName == 'ETH') {
-  //       var addr = await getAddressForCoin(root, tickerName);
-  //       log.w('name $tickerName - address $addr');
-  //       await coinBalanceByAddress(tickerName, addr, '');
-  //     } else if (tickerName == 'FAB') {
-  //       var addr = await getAddressForCoin(root, tickerName);
-  //       log.w('name $tickerName - address $addr');
-  //       await coinBalanceByAddress(tickerName, addr, '');
-  //     } else if (tickerName == 'USDT') {
-  //       var addr = await getAddressForCoin(root, tickerName, tokenType: 'ETH');
-  //       log.w('name $tickerName - address $addr');
-  //       await coinBalanceByAddress(tickerName, addr, 'ETH');
-  //     } else if (tickerName == 'EXG') {
-  //       var addr = await getAddressForCoin(root, tickerName, tokenType: 'FAB');
-  //       log.w('name $tickerName - address $addr');
-  //       await coinBalanceByAddress(tickerName, addr, 'FAB');
-  //     }
-  //   }
-  // }
-
-// So i don't need above function with all those if else statements because
-// function below giving me the same output without any if statements
-// I may add tokenType in the WalletInfo class as a new property
   Future getCoinAddresses() async {
     root = bip32.BIP32.fromSeed(seed);
     List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
@@ -148,6 +114,7 @@ class WalletService {
       var addr =
           await getAddressForCoin(root, tickerName, tokenType: tokenType[i]);
       log.w('name $tickerName - address $addr');
+      return addr;
     }
   }
 

@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 import 'gas.dart';
+
 class TotalBalancesScreen extends StatefulWidget {
   final List<WalletInfo> walletInfo;
   const TotalBalancesScreen({Key key, this.walletInfo}) : super(key: key);
@@ -211,31 +212,30 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
         children: <Widget>[
           Container(
             margin: EdgeInsets.all(5),
-            child:
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
                   children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.add_alert,
-                        semanticLabel: 'Hide Small Amount Assets',
-                        color: globals.primaryColor,
+                    Icon(
+                      Icons.add_alert,
+                      semanticLabel: 'Hide Small Amount Assets',
+                      color: globals.primaryColor,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 5),
+                      child: Text(
+                        'Hide Small Amount Assests',
+                        style: Theme.of(context)
+                            .textTheme
+                            .display2
+                            .copyWith(wordSpacing: 1.25),
                       ),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text(
-                          'Hide Small Amount Assests',
-                          style: Theme.of(context)
-                              .textTheme
-                              .display2
-                              .copyWith(wordSpacing: 1.25),
-                        ),
-                      )
-                    ],
-                  ),
-                  Gas()
-                  /*
+                    )
+                  ],
+                ),
+                Gas()
+                /*
                   Row(
                     children: <Widget>[
                       Icon(
@@ -257,8 +257,8 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                   )
 
                    */
-                ],)
-,
+              ],
+            ),
           ),
           Container(
             decoration: new BoxDecoration(
@@ -347,13 +347,15 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          IconButton(
-                              icon: Icon(Icons.arrow_downward),
-                              tooltip: 'Deposit',
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/deposit',
-                                    arguments: walletInfo[index]);
-                              }),
+                          Expanded(
+                            child: IconButton(
+                                icon: Icon(Icons.arrow_downward),
+                                tooltip: 'Deposit',
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/deposit',
+                                      arguments: walletInfo[index]);
+                                }),
+                          ),
                           // IconButton(
                           //     icon: Icon(Icons.arrow_upward),
                           //     tooltip: 'Withdraw',
@@ -361,10 +363,12 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                           //       Navigator.pushNamed(context, '/withdraw',
                           //           arguments: walletInfo[index]);
                           //     }),
-                          IconButton(
-                              icon: Icon(Icons.info_outline),
-                              tooltip: 'Redeposit',
-                              onPressed: () {}),
+                          Expanded(
+                            child: IconButton(
+                                icon: Icon(Icons.info_outline),
+                                tooltip: 'Redeposit',
+                                onPressed: () {}),
+                          ),
                         ],
                       )
                     ],
@@ -379,7 +383,9 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                         child: Text('Value(USD)',
                             style: Theme.of(context).textTheme.display2),
                       ),
-                      Text('$usdValue', style: TextStyle(color: globals.green))
+                      Text('$usdValue',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: globals.green))
                     ],
                   ),
                 ),

@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_state.dart';
+import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/services/api.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';

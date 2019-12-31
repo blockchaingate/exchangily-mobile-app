@@ -5,9 +5,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import '../shared/globals.dart' as globals;
 
 class CreatePasswordScreenState extends BaseState {
   final WalletService _walletService = locator<WalletService>();
@@ -51,7 +49,7 @@ class CreatePasswordScreenState extends BaseState {
                       Validate Pass
     -------------------------------------------------- */
 
-  bool validatePassword(pass, confirmPass, context) {
+  bool validatePassword(pass, confirmPass, context, mnemonic) {
     Pattern pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regex = new RegExp(pattern);
@@ -81,7 +79,8 @@ class CreatePasswordScreenState extends BaseState {
             context);
         return false;
       } else {
-        _vaultService.secureSeed(context, pass);
+        log.e('sdfasfas $mnemonic');
+        _vaultService.secureSeed(context, pass, mnemonic);
         log.w('In else');
         return true;
       }
