@@ -187,7 +187,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                   onTap: () async {
                     await model.refreshBalance(widget.walletInfo);
                     setState(() {
-                      model.total();
+                      model.totalUsdBal();
                     });
                   },
                   child: model.state == ViewState.Busy

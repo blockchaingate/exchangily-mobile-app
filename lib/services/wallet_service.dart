@@ -123,7 +123,7 @@ class WalletService {
       String name, String address, String tokenType) async {
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
-
+    log.w('TOTAL BALACE $bal');
     if (bal['balance'].isNaN) {
       return 0.0;
     }

@@ -183,10 +183,10 @@ Uint8List _padTo32(Uint8List data) {
   return Uint8List(32)..setRange(32 - data.length, 32, data);
 }
 
-Future<Uint8List> signBtcMessageWith(originalMessage,Uint8List privateKey,
-    {int chainId}) async{
+Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
+    {int chainId}) async {
   Uint8List messageHash =
-  magicHash(originalMessage, environment["chains"]["BTC"]["network"]);
+      magicHash(originalMessage, environment["chains"]["BTC"]["network"]);
 
   print('messageHash1=');
   print(messageHash);
@@ -196,7 +196,7 @@ Future<Uint8List> signBtcMessageWith(originalMessage,Uint8List privateKey,
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
   // be aware that signature.v already is recovery + 27
   final chainIdV =
-  chainId != null ? (signature.v - 27 + (chainId * 2 + 35)) : signature.v;
+      chainId != null ? (signature.v - 27 + (chainId * 2 + 35)) : signature.v;
 
   signature = MsgSignature(signature.r, signature.s, chainIdV);
 
@@ -207,6 +207,7 @@ Future<Uint8List> signBtcMessageWith(originalMessage,Uint8List privateKey,
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
   return uint8ListFromList(r + s + v);
 }
+
 Future<Uint8List> signPersonalMessageWith(
     String _messagePrefix, Uint8List privateKey, Uint8List payload,
     {int chainId}) async {
@@ -308,8 +309,7 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     var privateKey = bitCoinChild.privateKey;
     var credentials = EthPrivateKey(privateKey);
 
-    signedMess = await signBtcMessageWith(
-        originalMessage, privateKey);
+    signedMess = await signBtcMessageWith(originalMessage, privateKey);
     String ss = HEX.encode(signedMess);
     r = ss.substring(0, 64);
     s = ss.substring(64, 128);
