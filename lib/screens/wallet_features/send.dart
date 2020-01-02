@@ -267,7 +267,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                           )
                         : Center(
                             child: Text(
-                            '',
+                            model.errorMessage,
                             style: TextStyle(color: globals.red),
                           ))),
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -286,6 +286,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                           child: Text('Send'),
                           onPressed: () async {
                             model.txHash = '';
+                            model.errorMessage = '';
                             model.walletInfo = widget.walletInfo;
                             model.amount =
                                 double.tryParse(_sendAmountTextController.text);

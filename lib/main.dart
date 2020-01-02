@@ -57,10 +57,13 @@ class MyApp extends StatelessWidget {
           supportedLocales: [
             const Locale("en", "US"), // English
             const Locale("hi", ""), // Hindi India
+            const Locale("zh", ""), // Chinese
+            /*
             const Locale.fromSubtags(
                 languageCode: 'zh', scriptCode: 'Hans'), // Chinese Simplified
             const Locale.fromSubtags(
                 languageCode: 'zh', scriptCode: 'Hant'), // Chinese Traditional
+         */
           ],
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context).title,

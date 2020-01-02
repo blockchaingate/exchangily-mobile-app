@@ -79,6 +79,7 @@ class _DialogManagerState extends State<DialogManager> {
               FocusScope.of(context).requestFocus(FocusNode());
               _walletService.readEncryptedData(controller.text).then((data) {
                 if (data != '' && data != null) {
+                  log.w('Decrypted mnemonic - $data');
                   _dialogService.dialogComplete(
                       AlertResponse(fieldOne: data, confirmed: true));
                   controller.text = '';

@@ -121,15 +121,13 @@ class WalletService {
 // Future Get Coin Balance By Address
   Future coinBalanceByAddress(
       String name, String address, String tokenType) async {
-    double newBal;
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
 
-    newBal = bal['balance'];
-    if (newBal.isNaN) {
+    if (bal['balance'].isNaN) {
       return 0.0;
     }
-    return newBal;
+    return bal;
   }
 
   // Get Current Market Price For The Coin By Name
@@ -156,33 +154,28 @@ class WalletService {
     var usdVal = await _api.getCoinsUsdValue();
     log.w('USD VAL $usdVal');
     double currentBtcUsdValue = usdVal['bitcoin']['usd'];
-    log.w('BTC USD VAL $currentBtcUsdValue');
     double currentEthUsdValue = usdVal['ethereum']['usd'];
-    log.w('ETH USD VAL $currentEthUsdValue');
     double currentFabUsdValue = usdVal['fabcoin']['usd'];
-    log.w('FAB USD VAL $currentFabUsdValue');
     double currentTetherUsdValue = usdVal['tether']['usd'];
-    log.w('USDT USD VAL $currentTetherUsdValue');
     try {
       List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
       log.w('List of coins length ${listOfCoins.length}');
       for (int i = 0; i < listOfCoins.length; i++) {
         var tickerName = listOfCoins[i];
         if (tickerName == 'BTC') {
-          log.w('In BTC');
           var addr = await getAddressForCoin(root, tickerName);
           var bal = await getBalanceForCoin(root, tickerName);
+          log.w('BAL $bal');
           double newBal = bal['balance'];
           log.w('address - $addr and balance - $newBal');
           totalUsdBalance.clear();
           calculateCoinUsdBalance(currentBtcUsdValue, newBal);
-
           log.i('printing calculated bal $coinUsdBalance');
-
           _walletInfo.add(WalletInfo(
               tickerName: tickerName,
               address: addr,
               availableBalance: bal['balance'],
+              lockedBalance: bal['lockedBalance'],
               usdValue: coinUsdBalance,
               name: 'bitcoin',
               logoColor: Color.alphaBlend(Colors.blue, Colors.lightBlue)));
@@ -360,8 +353,7 @@ class WalletService {
         'contractAddress': environment["addresses"]["smartContract"][coinName]
       };
     }
-    //var mnemonic = 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-    //var seed = generateSeedFromUser(mnemonic);
+
     var resST = await sendTransaction(
         coinName, seed, [0], officalAddress, amount, option, false);
 
@@ -380,12 +372,8 @@ class WalletService {
 
     var txHex = resST['txHex'];
     var txHash = resST['txHash'];
-    //txHash =
-    //    '0x8b9cc0f8dbd9cde140ccdf8be4591602b34ae8a9bfa69b4c3e65c44373168c7f';
-    //print('txHash=' + txHash);
-    var amountInLink = BigInt.from(amount * 1e18);
-    // var amountInLink = BigInt.from(resST["amountSent"]);
 
+    var amountInLink = BigInt.from(amount * 1e18);
     print('amountInLink=');
     print(amountInLink);
 
@@ -593,10 +581,10 @@ class WalletService {
   Future sendTransaction(String coin, seed, List addressIndexList,
       String toAddress, double amount, options, bool doSubmit) async {
     final root = bip32.BIP32.fromSeed(seed);
-    print('coin=' + coin);
-    print(addressIndexList);
-    print(toAddress);
-    print(amount);
+    log.w('coin=' + coin);
+    log.w(addressIndexList);
+    log.w(toAddress);
+    log.w(amount);
     var totalInput = 0;
     var finished = false;
     var gasPrice = 10.2;
@@ -619,9 +607,9 @@ class WalletService {
           network: environment["chains"]["BTC"]["network"]);
       // txb.setVersion(1);
 
-      print('addressIndexList=');
-      print(addressIndexList);
-      print(addressIndexList.length);
+      log.w('addressIndexList=');
+      log.w(addressIndexList);
+      log.w(addressIndexList.length);
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
         var bitCoinChild = root.derivePath("m/44'/" +
@@ -680,11 +668,11 @@ class WalletService {
       print('333');
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
-        print('there we go');
+        log.w('there we go');
         var alice = ECPair.fromPrivateKey(privateKey,
             compressed: true, network: environment["chains"]["BTC"]["network"]);
         print('alice.network=');
-        print(alice.network);
+        log.w(alice.network);
         txb.sign(i, alice);
       }
 
@@ -721,8 +709,9 @@ class WalletService {
       var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
 
-      print('amountNum=');
-      print(amountNum);
+      log.i('amountNum=');
+      log.w(amount);
+      log.w(amountNum);
       final signed = await ethClient.signTransaction(
           credentials,
           Transaction(
@@ -735,16 +724,20 @@ class WalletService {
           ),
           chainId: ropstenChainId,
           fetchChainIdFromNetworkId: false);
-      print('signed=');
-      print(signed);
+      log.i('signed=');
+      log.w(signed);
       txHex = '0x' + HEX.encode(signed);
-      print(txHex);
+      log.w('TxHex $txHex');
       if (doSubmit) {
         var res = await _api.postEthTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
+        await Future.delayed(Duration(seconds: 7));
+        log.w('delay complete');
       } else {
         txHash = getTransactionHash(signed);
+        await Future.delayed(Duration(seconds: 7));
+        log.w('delay complete');
       }
     } else if (coin == 'FAB') {
       var res1 = await getFabTransactionHex(
@@ -828,18 +821,23 @@ class WalletService {
               data: Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex))),
           chainId: ropstenChainId,
           fetchChainIdFromNetworkId: false);
-      print('signed=');
+      log.w('signed=');
       txHex = '0x' + HEX.encode(signed);
 
       if (doSubmit) {
         var res = await _api.postEthTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
+        await Future.delayed(Duration(seconds: 7));
+        log.w('In if delay complete');
       } else {
         txHash = getTransactionHash(signed);
+        await Future.delayed(Duration(seconds: 7));
+        log.w('In else delay complete');
       }
     }
-
+    await Future.delayed(Duration(seconds: 7));
+    log.w('delay complete');
     return {
       'txHex': txHex,
       'txHash': txHash,

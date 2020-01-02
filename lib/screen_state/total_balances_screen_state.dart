@@ -2,20 +2,21 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 
 class TotalBalancesScreenState extends BaseState {
-  final log = getLogger('TotalBalancesSCreenState');
+  final log = getLogger('TotalBalancesScreenState');
+  List<WalletInfo> walletInfo;
+  WalletService walletService = locator<WalletService>();
+  Api _api = locator<Api>();
   final double elevation = 5;
   double totalUsdBalance = 0;
   var coinUsdBalance;
-  List<WalletInfo> walletInfo;
-  WalletService walletService = locator<WalletService>();
+  double gasAmount = 0;
 
-  refreshBalance(List<WalletInfo> _walletInfo) async {
-    // var address = await walletService.test();
-    // log.i(address);
+  Future refreshBalance(List<WalletInfo> _walletInfo) async {
     setState(ViewState.Busy);
     walletService.totalUsdBalance.clear();
     log.w(_walletInfo.length);
@@ -27,20 +28,25 @@ class TotalBalancesScreenState extends BaseState {
         String address = _walletInfo[i].address;
         String name = _walletInfo[i].name;
 
-        double bal = await walletService.coinBalanceByAddress(
+        var balance = await walletService.coinBalanceByAddress(
             tName, address, tokenType[i]);
-        log.w('$tName - $bal');
+        double bal = balance['balance'];
+        double lockedBal = balance['lockedBalance'];
         double marketPrice = await walletService.getCoinMarketPrice(name);
         walletService.calculateCoinUsdBalance(marketPrice, bal);
         coinUsdBalance = walletService.coinUsdBalance;
         log.w('usd Value $name - $coinUsdBalance');
         _walletInfo[i].availableBalance = bal;
+        _walletInfo[i].lockedBalance = lockedBal;
+
         if (coinUsdBalance == null) {
           _walletInfo[i].usdValue = 0.0;
         }
         _walletInfo[i].usdValue = coinUsdBalance;
       }
-      total();
+
+      totalUsdBal();
+      gasBalance();
       setState(ViewState.Idle);
       return _walletInfo;
     } else {
@@ -49,9 +55,17 @@ class TotalBalancesScreenState extends BaseState {
     }
   }
 
-  total() {
+  totalUsdBal() {
     totalUsdBalance = walletService.calculateTotalUsdBalance();
     log.w(totalUsdBalance);
     return totalUsdBalance;
+  }
+
+  gasBalance() async {
+    var bal = await _api.getGasBalance();
+    var newBal = int.parse(bal['balance']['FAB']);
+    gasAmount = newBal / 1e18;
+    log.w('Gas bal $gasAmount');
+    return gasAmount;
   }
 }

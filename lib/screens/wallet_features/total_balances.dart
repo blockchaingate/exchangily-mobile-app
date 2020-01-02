@@ -28,7 +28,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
     final List<WalletInfo> walletInfo = widget.walletInfo;
     return BaseScreen<TotalBalancesScreenState>(
         onModelReady: (model) {
-          model.total();
+          model.totalUsdBal();
         },
         builder: (context, model, child) => Scaffold(
               key: key,
@@ -40,6 +40,11 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                     padding: EdgeInsets.only(right: 10, top: 15),
                     child: _hideSmallAmount(),
                   ),
+                  // Gas Container
+                  Container(
+                      padding: EdgeInsets.only(left: 5, top: 2),
+                      child: Gas(gasAmount: model.gasAmount)),
+                  // Build Wallet List Container
                   Expanded(child: _buildWalletListContainer(walletInfo, model))
                 ],
               ),
@@ -63,6 +68,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
           return _coinDetailsCard(
               '$name',
               walletInfo[index].availableBalance,
+              walletInfo[index].lockedBalance,
               1000,
               walletInfo[index].usdValue,
               walletInfo[index].logoColor,
@@ -202,7 +208,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-                                                                                  Hide Small Amount Row
+                          Hide Small Amount Row
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -234,29 +240,6 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                     )
                   ],
                 ),
-                Gas()
-                /*
-                  Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.add_circle_outline,
-                        semanticLabel: 'Add gas',
-                        color: globals.primaryColor,
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        child: Text(
-                          'Gas:',
-                          style: Theme.of(context)
-                              .textTheme
-                              .display2
-                              .copyWith(wordSpacing: 1.25),
-                        ),
-                      )
-                    ],
-                  )
-
-                   */
               ],
             ),
           ),
@@ -278,8 +261,8 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _coinDetailsCard(tickerName, available, exgAmount, usdValue, color,
-          index, walletInfo, elevation) =>
+  Widget _coinDetailsCard(tickerName, available, locked, exgAmount, usdValue,
+          color, index, walletInfo, elevation) =>
       Card(
         color: globals.walletCardColor,
         elevation: elevation,
@@ -325,6 +308,14 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                           style: Theme.of(context).textTheme.display2),
                     ),
                     Text('$available',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: globals.red)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text('Locked',
+                          style: Theme.of(context).textTheme.display2),
+                    ),
+                    Text('$locked',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: globals.red))
                   ],

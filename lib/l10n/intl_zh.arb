@@ -1,0 +1,20 @@
+{
+    "title": "系统默认",
+    "@title": {
+      "description": "Title for the Exchangily App",
+      "type": "text",
+      "placeholders": {}
+    },
+    "confirm": "确认",
+    "@confirm": {
+        "description": "confirm_button",
+        "type": "text",
+        "placeholders": {}
+    },
+    "backupMnemonic": "备份种子代码",
+    "@backupMnemonic": {
+        "description": "backup_mnemonic",
+        "type": "text",
+        "placeholders": {}
+    }
+}
