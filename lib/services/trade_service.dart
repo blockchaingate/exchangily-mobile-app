@@ -12,9 +12,11 @@ mixin TradeService {
   getAllPriceChannel() {
     return IOWebSocketChannel.connect(environment['websocket'] + 'allprices');
   }
+
   getOrderListChannel(String pair) {
     var wsString = environment['websocket'] + 'orders'+ '@' + pair;
     print('wsString=' + wsString);
     return IOWebSocketChannel.connect(wsString);
   }
+
 }
