@@ -277,9 +277,10 @@ class WalletFeaturesScreen extends StatelessWidget {
 
 // Temp
   refreshBalance(String address, String tickerName) async {
+    state = ViewState.Busy;
     var bal = await walletService.coinBalanceByAddress(tickerName, address, '');
     log.w(bal);
-    balance = bal;
+    balance = bal['balance'];
     state = ViewState.Idle;
   }
 }
