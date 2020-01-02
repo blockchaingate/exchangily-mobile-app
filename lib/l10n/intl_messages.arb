@@ -1,8 +1,8 @@
 {
-  "@@last_modified": "2019-12-02T12:50:27.486565",
+  "@@last_modified": "2020-01-02T16:49:21.405390",
   "title": "Exchangily",
   "@title": {
-    "description": "Title_of_the_Exchangily_App",
+    "description": "title_exchangily_app",
     "type": "text",
     "placeholders": {}
   },
@@ -12,9 +12,9 @@
     "type": "text",
     "placeholders": {}
   },
-  "backupSeedPhrase": "Backup Seed Phrase",
-  "@backupSeedPhrase": {
-    "description": "backup_seed_phrase",
+  "backupMnemonic": "Backup Mnemonic",
+  "@backupMnemonic": {
+    "description": "backup_mnemonic",
     "type": "text",
     "placeholders": {}
   }

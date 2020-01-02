@@ -17,7 +17,7 @@ class SendScreenState extends BaseState {
   WalletService walletService = locator<WalletService>();
   var options = {};
   String txHash = '';
-  String errorMessage;
+  String errorMessage = '';
   var updatedBal;
   String toAddress;
   double amount;
@@ -26,45 +26,50 @@ class SendScreenState extends BaseState {
   Future verifyPassword(tickerName, toWalletAddress, amount, context) async {
     log.w('dialog called');
     setState(ViewState.Busy);
-    var res = await _dialogService.showDialog(
+    var dialogResponse = await _dialogService.showDialog(
         title: 'Enter Password',
         description:
             'Type the same password which you entered while creating the wallet');
-    if (res.confirmed) {
-      String mnemonic = res.fieldOne;
+    if (dialogResponse.confirmed) {
+      String mnemonic = dialogResponse.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      var ret = await walletService.sendTransaction(
-          tickerName, seed, [0], toWalletAddress, amount, options, true);
-      txHash = ret["txHash"];
-      errorMessage = ret["errMsg"];
-      if (txHash.isNotEmpty) {
-        log.w('Tx Hash $txHash - ${ret["txHash"]}');
-        walletService.showInfoFlushbar(
-            'Send Completed',
-            '$tickerName Transanction has been sent',
-            Icons.check_circle_outline,
-            globals.green,
-            context);
-        //   await checkTxStatus(txHash, tickerName);
-        Future.delayed(Duration(seconds: 5));
-        setState(ViewState.Idle);
+      await walletService
+          .sendTransaction(
+              tickerName, seed, [0], toWalletAddress, amount, options, true)
+          .then((res) {
+        log.e(res);
+        txHash = res["txHash"];
+        errorMessage = res["errMsg"];
+        if (txHash.isNotEmpty) {
+          walletService.showInfoFlushbar(
+              'Send Completed',
+              '$tickerName Transanction has been sent',
+              Icons.check_circle_outline,
+              globals.green,
+              context);
+          setState(ViewState.Idle);
+        }
         return txHash;
-      }
-      if (errorMessage.isNotEmpty) {
-        log.e('Error Message $errorMessage');
+      }).catchError((err) {
+        log.e('In Catch error - $err');
+        errorMessage = err.toString();
+        log.e('Error Message - $errorMessage');
         setState(ViewState.Idle);
-        return errorMessage;
-      }
-
+      }).timeout(Duration(seconds: 15), onTimeout: () {
+        log.e('In time out');
+        setState(ViewState.Idle);
+        return errorMessage = 'Server TIMEOUT!!!';
+      });
+    } else if (dialogResponse.fieldOne != 'Closed') {
       setState(ViewState.Idle);
+      return errorMessage = 'Please enter the correct Password';
     } else {
-      if (res.fieldOne != 'Closed') {
-        setState(ViewState.Idle);
-        log.w('Wrong password');
-        showNotification(context);
-      }
+      // This is when user closes the dialog box by pressing cross icon
+      setState(ViewState.Idle);
     }
   }
+
+  // Check Transaction Status
 
   checkTxStatus(String txHash, String tickerName) async {
     if (tickerName == 'FAB') {
@@ -113,11 +118,6 @@ class SendScreenState extends BaseState {
     // }
     // updatedBal = 0;
     // log.w('Not in if Updated Bal ${updatedBal}');
-  }
-
-  showNotification(context) {
-    walletService.showInfoFlushbar('Password Mismatch',
-        'Please enter the correct pasword', Icons.cancel, globals.red, context);
   }
 
   copyAddress(context) {

@@ -42,6 +42,7 @@ class WalletInfo {
   String _tickerName;
   String _tokenType;
   String _address;
+  double _lockedBalance;
   double _availableBalance;
   double _usdValue;
   Color _logoColor;
@@ -50,12 +51,14 @@ class WalletInfo {
   WalletInfo(
       {String tickerName,
       String address,
+      double lockedBalance,
       double availableBalance,
       double usdValue,
       Color logoColor,
       String name}) {
     this._tickerName = tickerName;
     this._address = address;
+    this._lockedBalance = lockedBalance ?? 0;
     this._availableBalance = availableBalance ?? 0;
     this._usdValue = usdValue ?? 0;
     this._logoColor = logoColor;
@@ -78,6 +81,11 @@ class WalletInfo {
 
   set address(String address) {
     this._address = address;
+  }
+
+  double get lockedBalance => _lockedBalance;
+  set lockedBalance(double lockedBalance) {
+    this._lockedBalance = lockedBalance;
   }
 
   double get availableBalance => _availableBalance;

@@ -5,6 +5,10 @@ import 'package:intl/intl.dart';
 import 'l10n/messages_all.dart';
 
 class AppLocalizations {
+  AppLocalizations();
+
+  static const AppLocalizationsDelegate delegate = AppLocalizationsDelegate();
+
   static Future<AppLocalizations> load(Locale locale) {
     final String name =
         locale.countryCode.isEmpty ? locale.languageCode : locale.toString();

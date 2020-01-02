@@ -29,6 +29,15 @@ class Api {
     return log.e('getCoinsUsdValue Failed to load the data from the API');
   }
 
+  Future getGasBalance() async {
+    final res = await http.get(gasBalance);
+    log.w('get gas bal ${res.body} - ${res.statusCode}');
+    if (res.statusCode == 200 || res.statusCode == 201) {
+      return jsonDecode(res.body);
+    }
+    return log.e('getGasBalance Failed to load the data from the API');
+  }
+
   // Get FabUtxos
   Future getFabUtxos(String address) async {
     var url = fabBaseUrl + 'getutxos/' + address;
