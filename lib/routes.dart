@@ -11,6 +11,7 @@ import 'package:exchangilymobileapp/screens/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/wallet_features.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/withdraw_to_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/wallet_setup.dart';
+import 'package:exchangilymobileapp/widgets/verify_mnemonic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
@@ -24,7 +25,7 @@ final log = getLogger('Routes');
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    log.i(
+    log.w(
         'generateRoute | name: ${settings.name} arguments:${settings.arguments}');
     final args = settings.arguments;
     switch (settings.name) {
@@ -32,18 +33,20 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageScreen());
       case '/walletSetup':
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
+
       case '/importWallet':
         return MaterialPageRoute(builder: (_) => ImportWalletScreen());
-
-      case '/backupMnemonic':
-        return MaterialPageRoute(builder: (_) => BackupMnemonicWalletScreen());
 
       case '/confirmMnemonic':
         return MaterialPageRoute(
             builder: (_) => ConfirmMnemonictWalletScreen(mnemonic: args));
 
+      case '/backupMnemonic':
+        return MaterialPageRoute(builder: (_) => BackupMnemonicWalletScreen());
+
       case '/createPassword':
-        return MaterialPageRoute(builder: (_) => CreatePasswordScreen());
+        return MaterialPageRoute(
+            builder: (_) => CreatePasswordScreen(mnemonic: args));
 
       case '/totalBalance':
         return MaterialPageRoute(

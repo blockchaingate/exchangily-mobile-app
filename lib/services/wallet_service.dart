@@ -57,12 +57,11 @@ class WalletService {
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
-
-    if(isLocal) {
-      randomMnemonic =
-          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-    }
-
+    // if (isLocal) {
+    // randomMnemonic =
+    //'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    // }
+    //log.w(randomMnemonic);
     return Future.value(randomMnemonic);
   }
 
@@ -106,40 +105,7 @@ class WalletService {
     return seed;
   }
 
-// Future Get Coin Addresses
   Future getCoinAddresses() async {
-    root = bip32.BIP32.fromSeed(seed);
-    _walletInfo.clear();
-    for (int i = 0; i < listOfCoins.length; i++) {
-      var tickerName = listOfCoins[i];
-      if (tickerName == 'BTC') {
-        var addr = await getAddressForCoin(root, tickerName);
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, '');
-      } else if (tickerName == 'ETH') {
-        var addr = await getAddressForCoin(root, tickerName);
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, '');
-      } else if (tickerName == 'FAB') {
-        var addr = await getAddressForCoin(root, tickerName);
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, '');
-      } else if (tickerName == 'USDT') {
-        var addr = await getAddressForCoin(root, tickerName, tokenType: 'ETH');
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, 'ETH');
-      } else if (tickerName == 'EXG') {
-        var addr = await getAddressForCoin(root, tickerName, tokenType: 'FAB');
-        log.w('name $tickerName - address $addr');
-        await coinBalanceByAddress(tickerName, addr, 'FAB');
-      }
-    }
-  }
-
-// So i don't need above function with all those if else statements because
-// function below giving me the same output without any if statements
-// I may add tokenType in the WalletInfo class as a new property
-  Future test() async {
     root = bip32.BIP32.fromSeed(seed);
     List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
     for (int i = 0; i < listOfCoins.length; i++) {
@@ -148,6 +114,7 @@ class WalletService {
       var addr =
           await getAddressForCoin(root, tickerName, tokenType: tokenType[i]);
       log.w('name $tickerName - address $addr');
+      return addr;
     }
   }
 
@@ -324,7 +291,7 @@ class WalletService {
       log.w('Total Usd balance $totalUsdBalance');
     } else {
       coinUsdBalance = 0.0;
-      log.i('Problem fetching the wallet balance');
+      log.i('calculateCoinUsdBalance - Wallet balance 0');
     }
   }
 
@@ -376,8 +343,8 @@ class WalletService {
 
 // Future Deposit Do
 
-  Future<Map<String, dynamic>> depositDo(seed, String coinName, String tokenType, double amount) async {
-
+  Future<Map<String, dynamic>> depositDo(
+      seed, String coinName, String tokenType, double amount) async {
     var errRes = new Map();
     errRes['success'] = false;
 
@@ -437,7 +404,6 @@ class WalletService {
         amountInLink,
         stringUtils.trimHexPrefix(addressInKanban));
 
-
     var signedMess =
         await signedMessage(originalMessage, seed, coinName, tokenType);
 
@@ -457,6 +423,30 @@ class WalletService {
     return res;
   }
 
+  /* --------------------------------------------
+              Methods Called in Send State 
+  ----------------------------------------------*/
+
+// Get Fab Transaction Status
+  Future getFabTxStatus(String txId) async {
+    await getFabTransactionStatus(txId);
+  }
+
+// Get Fab Transaction Balance
+  Future getFabBalance(String address) async {
+    await getFabBalanceByAddress(address);
+  }
+
+  // Get ETH Transaction Status
+  Future getEthTxStatus(String txId) async {
+    await getFabTransactionStatus(txId);
+  }
+
+// Get ETH Transaction Balance
+  Future getEthBalance(String address) async {
+    await getFabBalanceByAddress(address);
+  }
+
 // Future Add Gas Do
   Future<Map<String, dynamic>> AddGasDo(seed, double amount) async {
     var satoshisPerBytes = 14;
@@ -467,7 +457,6 @@ class WalletService {
     var fxnDepositCallHex = '4a58db19';
     var contractInfo =
         await getFabSmartContract(scarContractAddress, fxnDepositCallHex);
-
 
     var res1 = await getFabTransactionHex(seed, [0], contractInfo['contract'],
         amount, contractInfo['totalFee'], satoshisPerBytes);

@@ -11,9 +11,9 @@
       "type": "text",
       "placeholders": {}
     },
-    "backupSeedPhrase": "Backup Seed Phrase",
-    "@backupSeedPhrase": {
-        "description": "backup_seed_phrase",
+    "backupMnemonic": "Backup Mnemonic",
+    "@backupMnemonic": {
+        "description": "backup_mnemonic",
         "type": "text",
         "placeholders": {}
     }

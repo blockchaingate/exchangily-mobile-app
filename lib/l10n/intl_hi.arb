@@ -12,9 +12,9 @@
       "type": "text",
       "placeholders": {}
     },
-    "backupSeedPhrase": "बीज (सीड) बैकअप करें",
-    "@backupSeedPhrase": {
-        "description": "backup_seed_phrase",
+    "backupMnemonic": "बीज (सीड) बैकअप करें",
+    "@backupMnemonic": {
+        "description": "backup_mnemonic",
         "type": "text",
         "placeholders": {}
     }

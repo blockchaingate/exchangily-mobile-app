@@ -1,3 +1,8 @@
+import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -17,11 +22,16 @@ class WalletFeaturesScreen extends StatelessWidget {
         'withdrawToWallet', Colors.cyan),
   ];
   final double elevation = 5;
+  var state;
+  double balance;
+  WalletService walletService = locator<WalletService>();
+  final log = getLogger('WalletFeatures');
 
   @override
   Widget build(BuildContext context) {
     String tickerName = walletInfo.tickerName;
     String coinName = walletInfo.name;
+    balance = walletInfo.availableBalance;
     double containerWidth = 150;
     double containerHeight = 115;
     return Scaffold(
@@ -29,7 +39,7 @@ class WalletFeaturesScreen extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           new Container(
-            width: double.infinity,
+            height: 250,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image:
@@ -38,21 +48,7 @@ class WalletFeaturesScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                new Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        Icon(
-                          Icons.list,
-                          color: globals.white,
-                          size: 50,
-                        ),
-                        //   ),
-                      ],
-                    )),
-                new Container(
+                Container(
                   child: Image.asset(
                     'assets/images/start-page/logo.png',
                     width: 250,
@@ -82,13 +78,25 @@ class WalletFeaturesScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        buildTotalBalanceCard(context, walletInfo)
+                        Expanded(
+                          child: Stack(
+                            overflow: Overflow.visible,
+                            alignment: Alignment.bottomCenter,
+                            children: <Widget>[
+                              Positioned(
+                                //   bottom: -15,
+                                child: _buildTotalBalanceCard(context,
+                                    walletInfo.tickerName, walletInfo.usdValue),
+                              )
+                            ],
+                          ),
+                        )
                       ],
                     ))
               ],
             ),
           ),
-          new Container(
+          Container(
             margin: EdgeInsets.all(10),
             child: Column(
               children: <Widget>[
@@ -135,79 +143,96 @@ class WalletFeaturesScreen extends StatelessWidget {
               ],
             ),
           ),
-          Visibility(
-              visible: (walletInfo.tickerName == 'FAB'),
-              child: Container(
-                width: 190,
-                child: RaisedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/smartContract');
-                  },
-                  child: Text(walletInfo.tickerName + 'Smart Contract', style: TextStyle(fontSize: 15)),
-                ),
-              ))
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Visibility(
+                visible: (walletInfo.tickerName == 'FAB'),
+                child: Container(
+                  width: 190,
+                  child: RaisedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/smartContract');
+                    },
+                    child: Text(walletInfo.tickerName + 'Smart Contract',
+                        style: TextStyle(fontSize: 15)),
+                  ),
+                )),
+          )
         ],
       ),
       bottomNavigationBar: AppBottomNav(),
     );
   }
 
-  Widget buildTotalBalanceCard(BuildContext context, WalletInfo info) {
-    return _totalBalanceCard(context, info.tickerName, info.availableBalance);
-  }
+  // Build Total Balance Card
 
-  Widget _totalBalanceCard(context, name, balance) => Card(
+  Widget _buildTotalBalanceCard(context, name, usdBal) => Card(
         elevation: elevation,
         color: globals.walletCardColor,
         child: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        '$name '.toUpperCase() + 'Total Balance',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Icon(
-                        Icons.refresh,
-                        color: globals.primaryColor,
-                      ),
-                      Text(
-                        '$balance',
-                        style: Theme.of(context).textTheme.headline,
-                      )
-                    ],
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    '$name '.toUpperCase() + 'Total Balance',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('Wallet', style: Theme.of(context).textTheme.headline),
-                    Text('Assets in exchange',
-                        style: Theme.of(context).textTheme.headline)
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('1954465.26574',
-                        style: Theme.of(context).textTheme.headline),
-                    Text('2000', style: Theme.of(context).textTheme.headline)
-                  ],
-                )
-              ],
-            )),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 2.0, 0.0),
+                      child: InkWell(
+                          onTap: () async {
+                            state = ViewState.Busy;
+                            await refreshBalance(
+                                walletInfo.address, walletInfo.tickerName);
+                          },
+                          child: state == ViewState.Busy
+                              ? SizedBox(
+                                  child: CircularProgressIndicator(),
+                                  width: 20,
+                                  height: 20,
+                                )
+                              : Icon(
+                                  Icons.refresh,
+                                  color: globals.white,
+                                  size: 30,
+                                ))),
+                  Expanded(
+                    child: Text(
+                      '$usdBal USD',
+                      textAlign: TextAlign.right,
+                      style: Theme.of(context).textTheme.headline,
+                    ),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Fab Wallet Balance',
+                      style: Theme.of(context).textTheme.headline),
+                  Text('Assets in exchange',
+                      style: Theme.of(context).textTheme.headline)
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('$balance', style: Theme.of(context).textTheme.headline),
+                  Text('2000', style: Theme.of(context).textTheme.headline)
+                ],
+              )
+            ],
+          ),
+        ),
       );
 
-// Four Features Card
+  // Four Features Card
 
   Widget _featuresCard(context, index) => Card(
         color: globals.walletCardColor,
@@ -249,4 +274,12 @@ class WalletFeaturesScreen extends StatelessWidget {
           ),
         ),
       );
+
+// Temp
+  refreshBalance(String address, String tickerName) async {
+    var bal = await walletService.coinBalanceByAddress(tickerName, address, '');
+    log.w(bal);
+    balance = bal;
+    state = ViewState.Idle;
+  }
 }

@@ -53,7 +53,8 @@ class WalletSetupScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.display3,
                     ),
                     onPressed: () {
-                      Navigator.of(context).pushNamed('/importWallet');
+                      Navigator.of(context)
+                          .pushNamed('/importWallet', arguments: 'import');
                     },
                   ),
                 )

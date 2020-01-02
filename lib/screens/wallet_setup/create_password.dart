@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
-  final List<String> mnemonic;
+  final String mnemonic;
   const CreatePasswordScreen({Key key, this.mnemonic}) : super(key: key);
 
   @override
@@ -132,7 +132,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           // Remove the on screen keyboard by shifting focus to unused focus node
           FocusScope.of(context).requestFocus(FocusNode());
           var passSuccess = model.validatePassword(_passTextController.text,
-              _confirmPassTextController.text, context);
+              _confirmPassTextController.text, context, widget.mnemonic);
+
           _passTextController.text = '';
           _confirmPassTextController.text = '';
           model.errorMessage = '';

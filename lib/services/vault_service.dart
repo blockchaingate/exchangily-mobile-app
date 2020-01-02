@@ -9,26 +9,23 @@ class VaultService {
 
   WalletService _walletService = locator<WalletService>();
 
-  Future secureSeed(context, pass) async {
-    String randomMnemonic = Provider.of<String>(context);
-    _walletService.generateSeed(randomMnemonic);
+  Future secureSeed(context, pass, String mnemonic) async {
+    String randomMnemonic;
+    if (mnemonic == '' || mnemonic == null) {
+      log.e('import mnemonic is: $mnemonic');
+      randomMnemonic = Provider.of<String>(context);
+      _walletService.generateSeed(randomMnemonic);
+    } else {
+      randomMnemonic = mnemonic;
+      log.e('random and import mnemonic - $randomMnemonic = $mnemonic');
+    }
 
     String userTypedKey = pass;
-
     final key = prefix0.Key.fromLength(32);
     final iv = prefix0.IV.fromUtf8(userTypedKey);
     final encrypter = prefix0.Encrypter(prefix0.AES(key));
-
     final encrypted = encrypter.encrypt(randomMnemonic, iv: iv);
-    // final decrypted = encrypter.decrypt(encrypted, iv: iv);
-    // log.w('decrypted phrase - $decrypted');
-    // log.w('encrypted phrase - ${encrypted.base64}');
-    // log.w('decrypted phrase with user key - $decrypted');
     await _walletService.saveEncryptedData(encrypted.base64);
     randomMnemonic = '';
-    //log.w('Printing encrypted data from vault service $test');
-    // walletService
-    //     .writeStorage(userTypedKey, encrypted.base64)
-    //     .whenComplete(readKey());
   }
 }
