@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 import './string_util.dart';
 import 'dart:convert';
-
+import 'package:web3dart/web3dart.dart';
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final log = getLogger('fab_util');
 Api _api = locator<Api>();
@@ -25,6 +25,180 @@ getFabNode(root, {index = 0}) {
   return node;
 }
 
+Future getFabLockBalanceByAddress(String address) async {
+  double balance = 0;
+  var fabSmartContractAddress = environment['addresses']['smartContract']['FABLOCK'];
+  var getLockedInfoABI = '43eb7b44';
+  var data = {
+    'address': trimHexPrefix(fabSmartContractAddress),
+    'data': trimHexPrefix(getLockedInfoABI),
+    'sender': address
+
+  };
+  var url = fabBaseUrl + 'callcontract';
+  try {
+    var response = await http.post(url, body: data);
+    var json = jsonDecode(response.body);
+    if (json != null && json['executionResult'] != null && json['executionResult']['output'] != null) {
+      var balanceHex = json['executionResult']['output'];
+      final abiCode = """
+      [
+      {
+        "constant": false,
+  "name": "withdraw",
+  "payable": false,
+  "stateMutability": "nonpayable",
+  "type": "function",
+  "inputs": [],
+  "outputs": []
+  },
+  {
+  "constant": true,
+  "name": "lockPeriod",
+  "payable": false,
+  "stateMutability": "view",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+  {
+  "name": "",
+  "type": "uint256"
+  }
+  ]
+  },
+  {
+  "constant": true,
+  "name": "getLockerInfo",
+  "payable": false,
+  "stateMutability": "view",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+  {
+  "name": "",
+  "type": "uint256[]"
+  },
+  {
+  "name": "",
+  "type": "uint256[]"
+  }
+  ]
+  },
+  {
+  "constant": true,
+  "name": "startBlock",
+  "payable": false,
+  "stateMutability": "view",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+  {
+  "name": "",
+  "type": "uint256"
+  }
+  ]
+  },
+  {
+  "constant": false,
+  "name": "lockFab",
+  "payable": true,
+  "stateMutability": "payable",
+  "type": "function",
+  "inputs": [],
+  "outputs": []
+  },
+  {
+  "constant": true,
+  "name": "isOwner",
+  "payable": false,
+  "stateMutability": "view",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+  {
+  "name": "",
+  "type": "bool"
+  }
+  ]
+  },
+  {
+  "constant": false,
+  "name": "updateLockPeriod",
+  "payable": false,
+  "stateMutability": "nonpayable",
+  "type": "function",
+  "inputs": [
+  {
+  "name": "newLockPeriod",
+  "type": "uint256"
+  }
+  ],
+  "outputs": []
+  },
+  {
+  "constant": true,
+  "name": "_owner",
+  "payable": false,
+  "stateMutability": "view",
+  "type": "function",
+  "inputs": [],
+  "outputs": [
+  {
+  "name": "",
+  "type": "address"
+  }
+  ]
+  },
+  {
+  "constant": false,
+  "name": "",
+  "payable": false,
+  "stateMutability": "nonpayable",
+  "type": "constructor",
+  "inputs": [],
+  "outputs": null
+  }
+  ]""";
+
+
+      final EthereumAddress contractAddr =
+      EthereumAddress.fromHex(fabSmartContractAddress);
+      final contract =
+      DeployedContract(ContractAbi.fromJson(abiCode, 'FabLock'), contractAddr);
+      final getLockerInfo = contract.function('getLockerInfo');
+      var res = getLockerInfo.decodeReturnValues(balanceHex);
+      print('balanceHex=');
+      print(balanceHex);
+      print('res=');
+      print(res.length);
+      if(res != null && res.length == 2) {
+        var values = res[1];
+        print('values=');
+        print(values);
+        print(values.length);
+        print('before');
+        values.forEach((element) => {
+          balance = balance + element.toDouble()
+        });
+        print('after');
+        /*
+        for (var i = 0; i < values.length; i++) {
+          balance += values[i];
+          print('balanacccc');
+          print(balance);
+        }
+
+         */
+        print(balance);
+        balance = balance / 1e8;
+      }
+
+
+    }
+  } catch(e) {}
+  return balance;
+}
+
 Future getFabBalanceByAddress(String address) async {
   var url = fabBaseUrl + 'getbalance/' + address;
   var fabBalance = 0.0;
@@ -35,7 +209,8 @@ Future getFabBalanceByAddress(String address) async {
   } catch (e) {
     log.e(e);
   }
-  return {'balance': fabBalance, 'lockbalance': 0};
+  var lockbalance = await getFabLockBalanceByAddress(address);
+  return {'balance': fabBalance, 'lockbalance': lockbalance};
 }
 
 Future getFabTokenBalanceForABI(
