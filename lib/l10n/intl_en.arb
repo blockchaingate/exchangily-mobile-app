@@ -11,6 +11,7 @@
       "type": "text",
       "placeholders": {}
     },
+    "cancel": "Cancel",
     "@cancel": {
       "description": "cancel_button",
       "type": "text",
@@ -27,7 +28,7 @@
         "description": "backup_mnemonic",
         "type": "text",
         "placeholders": {}
-    }
+    },
     "send": "Send",
     "@send": {
       "description": "send_text",
@@ -155,7 +156,7 @@
       "placeholders": {}
     },
     "advance": "advance",
-    "@invalidAddress": {
+    "@advance": {
       "description": "advance",
       "type": "text",
       "placeholders": {}
@@ -214,7 +215,7 @@
       "type": "text",
       "placeholders": {}
     },
-    "moveAndTrade": "Nove & Trade",
+    "moveAndTrade": "Move & Trade",
     "@moveAndTrade": {
       "description": "wallet_feature_move_and_trade",
       "type": "text",
