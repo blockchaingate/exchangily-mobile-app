@@ -37,12 +37,16 @@ class TotalBalancesScreenState extends BaseState {
         coinUsdBalance = walletService.coinUsdBalance;
         log.w('usd Value $name - $coinUsdBalance');
         _walletInfo[i].availableBalance = bal;
-        _walletInfo[i].lockedBalance = lockedBal;
-
+        if (lockedBal == null) {
+          _walletInfo[i].lockedBalance = 0.0;
+        } else {
+          _walletInfo[i].lockedBalance = lockedBal;
+        }
         if (coinUsdBalance == null) {
           _walletInfo[i].usdValue = 0.0;
+        } else {
+          _walletInfo[i].usdValue = coinUsdBalance;
         }
-        _walletInfo[i].usdValue = coinUsdBalance;
       }
 
       totalUsdBal();

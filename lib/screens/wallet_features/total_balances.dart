@@ -29,6 +29,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
     return BaseScreen<TotalBalancesScreenState>(
         onModelReady: (model) {
           model.totalUsdBal();
+          model.gasBalance();
         },
         builder: (context, model, child) => Scaffold(
               key: key,
@@ -231,7 +232,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                     Container(
                       padding: EdgeInsets.only(left: 5),
                       child: Text(
-                        'Hide Small Amount Assests',
+                        'Hide Small Amount Assets',
                         style: Theme.of(context)
                             .textTheme
                             .display2

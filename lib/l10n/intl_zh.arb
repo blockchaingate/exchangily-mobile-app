@@ -1,9 +1,9 @@
 {
-    "title": "系统默认",
+    "title": "亿币Exchangily",
     "@title": {
-      "description": "Title for the Exchangily App",
-      "type": "text",
-      "placeholders": {}
+        "description": "Title for the Exchangily App",
+        "type": "text",
+        "placeholders": {}
     },
     "confirm": "确认",
     "@confirm": {
@@ -11,10 +11,250 @@
         "type": "text",
         "placeholders": {}
     },
-    "backupMnemonic": "备份种子代码",
+    "cancel": "取消",
+    "@cancel": {
+        "description": "cancel_button",
+        "type": "text",
+        "placeholders": {}
+    },
+    "close": "关闭",
+    "@close": {
+        "description": "close_button",
+        "type": "text",
+        "placeholders": {}
+    },
+    "backupMnemonic": "备份助记词",
     "@backupMnemonic": {
         "description": "backup_mnemonic",
         "type": "text",
         "placeholders": {}
-    }
+    },
+    "send": "发送",
+    "@send": {
+        "description": "send_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "receive": "接收",
+    "@receive": {
+        "description": "receive_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "sent": "已发送",
+    "@sent": {
+        "description": "sent_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "received": "已收到",
+    "@received": {
+        "description": "received_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "transactions": "交易",
+    "@transactions": {
+        "description": "transaction_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "addressCopied": "地超已拷贝",
+    "@addressCopied": {
+        "description": "receive_copied_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "copyAddress": "拷贝地地",
+    "@copyAddress": {
+        "description": "receive_copy_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "addressShare": "分享地址",
+    "@addressShare": {
+        "description": "receive_share_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "seed": "助记词",
+    "@seed": {
+        "description": "wallet_setup_menmonic_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "scanBarCode": "扫描二维码",
+    "@scanBarCode": {
+        "description": "send_scan_barcode_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "backupYourSeed": "备份助记词",
+    "@backupYourSeed": {
+        "description": "wallet_setup_mnemonic_backup_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "importSeed": "导入助记词",
+    "@importSeed": {
+        "description": "wallet_setup_mnemonic",
+        "type": "text",
+        "placeholders": {}
+    },
+    "importSeedHint": "请按序输入助记词",
+    "@importSeedHint": {
+        "description": "wallet_setup_mnemonic_info",
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcomeText": "欢迎使用亿币eXchangily去中心化交易所APP，首先请创建新钱包或导入已有钱包，然后才能开始使用。",
+    "@welcomeText": {
+        "description": "wallet_setup_welcome_title",
+        "type": "text",
+        "placeholders": {}
+    },
+    "newWallet": "创建新钱包",
+    "@newWallet": {
+        "description": "wallet_setup_create_wallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "importWallet": "导入已有钱包",
+    "@importWallet": {
+        "description": "wallet_setup_import_wallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "sendError": "发生错误，请稍候再试。",
+    "@sendError": {
+        "description": "send_screen_error_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "enterAmount": "输入数量",
+    "@enterAmount": {
+        "description": "send_amount_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "gasFee": "燃料费",
+    "@gasFee": {
+        "description": "send_gas_fee",
+        "type": "text",
+        "placeholders": {}
+    },
+    "enterAddress": "输入地址",
+    "@enterAddress": {
+        "description": "enter_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "invalidAddress": "输入的地址无效",
+    "@invalidAddress": {
+        "description": "send_invalid_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "advance": "高级",
+    "@advance": {
+        "description": "advance",
+        "type": "text",
+        "placeholders": {}
+    },
+    "addressMising": "请输入地址",
+    "@addressMising": {
+        "description": "send_enter_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "amountMissing": "请输入数量",
+    "@amountMissing": {
+        "description": "send_enter_amount",
+        "type": "text",
+        "placeholders": {}
+    },
+    "insufficientBalance": "余额不足",
+    "@insufficientBalance": {
+        "description": "send_insufficient_balance",
+        "type": "text",
+        "placeholders": {}
+    },
+    "wallet": "钱包",
+    "@wallet": {
+        "description": "app_nav_bar_wallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "market": "市场",
+    "@market": {
+        "description": "market",
+        "type": "text",
+        "placeholders": {}
+    },
+    "trade": "交易",
+    "@trade": {
+        "description": "app_nav_bar_trade",
+        "type": "text",
+        "placeholders": {}
+    },
+    "settings": "设置",
+    "@settings": {
+        "description": "app_nav_bar_settings",
+        "type": "text",
+        "placeholders": {}
+    },
+    "totalBalance": "总额",
+    "@totalBalance": {
+        "description": "wallet_feature_total_balance",
+        "type": "text",
+        "placeholders": {}
+    },
+    "assetInExchange": "交易所资产",
+    "@assetInExchange": {
+        "description": "wallet_feature_asset_in_Exchange",
+        "type": "text",
+        "placeholders": {}
+    },
+    "moveAndTrade": "存款及交易",
+    "@moveAndTrade": {
+        "description": "wallet_feature_move_and_trade",
+        "type": "text",
+        "placeholders": {}
+    },
+    "withdrawToWallet": "转款至钱包",
+    "@withdrawToWallet": {
+        "description": "wallet_feature_withdraw_to_wallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "saveAndShareQrCode": "保存并共享二维码",
+    "@saveAndShareQrCode": {
+        "description": "wallet_feature_save_and_share_qr_code",
+        "type": "text",
+        "placeholders": {}
+    },
+    "hideSmallAmountAssets": "隐藏小额资产",
+    "@hideSmallAmountAssets": {
+        "description": "total_balance_screen_hide_small_Amount_assets",
+        "type": "text",
+        "placeholders": {}
+    },
+    "assetsInExchange": "交易所资产",
+    "@assetsInExchange": {
+        "description": "total_balance_screen_assets_in_exchange",
+        "type": "text",
+        "placeholders": {}
+    },
+    "secureYourWallet": "安全保管您的钱包",
+    "@secureYourWallet": {
+        "description": "wallet_setup_secure_your_wallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "somethingWentWrong": "发生错误",
+    "@somethingWentWrong": {
+        "description": "wallet_setup_something_went_wrong",
+        "type": "text",
+        "placeholders": {}
+    },
 }
