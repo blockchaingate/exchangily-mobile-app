@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-02T16:49:21.405390",
+  "@@last_modified": "2020-01-02T20:04:45.846785",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -15,6 +15,12 @@
   "backupMnemonic": "Backup Mnemonic",
   "@backupMnemonic": {
     "description": "backup_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "send": "Send",
+  "@send": {
+    "description": "send",
     "type": "text",
     "placeholders": {}
   }

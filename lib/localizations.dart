@@ -38,6 +38,10 @@ class AppLocalizations {
     return Intl.message('Backup Mnemonic',
         name: 'backupMnemonic', desc: 'backup_mnemonic');
   }
+
+  String get send {
+    return Intl.message('Send', name: 'send', desc: 'send');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

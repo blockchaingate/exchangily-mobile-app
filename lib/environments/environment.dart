@@ -1,12 +1,10 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
 
 const bool isProduction = false;
-const bool isLocal = true;
-Map devConfig =  {
+const bool isLocal = false;
+Map devConfig = {
   "chains": {
-    "BTC": {
-      "network": testnet
-    },
+    "BTC": {"network": testnet},
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
@@ -43,9 +41,7 @@ Map devConfig =  {
 
 Map productionConfig = {
   "chains": {
-    "BTC": {
-      "network": bitcoin
-    },
+    "BTC": {"network": bitcoin},
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',

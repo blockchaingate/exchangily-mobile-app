@@ -33,8 +33,10 @@ class WalletSetupScreen extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: Container(
-                    margin: EdgeInsets.only(right: 2),
+                    margin: EdgeInsets.only(right: 5),
                     child: RaisedButton(
+                      elevation: 5,
+                      focusElevation: 5,
                       child: Text('Create Wallet',
                           style: Theme.of(context).textTheme.display3),
                       onPressed: () {
@@ -45,6 +47,7 @@ class WalletSetupScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: RaisedButton(
+                    elevation: 5,
                     shape: StadiumBorder(
                         side: BorderSide(color: globals.white, width: 1)),
                     color: globals.secondaryColor,

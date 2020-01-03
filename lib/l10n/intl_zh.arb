@@ -256,5 +256,4 @@
         "description": "wallet_setup_something_went_wrong",
         "type": "text",
         "placeholders": {}
-    },
-}
+    }}

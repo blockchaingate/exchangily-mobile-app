@@ -27,13 +27,15 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
   Widget build(BuildContext context) {
     final List<WalletInfo> walletInfo = widget.walletInfo;
     return BaseScreen<TotalBalancesScreenState>(
-        onModelReady: (model) {
+        onModelReady: (model) async {
           model.totalUsdBal();
-          model.gasBalance();
+          model.walletInfo = widget.walletInfo;
+          model.exgAddress();
+          await model.gasBalance(model.addr);
         },
         builder: (context, model, child) => Scaffold(
               key: key,
-              drawer: AppDrawer(),
+              //  drawer: AppDrawer(),
               body: Column(
                 children: <Widget>[
                   _buildBackgroundAndLogoContainer(model),
@@ -45,6 +47,14 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
                   Container(
                       padding: EdgeInsets.only(left: 5, top: 2),
                       child: Gas(gasAmount: model.gasAmount)),
+                  // Container(
+                  //   child: IconButton(
+                  //     icon: Icon(Icons.assignment_late),
+                  //     onPressed: () {
+                  //       model.gasBalance(model.addr);
+                  //     },
+                  //   ),
+                  // ),
                   // Build Wallet List Container
                   Expanded(child: _buildWalletListContainer(walletInfo, model))
                 ],
@@ -186,10 +196,7 @@ class _TotalBalancesScreenState extends State<TotalBalancesScreen> {
               ),
               InkWell(
                   onTap: () async {
-                    await model.refreshBalance(widget.walletInfo);
-                    setState(() {
-                      model.totalUsdBal();
-                    });
+                    await model.refreshBalance();
                   },
                   child: model.state == ViewState.Busy
                       ? SizedBox(

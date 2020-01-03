@@ -21,8 +21,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "backupMnemonic" : MessageLookupByLibrary.simpleMessage("备份种子代码"),
+    "backupMnemonic" : MessageLookupByLibrary.simpleMessage("备份助记词"),
     "confirm" : MessageLookupByLibrary.simpleMessage("确认"),
-    "title" : MessageLookupByLibrary.simpleMessage("系统默认")
+    "send" : MessageLookupByLibrary.simpleMessage("发送"),
+    "title" : MessageLookupByLibrary.simpleMessage("亿币Exchangily")
   };
 }

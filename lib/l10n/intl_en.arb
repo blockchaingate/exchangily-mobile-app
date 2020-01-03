@@ -257,4 +257,16 @@
       "type": "text",
       "placeholders": {}
     },
+    "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character",
+    "@setPasswordConditions": {
+      "description": "wallet_setup_set_password_conditions",
+      "type": "text",
+      "placeholders": {}
+    },
+    "setPasswordNote": "Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet",
+    "@setPasswordNote": {
+      "description": "wallet_setup_set_password_note",
+      "type": "text",
+      "placeholders": {}
+    },    
   }
