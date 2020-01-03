@@ -173,23 +173,9 @@ Future getFabLockBalanceByAddress(String address) async {
       print(res.length);
       if(res != null && res.length == 2) {
         var values = res[1];
-        print('values=');
-        print(values);
-        print(values.length);
-        print('before');
         values.forEach((element) => {
           balance = balance + element.toDouble()
         });
-        print('after');
-        /*
-        for (var i = 0; i < values.length; i++) {
-          balance += values[i];
-          print('balanacccc');
-          print(balance);
-        }
-
-         */
-        print(balance);
         balance = balance / 1e8;
       }
 
