@@ -93,17 +93,22 @@ dependencies:
 
 dev_dependencies:
   intl_translation: "^0.17.0"
+  flutter_launcher_icons: "^0.7.3"
+
   flutter_test:
     sdk: flutter
 
 flutter:
   uses-material-design: true
-
   # module:
   #   androidX: true
   #   androidPackage: my.package
   #   iosBundleIdentifier: my.package
 
+flutter_icons:
+  image_path: "assets/images/launcher/icon.png"
+  android: true
+  ios: true
   assets:
     - assets/images/start-page/
     - assets/images/wallet-page/
