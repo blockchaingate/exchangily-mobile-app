@@ -35,7 +35,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.0"
+    version: "2.3.0"
   barcode_scan:
     dependency: "direct main"
     description:
@@ -281,7 +281,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.0"
+    version: "0.15.8"
   intl_translation:
     dependency: "direct dev"
     description:
@@ -358,14 +358,14 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.6"
+    version: "0.12.5"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.8"
+    version: "1.1.7"
   node_interop:
     dependency: transitive
     description:
@@ -407,7 +407,7 @@ packages:
       name: pattern_formatter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.0"
   pedantic:
     dependency: transitive
     description:
@@ -554,7 +554,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.11"
+    version: "0.2.5"
   typed_data:
     dependency: transitive
     description:
