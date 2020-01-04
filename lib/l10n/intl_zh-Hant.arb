@@ -269,15 +269,15 @@
         "type": "text",
         "placeholders": {}
     },
-    "warningForCreateMnumonic": "下面的12個助記詞，你您錢包的安全生命線，必需妥善備份，安全保管，不可丟失、遺忘或洩露給別人，不要截屏保存在手機裡，不要通過任何社交軟件(如Email、微信、QQ等)發送，只要有了這些助記詞，請完全擁有了您錢包的控制權，請切記之，務必妥善抄寫，認真保存，永遠不可丟失。",
-    "@warningForCreateMnumonic": {
-        "description": "Warning for mnumonic creation.",
+    "warningBackupMnemonic": "下面的12個助記詞，你您錢包的安全生命線，必需妥善備份，安全保管，不可丟失、遺忘或洩露給別人，不要截屏保存在手機裡，不要通過任何社交軟件(如Email、微信、QQ等)發送，只要有了這些助記詞，請完全擁有了您錢包的控制權，請切記之，務必妥善抄寫，認真保存，永遠不可丟失。",
+    "@warningBackupMnemonic": {
+        "description": "warning_backup_mnemonic",
         "type": "text",
         "placeholders": {}
     },
-    "warningForBackupMnumonic": "請按序重輸一遍這12個助記詞，以確認您已經準備地備份了它們。",
-    "@warningForBackupMnumonic": {
-        "description": "Warning for mnumonic backup.",
+    "warningImportOrConfirmMnemonic": "請按序重輸一遍這12個助記詞，以確認您已經準備地備份了它們。",
+    "@warningImportOrConfirmMnemonic": {
+        "description": "Warning_import_or_confirm_mnemonic",
         "type": "text",
         "placeholders": {}
     },
