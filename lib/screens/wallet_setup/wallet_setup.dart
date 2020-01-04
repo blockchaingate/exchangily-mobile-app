@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -19,11 +20,17 @@ class WalletSetupScreen extends StatelessWidget {
         children: <Widget>[
           // Logo Container
           Container(
-            height: 70,
+            height: 50,
             child: Image.asset('assets/images/start-page/logo.png'),
           ),
+          Container(
+              child: Text(
+            AppLocalizations.of(context).welcomeText,
+            style: Theme.of(context).textTheme.display2,
+          )),
           // Middle Graphics Container
           Container(
+            padding: EdgeInsets.all(25),
             child: Image.asset('assets/images/start-page/middle-design.png'),
           ),
 
@@ -37,7 +44,7 @@ class WalletSetupScreen extends StatelessWidget {
                     child: RaisedButton(
                       elevation: 5,
                       focusElevation: 5,
-                      child: Text('Create Wallet',
+                      child: Text(AppLocalizations.of(context).createWallet,
                           style: Theme.of(context).textTheme.display3),
                       onPressed: () {
                         Navigator.of(context).pushNamed('/backupMnemonic');
@@ -52,7 +59,7 @@ class WalletSetupScreen extends StatelessWidget {
                         side: BorderSide(color: globals.white, width: 1)),
                     color: globals.secondaryColor,
                     child: Text(
-                      'Import Wallet',
+                      AppLocalizations.of(context).importWallet,
                       style: Theme.of(context).textTheme.display3,
                     ),
                     onPressed: () {

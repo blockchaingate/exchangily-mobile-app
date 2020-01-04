@@ -77,9 +77,15 @@
       "type": "text",
       "placeholders": {}
     },
-    "seed": "Mnemonic",
-    "@seed": {
+    "mnemonic": "Mnemonic",
+    "@mnemonic": {
       "description": "wallet_setup_menmonic_text",
+      "type": "text",
+      "placeholders": {}
+    },
+    "seed": "seed",
+    "@seed": {
+      "description": "wallet_setup_seed_text",
       "type": "text",
       "placeholders": {}
     },
@@ -89,21 +95,21 @@
       "type": "text",
       "placeholders": {}
     },
-    "backupYourSeed": "Backup your mnemonic",
-    "@backupYourSeed": {
+    "backupYourMnemonic": "Backup your mnemonic",
+    "@backupYourMnemonic": {
       "description": "wallet_setup_mnemonic_backup_text",
       "type": "text",
       "placeholders": {}
     },
-    "importSeed": "Import mnemonic",
-    "@importSeed": {
+    "importMnemonic": "Import mnemonic",
+    "@importMnemonic": {
       "description": "wallet_setup_mnemonic",
       "type": "text",
       "placeholders": {}
     },
-    "importSeedHint": "Please enter your mnemonic below.",
-    "@importSeedHint": {
-      "description": "wallet_setup_mnemonic_info",
+    "importMnemonicHint": "Please enter your mnemonic below.",
+    "@importMnemonicHint": {
+      "description": "wallet_setup_mnemonic_hintr",
       "type": "text",
       "placeholders": {}
     },
@@ -268,5 +274,5 @@
       "description": "wallet_setup_set_password_note",
       "type": "text",
       "placeholders": {}
-    },    
+    },   
   }

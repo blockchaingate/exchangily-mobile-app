@@ -109,7 +109,7 @@ flutter:
     - assets/images/wallet-page/
 
 flutter_icons:
-  image_path: "assets/images/launcher/icon.png"
+  image_path: "assets/images/launcher/mobile-icon.png"
   android: true
   ios: true
   #  - lib/l10n/en.json

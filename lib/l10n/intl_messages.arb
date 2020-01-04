@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-02T20:04:45.846785",
+  "@@last_modified": "2020-01-03T19:07:27.635960",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -12,6 +12,18 @@
     "type": "text",
     "placeholders": {}
   },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "cancel",
+    "type": "text",
+    "placeholders": {}
+  },
+  "close": "Close",
+  "@close": {
+    "description": "close",
+    "type": "text",
+    "placeholders": {}
+  },
   "backupMnemonic": "Backup Mnemonic",
   "@backupMnemonic": {
     "description": "backup_mnemonic",
@@ -21,6 +33,90 @@
   "send": "Send",
   "@send": {
     "description": "send",
+    "type": "text",
+    "placeholders": {}
+  },
+  "receive": "Receive",
+  "@receive": {
+    "description": "receive",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sent": "Sent",
+  "@sent": {
+    "description": "sent",
+    "type": "text",
+    "placeholders": {}
+  },
+  "received": "Received",
+  "@received": {
+    "description": "received",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactions": "Transactions",
+  "@transactions": {
+    "description": "transactions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addressCopied": "Address Copied",
+  "@addressCopied": {
+    "description": "address_copied",
+    "type": "text",
+    "placeholders": {}
+  },
+  "copyAddress": "Copy Address",
+  "@copyAddress": {
+    "description": "copy_Address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addressShare": "Address Share",
+  "@addressShare": {
+    "description": "address_share",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mnemonic": "Mnemonic",
+  "@mnemonic": {
+    "description": "mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "seed": "Seed",
+  "@seed": {
+    "description": "seed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scanBarCode": "Scan Bar Code",
+  "@scanBarCode": {
+    "description": "scan_bar_code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupYourMnemonic": "Backup Your Mnemonic",
+  "@backupYourMnemonic": {
+    "description": "backup_your_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "importMnemonic": "Import Mnemonic",
+  "@importMnemonic": {
+    "description": "import_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "importMnemonicHint": "Import Mnemonic Hint",
+  "@importMnemonicHint": {
+    "description": "import_mnemonic_hint",
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeText": "Welcome to Exchangily. To begin you may create a new wallet or import an existing one.",
+  "@welcomeText": {
+    "description": "welcomeText",
     "type": "text",
     "placeholders": {}
   }
