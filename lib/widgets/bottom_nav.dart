@@ -8,8 +8,9 @@ class AppBottomNav extends StatelessWidget {
     final double paddingValue = 4; // change space between icon and title text
     final double iconSize = 25; // change icon size
     return BottomNavigationBar(
+      elevation: 10,
       unselectedItemColor: globals.grey,
-      backgroundColor: Color.fromRGBO(28, 28, 45, 1),
+      //  backgroundColor: Color.fromRGBO(28, 28, 45, .95),
       selectedItemColor: globals.primaryColor,
       showUnselectedLabels:
           true, // show label below the icon even when not selected

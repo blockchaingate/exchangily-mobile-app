@@ -63,6 +63,7 @@ class WalletService {
       'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
     }
     //log.w(randomMnemonic);
+
     return Future.value(randomMnemonic);
   }
 
@@ -146,14 +147,10 @@ class WalletService {
 
 // Future GetAllCoins
   Future<List<WalletInfo>> getAllCoins() async {
-    log.w('enter in getallbalances');
-    log.w('wallet info length ${_walletInfo.length}');
     _walletInfo.clear();
-    log.w('Cleared wallet info length ${_walletInfo.length}');
     log.w('Seed in wallet service get all balanced method $seed');
     root = bip32.BIP32.fromSeed(seed);
     var usdVal = await _api.getCoinsUsdValue();
-    log.w('USD VAL $usdVal');
     double currentBtcUsdValue = usdVal['bitcoin']['usd'];
     double currentEthUsdValue = usdVal['ethereum']['usd'];
     double currentFabUsdValue = usdVal['fabcoin']['usd'];

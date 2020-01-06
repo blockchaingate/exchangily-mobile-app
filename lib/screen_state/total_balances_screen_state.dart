@@ -15,19 +15,34 @@ class TotalBalancesScreenState extends BaseState {
   double totalUsdBalance = 0;
   var coinUsdBalance;
   double gasAmount = 0;
+  String addr = '';
 
-  Future refreshBalance(List<WalletInfo> _walletInfo) async {
+  exgAddress() {
+    for (var i = 0; i < walletInfo.length; i++) {
+      String tName = walletInfo[i].tickerName;
+      if (tName == 'EXG') {
+        addr = walletInfo[i].address;
+        log.d(addr);
+        return addr;
+      }
+    }
+  }
+
+  Future refreshBalance() async {
     setState(ViewState.Busy);
     walletService.totalUsdBalance.clear();
-    log.w(_walletInfo.length);
-    int length = _walletInfo.length;
+    log.w(walletInfo.length);
+    int length = walletInfo.length;
     List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
-    if (_walletInfo.isNotEmpty) {
+    if (walletInfo.isNotEmpty) {
       for (var i = 0; i < length; i++) {
-        String tName = _walletInfo[i].tickerName;
-        String address = _walletInfo[i].address;
-        String name = _walletInfo[i].name;
-
+        String tName = walletInfo[i].tickerName;
+        String address = walletInfo[i].address;
+        String name = walletInfo[i].name;
+        if (tName == 'EXG') {
+          addr = walletInfo[i].address;
+          log.d(addr);
+        }
         var balance = await walletService.coinBalanceByAddress(
             tName, address, tokenType[i]);
         double bal = balance['balance'];
@@ -36,23 +51,23 @@ class TotalBalancesScreenState extends BaseState {
         walletService.calculateCoinUsdBalance(marketPrice, bal);
         coinUsdBalance = walletService.coinUsdBalance;
         log.w('usd Value $name - $coinUsdBalance');
-        _walletInfo[i].availableBalance = bal;
+        walletInfo[i].availableBalance = bal;
         if (lockedBal == null) {
-          _walletInfo[i].lockedBalance = 0.0;
+          walletInfo[i].lockedBalance = 0.0;
         } else {
-          _walletInfo[i].lockedBalance = lockedBal;
+          walletInfo[i].lockedBalance = lockedBal;
         }
         if (coinUsdBalance == null) {
-          _walletInfo[i].usdValue = 0.0;
+          walletInfo[i].usdValue = 0.0;
         } else {
-          _walletInfo[i].usdValue = coinUsdBalance;
+          walletInfo[i].usdValue = coinUsdBalance;
         }
       }
 
       totalUsdBal();
-      gasBalance();
+      gasBalance(addr);
       setState(ViewState.Idle);
-      return _walletInfo;
+      return walletInfo;
     } else {
       setState(ViewState.Idle);
       log.e('In else list 0');
@@ -65,11 +80,15 @@ class TotalBalancesScreenState extends BaseState {
     return totalUsdBalance;
   }
 
-  gasBalance() async {
-    var bal = await _api.getGasBalance();
-    var newBal = int.parse(bal['balance']['FAB']);
-    gasAmount = newBal / 1e18;
-    log.w('Gas bal $gasAmount');
-    return gasAmount;
+  gasBalance(addr) async {
+    await _api.getGasBalance(addr).then((res) {
+      var newBal = int.parse(res['balance']['FAB']);
+      gasAmount = newBal / 1e18;
+      log.w('Gas bal $gasAmount');
+      return gasAmount;
+    }).catchError((onError) {
+      log.w('On error $onError');
+      return gasAmount = 0.0;
+    });
   }
 }

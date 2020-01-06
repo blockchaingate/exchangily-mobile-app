@@ -52,8 +52,7 @@ class SendScreenState extends BaseState {
         return txHash;
       }).catchError((err) {
         log.e('In Catch error - $err');
-        errorMessage = err.toString();
-        log.e('Error Message - $errorMessage');
+        errorMessage = 'Transaction Failed';
         setState(ViewState.Idle);
       }).timeout(Duration(seconds: 15), onTimeout: () {
         log.e('In time out');

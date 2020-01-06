@@ -21,8 +21,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "backupMnemonic" : MessageLookupByLibrary.simpleMessage("备份种子代码"),
+    "addressCopied" : MessageLookupByLibrary.simpleMessage("地超已拷贝"),
+    "addressShare" : MessageLookupByLibrary.simpleMessage("分享地址"),
+    "backupMnemonic" : MessageLookupByLibrary.simpleMessage("备份助记词"),
+    "cancel" : MessageLookupByLibrary.simpleMessage("取消"),
+    "close" : MessageLookupByLibrary.simpleMessage("关闭"),
     "confirm" : MessageLookupByLibrary.simpleMessage("确认"),
-    "title" : MessageLookupByLibrary.simpleMessage("系统默认")
+    "copyAddress" : MessageLookupByLibrary.simpleMessage("拷贝地地"),
+    "receive" : MessageLookupByLibrary.simpleMessage("接收"),
+    "received" : MessageLookupByLibrary.simpleMessage("已收到"),
+    "scanBarCode" : MessageLookupByLibrary.simpleMessage("扫描二维码"),
+    "seed" : MessageLookupByLibrary.simpleMessage("助记词"),
+    "send" : MessageLookupByLibrary.simpleMessage("发送"),
+    "sent" : MessageLookupByLibrary.simpleMessage("已发送"),
+    "title" : MessageLookupByLibrary.simpleMessage("亿币Exchangily"),
+    "transactions" : MessageLookupByLibrary.simpleMessage("交易"),
+    "welcomeText" : MessageLookupByLibrary.simpleMessage("欢迎使用亿币eXchangily去中心化交易所APP，首先请创建新钱包或导入已有钱包，然后才能开始使用。")
   };
 }

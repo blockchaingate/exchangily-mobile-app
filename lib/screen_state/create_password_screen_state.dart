@@ -38,6 +38,7 @@ class CreatePasswordScreenState extends BaseState {
       log.w('wallet info length ${_walletInfo.length}');
       setState(ViewState.Idle);
     }
+    errorMessage = '';
     return _walletInfo;
   }
 

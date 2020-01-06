@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -12,18 +13,18 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           // Logo Container
-          new Container(
+          Container(
             height: 70,
             margin: EdgeInsets.only(bottom: 10),
             child: Image.asset('assets/images/start-page/logo.png'),
           ),
           // Middle Graphics Container
-          new Container(
+          Container(
             padding: EdgeInsets.all(20),
             child: Image.asset('assets/images/start-page/middle-design.png'),
           ),
           // Language Text and Icon Container
-          new Container(
+          Container(
             margin: EdgeInsets.only(bottom: 10),
             child: Row(
               children: <Widget>[
@@ -53,6 +54,7 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
                   RaisedButton(
                     child: Text('English'),
                     onPressed: () {
+                      AppLocalizations.load(Locale('en', 'US'));
                       Navigator.of(context).pushNamed('/walletSetup');
                     },
                   ),
@@ -63,7 +65,10 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
                             BorderSide(color: globals.primaryColor, width: 2)),
                     color: globals.secondaryColor,
                     child: Text('中文'),
-                    onPressed: () {},
+                    onPressed: () {
+                      AppLocalizations.load(Locale('zh', 'ZH'));
+                      Navigator.of(context).pushNamed('/walletSetup');
+                    },
                   )
                 ]),
           )

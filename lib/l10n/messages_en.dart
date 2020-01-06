@@ -21,8 +21,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "backupSeedPhrase" : MessageLookupByLibrary.simpleMessage("Backup Seed Phrase"),
+    "backupMnemonic" : MessageLookupByLibrary.simpleMessage("Backup Mnemonic"),
     "confirm" : MessageLookupByLibrary.simpleMessage("Confirm"),
+    "send" : MessageLookupByLibrary.simpleMessage("Send"),
     "title" : MessageLookupByLibrary.simpleMessage("Exchangily")
   };
 }

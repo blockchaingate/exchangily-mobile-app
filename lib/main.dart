@@ -23,11 +23,9 @@ void main() {
   // Force user to use only portrait mode until the development of other screen size design
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(
-        //   DevicePreview(builder: (context) =>
-        MyApp()
+    runApp(DevicePreview(builder: (context) => MyApp()
         // )
-        );
+        ));
   });
 }
 

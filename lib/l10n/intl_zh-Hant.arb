@@ -257,4 +257,28 @@
         "type": "text",
         "placeholders": {}
     },
+    "setPasswordConditions": "請輸入密碼以保護您的助記詞，密碼需至少8位，必需至少包含一個大寫字母，一個小寫字母，一個數字，一個特殊字符(如！@、#、¥、%、 &等)",
+    "@setPasswordConditions": {
+        "description": "wallet_setup_set_password_conditions",
+        "type": "text",
+        "placeholders": {}
+    },
+    "setPasswordNote": "注意：在重設密碼前，必需確認你有助記詞備份，助記詞是您錢包的安全生命線，必需可靠地備份，並安全地保管",
+    "@setPasswordNote": {
+        "description": "wallet_setup_set_password_note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "warningBackupMnemonic": "下面的12個助記詞，你您錢包的安全生命線，必需妥善備份，安全保管，不可丟失、遺忘或洩露給別人，不要截屏保存在手機裡，不要通過任何社交軟件(如Email、微信、QQ等)發送，只要有了這些助記詞，請完全擁有了您錢包的控制權，請切記之，務必妥善抄寫，認真保存，永遠不可丟失。",
+    "@warningBackupMnemonic": {
+        "description": "warning_backup_mnemonic",
+        "type": "text",
+        "placeholders": {}
+    },
+    "warningImportOrConfirmMnemonic": "請按序重輸一遍這12個助記詞，以確認您已經準備地備份了它們。",
+    "@warningImportOrConfirmMnemonic": {
+        "description": "Warning_import_or_confirm_mnemonic",
+        "type": "text",
+        "placeholders": {}
+    },
 }
