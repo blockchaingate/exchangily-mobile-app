@@ -66,10 +66,11 @@ class Api {
 
   // Post Btc Transaction
   Future postBtcTx(String txHex) async {
-    var url = btcBaseUrl + 'sendrawtransaction/' + txHex;
+    var url = btcBaseUrl + 'postrawtransaction';
     var json;
     try {
-      var response = await client.get(url);
+      var data = {'rawtx': txHex};
+      var response = await client.post(url, body: data);
       json = jsonDecode(response.body);
     } catch (e) {}
     var txHash = '';
@@ -120,12 +121,17 @@ class Api {
 
   // Fab Post Tx
   Future postFabTx(String txHex) async {
-    var url = fabBaseUrl + 'sendrawtransaction/' + txHex;
+    var url = fabBaseUrl + 'postrawtransaction';
     var txHash = '';
     var errMsg = '';
     if (txHex != '') {
+      var data = {'rawtx': txHex};
       try {
-        var response = await client.get(url);
+        print('data=');
+        print(data);
+        var response = await client.post(url,body: data);
+        print('response from postFabTx=');
+        print(response.body);
         var json = jsonDecode(response.body);
         if (json != null) {
           if ((json['txid'] != null) && (json['txid'] != '')) {
