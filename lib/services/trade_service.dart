@@ -19,4 +19,9 @@ mixin TradeService {
     return IOWebSocketChannel.connect(wsString);
   }
 
+  getTradeListChannel(String pair) {
+    var wsString = environment['websocket'] + 'trades'+ '@' + pair;
+    print('wsString=' + wsString);
+    return IOWebSocketChannel.connect(wsString);
+  }
 }

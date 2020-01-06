@@ -137,20 +137,27 @@ class KlineBloc extends KlineBlocBase {
   }
 
   void _calculateCurrentKlineDataLimit() {
-    double _priceMax = -double.infinity;
-    double _priceMin = double.infinity;
-    double _pMax = -double.infinity;
-    double _pMin = double.infinity;
-    double _volumeMax = -double.infinity;
+    double _priceMax = 0.0;
+    double _priceMin = 0.0;
+    double _pMax = 0.0;
+    double _pMin = 0.0;
+    double _volumeMax = 0.0;
+    print('_priceMax before loop=' + _priceMax.toString());
     for (var item in klineCurrentList) {
       _volumeMax = max(item.vol, _volumeMax);
 
+      print('item.high====' + item.high.toString());
+      print('_priceMax before=' + _priceMax.toString());
       _priceMax = max(_priceMax, item.high);
       _priceMin = min(_priceMin, item.low);
 
       _pMax = max(_pMax, item.high);
       _pMin = min(_pMin, item.low);
 
+      print('_priceMax after=' + _priceMax.toString());
+      print('_pMax=' + _pMax.toString());
+
+      /*
       /// 与x日均线数据对比计算最高最低价格
       if (item.priceMa1 != null) {
         _priceMax = max(_priceMax, item.priceMa1);
@@ -164,6 +171,8 @@ class KlineBloc extends KlineBlocBase {
         _priceMax = max(_priceMax, item.priceMa3);
         _priceMin = min(_priceMin, item.priceMa3);
       }
+
+       */
       pMax = _pMax;
       pMin = _pMin;
       priceMax = _priceMax;

@@ -20,7 +20,7 @@ class MarketModel {
   int id;
 
   //不同的类使用不同的mixin即可
-  factory MarketModel.fromJson(Map<String, dynamic> json) =>
+  factory MarketModel.fromJson(json) =>
       _marketModelFromJson(json);
   Map<String, dynamic> toJson() => _marketModelToJson(this);
 }
@@ -30,19 +30,19 @@ class MarketData {
   MarketData(this.data);
   @JsonKey(name: 'data')
   List<MarketModel> data;
-  factory MarketData.fromJson(Map<String, dynamic> json) =>
+  factory MarketData.fromJson(json) =>
       _marketDataFromJson(json);
   Map<String, dynamic> toJson() => _marketDataToJson(this);
 }
 
-MarketModel _marketModelFromJson(Map<String, dynamic> json) {
+MarketModel _marketModelFromJson(json) {
   return MarketModel(
-      (json['open'] as num)?.toDouble(),
-      (json['high'] as num)?.toDouble(),
-      (json['low'] as num)?.toDouble(),
-      (json['close'] as num)?.toDouble(),
-      (json['amount'] as num)?.toDouble(),
-      (json['id'] as num)?.toInt());
+      json['open'],
+      json['high'],
+      json['low'],
+      json['close'],
+      json['volume'],
+      (json['time'] as num)?.toInt());
 }
 
 Map<String, dynamic> _marketModelToJson(MarketModel model) => <String, dynamic>{
@@ -54,8 +54,8 @@ Map<String, dynamic> _marketModelToJson(MarketModel model) => <String, dynamic>{
   'id': model.id
 };
 
-MarketData _marketDataFromJson(Map<String, dynamic> json) {
-  return MarketData((json['data'] as List)
+MarketData _marketDataFromJson(json) {
+  return MarketData((json as List)
       ?.map((e) =>
   e == null ? null : MarketModel.fromJson(e as Map<String, dynamic>))
       ?.toList());

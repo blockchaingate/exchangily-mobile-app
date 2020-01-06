@@ -5,6 +5,7 @@ import '../../utils/decoder.dart';
 import 'package:web_socket_channel/io.dart';
 import '../../models/price.dart';
 import '../../services/trade_service.dart';
+
 class Market extends StatefulWidget{
   Market({Key key}) : super(key: key);
 
@@ -12,7 +13,7 @@ class Market extends StatefulWidget{
   _MarketState createState() => _MarketState();
 }
 
-class _MarketState extends State<Market>  with TradeService{
+class _MarketState extends State<Market>  with TradeService {
   final GlobalKey<MarketOverviewState> _marketOverviewState = new GlobalKey<MarketOverviewState>();
   final GlobalKey<MarketDetailState> _marketDetailState = new GlobalKey<MarketDetailState>();
 
@@ -42,7 +43,7 @@ class _MarketState extends State<Market>  with TradeService{
       item.low = item.low / 1e18;
       item.change = 0;
       if(item.open > 0) {
-        item.change = (item.close - item.open) / item.open * 100;
+        item.change = ((item.close - item.open) / item.open * 100 * 10).round() / 10;
       }
     }
     _marketOverviewState.currentState.updatePrices(list);

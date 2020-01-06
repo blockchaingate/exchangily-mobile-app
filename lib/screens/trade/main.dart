@@ -1,14 +1,55 @@
 import "package:flutter/material.dart";
 import 'package:flutter/cupertino.dart';
 import "widgets//price.dart";
-import "widgets/state.dart";
 import "widgets/market.dart";
 import "../place_order/main.dart";
+import 'package:web_socket_channel/io.dart';
+import '../../services/trade_service.dart';
+import "widgets/kline.dart";
 
 enum SingingCharacter { lafayette, jefferson }
-class Trade extends StatelessWidget {
+class Trade extends StatefulWidget {
   String pair;
+
   Trade(this.pair);
+
+  @override
+  _TradeState createState() => _TradeState();
+}
+
+class _TradeState extends State<Trade>  with TradeService {
+  IOWebSocketChannel allTradesChannel;
+  IOWebSocketChannel allOrdersChannel;
+
+  @override
+  void initState() {
+    super.initState();
+    var pair = widget.pair.replaceAll(RegExp('/'), '');
+    print('pair = ' + pair);
+    allTradesChannel = getTradeListChannel(pair);
+    allTradesChannel.stream.listen(
+            (trades) {
+              //print('trades=');
+              //print(trades);
+        }
+    );
+
+    allOrdersChannel = getOrderListChannel(pair);
+    allOrdersChannel.stream.listen(
+            (orders) {
+             // print('orders=');
+          // print(orders);
+        }
+    );
+  }
+
+  @override
+  void dispose() {
+    allTradesChannel.sink.close();
+    allOrdersChannel.sink.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -24,14 +65,14 @@ class Trade extends StatelessWidget {
             }
           },
         ),
-        middle: Text(this.pair,style: TextStyle(color: Colors.white),),
+        middle: Text(widget.pair,style: TextStyle(color: Colors.white),),
         backgroundColor: Color(0XFF1f2233),
       ),
       backgroundColor: Color(0xFF1F2233),
       body:ListView(
         children: <Widget>[
           TradePrice(),
-          TradeState(),
+          KlinePage(pair: widget.pair),
           Trademarket()
         ],
       ),
@@ -47,7 +88,7 @@ class Trade extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => PlaceOrder(pair: pair, bidOrAsk: true)),
+                      MaterialPageRoute(builder: (context) => PlaceOrder(pair: widget.pair, bidOrAsk: true)),
                     );
                   },
                   child: Text(
@@ -62,7 +103,7 @@ class Trade extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => PlaceOrder(pair: pair, bidOrAsk: false)),
+                      MaterialPageRoute(builder: (context) => PlaceOrder(pair: widget.pair, bidOrAsk: false)),
                     );
                   },
                   child: Text(
