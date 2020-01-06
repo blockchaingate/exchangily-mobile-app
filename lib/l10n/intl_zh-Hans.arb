@@ -280,5 +280,5 @@
         "description": "Warning_import_or_confirm_mnemonic",
         "type": "text",
         "placeholders": {}
-    },
+    }
 }

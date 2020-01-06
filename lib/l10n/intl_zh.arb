@@ -113,8 +113,8 @@
         "type": "text",
         "placeholders": {}
     },
-    "newWallet": "创建新钱包",
-    "@newWallet": {
+    "createWallet": "创建新钱包",
+    "@createWallet": {
         "description": "wallet_setup_create_wallet",
         "type": "text",
         "placeholders": {}
@@ -280,5 +280,4 @@
         "description": "Warning_import_or_confirm_mnemonic",
         "type": "text",
         "placeholders": {}
-    },
-}
+    }}

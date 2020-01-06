@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -29,7 +30,8 @@ class _ConfirmMnemonictWalletScreenState
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
             centerTitle: true,
-            title: Text('Confirm Mnemonic'),
+            title: Text(AppLocalizations.of(context).confirm +
+                AppLocalizations.of(context).mnemonic),
             backgroundColor: globals.secondaryColor),
         body: Container(
           padding: EdgeInsets.all(10),

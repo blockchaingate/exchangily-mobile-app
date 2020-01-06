@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-03T19:07:27.635960",
+  "@@last_modified": "2020-01-03T20:20:56.919327",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -117,6 +117,162 @@
   "welcomeText": "Welcome to Exchangily. To begin you may create a new wallet or import an existing one.",
   "@welcomeText": {
     "description": "welcomeText",
+    "type": "text",
+    "placeholders": {}
+  },
+  "createWallet": "Create Wallet",
+  "@createWallet": {
+    "description": "create_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "importWallet": "Import Wallet",
+  "@importWallet": {
+    "description": "import_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sendError": "Send Error",
+  "@sendError": {
+    "description": "send_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterAmount": "Enter Amount",
+  "@enterAmount": {
+    "description": "enter_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gasFee": "Gas Fee",
+  "@gasFee": {
+    "description": "gas_fee",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterAddress": "Enter Address",
+  "@enterAddress": {
+    "description": "enter_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "invalidAddress": "Invalid Address",
+  "@invalidAddress": {
+    "description": "invalid_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "advance": "Advance",
+  "@advance": {
+    "description": "advance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addressMising": "Address Mising",
+  "@addressMising": {
+    "description": "address_mising",
+    "type": "text",
+    "placeholders": {}
+  },
+  "amountMissing": "Amount Missing",
+  "@amountMissing": {
+    "description": "amount_missing",
+    "type": "text",
+    "placeholders": {}
+  },
+  "insufficientBalance": "Insufficient Balance",
+  "@insufficientBalance": {
+    "description": "insufficient_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "wallet": " Wallet",
+  "@wallet": {
+    "description": "wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "market": "Market",
+  "@market": {
+    "description": "market",
+    "type": "text",
+    "placeholders": {}
+  },
+  "trade": "trade",
+  "@trade": {
+    "description": "trade",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalBalance": "Total Balance",
+  "@totalBalance": {
+    "description": "total_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assetInExchange": "Asset In Exchange",
+  "@assetInExchange": {
+    "description": "asset_in_exchange",
+    "type": "text",
+    "placeholders": {}
+  },
+  "moveAndTrade": "Move And Trade",
+  "@moveAndTrade": {
+    "description": "move_and_trade",
+    "type": "text",
+    "placeholders": {}
+  },
+  "withdrawToWallet": "Withdraw To Wallet",
+  "@withdrawToWallet": {
+    "description": "withdraw_to_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "saveAndShareQrCode": "Save and Share Qr Code",
+  "@saveAndShareQrCode": {
+    "description": "save_and_share_qr_code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "hideSmallAmountAssets": "Hide Small Amount Assets",
+  "@hideSmallAmountAssets": {
+    "description": "hide_small_amount_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assetsInExchange": "Assets In Exchange",
+  "@assetsInExchange": {
+    "description": "assets_in_exchange",
+    "type": "text",
+    "placeholders": {}
+  },
+  "secureYourWallet": "Secure Your Wallet",
+  "@secureYourWallet": {
+    "description": "secure_your_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character",
+  "@setPasswordConditions": {
+    "description": "setPasswordConditions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "setPasswordNote": "Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet",
+  "@setPasswordNote": {
+    "description": "set_password_note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "warningBackupMnemonic": "Below are the 12 words mnemonic to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet",
+  "@warningBackupMnemonic": {
+    "description": "warning_backup_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "warningImportOrConfirmMnemonic": "Please type in your 12 word mnemonic phrase in the correct sequence to confirm",
+  "@warningImportOrConfirmMnemonic": {
+    "description": "warning_import_or_confirm_mnemonic",
     "type": "text",
     "placeholders": {}
   }

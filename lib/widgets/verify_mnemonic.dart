@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class VerifyMnemonicWalletScreen extends StatelessWidget {
             children: <Widget>[
               Expanded(
                   child: Text(
-                'Please type in your 12 word mnemonic phrase in the correct sequence to confirm',
+                AppLocalizations.of(context).warningImportOrConfirmMnemonic,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline,
               )),

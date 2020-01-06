@@ -27,7 +27,7 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
           backgroundColor: globals.secondaryColor),
       body: Container(
         padding: EdgeInsets.all(10),
-        child: Column(
+        child: ListView(
           children: <Widget>[
             UIHelper.verticalSpaceMedium,
             Row(
@@ -41,7 +41,7 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
                     )),
                 Expanded(
                     child: Text(
-                  'Below are the 12 words mnemonic to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet',
+                  AppLocalizations.of(context).warningBackupMnemonic,
                   style: Theme.of(context).textTheme.headline,
                 )),
               ],

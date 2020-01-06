@@ -222,10 +222,10 @@ class AppLocalizations {
         name: 'secureYourWallet', desc: 'secure_your_wallet');
   }
 
-  String get somethingWentWrong {
-    return Intl.message('somethingWentWrong',
-        name: 'Something Went Wrong', desc: 'something_went_Wrong');
-  }
+  // String get somethingWentWrong {
+  //   return Intl.message('Something Went Wrong',
+  //       name: 'Something Went Wrong', desc: 'something_went_Wrong');
+  // }
 
   String get setPasswordConditions {
     return Intl.message(
@@ -239,6 +239,20 @@ class AppLocalizations {
         'Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet',
         name: 'setPasswordNote',
         desc: 'set_password_note');
+  }
+
+  String get warningBackupMnemonic {
+    return Intl.message(
+        'Below are the 12 words mnemonic to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet',
+        name: 'warningBackupMnemonic',
+        desc: 'warning_backup_mnemonic');
+  }
+
+  String get warningImportOrConfirmMnemonic {
+    return Intl.message(
+        'Please type in your 12 word mnemonic phrase in the correct sequence to confirm',
+        name: 'warningImportOrConfirmMnemonic',
+        desc: 'warning_import_or_confirm_mnemonic');
   }
 }
 

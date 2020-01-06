@@ -257,12 +257,6 @@
       "type": "text",
       "placeholders": {}
     },
-    "somethingWentWrong": "Something Went Wrong",
-    "@somethingWentWrong": {
-      "description": "wallet_setup_something_went_wrong",
-      "type": "text",
-      "placeholders": {}
-    },
     "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character",
     "@setPasswordConditions": {
       "description": "wallet_setup_set_password_conditions",
@@ -286,5 +280,5 @@
       "description": "Warning_import_or_confirm_mnemonic",
       "type": "text",
       "placeholders": {}
-    },
+    }
   }

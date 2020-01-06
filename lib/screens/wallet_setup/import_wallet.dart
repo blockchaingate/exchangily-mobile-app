@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/widgets/verify_mnemonic.dart';
@@ -40,7 +41,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
                 padding: EdgeInsets.all(15),
                 child: RaisedButton(
                   child: Text(
-                    'Confirm',
+                    AppLocalizations.of(context).confirm,
                     style: Theme.of(context).textTheme.button,
                   ),
                   onPressed: () {
