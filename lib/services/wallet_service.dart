@@ -58,10 +58,12 @@ class WalletService {
   Future<String> getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
     if (isLocal) {
-      randomMnemonic =
-          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+     randomMnemonic =
+    //'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+      'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
     }
-    log.w(randomMnemonic);
+    //log.w(randomMnemonic);
+
     return Future.value(randomMnemonic);
   }
 
@@ -514,10 +516,12 @@ class WalletService {
           var idx = utxo['idx'];
           var txid = utxo['txid'];
           var value = utxo['value'];
+          /*
           var isLocked = await isFabTransactionLocked(txid, idx);
           if (isLocked) {
             continue;
           }
+           */
           txb.addInput(txid, idx);
           receivePrivateKeyArr.add(privateKey);
           totalInput += value;
@@ -557,7 +561,9 @@ class WalletService {
       txb.addOutput(changeAddress, output1);
       txb.addOutput(toAddress, output2);
 
+      print('receivePrivateKeyArr.length=' + receivePrivateKeyArr.length.toString());
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+        print('i=' + i.toString());
         var privateKey = receivePrivateKeyArr[i];
         print('there we go');
         var alice = ECPair.fromPrivateKey(privateKey,
@@ -565,9 +571,13 @@ class WalletService {
         print('alice.network=');
         print(alice.network);
         txb.sign(i, alice);
+        print('enf for i');
       }
 
+      print('begin build()');
       var txHex = txb.build().toHex();
+
+      print('txHex=' + txHex);
       return {'txHex': txHex, 'errMsg': ''};
     }
   }

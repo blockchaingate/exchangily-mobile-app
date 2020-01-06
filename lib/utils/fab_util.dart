@@ -167,10 +167,7 @@ Future getFabLockBalanceByAddress(String address) async {
       DeployedContract(ContractAbi.fromJson(abiCode, 'FabLock'), contractAddr);
       final getLockerInfo = contract.function('getLockerInfo');
       var res = getLockerInfo.decodeReturnValues(balanceHex);
-      print('balanceHex=');
-      print(balanceHex);
-      print('res=');
-      print(res.length);
+
       if(res != null && res.length == 2) {
         var values = res[1];
         values.forEach((element) => {
