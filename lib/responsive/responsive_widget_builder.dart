@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/screens/screen_size_info.dart';
+import 'package:exchangilymobileapp/responsive/screen_size_info.dart';
 import 'package:exchangilymobileapp/utils/ui_utils.dart';
 import 'package:flutter/material.dart';
 

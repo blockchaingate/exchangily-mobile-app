@@ -317,24 +317,26 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
-          _receiverWalletAddressTextController.text = 'User Access Denied';
+          _receiverWalletAddressTextController.text =
+              'User Access Denied'; // add to localization pending
         });
       } else {
-        setState(() =>
-            _receiverWalletAddressTextController.text = 'Unknown error: $e');
+        setState(() => _receiverWalletAddressTextController.text =
+            'Unknown error: $e'); // add to localization pending
       }
     } on FormatException {
       setState(() {
         walletService.showInfoFlushbar(
-            'Scan Cancelled',
-            'User returned by pressing the back button',
+            'Scan Cancelled', // add to localization pending
+            'User returned by pressing the back button', // add to localization pending
             Icons.cancel,
             globals.red,
             context);
       });
     } catch (e) {
       setState(() {
-        _receiverWalletAddressTextController.text = 'Unknown error: $e';
+        _receiverWalletAddressTextController.text =
+            'Unknown error: $e'; // add to localization pending
       });
     }
   }
