@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 
 import '../../models/wallet.dart';
@@ -29,11 +30,10 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   GlobalKey _globalKey = new GlobalKey();
 
   Widget build(BuildContext context) {
-    log.i('Address ${widget.walletInfo.address}');
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text('Receive'),
+        title: Text(AppLocalizations.of(context).receive),
         centerTitle: true,
       ),
       body: Column(
@@ -80,7 +80,9 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                           errorStateBuilder: (context, err) {
                             return Container(
                               child: Center(
-                                child: Text('Uh oh! Something went wrong...',
+                                child: Text(
+                                    AppLocalizations.of(context)
+                                        .somethingWentWrong,
                                     textAlign: TextAlign.center),
                               ),
                             );
@@ -90,7 +92,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                 ),
               )),
           RaisedButton(
-              child: Text('Save and Share QR code'),
+              child: Text(AppLocalizations.of(context).saveAndShareQrCode),
               onPressed: () {
                 String receiveFileName = 'share.png';
                 getApplicationDocumentsDirectory().then((dir) {
@@ -141,7 +143,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Icon(Icons.content_copy),
-                  Text('copy address'),
+                  Text(AppLocalizations.of(context).copyAddress),
                 ],
               ),
               onPressed: () {
@@ -165,7 +167,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     Clipboard.setData(new ClipboardData(text: walletAddress));
     Flushbar(
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
-      title: 'Copied Successfully',
+      title: AppLocalizations.of(context).addressCopied,
       message: 'Address copied to the Clipboard',
       icon: Icon(
         Icons.done,

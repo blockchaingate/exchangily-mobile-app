@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -32,7 +33,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Secure your wallet'),
+          title: Text(AppLocalizations.of(context).secureYourWallet),
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
@@ -42,7 +43,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(
-                'Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character',
+                AppLocalizations.of(context).setPasswordConditions,
                 style: Theme.of(context).textTheme.headline,
                 textAlign: TextAlign.left,
               ),
@@ -60,7 +61,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     : _buildCreateNewWalletButton(model, context),
               ),
               Text(
-                'Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet',
+                AppLocalizations.of(context).setPasswordNote,
                 style: Theme.of(context)
                     .textTheme
                     .headline
@@ -158,7 +159,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           }
         },
         child: Text(
-          'Create New Wallet',
+          AppLocalizations.of(context).createWallet,
           style: Theme.of(context).textTheme.button,
         ),
       ),

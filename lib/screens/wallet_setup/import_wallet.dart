@@ -27,7 +27,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
             centerTitle: true,
-            title: Text('Import Wallet'),
+            title: Text(AppLocalizations.of(context).importWallet),
             backgroundColor: globals.secondaryColor),
         body: Container(
           padding: EdgeInsets.all(10),

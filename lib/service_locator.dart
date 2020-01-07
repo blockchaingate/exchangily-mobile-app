@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet_features_screen_state.dart';
 import 'package:exchangilymobileapp/services/api.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
@@ -22,4 +23,5 @@ void serviceLocator() {
   locator.registerFactory(() => TotalBalancesScreenState());
   locator.registerFactory(() => SendScreenState());
   locator.registerFactory(() => ConfirmMnemonicScreenState());
+  locator.registerFactory(() => WalletFeaturesScreenState());
 }

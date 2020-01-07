@@ -257,6 +257,12 @@
       "type": "text",
       "placeholders": {}
     },
+    "somethingWentWrong": "Something Went Wrong",
+    "@somethingWentWrong": {
+        "description": "wallet_setup_something_went_wrong",
+        "type": "text",
+        "placeholders": {}
+    },
     "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character",
     "@setPasswordConditions": {
       "description": "wallet_setup_set_password_conditions",
@@ -281,4 +287,61 @@
       "type": "text",
       "placeholders": {}
     }
+    "enterPassword": "Enter Password",
+    "@enterPassword": {
+      "description": "create_enter_password",
+      "type": "text",
+      "placeholders": {}
+    },
+    "confirmPassword": "Confirm Password",
+    "@confirmPassword": {
+      "description": "create_confirm_password",
+      "type": "text",
+      "placeholders": {}
+    },
+    "available": "Available",
+    "@available": {
+      "description": "total_balance_available",
+      "type": "text",
+      "placeholders": {}
+    },
+    "locked": "Locked",
+    "@locked": {
+      "description": "total_balance_locked",
+      "type": "text",
+      "placeholders": {}
+    },
+    "value": "Value",
+    "@value": {
+      "description": "total_balance_value",
+      "type": "text",
+      "placeholders": {}
+    }
+    "walletbalance": "Wallet Balance",
+    "@walletbalance": {
+      "description": "total_balance_wallet_balance",
+      "type": "text",
+      "placeholders": {}
+    },
+    "address": "Address",
+    "@address": {
+      "description": "receive_address",
+      "type": "text",
+      "placeholders": {}
+    },
+    "receiverWalletAddress": "Receiver Wallet Address",
+    "@receiverWalletAddress": {
+      "description": "send_screenreceiver_wallet_address",
+      "type": "text",
+      "placeholders": {}
+    }
+    "taphereToCopyTxId": "Tap here to copy TxId",
+    "@tapHereToCopyTxId": {
+      "description": "Tap here to copy TxId",
+      "type": "text",
+      "placeholders": {}
+    }
+
+    
+    
   }

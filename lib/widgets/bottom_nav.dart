@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
@@ -21,23 +22,23 @@ class AppBottomNav extends StatelessWidget {
               padding: EdgeInsets.only(
                   top:
                       paddingValue), // use to give top padding between icon and text
-              child: Text('Wallet')),
+              child: Text(AppLocalizations.of(context).wallet)),
         ),
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.chartBar, size: iconSize),
             title: Padding(
                 padding: EdgeInsets.only(top: paddingValue),
-                child: Text('Market'))),
+                child: Text(AppLocalizations.of(context).market))),
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.coins, size: iconSize),
             title: Padding(
                 padding: EdgeInsets.only(top: paddingValue),
-                child: Text('Trade'))),
+                child: Text(AppLocalizations.of(context).trade))),
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.cog, size: iconSize),
             title: Padding(
                 padding: EdgeInsets.only(top: paddingValue),
-                child: Text('Settings'))),
+                child: Text(AppLocalizations.of(context).settings))),
       ].toList(),
       onTap: (int idx) {
         switch (idx) {

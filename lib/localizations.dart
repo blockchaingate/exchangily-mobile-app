@@ -73,6 +73,16 @@ class AppLocalizations {
         name: 'addressCopied', desc: 'address_copied');
   }
 
+  String get address {
+    return Intl.message('Address', name: 'address', desc: 'receive_address');
+  }
+
+  String get receiverWalletAddress {
+    return Intl.message('Receiver Wallet Address',
+        name: 'receiverWalletAddress',
+        desc: 'send_screen_receiver_awallet_ddress');
+  }
+
   String get copyAddress {
     return Intl.message('Copy Address',
         name: 'copyAddress', desc: 'copy_Address');
@@ -182,6 +192,11 @@ class AppLocalizations {
     return Intl.message('trade', name: 'trade', desc: 'trade');
   }
 
+  String get settings {
+    return Intl.message('Settings',
+        name: 'settings', desc: 'bottom_nav_settings');
+  }
+
   String get totalBalance {
     return Intl.message('Total Balance',
         name: 'totalBalance', desc: 'total_balance');
@@ -222,10 +237,10 @@ class AppLocalizations {
         name: 'secureYourWallet', desc: 'secure_your_wallet');
   }
 
-  // String get somethingWentWrong {
-  //   return Intl.message('Something Went Wrong',
-  //       name: 'Something Went Wrong', desc: 'something_went_Wrong');
-  // }
+  String get somethingWentWrong {
+    return Intl.message('Something Went Wrong',
+        name: 'Something Went Wrong', desc: 'something_went_Wrong');
+  }
 
   String get setPasswordConditions {
     return Intl.message(
@@ -253,6 +268,39 @@ class AppLocalizations {
         'Please type in your 12 word mnemonic phrase in the correct sequence to confirm',
         name: 'warningImportOrConfirmMnemonic',
         desc: 'warning_import_or_confirm_mnemonic');
+  }
+
+  String get enterPassword {
+    return Intl.message('Enter Password',
+        name: 'enterPassword', desc: 'create_enter_password');
+  }
+
+  String get confirmPassword {
+    return Intl.message('Confirm Password',
+        name: 'confirmPassword', desc: 'create_confirm_password');
+  }
+
+  String get available {
+    return Intl.message('Available',
+        name: 'available', desc: 'total_balance_available');
+  }
+
+  String get locked {
+    return Intl.message('Locked', name: 'locked', desc: 'total_balance_locked');
+  }
+
+  String get value {
+    return Intl.message('Value', name: 'value', desc: 'total_balance_value');
+  }
+
+  String get walletbalance {
+    return Intl.message('Wallet Balance',
+        name: 'walletbalance', desc: 'total_balance_wallet_balance');
+  }
+
+  String get taphereToCopyTxId {
+    return Intl.message('Tap here to copy TxId',
+        name: 'taphereToCopyTxId', desc: 'taphereToCopyTxId');
   }
 }
 

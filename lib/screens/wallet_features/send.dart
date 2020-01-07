@@ -1,5 +1,6 @@
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -9,8 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'package:flushbar/flushbar.dart';
 import '../../logger.dart';
 import '../../shared/globals.dart' as globals;
 
@@ -46,7 +45,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           backgroundColor: globals.walletCardColor,
-          title: Text('Send'),
+          title: Text(AppLocalizations.of(context).send),
           centerTitle: true,
         ),
         body: SingleChildScrollView(
@@ -111,7 +110,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                               Padding(
                                   padding: EdgeInsets.only(right: 5),
                                   child: Icon(Icons.camera_enhance)),
-                              Text('Scan Barcode')
+                              Text(AppLocalizations.of(context).scanBarCode)
                             ],
                           ))
                     ],
@@ -157,7 +156,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                           child: Row(
                             children: <Widget>[
                               Text(
-                                'Balance: ' + '$bal',
+                                AppLocalizations.of(context).walletbalance +
+                                    '$bal',
                                 style: Theme.of(context).textTheme.headline,
                               ),
                               Padding(
@@ -188,7 +188,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                         child: Row(
                           children: <Widget>[
                             Text(
-                              'Gas Fee ',
+                              AppLocalizations.of(context).gasFee,
                               style: Theme.of(context)
                                   .textTheme
                                   .display3
@@ -213,7 +213,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                       Row(
                         children: <Widget>[
                           Text(
-                            'Advanced',
+                            AppLocalizations.of(context).advance,
                             style: Theme.of(context)
                                 .textTheme
                                 .display3
@@ -283,7 +283,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                   child: model.state == ViewState.Busy
                       ? CircularProgressIndicator()
                       : RaisedButton(
-                          child: Text('Send'),
+                          child: Text(AppLocalizations.of(context).send),
                           onPressed: () async {
                             model.txHash = '';
                             model.errorMessage = '';
