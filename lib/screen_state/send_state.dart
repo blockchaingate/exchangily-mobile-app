@@ -37,7 +37,7 @@ class SendScreenState extends BaseState {
           .sendTransaction(
               tickerName, seed, [0], toWalletAddress, amount, options, true)
           .then((res) {
-        log.e(res);
+        log.w(res);
         txHash = res["txHash"];
         errorMessage = res["errMsg"];
         if (txHash.isNotEmpty) {

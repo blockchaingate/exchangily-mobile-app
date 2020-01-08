@@ -58,9 +58,9 @@ class WalletService {
   Future<String> getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
     if (isLocal) {
-     randomMnemonic =
-    //'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-      'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
+      randomMnemonic =
+          //'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+          'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
     }
     //log.w(randomMnemonic);
 
@@ -561,7 +561,8 @@ class WalletService {
       txb.addOutput(changeAddress, output1);
       txb.addOutput(toAddress, output2);
 
-      print('receivePrivateKeyArr.length=' + receivePrivateKeyArr.length.toString());
+      print('receivePrivateKeyArr.length=' +
+          receivePrivateKeyArr.length.toString());
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         print('i=' + i.toString());
         var privateKey = receivePrivateKeyArr[i];
@@ -738,12 +739,8 @@ class WalletService {
         var res = await _api.postEthTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-        await Future.delayed(Duration(seconds: 7));
-        log.w('delay complete');
       } else {
         txHash = getTransactionHash(signed);
-        await Future.delayed(Duration(seconds: 7));
-        log.w('delay complete');
       }
     } else if (coin == 'FAB') {
       var res1 = await getFabTransactionHex(

@@ -157,7 +157,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                             children: <Widget>[
                               Text(
                                 AppLocalizations.of(context).walletbalance +
-                                    '$bal',
+                                    ' $bal',
                                 style: Theme.of(context).textTheme.headline,
                               ),
                               Padding(

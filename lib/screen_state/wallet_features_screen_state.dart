@@ -28,7 +28,7 @@ class WalletFeaturesScreenState extends BaseState {
     return features = [
       WalletFeatureName(AppLocalizations.of(context).receive,
           Icons.arrow_downward, 'receive', Colors.redAccent),
-      WalletFeatureName(AppLocalizations.of(context).seed, Icons.arrow_upward,
+      WalletFeatureName(AppLocalizations.of(context).send, Icons.arrow_upward,
           'send', Colors.lightBlue),
       WalletFeatureName(AppLocalizations.of(context).moveAndTrade,
           Icons.equalizer, 'moveToExchange', Colors.purple),
