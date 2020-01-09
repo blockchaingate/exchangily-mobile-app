@@ -7,7 +7,8 @@ class Price {
   double close;
   double volume;
   double change;
+  double changeValue;
 
-  Price(this.symbol, this.price, this.high, this.low, this.open, this.close, this.volume, this.change);
+  Price(this.symbol, this.price, this.high, this.low, this.open, this.close, this.volume, this.change, this.changeValue);
 
 }

@@ -69,7 +69,7 @@ class KlineBloc extends KlineBlocBase {
   int toIndex;
 
   KlineBloc() {
-    initData();
+    // initData();
     _klinePeriodSwitchStream.listen(periodSwitch);
   }
   void periodSwitch(String period) {}
@@ -88,8 +88,17 @@ class KlineBloc extends KlineBlocBase {
     if (dataList != null && dataList.length > 0) {
       klineTotalList.clear();
       klineTotalList =
-          KlineDataManager.calculateKlineData(YKChartType.MA, dataList);
+          KlineDataManager.calculateKlineData(YKChartType.Unknown, dataList);
       _klineListSink.add(klineTotalList);
+    }
+  }
+
+  void addToDataList(Market data) {
+    if(data != null) {
+      List<Market> list = List<Market>();
+      list.add(data);
+      var klineTotalList1 = KlineDataManager.calculateKlineData(YKChartType.Unknown, list);
+      klineTotalList.addAll(klineTotalList1);
     }
   }
 
@@ -142,20 +151,15 @@ class KlineBloc extends KlineBlocBase {
     double _pMax = 0.0;
     double _pMin = 0.0;
     double _volumeMax = 0.0;
-    print('_priceMax before loop=' + _priceMax.toString());
     for (var item in klineCurrentList) {
       _volumeMax = max(item.vol, _volumeMax);
 
-      print('item.high====' + item.high.toString());
-      print('_priceMax before=' + _priceMax.toString());
       _priceMax = max(_priceMax, item.high);
       _priceMin = min(_priceMin, item.low);
 
       _pMax = max(_pMax, item.high);
       _pMin = min(_pMin, item.low);
 
-      print('_priceMax after=' + _priceMax.toString());
-      print('_pMax=' + _pMax.toString());
 
       /*
       /// 与x日均线数据对比计算最高最低价格

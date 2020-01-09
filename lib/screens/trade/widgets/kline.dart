@@ -9,27 +9,42 @@ import 'dart:convert';
 import 'dart:io';
 import '../../../packages/model/klineModel.dart';
 import 'package:http/http.dart' as http;
-
+import '../../../services/trade_service.dart';
 class KlinePage extends StatefulWidget {
   KlinePage({Key key, this.pair}) : super(key: key);
 
   final String pair;
 
   @override
-  _KlinePageState createState() => _KlinePageState();
+  KlinePageState createState() => KlinePageState();
 }
 
-class _KlinePageState extends State<KlinePage> {
+class KlinePageState extends State<KlinePage> {
   @override
   Widget build(BuildContext context) {
-    KlinePageBloc bloc = KlinePageBloc();
+
+    var pair = widget.pair.replaceAll("/", "");
+
+    print('widget.pairrrr=');
+    print(pair);
+
+    KlinePageBloc bloc = KlinePageBloc(pair);
     return Container(
         child: KlinePageWidget(bloc)
     );
   }
+
+  updateTrades(trades) {
+
+  }
 }
 
-Future<String> getKlineData(String period) async {
+Future<String> getKlineData(String pair, String period) async {
+  if(pair == null) {
+    return '[]';
+  }
+  print('pair in getKlineData3333=');
+  print(pair);
   if (period == null) {
     period = '1m';
   } else {
@@ -41,7 +56,7 @@ Future<String> getKlineData(String period) async {
   //var url =
   //    'https://api.huobi.vn/market/history/kline?period=$period&size=449&symbol=btcusdt';
   print('pair=');
-  var url = environment["endpoints"]['kanban'] + 'klinedata/FABUSDT/' + period;
+  var url = environment["endpoints"]['kanban'] + 'klinedata/' + pair + '/' + period;
   print("url=" + url);
   String result;
   var response = await http.get(url);
@@ -54,24 +69,55 @@ Future<String> getKlineData(String period) async {
   return result;
 }
 
-class KlinePageBloc extends KlineBloc {
+class KlinePageBloc extends KlineBloc with TradeService {
+  String pair;
+  KlinePageBloc(String pa) {
 
-
+    this.pair = pa;
+    this.initData();
+  }
   @override
   void periodSwitch(String period) {
-    _getData(period);
+    this._getData(this.pair, period);
     super.periodSwitch(period);
   }
 
   @override
   void initData() {
-    _getData('1min');
+    print('this.pair=------------');
+    print(this.pair);
+    _getData(this.pair, '1min');
     super.initData();
   }
 
-  _getData(String period) async {
+  getDataFromStream() {
+    String pair = 'FABUSDT';
+    var tickerChannel = getTickerChannel(pair, '1m');
+    tickerChannel.stream.listen(
+            (tickers) {
+          //List<Market> list = List<Market>();
+
+          var json = jsonDecode(tickers);
+          var open = double.parse(json['open'])/1e18;
+          var high = double.parse(json['high'])/1e18;
+          var low = double.parse(json['low'])/1e18;
+          var close = double.parse(json['close'])/1e18;
+          var volume = double.parse(json['volume'].toString())/1e18;
+
+          var id = json['time'];
+          Market market =
+            Market(open, high, low, close, volume, id);
+          //list.add(market);
+          this.addToDataList(market);
+        }
+    );
+  }
+
+  _getData(String pair, String period) async {
+    print('pair in _getData=');
+    print(pair);
     this.showLoadingSinkAdd(true);
-    var result = await getKlineData('$period');
+    var result = await getKlineData(pair, '$period');
     //future.then((result) {
       final parseJson = json.decode(result);
       print('parseJson=');
@@ -117,6 +163,7 @@ class KlinePageBloc extends KlineBloc {
       }
       this.showLoadingSinkAdd(false);
       this.updateDataList(list);
+      this.getDataFromStream();
     //});
   }
 }

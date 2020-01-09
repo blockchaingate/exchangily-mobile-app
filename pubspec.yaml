@@ -84,8 +84,6 @@ dependencies:
   # rflutter Alert
   rflutter_alert: ^1.0.3
 
-  bignum: any
-
   # Share files
   share:
     git:

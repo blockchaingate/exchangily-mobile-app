@@ -41,7 +41,7 @@ class _MarketState extends State<Market>  with TradeService {
       item.price = item.price / 1e18;
       item.high = item.high / 1e18;
       item.low = item.low / 1e18;
-      item.change = 0;
+      item.change = 0.0;
       if(item.open > 0) {
         item.change = ((item.close - item.open) / item.open * 100 * 10).round() / 10;
       }
