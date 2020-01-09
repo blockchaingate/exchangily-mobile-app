@@ -47,7 +47,7 @@ class ChooseWalletLanguagePortrait extends StatelessWidget {
           ),
           // Middle Graphics Container
           Container(
-            width: orientation == Orientation.portrait ? 100 : 300,
+            width: orientation == Orientation.portrait ? 300 : 300,
             padding: EdgeInsets.all(20),
             child: Image.asset('assets/images/start-page/middle-design.png'),
           ),

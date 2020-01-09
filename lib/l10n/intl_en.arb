@@ -263,7 +263,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character",
+    "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using any of these !@#\$&*~",
     "@setPasswordConditions": {
       "description": "wallet_setup_set_password_conditions",
       "type": "text",

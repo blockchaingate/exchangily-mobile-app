@@ -139,23 +139,10 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           _confirmPassTextController.text = '';
           model.errorMessage = '';
           if (passSuccess) {
-            log.w('in if true');
             List<WalletInfo> _walletInfo = await model.getAllCoins();
 
-            if (_walletInfo == null) {
-              log.w('Navigating back to previous page as wallet info is null');
-              model.showNotification(context, 'No Data', 'Server Error');
-              Navigator.pop(context);
-              return null;
-            } else if (_walletInfo.length == 0) {
-              model.showNotification(
-                  context, 'Server Timeout Error', 'Please try again later');
-              Navigator.pop(context);
-              return null;
-            } else {
-              Navigator.pushNamed(context, '/totalBalance',
-                  arguments: _walletInfo);
-            }
+            Navigator.pushNamed(context, '/totalBalance',
+                arguments: _walletInfo);
           }
         },
         child: Text(

@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../shared/globals.dart' as globals;
@@ -22,6 +23,7 @@ class SendScreenState extends BaseState {
   String toAddress;
   double amount;
   WalletInfo walletInfo;
+  bool checkSendAmount = false;
 
   Future verifyPassword(tickerName, toWalletAddress, amount, context) async {
     log.w('dialog called');
@@ -88,17 +90,16 @@ class SendScreenState extends BaseState {
 
   checkFields(context) async {
     log.w(walletInfo.address);
+    log.w(walletInfo.availableBalance);
     if (toAddress == '') {
       log.w('Address $toAddress');
       walletService.showInfoFlushbar('Empty Address', 'Please enter an address',
           Icons.cancel, globals.red, context);
-    } else if (amount == null || amount > walletInfo.availableBalance) {
-      walletService.showInfoFlushbar(
-          'Invalid Amount',
-          'Please enter a valid send amount',
-          Icons.cancel,
-          globals.red,
-          context);
+    } else if (amount == null ||
+        !checkSendAmount ||
+        amount > walletInfo.availableBalance) {
+      walletService.showInfoFlushbar('Invalid Amount',
+          'Please enter a valid number', Icons.cancel, globals.red, context);
     } else {
       FocusScope.of(context).requestFocus(FocusNode());
       await verifyPassword(
@@ -106,6 +107,16 @@ class SendScreenState extends BaseState {
       // await updateBalance(widget.walletInfo.address);
       // widget.walletInfo.availableBalance = model.updatedBal['balance'];
     }
+  }
+
+  bool checkAmount(amount) {
+    // Pattern pattern = r'^\$|^(0|([1-9][0-9]{0,})|\.)(\\.[0-9]{0,})?\$';
+    Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
+    log.w(amount);
+    var res = RegexValidator(pattern).isValid(amount);
+    checkSendAmount = res;
+    log.w('check send amount $checkSendAmount');
+    return checkSendAmount;
   }
 
   updateBalance(String address) async {

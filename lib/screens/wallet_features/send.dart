@@ -4,13 +4,12 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/screen_state/send_state.dart';
+import 'package:exchangilymobileapp/screen_state/send_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../logger.dart';
 import '../../shared/globals.dart' as globals;
 
 class SendWalletScreen extends StatefulWidget {
@@ -37,7 +36,6 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('Send');
     double bal = widget.walletInfo.availableBalance;
     String coinName = widget.walletInfo.tickerName;
 
@@ -131,25 +129,34 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                       children: <Widget>[
                         TextField(
                           controller: _sendAmountTextController,
-                          onEditingComplete: () {
-                            print('complete editring');
+                          onChanged: (String amount) {
+                            // checkSendAmount does not directly work if you use it in if as condition so setting state here to make it work
+                            setState(() {
+                              model.checkSendAmount = model.checkAmount(amount);
+                            });
                           },
                           keyboardType:
                               TextInputType.number, // numnber keyboard
-                          inputFormatters: <TextInputFormatter>[
-                            WhitelistingTextInputFormatter(RegExp(
-                                '^\$|^(0|([1-9][0-9]{0,}))(\\.[0-9]{0,})?\$'))
-                          ],
+                          // inputFormatters: <TextInputFormatter>[
+                          //   WhitelistingTextInputFormatter(RegExp(
+                          //       '^\$|^(0|([1-9][0-9]{0,})|\.)(\\.[0-9]{0,})?\$'
+                          //       // r"[\d.]"
+                          //       ))
+                          // ],
                           decoration: InputDecoration(
+                              focusedBorder: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: globals.primaryColor)),
+                              enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: globals.grey)),
                               hintText: '0.00000',
                               hintStyle: Theme.of(context)
                                   .textTheme
                                   .display2
                                   .copyWith(fontSize: 20)),
-                          style: Theme.of(context)
-                              .textTheme
-                              .display2
-                              .copyWith(fontSize: 24),
+                          style: model.checkSendAmount
+                              ? TextStyle(color: globals.grey, fontSize: 24)
+                              : TextStyle(color: globals.red, fontSize: 24),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
@@ -283,6 +290,9 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                   child: model.state == ViewState.Busy
                       ? CircularProgressIndicator()
                       : RaisedButton(
+                          disabledColor: model.checkSendAmount
+                              ? globals.grey
+                              : globals.primaryColor,
                           child: Text(AppLocalizations.of(context).send),
                           onPressed: () async {
                             model.txHash = '';
