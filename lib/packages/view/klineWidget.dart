@@ -73,11 +73,6 @@ double _getTotalAspectRatio(
   }
   double width = MediaQuery.of(context).size.width;
   // width/height1 = aspectRatio1; height1 = width/aspectRatio1;
-  print("width=" + width.toString());
-  print("aspectRatio1=" + aspectRatio1.toString());
-  print("aspectRatio2=" + aspectRatio2.toString());
-  print("aspectRatio3=" + aspectRatio3.toString());
-
   double height1 = width / aspectRatio1;
   double height2 = width / aspectRatio2;
   double heitht3 = width / aspectRatio3;
