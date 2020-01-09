@@ -1,8 +1,56 @@
+import 'package:exchangilymobileapp/models/order-model.dart';
+import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
+import '../../../models/orders.dart';
+import '../../../models/trade-model.dart';
 
-class Trademarket extends StatelessWidget {
-  Trademarket();
+class Trademarket extends StatefulWidget {
+  Trademarket({Key key}) : super(key: key);
 
+  @override
+  TrademarketState createState() => TrademarketState();
+}
+
+class TrademarketState extends State<Trademarket> {
+  String tabName;
+  List<OrderModel> sell;
+  List<OrderModel> buy;
+  List<TradeModel> trade;
+  @override
+  void initState() {
+    super.initState();
+    this.tabName = 'orders';
+    this.sell = [];
+    this.buy = [];
+    this.trade = [];
+  }
+
+  updateOrders(Orders orders) {
+    print('buy=====');
+    print(orders.buy);
+    print('sell=====');
+    print(orders.sell);
+
+    if(!listEquals(orders.buy, this.buy) || !listEquals(orders.sell, this.sell) ) {
+      setState(() => {
+        this.sell = orders.sell,
+        this.buy = orders.buy
+      });
+    }
+  }
+
+  updateTrades(List<TradeModel> trades) {
+    if(!listEquals(this.trade, trades)) {
+      setState(() => {
+        this.trade = trades
+      });
+    }
+  }
+
+  timeFormatted(timeStamp) {
+    var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
+    return time.hour.toString() + ':' + time.minute.toString() + ':' + time.second.toString();
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -22,49 +70,149 @@ class Trademarket extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                      child:Text("Order Book", style: TextStyle(fontSize: 18,color: Color(0xFF871fff)))
+                      child:
+                        GestureDetector(
+                          onTap: () => {
+                          setState(() => {
+                            this.tabName = 'orders'
+                          })
+                          },
+                            child:
+                              Text("Order Book", style: TextStyle(fontSize: 18,color: tabName == 'orders'?Color(0xFF871fff):Colors.white70))
+                        )
                   ),
-                  Text("Market Trades", style: TextStyle(fontSize: 18,color: Colors.white70))
+                    GestureDetector(
+                      onTap: () => {
+                        setState(() => {
+                          this.tabName = 'trades'
+                        })
+                      },
+                      child:
+                        Text("Market Trades", style: TextStyle(fontSize: 18,color: tabName == 'trades'?Color(0xFF871fff):Colors.white70))
+                      )
                 ],
               )
           ),
+    Visibility(
+      visible: tabName == 'orders',
+      child:
           Container(
             padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
-            child: Row(
-              children: <Widget>[
-                Container(
-                    decoration: const BoxDecoration(
-                        color: Color(0xFF264559)
-                    ),
-                    padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                    child:Text("8710", style: TextStyle(fontSize: 18,color: Color(0xFF0da88b)))
-                ),
-                Container(
-                    padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                    child:Text("8000", style: TextStyle(fontSize: 18,color: Color(0xFF5e617f)))
-                )
+            child:
+            Column(
+            children:[
+              for(var item in sell )
+                Column(
+                  children: <Widget>[
+                  Row(
+                    children:
 
-              ],
-            ),
-          ),
-          Container(
-              padding: EdgeInsets.all(15.0),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                      decoration: const BoxDecoration(
-                          color: Color(0xFF472a4a)
+                    <Widget>[
+
+                      Container(
+                          decoration: const BoxDecoration(
+                              color: Color(0xFF264559)
+                          ),
+                          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          child:Text(item.price.toString(), style: TextStyle(fontSize: 18,color: Color(0xFF0da88b)))
                       ),
-                      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                      child:Text("8789", style: TextStyle(fontSize: 18,color: Color(0xFFe2103c)))
+                      Container(
+                          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          child:Text(item.orderQuantity.toString(), style: TextStyle(fontSize: 18,color: Color(0xFF5e617f)))
+                      )
+
+                    ],
+
                   ),
-                  Container(
-                      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                      child:Text("8000", style: TextStyle(fontSize: 18,color: Color(0xFF5e617f)))
-                  )
-                ],
-              )
+                  SizedBox(height: 10)
+              ]),
+
+                  for(var item in buy )
+                  Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Container(
+                            decoration: const BoxDecoration(
+                                color: Color(0xFF472a4a)
+                            ),
+                            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                            child:Text(item.price.toString(), style: TextStyle(fontSize: 18,color: Color(0xFFe2103c)))
+                        ),
+                        Container(
+                            padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                            child:Text(item.orderQuantity.toString(), style: TextStyle(fontSize: 18,color: Color(0xFF5e617f)))
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 10)
+                    ],
+
+                    ),
+
+                    ])
+
           )
+    ),
+          Visibility(
+              visible: tabName == 'trades',
+              child:
+              Container(
+                padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                child:
+
+                Column(
+                    children:[
+                      for(var item in trade )
+                      Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Container(
+                                  decoration: const BoxDecoration(
+                                      color: Color(0xFF264559)
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                  child:Text(item.price.toString(), style: TextStyle(fontSize: 18,color: Color(item.bidOrAsk ? 0xFF0da88b : 0xFFe2103c)))
+                              ),
+                              Container(
+                                  padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                  child:Text(item.amount.toString(), style: TextStyle(fontSize: 18,color: Color(0xFF5e617f)))
+                              ),
+                              Container(
+                                  padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                  child:Text(timeFormatted(item.time), style: TextStyle(fontSize: 18,color: Color(0xFF5e617f)))
+                              )
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                        ],
+                      )
+
+
+
+
+                      /*
+                      Row(
+                        children: <Widget>[
+                          Container(
+                              decoration: const BoxDecoration(
+                                  color: Color(0xFF472a4a)
+                              ),
+                              padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                              child:Text("8789", style: TextStyle(fontSize: 18,color: Color(0xFFe2103c)))
+                          ),
+                          Container(
+                              padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                              child:Text("8000", style: TextStyle(fontSize: 18,color: Color(0xFF5e617f)))
+                          )
+                        ],
+                      )
+
+                       */
+                    ]),
+              )
+          ),
         ]
 
     );

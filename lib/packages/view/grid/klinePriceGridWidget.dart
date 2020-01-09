@@ -47,6 +47,7 @@ class _KlineGridPainter extends CustomPainter {
       ..filterQuality = FilterQuality.high;
     //绘制横线/价格
     double heightOffset = height / kGridRowCount;
+
     for (var i = 0; i < kGridRowCount + 1; i++) {
       canvas.drawLine(Offset(0, kTopMargin + heightOffset * i),
           Offset(width, kTopMargin + heightOffset * i), linePaint);
@@ -60,6 +61,7 @@ class _KlineGridPainter extends CustomPainter {
     if (max == null || min == null) {
       return;
     }
+
     double priceOffset = (max - min) / kGridRowCount;
     double priceOriginX = width;
     // 字体是10号字，但是实际上字体的高度会大于10所以加3

@@ -1,7 +1,31 @@
 import "package:flutter/material.dart";
+import 'package:exchangilymobileapp/models/price.dart';
 
-class TradePrice extends StatelessWidget {
-  TradePrice();
+class TradePrice extends StatefulWidget  {
+  TradePrice({Key key}) : super(key: key);
+
+  @override
+  TradePriceState createState() => TradePriceState();
+}
+
+class TradePriceState extends State<TradePrice>{
+  Price currentPrice;
+  double currentUsdPrice;
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
+  showPrice(Price price, double usdPrice) {
+    print('price.price=');
+    print(price.price);
+    setState(() => {
+      this.currentPrice = price,
+      this.currentUsdPrice = usdPrice
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -14,9 +38,9 @@ class TradePrice extends StatelessWidget {
                 Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 10, 30.0, 10),
                     child:
-                    Text("8718", style: TextStyle(fontSize: 30,color: Color(0xFF0da88b)))
+                    Text(currentPrice?.price.toString(), style: TextStyle(fontSize: 30,color: Color(0xFF0da88b)))
                 ),
-                Text("\$8718.79", style: TextStyle(fontSize: 16,color: Color(0xFF5e617f)))
+                Text("\$" + ((currentPrice!=null) ? (currentPrice.price * currentUsdPrice) : 0).toString(), style: TextStyle(fontSize: 16,color: Color(0xFF5e617f)))
               ],
             ),
             Row(
@@ -24,13 +48,13 @@ class TradePrice extends StatelessWidget {
                 Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 0, 5, 10),
                     child:
-                    Text("0.02", style: TextStyle(fontSize: 18,color: Color(0xFF0da88b)))
+                    Text(currentPrice?.changeValue.toString(), style: TextStyle(fontSize: 18,color: Color(0xFF0da88b)))
                 ),
 
                 Padding(
                     padding: EdgeInsets.fromLTRB(5, 0, 10.0, 10),
                     child:
-                    Text("0.17%", style: TextStyle(fontSize: 18,color: Color(0xFF0da88b)))
+                    Text( currentPrice?.change.toString() + "%", style: TextStyle(fontSize: 18,color: Color(0xFF0da88b)))
                 ),
               ],
             ),
@@ -39,9 +63,9 @@ class TradePrice extends StatelessWidget {
                 child:Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Low 8659", style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
-                    Text("Vol 9.9991.98 USDT", style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
-                    Text("High 8857", style: TextStyle(fontSize: 15,color: Color(0xFF5e617f)))
+                    Text("Low " + currentPrice?.low.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
+                    Text("Vol " + currentPrice?.volume.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
+                    Text("High " + currentPrice?.high.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f)))
                   ],
                 )
             )

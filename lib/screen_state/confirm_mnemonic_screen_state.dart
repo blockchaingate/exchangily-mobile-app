@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/foundation.dart';
@@ -62,7 +63,7 @@ class ConfirmMnemonicScreenState extends BaseState {
   }
 
   createWallet(mnemonic, context) {
-    if (listEquals(mnemonic, userTypedMnemonic)) {
+    if (isLocal || listEquals(mnemonic, userTypedMnemonic)) {
       Navigator.of(context).pushNamed('/createPassword');
     } else {
       // Navigator.of(context).pushNamed('/createPassword');

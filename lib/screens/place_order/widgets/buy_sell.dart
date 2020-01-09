@@ -1,9 +1,15 @@
+import 'package:exchangilymobileapp/screens/trade/main.dart';
 import "package:flutter/material.dart";
 import "./textfield_text.dart";
 import "./order_detail.dart";
 import "./my_orders.dart";
 import 'package:web_socket_channel/io.dart';
 import '../../../services/trade_service.dart';
+import '../../../utils/decoder.dart';
+import '../../../models/orders.dart';
+import '../../../models/order-model.dart';
+import '../../../models/trade-model.dart';
+import 'package:flutter/foundation.dart';
 
 class BuySell extends StatefulWidget {
   BuySell({Key key, this.bidOrAsk, this.baseCoinName, this.targetCoinName}) : super(key: key);
@@ -33,27 +39,57 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
     { "price":  5.4600, "quantity": 20}
   ];
 
+  List<OrderModel> sell;
+  List<OrderModel> buy;
+
   double currentPrice = 5.5450;
   double currentQuantity = 210;
   double _sliderValue = 10.0;
   IOWebSocketChannel orderListChannel;
-
+  IOWebSocketChannel tradeListChannel;
   @override
   void initState() {
     super.initState();
+    this.sell = [];
+    this.buy = [];
     bidOrAsk = widget.bidOrAsk;
     orderListChannel = getOrderListChannel(widget.targetCoinName + widget.baseCoinName);
     orderListChannel.stream.listen(
-            (orders) {
+            (ordersString) {
           print('orders');
-          print(orders);
+          print(ordersString);
+          Orders orders = Decoder.fromOrdersJsonArray(ordersString);
           _showOrders(orders);
+        }
+    );
+
+    tradeListChannel = getTradeListChannel(widget.targetCoinName + widget.baseCoinName);
+    tradeListChannel.stream.listen(
+            (tradesString) {
+          //print('trades=');
+          //print(trades);
+              List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
+
+          if(trades != null && trades.length > 0) {
+            TradeModel latestTrade = trades[0];
+
+            print('latestTrade=6666666666666666666666666666666');
+            print(latestTrade);
+            setState(() => {
+              this.currentPrice = latestTrade.price
+            });
+          }
         }
     );
   }
 
-  _showOrders(orders) {
-
+  _showOrders(Orders orders) {
+    if(!listEquals(orders.buy, this.buy) || !listEquals(orders.sell, this.sell) ) {
+      setState(() => {
+        this.sell = orders.sell,
+        this.buy = orders.buy
+      });
+    }
   }
 
   @override
@@ -264,7 +300,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                                   )
                                 ],
                               ),
-                              OrderDetail(sellArray, false),
+                              OrderDetail(sell, false),
 
                               Container(
                                   padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
@@ -283,24 +319,12 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                                                   fontSize: 18.0
                                               )
                                           )
-                                      ),
-                                      Container(
-                                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-
-                                          child:
-                                          Text(
-                                              currentQuantity.toString(),
-                                              style:  new TextStyle(
-                                                  color: Color(0xFF17a2b8),
-                                                  fontSize: 18.0
-                                              )
-                                          )
                                       )
                                     ],
                                   )
                               ),
 
-                              OrderDetail(buyArray, true)
+                              OrderDetail(buy, true)
                             ],
                           )
                       )
