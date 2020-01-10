@@ -21,24 +21,27 @@ class CreatePasswordScreenState extends BaseState {
   Future<List<WalletInfo>> getAllCoins() async {
     log.w('Future get all coins started');
     setState(ViewState.Busy);
-    _walletInfo = await _walletService
-        .getAllCoins()
-        .timeout(Duration(seconds: 15), onTimeout: () {
-      log.e('TIMEOUT');
-      setState(ViewState.Idle);
-      _walletInfo = [];
-      errorMessage = 'Server Timeout';
+    _walletInfo = await _walletService.getAllCoins().then((data) {
+      if (data == null) {
+        errorMessage = 'Server Error';
+        setState(ViewState.Idle);
+      } else {
+        _walletInfo = data;
+        log.w('else');
+        // setState(ViewState.Idle);
+      }
       return _walletInfo;
-    });
-    if (_walletInfo == null) {
-      errorMessage = 'No Coin Data';
+    }).timeout(Duration(seconds: 25), onTimeout: () {
+      log.e('TIMEOUT');
+      errorMessage = 'Server Timeout, Please try again later';
       setState(ViewState.Idle);
-    } else {
+      return _walletInfo;
+    }).catchError((onError) {
       errorMessage = 'Something went wrong';
-      log.w('wallet info length ${_walletInfo.length}');
+      log.e(onError);
       setState(ViewState.Idle);
-    }
-    errorMessage = '';
+    });
+    setState(ViewState.Idle);
     return _walletInfo;
   }
 

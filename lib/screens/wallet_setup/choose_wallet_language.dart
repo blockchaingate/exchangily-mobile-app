@@ -1,4 +1,6 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/responsive/orientation_layout.dart';
+import 'package:exchangilymobileapp/responsive/screen_type_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -6,20 +8,46 @@ import '../../shared/globals.dart' as globals;
 class ChooseWalletLanguageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return ScreenTypeLayout(
+      mobile: OrientationLayout(
+          portrait: ChooseWalletLanguagePortrait(),
+          landscape: ChooseWalletLanguageLandscape()),
+    );
+  }
+}
+
+class ChooseWalletLanguageLandscape extends StatelessWidget {
+  const ChooseWalletLanguageLandscape({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class ChooseWalletLanguagePortrait extends StatelessWidget {
+  const ChooseWalletLanguagePortrait({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var orientation = MediaQuery.of(context).orientation;
     return Container(
-      padding: EdgeInsets.all(40),
+      padding: orientation == Orientation.portrait
+          ? EdgeInsets.all(40)
+          : EdgeInsets.all(80),
       color: globals.walletCardColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           // Logo Container
           Container(
-            height: 70,
+            height: orientation == Orientation.portrait ? 50 : 20,
             margin: EdgeInsets.only(bottom: 10),
             child: Image.asset('assets/images/start-page/logo.png'),
           ),
           // Middle Graphics Container
           Container(
+            width: orientation == Orientation.portrait ? 300 : 300,
             padding: EdgeInsets.all(20),
             child: Image.asset('assets/images/start-page/middle-design.png'),
           ),
@@ -44,7 +72,7 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
             ),
           ),
           // Button Container
-          new Container(
+          Container(
             // width: 225,
             height: 150,
             child: Column(
