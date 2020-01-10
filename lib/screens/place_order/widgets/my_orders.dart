@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'orders_list.dart';
 import 'assets_list.dart';
+import 'dart:async';
 class MyOrders extends StatefulWidget {
   @override
   _MyOrdersState createState() => _MyOrdersState();
@@ -33,11 +34,20 @@ class _MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin
     { "coin":  "EXG", "amount": 120.1, "lockedAmount": 110.1},
     { "coin":  "EXG", "amount": 120.1, "lockedAmount": 110.1}
   ];
+
   @override
   void initState() {
     _tabController = new TabController(length: 3, vsync: this);
     super.initState();
   }
+
+  refresh() {
+    Timer(Duration(seconds: 3), () {
+      print("Yeah, this line is printed after 3 seconds");
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return

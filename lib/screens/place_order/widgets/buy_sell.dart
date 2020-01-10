@@ -23,21 +23,6 @@ class BuySell extends StatefulWidget {
 class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, TradeService {
 
   bool bidOrAsk;
-  List<Map<String, dynamic>> sellArray = [
-    { "price":  5.6800, "quantity": 914},
-    { "price":  5.6500, "quantity": 20},
-    { "price":  5.6200, "quantity": 100},
-    { "price":  5.6000, "quantity": 752100},
-    { "price":  5.5600, "quantity": 20}
-  ];
-
-  List<Map<String, dynamic>> buyArray = [
-    { "price":  5.5200, "quantity": 914},
-    { "price":  5.5100, "quantity": 20},
-    { "price":  5.5000, "quantity": 100},
-    { "price":  5.4800, "quantity": 752100},
-    { "price":  5.4600, "quantity": 20}
-  ];
 
   List<OrderModel> sell;
   List<OrderModel> buy;
@@ -73,8 +58,6 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
           if(trades != null && trades.length > 0) {
             TradeModel latestTrade = trades[0];
 
-            print('latestTrade=6666666666666666666666666666666');
-            print(latestTrade);
             setState(() => {
               this.currentPrice = latestTrade.price
             });
