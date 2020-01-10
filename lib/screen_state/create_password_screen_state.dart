@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
 
 class CreatePasswordScreenState extends BaseState {
@@ -13,7 +14,13 @@ class CreatePasswordScreenState extends BaseState {
 
   List<WalletInfo> _walletInfo;
   final log = getLogger('CreatePasswordScreenState');
+  bool checkPasswordConditions = false;
+  bool passwordMatch = false;
+  bool checkConfirmPasswordConditions = false;
+  String password = '';
   String errorMessage = '';
+  Pattern pattern =
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
 
 /* ---------------------------------------------------
                     Get All Coins Future
@@ -49,14 +56,27 @@ class CreatePasswordScreenState extends BaseState {
     _walletService.showInfoFlushbar(
         title, message, Icons.cancel, Colors.red, context);
   }
+
 /* ---------------------------------------------------
                       Validate Pass
     -------------------------------------------------- */
+  bool checkPassword(String pass) {
+    password = pass;
+    var res = RegexValidator(pattern).isValid(pass);
+    checkPasswordConditions = res;
+    return checkPasswordConditions;
+  }
+
+  bool checkConfirmPassword(String confirmPass) {
+    var res = RegexValidator(pattern).isValid(confirmPass);
+    checkConfirmPasswordConditions = res;
+    password == confirmPass ? passwordMatch = true : passwordMatch = false;
+    return checkConfirmPasswordConditions;
+  }
 
   bool validatePassword(pass, confirmPass, context, mnemonic) {
-    Pattern pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regex = new RegExp(pattern);
+
     if (pass.isEmpty) {
       _walletService.showInfoFlushbar(
           'Empty Password',
@@ -83,6 +103,8 @@ class CreatePasswordScreenState extends BaseState {
             context);
         return false;
       } else {
+        password = '';
+
         _vaultService.secureSeed(context, pass, mnemonic);
         log.w('In else');
         return true;

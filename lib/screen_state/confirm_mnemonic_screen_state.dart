@@ -43,7 +43,7 @@ class ConfirmMnemonicScreenState extends BaseState {
         String toStringMnemonic = userTypedMnemonic.join(' ');
         importWallet(toStringMnemonic, context);
       } else {
-        //  importWallet(mnemonic, context);
+        importWallet(mnemonic, context);
         _walletService.showInfoFlushbar(
             'Mnemonic Empty',
             'Please fill all the text fields',

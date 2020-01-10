@@ -84,6 +84,9 @@ dependencies:
   # rflutter Alert
   rflutter_alert: ^1.0.3
 
+  # Shared Preferences
+  shared_preferences: 0.5.6
+
   # Share files
   share:
     git:

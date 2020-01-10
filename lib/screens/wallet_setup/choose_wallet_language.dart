@@ -3,9 +3,36 @@ import 'package:exchangilymobileapp/responsive/orientation_layout.dart';
 import 'package:exchangilymobileapp/responsive/screen_type_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
 
-class ChooseWalletLanguageScreen extends StatelessWidget {
+class ChooseWalletLanguageScreen extends StatefulWidget {
+  @override
+  _ChooseWalletLanguageScreenState createState() =>
+      _ChooseWalletLanguageScreenState();
+}
+
+class _ChooseWalletLanguageScreenState
+    extends State<ChooseWalletLanguageScreen> {
+  bool _isWaiting = true;
+  bool _hasError = false;
+//
+// read-only status indicators
+  bool get isWaiting => _isWaiting;
+  bool get hasError => _hasError;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void navigateToLastPage({bool load = false}) async {
+    _hasError = false;
+    _isWaiting = true;
+    notifyListeners();
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout(
