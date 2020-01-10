@@ -2,13 +2,15 @@ import "package:flutter/material.dart";
 import 'orders_list.dart';
 import 'assets_list.dart';
 import 'dart:async';
+import '../../../services/trade_service.dart';
+
 class MyOrders extends StatefulWidget {
   @override
   _MyOrdersState createState() => _MyOrdersState();
 }
 
 
-class _MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin{
+class _MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin, TradeService{
   TabController _tabController;
 
   List<Map<String, dynamic>> openOrders = [
@@ -38,13 +40,20 @@ class _MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin
   @override
   void initState() {
     _tabController = new TabController(length: 3, vsync: this);
+    this.refresh('0xa2a3720c00c2872397e6d98f41305066cbf0f8b3 ');
     super.initState();
   }
 
-  refresh() {
+  refresh(String address) {
     Timer(Duration(seconds: 3), () {
       print("Yeah, this line is printed after 3 seconds");
+      var balances = getAssetsBalance(address);
+      var orders = getOrders(address);
+      print('balances=');
+      print(balances);
 
+      print('orders=');
+      print(orders);
     });
   }
 

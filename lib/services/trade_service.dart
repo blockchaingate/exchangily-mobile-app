@@ -44,4 +44,12 @@ mixin TradeService {
     currentUsdValue = usdVal[name]['usd'];
     return currentUsdValue;
   }
+
+  getAssetsBalance(String exgAddress) async {
+    return await _api.getAssetsBalance(exgAddress);
+  }
+
+  getOrders(String exgAddress) async {
+    return await _api.getOrders(exgAddress);
+  }
 }

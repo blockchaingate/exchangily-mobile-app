@@ -11,10 +11,9 @@ class Api {
 
   static const usdCoinPriceUrl =
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
-  static const gasBalance =
-      'kanban/getBalance/';
-  static const assetsBalance =
-      'https://kanbantest.fabcoinapi.com/exchangily/getBalances/';
+  static const gasBalance = 'kanban/getBalance/';
+  static const assetsBalance = 'exchangily/getBalances/';
+  static const orders = 'ordersbyaddress/';
 
   final btcBaseUrl = environment["endpoints"]["btc"];
   final fabBaseUrl = environment["endpoints"]["fab"];
@@ -31,12 +30,40 @@ class Api {
 
   Future getGasBalance(String exgAddress) async {
     log.w(gasBalance + exgAddress);
-    final res = await http.get(environment['endpoints']['kanban'] + gasBalance + exgAddress);
-    log.w('get gas bal ${res.body} - ${res.statusCode}');
-    if (res.statusCode == 200 || res.statusCode == 201) {
-      return jsonDecode(res.body);
-    }
-    return log.e('getGasBalance Failed to load the data from the API');
+    try {
+      final res = await http.get(
+          environment['endpoints']['kanban'] + gasBalance + exgAddress);
+      log.w('get gas bal ${res.body} - ${res.statusCode}');
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch(e) {}
+    log.e('getGasBalance Failed to load the data from the API');
+    return {};
+  }
+
+  Future getAssetsBalance(String exgAddress) async {
+    try {
+      final res = await http.get(
+          environment['endpoints']['kanban'] + assetsBalance + exgAddress);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch(e) {}
+    log.e('getAssetsBalance Failed to load the data from the API');
+    return {};
+  }
+
+  Future getOrders(String exgAddress) async {
+    try {
+      final res = await http.get(
+          environment['endpoints']['kanban'] + orders + exgAddress);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch(e) {}
+    log.e('getOrders Failed to load the data from the API');
+    return {};
   }
 
   Future getAssetsLockedBalance(String address) async {
