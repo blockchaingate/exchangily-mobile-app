@@ -29,7 +29,7 @@ class _ChooseWalletLanguageScreenState
   void navigateToLastPage({bool load = false}) async {
     _hasError = false;
     _isWaiting = true;
-    notifyListeners();
+    // notifyListeners();
     final SharedPreferences preferences = await SharedPreferences.getInstance();
   }
 

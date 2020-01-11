@@ -11,8 +11,7 @@ class Api {
 
   static const usdCoinPriceUrl =
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
-  static const gasBalance =
-      'kanban/getBalance/';
+  static const gasBalance = 'kanban/getBalance/';
   static const assetsBalance =
       'https://kanbantest.fabcoinapi.com/exchangily/getBalances/';
 
@@ -30,9 +29,9 @@ class Api {
   }
 
   Future getGasBalance(String exgAddress) async {
-    log.w(gasBalance + exgAddress);
-    final res = await http.get(environment['endpoints']['kanban'] + gasBalance + exgAddress);
-    log.w('get gas bal ${res.body} - ${res.statusCode}');
+    String url = environment['endpoints']['kanban'] + gasBalance + exgAddress;
+    final res = await http.get(url);
+    log.w('getGasBal ${res.body} - ${res.statusCode}');
     if (res.statusCode == 200 || res.statusCode == 201) {
       return jsonDecode(res.body);
     }
@@ -139,7 +138,7 @@ class Api {
       try {
         print('data=');
         print(data);
-        var response = await client.post(url,body: data);
+        var response = await client.post(url, body: data);
         print('response from postFabTx=');
         print(response.body);
         var json = jsonDecode(response.body);

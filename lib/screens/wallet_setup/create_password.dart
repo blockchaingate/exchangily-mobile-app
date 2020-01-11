@@ -29,10 +29,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
     return BaseScreen<CreatePasswordScreenState>(
       onModelReady: (model) {
         model.errorMessage = '';
-        model.password = '';
         model.passwordMatch = false;
-        model.checkConfirmPasswordConditions = false;
-        model.checkPasswordConditions = false;
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
@@ -111,13 +108,14 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             ? TextStyle(color: globals.primaryColor, fontSize: 16)
             : TextStyle(color: globals.grey, fontSize: 16),
         decoration: InputDecoration(
-            suffixIcon: model.checkPasswordConditions
-                ? Padding(
-                    padding: EdgeInsets.only(right: 0),
-                    child: Icon(Icons.check, color: globals.primaryColor))
-                : Padding(
-                    padding: EdgeInsets.only(right: 0),
-                    child: Icon(Icons.clear, color: globals.grey)),
+            suffixIcon:
+                model.checkPasswordConditions && model.password.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.only(right: 0),
+                        child: Icon(Icons.check, color: globals.primaryColor))
+                    : Padding(
+                        padding: EdgeInsets.only(right: 0),
+                        child: Icon(Icons.clear, color: globals.grey)),
             labelText: 'Enter Password',
             prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline,
@@ -144,7 +142,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             ? TextStyle(color: globals.primaryColor, fontSize: 16)
             : TextStyle(color: globals.grey, fontSize: 16),
         decoration: InputDecoration(
-            suffixIcon: model.checkConfirmPasswordConditions
+            suffixIcon: model.checkConfirmPasswordConditions &&
+                    model.confirmPassword.isNotEmpty
                 ? Padding(
                     padding: EdgeInsets.only(right: 0),
                     child: Icon(Icons.check, color: globals.primaryColor))
@@ -182,10 +181,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           _confirmPassTextController.text = '';
           model.errorMessage = '';
           if (passSuccess) {
-            List<WalletInfo> _walletInfo = await model.getAllCoins();
-
-            Navigator.pushNamed(context, '/totalBalance',
-                arguments: _walletInfo);
+            await model.getAllCoins(context);
           }
         },
         child: Text(

@@ -2,7 +2,6 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/api.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 
@@ -10,22 +9,25 @@ class TotalBalancesScreenState extends BaseState {
   final log = getLogger('TotalBalancesScreenState');
   List<WalletInfo> walletInfo;
   WalletService walletService = locator<WalletService>();
-  Api _api = locator<Api>();
   final double elevation = 5;
   double totalUsdBalance = 0;
   var coinUsdBalance;
-  double gasAmount = 0;
+  double gasAmount = 1;
   String addr = '';
 
-  exgAddress() {
+  getGas() async {
+    setState(ViewState.Busy);
     for (var i = 0; i < walletInfo.length; i++) {
       String tName = walletInfo[i].tickerName;
       if (tName == 'EXG') {
         addr = walletInfo[i].address;
-        log.d(addr);
-        return addr;
+        gasAmount = await walletService.gasBalance(addr);
+        log.w(gasAmount);
+        setState(ViewState.Idle);
+        return gasAmount;
       }
     }
+    setState(ViewState.Idle);
   }
 
   Future refreshBalance() async {
@@ -65,7 +67,7 @@ class TotalBalancesScreenState extends BaseState {
       }
 
       totalUsdBal();
-      gasBalance(addr);
+      walletService.gasBalance(addr);
       setState(ViewState.Idle);
       return walletInfo;
     } else {
@@ -78,17 +80,5 @@ class TotalBalancesScreenState extends BaseState {
     totalUsdBalance = walletService.calculateTotalUsdBalance();
     log.w(totalUsdBalance);
     return totalUsdBalance;
-  }
-
-  gasBalance(addr) async {
-    await _api.getGasBalance(addr).then((res) {
-      var newBal = int.parse(res['balance']['FAB']);
-      gasAmount = newBal / 1e18;
-      log.w('Gas bal $gasAmount');
-      return gasAmount;
-    }).catchError((onError) {
-      log.w('On error $onError');
-      return gasAmount = 0.0;
-    });
   }
 }

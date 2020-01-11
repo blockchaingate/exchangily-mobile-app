@@ -59,8 +59,8 @@ class WalletService {
     randomMnemonic = bip39.generateMnemonic();
     if (isLocal) {
       randomMnemonic =
-          //'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-          'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
+          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+      // 'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
     }
     //log.w(randomMnemonic);
 
@@ -241,6 +241,20 @@ class WalletService {
       log.i('Catch GetAllbalances Failed');
       return _walletInfo;
     }
+  }
+
+  // Gas Balance
+  gasBalance(addr) async {
+    double gasAmount;
+    await _api.getGasBalance(addr).then((res) {
+      var newBal = int.parse(res['balance']['FAB']);
+      gasAmount = newBal / 1e18;
+      log.w('Gas bal $gasAmount');
+    }).catchError((onError) {
+      log.w('On error $onError');
+      gasAmount = 0.0;
+    });
+    return gasAmount; // return here implies that it will return gas amount whatever value it gets assigned above
   }
 
   /* ---------------------------------------------------

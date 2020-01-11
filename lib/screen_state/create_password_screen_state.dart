@@ -18,6 +18,7 @@ class CreatePasswordScreenState extends BaseState {
   bool passwordMatch = false;
   bool checkConfirmPasswordConditions = false;
   String password = '';
+  String confirmPassword = '';
   String errorMessage = '';
   Pattern pattern =
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
@@ -25,7 +26,7 @@ class CreatePasswordScreenState extends BaseState {
 /* ---------------------------------------------------
                     Get All Coins Future
     -------------------------------------------------- */
-  Future<List<WalletInfo>> getAllCoins() async {
+  getAllCoins(context) async {
     log.w('Future get all coins started');
     setState(ViewState.Busy);
     _walletInfo = await _walletService.getAllCoins().then((data) {
@@ -34,22 +35,20 @@ class CreatePasswordScreenState extends BaseState {
         setState(ViewState.Idle);
       } else {
         _walletInfo = data;
-        log.w('else');
-        // setState(ViewState.Idle);
+        Navigator.pushNamed(context, '/totalBalance', arguments: _walletInfo);
       }
       return _walletInfo;
     }).timeout(Duration(seconds: 25), onTimeout: () {
       log.e('TIMEOUT');
       errorMessage = 'Server Timeout, Please try again later';
       setState(ViewState.Idle);
-      return _walletInfo;
+      return;
     }).catchError((onError) {
       errorMessage = 'Something went wrong';
       log.e(onError);
       setState(ViewState.Idle);
     });
     setState(ViewState.Idle);
-    return _walletInfo;
   }
 
   showNotification(context, title, message) {
@@ -62,12 +61,13 @@ class CreatePasswordScreenState extends BaseState {
     -------------------------------------------------- */
   bool checkPassword(String pass) {
     password = pass;
-    var res = RegexValidator(pattern).isValid(pass);
+    var res = RegexValidator(pattern).isValid(password);
     checkPasswordConditions = res;
     return checkPasswordConditions;
   }
 
   bool checkConfirmPassword(String confirmPass) {
+    confirmPassword = confirmPass;
     var res = RegexValidator(pattern).isValid(confirmPass);
     checkConfirmPasswordConditions = res;
     password == confirmPass ? passwordMatch = true : passwordMatch = false;
@@ -104,7 +104,7 @@ class CreatePasswordScreenState extends BaseState {
         return false;
       } else {
         password = '';
-
+        confirmPassword = '';
         _vaultService.secureSeed(context, pass, mnemonic);
         log.w('In else');
         return true;

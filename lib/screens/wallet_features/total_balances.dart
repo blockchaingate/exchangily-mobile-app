@@ -24,8 +24,7 @@ class TotalBalancesScreen extends StatelessWidget {
       onModelReady: (model) async {
         model.totalUsdBal();
         model.walletInfo = walletInfo;
-        model.exgAddress();
-        await model.gasBalance(model.addr);
+        await model.getGas();
       },
       builder: (context, model, child) => Scaffold(
         key: key,
@@ -216,7 +215,14 @@ class TotalBalancesScreen extends StatelessWidget {
             // Gas Container
             Container(
                 padding: EdgeInsets.only(left: 5, top: 2),
-                child: Gas(gasAmount: model.gasAmount)),
+                // added model state here and problem of displaying gas amount on the first load solves itself
+                child: model.state == ViewState.Busy
+                    ? SizedBox(
+                        child: CircularProgressIndicator(),
+                        width: 20,
+                        height: 20,
+                      )
+                    : Gas(gasAmount: model.gasAmount)),
             // Container(
             //   child: IconButton(
             //     icon: Icon(Icons.assignment_late),
