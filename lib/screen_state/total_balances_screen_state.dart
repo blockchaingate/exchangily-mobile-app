@@ -12,7 +12,8 @@ class TotalBalancesScreenState extends BaseState {
   final double elevation = 5;
   double totalUsdBalance = 0;
   var coinUsdBalance;
-  double gasAmount = 1;
+  double gasAmount = 0;
+  double assetsInExchange = 0;
   String addr = '';
 
   getGas() async {
@@ -28,6 +29,11 @@ class TotalBalancesScreenState extends BaseState {
       }
     }
     setState(ViewState.Idle);
+  }
+
+  getAssets() async {
+    assetsInExchange = await walletService.assetsBalance(addr);
+    log.w(assetsInExchange);
   }
 
   Future refreshBalance() async {

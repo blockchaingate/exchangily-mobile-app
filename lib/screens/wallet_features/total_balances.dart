@@ -223,14 +223,14 @@ class TotalBalancesScreen extends StatelessWidget {
                         height: 20,
                       )
                     : Gas(gasAmount: model.gasAmount)),
-            // Container(
-            //   child: IconButton(
-            //     icon: Icon(Icons.assignment_late),
-            //     onPressed: () {
-            //       model.gasBalance(model.addr);
-            //     },
-            //   ),
-            // ),
+            Container(
+              child: IconButton(
+                icon: Icon(Icons.assignment_late),
+                onPressed: () {
+                  model.getAssets();
+                },
+              ),
+            ),
 
 /*------------------------------------------------------------------------------
                             Build Wallet List Container

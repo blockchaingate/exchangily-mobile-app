@@ -244,7 +244,7 @@ class WalletService {
   }
 
   // Gas Balance
-  gasBalance(addr) async {
+  gasBalance(String addr) async {
     double gasAmount;
     await _api.getGasBalance(addr).then((res) {
       var newBal = int.parse(res['balance']['FAB']);
@@ -255,6 +255,20 @@ class WalletService {
       gasAmount = 0.0;
     });
     return gasAmount; // return here implies that it will return gas amount whatever value it gets assigned above
+  }
+
+  // Assets Balance
+  assetsBalance(String addr) async {
+    double assetbal;
+    await _api.getAssetsBalance(addr).then((res) {
+      //  assetbal = res['lockedAmount'];
+      log.w('assetsBalance $res');
+      log.w('assetsBalance ${res['lockedAmount']}');
+    }).catchError((onError) {
+      log.w('On error assetsBalance $onError');
+      assetbal = 0.0;
+    });
+    return assetbal;
   }
 
   /* ---------------------------------------------------
