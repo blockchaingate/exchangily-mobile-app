@@ -65,3 +65,9 @@ fixLength( String str, int length ) {
   retStr += str;
   return retStr;
 }
+
+bigNum2Double(bigNum) {
+
+  double d = (BigInt.parse(bigNum.toString()) / BigInt.parse('1000000000000')).round() / 1000000;
+  return d;
+}
