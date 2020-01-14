@@ -35,7 +35,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.4.0"
   barcode_scan:
     dependency: "direct main"
     description:
@@ -188,6 +188,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  flutter_inappwebview:
+    dependency: "direct main"
+    description:
+      name: flutter_inappwebview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0+1"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -212,6 +219,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_webview_plugin:
+    dependency: "direct main"
+    description:
+      name: flutter_webview_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.10+1"
   font_awesome_flutter:
     dependency: "direct main"
     description:
@@ -281,7 +295,7 @@ packages:
       name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.15.8"
+    version: "0.16.0"
   intl_translation:
     dependency: "direct dev"
     description:
@@ -358,14 +372,21 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.5"
+    version: "0.12.6"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.7"
+    version: "1.1.8"
+  mime:
+    dependency: transitive
+    description:
+      name: mime
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.6+3"
   node_interop:
     dependency: transitive
     description:
@@ -407,7 +428,7 @@ packages:
       name: pattern_formatter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   pedantic:
     dependency: transitive
     description:
@@ -554,7 +575,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.5"
+    version: "0.2.11"
   typed_data:
     dependency: transitive
     description:
@@ -597,6 +618,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  webview_flutter:
+    dependency: "direct main"
+    description:
+      name: webview_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.19+4"
   xml:
     dependency: transitive
     description:
@@ -613,4 +641,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.4.0 <3.0.0"
-  flutter: ">=1.7.0 <2.0.0"
+  flutter: ">=1.12.13+hotfix.5 <2.0.0"

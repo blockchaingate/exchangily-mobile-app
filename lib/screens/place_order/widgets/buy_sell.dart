@@ -58,9 +58,13 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
           if(trades != null && trades.length > 0) {
             TradeModel latestTrade = trades[0];
 
-            setState(() => {
-              this.currentPrice = latestTrade.price
-            });
+
+            if (this.mounted) {
+              setState(() =>
+              {
+                this.currentPrice = latestTrade.price
+              });
+            }
           }
         }
     );
@@ -68,10 +72,13 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
 
   _showOrders(Orders orders) {
     if(!listEquals(orders.buy, this.buy) || !listEquals(orders.sell, this.sell) ) {
-      setState(() => {
-        this.sell = orders.sell,
-        this.buy = orders.buy
-      });
+      if (this.mounted) {
+        setState(() =>
+        {
+          this.sell = orders.sell,
+          this.buy = orders.buy
+        });
+      }
     }
   }
 

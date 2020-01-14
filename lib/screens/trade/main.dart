@@ -10,6 +10,8 @@ import "widgets/kline.dart";
 import '../../utils/decoder.dart';
 import '../../models/price.dart';
 import '../../models/orders.dart';
+import 'widgets/trading_view.dart';
+
 enum SingingCharacter { lafayette, jefferson }
 class Trade extends StatefulWidget {
   String pair;
@@ -32,13 +34,18 @@ class _TradeState extends State<Trade>  with TradeService {
     print('tradesyyyyyyy=');
     print(tradesString);
     List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
-    this._tradeMarketState.currentState.updateTrades(trades);
+    if((this._tradeMarketState!=null) && (this._tradeMarketState.currentState!=null)) {
+      this._tradeMarketState.currentState.updateTrades(trades);
+    }
+
   }
 
   void _updateOrders(ordersString) {
     print('orders=');
     Orders orders = Decoder.fromOrdersJsonArray(ordersString);
-    this._tradeMarketState.currentState.updateOrders(orders);
+    if((this._tradeMarketState!=null) && (this._tradeMarketState.currentState!=null)) {
+      this._tradeMarketState.currentState.updateOrders(orders);
+    }
   }
   @override
   void initState() {
@@ -142,7 +149,8 @@ class _TradeState extends State<Trade>  with TradeService {
       body:ListView(
         children: <Widget>[
           TradePrice(key: _tradePriceState),
-          KlinePage(pair: widget.pair),
+          //KlinePage(pair: widget.pair),
+          LoadHTMLFileToWEbView(),
           Trademarket(key: _tradeMarketState)
         ],
       ),
