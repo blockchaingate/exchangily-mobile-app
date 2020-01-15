@@ -30,19 +30,18 @@ class CreatePasswordScreenState extends BaseState {
     log.w('Future get all coins started');
     setState(ViewState.Busy);
     _walletInfo = await _walletService.getAllCoins().then((data) {
-      if (data == null) {
+      if (data == null || data == []) {
         errorMessage = 'Server Error';
         setState(ViewState.Idle);
       } else {
         _walletInfo = data;
-        Navigator.pushNamed(context, '/totalBalance', arguments: _walletInfo);
+        Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
       }
       return _walletInfo;
     }).timeout(Duration(seconds: 25), onTimeout: () {
       log.e('TIMEOUT');
       errorMessage = 'Server Timeout, Please try again later';
       setState(ViewState.Idle);
-      return;
     }).catchError((onError) {
       errorMessage = 'Something went wrong';
       log.e(onError);
@@ -78,6 +77,10 @@ class CreatePasswordScreenState extends BaseState {
     RegExp regex = new RegExp(pattern);
 
     if (pass.isEmpty) {
+      password = '';
+      confirmPassword = '';
+      checkPasswordConditions = false;
+      checkConfirmPasswordConditions = false;
       _walletService.showInfoFlushbar(
           'Empty Password',
           'Please fill both password fields',
@@ -87,6 +90,10 @@ class CreatePasswordScreenState extends BaseState {
       return false;
     } else {
       if (!regex.hasMatch(pass)) {
+        password = '';
+        confirmPassword = '';
+        checkPasswordConditions = false;
+        checkConfirmPasswordConditions = false;
         _walletService.showInfoFlushbar(
             'Password Conditions Mismatch,',
             'Please enter the password that satisfy above conditions',
@@ -95,6 +102,10 @@ class CreatePasswordScreenState extends BaseState {
             context);
         return false;
       } else if (pass != confirmPass) {
+        password = '';
+        confirmPassword = '';
+        checkPasswordConditions = false;
+        checkConfirmPasswordConditions = false;
         _walletService.showInfoFlushbar(
             'Password Mismatch',
             'Please retype the same password in both fields',

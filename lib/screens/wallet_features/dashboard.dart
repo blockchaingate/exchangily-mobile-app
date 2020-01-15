@@ -3,18 +3,19 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/screen_state/total_balances_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/app_drawer.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 import 'gas.dart';
 
-class TotalBalancesScreen extends StatelessWidget {
+class DashboardScreen extends StatelessWidget {
   final List<WalletInfo> walletInfo;
-  TotalBalancesScreen({Key key, this.walletInfo}) : super(key: key);
+  DashboardScreen({Key key, this.walletInfo}) : super(key: key);
 
   final log = getLogger('TotalBalances');
 
@@ -25,6 +26,8 @@ class TotalBalancesScreen extends StatelessWidget {
         model.totalUsdBal();
         model.walletInfo = walletInfo;
         await model.getGas();
+        await model.getExchangeAssets();
+        model.saveWalletObject();
       },
       builder: (context, model, child) => Scaffold(
         key: key,
@@ -96,7 +99,7 @@ class TotalBalancesScreen extends StatelessWidget {
                                 child: Row(
                                   children: <Widget>[
                                     Container(
-                                      padding: EdgeInsets.all(4),
+                                      padding: EdgeInsets.all(8),
                                       decoration: new BoxDecoration(
                                           //    color: globals.iconBackgroundColor,
                                           borderRadius:
@@ -126,11 +129,24 @@ class TotalBalancesScreen extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.bold)),
                                           UIHelper.verticalSpaceSmall,
-                                          Text('${model.totalUsdBalance} USD',
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline),
+                                          model.state == ViewState.Busy
+                                              ? Shimmer.fromColors(
+                                                  baseColor:
+                                                      globals.primaryColor,
+                                                  highlightColor: globals.white,
+                                                  child: Text(
+                                                    '${model.totalUsdBalance.toStringAsFixed(3)} USD',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline,
+                                                  ),
+                                                )
+                                              : Text(
+                                                  '${model.totalUsdBalance.toStringAsFixed(3)} USD',
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline),
                                           //AddGas()
                                         ],
                                       ),
@@ -143,13 +159,13 @@ class TotalBalancesScreen extends StatelessWidget {
                                             ? SizedBox(
                                                 child:
                                                     CircularProgressIndicator(),
-                                                width: 20,
-                                                height: 20,
+                                                width: 18,
+                                                height: 18,
                                               )
                                             : Icon(
                                                 Icons.refresh,
                                                 color: globals.white,
-                                                size: 30,
+                                                size: 28,
                                               ))
                                   ],
                                 ),
@@ -217,17 +233,17 @@ class TotalBalancesScreen extends StatelessWidget {
                 padding: EdgeInsets.only(left: 5, top: 2),
                 // added model state here and problem of displaying gas amount on the first load solves itself
                 child: model.state == ViewState.Busy
-                    ? SizedBox(
-                        child: CircularProgressIndicator(),
-                        width: 20,
-                        height: 20,
+                    ? Shimmer.fromColors(
+                        baseColor: globals.primaryColor,
+                        highlightColor: globals.grey,
+                        child: Gas(gasAmount: model.gasAmount),
                       )
                     : Gas(gasAmount: model.gasAmount)),
             Container(
               child: IconButton(
                 icon: Icon(Icons.assignment_late),
                 onPressed: () {
-                  model.getAssets();
+                  model.saveWalletObject();
                 },
               ),
             ),
@@ -248,13 +264,14 @@ class TotalBalancesScreen extends StatelessWidget {
                       '$name',
                       walletInfo[index].availableBalance,
                       walletInfo[index].lockedBalance,
-                      1000,
+                      walletInfo[index].assetsInExchange,
                       walletInfo[index].usdValue,
                       walletInfo[index].logoColor,
                       index,
                       walletInfo,
                       model.elevation,
-                      context);
+                      context,
+                      model);
                 },
               ),
             ))
@@ -271,8 +288,18 @@ class TotalBalancesScreen extends StatelessWidget {
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _coinDetailsCard(tickerName, available, locked, exgAmount, usdValue,
-          color, index, walletInfo, elevation, context) =>
+  Widget _coinDetailsCard(
+          tickerName,
+          available,
+          locked,
+          assetsInExchange,
+          double usdValue,
+          color,
+          index,
+          walletInfo,
+          elevation,
+          context,
+          model) =>
       Card(
         color: globals.walletCardColor,
         elevation: elevation,
@@ -317,9 +344,22 @@ class TotalBalancesScreen extends StatelessWidget {
                       child: Text('Available',
                           style: Theme.of(context).textTheme.display2),
                     ),
-                    Text('$available',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: globals.red)),
+                    model.state == ViewState.Busy
+                        ? SizedBox(
+                            child: Shimmer.fromColors(
+                            baseColor: globals.red,
+                            highlightColor: globals.white,
+                            child: Text(
+                              '$available',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ))
+                        : Text('$available',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: globals.red)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
                       child: Text('Locked',
@@ -342,9 +382,19 @@ class TotalBalancesScreen extends StatelessWidget {
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.display2),
                       ),
-                      Text('$exgAmount',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: globals.primaryColor)),
+                      model.state == ViewState.Busy
+                          ? SizedBox(
+                              child: Shimmer.fromColors(
+                              baseColor: globals.primaryColor,
+                              highlightColor: globals.white,
+                              child: Text(
+                                '$assetsInExchange',
+                                textAlign: TextAlign.center,
+                              ),
+                            ))
+                          : Text('$assetsInExchange',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: globals.primaryColor)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -385,9 +435,18 @@ class TotalBalancesScreen extends StatelessWidget {
                         child: Text('Value(USD)',
                             style: Theme.of(context).textTheme.display2),
                       ),
-                      Text('$usdValue',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: globals.green))
+                      model.state == ViewState.Busy
+                          ? Shimmer.fromColors(
+                              baseColor: globals.green,
+                              highlightColor: globals.white,
+                              child: Text(
+                                '${usdValue.toStringAsFixed(2)}',
+                                style: TextStyle(color: globals.green),
+                              ),
+                            )
+                          : Text('${usdValue.toStringAsFixed(2)}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: globals.green))
                     ],
                   ),
                 ),

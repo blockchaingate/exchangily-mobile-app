@@ -331,17 +331,20 @@
     },
     "receiverWalletAddress": "Receiver Wallet Address",
     "@receiverWalletAddress": {
-      "description": "send_screenreceiver_wallet_address",
+      "description": "send_screen_receiver_wallet_address",
       "type": "text",
       "placeholders": {}
     }
     "taphereToCopyTxId": "Tap here to copy TxId",
     "@tapHereToCopyTxId": {
-      "description": "Tap here to copy TxId",
+      "description": "send_Screen_tap_here_to_copy_txId",
       "type": "text",
       "placeholders": {}
     }
-
-    
-    
+    "creatingWallet": "Creating Wallet",
+    "@creatingWallet": {
+      "description": "create_password_creatingWallet",
+      "type": "text",
+      "placeholders": {}
+    }
   }

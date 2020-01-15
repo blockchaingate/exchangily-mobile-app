@@ -3,7 +3,9 @@ import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../logger.dart';
 import '../service_locator.dart';
@@ -56,8 +58,23 @@ class ConfirmMnemonicScreenState extends BaseState {
     }
   }
 
-  importWallet(String toStringMnemonic, context) {
-    _walletService.generateSeed(toStringMnemonic);
+  importWallet(String toStringMnemonic, context) async {
+    var seed;
+    seed = _walletService.generateSeed(toStringMnemonic);
+    final storage = new FlutterSecureStorage();
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    log.e('2.1');
+    String test = seed.toString();
+    log.e(test);
+    // preferences.setString('seed', seed);
+    // log.e('seed 2.5');
+    // var t = preferences.getString('seed');
+    // log.w(t);
+    // log.e('3');
+    // await storage.write(key: 'seed', value: seed);
+    // log.i('seed 4');
+    // var test = await storage.read(key: 'seed');
+    // log.e(test);
     Navigator.of(context)
         .pushNamed('/createPassword', arguments: toStringMnemonic);
   }

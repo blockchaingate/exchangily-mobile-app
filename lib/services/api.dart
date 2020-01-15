@@ -32,7 +32,7 @@ class Api {
     try {
       final res = await http
           .get(environment['endpoints']['kanban'] + getBalance + exgAddress);
-      log.w('get gas bal ${res.body} - ${res.statusCode}');
+      log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }

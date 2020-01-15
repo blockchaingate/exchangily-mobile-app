@@ -24,6 +24,7 @@ class _ChooseWalletLanguageScreenState
   void initState() {
     // TODO: implement initState
     super.initState();
+    navigateToLastPage();
   }
 
   void navigateToLastPage({bool load = false}) async {
@@ -31,6 +32,14 @@ class _ChooseWalletLanguageScreenState
     _isWaiting = true;
     // notifyListeners();
     final SharedPreferences preferences = await SharedPreferences.getInstance();
+    String baseRoute = preferences.getString('route');
+    print('Base Route $baseRoute');
+    if (baseRoute.isNotEmpty && baseRoute != '/') {
+      //  Navigator.of(context).pushNamed('/$baseRoute');
+    } else {
+      //  Navigator.of(context).push(MaterialPageRoute(
+      //     builder: (BuildContext context) => ChooseWalletLanguagePortrait()));
+    }
   }
 
   @override

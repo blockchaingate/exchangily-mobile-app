@@ -1,6 +1,6 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/backup_mnemonic.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/total_balances.dart';
+import 'package:exchangilymobileapp/screens/wallet_features/dashboard.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/confirm_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/create_password.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/import_wallet.dart';
@@ -48,9 +48,9 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => CreatePasswordScreen(mnemonic: args));
 
-      case '/totalBalance':
+      case '/dashboard':
         return MaterialPageRoute(
-            builder: (_) => TotalBalancesScreen(walletInfo: args));
+            builder: (_) => DashboardScreen(walletInfo: args));
 
       case '/walletFeatures':
         return MaterialPageRoute(
