@@ -5,33 +5,42 @@ import 'dart:async';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
 
+// realtime: https://jsfiddle.net/TradingView/yozeu6k1/
+
 class LoadHTMLFileToWEbView extends StatefulWidget {
   @override
   _LoadHTMLFileToWEbViewState createState() => _LoadHTMLFileToWEbViewState();
 }
 
 class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
-  WebViewController _controller;
+  Completer<WebViewController> _controller =
+  Completer<WebViewController>();
   @override
   Widget build(BuildContext context) {
     return
       Container(
-        width: 200,
-        height: 400,
+        padding: EdgeInsets.all(0),
+        margin: EdgeInsets.all(0),
+        height: 350,
         child:
         WebView(
-          initialUrl: 'about:blank',
+          initialUrl: 'assets/index.html?pairLeft=FAB&pairRight=USDT&interval=1h',
             javascriptMode:JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) async {
-            _controller = webViewController;
-            await loadHtmlFromAssets('assets/index.html', _controller);
+
+          onWebViewCreated: (WebViewController webViewController)  {
+            _controller.complete(webViewController);
           },
+
+
         )
       );
   }
 
+  /*
   Future<void> loadHtmlFromAssets(String filename, controller) async {
     String fileText = await rootBundle.loadString(filename);
     controller.loadUrl(Uri.dataFromString(fileText, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
   }
+
+   */
 }
