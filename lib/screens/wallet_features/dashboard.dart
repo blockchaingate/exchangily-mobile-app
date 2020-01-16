@@ -26,13 +26,13 @@ class DashboardScreen extends StatelessWidget {
         if (walletInfo != null) {
           log.i('wallet info filled');
           model.walletInfo = walletInfo;
+          model.calcTotalBal(walletInfo.length);
         } else {
           log.w('wallet info empty, Retrieving wallets from local storafe');
           await model.retrieveWallets();
         }
         await model.getGas();
         await model.getExchangeAssets();
-        //model.calcTotalBal();
       },
       builder: (context, model, child) => Scaffold(
         key: key,
@@ -140,14 +140,14 @@ class DashboardScreen extends StatelessWidget {
                                                       globals.primaryColor,
                                                   highlightColor: globals.white,
                                                   child: Text(
-                                                    '${model.totalUsdBalance} USD',
+                                                    '${model.totalUsdBalance.toStringAsFixed(2)} USD',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline,
                                                   ),
                                                 )
                                               : Text(
-                                                  '${model.totalUsdBalance} USD',
+                                                  '${model.totalUsdBalance.toStringAsFixed(2)} USD',
                                                   textAlign: TextAlign.center,
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -256,34 +256,52 @@ class DashboardScreen extends StatelessWidget {
 /*------------------------------------------------------------------------------
                             Build Wallet List Container
 -------------------------------------------------------------------------------*/
-            model.state == ViewState.Busy
-                ? CircularProgressIndicator()
-                : Expanded(
-                    child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: model.walletInfo == null
-                          ? 0
-                          : model.walletInfo.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        var name =
-                            model.walletInfo[index].tickerName.toLowerCase();
-                        return _coinDetailsCard(
-                            '$name',
-                            model.walletInfo[index].availableBalance,
-                            //  model.walletInfo[index].lockedBalance,
-                            model.walletInfo[index].assetsInExchange,
-                            model.walletInfo[index].usdValue,
-                            //  walletInfo[index].logoColor,
-                            index,
-                            walletInfo,
-                            model.elevation,
-                            context,
-                            model);
-                      },
-                    ),
-                  ))
+            Expanded(
+                child: model.state == ViewState.Busy
+                    ? Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: model.walletInfoCopy.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return _coinDetailsCard(
+                                '${model.walletInfoCopy[index].tickerName.toLowerCase()}',
+                                model.walletInfoCopy[index].availableBalance,
+                                //  model.walletInfoCopy[index].lockedBalance,
+                                model.walletInfoCopy[index].assetsInExchange,
+                                model.walletInfoCopy[index].usdValue,
+                                //  walletInfoCopy[index].logoColor,
+                                index,
+                                model.walletInfoCopy,
+                                model.elevation,
+                                context,
+                                model);
+                          },
+                        ),
+                      )
+                    : Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: model.walletInfo.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            var name = model.walletInfo[index].tickerName
+                                .toLowerCase();
+                            return _coinDetailsCard(
+                                '$name',
+                                model.walletInfo[index].availableBalance,
+                                //  model.walletInfo[index].lockedBalance,
+                                model.walletInfo[index].assetsInExchange,
+                                model.walletInfo[index].usdValue,
+                                //  walletInfo[index].logoColor,
+                                index,
+                                walletInfo,
+                                model.elevation,
+                                context,
+                                model);
+                          },
+                        ),
+                      ))
           ],
         ),
         bottomNavigationBar: AppBottomNav(),
@@ -316,7 +334,7 @@ class DashboardScreen extends StatelessWidget {
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             Navigator.pushNamed(context, '/walletFeatures',
-                arguments: model.walletInfo[index]);
+                arguments: walletInfo[index]);
           },
           child: Container(
             padding: EdgeInsets.all(10),
