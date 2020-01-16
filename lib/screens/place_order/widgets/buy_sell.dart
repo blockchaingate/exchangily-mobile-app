@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/screens/trade/main.dart';
+import 'package:random_string/random_string.dart';
 import "package:flutter/material.dart";
 import "./textfield_text.dart";
 import "./order_detail.dart";
@@ -10,8 +10,22 @@ import '../../../models/orders.dart';
 import '../../../models/order-model.dart';
 import '../../../models/trade-model.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert';
+import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'dart:typed_data';
+import 'package:exchangilymobileapp/shared/globals.dart' as globals;
+import 'package:keccak/keccak.dart';
+import 'dart:typed_data';
+import 'package:convert/convert.dart';
+import '../../../utils/string_util.dart';
 
 class BuySell extends StatefulWidget {
+
   BuySell({Key key, this.bidOrAsk, this.baseCoinName, this.targetCoinName}) : super(key: key);
   final bool bidOrAsk;
   final String baseCoinName;
@@ -26,18 +40,80 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
 
   List<OrderModel> sell;
   List<OrderModel> buy;
-
-  double currentPrice = 5.5450;
-  double currentQuantity = 210;
+  DialogService _dialogService = locator<DialogService>();
+  WalletService walletService = locator<WalletService>();
+  double currentPrice = 0;
+  double currentQuantity = 0;
   double _sliderValue = 10.0;
   IOWebSocketChannel orderListChannel;
   IOWebSocketChannel tradeListChannel;
-
+  List<WalletInfo> walletInfo;
   double price;
   double quantity;
+  String exgAddress;
+  final GlobalKey<MyOrdersState> _myordersState = new GlobalKey<MyOrdersState>();
+
+  final log = getLogger('BuySell');
+  final storage = new FlutterSecureStorage();
+
+  retrieveWallets() async {
+
+    await storage.read(key: 'wallets').then((encodedJsonWallets) async {
+      print('there we go');
+      final decodedWallets = jsonDecode(encodedJsonWallets);
+      print(decodedWallets);
+      WalletInfoList walletInfoList = WalletInfoList.fromJson(decodedWallets);
+      print(walletInfoList.wallets[0].usdValue);
+
+      walletInfo = walletInfoList.wallets;
+      print(walletInfo.length);
+      print('end of read');
+      for(var i = 0; i < walletInfo.length; i++) {
+        var coin = walletInfo[i];
+        if(coin.tickerName == 'EXG') {
+          exgAddress = coin.address;
+          _myordersState.currentState.refresh(exgAddress);
+          break;
+        }
+      }
+
+    }).catchError((error) {
+    });
+  }
+
+  generateOrderHash (bidOrAsk, orderType, baseCoin, targetCoin, amount, price, timeBeforeExpiration) {
+    var randomStr = randomString(32);
+    var concatString = [bidOrAsk, orderType, baseCoin, targetCoin, amount, price, timeBeforeExpiration, randomStr].join('');
+    var outputHashData = keccak(stringToUint8List(concatString));
+
+    // if needed convert the output byte array into hex string.
+    var output = hex.encode(outputHashData);
+    return output;
+  }
+
+  txHexforPlaceOrder() {
+    var timeBeforeExpiration = 423434342432;
+    var orderType = 1;
+    var baseCoin = walletService.getCoinTypeIdByName(widget.baseCoinName);
+    var targetCoin = walletService.getCoinTypeIdByName(widget.targetCoinName);
+    var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin
+        , targetCoin, quantity, price, timeBeforeExpiration);
+
+    var qtyString = (quantity *1e18).round().toString();
+    var priceString = (price *1e18).round().toString();
+
+    /*
+    var abiHex = this.web3Serv.getCreateOrderFuncABI([bidOrAsk,
+      orderType, baseCoin, targetCoin, qtyString, priceString,
+      timeBeforeExpiration, false,  orderHash]);
+    const nonce = await this.kanbanService.getTransactionCount(exgAddress);
+    */
+    var txHex = '';
+    return txHex;
+  }
 
   @override
-  void initState() {
+  void initState()       {
     super.initState();
     this.sell = [];
     this.buy = [];
@@ -45,8 +121,6 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
     orderListChannel = getOrderListChannel(widget.targetCoinName + widget.baseCoinName);
     orderListChannel.stream.listen(
             (ordersString) {
-          print('orders');
-          print(ordersString);
           Orders orders = Decoder.fromOrdersJsonArray(ordersString);
           _showOrders(orders);
         }
@@ -72,6 +146,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
           }
         }
     );
+    retrieveWallets();
   }
 
   _showOrders(Orders orders) {
@@ -93,7 +168,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
   }
 
   placeOrder() {
-
+    checkPass(context);
   }
 
   void HandleTextChanged(String labelText, String text) {
@@ -110,6 +185,31 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
       } catch(e) {}
     }
   }
+
+  checkPass(context) async{
+    print('checkPass begin');
+    var res = await _dialogService.showDialog(
+        title: 'Enter Password',
+        description:
+        'Type the same password which you entered while creating the wallet');
+    if (res.confirmed) {
+      String mnemonic = res.fieldOne;
+      Uint8List seed = walletService.generateSeed(mnemonic);
+      print('seed=');
+      print(seed);
+
+    } else {
+      if (res.fieldOne != 'Closed') {
+        showNotification(context);
+      }
+    }
+  }
+
+  showNotification(context) {
+    walletService.showInfoFlushbar('Password Mismatch',
+        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +231,6 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                         onTap: () {
                           setState(() {
                             bidOrAsk = true;
-                            placeOrder();
                           });
                         },
                         child:Text(
@@ -157,7 +256,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                         onTap: () {
                           setState(() {
                             bidOrAsk = false;
-                            placeOrder();
+
                           });
                         },
                         child:
@@ -259,7 +358,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                                     textColor: Colors.white,
                                     color: bidOrAsk?Color(0xFF0da88b):Color(0xFFe2103c),
                                     onPressed: () => {
-
+                                      this.placeOrder()
                                     },
                                     child: new Text(
                                         bidOrAsk?"BUY":"SELL",
@@ -351,7 +450,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                 ],
               ),
             ),
-            MyOrders()
+            MyOrders(key: _myordersState)
           ]);
   }
 }

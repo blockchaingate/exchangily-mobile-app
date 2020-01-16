@@ -490,6 +490,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  random_string:
+    dependency: "direct main"
+    description:
+      name: random_string
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   rflutter_alert:
     dependency: "direct main"
     description:

@@ -26,10 +26,7 @@ class TrademarketState extends State<Trademarket> {
   }
 
   updateOrders(Orders orders) {
-    print('buy=====');
-    print(orders.buy);
-    print('sell=====');
-    print(orders.sell);
+
 
     if(!listEquals(orders.buy, this.buy) || !listEquals(orders.sell, this.sell) ) {
       setState(() => {
