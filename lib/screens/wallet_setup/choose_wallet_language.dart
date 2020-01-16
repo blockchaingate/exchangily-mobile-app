@@ -6,7 +6,6 @@ import 'package:exchangilymobileapp/responsive/screen_type_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
 
 class ChooseWalletLanguageScreen extends StatefulWidget {

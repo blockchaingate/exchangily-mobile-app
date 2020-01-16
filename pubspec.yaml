@@ -80,7 +80,7 @@ dependencies:
 
   # Device Preview
   device_preview:
-
+  webview_flutter: ^0.3.19+4
   # rflutter Alert
   rflutter_alert: ^1.0.3
 
@@ -111,6 +111,7 @@ flutter:
   #   androidPackage: my.package
   #   iosBundleIdentifier: my.package
   assets:
+    - assets/index.html
     - assets/images/start-page/
     - assets/images/wallet-page/
 

@@ -3,7 +3,8 @@ import 'orders_list.dart';
 import 'assets_list.dart';
 import 'dart:async';
 import '../../../services/trade_service.dart';
-
+import '../../../environments/coins.dart';
+import '../../../utils/string_util.dart';
 class MyOrders extends StatefulWidget {
   @override
   _MyOrdersState createState() => _MyOrdersState();
@@ -14,46 +15,110 @@ class _MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin
   TabController _tabController;
 
   List<Map<String, dynamic>> openOrders = [
+    /*
     { "block":  "absdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
     { "block":  "absdda...", "type": "Sell", "pair": "EXG/USDT", "price": 1.2, "amount": 1000.00},
     { "block":  "absdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
     { "block":  "absdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
     { "block":  "absdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00}
+
+     */
   ];
 
   List<Map<String, dynamic>> closedOrders = [
+    /*
     { "block":  "cbsdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
     { "block":  "cbsdda...", "type": "Sell", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
     { "block":  "cbsdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
     { "block":  "cbsdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
     { "block":  "cbsdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00}
+
+     */
   ];
 
   List<Map<String, dynamic>> balance = [
+    /*
     { "coin":  "EXG", "amount": 120.1, "lockedAmount": 110.1},
     { "coin":  "EXG", "amount": 120.1, "lockedAmount": 110.1},
     { "coin":  "EXG", "amount": 120.1, "lockedAmount": 110.1},
     { "coin":  "EXG", "amount": 120.1, "lockedAmount": 110.1},
     { "coin":  "EXG", "amount": 120.1, "lockedAmount": 110.1}
+
+     */
   ];
 
   @override
   void initState() {
     _tabController = new TabController(length: 3, vsync: this);
-    this.refresh('0xa2a3720c00c2872397e6d98f41305066cbf0f8b3 ');
+    this.refresh('0xa2a3720c00c2872397e6d98f41305066cbf0f8b3');
     super.initState();
   }
 
   refresh(String address) {
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 3), () async {
       print("Yeah, this line is printed after 3 seconds");
-      var balances = getAssetsBalance(address);
-      var orders = getOrders(address);
-      print('balances=');
+      var balances = await getAssetsBalance(address);
+      var orders = await getOrders(address);
+      print('balances==========================================================================');
       print(balances);
+      print(balances.length);
+      List<Map<String, dynamic>> newbals = [];
+      List<Map<String, dynamic>> openOrds = [];
+      List<Map<String, dynamic>> closeOrds = [];
 
-      print('orders=');
+      for(var i = 0; i < balances.length; i++) {
+        print('i=' + i.toString());
+        var bal = balances[i];
+        var coinType = int.parse(bal['coinType']);
+        var unlockedAmount = double.parse(bal['unlockedAmount']) / 1e18;
+        var lockedAmount = double.parse(bal['lockedAmount']) / 1e18;
+        var newbal = {
+          "coin": coin_list[coinType]['name'],
+          "amount": unlockedAmount,
+          "lockedAmount": lockedAmount
+        };
+        newbals.add(newbal);
+      }
+
+      print(newbals);
+      print('orders===========================================================================');
       print(orders);
+
+      for (var i = 0; i < orders.length; i++) {
+        var order = orders[i];
+        var orderHash = order['orderHash'];
+        var address = order['address'];
+        var orderType = order['orderType'];
+        var bidOrAsk = order['bidOrAsk'];
+        var pairLeft = order['pairLeft'];
+        var pairRight = order['pairRight'];
+        var price = bigNum2Double(order['price']);
+        var orderQuantity = bigNum2Double(order['orderQuantity']);
+        var filledQuantity = bigNum2Double(order['filledQuantity']);
+        var time = order['time'];
+        var isActive = order['isActive'];
+
+        //{ "block":  "absdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
+        var newOrd = {
+          'orderHash': orderHash,
+          'type': (bidOrAsk == true) ? 'Buy' : 'Sell',
+          'pair': coin_list[pairLeft]['name'].toString() + '/' + coin_list[pairRight]['name'].toString(),
+          'price': price,
+          'amount': orderQuantity
+        };
+
+        if(isActive == true) {
+          openOrds.add(newOrd);
+        } else {
+          closeOrds.add(newOrd);
+        }
+      }
+      setState(() => {
+        this.balance = newbals,
+        this.openOrders = openOrds,
+        this.closedOrders = closeOrds
+      });
+
     });
   }
 

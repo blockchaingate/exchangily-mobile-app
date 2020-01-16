@@ -1,10 +1,14 @@
 import "package:flutter/material.dart";
 import 'package:pattern_formatter/pattern_formatter.dart';
 
+typedef void TextChangedCallback(String labelText, String text);
+
 class TextfieldText extends StatelessWidget {
   String labelText;
   String suffixText;
-  TextfieldText(this.labelText, this.suffixText);
+  final TextChangedCallback onTextChanged;
+
+  TextfieldText(this.labelText, this.suffixText, this.onTextChanged);
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +28,18 @@ class TextfieldText extends StatelessWidget {
                         enabledBorder: OutlineInputBorder(
                             borderSide: new BorderSide(color: Colors.white24)
                         ),
-
                         isDense: true,
-                        labelText: labelText),
+                        labelText: labelText,
+                        labelStyle: new TextStyle(color: Colors.white70),
+                    ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
                       ThousandsFormatter(),
                     ],
+                    onChanged: (text) {
+                      print("First text field: $text");
+                      this.onTextChanged(labelText, text);
+                    },
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
                   )
                   /*

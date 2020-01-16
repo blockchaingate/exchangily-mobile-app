@@ -32,6 +32,10 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
   double _sliderValue = 10.0;
   IOWebSocketChannel orderListChannel;
   IOWebSocketChannel tradeListChannel;
+
+  double price;
+  double quantity;
+
   @override
   void initState() {
     super.initState();
@@ -58,9 +62,13 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
           if(trades != null && trades.length > 0) {
             TradeModel latestTrade = trades[0];
 
-            setState(() => {
-              this.currentPrice = latestTrade.price
-            });
+
+            if (this.mounted) {
+              setState(() =>
+              {
+                this.currentPrice = latestTrade.price
+              });
+            }
           }
         }
     );
@@ -68,10 +76,13 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
 
   _showOrders(Orders orders) {
     if(!listEquals(orders.buy, this.buy) || !listEquals(orders.sell, this.sell) ) {
-      setState(() => {
-        this.sell = orders.sell,
-        this.buy = orders.buy
-      });
+      if (this.mounted) {
+        setState(() =>
+        {
+          this.sell = orders.sell,
+          this.buy = orders.buy
+        });
+      }
     }
   }
 
@@ -79,6 +90,25 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
   void dispose() {
     orderListChannel.sink.close();
     super.dispose();
+  }
+
+  placeOrder() {
+
+  }
+
+  void HandleTextChanged(String labelText, String text) {
+    print('labelText=' + labelText);
+    print('text=' + text);
+    if(labelText == 'Price') {
+      try {
+        this.price = double.parse(text);
+      } catch(e) {}
+    }
+    if(labelText == 'Quantity') {
+      try {
+        this.quantity = double.parse(text);
+      } catch(e) {}
+    }
   }
 
   @override
@@ -99,7 +129,10 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                     child:
                     GestureDetector(
                         onTap: () {
-                          setState(() { bidOrAsk = true; });
+                          setState(() {
+                            bidOrAsk = true;
+                            placeOrder();
+                          });
                         },
                         child:Text(
                           "BUY",
@@ -122,7 +155,10 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                     child:
                     GestureDetector(
                         onTap: () {
-                          setState(() { bidOrAsk = false; });
+                          setState(() {
+                            bidOrAsk = false;
+                            placeOrder();
+                          });
                         },
                         child:
                         Text(
@@ -153,11 +189,11 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
-                            child: TextfieldText("Price",widget.baseCoinName),
+                            child: TextfieldText("Price",widget.baseCoinName, HandleTextChanged),
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(5, 10, 10, 10),
-                            child: TextfieldText("Quantity",""),
+                            child: TextfieldText("Quantity","", HandleTextChanged),
                           ),
                           Slider(
                             activeColor: Colors.indigoAccent,
