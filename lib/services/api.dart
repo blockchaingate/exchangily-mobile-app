@@ -93,12 +93,15 @@ class Api {
 
   // Post Btc Transaction
   Future postBtcTx(String txHex) async {
+    print('txHex=' + txHex);
     var url = btcBaseUrl + 'postrawtransaction';
     var json;
     try {
       var data = {'rawtx': txHex};
       var response = await client.post(url, body: data);
+
       json = jsonDecode(response.body);
+      print(json);
     } catch (e) {}
     var txHash = '';
     var errMsg = '';

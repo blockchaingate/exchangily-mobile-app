@@ -34,7 +34,7 @@ class _ChooseWalletLanguageScreenState
     _isWaiting = true;
     // notifyListeners();
     final storage = new FlutterSecureStorage();
-    //await storage.delete(key: 'wallets');
+    await storage.delete(key: 'wallets');
     await storage.read(key: 'wallets').then((encodedJsonWallets) {
       if (encodedJsonWallets == null) {
         Navigator.of(context).push(MaterialPageRoute(
