@@ -244,14 +244,14 @@ class DashboardScreen extends StatelessWidget {
                         child: Gas(gasAmount: model.gasAmount),
                       )
                     : Gas(gasAmount: model.gasAmount)),
-            Container(
-              child: IconButton(
-                icon: Icon(Icons.assignment_late),
-                onPressed: () {
-                  model.retrieveWallets();
-                },
-              ),
-            ),
+            // Container(
+            //   child: IconButton(
+            //     icon: Icon(Icons.assignment_late),
+            //     onPressed: () {
+            //       model.retrieveWallets();
+            //     },
+            //   ),
+            // ),
 
 /*------------------------------------------------------------------------------
                             Build Wallet List Container

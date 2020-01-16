@@ -50,7 +50,7 @@ class WalletInfo {
   double _assetsInExchange;
 
   WalletInfo(
-      String tickerName,
+      {String tickerName,
       String tokenType,
       String address,
       //  double lockedBalance,
@@ -58,7 +58,7 @@ class WalletInfo {
       double usdValue,
       //   Color logoColor,
       String name,
-      double assetsInExchange) {
+      double assetsInExchange}) {
     this._tickerName = tickerName;
     this._tokenType = tokenType;
     this._address = address;
@@ -82,17 +82,18 @@ class WalletInfo {
         'assetsInExchange': _assetsInExchange,
       };
 
-  WalletInfo.fromJson(Map<String, dynamic> data)
-      : _tickerName = data['tickerName'] as String,
-        _tokenType = data['tokenType'] as String,
-        _address = data['address'] as String,
-        //   _lockedBalance = data['lockedBalance'] ?? 0.0,
-        _availableBalance = data['availableBalance'] as double,
-        _usdValue = data['useValue'] as double,
-        //  _logoColor = data['logoColor'],
-        _name = data['name'] as String,
-        _assetsInExchange = data['assetsInExchange'] as double;
-
+  factory WalletInfo.fromJson(Map<String, dynamic> json) {
+    return new WalletInfo(
+        tickerName: json['tickerName'] as String,
+        tokenType: json['tokenType'] as String,
+        address: json['address'] as String,
+        //   _lockedBalance : json['lockedBalance'] ?? 0.0,
+        availableBalance: json['availableBalance'] as double,
+        usdValue: json['usdValue'] as double,
+        //  _logoColor : json['logoColor'],
+        name: json['name'] as String,
+        assetsInExchange: json['assetsInExchange'] as double);
+  }
   String get tickerName => _tickerName;
 
   set tickerName(String tickerName) {
@@ -148,12 +149,11 @@ class WalletInfo {
 
 class WalletInfoList {
   final List<WalletInfo> wallets;
-  WalletInfoList(this.wallets);
+  WalletInfoList({this.wallets});
 
-  WalletInfoList.fromJson(Map<String, dynamic> json)
-      : wallets = json['wallets'] != null
-            ? List<WalletInfo>.from(json['wallets'])
-            : null;
-
-  Map<String, dynamic> toJson() => {'wallets': wallets};
+  factory WalletInfoList.fromJson(List<dynamic> parsedJson) {
+    List<WalletInfo> wallets = new List<WalletInfo>();
+    wallets = parsedJson.map((i) => WalletInfo.fromJson(i)).toList();
+    return new WalletInfoList(wallets: wallets);
+  }
 }

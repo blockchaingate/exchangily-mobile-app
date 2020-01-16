@@ -52,21 +52,14 @@ class DashboardScreenState extends BaseState {
     setState(ViewState.Busy);
 
     await storage.read(key: 'wallets').then((encodedJsonWallets) async {
-      final decodedWallets = jsonDecode(encodedJsonWallets) as List;
+      final decodedWallets = jsonDecode(encodedJsonWallets);
       log.w(decodedWallets);
+      WalletInfoList walletInfoList = WalletInfoList.fromJson(decodedWallets);
+      log.e(walletInfoList.wallets[0].usdValue);
 
-      var t = decodedWallets.map((i) {
-        WalletInfo wi = new WalletInfo(
-            i['tickerName'],
-            i['tokenType'],
-            i['address'],
-            i['availableBalance'],
-            i['usdValue'],
-            i['name'],
-            i['assetsInExchange']);
-        log.e(wi);
-      }) as WalletInfoList;
-      log.e(walletInfo);
+      walletInfo = walletInfoList.wallets;
+      log.i(walletInfo.length);
+
       // await refreshBalance();
       setState(ViewState.Idle);
     }).catchError((error) {
@@ -118,8 +111,14 @@ class DashboardScreenState extends BaseState {
           // and sometimes it shows the locked bal but sometimes it doesn't
           //log.e('$tickerName - $walletLockedBal');
           //  walletInfo[i].lockedBalance = walletLockedBal;
-          WalletInfo wi = new WalletInfo(tickerName, token[i], address,
-              walletBal, coinUsdBalance, name, assetsInExg);
+          WalletInfo wi = new WalletInfo(
+              tickerName: tickerName,
+              tokenType: token[i],
+              address: address,
+              availableBalance: walletBal,
+              usdValue: coinUsdBalance,
+              name: name,
+              assetsInExchange: assetsInExg);
           walletInfo.add(wi);
           wallets = jsonEncode(walletInfo);
         }).catchError((error) {

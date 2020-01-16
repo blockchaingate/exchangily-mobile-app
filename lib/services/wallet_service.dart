@@ -187,8 +187,14 @@ class WalletService {
         calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
         //  log.i('printing calculated bal $coinUsdBalance');
         double assetsInExg = 0.0;
-        WalletInfo wi = new WalletInfo(tickerName, token, addr, walletBal,
-            coinUsdBalance, name, assetsInExg);
+        WalletInfo wi = new WalletInfo(
+            tickerName: tickerName,
+            tokenType: token,
+            address: addr,
+            availableBalance: walletBal,
+            usdValue: coinUsdBalance,
+            name: name,
+            assetsInExchange: assetsInExg);
 
         // String wallet = jsonEncode(wi);
         // log.e('with $wallet');
