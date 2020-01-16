@@ -31,8 +31,7 @@ class _TradeState extends State<Trade>  with TradeService {
 
   void _updateTrades(tradesString) {
     // _klinePageState.currentState.updateTrades(trades);
-    print('tradesyyyyyyy=');
-    print(tradesString);
+
     List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
     if((this._tradeMarketState!=null) && (this._tradeMarketState.currentState!=null)) {
       this._tradeMarketState.currentState.updateTrades(trades);
@@ -41,7 +40,6 @@ class _TradeState extends State<Trade>  with TradeService {
   }
 
   void _updateOrders(ordersString) {
-    print('orders=');
     Orders orders = Decoder.fromOrdersJsonArray(ordersString);
     if((this._tradeMarketState!=null) && (this._tradeMarketState.currentState!=null)) {
       this._tradeMarketState.currentState.updateOrders(orders);
@@ -79,13 +77,11 @@ class _TradeState extends State<Trade>  with TradeService {
           var item;
           for(var i = 0; i < list.length; i++) {
             item = list[i];
-            print(item.symbol);
             if (item.symbol == pair) {
               break;
             }
           }
           if(item != null) {
-            print(item);
             item.changeValue = (item.close - item.open) / 1e18;
             item.open = item.open / 1e18;
             item.close = item.close / 1e18;

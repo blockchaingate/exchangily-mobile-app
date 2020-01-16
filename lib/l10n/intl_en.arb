@@ -286,7 +286,7 @@
       "description": "Warning_import_or_confirm_mnemonic",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "enterPassword": "Enter Password",
     "@enterPassword": {
       "description": "create_enter_password",
@@ -316,7 +316,7 @@
       "description": "total_balance_value",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "walletbalance": "Wallet Balance",
     "@walletbalance": {
       "description": "total_balance_wallet_balance",
@@ -334,13 +334,13 @@
       "description": "send_screen_receiver_wallet_address",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "taphereToCopyTxId": "Tap here to copy TxId",
     "@tapHereToCopyTxId": {
       "description": "send_Screen_tap_here_to_copy_txId",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "creatingWallet": "Creating Wallet",
     "@creatingWallet": {
       "description": "create_password_creatingWallet",
