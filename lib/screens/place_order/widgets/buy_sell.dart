@@ -110,26 +110,15 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
       orderType, baseCoin, targetCoin, qtyBigInt, priceBigInt,
       timeBeforeExpiration, false,  orderHash);
     var nonce = await getNonce(exgAddress);
+    print('exgAddress===');
+    print(exgAddress);
+    print('nonce===');
+    print(nonce);
     var keyPairKanban = getExgKeyPair(seed);
     var exchangilyAddress = await getExchangilyAddress();
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), exchangilyAddress, nonce);
     return txKanbanHex;
-/*
-    var abiHex = getDepositFuncABI(
-        coinType, txHash, amountInLink, addressInKanban, signedMess);
-
-    var nonce = await getNonce(addressInKanban);
-
-    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
-
-    var res = await submitDeposit(txHex, txKanbanHex);
- */
-
-
-    var txHex = '';
-    return txHex;
   }
 
   @override
