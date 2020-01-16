@@ -25,8 +25,6 @@ class KlinePageState extends State<KlinePage> {
 
     var pair = widget.pair.replaceAll("/", "");
 
-    print('widget.pairrrr=');
-    print(pair);
 
     KlinePageBloc bloc = KlinePageBloc(pair);
     return Container(
@@ -43,8 +41,7 @@ Future<String> getKlineData(String pair, String period) async {
   if(pair == null) {
     return '[]';
   }
-  print('pair in getKlineData3333=');
-  print(pair);
+
   if (period == null) {
     period = '1m';
   } else {
@@ -55,9 +52,9 @@ Future<String> getKlineData(String pair, String period) async {
   }
   //var url =
   //    'https://api.huobi.vn/market/history/kline?period=$period&size=449&symbol=btcusdt';
-  print('pair=');
+
   var url = environment["endpoints"]['kanban'] + 'klinedata/' + pair + '/' + period;
-  print("url=" + url);
+
   String result;
   var response = await http.get(url);
   if (response.statusCode == HttpStatus.ok) {

@@ -18,8 +18,7 @@ class TradePriceState extends State<TradePrice>{
   }
 
   showPrice(Price price, double usdPrice) {
-    print('price.price=');
-    print(price.price);
+
     setState(() => {
       this.currentPrice = price,
       this.currentUsdPrice = usdPrice

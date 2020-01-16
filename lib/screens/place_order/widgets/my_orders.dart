@@ -6,12 +6,13 @@ import '../../../services/trade_service.dart';
 import '../../../environments/coins.dart';
 import '../../../utils/string_util.dart';
 class MyOrders extends StatefulWidget {
+  MyOrders({Key key}) : super(key: key);
   @override
-  _MyOrdersState createState() => _MyOrdersState();
+  MyOrdersState createState() => MyOrdersState();
 }
 
 
-class _MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin, TradeService{
+class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin, TradeService{
   TabController _tabController;
 
   List<Map<String, dynamic>> openOrders = [
@@ -50,11 +51,15 @@ class _MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin
   @override
   void initState() {
     _tabController = new TabController(length: 3, vsync: this);
-    this.refresh('0xa2a3720c00c2872397e6d98f41305066cbf0f8b3');
+
     super.initState();
   }
 
   refresh(String address) {
+    print('address is::::' + address);
+    if(address == null) {
+      return;
+    }
     Timer(Duration(seconds: 3), () async {
       print("Yeah, this line is printed after 3 seconds");
       var balances = await getAssetsBalance(address);

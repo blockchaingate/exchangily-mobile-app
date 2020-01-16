@@ -52,7 +52,7 @@ dependencies:
 
   # Path Provider
   path_provider: 1.4.2
-
+  random_string: ^2.0.1
   # Keccak
   keccak: ^1.0.3
 
