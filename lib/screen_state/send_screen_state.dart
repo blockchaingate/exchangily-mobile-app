@@ -34,6 +34,7 @@ class SendScreenState extends BaseState {
             'Type the same password which you entered while creating the wallet');
     if (dialogResponse.confirmed) {
       String mnemonic = dialogResponse.fieldOne;
+      print('mnemonic in sendTransaction=' + mnemonic);
       Uint8List seed = walletService.generateSeed(mnemonic);
       await walletService
           .sendTransaction(

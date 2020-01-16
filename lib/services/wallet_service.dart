@@ -593,6 +593,8 @@ class WalletService {
 
   Future sendTransaction(String coin, seed, List addressIndexList,
       String toAddress, double amount, options, bool doSubmit) async {
+    print('seed from sendTransaction=');
+    print(seed);
     final root = bip32.BIP32.fromSeed(seed);
     log.w('coin=' + coin);
     log.w(addressIndexList);
@@ -647,6 +649,7 @@ class WalletService {
           }
           txb.addInput(tx['txid'], tx['idx']);
           print('amountNum=' + amountNum.toString());
+          print('txvalue=' + tx['value']);
           amountNum -= tx['value'];
           print('amountNum1=' + amountNum.toString());
           amountNum += bytesPerInput * satoshisPerBytes;
@@ -674,18 +677,20 @@ class WalletService {
               10;
       var output1 = (totalInput - amount * 1e8 - transFee).round();
       var output2 = (amount * 1e8).round();
-      print('111');
+      print('111, output there we go:');
+      print(totalInput);
+      print(output1);
+      print(output2);
+      print(receivePrivateKeyArr.length);
       txb.addOutput(changeAddress, output1);
       print('222');
       txb.addOutput(toAddress, output2);
       print('333');
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+
         var privateKey = receivePrivateKeyArr[i];
-        log.w('there we go');
         var alice = ECPair.fromPrivateKey(privateKey,
             compressed: true, network: environment["chains"]["BTC"]["network"]);
-        print('alice.network=');
-        log.w(alice.network);
         txb.sign(i, alice);
       }
 

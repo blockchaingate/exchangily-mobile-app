@@ -25,6 +25,31 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink, String addre
   return abiHex;
 }
 
+getCreateOrderFuncABI(bool bidOrAsk,
+int orderType, int baseCoin,int targetCoin, BigInt qty, BigInt price,
+int timeBeforeExpiration, bool payWithEXG,  String orderHash) {
+  /*
+ 0x12a3da170000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000002386f26fc10000000000000000000000000000000000000000000000000000002386f26fc100000000000000000000000000000000000000000000000000000000006296a75020000000000000000000000000000000000000000000000000000000000000000006e328d04a77db9be48be26004e8eb87ccb4432839a10bdff4112a2bffdb3821
+   */
+  var abiHex = '12a3da17';
+  var bidOrAskString = bidOrAsk ? '1' : '0';
+  abiHex += fixLength(bidOrAskString, 64);
+  abiHex += fixLength(orderType.toString(), 64);
+  abiHex += fixLength(baseCoin.toString(), 64);
+  abiHex += fixLength(targetCoin.toString(), 64);
+  var qtyHex = qty.toRadixString(16);
+  abiHex += fixLength(qtyHex, 64);
+  var priceHex = price.toRadixString(16);
+  abiHex += fixLength(priceHex, 64);
+  abiHex += fixLength(timeBeforeExpiration.toString(), 64);
+  var payWithEXGString = payWithEXG?'1':'0';
+  abiHex += fixLength(payWithEXGString, 64);
+  abiHex += fixLength(orderHash, 64);
+  print('abiHex=');
+  print(abiHex);
+  return abiHex;
+}
+
 List<dynamic> _encodeToRlp(Transaction transaction, MsgSignature signature) {
   final list = [
     transaction.nonce,
