@@ -17,17 +17,22 @@ class DashboardScreen extends StatelessWidget {
   final List<WalletInfo> walletInfo;
   DashboardScreen({Key key, this.walletInfo}) : super(key: key);
 
-  final log = getLogger('TotalBalances');
+  final log = getLogger('Dashboard');
 
   Widget build(BuildContext context) {
     final key = new GlobalKey<ScaffoldState>();
-    return BaseScreen<TotalBalancesScreenState>(
+    return BaseScreen<DashboardScreenState>(
       onModelReady: (model) async {
-        model.totalUsdBal();
-        model.walletInfo = walletInfo;
+        if (walletInfo != null) {
+          log.i('wallet info filled');
+          model.walletInfo = walletInfo;
+        } else {
+          log.w('wallet info empty, Retrieving wallets from local storafe');
+          await model.retrieveWallets();
+        }
         await model.getGas();
         await model.getExchangeAssets();
-        model.saveWalletObject();
+        model.calcTotalBal();
       },
       builder: (context, model, child) => Scaffold(
         key: key,
@@ -135,14 +140,14 @@ class DashboardScreen extends StatelessWidget {
                                                       globals.primaryColor,
                                                   highlightColor: globals.white,
                                                   child: Text(
-                                                    '${model.totalUsdBalance.toStringAsFixed(3)} USD',
+                                                    '${model.totalUsdBalance.toStringAsFixed(2)} USD',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline,
                                                   ),
                                                 )
                                               : Text(
-                                                  '${model.totalUsdBalance.toStringAsFixed(3)} USD',
+                                                  '${model.totalUsdBalance.toStringAsFixed(2)} USD',
                                                   textAlign: TextAlign.center,
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -243,7 +248,7 @@ class DashboardScreen extends StatelessWidget {
               child: IconButton(
                 icon: Icon(Icons.assignment_late),
                 onPressed: () {
-                  model.saveWalletObject();
+                  model.retrieveWallets();
                 },
               ),
             ),
@@ -251,30 +256,34 @@ class DashboardScreen extends StatelessWidget {
 /*------------------------------------------------------------------------------
                             Build Wallet List Container
 -------------------------------------------------------------------------------*/
-
-            Expanded(
-                child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: walletInfo.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var name = walletInfo[index].tickerName.toLowerCase();
-                  return _coinDetailsCard(
-                      '$name',
-                      walletInfo[index].availableBalance,
-                      walletInfo[index].lockedBalance,
-                      walletInfo[index].assetsInExchange,
-                      walletInfo[index].usdValue,
-                      walletInfo[index].logoColor,
-                      index,
-                      walletInfo,
-                      model.elevation,
-                      context,
-                      model);
-                },
-              ),
-            ))
+            model.state == ViewState.Busy
+                ? CircularProgressIndicator()
+                : Expanded(
+                    child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: model.walletInfo == null
+                          ? 0
+                          : model.walletInfo.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        var name =
+                            model.walletInfo[index].tickerName.toLowerCase();
+                        return _coinDetailsCard(
+                            '$name',
+                            model.walletInfo[index].availableBalance,
+                            //  model.walletInfo[index].lockedBalance,
+                            model.walletInfo[index].assetsInExchange,
+                            model.walletInfo[index].usdValue,
+                            //  walletInfo[index].logoColor,
+                            index,
+                            walletInfo,
+                            model.elevation,
+                            context,
+                            model);
+                      },
+                    ),
+                  ))
           ],
         ),
         bottomNavigationBar: AppBottomNav(),
@@ -289,12 +298,12 @@ class DashboardScreen extends StatelessWidget {
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Widget _coinDetailsCard(
-          tickerName,
-          available,
-          locked,
-          assetsInExchange,
+          String tickerName,
+          double available,
+          // double locked,
+          double assetsInExchange,
           double usdValue,
-          color,
+          //   color,
           index,
           walletInfo,
           elevation,
@@ -307,7 +316,7 @@ class DashboardScreen extends StatelessWidget {
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             Navigator.pushNamed(context, '/walletFeatures',
-                arguments: walletInfo[index]);
+                arguments: model.walletInfo[index]);
           },
           child: Container(
             padding: EdgeInsets.all(10),
@@ -323,7 +332,7 @@ class DashboardScreen extends StatelessWidget {
                         borderRadius: new BorderRadius.circular(50),
                         boxShadow: [
                           new BoxShadow(
-                              color: color,
+                              color: globals.fabLogoColor,
                               offset: new Offset(1.0, 5.0),
                               blurRadius: 10.0,
                               spreadRadius: 1.0),
@@ -360,14 +369,27 @@ class DashboardScreen extends StatelessWidget {
                         : Text('$available',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: globals.red)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text('Locked',
-                          style: Theme.of(context).textTheme.display2),
-                    ),
-                    Text('$locked',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: globals.red))
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    //   child: Text('Locked',
+                    //       style: Theme.of(context).textTheme.display2),
+                    // ),
+                    // model.state == ViewState.Busy
+                    //     ? SizedBox(
+                    //         child: Shimmer.fromColors(
+                    //         baseColor: globals.red,
+                    //         highlightColor: globals.white,
+                    //         child: Text(
+                    //           '$locked',
+                    //           textAlign: TextAlign.center,
+                    //           style: TextStyle(
+                    //             fontSize: 15.0,
+                    //           ),
+                    //         ),
+                    //       ))
+                    //     : Text('$locked',
+                    //         textAlign: TextAlign.center,
+                    //         style: TextStyle(color: globals.red))
                   ],
                 ),
                 Expanded(

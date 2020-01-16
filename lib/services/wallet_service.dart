@@ -50,7 +50,7 @@ class WalletService {
   String randomMnemonic = '';
   Uint8List seed;
   var sum;
-  var coinUsdBalance;
+  double coinUsdBalance;
   var root;
   List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
   List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
@@ -148,17 +148,22 @@ class WalletService {
       return currentUsdValue = 0.2;
     }
     currentUsdValue = usdVal[name]['usd'];
-    // log.w('USD VAL of $name - $currentUsdValue');
+    log.w('USD VAL of $name - $currentUsdValue');
     return currentUsdValue;
   }
 
 // Future GetAllCoins
   Future<List<WalletInfo>> getAllCoins() async {
-    _walletInfo.clear();
+    if (_walletInfo != null) {
+      _walletInfo.clear();
+    } else {
+      _walletInfo = [];
+    }
     coinUsdMarketPrice.clear();
     totalUsdBalance.clear();
     log.w('Seed in wallet service getallbalanced method $seed');
     root = bip32.BIP32.fromSeed(seed);
+    String wallets;
     try {
       log.w('List of coins length ${coinTickers.length}');
       for (int i = 0; i < coinTickers.length; i++) {
@@ -169,27 +174,36 @@ class WalletService {
         //    print('Market Value of coin $marketValue');
         coinUsdMarketPrice.add(marketValue);
         //   log.w('coinUsdMarketPriceList $coinUsdMarketPrice');
-        var addr = await getAddressForCoin(root, tickerName, tokenType: token);
-        log.w('Address $addr');
+        String addr =
+            await getAddressForCoin(root, tickerName, tokenType: token);
+        //  log.w('Address $addr');
         var bal =
             await getCoinBalanceByAddress(tickerName, addr, tokenType: token);
         //   log.w('BAL $bal');
         double walletBal = bal['balance'];
+        double walletLockedBal = bal['lockedBalance'];
         //  log.w('tickername $tickerName - address: $addr - balance: $walletBal');
         totalUsdBalance.clear();
         calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
         //  log.i('printing calculated bal $coinUsdBalance');
+        double assetsInExg = 0.0;
+        WalletInfo wi = new WalletInfo(tickerName, token, addr, walletBal,
+            coinUsdBalance, name, assetsInExg);
 
-        _walletInfo.add(WalletInfo(
-            tickerName: tickerName,
-            address: addr,
-            availableBalance: bal['balance'],
-            lockedBalance: bal['lockedBalance'],
-            usdValue: coinUsdBalance,
-            name: name,
-            logoColor: Color.alphaBlend(Colors.blue, Colors.lightBlue)));
+        // String wallet = jsonEncode(wi);
+        // log.e('with $wallet');
+        // Map<String, dynamic> decodedWallet = jsonDecode(wallet);
+        // log.w('Decoded Walelt $decodedWallet');
+        _walletInfo.add(wi);
+        wallets = jsonEncode(_walletInfo);
+        //  log.w('Wallets $wallets');
       }
-//      log.e('Wallet info ${_walletInfo.length}');
+      final storage = new FlutterSecureStorage();
+      await storage.delete(key: 'wallets');
+      await storage.write(key: 'wallets', value: wallets);
+      // var test = await storage.read(key: 'wallets');
+      // log.e(test);
+      // log.e('Wallet info ${_walletInfo.length}');
       return _walletInfo;
     } catch (e) {
       log.e(e);
@@ -214,9 +228,9 @@ class WalletService {
   }
 
   // Assets Balance
-  assetsBalance(String addr) async {
+  assetsBalance(String exgAddress) async {
     List<Map<String, dynamic>> bal = [];
-    await _api.getAssetsBalance(addr).then((res) {
+    await _api.getAssetsBalance(exgAddress).then((res) {
       for (var i = 0; i < res.length; i++) {
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
@@ -265,14 +279,15 @@ class WalletService {
   // Calculate Only Usd Balance For Individual Coin
   calculateCoinUsdBalance(
       double usdValueByApi, double actualWalletBalance) async {
-    //   log.w('usdVal =$usdValueByApi, actualwallet bal $actualWalletBalance');
+    log.w('usdVal =$usdValueByApi, actualwallet bal $actualWalletBalance');
     if (actualWalletBalance != 0 &&
         usdValueByApi != 0 &&
         usdValueByApi != null) {
       coinUsdBalance = (usdValueByApi * actualWalletBalance);
 
       totalUsdBalance.add(coinUsdBalance);
-      //     log.w('Total Usd balance $totalUsdBalance');
+      log.w('Total coin usd balance list $totalUsdBalance');
+      return coinUsdBalance;
     } else {
       coinUsdBalance = 0.0;
       log.i('calculateCoinUsdBalance - Wallet balance 0');

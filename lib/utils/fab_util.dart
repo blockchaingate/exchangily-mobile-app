@@ -1,14 +1,12 @@
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/api.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 import './string_util.dart';
 import 'dart:convert';
 import 'package:web3dart/web3dart.dart';
+
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final log = getLogger('fab_util');
-Api _api = locator<Api>();
 
 Future getFabTransactionStatus(String txid) async {
   var url = fabBaseUrl + 'gettransactionjson/' + txid;
@@ -27,19 +25,21 @@ getFabNode(root, {index = 0}) {
 
 Future getFabLockBalanceByAddress(String address) async {
   double balance = 0;
-  var fabSmartContractAddress = environment['addresses']['smartContract']['FABLOCK'];
+  var fabSmartContractAddress =
+      environment['addresses']['smartContract']['FABLOCK'];
   var getLockedInfoABI = '43eb7b44';
   var data = {
     'address': trimHexPrefix(fabSmartContractAddress),
     'data': trimHexPrefix(getLockedInfoABI),
     'sender': address
-
   };
   var url = fabBaseUrl + 'callcontract';
   try {
     var response = await http.post(url, body: data);
     var json = jsonDecode(response.body);
-    if (json != null && json['executionResult'] != null && json['executionResult']['output'] != null) {
+    if (json != null &&
+        json['executionResult'] != null &&
+        json['executionResult']['output'] != null) {
       var balanceHex = json['executionResult']['output'];
       final abiCode = """
       [
@@ -160,25 +160,20 @@ Future getFabLockBalanceByAddress(String address) async {
   }
   ]""";
 
-
       final EthereumAddress contractAddr =
-      EthereumAddress.fromHex(fabSmartContractAddress);
-      final contract =
-      DeployedContract(ContractAbi.fromJson(abiCode, 'FabLock'), contractAddr);
+          EthereumAddress.fromHex(fabSmartContractAddress);
+      final contract = DeployedContract(
+          ContractAbi.fromJson(abiCode, 'FabLock'), contractAddr);
       final getLockerInfo = contract.function('getLockerInfo');
       var res = getLockerInfo.decodeReturnValues(balanceHex);
 
-      if(res != null && res.length == 2) {
+      if (res != null && res.length == 2) {
         var values = res[1];
-        values.forEach((element) => {
-          balance = balance + element.toDouble()
-        });
+        values.forEach((element) => {balance = balance + element.toDouble()});
         balance = balance / 1e8;
       }
-
-
     }
-  } catch(e) {}
+  } catch (e) {}
   return balance;
 }
 
@@ -188,7 +183,6 @@ Future getFabBalanceByAddress(String address) async {
   try {
     var response = await http.get(url);
     fabBalance = double.parse(response.body) / 1e8;
-    log.w(fabBalance);
   } catch (e) {
     log.e(e);
   }

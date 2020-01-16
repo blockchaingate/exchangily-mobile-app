@@ -20,7 +20,7 @@ void serviceLocator() {
 
 // factory returns the new instance
   locator.registerFactory(() => CreatePasswordScreenState());
-  locator.registerFactory(() => TotalBalancesScreenState());
+  locator.registerFactory(() => DashboardScreenState());
   locator.registerFactory(() => SendScreenState());
   locator.registerFactory(() => ConfirmMnemonicScreenState());
   locator.registerFactory(() => WalletFeaturesScreenState());

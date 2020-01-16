@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/responsive/orientation_layout.dart';
 import 'package:exchangilymobileapp/responsive/screen_type_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
 
@@ -31,15 +34,18 @@ class _ChooseWalletLanguageScreenState
     _hasError = false;
     _isWaiting = true;
     // notifyListeners();
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    String baseRoute = preferences.getString('route');
-    print('Base Route $baseRoute');
-    if (baseRoute.isNotEmpty && baseRoute != '/') {
-      //  Navigator.of(context).pushNamed('/$baseRoute');
-    } else {
-      //  Navigator.of(context).push(MaterialPageRoute(
-      //     builder: (BuildContext context) => ChooseWalletLanguagePortrait()));
-    }
+    final storage = new FlutterSecureStorage();
+    //await storage.delete(key: 'wallets');
+    await storage.read(key: 'wallets').then((encodedJsonWallets) {
+      if (encodedJsonWallets == null) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => ChooseWalletLanguagePortrait()));
+      } else if (encodedJsonWallets.isNotEmpty) {
+        Navigator.of(context).pushNamed('/dashboard');
+      }
+    }).catchError((error) {
+      print('No Wallets found in the Storage $error');
+    });
   }
 
   @override

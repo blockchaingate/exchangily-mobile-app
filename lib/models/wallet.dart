@@ -42,54 +42,56 @@ class WalletInfo {
   String _tickerName;
   String _tokenType;
   String _address;
-  double _lockedBalance;
+  // double _lockedBalance;
   double _availableBalance;
   double _usdValue;
-  Color _logoColor;
+//  Color _logoColor;
   String _name;
   double _assetsInExchange;
 
-  Map<String, dynamic> toJson() => _itemToJson(this);
   WalletInfo(
-      {String tickerName,
+      String tickerName,
+      String tokenType,
       String address,
-      double lockedBalance,
+      //  double lockedBalance,
       double availableBalance,
       double usdValue,
-      Color logoColor,
+      //   Color logoColor,
       String name,
-      double assetsInExchange}) {
+      double assetsInExchange) {
     this._tickerName = tickerName;
+    this._tokenType = tokenType;
     this._address = address;
-    this._lockedBalance = lockedBalance ?? 0;
-    this._availableBalance = availableBalance ?? 0;
-    this._usdValue = usdValue ?? 0;
-    this._logoColor = logoColor;
+    //   this._lockedBalance = lockedBalance ?? 0.0;
+    this._availableBalance = availableBalance;
+    this._usdValue = usdValue;
+    // this._logoColor = logoColor;
     this._name = name;
     this._assetsInExchange = assetsInExchange;
   }
 
-  Map<String, dynamic> _itemToJson(WalletInfo walletInfo) {
-    return <String, dynamic>{
-      'tickerName': walletInfo._tickerName,
-      'address': walletInfo._address,
-      'lockedBalance': walletInfo._lockedBalance,
-      'availableBalance': walletInfo._availableBalance,
-      'usdValue': walletInfo._usdValue,
-      'logoColor': walletInfo._logoColor,
-      'name': walletInfo._name,
-      'assetsInExchange': walletInfo._assetsInExchange,
-    };
-  }
-  // WalletInfo.fromJson(Map<String, dynamic> data)
-  //     : _tickerName = data['tickerName'],
-  //       _address = data['address'],
-  //       _lockedBalance = data['lockedBalance'],
-  //       _availableBalance = data['availableBalance'],
-  //       _usdValue = data['tickerName'],
-  //       _logoColor = data['logoColor'],
-  //       _name = data['name'],
-  //       _assetsInExchange = data['assetsInExchange'];
+  Map<String, dynamic> toJson() => {
+        'tickerName': _tickerName,
+        'tokenType': _tokenType,
+        'address': _address,
+        //   'lockedBalance': _lockedBalance ?? 0.0,
+        'availableBalance': _availableBalance,
+        'usdValue': _usdValue,
+        //  'logoColor': _logoColor,
+        'name': _name,
+        'assetsInExchange': _assetsInExchange,
+      };
+
+  WalletInfo.fromJson(Map<String, dynamic> data)
+      : _tickerName = data['tickerName'] as String,
+        _tokenType = data['tokenType'] as String,
+        _address = data['address'] as String,
+        //   _lockedBalance = data['lockedBalance'] ?? 0.0,
+        _availableBalance = data['availableBalance'] as double,
+        _usdValue = data['useValue'] as double,
+        //  _logoColor = data['logoColor'],
+        _name = data['name'] as String,
+        _assetsInExchange = data['assetsInExchange'] as double;
 
   String get tickerName => _tickerName;
 
@@ -109,10 +111,10 @@ class WalletInfo {
     this._address = address;
   }
 
-  double get lockedBalance => _lockedBalance;
-  set lockedBalance(double lockedBalance) {
-    this._lockedBalance = lockedBalance;
-  }
+  // double get lockedBalance => _lockedBalance;
+  // set lockedBalance(double lockedBalance) {
+  //   this._lockedBalance = lockedBalance;
+  // }
 
   double get availableBalance => _availableBalance;
 
@@ -137,9 +139,21 @@ class WalletInfo {
     this._assetsInExchange = assetsInExchange;
   }
 
-  Color get logoColor => _logoColor;
+  // Color get logoColor => _logoColor;
 
-  set logoColor(Color logoColor) {
-    this._logoColor = logoColor;
-  }
+  // set logoColor(Color logoColor) {
+  //   this._logoColor = logoColor;
+  // }
+}
+
+class WalletInfoList {
+  final List<WalletInfo> wallets;
+  WalletInfoList(this.wallets);
+
+  WalletInfoList.fromJson(Map<String, dynamic> json)
+      : wallets = json['wallets'] != null
+            ? List<WalletInfo>.from(json['wallets'])
+            : null;
+
+  Map<String, dynamic> toJson() => {'wallets': wallets};
 }
