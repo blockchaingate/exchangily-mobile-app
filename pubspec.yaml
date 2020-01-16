@@ -81,8 +81,6 @@ dependencies:
   # Device Preview
   device_preview:
   webview_flutter: ^0.3.19+4
-  flutter_webview_plugin: ^0.3.10+1
-  flutter_inappwebview:
   # rflutter Alert
   rflutter_alert: ^1.0.3
 
