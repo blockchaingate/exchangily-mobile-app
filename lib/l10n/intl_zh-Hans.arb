@@ -280,5 +280,65 @@
         "description": "Warning_import_or_confirm_mnemonic",
         "type": "text",
         "placeholders": {}
+    },
+    "enterPassword": "请输入密码",
+    "@enterPassword": {
+        "description": "create_enter_password",
+        "type": "text",
+        "placeholders": {}
+    },
+    "confirmPassword": "确认密码",
+    "@confirmPassword": {
+        "description": "create_confirm_password",
+        "type": "text",
+        "placeholders": {}
+    },
+    "available": "可用余额",
+    "@available": {
+        "description": "total_balance_available",
+        "type": "text",
+        "placeholders": {}
+    },
+    "locked": "锁仓",
+    "@locked": {
+        "description": "total_balance_locked",
+        "type": "text",
+        "placeholders": {}
+    },
+    "value": "价值",
+    "@value": {
+        "description": "total_balance_value",
+        "type": "text",
+        "placeholders": {}
+    },
+    "walletbalance": "钱包余额",
+    "@walletbalance": {
+        "description": "total_balance_wallet_balance",
+        "type": "text",
+        "placeholders": {}
+    },
+    "address": "地址",
+    "@address": {
+        "description": "receive_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "receiverWalletAddress": "接收地址",
+    "@receiverWalletAddress": {
+        "description": "send_screen_receiver_wallet_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "taphereToCopyTxId": "点出复制交易号",
+    "@tapHereToCopyTxId": {
+        "description": "send_Screen_tap_here_to_copy_txId",
+        "type": "text",
+        "placeholders": {}
+    },
+    "creatingWallet": "创建钱包",
+    "@creatingWallet": {
+        "description": "create_password_creatingWallet",
+        "type": "text",
+        "placeholders": {}
     }
 }
