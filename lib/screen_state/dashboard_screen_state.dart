@@ -21,6 +21,7 @@ class DashboardScreenState extends BaseState {
   List<double> assetsInExchange = [];
   final storage = new FlutterSecureStorage();
   String wallets;
+  List walletInfoCopy = [];
 
   calcTotalBal(numberOfCoins) {
     totalUsdBalance = 0;
@@ -30,7 +31,6 @@ class DashboardScreenState extends BaseState {
       log.i('Total ${totalUsdBalance.toStringAsFixed(2)}');
     }
     setState(ViewState.Idle);
-    return totalUsdBalance.toStringAsFixed(2);
   }
 
   getGas() async {
@@ -76,10 +76,10 @@ class DashboardScreenState extends BaseState {
     setState(ViewState.Busy);
     assetsInExchange.clear();
     var res = await walletService.assetsBalance(exgAddress);
-    for (var i = 0; i < res.length; i++) {
+    var length = res.length;
+    for (var i = 0; i < length; i++) {
       String coin = res[i]['coin'];
-
-      for (var j = 0; j < walletInfo.length; j++) {
+      for (var j = 0; j < length; j++) {
         if (coin == walletInfo[j].tickerName)
           walletInfo[j].assetsInExchange = res[i]['amount'];
       }
@@ -89,51 +89,53 @@ class DashboardScreenState extends BaseState {
 
   Future refreshBalance() async {
     setState(ViewState.Busy);
-    //walletService.totalUsdBalance.clear();
-    int length = walletInfo.length;
-    log.e('Length $length');
-    List<String> token = ['', '', '', 'ETH', 'FAB'];
-    if (walletInfo.isNotEmpty) {
-      double walletBal = 0;
-      // double walletLockedBal = 0;
-      for (var i = 0; i < length; i++) {
-        String tickerName = walletInfo[i].tickerName;
-        String address = walletInfo[i].address;
-        String name = walletInfo[i].name;
-        await walletService
-            .coinBalanceByAddress(tickerName, address, token[i])
-            .then((balance) async {
-          walletBal = balance['balance'];
-          //  walletLockedBal = balance['lockbalance'];
-          double marketPrice = await walletService.getCoinMarketPrice(name);
-          await walletService.calculateCoinUsdBalance(marketPrice, walletBal);
-          double assetsInExg = 0.0;
-          // PENDING: Something went wrong  - type 'int' is not a subtype of type 'double'
-          // and sometimes it shows the locked bal but sometimes it doesn't
-          //log.e('$tickerName - $walletLockedBal');
-          //  walletInfo[i].lockedBalance = walletLockedBal;
-          WalletInfo wi = WalletInfo(
-              tickerName: tickerName,
-              tokenType: token[i],
-              address: address,
-              availableBalance: walletBal,
-              usdValue: coinUsdBalance,
-              name: name,
-              assetsInExchange: assetsInExg);
-          walletInfo.add(wi);
-          wallets = jsonEncode(walletInfo);
-        }).catchError((error) {
-          log.e('Something went wrong  - $error');
-        });
-      }
-      calcTotalBal(length);
-      //  await storage.delete(key: 'wallets');
-      //   await storage.write(key: 'wallets', value: wallets);
-      setState(ViewState.Idle);
-      return walletInfo;
-    } else {
-      setState(ViewState.Idle);
-      log.e('In else wallet list - 0');
+    // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
+    walletInfoCopy = walletInfo.map((element) => element).toList();
+    int length = walletInfoCopy.length;
+    List<String> token = walletService.tokenType;
+    walletInfo.clear();
+    log.i('WI cleared');
+    log.w('TickerName ${walletInfoCopy[0].tickerName}');
+    double walletBal = 0;
+    // double walletLockedBal = 0;
+    for (var i = 0; i < length; i++) {
+      String tickerName = walletInfoCopy[i].tickerName;
+      String address = walletInfoCopy[i].address;
+      String name = walletInfoCopy[i].name;
+      await walletService
+          .coinBalanceByAddress(tickerName, address, token[i])
+          .then((balance) async {
+        walletBal = balance['balance'];
+        //  walletLockedBal = balance['lockbalance'];
+        double marketPrice = await walletService.getCoinMarketPrice(name);
+        coinUsdBalance =
+            walletService.calculateCoinUsdBalance(marketPrice, walletBal);
+        double assetsInExg = 0.0;
+        // PENDING: Something went wrong  - type 'int' is not a subtype of type 'double'
+        // and sometimes it shows the locked bal but sometimes it doesn't
+        //log.e('$tickerName - $walletLockedBal');
+        //  walletInfo[i].lockedBalance = walletLockedBal;
+
+        WalletInfo wi = WalletInfo(
+            tickerName: tickerName,
+            tokenType: token[i],
+            address: address,
+            availableBalance: walletBal,
+            usdValue: coinUsdBalance,
+            name: name,
+            assetsInExchange: assetsInExg);
+        walletInfo.add(wi);
+        wallets = jsonEncode(walletInfo);
+      }).catchError((error) {
+        log.e('Something went wrong  - $error');
+      });
     }
+    calcTotalBal(length);
+    await getGas();
+    await getExchangeAssets();
+    //  await storage.delete(key: 'wallets');
+    //   await storage.write(key: 'wallets', value: wallets);
+    setState(ViewState.Idle);
+    return walletInfo;
   }
 }

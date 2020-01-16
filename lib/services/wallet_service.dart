@@ -141,7 +141,7 @@ class WalletService {
 
   // Get Current Market Price For The Coin By Name
 
-  getCoinMarketPrice(String name) async {
+  Future<double> getCoinMarketPrice(String name) async {
     double currentUsdValue;
     var usdVal = await _api.getCoinsUsdValue();
     if (name == 'exchangily') {
@@ -160,12 +160,12 @@ class WalletService {
       _walletInfo = [];
     }
     coinUsdMarketPrice.clear();
-    totalUsdBalance.clear();
+    // totalUsdBalance.clear();
     log.w('Seed in wallet service getallbalanced method $seed');
     root = bip32.BIP32.fromSeed(seed);
     String wallets;
     try {
-      log.w('List of coins length ${coinTickers.length}');
+      //   log.w('List of coins length ${coinTickers.length}');
       for (int i = 0; i < coinTickers.length; i++) {
         String tickerName = coinTickers[i];
         String name = coinNames[i];
@@ -183,7 +183,7 @@ class WalletService {
         double walletBal = bal['balance'];
         double walletLockedBal = bal['lockedBalance'];
         //  log.w('tickername $tickerName - address: $addr - balance: $walletBal');
-        totalUsdBalance.clear();
+        // totalUsdBalance.clear();
         calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
         //  log.i('printing calculated bal $coinUsdBalance');
         double assetsInExg = 0.0;
@@ -276,13 +276,11 @@ class WalletService {
   }
 
   // Calculate Only Usd Balance For Individual Coin
-  calculateCoinUsdBalance(
-      double usdValueByApi, double actualWalletBalance) async {
-    log.w('usdVal =$usdValueByApi, actualwallet bal $actualWalletBalance');
-    if (actualWalletBalance != 0 &&
-        usdValueByApi != 0 &&
-        usdValueByApi != null) {
-      coinUsdBalance = (usdValueByApi * actualWalletBalance);
+  double calculateCoinUsdBalance(
+      double marketPrice, double actualWalletBalance) {
+    log.w('usdVal =$marketPrice, actualwallet bal $actualWalletBalance');
+    if (actualWalletBalance != 0 && marketPrice != null) {
+      coinUsdBalance = (marketPrice * actualWalletBalance);
 
       // totalUsdBalance.add(coinUsdBalance);
       // log.w('Total coin usd balance list $totalUsdBalance');
@@ -291,6 +289,7 @@ class WalletService {
       coinUsdBalance = 0.0;
       log.i('calculateCoinUsdBalance - Wallet balance 0');
     }
+    return coinUsdBalance;
   }
 
   // Calculate Total Usd Balance
