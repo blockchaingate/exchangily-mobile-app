@@ -32,7 +32,7 @@ class DashboardScreen extends StatelessWidget {
         }
         await model.getGas();
         await model.getExchangeAssets();
-        model.calcTotalBal();
+        //model.calcTotalBal();
       },
       builder: (context, model, child) => Scaffold(
         key: key,
@@ -140,14 +140,14 @@ class DashboardScreen extends StatelessWidget {
                                                       globals.primaryColor,
                                                   highlightColor: globals.white,
                                                   child: Text(
-                                                    '${model.totalUsdBalance.toStringAsFixed(2)} USD',
+                                                    '${model.totalUsdBalance} USD',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline,
                                                   ),
                                                 )
                                               : Text(
-                                                  '${model.totalUsdBalance.toStringAsFixed(2)} USD',
+                                                  '${model.totalUsdBalance} USD',
                                                   textAlign: TextAlign.center,
                                                   style: Theme.of(context)
                                                       .textTheme

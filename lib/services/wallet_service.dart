@@ -225,7 +225,6 @@ class WalletService {
     await _api.getGasBalance(addr).then((res) {
       var newBal = int.parse(res['balance']['FAB']);
       gasAmount = newBal / 1e18;
-      //    log.w('Gas bal $gasAmount');
     }).catchError((onError) {
       log.w('On error $onError');
       gasAmount = 0.0;
@@ -276,12 +275,6 @@ class WalletService {
     ).show(context);
   }
 
-  void printValuesAfter(i, name) {
-    //log.i('in $name');
-    // log.i(
-    //     '${_walletInfo[i].name} address: ${_walletInfo[i].address} -Coin bal is ${_walletInfo[i].availableBalance} and usd Bal is ${_walletInfo[i].usdValue}');
-  }
-
   // Calculate Only Usd Balance For Individual Coin
   calculateCoinUsdBalance(
       double usdValueByApi, double actualWalletBalance) async {
@@ -291,8 +284,8 @@ class WalletService {
         usdValueByApi != null) {
       coinUsdBalance = (usdValueByApi * actualWalletBalance);
 
-      totalUsdBalance.add(coinUsdBalance);
-      log.w('Total coin usd balance list $totalUsdBalance');
+      // totalUsdBalance.add(coinUsdBalance);
+      // log.w('Total coin usd balance list $totalUsdBalance');
       return coinUsdBalance;
     } else {
       coinUsdBalance = 0.0;
@@ -302,19 +295,19 @@ class WalletService {
 
   // Calculate Total Usd Balance
 
-  calculateTotalUsdBalance() {
-    sum = 0;
-    if (totalUsdBalance.isNotEmpty) {
-      log.w('Total usd balance list count ${totalUsdBalance.length}');
-      for (var i = 0; i < totalUsdBalance.length; i++) {
-        sum = sum + totalUsdBalance[i];
-      }
-      log.w('Sum $sum');
-      return sum;
-    }
-    log.w('totalUsdBalance List empty');
-    return 0.0;
-  }
+  // calculateTotalUsdBalance() {
+  //   sum = 0;
+  //   if (totalUsdBalance.isNotEmpty) {
+  //     log.w('Total usd balance list count ${totalUsdBalance.length}');
+  //     for (var i = 0; i < totalUsdBalance.length; i++) {
+  //       sum = sum + totalUsdBalance[i];
+  //     }
+  //     log.w('Sum $sum');
+  //     return sum;
+  //   }
+  //   log.w('totalUsdBalance List empty');
+  //   return 0.0;
+  // }
 
 // Add Gas
   Future<int> addGas() async {

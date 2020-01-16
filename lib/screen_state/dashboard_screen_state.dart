@@ -22,13 +22,15 @@ class DashboardScreenState extends BaseState {
   final storage = new FlutterSecureStorage();
   String wallets;
 
-  calcTotalBal() {
-    log.i("XXXX ${walletInfo.length}");
-    for (var i = 0; i < walletInfo.length; i++) {
+  calcTotalBal(numberOfCoins) {
+    totalUsdBalance = 0;
+    for (var i = 0; i < numberOfCoins; i++) {
       log.e(walletInfo[i].usdValue);
       totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
-      log.i('Total $totalUsdBalance');
+      log.i('Total ${totalUsdBalance.toStringAsFixed(2)}');
     }
+    setState(ViewState.Idle);
+    return totalUsdBalance.toStringAsFixed(2);
   }
 
   getGas() async {
@@ -59,14 +61,13 @@ class DashboardScreenState extends BaseState {
 
       walletInfo = walletInfoList.wallets;
       log.i(walletInfo.length);
-
+      calcTotalBal(walletInfo.length);
       // await refreshBalance();
       setState(ViewState.Idle);
     }).catchError((error) {
       log.e('Catch Error $error');
       setState(ViewState.Idle);
     });
-    setState(ViewState.Idle);
   }
 
   /* Get Exchange Assets */
@@ -88,7 +89,7 @@ class DashboardScreenState extends BaseState {
 
   Future refreshBalance() async {
     setState(ViewState.Busy);
-    walletService.totalUsdBalance.clear();
+    //walletService.totalUsdBalance.clear();
     int length = walletInfo.length;
     log.e('Length $length');
     List<String> token = ['', '', '', 'ETH', 'FAB'];
@@ -111,7 +112,7 @@ class DashboardScreenState extends BaseState {
           // and sometimes it shows the locked bal but sometimes it doesn't
           //log.e('$tickerName - $walletLockedBal');
           //  walletInfo[i].lockedBalance = walletLockedBal;
-          WalletInfo wi = new WalletInfo(
+          WalletInfo wi = WalletInfo(
               tickerName: tickerName,
               tokenType: token[i],
               address: address,
@@ -125,7 +126,7 @@ class DashboardScreenState extends BaseState {
           log.e('Something went wrong  - $error');
         });
       }
-      totalUsdBal();
+      calcTotalBal(length);
       //  await storage.delete(key: 'wallets');
       //   await storage.write(key: 'wallets', value: wallets);
       setState(ViewState.Idle);
@@ -134,10 +135,5 @@ class DashboardScreenState extends BaseState {
       setState(ViewState.Idle);
       log.e('In else wallet list - 0');
     }
-  }
-
-  totalUsdBal() {
-    totalUsdBalance = walletService.calculateTotalUsdBalance();
-    return totalUsdBalance;
   }
 }
