@@ -69,9 +69,9 @@ class WalletService {
     if (isLocal) {
       randomMnemonic =
           'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-      // 'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
+      //'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
     }
-    //log.w(randomMnemonic);
+    log.w(randomMnemonic);
 
     return Future.value(randomMnemonic);
   }
@@ -81,8 +81,10 @@ class WalletService {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/my_file.byte');
-      final text = data;
-      await file.writeAsString(text);
+      // final text = data;
+      await file.delete();
+      log.w('Previous data in the stored file deleted');
+      await file.writeAsString(data);
       log.w('Encrypted data saved in storage');
     } catch (e) {
       log.e("Couldn't write encrypted datra to file!! $e");
@@ -837,16 +839,10 @@ class WalletService {
         var res = await _api.postEthTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-        await Future.delayed(Duration(seconds: 7));
-        log.w('In if delay complete');
       } else {
         txHash = getTransactionHash(signed);
-        await Future.delayed(Duration(seconds: 7));
-        log.w('In else delay complete');
       }
     }
-    await Future.delayed(Duration(seconds: 7));
-    log.w('delay complete');
     return {
       'txHex': txHex,
       'txHash': txHash,

@@ -35,14 +35,17 @@ class SendScreenState extends BaseState {
     if (dialogResponse.confirmed) {
       String mnemonic = dialogResponse.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
+      log.e(seed);
+      log.w(mnemonic);
       await walletService
           .sendTransaction(
               tickerName, seed, [0], toWalletAddress, amount, options, true)
           .then((res) {
-        log.w(res);
+        log.w('Result $res');
         txHash = res["txHash"];
         errorMessage = res["errMsg"];
         if (txHash.isNotEmpty) {
+          log.w('TXhash $txHash');
           walletService.showInfoFlushbar(
               'Send Completed',
               '$tickerName Transanction has been sent',
@@ -50,16 +53,29 @@ class SendScreenState extends BaseState {
               globals.green,
               context);
           setState(ViewState.Idle);
+        } else if (errorMessage.isNotEmpty) {
+          setState(ViewState.Idle);
+          log.e('errorMessage.isNotEmpty $errorMessage');
+          return errorMessage = 'Transaction Failed';
+        } else if (txHash == '' && errorMessage == '') {
+          log.w('Both TxHash and Error Message are empty $errorMessage');
+          walletService.showInfoFlushbar(
+              'Send Failed',
+              '$tickerName Transanction has not been completed',
+              Icons.cancel,
+              globals.red,
+              context);
+          setState(ViewState.Idle);
         }
         return txHash;
-      }).catchError((err) {
-        log.e('In Catch error - $err');
-        errorMessage = 'Transaction Failed';
-        setState(ViewState.Idle);
-      }).timeout(Duration(seconds: 15), onTimeout: () {
+      }).timeout(Duration(seconds: 25), onTimeout: () {
         log.e('In time out');
         setState(ViewState.Idle);
         return errorMessage = 'Server TIMEOUT!!!';
+      }).catchError((error) {
+        log.e('In Catch error - $error');
+        errorMessage = 'Transaction Failed';
+        setState(ViewState.Idle);
       });
     } else if (dialogResponse.fieldOne != 'Closed') {
       setState(ViewState.Idle);

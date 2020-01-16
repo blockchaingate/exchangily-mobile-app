@@ -17,12 +17,13 @@ class VaultService {
       log.e('import mnemonic is: $mnemonic');
       randomMnemonic = Provider.of<String>(context);
       seed = _walletService.generateSeed(randomMnemonic);
-      final storage = new FlutterSecureStorage();
-      log.e('seed 1');
-      await storage.write(key: 'seed', value: seed);
-      log.i('seed 2');
-      var test = await storage.read(key: 'seed');
-      log.e(test);
+      log.w(seed);
+      // final storage = new FlutterSecureStorage();
+      // log.e('seed 1');
+      // await storage.write(key: 'seed', value: seed);
+      // log.i('seed 2');
+      // var test = await storage.read(key: 'seed');
+      // log.e(test);
     } else {
       randomMnemonic = mnemonic;
       log.e('random and import mnemonic - $randomMnemonic = $mnemonic');

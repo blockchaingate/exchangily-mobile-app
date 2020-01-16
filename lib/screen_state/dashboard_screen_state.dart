@@ -60,6 +60,7 @@ class DashboardScreenState extends BaseState {
       log.e(walletInfoList.wallets[0].usdValue);
 
       walletInfo = walletInfoList.wallets;
+      walletInfoCopy = walletInfo.map((element) => element).toList();
       log.i(walletInfo.length);
       calcTotalBal(walletInfo.length);
       // await refreshBalance();
@@ -92,10 +93,10 @@ class DashboardScreenState extends BaseState {
     // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
     walletInfoCopy = walletInfo.map((element) => element).toList();
     int length = walletInfoCopy.length;
+    log.w('Wallet copy ${walletInfoCopy.length}');
     List<String> token = walletService.tokenType;
     walletInfo.clear();
     log.i('WI cleared');
-    log.w('TickerName ${walletInfoCopy[0].tickerName}');
     double walletBal = 0;
     // double walletLockedBal = 0;
     for (var i = 0; i < length; i++) {
@@ -133,8 +134,8 @@ class DashboardScreenState extends BaseState {
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();
-    //  await storage.delete(key: 'wallets');
-    //   await storage.write(key: 'wallets', value: wallets);
+    await storage.delete(key: 'wallets');
+    await storage.write(key: 'wallets', value: wallets);
     setState(ViewState.Idle);
     return walletInfo;
   }

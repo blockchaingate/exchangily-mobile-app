@@ -9,6 +9,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
   final String mnemonic;
@@ -19,7 +20,7 @@ class CreatePasswordScreen extends StatefulWidget {
 }
 
 class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
-  final log = getLogger('Create Password');
+  final log = getLogger('CreatePassword');
   FocusNode passFocus = FocusNode();
   TextEditingController _passTextController = TextEditingController();
   TextEditingController _confirmPassTextController = TextEditingController();
@@ -39,57 +40,70 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
-          padding: EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Text(
-                AppLocalizations.of(context).setPasswordConditions,
-                style: Theme.of(context).textTheme.headline,
-                textAlign: TextAlign.left,
-              ),
-              _buildPasswordTextField(model),
-              _buildConfirmPasswordTextField(model),
-              model.password != ''
-                  ? model.passwordMatch && model.password.isNotEmpty
-                      ? Center(
-                          child: Text(
-                          'Password Matched',
-                          style: TextStyle(color: globals.white),
-                        ))
-                      : Center(
-                          child: Text('Password does not matched',
-                              style: TextStyle(color: globals.grey)))
-                  : Text(''),
-              Center(
-                  child: Text(model.errorMessage,
+            padding: EdgeInsets.all(15),
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              children: <Widget>[
+                UIHelper.verticalSpaceSmall,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Text(
+                      AppLocalizations.of(context).setPasswordConditions,
+                      style: Theme.of(context).textTheme.headline,
+                      textAlign: TextAlign.left,
+                    ),
+                    UIHelper.verticalSpaceSmall,
+                    _buildPasswordTextField(model),
+                    UIHelper.verticalSpaceSmall,
+                    _buildConfirmPasswordTextField(model),
+                    model.password != ''
+                        ? model.passwordMatch && model.password.isNotEmpty
+                            ? Center(
+                                child: Text(
+                                'Password Matched',
+                                style: TextStyle(color: globals.white),
+                              ))
+                            : Center(
+                                child: Text('Password does not matched',
+                                    style: TextStyle(color: globals.grey)))
+                        : Text(''),
+                    UIHelper.verticalSpaceSmall,
+                    Center(
+                        child: Text(model.errorMessage,
+                            style: Theme.of(context)
+                                .textTheme
+                                .display2
+                                .copyWith(color: globals.red))),
+                    UIHelper.verticalSpaceLarge,
+                    UIHelper.verticalSpaceLarge,
+                    Center(
+                      child: model.state == ViewState.Busy
+                          ? Shimmer.fromColors(
+                              baseColor: globals.primaryColor,
+                              highlightColor: globals.grey,
+                              child: Text(
+                                'Creating Wallet',
+                                style: Theme.of(context).textTheme.button,
+                              ),
+                            )
+                          : _buildCreateNewWalletButton(model, context),
+                    ),
+                    UIHelper.verticalSpaceLarge,
+                    Text(
+                      AppLocalizations.of(context).setPasswordNote,
+                      textAlign: TextAlign.left,
                       style: Theme.of(context)
                           .textTheme
-                          .display2
-                          .copyWith(color: globals.red))),
-              Center(
-                child: model.state == ViewState.Busy
-                    ? Shimmer.fromColors(
-                        baseColor: globals.primaryColor,
-                        highlightColor: globals.grey,
-                        child: Text(
-                          'Creating Wallet',
-                          style: Theme.of(context).textTheme.button,
-                        ),
-                      )
-                    : _buildCreateNewWalletButton(model, context),
-              ),
-              Text(
-                AppLocalizations.of(context).setPasswordNote,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline
-                    .copyWith(fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ),
+                          .headline
+                          .copyWith(fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ],
+            )),
       ),
     );
   }

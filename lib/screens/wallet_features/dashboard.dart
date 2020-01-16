@@ -28,7 +28,7 @@ class DashboardScreen extends StatelessWidget {
           model.walletInfo = walletInfo;
           model.calcTotalBal(walletInfo.length);
         } else {
-          log.w('wallet info empty, Retrieving wallets from local storafe');
+          log.w('wallet info empty, Retrieving wallets from local storage');
           await model.retrieveWallets();
         }
         await model.getGas();
@@ -334,7 +334,7 @@ class DashboardScreen extends StatelessWidget {
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             Navigator.pushNamed(context, '/walletFeatures',
-                arguments: walletInfo[index]);
+                arguments: model.walletInfo[index]);
           },
           child: Container(
             padding: EdgeInsets.all(10),

@@ -259,7 +259,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                     text: 'Tap here to copy TxId',
                                     style: TextStyle(
                                         decoration: TextDecoration.underline,
-                                        color: Colors.blue),
+                                        color: globals.primaryColor),
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
                                         model.copyAddress(context);

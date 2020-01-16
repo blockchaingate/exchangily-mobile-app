@@ -69,7 +69,6 @@ class ConfirmMnemonicScreenState extends BaseState {
     if (isLocal || listEquals(mnemonic, userTypedMnemonic)) {
       Navigator.of(context).pushNamed('/createPassword');
     } else {
-      // Navigator.of(context).pushNamed('/createPassword');
       _walletService.showInfoFlushbar('Mnemonic incomplete',
           'Please fill all the text fields', Icons.cancel, Colors.red, context);
     }
