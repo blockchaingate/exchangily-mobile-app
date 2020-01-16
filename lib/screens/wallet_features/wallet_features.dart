@@ -19,9 +19,8 @@ class WalletFeaturesScreen extends StatelessWidget {
     return BaseScreen<WalletFeaturesScreenState>(
       onModelReady: (model) {
         model.walletInfo = walletInfo;
-        model.initialSetup();
+        // model.initialSetup();
         model.getWalletFeatures(context);
-        log.w('Features ${model.features[0].name}');
       },
       builder: (context, model, child) => Scaffold(
         key: key,
@@ -57,7 +56,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                             padding: EdgeInsets.only(left: 5),
                             child: Row(
                               children: <Widget>[
-                                Text('${model.tickerName}',
+                                Text('${walletInfo.tickerName}',
                                     style:
                                         Theme.of(context).textTheme.headline),
                                 Icon(
@@ -65,7 +64,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                                   size: 17,
                                   color: globals.white,
                                 ),
-                                Text('${model.coinName}',
+                                Text('${walletInfo.name}',
                                     style: Theme.of(context).textTheme.headline)
                               ],
                             ),
@@ -77,7 +76,8 @@ class WalletFeaturesScreen extends StatelessWidget {
                               children: <Widget>[
                                 Positioned(
                                   //   bottom: -15,
-                                  child: _buildTotalBalanceCard(context, model),
+                                  child: _buildTotalBalanceCard(
+                                      context, model, walletInfo),
                                 )
                               ],
                             ),
@@ -160,7 +160,7 @@ class WalletFeaturesScreen extends StatelessWidget {
 
   // Build Total Balance Card
 
-  Widget _buildTotalBalanceCard(context, model) => Card(
+  Widget _buildTotalBalanceCard(context, model, walletInfo) => Card(
         elevation: model.elevation,
         color: globals.walletCardColor,
         child: Container(
@@ -172,7 +172,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Text(
-                    '${model.tickerName} ' +
+                    '${walletInfo.tickerName} ' +
                         AppLocalizations.of(context).totalBalance,
                     style: Theme.of(context)
                         .textTheme
@@ -201,7 +201,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                       )),
                   Expanded(
                     child: Text(
-                      '${model.usdBalance} USD',
+                      '${model.walletInfo.usdValue} USD',
                       textAlign: TextAlign.right,
                       style: Theme.of(context).textTheme.headline,
                     ),
@@ -211,7 +211,9 @@ class WalletFeaturesScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('${model.tickerName} '.toUpperCase() + 'Wallet Balance',
+                  Text(
+                      '${walletInfo.tickerName} '.toUpperCase() +
+                          'Wallet Balance',
                       style: Theme.of(context).textTheme.headline),
                   Text(AppLocalizations.of(context).assetInExchange,
                       style: Theme.of(context).textTheme.headline)
@@ -220,7 +222,7 @@ class WalletFeaturesScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('${model.walletBalance}',
+                  Text('${model.walletInfo.availableBalance}',
                       style: Theme.of(context).textTheme.headline),
                   Text('2000', style: Theme.of(context).textTheme.headline)
                 ],
@@ -239,7 +241,8 @@ class WalletFeaturesScreen extends StatelessWidget {
           splashColor: globals.primaryColor.withAlpha(30),
           onTap: () {
             var route = model.features[index].route;
-            Navigator.pushNamed(context, '/$route', arguments: walletInfo);
+            Navigator.pushNamed(context, '/$route',
+                arguments: model.walletInfo);
           },
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 1),

@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/create_password_screen_state.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
     return BaseScreen<CreatePasswordScreenState>(
       onModelReady: (model) {
         model.errorMessage = '';
+        model.passwordMatch = false;
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
@@ -37,7 +39,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
-          padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -47,8 +49,19 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 style: Theme.of(context).textTheme.headline,
                 textAlign: TextAlign.left,
               ),
-              _buildPasswordTextField(),
-              _buildConfirmPasswordTextField(),
+              _buildPasswordTextField(model),
+              _buildConfirmPasswordTextField(model),
+              model.password != ''
+                  ? model.passwordMatch && model.password.isNotEmpty
+                      ? Center(
+                          child: Text(
+                          'Password Matched',
+                          style: TextStyle(color: globals.white),
+                        ))
+                      : Center(
+                          child: Text('Password does not matched',
+                              style: TextStyle(color: globals.grey)))
+                  : Text(''),
               Center(
                   child: Text(model.errorMessage,
                       style: Theme.of(context)
@@ -57,7 +70,14 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                           .copyWith(color: globals.red))),
               Center(
                 child: model.state == ViewState.Busy
-                    ? CircularProgressIndicator()
+                    ? Shimmer.fromColors(
+                        baseColor: globals.primaryColor,
+                        highlightColor: globals.grey,
+                        child: Text(
+                          'Creating Wallet',
+                          style: Theme.of(context).textTheme.button,
+                        ),
+                      )
                     : _buildCreateNewWalletButton(model, context),
               ),
               Text(
@@ -80,15 +100,30 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _buildPasswordTextField() {
+  Widget _buildPasswordTextField(model) {
     return TextField(
+        onChanged: (String pass) {
+          setState(() {
+            model.checkPassword(pass);
+          });
+        },
         focusNode: passFocus,
         autofocus: true,
         controller: _passTextController,
         obscureText: true,
         maxLength: 16,
-        style: Theme.of(context).textTheme.headline,
+        style: model.checkPasswordConditions
+            ? TextStyle(color: globals.primaryColor, fontSize: 16)
+            : TextStyle(color: globals.grey, fontSize: 16),
         decoration: InputDecoration(
+            suffixIcon:
+                model.checkPasswordConditions && model.password.isNotEmpty
+                    ? Padding(
+                        padding: EdgeInsets.only(right: 0),
+                        child: Icon(Icons.check, color: globals.primaryColor))
+                    : Padding(
+                        padding: EdgeInsets.only(right: 0),
+                        child: Icon(Icons.clear, color: globals.grey)),
             labelText: 'Enter Password',
             prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline,
@@ -101,13 +136,28 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _buildConfirmPasswordTextField() {
+  Widget _buildConfirmPasswordTextField(model) {
     return TextField(
+        onChanged: (String pass) {
+          setState(() {
+            model.checkConfirmPassword(pass);
+          });
+        },
         controller: _confirmPassTextController,
         obscureText: true,
         maxLength: 16,
-        style: TextStyle(fontSize: 15, color: Colors.white),
+        style: model.checkConfirmPasswordConditions
+            ? TextStyle(color: globals.primaryColor, fontSize: 16)
+            : TextStyle(color: globals.grey, fontSize: 16),
         decoration: InputDecoration(
+            suffixIcon: model.checkConfirmPasswordConditions &&
+                    model.confirmPassword.isNotEmpty
+                ? Padding(
+                    padding: EdgeInsets.only(right: 0),
+                    child: Icon(Icons.check, color: globals.primaryColor))
+                : Padding(
+                    padding: EdgeInsets.only(right: 0),
+                    child: Icon(Icons.clear, color: globals.grey)),
             labelText: 'Confirm password',
             prefixIcon: Icon(Icons.lock, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline,
@@ -139,10 +189,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           _confirmPassTextController.text = '';
           model.errorMessage = '';
           if (passSuccess) {
-            List<WalletInfo> _walletInfo = await model.getAllCoins();
-
-            Navigator.pushNamed(context, '/totalBalance',
-                arguments: _walletInfo);
+            await model.getAllCoins(context);
           }
         },
         child: Text(

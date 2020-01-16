@@ -42,29 +42,58 @@ class WalletInfo {
   String _tickerName;
   String _tokenType;
   String _address;
-  double _lockedBalance;
+  // double _lockedBalance;
   double _availableBalance;
   double _usdValue;
-  Color _logoColor;
+//  Color _logoColor;
   String _name;
+  double _assetsInExchange;
 
   WalletInfo(
       {String tickerName,
+      String tokenType,
       String address,
-      double lockedBalance,
+      //  double lockedBalance,
       double availableBalance,
       double usdValue,
-      Color logoColor,
-      String name}) {
+      //   Color logoColor,
+      String name,
+      double assetsInExchange}) {
     this._tickerName = tickerName;
+    this._tokenType = tokenType;
     this._address = address;
-    this._lockedBalance = lockedBalance ?? 0;
-    this._availableBalance = availableBalance ?? 0;
-    this._usdValue = usdValue ?? 0;
-    this._logoColor = logoColor;
+    //   this._lockedBalance = lockedBalance ?? 0.0;
+    this._availableBalance = availableBalance;
+    this._usdValue = usdValue;
+    // this._logoColor = logoColor;
     this._name = name;
+    this._assetsInExchange = assetsInExchange;
   }
 
+  Map<String, dynamic> toJson() => {
+        'tickerName': _tickerName,
+        'tokenType': _tokenType,
+        'address': _address,
+        //   'lockedBalance': _lockedBalance ?? 0.0,
+        'availableBalance': _availableBalance,
+        'usdValue': _usdValue,
+        //  'logoColor': _logoColor,
+        'name': _name,
+        'assetsInExchange': _assetsInExchange,
+      };
+
+  factory WalletInfo.fromJson(Map<String, dynamic> json) {
+    return new WalletInfo(
+        tickerName: json['tickerName'] as String,
+        tokenType: json['tokenType'] as String,
+        address: json['address'] as String,
+        //   _lockedBalance : json['lockedBalance'] ?? 0.0,
+        availableBalance: json['availableBalance'] as double,
+        usdValue: json['usdValue'] as double,
+        //  _logoColor : json['logoColor'],
+        name: json['name'] as String,
+        assetsInExchange: json['assetsInExchange'] as double);
+  }
   String get tickerName => _tickerName;
 
   set tickerName(String tickerName) {
@@ -83,10 +112,10 @@ class WalletInfo {
     this._address = address;
   }
 
-  double get lockedBalance => _lockedBalance;
-  set lockedBalance(double lockedBalance) {
-    this._lockedBalance = lockedBalance;
-  }
+  // double get lockedBalance => _lockedBalance;
+  // set lockedBalance(double lockedBalance) {
+  //   this._lockedBalance = lockedBalance;
+  // }
 
   double get availableBalance => _availableBalance;
 
@@ -106,9 +135,25 @@ class WalletInfo {
     this._name = name;
   }
 
-  Color get logoColor => _logoColor;
+  double get assetsInExchange => _assetsInExchange;
+  set assetsInExchange(double assetsInExchange) {
+    this._assetsInExchange = assetsInExchange;
+  }
 
-  set logoColor(Color logoColor) {
-    this._logoColor = logoColor;
+  // Color get logoColor => _logoColor;
+
+  // set logoColor(Color logoColor) {
+  //   this._logoColor = logoColor;
+  // }
+}
+
+class WalletInfoList {
+  final List<WalletInfo> wallets;
+  WalletInfoList({this.wallets});
+
+  factory WalletInfoList.fromJson(List<dynamic> parsedJson) {
+    List<WalletInfo> wallets = new List<WalletInfo>();
+    wallets = parsedJson.map((i) => WalletInfo.fromJson(i)).toList();
+    return new WalletInfoList(wallets: wallets);
   }
 }

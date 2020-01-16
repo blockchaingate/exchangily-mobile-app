@@ -3,29 +3,36 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/screen_state/total_balances_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/app_drawer.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 import 'gas.dart';
 
-class TotalBalancesScreen extends StatelessWidget {
+class DashboardScreen extends StatelessWidget {
   final List<WalletInfo> walletInfo;
-  TotalBalancesScreen({Key key, this.walletInfo}) : super(key: key);
+  DashboardScreen({Key key, this.walletInfo}) : super(key: key);
 
-  final log = getLogger('TotalBalances');
+  final log = getLogger('Dashboard');
 
   Widget build(BuildContext context) {
     final key = new GlobalKey<ScaffoldState>();
-    return BaseScreen<TotalBalancesScreenState>(
+    return BaseScreen<DashboardScreenState>(
       onModelReady: (model) async {
-        model.totalUsdBal();
-        model.walletInfo = walletInfo;
-        model.exgAddress();
-        await model.gasBalance(model.addr);
+        if (walletInfo != null) {
+          log.i('wallet info filled');
+          model.walletInfo = walletInfo;
+        } else {
+          log.w('wallet info empty, Retrieving wallets from local storafe');
+          await model.retrieveWallets();
+        }
+        await model.getGas();
+        await model.getExchangeAssets();
+        //model.calcTotalBal();
       },
       builder: (context, model, child) => Scaffold(
         key: key,
@@ -97,7 +104,7 @@ class TotalBalancesScreen extends StatelessWidget {
                                 child: Row(
                                   children: <Widget>[
                                     Container(
-                                      padding: EdgeInsets.all(4),
+                                      padding: EdgeInsets.all(8),
                                       decoration: new BoxDecoration(
                                           //    color: globals.iconBackgroundColor,
                                           borderRadius:
@@ -127,11 +134,24 @@ class TotalBalancesScreen extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.bold)),
                                           UIHelper.verticalSpaceSmall,
-                                          Text('${model.totalUsdBalance} USD',
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline),
+                                          model.state == ViewState.Busy
+                                              ? Shimmer.fromColors(
+                                                  baseColor:
+                                                      globals.primaryColor,
+                                                  highlightColor: globals.white,
+                                                  child: Text(
+                                                    '${model.totalUsdBalance} USD',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline,
+                                                  ),
+                                                )
+                                              : Text(
+                                                  '${model.totalUsdBalance} USD',
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline),
                                           //AddGas()
                                         ],
                                       ),
@@ -144,13 +164,13 @@ class TotalBalancesScreen extends StatelessWidget {
                                             ? SizedBox(
                                                 child:
                                                     CircularProgressIndicator(),
-                                                width: 20,
-                                                height: 20,
+                                                width: 18,
+                                                height: 18,
                                               )
                                             : Icon(
                                                 Icons.refresh,
                                                 color: globals.white,
-                                                size: 30,
+                                                size: 28,
                                               ))
                                   ],
                                 ),
@@ -216,12 +236,19 @@ class TotalBalancesScreen extends StatelessWidget {
             // Gas Container
             Container(
                 padding: EdgeInsets.only(left: 5, top: 2),
-                child: Gas(gasAmount: model.gasAmount)),
+                // added model state here and problem of displaying gas amount on the first load solves itself
+                child: model.state == ViewState.Busy
+                    ? Shimmer.fromColors(
+                        baseColor: globals.primaryColor,
+                        highlightColor: globals.grey,
+                        child: Gas(gasAmount: model.gasAmount),
+                      )
+                    : Gas(gasAmount: model.gasAmount)),
             // Container(
             //   child: IconButton(
             //     icon: Icon(Icons.assignment_late),
             //     onPressed: () {
-            //       model.gasBalance(model.addr);
+            //       model.retrieveWallets();
             //     },
             //   ),
             // ),
@@ -229,29 +256,34 @@ class TotalBalancesScreen extends StatelessWidget {
 /*------------------------------------------------------------------------------
                             Build Wallet List Container
 -------------------------------------------------------------------------------*/
-
-            Expanded(
-                child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 10),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: walletInfo.length,
-                itemBuilder: (BuildContext context, int index) {
-                  var name = walletInfo[index].tickerName.toLowerCase();
-                  return _coinDetailsCard(
-                      '$name',
-                      walletInfo[index].availableBalance,
-                      walletInfo[index].lockedBalance,
-                      1000,
-                      walletInfo[index].usdValue,
-                      walletInfo[index].logoColor,
-                      index,
-                      walletInfo,
-                      model.elevation,
-                      context);
-                },
-              ),
-            ))
+            model.state == ViewState.Busy
+                ? CircularProgressIndicator()
+                : Expanded(
+                    child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: model.walletInfo == null
+                          ? 0
+                          : model.walletInfo.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        var name =
+                            model.walletInfo[index].tickerName.toLowerCase();
+                        return _coinDetailsCard(
+                            '$name',
+                            model.walletInfo[index].availableBalance,
+                            //  model.walletInfo[index].lockedBalance,
+                            model.walletInfo[index].assetsInExchange,
+                            model.walletInfo[index].usdValue,
+                            //  walletInfo[index].logoColor,
+                            index,
+                            walletInfo,
+                            model.elevation,
+                            context,
+                            model);
+                      },
+                    ),
+                  ))
           ],
         ),
         bottomNavigationBar: AppBottomNav(),
@@ -265,8 +297,18 @@ class TotalBalancesScreen extends StatelessWidget {
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _coinDetailsCard(tickerName, available, locked, exgAmount, usdValue,
-          color, index, walletInfo, elevation, context) =>
+  Widget _coinDetailsCard(
+          String tickerName,
+          double available,
+          // double locked,
+          double assetsInExchange,
+          double usdValue,
+          //   color,
+          index,
+          walletInfo,
+          elevation,
+          context,
+          model) =>
       Card(
         color: globals.walletCardColor,
         elevation: elevation,
@@ -274,7 +316,7 @@ class TotalBalancesScreen extends StatelessWidget {
           splashColor: Colors.blue.withAlpha(30),
           onTap: () {
             Navigator.pushNamed(context, '/walletFeatures',
-                arguments: walletInfo[index]);
+                arguments: model.walletInfo[index]);
           },
           child: Container(
             padding: EdgeInsets.all(10),
@@ -290,7 +332,7 @@ class TotalBalancesScreen extends StatelessWidget {
                         borderRadius: new BorderRadius.circular(50),
                         boxShadow: [
                           new BoxShadow(
-                              color: color,
+                              color: globals.fabLogoColor,
                               offset: new Offset(1.0, 5.0),
                               blurRadius: 10.0,
                               spreadRadius: 1.0),
@@ -311,17 +353,43 @@ class TotalBalancesScreen extends StatelessWidget {
                       child: Text('Available',
                           style: Theme.of(context).textTheme.display2),
                     ),
-                    Text('$available',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: globals.red)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text('Locked',
-                          style: Theme.of(context).textTheme.display2),
-                    ),
-                    Text('$locked',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: globals.red))
+                    model.state == ViewState.Busy
+                        ? SizedBox(
+                            child: Shimmer.fromColors(
+                            baseColor: globals.red,
+                            highlightColor: globals.white,
+                            child: Text(
+                              '$available',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ))
+                        : Text('$available',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: globals.red)),
+                    // Padding(
+                    //   padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    //   child: Text('Locked',
+                    //       style: Theme.of(context).textTheme.display2),
+                    // ),
+                    // model.state == ViewState.Busy
+                    //     ? SizedBox(
+                    //         child: Shimmer.fromColors(
+                    //         baseColor: globals.red,
+                    //         highlightColor: globals.white,
+                    //         child: Text(
+                    //           '$locked',
+                    //           textAlign: TextAlign.center,
+                    //           style: TextStyle(
+                    //             fontSize: 15.0,
+                    //           ),
+                    //         ),
+                    //       ))
+                    //     : Text('$locked',
+                    //         textAlign: TextAlign.center,
+                    //         style: TextStyle(color: globals.red))
                   ],
                 ),
                 Expanded(
@@ -336,9 +404,19 @@ class TotalBalancesScreen extends StatelessWidget {
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.display2),
                       ),
-                      Text('$exgAmount',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: globals.primaryColor)),
+                      model.state == ViewState.Busy
+                          ? SizedBox(
+                              child: Shimmer.fromColors(
+                              baseColor: globals.primaryColor,
+                              highlightColor: globals.white,
+                              child: Text(
+                                '$assetsInExchange',
+                                textAlign: TextAlign.center,
+                              ),
+                            ))
+                          : Text('$assetsInExchange',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: globals.primaryColor)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -379,9 +457,18 @@ class TotalBalancesScreen extends StatelessWidget {
                         child: Text('Value(USD)',
                             style: Theme.of(context).textTheme.display2),
                       ),
-                      Text('$usdValue',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: globals.green))
+                      model.state == ViewState.Busy
+                          ? Shimmer.fromColors(
+                              baseColor: globals.green,
+                              highlightColor: globals.white,
+                              child: Text(
+                                '${usdValue.toStringAsFixed(2)}',
+                                style: TextStyle(color: globals.green),
+                              ),
+                            )
+                          : Text('${usdValue.toStringAsFixed(2)}',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: globals.green))
                     ],
                   ),
                 ),

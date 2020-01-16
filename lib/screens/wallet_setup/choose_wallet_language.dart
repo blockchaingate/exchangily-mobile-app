@@ -1,11 +1,53 @@
+import 'dart:convert';
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/responsive/orientation_layout.dart';
 import 'package:exchangilymobileapp/responsive/screen_type_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
 
-class ChooseWalletLanguageScreen extends StatelessWidget {
+class ChooseWalletLanguageScreen extends StatefulWidget {
+  @override
+  _ChooseWalletLanguageScreenState createState() =>
+      _ChooseWalletLanguageScreenState();
+}
+
+class _ChooseWalletLanguageScreenState
+    extends State<ChooseWalletLanguageScreen> {
+  bool _isWaiting = true;
+  bool _hasError = false;
+//
+// read-only status indicators
+  bool get isWaiting => _isWaiting;
+  bool get hasError => _hasError;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    navigateToLastPage();
+  }
+
+  void navigateToLastPage({bool load = false}) async {
+    _hasError = false;
+    _isWaiting = true;
+    // notifyListeners();
+    final storage = new FlutterSecureStorage();
+    //await storage.delete(key: 'wallets');
+    await storage.read(key: 'wallets').then((encodedJsonWallets) {
+      if (encodedJsonWallets == null) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (BuildContext context) => ChooseWalletLanguagePortrait()));
+      } else if (encodedJsonWallets.isNotEmpty) {
+        Navigator.of(context).pushNamed('/dashboard');
+      }
+    }).catchError((error) {
+      print('No Wallets found in the Storage $error');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenTypeLayout(

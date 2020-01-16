@@ -17,11 +17,10 @@ class WalletFeaturesScreenState extends BaseState {
   double totalUsdBalance = 0;
   double containerWidth = 150;
   double containerHeight = 115;
-  String tickerName = '';
-  String coinName = '';
-  var walletBalance;
-  var usdBalance;
-  String address = '';
+  double walletBalance;
+  double assetsInExchange;
+  double usdBalance;
+
   List<WalletFeatureName> features = new List();
 
   getWalletFeatures(context) {
@@ -37,23 +36,21 @@ class WalletFeaturesScreenState extends BaseState {
     ];
   }
 
-  initialSetup() {
-    tickerName = walletInfo.tickerName;
-    coinName = walletInfo.name;
-    address = walletInfo.address;
-    walletBalance = walletInfo.availableBalance;
-    usdBalance = walletInfo.usdValue;
-    log.w('test ${walletInfo.name}');
-  }
-
   refreshBalance() async {
     setState(ViewState.Busy);
     await walletService
-        .coinBalanceByAddress(tickerName, address, '')
-        .then((data) {
+        .coinBalanceByAddress(
+            walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
+        .then((data) async {
       setState(ViewState.Idle);
       log.w(data);
+//walletBalance = data['assetInExchange'];
       walletBalance = data['balance'];
+      walletInfo.availableBalance = walletBalance;
+      double currentUsdValue =
+          await walletService.getCoinMarketPrice(walletInfo.name);
+      walletService.calculateCoinUsdBalance(currentUsdValue, walletBalance);
+      walletInfo.usdValue = walletService.coinUsdBalance;
     }).catchError((onError) {
       log.e(onError);
       setState(ViewState.Idle);

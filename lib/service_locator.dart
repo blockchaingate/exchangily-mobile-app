@@ -6,7 +6,7 @@ import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/create_password_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/send_screen_state.dart';
-import 'package:exchangilymobileapp/screen_state/total_balances_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/dashboard_screen_state.dart';
 import 'package:get_it/get_it.dart';
 
 GetIt locator = GetIt();
@@ -20,7 +20,7 @@ void serviceLocator() {
 
 // factory returns the new instance
   locator.registerFactory(() => CreatePasswordScreenState());
-  locator.registerFactory(() => TotalBalancesScreenState());
+  locator.registerFactory(() => DashboardScreenState());
   locator.registerFactory(() => SendScreenState());
   locator.registerFactory(() => ConfirmMnemonicScreenState());
   locator.registerFactory(() => WalletFeaturesScreenState());

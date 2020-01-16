@@ -11,7 +11,7 @@ class Api {
 
   static const usdCoinPriceUrl =
       'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
-  static const gasBalance = 'kanban/getBalance/';
+  static const getBalance = 'kanban/getBalance/';
   static const assetsBalance = 'exchangily/getBalances/';
   static const orders = 'ordersbyaddress/';
 
@@ -22,57 +22,47 @@ class Api {
 // Get Coin Usd Price
   Future getCoinsUsdValue() async {
     final res = await http.get(usdCoinPriceUrl);
-    if (res.statusCode == 200) {
+    if (res.statusCode == 200 || res.statusCode == 201) {
       return jsonDecode(res.body);
     }
     return log.e('getCoinsUsdValue Failed to load the data from the API');
   }
 
   Future getGasBalance(String exgAddress) async {
-    log.w(gasBalance + exgAddress);
     try {
-      final res = await http.get(
-          environment['endpoints']['kanban'] + gasBalance + exgAddress);
-      log.w('get gas bal ${res.body} - ${res.statusCode}');
+      final res = await http
+          .get(environment['endpoints']['kanban'] + getBalance + exgAddress);
+      log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
-    } catch(e) {}
+    } catch (e) {}
     log.e('getGasBalance Failed to load the data from the API');
     return {};
   }
 
   Future getAssetsBalance(String exgAddress) async {
     try {
-      final res = await http.get(
-          environment['endpoints']['kanban'] + assetsBalance + exgAddress);
+      final res = await http
+          .get(environment['endpoints']['kanban'] + assetsBalance + exgAddress);
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
-    } catch(e) {}
+    } catch (e) {}
     log.e('getAssetsBalance Failed to load the data from the API');
     return {};
   }
 
   Future getOrders(String exgAddress) async {
     try {
-      final res = await http.get(
-          environment['endpoints']['kanban'] + orders + exgAddress);
+      final res = await http
+          .get(environment['endpoints']['kanban'] + orders + exgAddress);
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
-    } catch(e) {}
+    } catch (e) {}
     log.e('getOrders Failed to load the data from the API');
     return {};
-  }
-
-  Future getAssetsLockedBalance(String address) async {
-    final res = await http.get(environment['endpoints']['kanban'] + gasBalance);
-    log.w('get gas bal ${res.body} - ${res.statusCode}');
-    if (res.statusCode == 200 || res.statusCode == 201) {
-      return jsonDecode(res.body);
-    }
-    return log.e('getGasBalance Failed to load the data from the API');
   }
 
   // Get FabUtxos
@@ -166,7 +156,7 @@ class Api {
       try {
         print('data=');
         print(data);
-        var response = await client.post(url,body: data);
+        var response = await client.post(url, body: data);
         print('response from postFabTx=');
         print(response.body);
         var json = jsonDecode(response.body);

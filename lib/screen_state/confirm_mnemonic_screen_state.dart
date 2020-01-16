@@ -3,7 +3,9 @@ import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../logger.dart';
 import '../service_locator.dart';
@@ -43,7 +45,7 @@ class ConfirmMnemonicScreenState extends BaseState {
         String toStringMnemonic = userTypedMnemonic.join(' ');
         importWallet(toStringMnemonic, context);
       } else {
-        //  importWallet(mnemonic, context);
+        importWallet(mnemonic, context);
         _walletService.showInfoFlushbar(
             'Mnemonic Empty',
             'Please fill all the text fields',
@@ -56,8 +58,9 @@ class ConfirmMnemonicScreenState extends BaseState {
     }
   }
 
-  importWallet(String toStringMnemonic, context) {
+  importWallet(String toStringMnemonic, context) async {
     _walletService.generateSeed(toStringMnemonic);
+
     Navigator.of(context)
         .pushNamed('/createPassword', arguments: toStringMnemonic);
   }

@@ -50,17 +50,26 @@ class WalletService {
   String randomMnemonic = '';
   Uint8List seed;
   var sum;
-  var coinUsdBalance;
+  double coinUsdBalance;
   var root;
-  List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
+  List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
+  List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
+  List<double> coinUsdMarketPrice = [];
+  List<String> coinNames = [
+    'bitcoin',
+    'ethereum',
+    'fabcoin',
+    'tether',
+    'exchangily'
+  ];
 
   // Get Random Mnemonic
   Future<String> getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
     if (isLocal) {
       randomMnemonic =
-          //'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-          'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
+          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+      // 'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
     }
     //log.w(randomMnemonic);
 
@@ -109,10 +118,8 @@ class WalletService {
 
   Future getCoinAddresses() async {
     root = bip32.BIP32.fromSeed(seed);
-    List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
-    for (int i = 0; i < listOfCoins.length; i++) {
-      var tickerName = listOfCoins[i];
-
+    for (int i = 0; i < coinTickers.length; i++) {
+      var tickerName = coinTickers[i];
       var addr =
           await getAddressForCoin(root, tickerName, tokenType: tokenType[i]);
       log.w('name $tickerName - address $addr');
@@ -125,7 +132,7 @@ class WalletService {
       String name, String address, String tokenType) async {
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
-    log.w('TOTAL BALACE $bal');
+    log.w('$name - Coin Balance $bal');
     if (bal['balance'].isNaN) {
       return 0.0;
     }
@@ -147,100 +154,105 @@ class WalletService {
 
 // Future GetAllCoins
   Future<List<WalletInfo>> getAllCoins() async {
-    _walletInfo.clear();
-    log.w('Seed in wallet service get all balanced method $seed');
+    if (_walletInfo != null) {
+      _walletInfo.clear();
+    } else {
+      _walletInfo = [];
+    }
+    coinUsdMarketPrice.clear();
+    totalUsdBalance.clear();
+    log.w('Seed in wallet service getallbalanced method $seed');
     root = bip32.BIP32.fromSeed(seed);
-    var usdVal = await _api.getCoinsUsdValue();
-    double currentBtcUsdValue = usdVal['bitcoin']['usd'];
-    double currentEthUsdValue = usdVal['ethereum']['usd'];
-    double currentFabUsdValue = usdVal['fabcoin']['usd'];
-    double currentTetherUsdValue = usdVal['tether']['usd'];
+    String wallets;
     try {
-      List<String> listOfCoins = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
-      log.w('List of coins length ${listOfCoins.length}');
-      for (int i = 0; i < listOfCoins.length; i++) {
-        var tickerName = listOfCoins[i];
-        if (tickerName == 'BTC') {
-          var addr = await getAddressForCoin(root, tickerName);
-          var bal = await getBalanceForCoin(root, tickerName);
-          log.w('BAL $bal');
-          double newBal = bal['balance'];
-          log.w('address - $addr and balance - $newBal');
-          totalUsdBalance.clear();
-          calculateCoinUsdBalance(currentBtcUsdValue, newBal);
-          log.i('printing calculated bal $coinUsdBalance');
-          _walletInfo.add(WalletInfo(
-              tickerName: tickerName,
-              address: addr,
-              availableBalance: bal['balance'],
-              lockedBalance: bal['lockedBalance'],
-              usdValue: coinUsdBalance,
-              name: 'bitcoin',
-              logoColor: Color.alphaBlend(Colors.blue, Colors.lightBlue)));
-          printValuesAfter(i, tickerName);
-        } else if (tickerName == 'FAB') {
-          var addr = await getAddressForCoin(root, tickerName);
-          var bal = await getBalanceForCoin(root, tickerName);
+      log.w('List of coins length ${coinTickers.length}');
+      for (int i = 0; i < coinTickers.length; i++) {
+        String tickerName = coinTickers[i];
+        String name = coinNames[i];
+        String token = tokenType[i];
+        var marketValue = await getCoinMarketPrice(name);
+        //    print('Market Value of coin $marketValue');
+        coinUsdMarketPrice.add(marketValue);
+        //   log.w('coinUsdMarketPriceList $coinUsdMarketPrice');
+        String addr =
+            await getAddressForCoin(root, tickerName, tokenType: token);
+        //  log.w('Address $addr');
+        var bal =
+            await getCoinBalanceByAddress(tickerName, addr, tokenType: token);
+        //   log.w('BAL $bal');
+        double walletBal = bal['balance'];
+        double walletLockedBal = bal['lockedBalance'];
+        //  log.w('tickername $tickerName - address: $addr - balance: $walletBal');
+        totalUsdBalance.clear();
+        calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
+        //  log.i('printing calculated bal $coinUsdBalance');
+        double assetsInExg = 0.0;
+        WalletInfo wi = new WalletInfo(
+            tickerName: tickerName,
+            tokenType: token,
+            address: addr,
+            availableBalance: walletBal,
+            usdValue: coinUsdBalance,
+            name: name,
+            assetsInExchange: assetsInExg);
 
-          calculateCoinUsdBalance(currentFabUsdValue, bal['balance']);
-
-          _walletInfo.add(WalletInfo(
-              tickerName: tickerName,
-              address: addr,
-              usdValue: coinUsdBalance,
-              availableBalance: bal['balance'],
-              name: 'fabcoin',
-              logoColor: globals.primaryColor));
-          printValuesAfter(i, tickerName);
-        } else if (tickerName == 'ETH') {
-          var addr = await getAddressForCoin(root, tickerName);
-          var bal = await getBalanceForCoin(root, tickerName);
-
-          calculateCoinUsdBalance(currentEthUsdValue, bal['balance']);
-          _walletInfo.add(WalletInfo(
-              tickerName: tickerName,
-              address: addr,
-              usdValue: coinUsdBalance,
-              availableBalance: bal['balance'],
-              name: 'ethereum',
-              logoColor: globals.primaryColor));
-          printValuesAfter(i, tickerName);
-        } else if (tickerName == 'USDT') {
-          var addr =
-              await getAddressForCoin(root, tickerName, tokenType: 'ETH');
-          var bal = await getBalanceForCoin(root, tickerName, tokenType: 'ETH');
-
-          calculateCoinUsdBalance(currentTetherUsdValue, bal['balance']);
-          _walletInfo.add(WalletInfo(
-              tickerName: tickerName,
-              address: addr,
-              usdValue: coinUsdBalance,
-              availableBalance: bal['balance'],
-              name: 'tether',
-              logoColor: globals.primaryColor));
-          printValuesAfter(i, tickerName);
-        } else if (tickerName == 'EXG') {
-          var addr =
-              await getAddressForCoin(root, tickerName, tokenType: 'FAB');
-          var bal = await getBalanceForCoin(root, tickerName, tokenType: 'FAB');
-          calculateCoinUsdBalance(0.2, bal['balance']);
-          _walletInfo.add(WalletInfo(
-              tickerName: tickerName,
-              address: addr,
-              availableBalance: bal['balance'],
-              usdValue: coinUsdBalance,
-              name: 'exchangily',
-              logoColor: globals.primaryColor));
-          printValuesAfter(i, tickerName);
-        }
+        // String wallet = jsonEncode(wi);
+        // log.e('with $wallet');
+        // Map<String, dynamic> decodedWallet = jsonDecode(wallet);
+        // log.w('Decoded Walelt $decodedWallet');
+        _walletInfo.add(wi);
+        wallets = jsonEncode(_walletInfo);
+        //  log.w('Wallets $wallets');
       }
+      final storage = new FlutterSecureStorage();
+      await storage.delete(key: 'wallets');
+      await storage.write(key: 'wallets', value: wallets);
+      // var test = await storage.read(key: 'wallets');
+      // log.e(test);
+      // log.e('Wallet info ${_walletInfo.length}');
       return _walletInfo;
     } catch (e) {
       log.e(e);
-      _walletInfo = [];
+      _walletInfo = null;
       log.i('Catch GetAllbalances Failed');
       return _walletInfo;
     }
+  }
+
+  // Gas Balance
+  gasBalance(String addr) async {
+    double gasAmount;
+    await _api.getGasBalance(addr).then((res) {
+      var newBal = int.parse(res['balance']['FAB']);
+      gasAmount = newBal / 1e18;
+    }).catchError((onError) {
+      log.w('On error $onError');
+      gasAmount = 0.0;
+    });
+    return gasAmount; // return here implies that it will return gas amount whatever value it gets assigned above
+  }
+
+  // Assets Balance
+  assetsBalance(String exgAddress) async {
+    List<Map<String, dynamic>> bal = [];
+    await _api.getAssetsBalance(exgAddress).then((res) {
+      for (var i = 0; i < res.length; i++) {
+        var tempBal = res[i];
+        var coinType = int.parse(tempBal['coinType']);
+        var unlockedAmount = double.parse(tempBal['unlockedAmount']) / 1e18;
+        var lockedAmount = double.parse(tempBal['lockedAmount']) / 1e18;
+        var finalBal = {
+          'coin': coinList.coin_list[coinType]['name'],
+          'amount': unlockedAmount,
+          'lockedAmount': lockedAmount
+        };
+        bal.add(finalBal);
+      }
+    }).catchError((onError) {
+      log.w('On error assetsBalance $onError');
+      bal = [];
+    });
+    return bal;
   }
 
   /* ---------------------------------------------------
@@ -263,12 +275,6 @@ class WalletService {
     ).show(context);
   }
 
-  void printValuesAfter(i, name) {
-    //log.i('in $name');
-    // log.i(
-    //     '${_walletInfo[i].name} address: ${_walletInfo[i].address} -Coin bal is ${_walletInfo[i].availableBalance} and usd Bal is ${_walletInfo[i].usdValue}');
-  }
-
   // Calculate Only Usd Balance For Individual Coin
   calculateCoinUsdBalance(
       double usdValueByApi, double actualWalletBalance) async {
@@ -278,8 +284,9 @@ class WalletService {
         usdValueByApi != null) {
       coinUsdBalance = (usdValueByApi * actualWalletBalance);
 
-      totalUsdBalance.add(coinUsdBalance);
-      log.w('Total Usd balance $totalUsdBalance');
+      // totalUsdBalance.add(coinUsdBalance);
+      // log.w('Total coin usd balance list $totalUsdBalance');
+      return coinUsdBalance;
     } else {
       coinUsdBalance = 0.0;
       log.i('calculateCoinUsdBalance - Wallet balance 0');
@@ -288,19 +295,19 @@ class WalletService {
 
   // Calculate Total Usd Balance
 
-  calculateTotalUsdBalance() {
-    sum = 0;
-    if (totalUsdBalance.isNotEmpty) {
-      log.w('Total usd balance list count ${totalUsdBalance.length}');
-      for (var i = 0; i < totalUsdBalance.length; i++) {
-        sum = sum + totalUsdBalance[i];
-      }
-      log.w('Sum $sum');
-      return sum;
-    }
-    log.w('totalUsdBalance List empty');
-    return 0.0;
-  }
+  // calculateTotalUsdBalance() {
+  //   sum = 0;
+  //   if (totalUsdBalance.isNotEmpty) {
+  //     log.w('Total usd balance list count ${totalUsdBalance.length}');
+  //     for (var i = 0; i < totalUsdBalance.length; i++) {
+  //       sum = sum + totalUsdBalance[i];
+  //     }
+  //     log.w('Sum $sum');
+  //     return sum;
+  //   }
+  //   log.w('totalUsdBalance List empty');
+  //   return 0.0;
+  // }
 
 // Add Gas
   Future<int> addGas() async {
