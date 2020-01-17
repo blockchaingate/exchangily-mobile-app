@@ -76,14 +76,21 @@ class WalletService {
     return Future.value(randomMnemonic);
   }
 
+  deleteEncryptedData() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/my_file.byte');
+    await file
+        .delete()
+        .then((res) => log.w('Previous data in the stored file deleted $res'))
+        .catchError((error) => log.w('Previous data deletion failed $error'));
+  }
+
   // Save Encrypted Data to Storage
   saveEncryptedData(String data) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/my_file.byte');
-      // final text = data;
-      await file.delete();
-      log.w('Previous data in the stored file deleted');
+      await deleteEncryptedData();
       await file.writeAsString(data);
       log.w('Encrypted data saved in storage');
     } catch (e) {

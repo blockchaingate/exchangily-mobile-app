@@ -8,10 +8,14 @@ class AppBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final double paddingValue = 4; // change space between icon and title text
     final double iconSize = 25; // change icon size
+
     return BottomNavigationBar(
+      type: BottomNavigationBarType.shifting,
+
+      selectedFontSize: 14,
       elevation: 10,
       unselectedItemColor: globals.grey,
-      //  backgroundColor: Color.fromRGBO(28, 28, 45, .95),
+      backgroundColor: Color.fromRGBO(28, 28, 45, .95),
       selectedItemColor: globals.primaryColor,
       showUnselectedLabels:
           true, // show label below the icon even when not selected
@@ -43,7 +47,7 @@ class AppBottomNav extends StatelessWidget {
       onTap: (int idx) {
         switch (idx) {
           case 0:
-            // Navigator.pushNamed(context, '/wallet');
+            Navigator.pushNamed(context, '/dashboard');
             break;
           case 1:
             Navigator.pushNamed(context, '/market');
