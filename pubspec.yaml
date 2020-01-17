@@ -111,7 +111,7 @@ flutter:
   #   androidPackage: my.package
   #   iosBundleIdentifier: my.package
   assets:
-    - assets/index.html
+    - assets/pages/
     - assets/images/start-page/
     - assets/images/wallet-page/
 

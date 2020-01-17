@@ -146,7 +146,7 @@ class _TradeState extends State<Trade>  with TradeService {
         children: <Widget>[
           TradePrice(key: _tradePriceState),
           //KlinePage(pair: widget.pair),
-          LoadHTMLFileToWEbView(),
+          LoadHTMLFileToWEbView(widget.pair),
           Trademarket(key: _tradeMarketState)
         ],
       ),
