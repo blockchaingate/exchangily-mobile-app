@@ -61,9 +61,15 @@ fixLength( String str, int length ) {
     for(int i=0;i<len2; i++) {
       retStr += '0';
     }
-  }
-  retStr += str;
-  return retStr;
+    retStr += str;
+    return retStr;
+  } else
+    if(len2 < 0) {
+      return str.substring(0, length -1);
+    }
+   else {
+     return str;
+    }
 }
 
 bigNum2Double(bigNum) {

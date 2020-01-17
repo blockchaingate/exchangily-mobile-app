@@ -20,9 +20,12 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'dart:typed_data';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:keccak/keccak.dart';
-import 'dart:typed_data';
-import 'package:convert/convert.dart';
 import '../../../utils/string_util.dart';
+import 'package:convert/convert.dart';
+import '../../../utils/kanban.util.dart';
+import 'package:hex/hex.dart';
+import '../../../utils/abi_util.dart';
+import '../../../utils/keypair_util.dart';
 
 class BuySell extends StatefulWidget {
 
@@ -91,7 +94,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
     return output;
   }
 
-  txHexforPlaceOrder() {
+  txHexforPlaceOrder(seed) async{
     var timeBeforeExpiration = 423434342432;
     var orderType = 1;
     var baseCoin = walletService.getCoinTypeIdByName(widget.baseCoinName);
@@ -99,17 +102,23 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
     var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin
         , targetCoin, quantity, price, timeBeforeExpiration);
 
-    var qtyString = (quantity *1e18).round().toString();
-    var priceString = (price *1e18).round().toString();
+    var qtyBigInt = BigInt.from(quantity * 1e18);
+    var priceBigInt = BigInt.from(price * 1e18);
 
-    /*
-    var abiHex = this.web3Serv.getCreateOrderFuncABI([bidOrAsk,
-      orderType, baseCoin, targetCoin, qtyString, priceString,
-      timeBeforeExpiration, false,  orderHash]);
-    const nonce = await this.kanbanService.getTransactionCount(exgAddress);
-    */
-    var txHex = '';
-    return txHex;
+
+    var abiHex = getCreateOrderFuncABI(bidOrAsk,
+      orderType, baseCoin, targetCoin, qtyBigInt, priceBigInt,
+      timeBeforeExpiration, false,  orderHash);
+    var nonce = await getNonce(exgAddress);
+    print('exgAddress===');
+    print(exgAddress);
+    print('nonce===');
+    print(nonce);
+    var keyPairKanban = getExgKeyPair(seed);
+    var exchangilyAddress = await getExchangilyAddress();
+    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
+        HEX.encode(keyPairKanban["privateKey"]), exchangilyAddress, nonce);
+    return txKanbanHex;
   }
 
   @override
@@ -197,6 +206,10 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
       Uint8List seed = walletService.generateSeed(mnemonic);
       print('seed=');
       print(seed);
+      var txHex = await txHexforPlaceOrder(seed);
+      var resKanban = await sendKanbanRawTransaction(txHex);
+      print('resKanban111=');
+      print(resKanban);
 
     } else {
       if (res.fieldOne != 'Closed') {
