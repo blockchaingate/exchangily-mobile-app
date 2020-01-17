@@ -118,8 +118,8 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
       }
       setState(() => {
         this.balance = newbals,
-        this.openOrders = openOrds.sublist(0, 10),
-        this.closedOrders = closeOrds.sublist(0, 10)
+        this.openOrders = openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds,
+        this.closedOrders = closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds
       });
 
     });

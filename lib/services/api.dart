@@ -96,6 +96,8 @@ class Api {
     print('txHex=' + txHex);
     var url = btcBaseUrl + 'postrawtransaction';
     var json;
+    var txHash = '';
+    var errMsg = '';
     try {
       var data = {'rawtx': txHex};
       var response = await client.post(url, body: data);
@@ -104,10 +106,8 @@ class Api {
       json = jsonDecode(response.body);
       print('json=');
       print(json);
-      print(json);
     } catch (e) {}
-    var txHash = '';
-    var errMsg = '';
+
     log.w('json= $json');
     if (json != null) {
       if (json['txid'] != null) {
