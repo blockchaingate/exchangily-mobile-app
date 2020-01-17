@@ -302,6 +302,32 @@ class AppLocalizations {
     return Intl.message('Tap here to copy TxId',
         name: 'taphereToCopyTxId', desc: 'taphereToCopyTxId');
   }
+
+  String get creatingWallet {
+    return Intl.message('Creating Wallet',
+        name: 'creatingWallet', desc: 'create_password_creatingWallet');
+  }
+
+  String get displayMnemonic {
+    return Intl.message('Display Mnemonic',
+        name: 'displayMnemonic', desc: 'settings_displayMnemonic');
+  }
+
+  String get hideMnemonic {
+    return Intl.message('Hide Mnemonic',
+        name: 'hideMnemonic', desc: 'settings_hideMnemonic');
+  }
+
+  String get deleteWallet {
+    return Intl.message('Delete Wallet',
+        name: 'deleteWallet', desc: 'settings_deleteWallet');
+  }
+
+  String get finishWalletBackup {
+    return Intl.message('Finish Wallet Backup',
+        name: 'finishWalletBackup',
+        desc: 'confirm_mnemonic_finishWalletBackup');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
