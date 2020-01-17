@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-17T11:57:03.376196",
+  "@@last_modified": "2020-01-17T14:44:26.010681",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -368,7 +368,115 @@
   },
   "finishWalletBackup": "Finish Wallet Backup",
   "@finishWalletBackup": {
-    "description": "confirm_mnemonic_finishWalletBackup",
+    "description": "confirm_mnemonic_finishWallet_backup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "serverTimeoutPleaseTryAgainLater": "Server Timeout, Please try again later",
+  "@serverTimeoutPleaseTryAgainLater": {
+    "description": "create_password_server_timeout_please_try_again_later",
+    "type": "text",
+    "placeholders": {}
+  },
+  "serverError": "Server Error",
+  "@serverError": {
+    "description": "create_password_serverError",
+    "type": "text",
+    "placeholders": {}
+  },
+  "emptyPassword": "Empty Password",
+  "@emptyPassword": {
+    "description": "create_password_empty_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseFillBothPasswordFields": "Please fill both password fields",
+  "@pleaseFillBothPasswordFields": {
+    "description": "create_password_please_fill_both_password_fields",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordConditionsMismatch": "Password Conditions Mismatch",
+  "@passwordConditionsMismatch": {
+    "description": "create_password_password_conditions_mismatch",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordConditions": "Please enter the password that satisfy above conditions",
+  "@passwordConditions": {
+    "description": "create_password_conditions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordMismatch": "Password Mismatch",
+  "@passwordMismatch": {
+    "description": "create_password_password_mismatch",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordRetype": "Please retype the same password in both fields",
+  "@passwordRetype": {
+    "description": "create_password_password_retype",
+    "type": "text",
+    "placeholders": {}
+  },
+  "typeYourWalletPassword": "Type your wallet password",
+  "@typeYourWalletPassword": {
+    "description": "dialog_manager_type_your_wallet_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dialogManagerTypeSamePasswordNote": "Type the same password which you have entered while creating the wallet",
+  "@dialogManagerTypeSamePasswordNote": {
+    "description": "dialog_manager_type_same_password_note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transanctionFailed": "Transanction Failed",
+  "@transanctionFailed": {
+    "description": "send_state_transanction_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseProvideTheCorrectPassword": "Please provide the correct Password",
+  "@pleaseProvideTheCorrectPassword": {
+    "description": "send_state_please_provide_the_correct_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "emptyAddress": "Empty Address",
+  "@emptyAddress": {
+    "description": "send_state_error_empty_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterAnAddress": "Please enter an address",
+  "@pleaseEnterAnAddress": {
+    "description": "send_state_error_please_enter_an_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "invalidAmount": "Invalid Amount",
+  "@invalidAmount": {
+    "description": "send_state_error_invalid_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterValidNumber": "Please enter a valid number",
+  "@pleaseEnterValidNumber": {
+    "description": "send_state_error_please_enter_valid_number",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactionId": "Transaction Id",
+  "@transactionId": {
+    "description": "send_state_transaction_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "copiedSuccessfully": "Copied Successfully",
+  "@copiedSuccessfully": {
+    "description": "send_state_copied_successfully",
     "type": "text",
     "placeholders": {}
   }

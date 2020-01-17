@@ -213,7 +213,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                 children: <Widget>[
                   Text(
                       '${walletInfo.tickerName} '.toUpperCase() +
-                          'Wallet Balance',
+                          AppLocalizations.of(context).walletbalance,
                       style: Theme.of(context).textTheme.headline),
                   Text(AppLocalizations.of(context).assetInExchange,
                       style: Theme.of(context).textTheme.headline)

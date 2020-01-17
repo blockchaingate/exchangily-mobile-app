@@ -236,7 +236,7 @@ class AppLocalizations {
     return Intl.message('Secure Your Wallet',
         name: 'secureYourWallet', desc: 'secure_your_wallet');
   }
- 
+
   String get somethingWentWrong {
     return Intl.message('Something Went Wrong',
         name: 'somethingWentWrong', desc: 'something_went_Wrong');
@@ -326,7 +326,108 @@ class AppLocalizations {
   String get finishWalletBackup {
     return Intl.message('Finish Wallet Backup',
         name: 'finishWalletBackup',
-        desc: 'confirm_mnemonic_finishWalletBackup');
+        desc: 'confirm_mnemonic_finishWallet_backup');
+  }
+
+  String get serverTimeoutPleaseTryAgainLater {
+    return Intl.message('Server Timeout, Please try again later',
+        name: 'serverTimeoutPleaseTryAgainLater',
+        desc: 'create_password_server_timeout_please_try_again_later');
+  }
+
+  String get serverError {
+    return Intl.message('Server Error',
+        name: 'serverError', desc: 'create_password_serverError');
+  }
+
+  String get emptyPassword {
+    return Intl.message('Empty Password',
+        name: 'emptyPassword', desc: 'create_password_empty_password');
+  }
+
+  String get pleaseFillBothPasswordFields {
+    return Intl.message('Please fill both password fields',
+        name: 'pleaseFillBothPasswordFields',
+        desc: 'create_password_please_fill_both_password_fields');
+  }
+
+  String get passwordConditionsMismatch {
+    return Intl.message('Password Conditions Mismatch',
+        name: 'passwordConditionsMismatch',
+        desc: 'create_password_password_conditions_mismatch');
+  }
+
+  String get passwordConditions {
+    return Intl.message(
+        'Please enter the password that satisfy above conditions',
+        name: 'passwordConditions',
+        desc: 'create_password_conditions');
+  }
+
+  String get passwordMismatch {
+    return Intl.message('Password Mismatch',
+        name: 'passwordMismatch', desc: 'create_password_password_mismatch');
+  }
+
+  String get passwordRetype {
+    return Intl.message('Please retype the same password in both fields',
+        name: 'passwordRetype', desc: 'create_password_password_retype');
+  }
+
+  String get typeYourWalletPassword {
+    return Intl.message('Type your wallet password',
+        name: 'typeYourWalletPassword',
+        desc: 'dialog_manager_type_your_wallet_password');
+  }
+
+  String get dialogManagerTypeSamePasswordNote {
+    return Intl.message(
+        'Type the same password which you have entered while creating the wallet',
+        name: 'dialogManagerTypeSamePasswordNote',
+        desc: 'dialog_manager_type_same_password_note');
+  }
+
+  String get transanctionFailed {
+    return Intl.message('Transanction Failed',
+        name: 'transanctionFailed', desc: 'send_state_transanction_failed');
+  }
+
+  String get pleaseProvideTheCorrectPassword {
+    return Intl.message('Please provide the correct Password',
+        name: 'pleaseProvideTheCorrectPassword',
+        desc: 'send_state_please_provide_the_correct_password');
+  }
+
+  String get emptyAddress {
+    return Intl.message('Empty Address',
+        name: 'emptyAddress', desc: 'send_state_error_empty_address');
+  }
+
+  String get pleaseEnterAnAddress {
+    return Intl.message('Please enter an address',
+        name: 'pleaseEnterAnAddress',
+        desc: 'send_state_error_please_enter_an_address');
+  }
+
+  String get invalidAmount {
+    return Intl.message('Invalid Amount',
+        name: 'invalidAmount', desc: 'send_state_error_invalid_amount');
+  }
+
+  String get pleaseEnterValidNumber {
+    return Intl.message('Please enter a valid number',
+        name: 'pleaseEnterValidNumber',
+        desc: 'send_state_error_please_enter_valid_number');
+  }
+
+  String get transactionId {
+    return Intl.message('Transaction Id',
+        name: 'transactionId', desc: 'send_state_transaction_id');
+  }
+
+  String get copiedSuccessfully {
+    return Intl.message('Copied Successfully',
+        name: 'copiedSuccessfully', desc: 'send_state_copied_successfully');
   }
 }
 

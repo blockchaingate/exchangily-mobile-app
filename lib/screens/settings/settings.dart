@@ -58,7 +58,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     height: 100,
                     child: Center(
                       child: Text(
-                        'Delete Wallet',
+                        AppLocalizations.of(context).deleteWallet,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.display3,
                       ),
@@ -82,7 +82,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     height: 100,
                     child: Center(
                       child: Text(
-                        !_isVisible ? 'Display Mnemonic' : 'Hide Mnemonic',
+                        !_isVisible
+                            ? AppLocalizations.of(context).displayMnemonic
+                            : AppLocalizations.of(context).hideMnemonic,
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.display3,
                       ),
