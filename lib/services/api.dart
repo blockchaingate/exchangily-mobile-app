@@ -96,15 +96,18 @@ class Api {
     print('txHex=' + txHex);
     var url = btcBaseUrl + 'postrawtransaction';
     var json;
+    var txHash = '';
+    var errMsg = '';
     try {
       var data = {'rawtx': txHex};
       var response = await client.post(url, body: data);
-
+      print('response from postrawtransaction: ');
+      print(response.body);
       json = jsonDecode(response.body);
+      print('json=');
       print(json);
     } catch (e) {}
-    var txHash = '';
-    var errMsg = '';
+
     log.w('json= $json');
     if (json != null) {
       if (json['txid'] != null) {
@@ -112,6 +115,8 @@ class Api {
       } else if (json['Error'] != null) {
         errMsg = json['Error'];
       }
+    } else {
+      errMsg = 'invalid json format.';
     }
     return {'txHash': txHash, 'errMsg': errMsg};
   }
