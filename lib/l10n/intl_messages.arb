@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-17T11:57:03.376196",
+  "@@last_modified": "2020-01-17T13:40:21.782591",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -369,6 +369,12 @@
   "finishWalletBackup": "Finish Wallet Backup",
   "@finishWalletBackup": {
     "description": "confirm_mnemonic_finishWalletBackup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "volume": "Volume",
+  "@volume": {
+    "description": "volume_text",
     "type": "text",
     "placeholders": {}
   }

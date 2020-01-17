@@ -5,6 +5,7 @@ import 'dart:async';
 import '../../../services/trade_service.dart';
 import '../../../environments/coins.dart';
 import '../../../utils/string_util.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 class MyOrders extends StatefulWidget {
   MyOrders({Key key}) : super(key: key);
   @override
@@ -143,10 +144,10 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
                 tabs: [
                   Padding(
                       padding: const EdgeInsets.only(top: 10.0, bottom: 8.0),
-                      child:new Text("Open")
+                      child:new Text(AppLocalizations.of(context).openOrders)
                   ),
-                  new Text("Close"),
-                  new Text("Assets")
+                  new Text(AppLocalizations.of(context).closeOrders),
+                  new Text(AppLocalizations.of(context).assets)
                 ],
                 controller: _tabController,
                 indicatorColor: Colors.white,

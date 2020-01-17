@@ -370,5 +370,120 @@
         "description": "wallet_setup_menmonic_text",
         "type": "text",
         "placeholders": {}
+    },
+    "volume": "交易量",
+    "@volume": {
+        "description": "volume_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "price": "价格",
+    "@price": {
+        "description": "price_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "high": "最高",
+    "@high": {
+        "description": "high_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "low": "最低",
+    "@low": {
+        "description": "low_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "orderBook": "买卖盘",
+    "@orderBook": {
+      "description": "order_book_text",
+      "type": "text",
+      "placeholders": {}
+    },
+    "marketTrades": "成交记录",
+    "@marketTrades": {
+      "description": "market_trades_text",
+      "type": "text",
+      "placeholders": {}
+    },
+    "coin": "资产",
+    "@coin": {
+        "description": "coin_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "amount": "可用数量",
+    "@low": {
+        "description": "amount_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "lockedAmount": "冻结数量",
+    "@orderBook": {
+      "description": "locked_amount_text",
+      "type": "text",
+      "placeholders": {}
+    },
+
+    "buy": "买入",
+    "@buy": {
+      "description": "buy_text",
+      "type": "text",
+      "placeholders": {}
+    },
+    "sell": "卖出",
+    "@sell": {
+      "description": "sell_text",
+      "type": "text",
+      "placeholders": {}
+    },
+    "transactionAmount": "交易数量",
+    "@transactionAmount": {
+        "description": "transaction_amount_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "quantity": "数量",
+    "@quantity": {
+        "description": "quantity_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "openOrders": "我的委托",
+    "@openOrders": {
+      "description": "open_orders_text",
+      "type": "text",
+      "placeholders": {}
+    }
+    "closeOrders": "我的成交",
+    "@closeOrders": {
+      "description": "close_orders_text",
+      "type": "text",
+      "placeholders": {}
+    },
+    "assets": "我的持仓",
+    "@assets": {
+      "description": "assets_text",
+      "type": "text",
+      "placeholders": {}
+    },
+    "type": "类型",
+    "@type": {
+        "description": "type_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pair": "交易对",
+    "@pair": {
+        "description": "pair_text",
+        "type": "text",
+        "placeholders": {}
+    },
+    "filledAmount": "成交",
+    "@filledAmount": {
+      "description": "filled_amount_text",
+      "type": "text",
+      "placeholders": {}
     }
 }

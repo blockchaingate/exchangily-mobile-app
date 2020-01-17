@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
 import '../../../models/orders.dart';
 import '../../../models/trade-model.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 
 class Trademarket extends StatefulWidget {
   Trademarket({Key key}) : super(key: key);
@@ -75,7 +76,7 @@ class TrademarketState extends State<Trademarket> {
                           })
                           },
                             child:
-                              Text("Order Book", style: TextStyle(fontSize: 18,color: tabName == 'orders'?Color(0xFF871fff):Colors.white70))
+                              Text(AppLocalizations.of(context).orderBook, style: TextStyle(fontSize: 18,color: tabName == 'orders'?Color(0xFF871fff):Colors.white70))
                         )
                   ),
                     GestureDetector(
@@ -85,7 +86,7 @@ class TrademarketState extends State<Trademarket> {
                         })
                       },
                       child:
-                        Text("Market Trades", style: TextStyle(fontSize: 18,color: tabName == 'trades'?Color(0xFF871fff):Colors.white70))
+                        Text(AppLocalizations.of(context).marketTrades, style: TextStyle(fontSize: 18,color: tabName == 'trades'?Color(0xFF871fff):Colors.white70))
                       )
                 ],
               )
