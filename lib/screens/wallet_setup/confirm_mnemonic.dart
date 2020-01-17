@@ -47,7 +47,7 @@ class _ConfirmMnemonictWalletScreenState
                 padding: EdgeInsets.all(15),
                 child: RaisedButton(
                   child: Text(
-                    'Finish Wallet Backup',
+                    AppLocalizations.of(context).finishWalletBackup,
                     style: Theme.of(context).textTheme.button,
                   ),
                   onPressed: () {

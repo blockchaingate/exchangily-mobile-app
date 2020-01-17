@@ -236,10 +236,10 @@ class AppLocalizations {
     return Intl.message('Secure Your Wallet',
         name: 'secureYourWallet', desc: 'secure_your_wallet');
   }
-
+ 
   String get somethingWentWrong {
     return Intl.message('Something Went Wrong',
-        name: 'Something Went Wrong', desc: 'something_went_Wrong');
+        name: 'somethingWentWrong', desc: 'something_went_Wrong');
   }
 
   String get setPasswordConditions {
