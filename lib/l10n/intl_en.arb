@@ -341,35 +341,35 @@
       "description": "create_password_creatingWallet",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "displayMnemonic": "Display Mnemonic",
     "@displayMnemonic": {
       "description": "settings_displayMnemonic",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "hideMnemonic": "Hide Mnemonic",
     "@hideMnemonic": {
       "description": "settings_hideMnemonic",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "deleteWallet": "Delete Wallet",
     "@deleteWallet": {
       "description": "settings_deleteWallet",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "finishWalletBackup": "Finish Wallet Backup",
     "@finishWalletBackup": {
       "description": "confirm_mnemonic_finishWalletBackup",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "mnemonic": "Mnemonic",
     "@mnemonic": {
       "description": "wallet_setup_menmonic_text",
       "type": "text",
       "placeholders": {}
-    },
+    }
   }

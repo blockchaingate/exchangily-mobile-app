@@ -340,5 +340,35 @@
         "description": "create_password_creatingWallet",
         "type": "text",
         "placeholders": {}
+    },
+    "displayMnemonic": "顯示助記詞",
+    "@displayMnemonic": {
+        "description": "settings_displayMnemonic",
+        "type": "text",
+        "placeholders": {}
+    },
+    "hideMnemonic": "隱藏助記詞",
+    "@hideMnemonic": {
+        "description": "settings_hideMnemonic",
+        "type": "text",
+        "placeholders": {}
+    },
+    "deleteWallet": "刪除錢包",
+    "@deleteWallet": {
+        "description": "settings_deleteWallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "finishWalletBackup": "完成錢包備份",
+    "@finishWalletBackup": {
+        "description": "confirm_mnemonic_finishWalletBackup",
+        "type": "text",
+        "placeholders": {}
+    },
+    "mnemonic": "助記詞",
+    "@mnemonic": {
+        "description": "wallet_setup_menmonic_text",
+        "type": "text",
+        "placeholders": {}
     }
 }
