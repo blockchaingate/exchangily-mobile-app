@@ -99,8 +99,11 @@ class Api {
     try {
       var data = {'rawtx': txHex};
       var response = await client.post(url, body: data);
-
+      print('response from postrawtransaction: ');
+      print(response.body);
       json = jsonDecode(response.body);
+      print('json=');
+      print(json);
       print(json);
     } catch (e) {}
     var txHash = '';
