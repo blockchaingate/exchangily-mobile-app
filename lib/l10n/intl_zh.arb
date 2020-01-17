@@ -299,7 +299,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "locked": "锁仓",
+    "locked": "冻结",
     "@locked": {
         "description": "total_balance_locked",
         "type": "text",
@@ -414,18 +414,17 @@
         "placeholders": {}
     },
     "amount": "可用数量",
-    "@low": {
+    "@amount": {
         "description": "amount_text",
         "type": "text",
         "placeholders": {}
     },
     "lockedAmount": "冻结数量",
-    "@orderBook": {
+    "@lockedAmount": {
       "description": "locked_amount_text",
       "type": "text",
       "placeholders": {}
     },
-
     "buy": "买入",
     "@buy": {
       "description": "buy_text",
@@ -455,8 +454,8 @@
       "description": "open_orders_text",
       "type": "text",
       "placeholders": {}
-    }
-    "closeOrders": "我的成交",
+    },
+    "closeOrders": "成交订单",
     "@closeOrders": {
       "description": "close_orders_text",
       "type": "text",
