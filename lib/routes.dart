@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/screens/wallet_features/add_gas.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/deposit.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/withdraw.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/smart_contract.dart';
+import 'package:exchangilymobileapp/screens/settings/settings.dart';
 
 final log = getLogger('Routes');
 
@@ -91,6 +92,9 @@ class RouteGenerator {
 
       case '/withdraw':
         return MaterialPageRoute(builder: (_) => Withdraw(walletInfo: args));
+
+      case '/settings':
+        return MaterialPageRoute(builder: (_) => SettingsScreen());
 
       default:
         return _errorRoute(settings);

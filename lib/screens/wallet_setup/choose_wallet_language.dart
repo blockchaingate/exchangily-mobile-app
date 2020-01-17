@@ -26,7 +26,7 @@ class _ChooseWalletLanguageScreenState
   void initState() {
     // TODO: implement initState
     super.initState();
-    navigateToLastPage();
+    // navigateToLastPage();
   }
 
   void navigateToLastPage({bool load = false}) async {

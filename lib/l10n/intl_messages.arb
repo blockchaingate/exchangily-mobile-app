@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-03T20:20:56.919327",
+  "@@last_modified": "2020-01-17T11:57:03.376196",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -63,6 +63,18 @@
   "addressCopied": "Address Copied",
   "@addressCopied": {
     "description": "address_copied",
+    "type": "text",
+    "placeholders": {}
+  },
+  "address": "Address",
+  "@address": {
+    "description": "receive_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "receiverWalletAddress": "Receiver Wallet Address",
+  "@receiverWalletAddress": {
+    "description": "send_screen_receiver_awallet_ddress",
     "type": "text",
     "placeholders": {}
   },
@@ -204,6 +216,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "settings": "Settings",
+  "@settings": {
+    "description": "bottom_nav_settings",
+    "type": "text",
+    "placeholders": {}
+  },
   "totalBalance": "Total Balance",
   "@totalBalance": {
     "description": "total_balance",
@@ -252,7 +270,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character",
+  "somethingWentWrong": "Something Went Wrong",
+  "@somethingWentWrong": {
+    "description": "something_went_Wrong",
+    "type": "text",
+    "placeholders": {}
+  },
+  "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using !@#$&*~",
   "@setPasswordConditions": {
     "description": "setPasswordConditions",
     "type": "text",
@@ -273,6 +297,78 @@
   "warningImportOrConfirmMnemonic": "Please type in your 12 word mnemonic phrase in the correct sequence to confirm",
   "@warningImportOrConfirmMnemonic": {
     "description": "warning_import_or_confirm_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterPassword": "Enter Password",
+  "@enterPassword": {
+    "description": "create_enter_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "create_confirm_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "available": "Available",
+  "@available": {
+    "description": "total_balance_available",
+    "type": "text",
+    "placeholders": {}
+  },
+  "locked": "Locked",
+  "@locked": {
+    "description": "total_balance_locked",
+    "type": "text",
+    "placeholders": {}
+  },
+  "value": "Value",
+  "@value": {
+    "description": "total_balance_value",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletbalance": "Wallet Balance",
+  "@walletbalance": {
+    "description": "total_balance_wallet_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "taphereToCopyTxId": "Tap here to copy TxId",
+  "@taphereToCopyTxId": {
+    "description": "taphereToCopyTxId",
+    "type": "text",
+    "placeholders": {}
+  },
+  "creatingWallet": "Creating Wallet",
+  "@creatingWallet": {
+    "description": "create_password_creatingWallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "displayMnemonic": "Display Mnemonic",
+  "@displayMnemonic": {
+    "description": "settings_displayMnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "hideMnemonic": "Hide Mnemonic",
+  "@hideMnemonic": {
+    "description": "settings_hideMnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteWallet": "Delete Wallet",
+  "@deleteWallet": {
+    "description": "settings_deleteWallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "finishWalletBackup": "Finish Wallet Backup",
+  "@finishWalletBackup": {
+    "description": "confirm_mnemonic_finishWalletBackup",
     "type": "text",
     "placeholders": {}
   }

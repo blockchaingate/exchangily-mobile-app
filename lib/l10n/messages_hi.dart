@@ -21,7 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "backupSeedPhrase" : MessageLookupByLibrary.simpleMessage("बीज (सीड) बैकअप करें"),
+    "backupMnemonic" : MessageLookupByLibrary.simpleMessage("बीज (सीड) बैकअप करें"),
     "confirm" : MessageLookupByLibrary.simpleMessage("पुष्टि (कन्फर्म) करें "),
     "title" : MessageLookupByLibrary.simpleMessage("सफलतापूर्वक")
   };

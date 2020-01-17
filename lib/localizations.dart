@@ -236,10 +236,10 @@ class AppLocalizations {
     return Intl.message('Secure Your Wallet',
         name: 'secureYourWallet', desc: 'secure_your_wallet');
   }
-
+ 
   String get somethingWentWrong {
     return Intl.message('Something Went Wrong',
-        name: 'Something Went Wrong', desc: 'something_went_Wrong');
+        name: 'somethingWentWrong', desc: 'something_went_Wrong');
   }
 
   String get setPasswordConditions {
@@ -301,6 +301,32 @@ class AppLocalizations {
   String get taphereToCopyTxId {
     return Intl.message('Tap here to copy TxId',
         name: 'taphereToCopyTxId', desc: 'taphereToCopyTxId');
+  }
+
+  String get creatingWallet {
+    return Intl.message('Creating Wallet',
+        name: 'creatingWallet', desc: 'create_password_creatingWallet');
+  }
+
+  String get displayMnemonic {
+    return Intl.message('Display Mnemonic',
+        name: 'displayMnemonic', desc: 'settings_displayMnemonic');
+  }
+
+  String get hideMnemonic {
+    return Intl.message('Hide Mnemonic',
+        name: 'hideMnemonic', desc: 'settings_hideMnemonic');
+  }
+
+  String get deleteWallet {
+    return Intl.message('Delete Wallet',
+        name: 'deleteWallet', desc: 'settings_deleteWallet');
+  }
+
+  String get finishWalletBackup {
+    return Intl.message('Finish Wallet Backup',
+        name: 'finishWalletBackup',
+        desc: 'confirm_mnemonic_finishWalletBackup');
   }
 }
 

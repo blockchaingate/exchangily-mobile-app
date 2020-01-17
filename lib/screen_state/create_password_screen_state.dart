@@ -116,7 +116,7 @@ class CreatePasswordScreenState extends BaseState {
       } else {
         password = '';
         confirmPassword = '';
-        _vaultService.secureSeed(context, pass, mnemonic);
+        _vaultService.secureMnemonic(context, pass, mnemonic);
         log.w('In else');
         return true;
       }
