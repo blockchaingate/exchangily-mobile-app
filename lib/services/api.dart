@@ -115,6 +115,8 @@ class Api {
       } else if (json['Error'] != null) {
         errMsg = json['Error'];
       }
+    } else {
+      errMsg = 'invalid json format.';
     }
     return {'txHash': txHash, 'errMsg': errMsg};
   }

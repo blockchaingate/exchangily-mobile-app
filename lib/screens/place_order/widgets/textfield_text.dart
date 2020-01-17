@@ -34,7 +34,7 @@ class TextfieldText extends StatelessWidget {
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
-                      ThousandsFormatter(),
+                      ThousandsFormatter(allowFraction: true),
                     ],
                     onChanged: (text) {
                       print("First text field: $text");
