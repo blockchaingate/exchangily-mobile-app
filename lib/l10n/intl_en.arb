@@ -415,18 +415,17 @@
         "placeholders": {}
     },
     "amount": "Amount",
-    "@low": {
+    "@amount": {
         "description": "amount_text",
         "type": "text",
         "placeholders": {}
     },
     "lockedAmount": "Locked Amount",
-    "@orderBook": {
+    "@lockedAmount": {
       "description": "locked_amount_text",
       "type": "text",
       "placeholders": {}
-    }
-
+    },
     "buy": "Buy",
     "@buy": {
       "description": "buy_text",
@@ -456,7 +455,7 @@
       "description": "open_orders_text",
       "type": "text",
       "placeholders": {}
-    }
+    },
     "closeOrders": "Close Orders",
     "@closeOrders": {
       "description": "close_orders_text",
@@ -486,8 +485,7 @@
       "description": "filled_amount_text",
       "type": "text",
       "placeholders": {}
-    }
-
+    },
     "passwordMatched": "Password Matched",
     "@passwordMatched": {
       "description": "create_password_password_matched",
@@ -608,4 +606,4 @@
     "type": "text",
     "placeholders": {}
   }
-  }
+}
