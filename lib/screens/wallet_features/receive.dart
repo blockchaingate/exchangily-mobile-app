@@ -130,7 +130,8 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text('Address', style: Theme.of(context).textTheme.display1),
+          Text(AppLocalizations.of(context).address,
+              style: Theme.of(context).textTheme.display1),
           Text(widget.walletInfo.address,
               style: Theme.of(context).textTheme.headline),
           Container(

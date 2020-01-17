@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/create_password_screen_state.dart';
@@ -85,7 +84,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               baseColor: globals.primaryColor,
                               highlightColor: globals.grey,
                               child: Text(
-                                'Creating Wallet',
+                                AppLocalizations.of(context).creatingWallet,
                                 style: Theme.of(context).textTheme.button,
                               ),
                             )
@@ -138,7 +137,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     : Padding(
                         padding: EdgeInsets.only(right: 0),
                         child: Icon(Icons.clear, color: globals.grey)),
-            labelText: 'Enter Password',
+            labelText: AppLocalizations.of(context).enterPassword,
             prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline,
             helperStyle: Theme.of(context).textTheme.display2));
@@ -172,7 +171,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                 : Padding(
                     padding: EdgeInsets.only(right: 0),
                     child: Icon(Icons.clear, color: globals.grey)),
-            labelText: 'Confirm password',
+            labelText: AppLocalizations.of(context).confirmPassword,
             prefixIcon: Icon(Icons.lock, color: Colors.white),
             labelStyle: Theme.of(context).textTheme.headline,
             helperStyle: Theme.of(context).textTheme.display2));

@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../shared/globals.dart' as globals;
+import 'package:exchangilymobileapp/localizations.dart';
 
 class DialogManager extends StatefulWidget {
   final Widget child;
@@ -67,7 +68,7 @@ class _DialogManagerState extends State<DialogManager> {
                   Icons.security,
                   color: globals.primaryColor,
                 ),
-                labelText: 'Type your wallet password',
+                labelText: AppLocalizations.of(context).typeYourWalletPassword,
               ),
             ),
           ],

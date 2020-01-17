@@ -91,7 +91,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                     iconSize: 25,
                                     color: globals.primaryColor,
                                   ),
-                                  labelText: 'Receiver Wallet Address',
+                                  labelText: AppLocalizations.of(context)
+                                      .receiverWalletAddress,
                                   labelStyle:
                                       Theme.of(context).textTheme.display2),
                               style: Theme.of(context).textTheme.display2,
@@ -256,7 +257,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                             children: <Widget>[
                               RichText(
                                 text: TextSpan(
-                                    text: 'Tap here to copy TxId',
+                                    text: AppLocalizations.of(context)
+                                        .taphereToCopyTxId,
                                     style: TextStyle(
                                         decoration: TextDecoration.underline,
                                         color: globals.primaryColor),

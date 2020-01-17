@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../shared/globals.dart' as globals;
 
+import 'package:exchangilymobileapp/localizations.dart';
+
 class SendScreenState extends BaseState {
   final log = getLogger('SendState');
   DialogService _dialogService = locator<DialogService>();
@@ -29,9 +31,10 @@ class SendScreenState extends BaseState {
     log.w('dialog called');
     setState(ViewState.Busy);
     var dialogResponse = await _dialogService.showDialog(
-        title: 'Enter Password',
+        title: AppLocalizations.of(context).enterPassword,
         description:
-            'Type the same password which you entered while creating the wallet');
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context).confirm);
     if (dialogResponse.confirmed) {
       String mnemonic = dialogResponse.fieldOne;
       print('mnemonic in sendTransaction=' + mnemonic);
@@ -61,8 +64,8 @@ class SendScreenState extends BaseState {
         } else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
           walletService.showInfoFlushbar(
-              'Send Failed',
-              '$tickerName Transanction has not been completed',
+              AppLocalizations.of(context).sendError,
+              '$tickerName + ${AppLocalizations.of(context).transanctionFailed}',
               Icons.cancel,
               globals.red,
               context);
@@ -72,15 +75,17 @@ class SendScreenState extends BaseState {
       }).timeout(Duration(seconds: 25), onTimeout: () {
         log.e('In time out');
         setState(ViewState.Idle);
-        return errorMessage = 'Server TIMEOUT!!!';
+        return errorMessage =
+            AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
       }).catchError((error) {
         log.e('In Catch error - $error');
-        errorMessage = 'Transaction Failed';
+        errorMessage = AppLocalizations.of(context).transanctionFailed;
         setState(ViewState.Idle);
       });
     } else if (dialogResponse.fieldOne != 'Closed') {
       setState(ViewState.Idle);
-      return errorMessage = 'Please enter the correct Password';
+      return errorMessage =
+          AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
     } else {
       // This is when user closes the dialog box by pressing cross icon
       setState(ViewState.Idle);
@@ -110,13 +115,21 @@ class SendScreenState extends BaseState {
     log.w(walletInfo.availableBalance);
     if (toAddress == '') {
       log.w('Address $toAddress');
-      walletService.showInfoFlushbar('Empty Address', 'Please enter an address',
-          Icons.cancel, globals.red, context);
+      walletService.showInfoFlushbar(
+          AppLocalizations.of(context).emptyAddress,
+          AppLocalizations.of(context).pleaseEnterAnAddress,
+          Icons.cancel,
+          globals.red,
+          context);
     } else if (amount == null ||
         !checkSendAmount ||
         amount > walletInfo.availableBalance) {
-      walletService.showInfoFlushbar('Invalid Amount',
-          'Please enter a valid number', Icons.cancel, globals.red, context);
+      walletService.showInfoFlushbar(
+          AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          Icons.cancel,
+          globals.red,
+          context);
     } else {
       FocusScope.of(context).requestFocus(FocusNode());
       await verifyPassword(
@@ -149,7 +162,11 @@ class SendScreenState extends BaseState {
 
   copyAddress(context) {
     Clipboard.setData(new ClipboardData(text: txHash));
-    walletService.showInfoFlushbar('Transaction Id', 'Copied Successfully',
-        Icons.check, globals.green, context);
+    walletService.showInfoFlushbar(
+        AppLocalizations.of(context).transactionId,
+        AppLocalizations.of(context).copiedSuccessfully,
+        Icons.check,
+        globals.green,
+        context);
   }
 }

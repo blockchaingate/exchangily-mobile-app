@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -31,7 +32,7 @@ class CreatePasswordScreenState extends BaseState {
     setState(ViewState.Busy);
     _walletInfo = await _walletService.getAllCoins().then((data) {
       if (data == null || data == []) {
-        errorMessage = 'Server Error';
+        errorMessage = AppLocalizations.of(context).serverError;
         setState(ViewState.Idle);
       } else {
         _walletInfo = data;
@@ -40,10 +41,11 @@ class CreatePasswordScreenState extends BaseState {
       return _walletInfo;
     }).timeout(Duration(seconds: 25), onTimeout: () {
       log.e('TIMEOUT');
-      errorMessage = 'Server Timeout, Please try again later';
+      errorMessage =
+          AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
       setState(ViewState.Idle);
     }).catchError((onError) {
-      errorMessage = 'Something went wrong';
+      errorMessage = AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);
       setState(ViewState.Idle);
     });
@@ -82,8 +84,8 @@ class CreatePasswordScreenState extends BaseState {
       checkPasswordConditions = false;
       checkConfirmPasswordConditions = false;
       _walletService.showInfoFlushbar(
-          'Empty Password',
-          'Please fill both password fields',
+          AppLocalizations.of(context).emptyPassword,
+          AppLocalizations.of(context).pleaseFillBothPasswordFields,
           Icons.cancel,
           Colors.red,
           context);
@@ -95,8 +97,8 @@ class CreatePasswordScreenState extends BaseState {
         checkPasswordConditions = false;
         checkConfirmPasswordConditions = false;
         _walletService.showInfoFlushbar(
-            'Password Conditions Mismatch,',
-            'Please enter the password that satisfy above conditions',
+            AppLocalizations.of(context).passwordConditionsMismatch,
+            AppLocalizations.of(context).passwordConditions,
             Icons.cancel,
             Colors.red,
             context);
@@ -107,8 +109,8 @@ class CreatePasswordScreenState extends BaseState {
         checkPasswordConditions = false;
         checkConfirmPasswordConditions = false;
         _walletService.showInfoFlushbar(
-            'Password Mismatch',
-            'Please retype the same password in both fields',
+            AppLocalizations.of(context).passwordMismatch,
+            AppLocalizations.of(context).passwordRetype,
             Icons.cancel,
             Colors.red,
             context);

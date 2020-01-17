@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:exchangilymobileapp/models/alert/alert_request.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 
 class DialogService {
   Function(AlertRequest) _showDialogListener;
   Completer<AlertResponse> _dialogCompleter;
-
   // Registers a callback function, typically to show the dialog box
   void registerDialogListener(Function(AlertRequest) showDialogListener) {
     _showDialogListener = showDialogListener;
@@ -14,7 +12,7 @@ class DialogService {
 
   // Calls the dialog listener and returns a future that will wait for the dialog to complete
   Future<AlertResponse> showDialog(
-      {String title, String description, String buttonTitle = "Confirm"}) {
+      {String title, String description, String buttonTitle}) {
     _dialogCompleter = Completer<AlertResponse>();
     _showDialogListener(AlertRequest(
         title: title, description: description, buttonTitle: buttonTitle));
