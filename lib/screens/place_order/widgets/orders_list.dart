@@ -81,7 +81,7 @@ class OrdersList extends StatelessWidget {
         Column(
           children: <Widget>[
             Text(
-                "Amount",
+                "Amount(Filled)",
                 style:  new TextStyle(
                     color: Colors.grey,
                     fontSize: 18.0)
@@ -91,7 +91,7 @@ class OrdersList extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
                   child:
                   Text(
-                      item["amount"].toString(),
+                      (item["amount"] + item["filledAmount"]).toString() + "(" + item["filledAmount"].toString() + ")",
                       style:  new TextStyle(
                           color: Colors.white70,
                           fontSize: 16.0)

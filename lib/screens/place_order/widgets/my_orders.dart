@@ -60,8 +60,8 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
     if(address == null) {
       return;
     }
-    Timer(Duration(seconds: 3), () async {
-      print("Yeah, this line is printed after 3 seconds");
+    Timer.periodic(Duration(seconds: 3), (Timer time) async {
+      // print("Yeah, this line is printed after 3 seconds");
       var balances = await getAssetsBalance(address);
       var orders = await getOrders(address);
       print('balances==========================================================================');
@@ -85,9 +85,6 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
         newbals.add(newbal);
       }
 
-      print(newbals);
-      print('orders===========================================================================');
-      print(orders);
 
       for (var i = 0; i < orders.length; i++) {
         var order = orders[i];
@@ -109,7 +106,8 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
           'type': (bidOrAsk == true) ? 'Buy' : 'Sell',
           'pair': coin_list[pairLeft]['name'].toString() + '/' + coin_list[pairRight]['name'].toString(),
           'price': price,
-          'amount': orderQuantity
+          'amount': orderQuantity,
+          'filledAmount': filledQuantity
         };
 
         if(isActive == true) {
@@ -120,8 +118,8 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
       }
       setState(() => {
         this.balance = newbals,
-        this.openOrders = openOrds,
-        this.closedOrders = closeOrds
+        this.openOrders = openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds,
+        this.closedOrders = closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds
       });
 
     });
@@ -162,7 +160,7 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
                   ),
                   padding: EdgeInsets.fromLTRB(0.0, 10, 0.0, 0),
                   margin: EdgeInsets.fromLTRB(0.0, 10, 0.0, 0),
-                  height: 530,
+                  height: 330,
                   child:TabBarView(
                     children: [
                       OrdersList(openOrders),

@@ -651,7 +651,7 @@ class WalletService {
           }
           txb.addInput(tx['txid'], tx['idx']);
           print('amountNum=' + amountNum.toString());
-          print('txvalue=' + tx['value']);
+          print('txvalue=' + tx['value'].toString());
           amountNum -= tx['value'];
           print('amountNum1=' + amountNum.toString());
           amountNum += bytesPerInput * satoshisPerBytes;
