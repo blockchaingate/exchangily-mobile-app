@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/models/trade-model.dart';
+import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/cupertino.dart';
 import "widgets//price.dart";
@@ -147,12 +148,8 @@ class _TradeState extends State<Trade>  with TradeService {
           TradePrice(key: _tradePriceState),
           //KlinePage(pair: widget.pair),
           LoadHTMLFileToWEbView(),
-          Trademarket(key: _tradeMarketState)
-        ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-          color: Color(0xFF1c1c2d),
-          child: Row(
+          Trademarket(key: _tradeMarketState),
+           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Flexible(
@@ -187,7 +184,9 @@ class _TradeState extends State<Trade>  with TradeService {
               )
             ],
           )
+        ],
       ),
+      bottomNavigationBar: AppBottomNav()
     );
   }
 }

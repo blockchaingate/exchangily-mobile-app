@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,9 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WalletService walletService = locator<WalletService>();
     final log = getLogger('Backup Mnemonic');
-    final randomMnemonic = Provider.of<String>(context);
+    final randomMnemonic = walletService.getRandomMnemonic();
     log.w(randomMnemonic);
     mnemonic = randomMnemonic
         .split(" ")

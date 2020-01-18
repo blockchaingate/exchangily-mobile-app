@@ -64,7 +64,7 @@ class WalletService {
   ];
 
   // Get Random Mnemonic
-  Future<String> getRandomMnemonic() {
+  String getRandomMnemonic() {
     randomMnemonic = bip39.generateMnemonic();
     if (isLocal) {
       randomMnemonic =
@@ -73,7 +73,7 @@ class WalletService {
     }
     log.w(randomMnemonic);
 
-    return Future.value(randomMnemonic);
+    return randomMnemonic;
   }
 
   deleteEncryptedData() async {
@@ -696,7 +696,6 @@ class WalletService {
       txb.addOutput(toAddress, output2);
       print('333');
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
-
         var privateKey = receivePrivateKeyArr[i];
         var alice = ECPair.fromPrivateKey(privateKey,
             compressed: true, network: environment["chains"]["BTC"]["network"]);

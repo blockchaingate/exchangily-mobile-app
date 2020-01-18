@@ -37,7 +37,6 @@ class SendScreenState extends BaseState {
         buttonTitle: AppLocalizations.of(context).confirm);
     if (dialogResponse.confirmed) {
       String mnemonic = dialogResponse.fieldOne;
-      print('mnemonic in sendTransaction=' + mnemonic);
       Uint8List seed = walletService.generateSeed(mnemonic);
       log.e(seed);
       log.w(mnemonic);

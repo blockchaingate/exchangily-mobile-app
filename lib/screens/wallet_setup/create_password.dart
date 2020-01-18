@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
-  final String mnemonic;
-  const CreatePasswordScreen({Key key, this.mnemonic}) : super(key: key);
+  final String randomMnemonic;
+  const CreatePasswordScreen({Key key, this.randomMnemonic}) : super(key: key);
 
   @override
   _CreatePasswordScreenState createState() => _CreatePasswordScreenState();
@@ -193,10 +193,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         color: globals.primaryColor,
         textColor: Colors.white,
         onPressed: () async {
+          log.e('111111 -${widget.randomMnemonic}');
           // Remove the on screen keyboard by shifting focus to unused focus node
           FocusScope.of(context).requestFocus(FocusNode());
           var passSuccess = model.validatePassword(_passTextController.text,
-              _confirmPassTextController.text, context, widget.mnemonic);
+              _confirmPassTextController.text, context, widget.randomMnemonic);
 
           _passTextController.text = '';
           _confirmPassTextController.text = '';

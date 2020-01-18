@@ -429,6 +429,11 @@ class AppLocalizations {
     return Intl.message('Copied Successfully',
         name: 'copiedSuccessfully', desc: 'send_state_copied_successfully');
   }
+
+  String get changeWalletLanguage {
+    return Intl.message('Change Wallet Language',
+        name: 'changeWalletLanguage', desc: 'settings_change_wallet_language');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

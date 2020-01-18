@@ -13,13 +13,11 @@ class ConfirmMnemonicScreenState extends BaseState {
   final log = getLogger('ConfirmMnemonicScreenState');
   String errorMessage = '';
   List<String> userTypedMnemonic = [];
-  String mnemonic;
+  List<String> randomMnemonic = [];
+  String listToString = '';
 
   verifyMnemonic(controller, context, count, routeName) {
-    mnemonic = Provider.of<String>(context);
-    List<String> randomMnemonic = mnemonic.split(" ").toList();
-
-    log.w(randomMnemonic);
+    log.w('random $randomMnemonic');
 
     userTypedMnemonic.clear();
     for (var i = 0; i < count; i++) {
@@ -40,8 +38,8 @@ class ConfirmMnemonicScreenState extends BaseState {
           userTypedMnemonic[10] != '' &&
           userTypedMnemonic[11] != '') {
         log.e(userTypedMnemonic.length);
-        String toStringMnemonic = userTypedMnemonic.join(' ');
-        importWallet(toStringMnemonic, context);
+        listToString = userTypedMnemonic.join(' ');
+        importWallet(listToString, context);
       } else {
         // importWallet(mnemonic, context);
         _walletService.showInfoFlushbar(
@@ -52,20 +50,23 @@ class ConfirmMnemonicScreenState extends BaseState {
             context);
       }
     } else {
-      createWallet(randomMnemonic, context);
+      createWallet(context);
     }
   }
+  // Import Wallet
 
   importWallet(String toStringMnemonic, context) async {
     _walletService.generateSeed(toStringMnemonic);
-
     Navigator.of(context)
         .pushNamed('/createPassword', arguments: toStringMnemonic);
   }
 
-  createWallet(mnemonic, context) {
-    if (isLocal || listEquals(mnemonic, userTypedMnemonic)) {
-      Navigator.of(context).pushNamed('/createPassword');
+// Create Wallet
+  createWallet(context) {
+    if (isLocal || listEquals(randomMnemonic, userTypedMnemonic)) {
+      listToString = randomMnemonic.join(' ');
+      Navigator.of(context)
+          .pushNamed('/createPassword', arguments: listToString);
     } else {
       _walletService.showInfoFlushbar('Mnemonic incomplete',
           'Please fill all the text fields', Icons.cancel, Colors.red, context);

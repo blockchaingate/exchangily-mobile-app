@@ -40,14 +40,14 @@ class RouteGenerator {
 
       case '/confirmMnemonic':
         return MaterialPageRoute(
-            builder: (_) => ConfirmMnemonictWalletScreen(mnemonic: args));
+            builder: (_) => ConfirmMnemonictWalletScreen(randomMnemonic: args));
 
       case '/backupMnemonic':
         return MaterialPageRoute(builder: (_) => BackupMnemonicWalletScreen());
 
       case '/createPassword':
         return MaterialPageRoute(
-            builder: (_) => CreatePasswordScreen(mnemonic: args));
+            builder: (_) => CreatePasswordScreen(randomMnemonic: args));
 
       case '/dashboard':
         return MaterialPageRoute(
