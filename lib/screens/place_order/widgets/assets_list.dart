@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:exchangilymobileapp/localizations.dart';
 
 class AssetssList extends StatelessWidget {
   List<Map<String, dynamic>> assetsArray;
@@ -13,7 +14,7 @@ class AssetssList extends StatelessWidget {
         Column(
           children: <Widget>[
             Text(
-                "Coin",
+                AppLocalizations.of(context).coin,
                 style:  new TextStyle(
                     color: Colors.grey,
                     fontSize: 18.0)
@@ -35,7 +36,7 @@ class AssetssList extends StatelessWidget {
           children: <Widget>[
 
             Text(
-                "Amount",
+                AppLocalizations.of(context).amount,
                 style:  new TextStyle(
                     color: Colors.grey,
                     fontSize: 18.0)
@@ -56,7 +57,7 @@ class AssetssList extends StatelessWidget {
         Column(
           children: <Widget>[
             Text(
-                "Locked Amount",
+                AppLocalizations.of(context).lockedAmount,
                 style:  new TextStyle(
                     color: Colors.grey,
                     fontSize: 18.0)

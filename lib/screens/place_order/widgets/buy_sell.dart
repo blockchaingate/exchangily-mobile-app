@@ -26,6 +26,7 @@ import '../../../utils/kanban.util.dart';
 import 'package:hex/hex.dart';
 import '../../../utils/abi_util.dart';
 import '../../../utils/keypair_util.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 
 class BuySell extends StatefulWidget {
 
@@ -160,11 +161,12 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
 
   _showOrders(Orders orders) {
     if(!listEquals(orders.buy, this.buy) || !listEquals(orders.sell, this.sell) ) {
+      print('orders.sell=' + orders.sell.length.toString());
       if (this.mounted) {
         setState(() =>
         {
-          this.sell = orders.sell,
-          this.buy = orders.buy
+          this.sell = (orders.sell.length > 5)?(orders.sell.sublist(orders.sell.length - 5)):orders.sell,
+          this.buy = (orders.buy.length > 5)?(orders.buy.sublist(0,5)):orders.buy
         });
       }
     }
@@ -180,15 +182,15 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
     checkPass(context);
   }
 
-  void HandleTextChanged(String labelText, String text) {
-    print('labelText=' + labelText);
+  void handleTextChanged(String name, String text) {
+    print('name=' + name);
     print('text=' + text);
-    if(labelText == 'Price') {
+    if(name == 'price') {
       try {
         this.price = double.parse(text);
       } catch(e) {}
     }
-    if(labelText == 'Quantity') {
+    if(name == 'quantity') {
       try {
         this.quantity = double.parse(text);
       } catch(e) {}
@@ -247,7 +249,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                           });
                         },
                         child:Text(
-                          "BUY",
+                          AppLocalizations.of(context).buy,
                           style:  new TextStyle(
                               color: bidOrAsk?Color(0XFF871fff):Colors.white,
                               fontSize: 18.0),
@@ -274,7 +276,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                         },
                         child:
                         Text(
-                          "SELL",
+                          AppLocalizations.of(context).sell,
                           style:  new TextStyle(
                               color: bidOrAsk?Colors.white:Color(0XFF871fff),
                               fontSize: 18.0),
@@ -301,11 +303,11 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
-                            child: TextfieldText("Price",widget.baseCoinName, HandleTextChanged),
+                            child: TextfieldText("price", AppLocalizations.of(context).price,widget.baseCoinName, handleTextChanged),
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(5, 10, 10, 10),
-                            child: TextfieldText("Quantity","", HandleTextChanged),
+                            child: TextfieldText("quantity", AppLocalizations.of(context).quantity,"", handleTextChanged),
                           ),
                           Slider(
                             activeColor: Colors.indigoAccent,
@@ -324,7 +326,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                    "Transaction amount",
+                                    AppLocalizations.of(context).transactionAmount,
                                     style:  new TextStyle(
                                         color: Colors.grey,
                                         fontSize: 14.0),
@@ -346,7 +348,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                      "Balance",
+                                      AppLocalizations.of(context).totalBalance,
                                       style:  new TextStyle(
                                           color: Colors.grey,
                                           fontSize: 14.0)
@@ -374,7 +376,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                                       this.placeOrder()
                                     },
                                     child: new Text(
-                                        bidOrAsk?"BUY":"SELL",
+                                        bidOrAsk?AppLocalizations.of(context).buy:AppLocalizations.of(context).sell,
                                         style:  new TextStyle(
                                             color: Colors.white,
                                             fontSize: 18.0
@@ -406,7 +408,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                                       ),
                                       child:
                                       Text(
-                                          "Price",
+                                          AppLocalizations.of(context).price,
                                           style:  new TextStyle(
                                               color: Colors.white,
                                               fontSize: 16.0
@@ -422,7 +424,7 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
                                       ),
                                       child:
                                       Text(
-                                          "Quantity",
+                                          AppLocalizations.of(context).quantity,
                                           style:  new TextStyle(
                                               color: Colors.white,
                                               fontSize: 16.0

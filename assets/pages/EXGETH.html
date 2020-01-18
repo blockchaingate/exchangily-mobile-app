@@ -90,7 +90,7 @@
             */
         }
 
-        function doit() {
+        function showChart(pairLeft, pairRight, interval) {
             const chartPrice = LightweightCharts.createChart(document.getElementById('price'), {
                 width: window.innerWidth,
                 height: window.innerHeight,
@@ -134,9 +134,6 @@
             });
 
             var vars = getUrlVars();
-            var pairLeft = vars["pairLeft"];
-            var pairRight = vars["pairRight"];
-            var interval = vars["interval"];
             httpGetAsync('https://kanbantest.fabcoinapi.com/klinedata/' + pairLeft + pairRight + '/' + interval, candlestickSeries, volumeSeries, handleTiker);
             // set data
 
@@ -275,13 +272,13 @@
     </script>
 </head>
 
-<body onload="doit()" style="margin:0">
-<div id="price">
+<body onload="showChart('EXG', 'ETH', '1m')" style="margin:0">
+    <div id="price">
 
-</div>
-<div id="volume">
+    </div>
+    <div id="volume">
 
-</div>
+    </div>
 </body>
 
 </html>

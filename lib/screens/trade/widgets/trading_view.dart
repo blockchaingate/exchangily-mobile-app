@@ -7,12 +7,14 @@ import 'dart:convert';
 // realtime: https://jsfiddle.net/TradingView/yozeu6k1/
 
 class LoadHTMLFileToWEbView extends StatefulWidget {
+  String pair;
+  LoadHTMLFileToWEbView(this.pair);
   @override
   _LoadHTMLFileToWEbViewState createState() => _LoadHTMLFileToWEbViewState();
 }
 
 class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
-
+  WebViewController _controller;
   @override
   Widget build(BuildContext context) {
     return
@@ -22,23 +24,27 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
         height: 460,
         child:
         WebView(
-          initialUrl: 'https://exchangily.net/market/tvchart/ETH_BTC?noHeader=true',
-            javascriptMode:JavascriptMode.unrestricted,
-        /*
-          onWebViewCreated: (WebViewController webViewController)  {
-            _controller.complete(webViewController);
+          initialUrl: '',
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            _controller = webViewController;
+            _loadHtmlFromAssets();
           },
-        */
-
         )
       );
   }
 
-  /*
-  Future<void> loadHtmlFromAssets(String filename, controller) async {
-    String fileText = await rootBundle.loadString(filename);
-    controller.loadUrl(Uri.dataFromString(fileText, mimeType: 'text/html', encoding: Encoding.getByName('utf-8')).toString());
+
+  _loadHtmlFromAssets() async {
+    var pair = widget.pair.replaceAll(RegExp('/'), '');
+    print('pairdddd=' + pair);
+    // pair = 'index';
+    String fileText = await rootBundle.loadString('assets/pages/' + pair + '.html');
+    _controller.loadUrl( Uri.dataFromString(
+        fileText,
+        mimeType: 'text/html',
+        encoding: Encoding.getByName('utf-8')
+    ).toString());
   }
 
-   */
 }

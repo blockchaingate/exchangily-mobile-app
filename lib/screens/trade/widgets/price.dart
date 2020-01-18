@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:exchangilymobileapp/models/price.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 
 class TradePrice extends StatefulWidget  {
   TradePrice({Key key}) : super(key: key);
@@ -62,9 +63,9 @@ class TradePriceState extends State<TradePrice>{
                 child:Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text("Low " + currentPrice?.low.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
-                    Text("Vol " + currentPrice?.volume.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
-                    Text("High " + currentPrice?.high.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f)))
+                    Text(AppLocalizations.of(context).low + " " + currentPrice?.low.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
+                    Text(AppLocalizations.of(context).volume + " " + currentPrice?.volume.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
+                    Text(AppLocalizations.of(context).high + " " + currentPrice?.high.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f)))
                   ],
                 )
             )

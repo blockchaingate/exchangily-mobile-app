@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "../../trade/main.dart";
+import 'package:exchangilymobileapp/localizations.dart';
 class DetailPair extends StatelessWidget {
   String pair;
   double volume;
@@ -33,7 +34,7 @@ class DetailPair extends StatelessWidget {
                       Text(pair,style: new TextStyle(
                           color: Colors.white,
                           fontSize: 18.0)),
-                      Text("volume:" + volume.toString(),style: new TextStyle(
+                      Text(AppLocalizations.of(context).volume + ":" + volume.toString(),style: new TextStyle(
                           color: Colors.white38,
                           fontSize: 16.0))
                     ],
@@ -41,13 +42,13 @@ class DetailPair extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text("price:" + price.toString(),style: new TextStyle(
+                      Text(AppLocalizations.of(context).price + ":" + price.toString(),style: new TextStyle(
                           color: Colors.white38,
                           fontSize: 16.0)),
-                      Text("high:" + high.toString(),style: new TextStyle(
+                      Text(AppLocalizations.of(context).high + ":" + high.toString(),style: new TextStyle(
                           color: Colors.white38,
                           fontSize: 16.0)),
-                      Text("low:" + low.toString(),style: new TextStyle(
+                      Text(AppLocalizations.of(context).low + ":" + low.toString(),style: new TextStyle(
                           color: Colors.white38,
                           fontSize: 16.0)),
                     ],

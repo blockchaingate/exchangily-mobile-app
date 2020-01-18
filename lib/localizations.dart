@@ -434,6 +434,89 @@ class AppLocalizations {
     return Intl.message('Change Wallet Language',
         name: 'changeWalletLanguage', desc: 'settings_change_wallet_language');
   }
+
+  String get volume {
+    return Intl.message('volume', name: 'volume', desc: 'volume_text');
+  }
+
+  String get price {
+    return Intl.message('price', name: 'price', desc: 'price_text');
+  }
+
+  String get high {
+    return Intl.message('high', name: 'high', desc: 'high_text');
+  }
+
+  String get low {
+    return Intl.message('low', name: 'low', desc: 'low_text');
+  }
+
+  String get orderBook {
+    return Intl.message('Order Book',
+        name: 'orderBook', desc: 'order_book_text');
+  }
+
+  String get marketTrades {
+    return Intl.message('Market Trades',
+        name: 'marketTrades', desc: 'market_trades_text');
+  }
+
+  String get coin {
+    return Intl.message('coin', name: 'coin', desc: 'price_text');
+  }
+
+  String get amount {
+    return Intl.message('amount', name: 'amount', desc: 'amount_text');
+  }
+
+  String get lockedAmount {
+    return Intl.message('lockedAmount',
+        name: 'lockedAmount', desc: 'locked_amount_text');
+  }
+
+  String get buy {
+    return Intl.message('Buy', name: 'buy', desc: 'buy_text');
+  }
+
+  String get sell {
+    return Intl.message('Sell', name: 'sell', desc: 'sell_text');
+  }
+
+  String get transactionAmount {
+    return Intl.message('Transaction Amount',
+        name: 'transactionAmount', desc: 'transaction_amount_text');
+  }
+
+  String get quantity {
+    return Intl.message('quantity', name: 'quantity', desc: 'quantity_text');
+  }
+
+  String get openOrders {
+    return Intl.message('openOrders',
+        name: 'openOrders', desc: 'open_orders_text');
+  }
+
+  String get closeOrders {
+    return Intl.message('Close Orders',
+        name: 'closeOrders', desc: 'close_orders_text');
+  }
+
+  String get assets {
+    return Intl.message('Assets', name: 'assets', desc: 'assets_text');
+  }
+
+  String get type {
+    return Intl.message('type', name: 'type', desc: 'type_text');
+  }
+
+  String get pair {
+    return Intl.message('pair', name: 'pair', desc: 'pair_text');
+  }
+
+  String get filledAmount {
+    return Intl.message('Filled Amount',
+        name: 'filledAmount', desc: 'filled_amount_text');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
