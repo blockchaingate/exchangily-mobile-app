@@ -36,10 +36,12 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
 
 
   _loadHtmlFromAssets() async {
-    var pair = widget.pair.replaceAll(RegExp('/'), '');
-    print('pairdddd=' + pair);
+    //var pair = widget.pair.replaceAll(RegExp('/'), '');
     // pair = 'index';
-    String fileText = await rootBundle.loadString('assets/pages/' + pair + '.html');
+    var pairArray = widget.pair.split('/');
+    String fileText = await rootBundle.loadString('assets/pages/index.html');
+    fileText = fileText.replaceAll('BTC', pairArray[0]).replaceAll('USDT', pairArray[1]);
+
     _controller.loadUrl( Uri.dataFromString(
         fileText,
         mimeType: 'text/html',
