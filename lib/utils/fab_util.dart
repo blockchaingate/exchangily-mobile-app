@@ -24,7 +24,7 @@ getFabNode(root, {index = 0}) {
 }
 
 Future getFabLockBalanceByAddress(String address) async {
-  double balance = 0;
+  double balance = 0.0;
   var fabSmartContractAddress =
       environment['addresses']['smartContract']['FABLOCK'];
   var getLockedInfoABI = '43eb7b44';
