@@ -39,6 +39,7 @@ class CoinUsdValue {
 // Wallet Model
 
 class WalletInfo {
+  // final int _id;
   String _tickerName;
   String _tokenType;
   String _address;
@@ -50,7 +51,9 @@ class WalletInfo {
   double _assetsInExchange;
 
   WalletInfo(
-      {String tickerName,
+      {
+      //int id,
+      String tickerName,
       String tokenType,
       String address,
       //  double lockedBalance,
@@ -62,7 +65,7 @@ class WalletInfo {
     this._tickerName = tickerName;
     this._tokenType = tokenType;
     this._address = address;
-    //   this._lockedBalance = lockedBalance ?? 0.0;
+    // this._lockedBalance = lockedBalance;
     this._availableBalance = availableBalance;
     this._usdValue = usdValue;
     // this._logoColor = logoColor;
@@ -74,7 +77,7 @@ class WalletInfo {
         'tickerName': _tickerName,
         'tokenType': _tokenType,
         'address': _address,
-        //   'lockedBalance': _lockedBalance ?? 0.0,
+        //  'lockedBalance': _lockedBalance,
         'availableBalance': _availableBalance,
         'usdValue': _usdValue,
         //  'logoColor': _logoColor,
@@ -87,7 +90,7 @@ class WalletInfo {
         tickerName: json['tickerName'] as String,
         tokenType: json['tokenType'] as String,
         address: json['address'] as String,
-        //   _lockedBalance : json['lockedBalance'] ?? 0.0,
+        //  lockedBalance: json['lockedBalance'],
         availableBalance: json['availableBalance'] as double,
         usdValue: json['usdValue'] as double,
         //  _logoColor : json['logoColor'],

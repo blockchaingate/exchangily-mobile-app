@@ -14,16 +14,14 @@ class WalletFeaturesScreenState extends BaseState {
   WalletInfo walletInfo;
   WalletService walletService = locator<WalletService>();
   final double elevation = 5;
-  double totalUsdBalance = 0;
   double containerWidth = 150;
   double containerHeight = 115;
   double walletBalance;
-  double assetsInExchange;
-  double usdBalance;
+  BuildContext context;
 
   List<WalletFeatureName> features = new List();
 
-  getWalletFeatures(context) {
+  getWalletFeatures() {
     return features = [
       WalletFeatureName(AppLocalizations.of(context).receive,
           Icons.arrow_downward, 'receive', Colors.redAccent),
@@ -44,7 +42,7 @@ class WalletFeaturesScreenState extends BaseState {
         .then((data) async {
       setState(ViewState.Idle);
       log.w(data);
-//walletBalance = data['assetInExchange'];
+      log.w(walletBalance);
       walletBalance = data['balance'];
       walletInfo.availableBalance = walletBalance;
       double currentUsdValue =

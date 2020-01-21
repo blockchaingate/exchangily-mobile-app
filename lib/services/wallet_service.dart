@@ -44,17 +44,10 @@ class WalletService {
   final log = getLogger('Wallet Service');
   Api _api = locator<Api>();
 
-  List<WalletInfo> _walletInfo = [];
-
-  List<double> totalUsdBalance = [];
-  String randomMnemonic = '';
-  Uint8List seed;
-  var sum;
   double coinUsdBalance;
-  var root;
   List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
   List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
-  List<double> coinUsdMarketPrice = [];
+
   List<String> coinNames = [
     'bitcoin',
     'ethereum',
@@ -65,24 +58,16 @@ class WalletService {
 
   // Get Random Mnemonic
   String getRandomMnemonic() {
+    String randomMnemonic = '';
     randomMnemonic = bip39.generateMnemonic();
     if (isLocal) {
       randomMnemonic =
           'culture sound obey clean pretty medal churn behind chief cactus alley ready';
       //'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
     }
-    log.w(randomMnemonic);
+    log.w('getRandomMnemonic $randomMnemonic');
 
     return randomMnemonic;
-  }
-
-  deleteEncryptedData() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/my_file.byte');
-    await file
-        .delete()
-        .then((res) => log.w('Previous data in the stored file deleted $res'))
-        .catchError((error) => log.w('Previous data deletion failed $error'));
   }
 
   // Save Encrypted Data to Storage
@@ -96,6 +81,16 @@ class WalletService {
     } catch (e) {
       log.e("Couldn't write encrypted datra to file!! $e");
     }
+  }
+
+  // Delete Encrypted Data
+  deleteEncryptedData() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/my_file.byte');
+    await file
+        .delete()
+        .then((res) => log.w('Previous data in the stored file deleted $res'))
+        .catchError((error) => log.e('Previous data deletion failed $error'));
   }
 
   // Read Encrypted Data from Storage
@@ -120,13 +115,14 @@ class WalletService {
   // Generate Seed
 
   generateSeed(String mnemonic) {
-    seed = bip39.mnemonicToSeed(mnemonic);
+    Uint8List seed = bip39.mnemonicToSeed(mnemonic);
     log.w(seed);
     return seed;
   }
 
-  Future getCoinAddresses() async {
-    root = bip32.BIP32.fromSeed(seed);
+  Future getCoinAddresses(String mnemonic) async {
+    var seed = generateSeed(mnemonic);
+    var root = bip32.BIP32.fromSeed(seed);
     for (int i = 0; i < coinTickers.length; i++) {
       var tickerName = coinTickers[i];
       var addr =
@@ -149,7 +145,6 @@ class WalletService {
   }
 
   // Get Current Market Price For The Coin By Name
-
   Future<double> getCoinMarketPrice(String name) async {
     double currentUsdValue;
     var usdVal = await _api.getCoinsUsdValue();
@@ -161,26 +156,26 @@ class WalletService {
     return currentUsdValue;
   }
 
-// Future GetAllCoins
-  Future<List<WalletInfo>> getAllCoins() async {
+// Future GetWalletCoins
+  Future<List<WalletInfo>> getWalletCoins(String mnemonic) async {
+    List<WalletInfo> _walletInfo = [];
+    List<double> coinUsdMarketPrice = [];
+    String exgAddress = '';
+    String wallets;
     if (_walletInfo != null) {
       _walletInfo.clear();
     } else {
       _walletInfo = [];
     }
     coinUsdMarketPrice.clear();
-    // totalUsdBalance.clear();
-    log.w('Seed in wallet service getallbalanced method $seed');
-    root = bip32.BIP32.fromSeed(seed);
-    String wallets;
+    var seed = generateSeed(mnemonic);
+    var root = bip32.BIP32.fromSeed(seed);
     try {
-      //   log.w('List of coins length ${coinTickers.length}');
       for (int i = 0; i < coinTickers.length; i++) {
         String tickerName = coinTickers[i];
         String name = coinNames[i];
         String token = tokenType[i];
         var marketValue = await getCoinMarketPrice(name);
-        //    print('Market Value of coin $marketValue');
         coinUsdMarketPrice.add(marketValue);
         //   log.w('coinUsdMarketPriceList $coinUsdMarketPrice');
         String addr =
@@ -188,42 +183,46 @@ class WalletService {
         //  log.w('Address $addr');
         var bal =
             await getCoinBalanceByAddress(tickerName, addr, tokenType: token);
-        //   log.w('BAL $bal');
+        //   log.w('Bal $bal');
         double walletBal = bal['balance'];
-        double walletLockedBal = bal['lockedBalance'];
-        //  log.w('tickername $tickerName - address: $addr - balance: $walletBal');
-        // totalUsdBalance.clear();
+        // double walletLockedBal = bal['lockedBalance'];
+        log.w('tickername $tickerName - address: $addr - balance: $walletBal');
         calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
         //  log.i('printing calculated bal $coinUsdBalance');
         double assetsInExg = 0.0;
+        if (tickerName == 'EXG') {
+          exgAddress = addr;
+          log.e(exgAddress);
+        }
         WalletInfo wi = new WalletInfo(
             tickerName: tickerName,
             tokenType: token,
             address: addr,
+            // lockedBalance: walletLockedBal,
             availableBalance: walletBal,
             usdValue: coinUsdBalance,
             name: name,
             assetsInExchange: assetsInExg);
-
-        // String wallet = jsonEncode(wi);
-        // log.e('with $wallet');
-        // Map<String, dynamic> decodedWallet = jsonDecode(wallet);
-        // log.w('Decoded Walelt $decodedWallet');
         _walletInfo.add(wi);
         wallets = jsonEncode(_walletInfo);
-        //  log.w('Wallets $wallets');
+      }
+      var res = await assetsBalance(exgAddress);
+      var length = res.length;
+      for (var i = 0; i < length; i++) {
+        String coin = res[i]['coin'];
+        for (var j = 0; j < length; j++) {
+          if (coin == _walletInfo[j].tickerName)
+            _walletInfo[j].assetsInExchange = res[i]['amount'];
+        }
       }
       final storage = new FlutterSecureStorage();
       await storage.delete(key: 'wallets');
       await storage.write(key: 'wallets', value: wallets);
-      // var test = await storage.read(key: 'wallets');
-      // log.e(test);
-      // log.e('Wallet info ${_walletInfo.length}');
       return _walletInfo;
     } catch (e) {
       log.e(e);
       _walletInfo = null;
-      log.i('Catch GetAllbalances Failed');
+      log.e('Catch GetAll Wallets Failed $e');
       return _walletInfo;
     }
   }

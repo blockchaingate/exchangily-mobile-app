@@ -19,8 +19,8 @@ class WalletFeaturesScreen extends StatelessWidget {
     return BaseScreen<WalletFeaturesScreenState>(
       onModelReady: (model) {
         model.walletInfo = walletInfo;
-        // model.initialSetup();
-        model.getWalletFeatures(context);
+        model.context = context;
+        model.getWalletFeatures();
       },
       builder: (context, model, child) => Scaffold(
         key: key,
@@ -224,7 +224,8 @@ class WalletFeaturesScreen extends StatelessWidget {
                 children: <Widget>[
                   Text('${model.walletInfo.availableBalance}',
                       style: Theme.of(context).textTheme.headline),
-                  Text('2000', style: Theme.of(context).textTheme.headline)
+                  Text('${model.walletInfo.assetsInExchange}',
+                      style: Theme.of(context).textTheme.headline)
                 ],
               )
             ],

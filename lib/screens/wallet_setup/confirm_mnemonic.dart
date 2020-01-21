@@ -9,8 +9,9 @@ import '../../shared/globals.dart' as globals;
 import '../base_screen.dart';
 
 class ConfirmMnemonictWalletScreen extends StatefulWidget {
-  final List<String> randomMnemonic;
-  const ConfirmMnemonictWalletScreen({Key key, this.randomMnemonic})
+  final List<String> randomMnemonicListFromRoute;
+  const ConfirmMnemonictWalletScreen(
+      {Key key, this.randomMnemonicListFromRoute})
       : super(key: key);
 
   @override
@@ -28,7 +29,7 @@ class _ConfirmMnemonictWalletScreenState
   Widget build(BuildContext context) {
     return BaseScreen<ConfirmMnemonicScreenState>(
       onModelReady: (model) {
-        model.randomMnemonic = widget.randomMnemonic;
+        model.randomMnemonicList = widget.randomMnemonicListFromRoute;
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(

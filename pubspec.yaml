@@ -4,7 +4,7 @@ description: Decentralized Wallet App.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.3.2 <3.0.0"
+  sdk: '>=2.3.2 <3.0.0'
 
 dependencies:
   flutter:
@@ -81,14 +81,18 @@ dependencies:
   # Device Preview
   device_preview:
   webview_flutter: ^0.3.19+4
+
   # rflutter Alert
   rflutter_alert: ^1.0.3
 
-  # Shared Preferences
-  shared_preferences: 0.5.6
-
   # Shimmer
   shimmer: ^1.0.1
+
+  # Sqflite
+  sqflite: ^1.2.0
+
+  # Path
+  path: ^1.6.4
 
   # Share files
   share:
@@ -98,8 +102,8 @@ dependencies:
       ref: master
 
 dev_dependencies:
-  intl_translation: "^0.17.0"
-  flutter_launcher_icons: "^0.7.3"
+  intl_translation: '^0.17.0'
+  flutter_launcher_icons: '^0.7.3'
 
   flutter_test:
     sdk: flutter
@@ -116,7 +120,7 @@ flutter:
     - assets/images/wallet-page/
 
 flutter_icons:
-  image_path: "assets/images/launcher/mobile-icon.png"
+  image_path: 'assets/images/launcher/mobile-icon.png'
   android: true
   ios: true
   #  - lib/l10n/en.json

@@ -4,23 +4,20 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:bip39/bip39.dart' as bip39;
 
 class BackupMnemonicWalletScreen extends StatelessWidget {
   const BackupMnemonicWalletScreen({Key key}) : super(key: key);
-  static List<String> mnemonic = [];
+  static List<String> randomMnemonicList = [];
 
   @override
   Widget build(BuildContext context) {
     WalletService walletService = locator<WalletService>();
-    final log = getLogger('Backup Mnemonic');
-    final randomMnemonic = walletService.getRandomMnemonic();
-    log.w(randomMnemonic);
-    mnemonic = randomMnemonic
+    final randomMnemonicString = walletService.getRandomMnemonic();
+    randomMnemonicList = randomMnemonicString
         .split(" ")
-        .toList(); // convert string to list to iterate and display single word as a textbox
+        .toList(); // convert string to list to iterate and display single word in a textbox
 
     return Scaffold(
       appBar: AppBar(
@@ -65,8 +62,8 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.button,
                 ),
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed('/confirmMnemonic', arguments: mnemonic);
+                  Navigator.of(context).pushNamed('/confirmMnemonic',
+                      arguments: randomMnemonicList);
                 },
               ),
             )
@@ -86,7 +83,7 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
       children: _buildButtonGrid(12));
 
   List<Container> _buildButtonGrid(int count) => List.generate(count, (i) {
-        var singleWord = mnemonic[i];
+        var singleWord = randomMnemonicList[i];
         return Container(
             child: TextField(
           textAlign: TextAlign.left,

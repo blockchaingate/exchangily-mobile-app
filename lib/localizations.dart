@@ -517,6 +517,19 @@ class AppLocalizations {
     return Intl.message('Filled Amount',
         name: 'filledAmount', desc: 'filled_amount_text');
   }
+
+  String get invalidMnemonic {
+    return Intl.message('Invalid Mnemonic',
+        name: 'invalidMnemonic',
+        desc: 'confirm_mnemonic_error_invalid_mnemonic');
+  }
+
+  String get pleaseFillAllTheTextFieldsCorrectly {
+    return Intl.message('Please fill all the text fields correctly',
+        name: 'pleaseFillAllTheTextFieldsCorrectly',
+        desc:
+            'confirm_mnemonic_error_please_fill_all_the_text_fields_correctly');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

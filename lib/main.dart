@@ -2,18 +2,13 @@ import 'package:device_preview/device_preview.dart';
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 import './shared/globals.dart' as globals;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localizations.dart';
-
-import 'models/wallet.dart';
-// import 'package:flutter_cupertino_localizations/flutter_cupertino_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

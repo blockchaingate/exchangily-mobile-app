@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,6 +16,7 @@ class WalletSetupScreen extends StatefulWidget {
 
 class _WalletSetupScreenState extends State<WalletSetupScreen> {
   WalletService walletService = locator<WalletService>();
+  final log = getLogger('WalletSetupScreen');
   @override
   void initState() {
     // TODO: implement initState
@@ -31,12 +33,9 @@ class _WalletSetupScreenState extends State<WalletSetupScreen> {
 
     //await storage.delete(key: 'wallets');
     await storage.read(key: 'wallets').then((encodedJsonWallets) {
-      print('wallet setup $encodedJsonWallets');
+      log.w('wallet setup $encodedJsonWallets');
       if (encodedJsonWallets == null) {
-        print('Generating new mnemonic in wallet setup');
-        // generateMnemonic();
-        // Navigator.of(context).push(MaterialPageRoute(
-        //     builder: (BuildContext context) => WalletSetupScreen()));
+        log.w('encodedJsonWallets is null');
       } else if (encodedJsonWallets.isNotEmpty) {
         Navigator.of(context).pushNamed('/dashboard');
       }
@@ -86,8 +85,6 @@ class _WalletSetupScreenState extends State<WalletSetupScreen> {
                       child: Text(AppLocalizations.of(context).createWallet,
                           style: Theme.of(context).textTheme.display3),
                       onPressed: () {
-                        print('new mnemonic on create wallet button press');
-                        // String randomMnemonic = generateMnemonic();
                         Navigator.of(context).pushNamed('/backupMnemonic');
                       },
                     ),

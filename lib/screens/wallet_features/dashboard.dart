@@ -32,7 +32,7 @@ class DashboardScreen extends StatelessWidget {
           await model.retrieveWallets();
         }
         await model.getGas();
-        await model.getExchangeAssets();
+        //  await model.getExchangeAssets();
       },
       builder: (context, model, child) => Scaffold(
         key: key,

@@ -31,11 +31,19 @@ class Deposit extends StatelessWidget {
       if (coinName == 'EXG') {
         tokenType = 'FAB';
       }
-      var ret = await walletService.depositDo(seed, coinName, tokenType, amount);
+      var ret =
+          await walletService.depositDo(seed, coinName, tokenType, amount);
 
-      walletService.showInfoFlushbar(ret["success"]?'Deposit transaction was made successfully':'Deposit transaction failed',
-          ret["success"]?'transactionID:' + ret['data']['transactionID']:ret['data'], Icons.cancel, globals.red, context);
-
+      walletService.showInfoFlushbar(
+          ret["success"]
+              ? 'Deposit transaction was made successfully'
+              : 'Deposit transaction failed',
+          ret["success"]
+              ? 'transactionID:' + ret['data']['transactionID']
+              : ret['data'],
+          Icons.cancel,
+          globals.red,
+          context);
     } else {
       if (res.fieldOne != 'Closed') {
         showNotification(context);
