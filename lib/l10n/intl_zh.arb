@@ -263,13 +263,13 @@
         "type": "text",
         "placeholders": {}
     },
-    "setPasswordNote": "注意：在重设密码前，必需确认你有助记词备份，助记词是您钱包的安全生命线，必需可靠地备份，并安全地保管",
+    "setPasswordNote": "注意：在重设密码前，必需确认您有助记词备份，助记词是您钱包的安全生命线，必需可靠地备份，并安全地保管",
     "@setPasswordNote": {
         "description": "wallet_setup_set_password_note",
         "type": "text",
         "placeholders": {}
     },
-    "warningBackupMnemonic": "下面的12个助记词，你您钱包的安全生命线，必需妥善备份，安全保管，不可丢失、遗忘或泄露给别人，不要截屏保存在手机里，不要通过任何社交软件(如Email、微信、QQ等)发送，只要有了这些助记词，请完全拥有了您钱包的控制权，请切记之，务必妥善抄写，认真保存，永远不可丢失。",
+    "warningBackupMnemonic": "下面的12个助记词，是您钱包的安全生命线，必需妥善备份，安全保管，不可丢失、遗忘或泄露给别人，不要截屏保存在手机里，不要通过任何社交软件(如Email、微信、QQ等)发送，只要有了这些助记词，就完全拥有了您钱包的控制权，请切记之，务必妥善抄写，认真保存，永远不可丢失。",
     "@warningBackupMnemonic": {
         "description": "warning_backup_mnemonic",
         "type": "text",
@@ -484,5 +484,131 @@
       "description": "filled_amount_text",
       "type": "text",
       "placeholders": {}
+    },
+    "passwordMatched": "密码匹配",
+    "@passwordMatched": {
+        "description": "create_password_password_matched",
+        "type": "text",
+        "placeholders": {}
+    },
+    "passwordDoesNotMatched": "密码不匹配",
+    "@passwordDoesNotMatched": {
+        "description": "create_password_password_does_not_matched",
+        "type": "text",
+        "placeholders": {}
+    },
+    "serverTimeoutPleaseTryAgainLater": "服务端超时，请稍候再试",
+    "@serverTimeoutPleaseTryAgainLater": {
+        "description": "create_password_server_timeout_please_try_again_later",
+        "type": "text",
+        "placeholders": {}
+    },
+    "serverError": "服务端错误",
+    "@serverError": {
+        "description": "create_password_serverError",
+        "type": "text",
+        "placeholders": {}
+    },
+    "emptyPassword": "密码为空",
+    "@emptyPassword": {
+        "description": "create_password_empty_password",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseFillBothPasswordFields": "请填下列两处密码",
+    "@pleaseFillBothPasswordFields": {
+        "description": "create_password_please_fill_both_password_fields",
+        "type": "text",
+        "placeholders": {}
+    },
+    "passwordConditionsMismatch": "密码符合要求",
+    "@passwordConditionsMismatch": {
+        "description": "create_password_password_conditions_mismatch",
+        "type": "text",
+        "placeholders": {}
+    },
+    "passwordConditions": "请填写符合上述要求的密码",
+    "@passwordConditions": {
+        "description": "create_password_conditions",
+        "type": "text",
+        "placeholders": {}
+    },
+    "passwordMismatch": "密码匹配",
+    "@passwordMismatch": {
+        "description": "create_password_password_mismatch",
+        "type": "text",
+        "placeholders": {}
+    },
+    "passwordRetype": "请在两处卦写相同密码",
+    "@passwordRetype": {
+        "description": "create_password_password_retype",
+        "type": "text",
+        "placeholders": {}
+    },
+    "typeYourWalletPassword": "输入您的钱包密码",
+    "@typeYourWalletPassword": {
+        "description": "dialog_manager_type_your_wallet_password",
+        "type": "text",
+        "placeholders": {}
+    },
+    "dialogManagerTypeSamePasswordNote": "输入创建钱包时所设置的密码",
+    "@dialogManagerTypeSamePasswordNote": {
+        "description": "dialog_manager_type_same_password_note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "transanctionFailed": "交易失败",
+    "@transanctionFailed": {
+        "description": "send_state_transanction_failed",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseProvideTheCorrectPassword": "请输入正确密码",
+    "@pleaseProvideTheCorrectPassword": {
+        "description": "send_state_please_provide_the_correct_password",
+        "type": "text",
+        "placeholders": {}
+    },
+    "emptyAddress": "空地址",
+    "@emptyAddress": {
+        "description": "send_state_error_empty_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseEnterAnAddress": "请输入地址",
+    "@pleaseEnterAnAddress": {
+        "description": "send_state_error_please_enter_an_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "invalidAmount": "数量错误",
+    "@invalidAmount": {
+        "description": "send_state_error_invalid_amount",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseEnterValidNumber": "请输入有效数字",
+    "@pleaseEnterValidNumber": {
+        "description": "send_state_error_please_enter_valid_number",
+        "type": "text",
+        "placeholders": {}
+    },
+    "transactionId": "交易号(ID)",
+    "@transactionId": {
+        "description": "send_state_transaction_id",
+        "type": "text",
+        "placeholders": {}
+    },
+    "copiedSuccessfully": "成功复制",
+    "@copiedSuccessfully": {
+        "description": "send_state_copied_successfully",
+        "type": "text",
+        "placeholders": {}
+    },
+    "changeWalletLanguage": "设置语言",
+    "@changeWalletLanguage": {
+        "description": "settings_change_wallet_language",
+        "type": "text",
+        "placeholders": {}
     }
 }
