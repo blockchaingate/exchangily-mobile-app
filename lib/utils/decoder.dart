@@ -4,7 +4,7 @@ import 'package:exchangilymobileapp/models/trade-model.dart';
 
 import '../models/price.dart';
 import '../models/orders.dart';
-
+import '../utils/string_util.dart';
 class Decoder {
   //Given a Map (property names are keys, property values are the values), decode as a Student
   static Price fromJsonMap(Map<String, dynamic> json) {
@@ -25,8 +25,8 @@ class Decoder {
   static TradeModel fromTradeJsonMap(Map<String, dynamic> json) {
     String orderHash1 = json['orderHash1'];
     String orderHash2 = json['orderHash2'];
-    double price = double.parse(json['price'].toString()) / 1e18;
-    double amount = double.parse(json['amount'].toString()) / 1e18;
+    double price = bigNum2Double(json['price'].toString());
+    double amount = bigNum2Double(json['amount'].toString());
     int blockNumber = json['blockNumber'];
     int time = json['time'];
     bool bidOrAsk = json['bidOrAsk'];
@@ -42,9 +42,9 @@ class Decoder {
     int pairRight = json['pairRight'];
     int orderType = json['orderType'];
     bool bidOrAsk = json['bidOrAsk'];
-    double price = double.parse(json['price'].toString()) / 1e18;
-    double orderQuantity = double.parse(json['orderQuantity'].toString()) / 1e18;
-    double filledQuantity = double.parse(json['filledQuantity'].toString()) / 1e18;
+    double price = bigNum2Double(json['price']);
+    double orderQuantity = bigNum2Double(json['orderQuantity']);
+    double filledQuantity = bigNum2Double(json['filledQuantity']);
     int time = json['time'];
     bool isActive = json['isActive'];
     OrderModel s = new OrderModel(payWithExg, orderHash, address, pairLeft, pairRight, orderType, bidOrAsk, price, orderQuantity, filledQuantity, time, isActive);

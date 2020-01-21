@@ -3,8 +3,8 @@ import "detail-pair.dart";
 import '../../../models/price.dart';
 
 class MarketDetail extends StatefulWidget {
-
-  MarketDetail({Key key})
+  List<Price> data;
+  MarketDetail({Key key,this.data})
       : super(key: key);
 
   @override
@@ -23,6 +23,7 @@ class MarketDetailState extends State<MarketDetail> with SingleTickerProviderSta
   void initState() {
     _tabController = new TabController(length: 4, vsync: this);
     super.initState();
+    this.updatePrices(widget.data);
   }
   void updatePrices(List<Price> prices) {
     usdtWidgets = [];

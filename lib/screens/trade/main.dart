@@ -7,12 +7,12 @@ import "widgets/market.dart";
 import "../place_order/main.dart";
 import 'package:web_socket_channel/io.dart';
 import '../../services/trade_service.dart';
-import "widgets/kline.dart";
+// import "widgets/kline.dart";
 import '../../utils/decoder.dart';
 import '../../models/price.dart';
 import '../../models/orders.dart';
 import 'widgets/trading_view.dart';
-
+import '../../utils/string_util.dart';
 enum SingingCharacter { lafayette, jefferson }
 
 class Trade extends StatefulWidget {
@@ -28,6 +28,9 @@ class _TradeState extends State<Trade> with TradeService {
   IOWebSocketChannel allTradesChannel;
   IOWebSocketChannel allOrdersChannel;
   IOWebSocketChannel allPriceChannel;
+  bool tradeChannelCompleted = false;
+  bool priceChannelCompleted = false;
+  bool orderChannelCompleted = false;
   final GlobalKey<TradePriceState> _tradePriceState =
       new GlobalKey<TradePriceState>();
   final GlobalKey<TrademarketState> _tradeMarketState =
@@ -35,7 +38,8 @@ class _TradeState extends State<Trade> with TradeService {
 
   void _updateTrades(tradesString) {
     // _klinePageState.currentState.updateTrades(trades);
-
+    print('tradesString================');
+    print(tradesString);
     List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
     if ((this._tradeMarketState != null) &&
         (this._tradeMarketState.currentState != null)) {
@@ -60,19 +64,31 @@ class _TradeState extends State<Trade> with TradeService {
       //print('trades=');
       //print(trades);
       _updateTrades(trades);
+      print('tradeChannelCompleted');
+      setState(() =>
+      {
+        this.tradeChannelCompleted = true
+      });
     });
 
     allOrdersChannel = getOrderListChannel(pair);
     allOrdersChannel.stream.listen((orders) {
       _updateOrders(orders);
-      // print('orders=');
-      // print(orders);
+      print('orderChannelCompleted');
+
+      setState(() =>
+      {
+        this.orderChannelCompleted = true
+      });
     });
 
     allPriceChannel = getAllPriceChannel();
     allPriceChannel.stream.listen((prices) async {
+      print('prices3333=');
+      print(prices);
       if (this._tradePriceState == null ||
           this._tradePriceState.currentState == null) {
+        print('exit');
         return;
       }
       List<Price> list = Decoder.fromJsonArray(prices);
@@ -84,14 +100,14 @@ class _TradeState extends State<Trade> with TradeService {
         }
       }
       if (item != null) {
-        item.changeValue = (item.close - item.open) / 1e18;
-        item.open = item.open / 1e18;
-        item.close = item.close / 1e18;
-        item.volume = item.volume / 1e18;
-        item.price = item.price / 1e18;
-        item.high = item.high / 1e18;
+        item.changeValue = bigNum2Double(item.close - item.open);
+        item.open = bigNum2Double(item.open);
+        item.close = bigNum2Double(item.close);
+        item.volume = bigNum2Double(item.volume);
+        item.price = bigNum2Double(item.price);
+        item.high = bigNum2Double(item.high);
 
-        item.low = item.low / 1e18;
+        item.low = bigNum2Double(item.low);
 
         item.change = 0.0;
         if (item.open > 0) {
@@ -110,7 +126,14 @@ class _TradeState extends State<Trade> with TradeService {
         }
 
         this._tradePriceState.currentState.showPrice(item, usdPrice);
+
+        setState(() =>
+        {
+          this.priceChannelCompleted = true
+        });
       }
+      print('priceChannelCompleted');
+
     });
   }
 
@@ -145,47 +168,72 @@ class _TradeState extends State<Trade> with TradeService {
           backgroundColor: Color(0XFF1f2233),
         ),
         backgroundColor: Color(0xFF1F2233),
-        body: ListView(
+        body:
+        Stack(
+            children: <Widget>[
+
+        ListView(
           children: <Widget>[
-            TradePrice(key: _tradePriceState),
-            //KlinePage(pair: widget.pair),
-            LoadHTMLFileToWEbView(widget.pair),
-            Trademarket(key: _tradeMarketState),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Flexible(
-                    child: FlatButton(
-                  color: Color(0xFF0da88b),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              PlaceOrder(pair: widget.pair, bidOrAsk: true)),
-                    );
-                  },
-                  child: Text("Buy",
-                      style: TextStyle(fontSize: 16, color: Colors.white)),
-                )),
-                Flexible(
-                    child: FlatButton(
-                  color: Color(0xFFe2103c),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              PlaceOrder(pair: widget.pair, bidOrAsk: false)),
-                    );
-                  },
-                  child: Text("Sell",
-                      style: TextStyle(fontSize: 16, color: Colors.white)),
-                ))
-              ],
-            )
+
+
+                TradePrice(key: _tradePriceState),
+                //KlinePage(pair: widget.pair),
+                LoadHTMLFileToWEbView(widget.pair),
+                Trademarket(key: _tradeMarketState),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Flexible(
+                        child: FlatButton(
+                          color: Color(0xFF0da88b),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      PlaceOrder(pair: widget.pair, bidOrAsk: true)),
+                            );
+                          },
+                          child: Text("Buy",
+                              style: TextStyle(fontSize: 16, color: Colors.white)),
+                        )),
+                    Flexible(
+                        child: FlatButton(
+                          color: Color(0xFFe2103c),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      PlaceOrder(pair: widget.pair, bidOrAsk: false)),
+                            );
+                          },
+                          child: Text("Sell",
+                              style: TextStyle(fontSize: 16, color: Colors.white)),
+                        ))
+                  ],
+                )
+
           ],
         ),
+              Visibility(
+                  visible: !(tradeChannelCompleted&&priceChannelCompleted&&orderChannelCompleted),
+                  child:
+    Container(
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.height,
+    color: Color(0xFF2c2c4c),
+                  child:
+                  Center(
+                      child: CircularProgressIndicator()
+                  )
+    )
+              )
+         ]     )
+
+        ,
+
+
         bottomNavigationBar: AppBottomNav());
   }
 }
