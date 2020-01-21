@@ -16,6 +16,7 @@ class SettingsScreen extends StatelessWidget {
         model.context = context;
       },
       builder: (context, model, child) => Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
           title: Text(AppLocalizations.of(context).settings),

@@ -249,7 +249,8 @@ class WalletService {
       for (var i = 0; i < res.length; i++) {
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
-        var unlockedAmount = stringUtils.bigNum2Double(tempBal['unlockedAmount']);
+        var unlockedAmount =
+            stringUtils.bigNum2Double(tempBal['unlockedAmount']);
         var lockedAmount = stringUtils.bigNum2Double(tempBal['lockedAmount']);
         var finalBal = {
           'coin': coinList.coin_list[coinType]['name'],

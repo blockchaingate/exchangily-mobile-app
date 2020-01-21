@@ -96,7 +96,7 @@ class DashboardScreenState extends BaseState {
     List<String> token = walletService.tokenType;
     walletInfo.clear();
     double walletBal = 0;
-    // double walletLockedBal = 0;
+    double walletLockedBal = 0;
     for (var i = 0; i < length; i++) {
       String tickerName = walletInfoCopy[i].tickerName;
       String address = walletInfoCopy[i].address;
@@ -105,15 +105,16 @@ class DashboardScreenState extends BaseState {
           .coinBalanceByAddress(tickerName, address, token[i])
           .then((balance) async {
         walletBal = balance['balance'];
-        //  walletLockedBal = balance['lockbalance'];
+        walletLockedBal = balance['lockbalance'];
+        log.w('Raw Wallet locked bal ${balance['lockbalance']}');
+        log.w('Wallet locked bal $walletLockedBal');
         double marketPrice = await walletService.getCoinMarketPrice(name);
         coinUsdBalance =
             walletService.calculateCoinUsdBalance(marketPrice, walletBal);
 
         // PENDING: Something went wrong  - type 'int' is not a subtype of type 'double'
         // and sometimes it shows the locked bal but sometimes it doesn't
-        //log.e('$tickerName - $walletLockedBal');
-        //  walletInfo[i].lockedBalance = walletLockedBal;
+        //  log.e('$tickerName - $walletLockedBal');
 
         // Solution for above error is to add locked balance variable in every coin utils like balance var is already there
 

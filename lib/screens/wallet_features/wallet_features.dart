@@ -153,7 +153,7 @@ class WalletFeaturesScreen extends StatelessWidget {
             )
           ],
         ),
-        bottomNavigationBar: AppBottomNav(),
+        bottomNavigationBar: AppBottomNav(count: 0),
       ),
     );
   }

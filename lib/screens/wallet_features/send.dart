@@ -41,6 +41,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
 
     return BaseScreen<SendScreenState>(
       builder: (context, model, child) => Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: globals.walletCardColor,
           title: Text(AppLocalizations.of(context).send),
