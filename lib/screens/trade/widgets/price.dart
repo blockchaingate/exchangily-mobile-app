@@ -38,7 +38,7 @@ class TradePriceState extends State<TradePrice>{
                 Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 10, 30.0, 10),
                     child:
-                    Text(currentPrice?.price.toString(), style: TextStyle(fontSize: 30,color: Color(0xFF0da88b)))
+                    Text((currentPrice!=null ) ? currentPrice.price.toString():'', style: TextStyle(fontSize: 30,color: Color(0xFF0da88b)))
                 ),
                 Text("\$" + ((currentPrice!=null) ? (currentPrice.price * currentUsdPrice) : 0).toString(), style: TextStyle(fontSize: 16,color: Color(0xFF5e617f)))
               ],

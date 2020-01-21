@@ -234,7 +234,7 @@ class WalletService {
     double gasAmount;
     await _api.getGasBalance(addr).then((res) {
       var newBal = int.parse(res['balance']['FAB']);
-      gasAmount = newBal / 1e18;
+      gasAmount = stringUtils.bigNum2Double(newBal);
     }).catchError((onError) {
       log.w('On error $onError');
       gasAmount = 0.0;
@@ -249,8 +249,8 @@ class WalletService {
       for (var i = 0; i < res.length; i++) {
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
-        var unlockedAmount = double.parse(tempBal['unlockedAmount']) / 1e18;
-        var lockedAmount = double.parse(tempBal['lockedAmount']) / 1e18;
+        var unlockedAmount = stringUtils.bigNum2Double(tempBal['unlockedAmount']);
+        var lockedAmount = stringUtils.bigNum2Double(tempBal['lockedAmount']);
         var finalBal = {
           'coin': coinList.coin_list[coinType]['name'],
           'amount': unlockedAmount,

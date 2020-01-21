@@ -6,6 +6,7 @@ import '../../utils/decoder.dart';
 import 'package:web_socket_channel/io.dart';
 import '../../models/price.dart';
 import '../../services/trade_service.dart';
+import '../../utils/string_util.dart';
 
 class Market extends StatefulWidget {
   Market({Key key}) : super(key: key);
@@ -26,41 +27,52 @@ class _MarketState extends State<Market> with TradeService {
   @override
   void initState() {
     super.initState();
-    allPriceChannel = getAllPriceChannel();
-    allPriceChannel.stream.listen((prices) {
-      _updatePrice(prices);
-    });
+
   }
 
-  void _updatePrice(prices) {
+
+  List<Price> _updatePrice(prices) {
     // print(prices);
     List<Price> list = Decoder.fromJsonArray(prices);
     for (var item in list) {
-      item.open = item.open / 1e18;
-      item.close = item.close / 1e18;
-      item.volume = item.volume / 1e18;
-      item.price = item.price / 1e18;
-      item.high = item.high / 1e18;
-      item.low = item.low / 1e18;
+      item.open = bigNum2Double(item.open);
+      item.close = bigNum2Double(item.close);
+      item.volume = bigNum2Double(item.volume);
+      item.price = bigNum2Double(item.price);
+      item.high = bigNum2Double(item.high);
+      item.low = bigNum2Double(item.low);
       item.change = 0.0;
       if (item.open > 0) {
         item.change =
             ((item.close - item.open) / item.open * 100 * 10).round() / 10;
       }
     }
-    _marketOverviewState.currentState.updatePrices(list);
-    _marketDetailState.currentState.updatePrices(list);
+    return list;
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff1f2233),
-      body: ListView(
-        children: <Widget>[
-          MarketOverview(key: _marketOverviewState),
-          MarketDetail(key: _marketDetailState)
-        ],
+      body:
+      StreamBuilder(
+        stream: getAllPriceChannel().stream,
+        builder: (context, snapshot) {
+          return  snapshot.hasData ? ListView(
+            children: <Widget>[
+              MarketOverview(key: _marketOverviewState, data: _updatePrice(snapshot.data)),
+              MarketDetail(key: _marketDetailState, data: _updatePrice(snapshot.data))
+              /*
+              MarketOverview(key: _marketOverviewState),
+              MarketDetail(key: _marketDetailState)
+
+               */
+            ],
+          ) :
+          Center(
+            child: CircularProgressIndicator()
+          );
+        },
       ),
       bottomNavigationBar: AppBottomNav(count: 1),
     );
@@ -68,7 +80,7 @@ class _MarketState extends State<Market> with TradeService {
 
   @override
   void dispose() {
-    allPriceChannel.sink.close();
+    //allPriceChannel.sink.close();
     super.dispose();
   }
 }
