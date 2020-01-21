@@ -4,28 +4,29 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
 
 class AppBottomNav extends StatelessWidget {
+  final int count;
+  AppBottomNav({Key key, this.count}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final double paddingValue = 4; // change space between icon and title text
     final double iconSize = 25; // change icon size
+    int _selectedIndex = count;
 
     return BottomNavigationBar(
-      type: BottomNavigationBarType.shifting,
-
+      currentIndex: _selectedIndex,
+      type: BottomNavigationBarType.fixed,
       selectedFontSize: 14,
       elevation: 10,
       unselectedItemColor: globals.grey,
-      backgroundColor: Color.fromRGBO(28, 28, 45, .95),
+      backgroundColor: globals.walletCardColor,
       selectedItemColor: globals.primaryColor,
-      showUnselectedLabels:
-          true, // show label below the icon even when not selected
+      showUnselectedLabels: true,
       items: [
         BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.wallet, size: iconSize),
           title: Padding(
-              padding: EdgeInsets.only(
-                  top:
-                      paddingValue), // use to give top padding between icon and text
+              padding: EdgeInsets.only(top: paddingValue),
               child: Text(AppLocalizations.of(context).wallet)),
         ),
         BottomNavigationBarItem(

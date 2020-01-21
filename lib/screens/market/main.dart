@@ -74,7 +74,7 @@ class _MarketState extends State<Market> with TradeService {
           );
         },
       ),
-      bottomNavigationBar: AppBottomNav(),
+      bottomNavigationBar: AppBottomNav(count: 1),
     );
   }
 

@@ -13,6 +13,7 @@ import '../../models/price.dart';
 import '../../models/orders.dart';
 import 'widgets/trading_view.dart';
 import '../../utils/string_util.dart';
+
 enum SingingCharacter { lafayette, jefferson }
 
 class Trade extends StatefulWidget {
@@ -63,28 +64,20 @@ class _TradeState extends State<Trade> with TradeService {
       //print('trades=');
       //print(trades);
       _updateTrades(trades);
-      setState(() =>
-      {
-        this.tradeChannelCompleted = true
-      });
+      setState(() => {this.tradeChannelCompleted = true});
     });
 
     allOrdersChannel = getOrderListChannel(pair);
     allOrdersChannel.stream.listen((orders) {
       _updateOrders(orders);
 
-      setState(() =>
-      {
-        this.orderChannelCompleted = true
-      });
+      setState(() => {this.orderChannelCompleted = true});
     });
 
     allPriceChannel = getAllPriceChannel();
     allPriceChannel.stream.listen((prices) async {
-
       if (this._tradePriceState == null ||
           this._tradePriceState.currentState == null) {
-
         return;
       }
       List<Price> list = Decoder.fromJsonArray(prices);
@@ -123,12 +116,8 @@ class _TradeState extends State<Trade> with TradeService {
 
         this._tradePriceState.currentState.showPrice(item, usdPrice);
 
-        setState(() =>
-        {
-          this.priceChannelCompleted = true
-        });
+        setState(() => {this.priceChannelCompleted = true});
       }
-
     });
   }
 
@@ -163,86 +152,70 @@ class _TradeState extends State<Trade> with TradeService {
           backgroundColor: Color(0XFF1f2233),
         ),
         backgroundColor: Color(0xFF1F2233),
-        body:
-        Stack(
+        body: Stack(children: <Widget>[
+          ListView(
             children: <Widget>[
-
-        ListView(
-          children: <Widget>[
-                TradePrice(key: _tradePriceState),
-                //KlinePage(pair: widget.pair),
-                LoadHTMLFileToWEbView(widget.pair),
-                Trademarket(key: _tradeMarketState),
-                SizedBox(height: 60)
-
-          ],
-        ),
-        Visibility(
-        visible: (tradeChannelCompleted&&priceChannelCompleted&&orderChannelCompleted),
-        child:
-              Align(
+              TradePrice(key: _tradePriceState),
+              //KlinePage(pair: widget.pair),
+              LoadHTMLFileToWEbView(widget.pair),
+              Trademarket(key: _tradeMarketState),
+              SizedBox(height: 60)
+            ],
+          ),
+          Visibility(
+              visible: (tradeChannelCompleted &&
+                  priceChannelCompleted &&
+                  orderChannelCompleted),
+              child: Align(
                 alignment: Alignment.bottomRight,
-                child:
-                Container(
-                  width: 200,
-                  child:
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-
-                  Flexible(
-
-                        child: FlatButton(
+                child: Container(
+                    width: 200,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Flexible(
+                            child: FlatButton(
                           color: Color(0xFF0da88b),
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      PlaceOrder(pair: widget.pair, bidOrAsk: true)),
+                                  builder: (context) => PlaceOrder(
+                                      pair: widget.pair, bidOrAsk: true)),
                             );
                           },
                           child: Text("Buy",
-                              style: TextStyle(fontSize: 16, color: Colors.white)),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white)),
                         )),
-                    Flexible(
-                        child: FlatButton(
+                        Flexible(
+                            child: FlatButton(
                           color: Color(0xFFe2103c),
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      PlaceOrder(pair: widget.pair, bidOrAsk: false)),
+                                  builder: (context) => PlaceOrder(
+                                      pair: widget.pair, bidOrAsk: false)),
                             );
                           },
                           child: Text("Sell",
-                              style: TextStyle(fontSize: 16, color: Colors.white)),
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white)),
                         ))
-                  ],
-                )),
-
-              )
-          ),
-              Visibility(
-                  visible: !(tradeChannelCompleted&&priceChannelCompleted&&orderChannelCompleted),
-                  child:
-                    Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    color: Color(0xFF2c2c4c),
-                    child:
-                        Center(
-                          child: CircularProgressIndicator()
-                        )
-                    )
-              )
-         ]
-        )
-
-        ,
-
-
-        bottomNavigationBar: AppBottomNav());
+                      ],
+                    )),
+              )),
+          Visibility(
+              visible: !(tradeChannelCompleted &&
+                  priceChannelCompleted &&
+                  orderChannelCompleted),
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  color: Color(0xFF2c2c4c),
+                  child: Center(child: CircularProgressIndicator())))
+        ]),
+        bottomNavigationBar: AppBottomNav(count: 2));
   }
 }

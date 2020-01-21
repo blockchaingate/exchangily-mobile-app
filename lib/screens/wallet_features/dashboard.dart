@@ -304,7 +304,7 @@ class DashboardScreen extends StatelessWidget {
                       ))
           ],
         ),
-        bottomNavigationBar: AppBottomNav(),
+        bottomNavigationBar: AppBottomNav(count: 0),
       ),
     );
   }
@@ -428,7 +428,7 @@ class DashboardScreen extends StatelessWidget {
                               baseColor: globals.primaryColor,
                               highlightColor: globals.white,
                               child: Text(
-                                '$assetsInExchange',
+                                '${assetsInExchange}',
                                 textAlign: TextAlign.center,
                               ),
                             ))

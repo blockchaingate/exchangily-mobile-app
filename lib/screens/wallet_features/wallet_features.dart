@@ -201,7 +201,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                       )),
                   Expanded(
                     child: Text(
-                      '${model.walletInfo.usdValue} USD',
+                      '${model.walletInfo.usdValue.toStringAsFixed(2)} USD',
                       textAlign: TextAlign.right,
                       style: Theme.of(context).textTheme.headline,
                     ),
