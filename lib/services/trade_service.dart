@@ -19,19 +19,16 @@ mixin TradeService {
 
   getOrderListChannel(String pair) {
     var wsString = environment['websocket'] + 'orders'+ '@' + pair;
-    print('wsString=' + wsString);
     return IOWebSocketChannel.connect(wsString);
   }
 
   getTradeListChannel(String pair) {
     var wsString = environment['websocket'] + 'trades'+ '@' + pair;
-    print('wsString=' + wsString);
     return IOWebSocketChannel.connect(wsString);
   }
 
   getTickerChannel(String pair, String interval) {
     var wsString = environment['websocket'] + 'ticker'+ '@' + pair+ '@' + interval;
-    print('wsString=' + wsString);
     return IOWebSocketChannel.connect(wsString);
   }
 

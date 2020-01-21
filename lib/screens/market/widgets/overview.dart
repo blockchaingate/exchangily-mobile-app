@@ -24,8 +24,7 @@ class MarketOverviewState extends State<MarketOverview> {
   }
 
   void updatePrices(List<Price> prices) {
-    print('price for updated=');
-    print(prices);
+
     var btcUsdtP = 0.0;
     var btcUsdtC = 0.0;
     var exgUsdtP = 0.0;

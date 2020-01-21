@@ -65,15 +65,13 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
       // print("Yeah, this line is printed after 3 seconds");
       var balances = await getAssetsBalance(address);
       var orders = await getOrders(address);
-      print('balances==========================================================================');
-      print(balances);
+
       print(balances.length);
       List<Map<String, dynamic>> newbals = [];
       List<Map<String, dynamic>> openOrds = [];
       List<Map<String, dynamic>> closeOrds = [];
 
       for(var i = 0; i < balances.length; i++) {
-        print('i=' + i.toString());
         var bal = balances[i];
         var coinType = int.parse(bal['coinType']);
         var unlockedAmount = bigNum2Double(bal['unlockedAmount']);

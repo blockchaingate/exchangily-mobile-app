@@ -169,7 +169,6 @@ class _BuySellState extends State<BuySell>
   _showOrders(Orders orders) {
     if (!listEquals(orders.buy, this.buy) ||
         !listEquals(orders.sell, this.sell)) {
-      print('orders.sell=' + orders.sell.length.toString());
       if (this.mounted) {
         setState(() => {
               this.sell = (orders.sell.length > 5)

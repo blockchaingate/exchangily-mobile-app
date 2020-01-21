@@ -39,7 +39,6 @@ class TrademarketState extends State<Trademarket> {
   }
 
   updateTrades(List<TradeModel> trades) {
-    print('trade=');
     if(!listEquals(this.trade, trades)) {
       setState(() => {
         this.trade = trades

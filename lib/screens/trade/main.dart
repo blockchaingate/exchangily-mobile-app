@@ -38,8 +38,7 @@ class _TradeState extends State<Trade> with TradeService {
 
   void _updateTrades(tradesString) {
     // _klinePageState.currentState.updateTrades(trades);
-    print('tradesString================');
-    print(tradesString);
+
     List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
     if ((this._tradeMarketState != null) &&
         (this._tradeMarketState.currentState != null)) {
@@ -64,7 +63,6 @@ class _TradeState extends State<Trade> with TradeService {
       //print('trades=');
       //print(trades);
       _updateTrades(trades);
-      print('tradeChannelCompleted');
       setState(() =>
       {
         this.tradeChannelCompleted = true
@@ -74,7 +72,6 @@ class _TradeState extends State<Trade> with TradeService {
     allOrdersChannel = getOrderListChannel(pair);
     allOrdersChannel.stream.listen((orders) {
       _updateOrders(orders);
-      print('orderChannelCompleted');
 
       setState(() =>
       {
@@ -84,11 +81,10 @@ class _TradeState extends State<Trade> with TradeService {
 
     allPriceChannel = getAllPriceChannel();
     allPriceChannel.stream.listen((prices) async {
-      print('prices3333=');
-      print(prices);
+
       if (this._tradePriceState == null ||
           this._tradePriceState.currentState == null) {
-        print('exit');
+
         return;
       }
       List<Price> list = Decoder.fromJsonArray(prices);
@@ -132,7 +128,6 @@ class _TradeState extends State<Trade> with TradeService {
           this.priceChannelCompleted = true
         });
       }
-      print('priceChannelCompleted');
 
     });
   }
@@ -174,16 +169,29 @@ class _TradeState extends State<Trade> with TradeService {
 
         ListView(
           children: <Widget>[
-
-
                 TradePrice(key: _tradePriceState),
                 //KlinePage(pair: widget.pair),
                 LoadHTMLFileToWEbView(widget.pair),
                 Trademarket(key: _tradeMarketState),
+                SizedBox(height: 60)
+
+          ],
+        ),
+        Visibility(
+        visible: (tradeChannelCompleted&&priceChannelCompleted&&orderChannelCompleted),
+        child:
+              Align(
+                alignment: Alignment.bottomRight,
+                child:
+                Container(
+                  width: 200,
+                  child:
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    Flexible(
+
+                  Flexible(
+
                         child: FlatButton(
                           color: Color(0xFF0da88b),
                           onPressed: () {
@@ -212,24 +220,25 @@ class _TradeState extends State<Trade> with TradeService {
                               style: TextStyle(fontSize: 16, color: Colors.white)),
                         ))
                   ],
-                )
+                )),
 
-          ],
-        ),
+              )
+          ),
               Visibility(
                   visible: !(tradeChannelCompleted&&priceChannelCompleted&&orderChannelCompleted),
                   child:
-    Container(
-    width: MediaQuery.of(context).size.width,
-    height: MediaQuery.of(context).size.height,
-    color: Color(0xFF2c2c4c),
-                  child:
-                  Center(
-                      child: CircularProgressIndicator()
-                  )
-    )
+                    Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    color: Color(0xFF2c2c4c),
+                    child:
+                        Center(
+                          child: CircularProgressIndicator()
+                        )
+                    )
               )
-         ]     )
+         ]
+        )
 
         ,
 

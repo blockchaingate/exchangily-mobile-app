@@ -80,12 +80,26 @@ fixLength( String str, int length ) {
 
 bigNum2Double(bigNum) {
 
-  var s = (Decimal.parse(bigNum.toString()) / Decimal.parse('1000000000000000000')).toString();
-  if(s.length > 8) {
-    s = s.substring(0,8);
+  var str = (Decimal.parse(bigNum.toString()) / Decimal.parse('1000000000000000000')).toString();
+  var s = str;
+  if(str.length > 6) {
+    s = str.substring(0,6);
   }
 
-  return double.parse(s);
+  double d = double.parse(s);
+  if (d == 0.0) {
+    if(str.length > 7) {
+      s = str.substring(0,7);
+    }
+    d = double.parse(s);
+  }
+  if (d == 0.0) {
+    if(str.length > 8) {
+      s = str.substring(0,8);
+    }
+    d = double.parse(s);
+  }
+  return d;
   //double d = (BigInt.parse(bigNum.toString()) / BigInt.parse('1000000000000')).round() / 1000000;
   //return d;
 }
