@@ -186,6 +186,6 @@ class _TradeState extends State<Trade> with TradeService {
             )
           ],
         ),
-        bottomNavigationBar: AppBottomNav());
+        bottomNavigationBar: AppBottomNav(count: 2));
   }
 }

@@ -3,6 +3,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 class DataBaseService {
+  static final _databaseName = 'wallet_database.db';
+  static final _databaseVersion = 1;
   var databasePath;
   String path;
   Future<Database> database;
@@ -14,6 +16,10 @@ class DataBaseService {
       return db.execute(
           "CREATE TABLE test(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)");
     }, version: 1);
+  }
+
+  Future onCreate(Database db, int version) async {
+    //await db.execute(sql)
   }
 
   deleteDb() async {

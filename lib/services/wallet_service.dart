@@ -160,6 +160,7 @@ class WalletService {
   Future<List<WalletInfo>> getWalletCoins(String mnemonic) async {
     List<WalletInfo> _walletInfo = [];
     List<double> coinUsdMarketPrice = [];
+    double assetsInExg = 0.0;
     String exgAddress = '';
     String wallets;
     if (_walletInfo != null) {
@@ -189,7 +190,7 @@ class WalletService {
         log.w('tickername $tickerName - address: $addr - balance: $walletBal');
         calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
         //  log.i('printing calculated bal $coinUsdBalance');
-        double assetsInExg = 0.0;
+
         if (tickerName == 'EXG') {
           exgAddress = addr;
           log.e(exgAddress);
@@ -201,10 +202,9 @@ class WalletService {
             // lockedBalance: walletLockedBal,
             availableBalance: walletBal,
             usdValue: coinUsdBalance,
-            name: name,
-            assetsInExchange: assetsInExg);
+            name: name);
         _walletInfo.add(wi);
-        wallets = jsonEncode(_walletInfo);
+        //  wallets = jsonEncode(_walletInfo);
       }
       var res = await assetsBalance(exgAddress);
       var length = res.length;
@@ -215,6 +215,8 @@ class WalletService {
             _walletInfo[j].assetsInExchange = res[i]['amount'];
         }
       }
+      // Pushed this line below here to add assets in exchange in the local storage
+      wallets = jsonEncode(_walletInfo);
       final storage = new FlutterSecureStorage();
       await storage.delete(key: 'wallets');
       await storage.write(key: 'wallets', value: wallets);

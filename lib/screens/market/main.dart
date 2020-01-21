@@ -62,7 +62,7 @@ class _MarketState extends State<Market> with TradeService {
           MarketDetail(key: _marketDetailState)
         ],
       ),
-      bottomNavigationBar: AppBottomNav(),
+      bottomNavigationBar: AppBottomNav(count: 1),
     );
   }
 
