@@ -196,7 +196,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         color: globals.primaryColor,
         textColor: Colors.white,
         onPressed: () async {
-          log.e('Random Mnemonic -${widget.randomMnemonicFromRoute}');
+          log.e('Random Mnemonic - ${widget.randomMnemonicFromRoute}');
           // Remove the on screen keyboard by shifting focus to unused focus node
           FocusScope.of(context).requestFocus(FocusNode());
           var passSuccess = model.validatePassword(

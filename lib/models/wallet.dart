@@ -160,3 +160,15 @@ class WalletInfoList {
     return new WalletInfoList(wallets: wallets);
   }
 }
+
+class Test {
+  final int id;
+  final String name;
+  final int age;
+
+  Test({this.id, this.name, this.age});
+
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'name': name, 'age': age};
+  }
+}
