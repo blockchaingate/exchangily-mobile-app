@@ -1,8 +1,6 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:provider/provider.dart';
 import 'package:encrypt/encrypt.dart' as prefix0;
 
 class VaultService {
@@ -10,7 +8,7 @@ class VaultService {
 
   WalletService _walletService = locator<WalletService>();
 
-  Future secureMnemonic(context, pass, String mnemonic) async {
+  Future secureMnemonic(context, String pass, String mnemonic) async {
     _walletService.generateSeed(mnemonic);
 
     log.w(mnemonic);

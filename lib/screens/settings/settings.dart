@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/screen_state/settings_state.dart';
+import 'package:exchangilymobileapp/screen_state/settings_screen_state.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,9 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScreen<SettingsScreenState>(
+      onModelReady: (model) {
+        model.context = context;
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -44,7 +47,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () async {
-                    await model.verify(context);
+                    await model.verify();
                   },
                 ),
                 InkWell(
@@ -67,7 +70,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    model.displayMnemonic(context);
+                    model.displayMnemonic();
                     print('mnemonic - ${model.mnemonic}');
                   },
                 ),
@@ -95,7 +98,6 @@ class SettingsScreen extends StatelessWidget {
                         value: model.selectedLanguage,
                         onChanged: (newValue) {
                           model.changeWalletLanguage(newValue);
-                          // Navigator.pushNamed(context, '/dashboard');
                         },
                         items: model.languages.map((language) {
                           return DropdownMenuItem(
@@ -123,7 +125,7 @@ class SettingsScreen extends StatelessWidget {
                 )
               ]),
         ),
-        bottomNavigationBar: AppBottomNav(),
+        bottomNavigationBar: AppBottomNav(count: 3),
       ),
     );
   }

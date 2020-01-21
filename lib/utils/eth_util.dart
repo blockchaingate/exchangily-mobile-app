@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:keccak/keccak.dart';
 import 'package:hex/hex.dart';
 import 'dart:typed_data';
@@ -46,9 +47,9 @@ Future getEthBalanceByAddress(String address) async {
   try {
     var response = await http.get(url);
     Map<String, dynamic> balance = jsonDecode(response.body);
-    ethBalance = double.parse(balance['balance']) / 1e18;
+    ethBalance = bigNum2Double(balance['balance']);
   } catch (e) {}
-  return {'balance': ethBalance, 'lockbalance': 0};
+  return {'balance': ethBalance, 'lockbalance': 0.0};
 }
 
 Future getEthTokenBalanceByAddress(String address, String coinName) async {
@@ -62,5 +63,5 @@ Future getEthTokenBalanceByAddress(String address, String coinName) async {
 
     tokenBalance = double.parse(balance['balance']) / 1e6;
   } catch (e) {}
-  return {'balance': tokenBalance, 'lockbalance': 0};
+  return {'balance': tokenBalance, 'lockbalance': 0.0};
 }

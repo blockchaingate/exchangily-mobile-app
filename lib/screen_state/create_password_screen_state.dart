@@ -18,6 +18,8 @@ class CreatePasswordScreenState extends BaseState {
   bool checkPasswordConditions = false;
   bool passwordMatch = false;
   bool checkConfirmPasswordConditions = false;
+  String randomMnemonicFromRoute = '';
+  BuildContext context;
   String password = '';
   String confirmPassword = '';
   String errorMessage = '';
@@ -27,22 +29,27 @@ class CreatePasswordScreenState extends BaseState {
 /* ---------------------------------------------------
                     Get All Coins Future
     -------------------------------------------------- */
-  getAllCoins(context) async {
+  getAllCoins() async {
     log.w('Future get all coins started');
+    log.w(randomMnemonicFromRoute);
     setState(ViewState.Busy);
-    _walletInfo = await _walletService.getAllCoins().then((data) {
+    _walletInfo = await _walletService
+        .getWalletCoins(randomMnemonicFromRoute)
+        .then((data) {
       if (data == null || data == []) {
         errorMessage = AppLocalizations.of(context).serverError;
         setState(ViewState.Idle);
       } else {
         _walletInfo = data;
         Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
+        randomMnemonicFromRoute = '';
       }
       return _walletInfo;
     }).timeout(Duration(seconds: 25), onTimeout: () {
-      log.e('TIMEOUT');
+      log.e('Timeout');
       errorMessage =
           AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
+      // Could add retune walletInfo = null to fix the return warning but then i don't have way to test when its actually null
       setState(ViewState.Idle);
     }).catchError((onError) {
       errorMessage = AppLocalizations.of(context).somethingWentWrong;
@@ -50,11 +57,6 @@ class CreatePasswordScreenState extends BaseState {
       setState(ViewState.Idle);
     });
     setState(ViewState.Idle);
-  }
-
-  showNotification(context, title, message) {
-    _walletService.showInfoFlushbar(
-        title, message, Icons.cancel, Colors.red, context);
   }
 
 /* ---------------------------------------------------
@@ -75,7 +77,7 @@ class CreatePasswordScreenState extends BaseState {
     return checkConfirmPasswordConditions;
   }
 
-  bool validatePassword(pass, confirmPass, context, mnemonic) {
+  bool validatePassword(pass, confirmPass) {
     RegExp regex = new RegExp(pattern);
 
     if (pass.isEmpty) {
@@ -118,7 +120,7 @@ class CreatePasswordScreenState extends BaseState {
       } else {
         password = '';
         confirmPassword = '';
-        _vaultService.secureMnemonic(context, pass, mnemonic);
+        _vaultService.secureMnemonic(context, pass, randomMnemonicFromRoute);
         log.w('In else');
         return true;
       }

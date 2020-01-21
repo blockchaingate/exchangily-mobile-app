@@ -11,8 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
-  final String randomMnemonic;
-  const CreatePasswordScreen({Key key, this.randomMnemonic}) : super(key: key);
+  final String randomMnemonicFromRoute;
+  const CreatePasswordScreen({Key key, this.randomMnemonicFromRoute})
+      : super(key: key);
 
   @override
   _CreatePasswordScreenState createState() => _CreatePasswordScreenState();
@@ -29,6 +30,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   Widget build(BuildContext context) {
     return BaseScreen<CreatePasswordScreenState>(
       onModelReady: (model) {
+        model.randomMnemonicFromRoute = widget.randomMnemonicFromRoute;
+        model.context = context;
         model.errorMessage = '';
         model.passwordMatch = false;
       },
@@ -193,17 +196,17 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         color: globals.primaryColor,
         textColor: Colors.white,
         onPressed: () async {
-          log.e('111111 -${widget.randomMnemonic}');
+          log.e('Random Mnemonic - ${widget.randomMnemonicFromRoute}');
           // Remove the on screen keyboard by shifting focus to unused focus node
           FocusScope.of(context).requestFocus(FocusNode());
-          var passSuccess = model.validatePassword(_passTextController.text,
-              _confirmPassTextController.text, context, widget.randomMnemonic);
+          var passSuccess = model.validatePassword(
+              _passTextController.text, _confirmPassTextController.text);
 
           _passTextController.text = '';
           _confirmPassTextController.text = '';
           model.errorMessage = '';
           if (passSuccess) {
-            await model.getAllCoins(context);
+            await model.getAllCoins();
           }
         },
         child: Text(

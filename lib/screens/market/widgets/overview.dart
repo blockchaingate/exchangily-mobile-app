@@ -3,7 +3,8 @@ import "overview-block.dart";
 import '../../../models/price.dart';
 
 class MarketOverview extends StatefulWidget {
-  MarketOverview({Key key})
+  List<Price> data;
+  MarketOverview({Key key,this.data})
       : super(key: key);
   @override
   MarketOverviewState createState() => MarketOverviewState();
@@ -19,10 +20,11 @@ class MarketOverviewState extends State<MarketOverview> {
   @override
   void initState() {
     super.initState();
-
+    this.updatePrices(widget.data);
   }
 
   void updatePrices(List<Price> prices) {
+
     var btcUsdtP = 0.0;
     var btcUsdtC = 0.0;
     var exgUsdtP = 0.0;

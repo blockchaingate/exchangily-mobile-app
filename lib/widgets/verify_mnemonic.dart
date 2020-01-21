@@ -66,7 +66,6 @@ class VerifyMnemonicWalletScreen extends StatelessWidget {
           ],
           style: TextStyle(color: globals.white),
           controller: controller[i],
-          //  maxLines: 2, // Chracters were displaying as half so comment this out for now
           autocorrect: true,
           decoration: InputDecoration(
             fillColor: globals.primaryColor,

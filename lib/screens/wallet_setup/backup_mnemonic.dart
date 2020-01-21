@@ -4,24 +4,33 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:bip39/bip39.dart' as bip39;
 
-class BackupMnemonicWalletScreen extends StatelessWidget {
+class BackupMnemonicWalletScreen extends StatefulWidget {
   const BackupMnemonicWalletScreen({Key key}) : super(key: key);
-  static List<String> mnemonic = [];
+  static List<String> randomMnemonicList = [];
+
+  @override
+  _BackupMnemonicWalletScreenState createState() =>
+      _BackupMnemonicWalletScreenState();
+}
+
+class _BackupMnemonicWalletScreenState
+    extends State<BackupMnemonicWalletScreen> {
+  WalletService walletService = locator<WalletService>();
+  @override
+  void initState() {
+    super.initState();
+    final randomMnemonicString = walletService.getRandomMnemonic();
+    print('In backup mnemonic $randomMnemonicString');
+    // convert string to list to iterate and display single word in a textbox
+    BackupMnemonicWalletScreen.randomMnemonicList =
+        randomMnemonicString.split(" ").toList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    WalletService walletService = locator<WalletService>();
-    final log = getLogger('Backup Mnemonic');
-    final randomMnemonic = walletService.getRandomMnemonic();
-    log.w(randomMnemonic);
-    mnemonic = randomMnemonic
-        .split(" ")
-        .toList(); // convert string to list to iterate and display single word as a textbox
-
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
@@ -65,8 +74,8 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.button,
                 ),
                 onPressed: () {
-                  Navigator.of(context)
-                      .pushNamed('/confirmMnemonic', arguments: mnemonic);
+                  Navigator.of(context).pushNamed('/confirmMnemonic',
+                      arguments: BackupMnemonicWalletScreen.randomMnemonicList);
                 },
               ),
             )
@@ -86,7 +95,7 @@ class BackupMnemonicWalletScreen extends StatelessWidget {
       children: _buildButtonGrid(12));
 
   List<Container> _buildButtonGrid(int count) => List.generate(count, (i) {
-        var singleWord = mnemonic[i];
+        var singleWord = BackupMnemonicWalletScreen.randomMnemonicList[i];
         return Container(
             child: TextField(
           textAlign: TextAlign.left,

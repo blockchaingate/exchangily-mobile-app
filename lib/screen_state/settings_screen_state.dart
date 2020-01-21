@@ -1,12 +1,10 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
-import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 import '../localizations.dart';
 import '../logger.dart';
@@ -25,13 +23,14 @@ class SettingsScreenState extends BaseState {
   // bool result = false;
   String errorMessage = '';
   AlertResponse alertResponse;
+  BuildContext context;
 
-  void showMnemonic(context) async {
-    await displayMnemonic(context);
+  void showMnemonic() async {
+    await displayMnemonic();
     isVisible = !isVisible;
   }
 
-  verify(context) async {
+  verify() async {
     errorMessage = '';
     setState(ViewState.Busy);
     await dialogService
@@ -41,17 +40,18 @@ class SettingsScreenState extends BaseState {
                 AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
             buttonTitle: AppLocalizations.of(context).confirm)
         .then((res) async {
-      log.w('1 ${res.confirmed}');
       if (res.confirmed) {
         log.w('Indelete');
         await storage.delete(key: 'wallets');
         await storage.deleteAll();
-
         await walletService.deleteEncryptedData();
-
         setState(ViewState.Idle);
         Navigator.pushNamed(context, '/walletSetup');
         return '';
+      } else if (res.fieldOne == 'Closed') {
+        log.e('Dialog Closed By User');
+        setState(ViewState.Idle);
+        return errorMessage = '';
       } else {
         log.e('Wrong pass');
         setState(ViewState.Idle);
@@ -65,7 +65,7 @@ class SettingsScreenState extends BaseState {
     });
   }
 
-  displayMnemonic(context) async {
+  displayMnemonic() async {
     errorMessage = '';
     setState(ViewState.Busy);
     log.w('Is visi $isVisible');
@@ -84,6 +84,10 @@ class SettingsScreenState extends BaseState {
           mnemonic = res.fieldOne;
           setState(ViewState.Idle);
           return '';
+        } else if (res.fieldOne == 'Closed') {
+          log.e('Dialog Closed By User');
+          setState(ViewState.Idle);
+          return errorMessage = '';
         } else {
           log.e('Wrong pass');
           setState(ViewState.Idle);

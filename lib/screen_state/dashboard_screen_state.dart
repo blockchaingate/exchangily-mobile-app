@@ -62,7 +62,6 @@ class DashboardScreenState extends BaseState {
       walletInfoCopy = walletInfo.map((element) => element).toList();
       log.i(walletInfo.length);
       calcTotalBal(walletInfo.length);
-      // await refreshBalance();
       setState(ViewState.Idle);
     }).catchError((error) {
       log.e('Catch Error $error');
@@ -84,6 +83,7 @@ class DashboardScreenState extends BaseState {
           walletInfo[j].assetsInExchange = res[i]['amount'];
       }
     }
+    walletInfoCopy = walletInfo.map((element) => element).toList();
     setState(ViewState.Idle);
   }
 
@@ -95,7 +95,6 @@ class DashboardScreenState extends BaseState {
     log.w('Wallet copy ${walletInfoCopy.length}');
     List<String> token = walletService.tokenType;
     walletInfo.clear();
-    log.i('WI cleared');
     double walletBal = 0;
     // double walletLockedBal = 0;
     for (var i = 0; i < length; i++) {
@@ -110,11 +109,13 @@ class DashboardScreenState extends BaseState {
         double marketPrice = await walletService.getCoinMarketPrice(name);
         coinUsdBalance =
             walletService.calculateCoinUsdBalance(marketPrice, walletBal);
-        double assetsInExg = 0.0;
+
         // PENDING: Something went wrong  - type 'int' is not a subtype of type 'double'
         // and sometimes it shows the locked bal but sometimes it doesn't
         //log.e('$tickerName - $walletLockedBal');
         //  walletInfo[i].lockedBalance = walletLockedBal;
+
+        // Solution for above error is to add locked balance variable in every coin utils like balance var is already there
 
         WalletInfo wi = WalletInfo(
             tickerName: tickerName,
@@ -122,10 +123,8 @@ class DashboardScreenState extends BaseState {
             address: address,
             availableBalance: walletBal,
             usdValue: coinUsdBalance,
-            name: name,
-            assetsInExchange: assetsInExg);
+            name: name);
         walletInfo.add(wi);
-        wallets = jsonEncode(walletInfo);
       }).catchError((error) {
         log.e('Something went wrong  - $error');
       });
@@ -133,6 +132,7 @@ class DashboardScreenState extends BaseState {
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();
+    wallets = jsonEncode(walletInfo);
     await storage.delete(key: 'wallets');
     await storage.write(key: 'wallets', value: wallets);
     setState(ViewState.Idle);
