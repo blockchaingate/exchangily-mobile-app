@@ -1,3 +1,5 @@
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -5,17 +7,19 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'dart:typed_data';
-class AddGas extends StatelessWidget {
 
-  DialogService _dialogService = locator<DialogService>();
-  WalletService walletService = locator<WalletService>();
+class AddGas extends StatelessWidget {
+  final DialogService _dialogService = locator<DialogService>();
+  final WalletService walletService = locator<WalletService>();
+  final log = getLogger('AddGas');
   AddGas({Key key}) : super(key: key);
 
-  checkPass(double amount, context) async{
+  checkPass(double amount, context) async {
     var res = await _dialogService.showDialog(
-        title: 'Enter Password',
+        title: AppLocalizations.of(context).enterPassword,
         description:
-        'Type the same password which you entered while creating the wallet');
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
@@ -24,9 +28,16 @@ class AddGas extends StatelessWidget {
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
       print('retfffff=');
       print(ret);
-      walletService.showInfoFlushbar((ret["errMsg"] == '')?'Add gas transaction was made successfully':'Add gas transaction failed',
-          (ret["errMsg"] == '')?'transactionID:' + ret['txHash']:ret["errMsg"], Icons.cancel, globals.red, context);
-
+      walletService.showInfoFlushbar(
+          (ret["errMsg"] == '')
+              ? 'Add gas transaction was made successfully'
+              : 'Add gas transaction failed',
+          (ret["errMsg"] == '')
+              ? 'transactionID:' + ret['txHash']
+              : ret["errMsg"],
+          Icons.cancel,
+          globals.red,
+          context);
     } else {
       if (res.fieldOne != 'Closed') {
         showNotification(context);
@@ -73,12 +84,13 @@ class AddGas extends StatelessWidget {
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 TextField(
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(
                             color: Color(0XFF871fff), width: 1.0)),
                     hintText: 'Enter the amount',
-                    hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                    hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey),
                   ),
                   controller: myController,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
@@ -89,8 +101,19 @@ class AddGas extends StatelessWidget {
                   color: globals.primaryColor,
                   textColor: Colors.white,
                   onPressed: () async {
+                    double amount = 0;
+                    if (myController.text != '') {
+                      amount = double.parse(myController.text);
+                    }
                     // var res = await AddGasDo(double.parse(myController.text));
-                    checkPass(double.parse(myController.text), context);
+                    myController.text == '' || amount == null
+                        ? walletService.showInfoFlushbar(
+                            AppLocalizations.of(context).invalidAmount,
+                            AppLocalizations.of(context).pleaseEnterValidNumber,
+                            Icons.cancel,
+                            globals.red,
+                            context)
+                        : checkPass(amount, context);
                     //   print(res);
                   },
                   child: Text(
