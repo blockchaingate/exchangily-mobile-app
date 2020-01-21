@@ -530,6 +530,10 @@ class AppLocalizations {
         desc:
             'confirm_mnemonic_error_please_fill_all_the_text_fields_correctly');
   }
+
+  String get addGas {
+    return Intl.message('Add Gas', name: 'addGas', desc: 'add_gas');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

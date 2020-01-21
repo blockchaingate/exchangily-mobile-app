@@ -16,6 +16,7 @@ class SettingsScreen extends StatelessWidget {
         model.context = context;
       },
       builder: (context, model, child) => Scaffold(
+        // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,

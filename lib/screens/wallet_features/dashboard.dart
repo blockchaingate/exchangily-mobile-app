@@ -23,8 +23,9 @@ class DashboardScreen extends StatelessWidget {
     final key = new GlobalKey<ScaffoldState>();
     return BaseScreen<DashboardScreenState>(
       onModelReady: (model) async {
+        model.context = context;
         if (walletInfo != null) {
-          log.i('wallet info filled');
+          log.i('wallet info not null');
           model.walletInfo = walletInfo;
           model.calcTotalBal(walletInfo.length);
         } else {

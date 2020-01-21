@@ -64,7 +64,7 @@ class SendScreenState extends BaseState {
           log.w('Both TxHash and Error Message are empty $errorMessage');
           walletService.showInfoFlushbar(
               AppLocalizations.of(context).sendError,
-              '$tickerName + ${AppLocalizations.of(context).transanctionFailed}',
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
               Icons.cancel,
               globals.red,
               context);

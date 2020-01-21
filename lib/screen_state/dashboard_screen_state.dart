@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
@@ -21,6 +21,7 @@ class DashboardScreenState extends BaseState {
   final storage = new FlutterSecureStorage();
   String wallets;
   List walletInfoCopy = [];
+  BuildContext context;
 
   calcTotalBal(numberOfCoins) {
     totalUsdBalance = 0;
@@ -53,6 +54,10 @@ class DashboardScreenState extends BaseState {
     setState(ViewState.Busy);
 
     await storage.read(key: 'wallets').then((encodedJsonWallets) async {
+      if (encodedJsonWallets == null) {
+        log.e('Local storage null');
+        Navigator.pushNamed(context, '/walletSetup');
+      }
       final decodedWallets = jsonDecode(encodedJsonWallets);
       log.w(decodedWallets);
       WalletInfoList walletInfoList = WalletInfoList.fromJson(decodedWallets);
@@ -89,6 +94,7 @@ class DashboardScreenState extends BaseState {
 
   Future refreshBalance() async {
     setState(ViewState.Busy);
+    // totalUsdBalance = 0;
     // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
     walletInfoCopy = walletInfo.map((element) => element).toList();
     int length = walletInfoCopy.length;
@@ -96,7 +102,7 @@ class DashboardScreenState extends BaseState {
     List<String> token = walletService.tokenType;
     walletInfo.clear();
     double walletBal = 0;
-    double walletLockedBal = 0;
+    // double walletLockedBal = 0;
     for (var i = 0; i < length; i++) {
       String tickerName = walletInfoCopy[i].tickerName;
       String address = walletInfoCopy[i].address;
@@ -105,16 +111,15 @@ class DashboardScreenState extends BaseState {
           .coinBalanceByAddress(tickerName, address, token[i])
           .then((balance) async {
         walletBal = balance['balance'];
-        walletLockedBal = balance['lockbalance'];
-        log.w('Raw Wallet locked bal ${balance['lockbalance']}');
-        log.w('Wallet locked bal $walletLockedBal');
+        //  walletLockedBal = balance['lockbalance'];
         double marketPrice = await walletService.getCoinMarketPrice(name);
         coinUsdBalance =
             walletService.calculateCoinUsdBalance(marketPrice, walletBal);
 
         // PENDING: Something went wrong  - type 'int' is not a subtype of type 'double'
         // and sometimes it shows the locked bal but sometimes it doesn't
-        //  log.e('$tickerName - $walletLockedBal');
+        //log.e('$tickerName - $walletLockedBal');
+        //  walletInfo[i].lockedBalance = walletLockedBal;
 
         // Solution for above error is to add locked balance variable in every coin utils like balance var is already there
 

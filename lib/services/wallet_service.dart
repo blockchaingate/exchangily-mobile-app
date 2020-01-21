@@ -239,7 +239,7 @@ class WalletService {
       log.w('On error $onError');
       gasAmount = 0.0;
     });
-    return gasAmount; // return here implies that it will return gas amount whatever value it gets assigned above
+    return gasAmount;
   }
 
   // Assets Balance

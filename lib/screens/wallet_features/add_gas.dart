@@ -46,8 +46,12 @@ class AddGas extends StatelessWidget {
   }
 
   showNotification(context) {
-    walletService.showInfoFlushbar('Password Mismatch',
-        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+    walletService.showInfoFlushbar(
+        AppLocalizations.of(context).passwordMismatch,
+        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        Icons.cancel,
+        globals.red,
+        context);
   }
 
   @override
@@ -80,7 +84,7 @@ class AddGas extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text("Amount:",
+                Text(AppLocalizations.of(context).amount,
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 TextField(
@@ -89,7 +93,7 @@ class AddGas extends StatelessWidget {
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(
                             color: Color(0XFF871fff), width: 1.0)),
-                    hintText: 'Enter the amount',
+                    hintText: AppLocalizations.of(context).enterAmount,
                     hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey),
                   ),
                   controller: myController,
@@ -117,7 +121,7 @@ class AddGas extends StatelessWidget {
                     //   print(res);
                   },
                   child: Text(
-                    'Confirm',
+                    AppLocalizations.of(context).confirm,
                     style: Theme.of(context).textTheme.button,
                   ),
                 )
