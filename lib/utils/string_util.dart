@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:hex/hex.dart';
+import 'package:decimal/decimal.dart';
 
 hex2Buffer(hexString) {
 
@@ -53,6 +54,11 @@ uint8ListToString(Uint8List list) {
   return HEX.encode(list);
 }
 
+/*
+bigIntString2Double(bigInt) {
+  return (Decimal.parse(bigInt.toString()) / Decimal.parse('1000000000000000000')).toDouble();
+}
+*/
 fixLength( String str, int length ) {
   var retStr = '';
   int len = str.length;
@@ -74,6 +80,12 @@ fixLength( String str, int length ) {
 
 bigNum2Double(bigNum) {
 
-  double d = (BigInt.parse(bigNum.toString()) / BigInt.parse('1000000000000')).round() / 1000000;
-  return d;
+  var s = (Decimal.parse(bigNum.toString()) / Decimal.parse('1000000000000000000')).toString();
+  if(s.length > 8) {
+    s = s.substring(0,8);
+  }
+
+  return double.parse(s);
+  //double d = (BigInt.parse(bigNum.toString()) / BigInt.parse('1000000000000')).round() / 1000000;
+  //return d;
 }

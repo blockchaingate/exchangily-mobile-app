@@ -23,7 +23,7 @@ Future getBtcBalanceByAddress(String address) async{
     var response = await http.get(url);
     btcBalance = double.parse(response.body) / 1e8;
   } catch(e) {}
-  return {'balance':btcBalance,'lockbalance': 0};
+  return {'balance':btcBalance,'lockbalance': 0.0};
 }
 
 getBtcNode(root, {index = 0}) {

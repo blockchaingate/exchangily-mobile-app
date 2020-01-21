@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/models/order-model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
 import '../../../models/orders.dart';
@@ -38,6 +39,7 @@ class TrademarketState extends State<Trademarket> {
   }
 
   updateTrades(List<TradeModel> trades) {
+    print('trade=');
     if(!listEquals(this.trade, trades)) {
       setState(() => {
         this.trade = trades
@@ -97,6 +99,95 @@ class TrademarketState extends State<Trademarket> {
           Container(
             padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
             child:
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+
+                  Column(
+                    children:[
+                      Container(
+                          padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                          child:
+                            Text('Sell Orders',style: TextStyle(fontSize: 18,color: Colors.white70))
+                      ),
+                      for(var item in sell )
+                        Column(
+                          children: <Widget>[
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.45,
+                              child:
+                              Row(
+                                children:
+
+                                  <Widget>[
+
+                                    Container(
+                                        alignment: Alignment.centerLeft,
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFF264559)
+                                      ),
+                                      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                      width: MediaQuery.of(context).size.width * 0.2,
+                                      child:Text(item.price.toString(), style: TextStyle(fontSize: 14,color: Color(0xFF0da88b)))
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                      child:Text(item.orderQuantity.toString(), style: TextStyle(fontSize: 14,color: Color(0xFF5e617f)))
+                                    )
+
+                                  ],
+
+                              )
+                            ),
+                            SizedBox(height: 10)
+                          ]
+                        ),
+
+                    ]
+                  ),
+
+
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                        child:
+                        Text('Buy Orders',style: TextStyle(fontSize: 18,color: Colors.white70)),
+                      ),
+                      for(var item in buy )
+                        Column(
+                          children: <Widget>[
+
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child:
+                              Row(
+                                children: <Widget>[
+                                  Container(
+                                      width: MediaQuery.of(context).size.width * 0.2,
+                                      decoration: const BoxDecoration(
+                                          color: Color(0xFF472a4a)
+                                      ),
+                                      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                      child:Text(item.price.toString(), style: TextStyle(fontSize: 14,color: Color(0xFFe2103c)))
+                                  ),
+                                  Container(
+                                      padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                      child:Text(item.orderQuantity.toString(), style: TextStyle(fontSize: 14,color: Color(0xFF5e617f)))
+                                  )
+                                ],
+                              )
+                            ),
+                            SizedBox(height: 10)
+                          ],
+
+                        )
+                    ],
+                  )
+                ],
+              )
+                /*
             Column(
             children:[
               for(var item in sell )
@@ -149,6 +240,7 @@ class TrademarketState extends State<Trademarket> {
                     ),
 
                     ])
+              */
 
           )
     ),

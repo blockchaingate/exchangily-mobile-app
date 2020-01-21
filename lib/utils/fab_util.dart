@@ -210,7 +210,7 @@ Future getFabTokenBalanceForABI(
     // var unlockInt = int.parse(unlockBalance, radix: 16);
     var unlockInt = BigInt.parse(unlockBalance, radix: 16);
 
-    tokenBalance = unlockInt.toDouble() / 1e18;
+    tokenBalance = bigNum2Double(unlockInt);
   } catch (e) {}
   return tokenBalance;
 }

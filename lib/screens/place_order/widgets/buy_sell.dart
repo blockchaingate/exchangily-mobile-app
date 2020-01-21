@@ -70,8 +70,6 @@ class _BuySellState extends State<BuySell> with SingleTickerProviderStateMixin, 
       print(walletInfoList.wallets[0].usdValue);
 
       walletInfo = walletInfoList.wallets;
-      print(walletInfo.length);
-      print('end of read');
       for(var i = 0; i < walletInfo.length; i++) {
         var coin = walletInfo[i];
         if(coin.tickerName == 'EXG') {
