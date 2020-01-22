@@ -397,15 +397,15 @@
     },
     "orderBook": "买卖盘",
     "@orderBook": {
-      "description": "order_book_text",
-      "type": "text",
-      "placeholders": {}
+        "description": "order_book_text",
+        "type": "text",
+        "placeholders": {}
     },
     "marketTrades": "成交记录",
     "@marketTrades": {
-      "description": "market_trades_text",
-      "type": "text",
-      "placeholders": {}
+        "description": "market_trades_text",
+        "type": "text",
+        "placeholders": {}
     },
     "coin": "资产",
     "@coin": {
@@ -421,21 +421,21 @@
     },
     "lockedAmount": "冻结数量",
     "@lockedAmount": {
-      "description": "locked_amount_text",
-      "type": "text",
-      "placeholders": {}
+        "description": "locked_amount_text",
+        "type": "text",
+        "placeholders": {}
     },
     "buy": "买入",
     "@buy": {
-      "description": "buy_text",
-      "type": "text",
-      "placeholders": {}
+        "description": "buy_text",
+        "type": "text",
+        "placeholders": {}
     },
     "sell": "卖出",
     "@sell": {
-      "description": "sell_text",
-      "type": "text",
-      "placeholders": {}
+        "description": "sell_text",
+        "type": "text",
+        "placeholders": {}
     },
     "transactionAmount": "交易数量",
     "@transactionAmount": {
@@ -451,21 +451,21 @@
     },
     "openOrders": "我的委托",
     "@openOrders": {
-      "description": "open_orders_text",
-      "type": "text",
-      "placeholders": {}
+        "description": "open_orders_text",
+        "type": "text",
+        "placeholders": {}
     },
     "closeOrders": "成交订单",
     "@closeOrders": {
-      "description": "close_orders_text",
-      "type": "text",
-      "placeholders": {}
+        "description": "close_orders_text",
+        "type": "text",
+        "placeholders": {}
     },
     "assets": "我的持仓",
     "@assets": {
-      "description": "assets_text",
-      "type": "text",
-      "placeholders": {}
+        "description": "assets_text",
+        "type": "text",
+        "placeholders": {}
     },
     "type": "类型",
     "@type": {
@@ -481,9 +481,9 @@
     },
     "filledAmount": "成交",
     "@filledAmount": {
-      "description": "filled_amount_text",
-      "type": "text",
-      "placeholders": {}
+        "description": "filled_amount_text",
+        "type": "text",
+        "placeholders": {}
     },
     "passwordMatched": "密码匹配",
     "@passwordMatched": {
@@ -608,6 +608,54 @@
     "changeWalletLanguage": "设置语言",
     "@changeWalletLanguage": {
         "description": "settings_change_wallet_language",
+        "type": "text",
+        "placeholders": {}
+    },
+    "invalidMnemonic": "无效的助记词",
+    "@invalidMnemonic": {
+        "description": "confirm_mnemonic_error_invalid_mnemonic",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseFillAllTheTextFieldsCorrectly": "请确保所有助记词正确",
+    "@pleaseFillAllTheTextFieldsCorrectly": {
+        "description": "confirm_mnemonic_error_please_fill_all_the_text_fields_correctly",
+        "type": "text",
+        "placeholders": {}
+    },
+    "addGas": "加燃料",
+    "@addGas": {
+        "description": "add_gas",
+        "type": "text",
+        "placeholders": {}
+    },
+    "depositTransactionSuccess": "存款交易成功，请过一会查看结果",
+    "@depositTransactionSuccess": {
+        "description": "deposit_transaction_success",
+        "type": "text",
+        "placeholders": {}
+    },
+    "depositTransactionFailed": "存款交易失败",
+    "@depositTransactionFailed": {
+        "description": "deposit_transaction_failed",
+        "type": "text",
+        "placeholders": {}
+    },
+    "move": "转移",
+    "@move": {
+        "description": "deposit_withdraw_move_header",
+        "type": "text",
+        "placeholders": {}
+    },
+    "toWallet": "到钱包",
+    "@toWallet": {
+        "description": "withdraw_to_wallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "toExchange": "到交易所",
+    "@toExchange": {
+        "description": "deposit_to_exchange",
         "type": "text",
         "placeholders": {}
     }

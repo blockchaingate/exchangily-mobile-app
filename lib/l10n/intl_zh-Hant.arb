@@ -610,5 +610,53 @@
         "description": "settings_change_wallet_language",
         "type": "text",
         "placeholders": {}
+    },
+    "invalidMnemonic": "無效的助記詞",
+    "@invalidMnemonic": {
+        "description": "confirm_mnemonic_error_invalid_mnemonic",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseFillAllTheTextFieldsCorrectly": "請確保所有助記詞正確",
+    "@pleaseFillAllTheTextFieldsCorrectly": {
+        "description": "confirm_mnemonic_error_please_fill_all_the_text_fields_correctly",
+        "type": "text",
+        "placeholders": {}
+    },
+    "addGas": "加燃料",
+    "@addGas": {
+        "description": "add_gas",
+        "type": "text",
+        "placeholders": {}
+    },
+    "depositTransactionSuccess": "存款交易成功，請過一會查看結果",
+    "@depositTransactionSuccess": {
+        "description": "deposit_transaction_success",
+        "type": "text",
+        "placeholders": {}
+    },
+    "depositTransactionFailed": "存款交易失敗",
+    "@depositTransactionFailed": {
+        "description": "deposit_transaction_failed",
+        "type": "text",
+        "placeholders": {}
+    },
+    "move": "轉移",
+    "@move": {
+        "description": "deposit_withdraw_move_header",
+        "type": "text",
+        "placeholders": {}
+    },
+    "toWallet": "到錢包",
+    "@toWallet": {
+        "description": "withdraw_to_wallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "toExchange": "到交易所",
+    "@toExchange": {
+        "description": "deposit_to_exchange",
+        "type": "text",
+        "placeholders": {}
     }
 }
