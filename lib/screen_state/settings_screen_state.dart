@@ -33,9 +33,7 @@ class SettingsScreenState extends BaseState {
   verify() async {
     errorMessage = '';
     setState(ViewState.Busy);
-    await storage.deleteAll().whenComplete(() {
-      log.w('Flutter secure stotage delete all in complete');
-    });
+
     await dialogService
         .showDialog(
             title: AppLocalizations.of(context).enterPassword,
@@ -50,8 +48,13 @@ class SettingsScreenState extends BaseState {
           log.w('Flutter secure stotage delete all in complete');
         });
         await walletService.deleteEncryptedData();
-        setState(ViewState.Idle);
+        await storage.deleteAll().whenComplete(() {
+          Navigator.pushNamed(context, '/walletSetup');
+          log.w('Flutter secure stotage delete all in complete');
+        });
         Navigator.pushNamed(context, '/walletSetup');
+        setState(ViewState.Idle);
+
         return '';
       } else if (res.fieldOne == 'Closed') {
         log.e('Dialog Closed By User');

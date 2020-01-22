@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DashboardScreenState extends BaseState {
@@ -143,5 +144,31 @@ class DashboardScreenState extends BaseState {
     await storage.write(key: 'wallets', value: wallets);
     setState(ViewState.Idle);
     return walletInfo;
+  }
+
+  Future<bool> onBackButtonPressed() async {
+    return showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('Are you sure?'),
+                content: Text('Do you want to close the app'),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('No'),
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                  ),
+                  FlatButton(
+                    child: Text('Yes'),
+                    onPressed: () {
+                      log.w('yes');
+                    },
+                  )
+                ],
+              );
+            }) ??
+        false;
   }
 }

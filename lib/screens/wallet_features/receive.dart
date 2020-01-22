@@ -66,28 +66,25 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               height: 250,
               decoration: BoxDecoration(
                   border: Border.all(width: 1.0, color: globals.primaryColor)),
-              child: SizedBox(
-                height: 500.0,
-                child: Center(
-                  child: Container(
-                    child: RepaintBoundary(
-                      key: _globalKey,
-                      child: QrImage(
-                          data: widget.walletInfo.address,
-                          version: QrVersions.auto,
-                          size: 300,
-                          gapless: true,
-                          errorStateBuilder: (context, err) {
-                            return Container(
-                              child: Center(
-                                child: Text(
-                                    AppLocalizations.of(context)
-                                        .somethingWentWrong,
-                                    textAlign: TextAlign.center),
-                              ),
-                            );
-                          }),
-                    ),
+              child: Center(
+                child: Container(
+                  child: RepaintBoundary(
+                    key: _globalKey,
+                    child: QrImage(
+                        data: widget.walletInfo.address,
+                        version: QrVersions.auto,
+                        size: 300,
+                        gapless: true,
+                        errorStateBuilder: (context, err) {
+                          return Container(
+                            child: Center(
+                              child: Text(
+                                  AppLocalizations.of(context)
+                                      .somethingWentWrong,
+                                  textAlign: TextAlign.center),
+                            ),
+                          );
+                        }),
                   ),
                 ),
               )),
