@@ -3,6 +3,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/wallet_features_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -26,7 +27,7 @@ class WalletFeaturesScreen extends StatelessWidget {
         key: key,
         body: ListView(
           children: <Widget>[
-            new Container(
+            Container(
               height: 250,
               decoration: BoxDecoration(
                   image: DecorationImage(
@@ -99,6 +100,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                   //       'Receive and Send Exg',
                   //       style: Theme.of(context).textTheme.display3,
                   //     )),
+                  UIHelper.horizontalSpaceMedium,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -246,7 +248,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                 arguments: model.walletInfo);
           },
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[

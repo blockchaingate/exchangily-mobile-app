@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-22T12:04:24.705309",
+  "@@last_modified": "2020-01-22T18:13:12.828191",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -528,7 +528,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "amount": "amount",
+  "amount": "Amount",
   "@amount": {
     "description": "amount_text",
     "type": "text",
@@ -615,6 +615,36 @@
   "addGas": "Add Gas",
   "@addGas": {
     "description": "add_gas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "depositTransactionSuccess": "Deposit transaction was made successfully",
+  "@depositTransactionSuccess": {
+    "description": "deposit_transaction_success",
+    "type": "text",
+    "placeholders": {}
+  },
+  "depositTransactionFailed": "Deposit transaction failed",
+  "@depositTransactionFailed": {
+    "description": "deposit_transaction_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "move": "Move",
+  "@move": {
+    "description": "deposit_withdraw_move_header",
+    "type": "text",
+    "placeholders": {}
+  },
+  "toWallet": "to wallet",
+  "@toWallet": {
+    "description": "withdraw_to_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "toExchange": "to exchange",
+  "@toExchange": {
+    "description": "deposit_to_exchange",
     "type": "text",
     "placeholders": {}
   }

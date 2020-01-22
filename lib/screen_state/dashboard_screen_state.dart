@@ -149,6 +149,6 @@ class DashboardScreenState extends BaseState {
 
   onBackButtonPressed() async {
     sharedService.context = context;
-    await sharedService.onBackButtonPressed();
+    await sharedService.closeApp();
   }
 }

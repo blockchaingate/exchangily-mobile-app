@@ -27,9 +27,9 @@ class WalletFeaturesScreenState extends BaseState {
       WalletFeatureName(AppLocalizations.of(context).send, Icons.arrow_upward,
           'send', Colors.lightBlue),
       WalletFeatureName(AppLocalizations.of(context).moveAndTrade,
-          Icons.equalizer, 'moveToExchange', Colors.purple),
+          Icons.equalizer, 'deposit', Colors.purple),
       WalletFeatureName(AppLocalizations.of(context).withdrawToWallet,
-          Icons.exit_to_app, 'withdrawToWallet', Colors.cyan),
+          Icons.exit_to_app, 'withdraw', Colors.cyan),
     ];
   }
 

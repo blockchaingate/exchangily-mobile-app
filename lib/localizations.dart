@@ -534,6 +534,31 @@ class AppLocalizations {
   String get addGas {
     return Intl.message('Add Gas', name: 'addGas', desc: 'add_gas');
   }
+
+  String get depositTransactionSuccess {
+    return Intl.message('Deposit transaction was made successfully',
+        name: 'depositTransactionSuccess', desc: 'deposit_transaction_success');
+  }
+
+  String get depositTransactionFailed {
+    return Intl.message('Deposit transaction failed',
+        name: 'depositTransactionFailed', desc: 'deposit_transaction_failed');
+  }
+
+  String get move {
+    return Intl.message('Move',
+        name: 'move', desc: 'deposit_withdraw_move_header');
+  }
+
+  String get toWallet {
+    return Intl.message('to wallet',
+        name: 'toWallet', desc: 'withdraw_to_wallet');
+  }
+
+  String get toExchange {
+    return Intl.message('to exchange',
+        name: 'toExchange', desc: 'deposit_to_exchange');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

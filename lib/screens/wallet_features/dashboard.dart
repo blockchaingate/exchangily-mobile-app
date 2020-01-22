@@ -436,7 +436,7 @@ class DashboardScreen extends StatelessWidget {
                               baseColor: globals.primaryColor,
                               highlightColor: globals.white,
                               child: Text(
-                                '${assetsInExchange}',
+                                '$assetsInExchange',
                                 textAlign: TextAlign.center,
                               ),
                             ))
@@ -453,7 +453,7 @@ class DashboardScreen extends StatelessWidget {
                                 tooltip: 'Deposit',
                                 onPressed: () {
                                   Navigator.pushNamed(context, '/deposit',
-                                      arguments: walletInfo[index]);
+                                      arguments: model.walletInfo[index]);
                                 }),
                           ),
                           // IconButton(

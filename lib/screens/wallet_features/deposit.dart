@@ -1,5 +1,7 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../shared/globals.dart' as globals;
 import '../../models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -17,9 +19,9 @@ class Deposit extends StatelessWidget {
 
   checkPass(double amount, context) async {
     var res = await _dialogService.showDialog(
-        title: 'Enter Password',
+        title: AppLocalizations.of(context).enterPassword,
         description:
-            'Type the same password which you entered while creating the wallet');
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote);
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
@@ -52,8 +54,12 @@ class Deposit extends StatelessWidget {
   }
 
   showNotification(context) {
-    walletService.showInfoFlushbar('Password Mismatch',
-        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+    walletService.showInfoFlushbar(
+        AppLocalizations.of(context).passwordMismatch,
+        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        Icons.cancel,
+        globals.red,
+        context);
   }
 
   @override
@@ -75,7 +81,7 @@ class Deposit extends StatelessWidget {
             },
           ),
           middle: Text(
-            "Transfer ${walletInfo.name} to Exchange",
+            '${AppLocalizations.of(context).move}  ${walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0XFF1f2233),
@@ -86,15 +92,16 @@ class Deposit extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text("Amount:",
-                    style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
-                SizedBox(height: 10),
+                // Text("Amount:",
+                //     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                // SizedBox(height: 10),
                 TextField(
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(
                             color: Color(0XFF871fff), width: 1.0)),
-                    hintText: 'Enter the amount',
+                    hintText: AppLocalizations.of(context).enterAmount,
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
                   controller: myController,
@@ -118,7 +125,7 @@ class Deposit extends StatelessWidget {
                     checkPass(double.parse(myController.text), context);
                   },
                   child: Text(
-                    'Confirm',
+                    AppLocalizations.of(context).confirm,
                     style: Theme.of(context).textTheme.button,
                   ),
                 )

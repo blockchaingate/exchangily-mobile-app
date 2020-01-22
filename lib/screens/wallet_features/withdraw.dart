@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
 import '../../models/wallet.dart';
 
@@ -26,7 +27,7 @@ class Withdraw extends StatelessWidget {
             },
           ),
           middle: Text(
-            "Withdraw for ${walletInfo.name}",
+            '${AppLocalizations.of(context).move}  ${walletInfo.tickerName}  ${AppLocalizations.of(context).toWallet}',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0XFF1f2233),
@@ -37,15 +38,16 @@ class Withdraw extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text("Amount:",
-                    style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
-                SizedBox(height: 10),
+                // Text("Amount:",
+                //     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                // SizedBox(height: 10),
                 TextField(
+                  keyboardType: TextInputType.number,
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(
                             color: Color(0XFF871fff), width: 1.0)),
-                    hintText: 'Enter the amount',
+                    hintText: AppLocalizations.of(context).enterAmount,
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
                   controller: myController,
@@ -58,7 +60,7 @@ class Withdraw extends StatelessWidget {
                   textColor: Colors.white,
                   onPressed: () async {},
                   child: Text(
-                    'Confirm',
+                    AppLocalizations.of(context).confirm,
                     style: Theme.of(context).textTheme.button,
                   ),
                 )

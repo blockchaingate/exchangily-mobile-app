@@ -20,7 +20,6 @@ class _WalletSetupScreenState extends State<WalletSetupScreen> {
   final log = getLogger('WalletSetupScreen');
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     sharedService.context = context;
     checkExistingWallet();
@@ -45,7 +44,7 @@ class _WalletSetupScreenState extends State<WalletSetupScreen> {
     return WillPopScope(
       onWillPop: () {
         log.w('onwillpop');
-        sharedService.onBackButtonPressed();
+        sharedService.closeApp();
         return new Future(() => false);
       },
       child: Container(
