@@ -466,7 +466,7 @@ class AppLocalizations {
   }
 
   String get amount {
-    return Intl.message('amount', name: 'amount', desc: 'amount_text');
+    return Intl.message('Amount', name: 'amount', desc: 'amount_text');
   }
 
   String get lockedAmount {

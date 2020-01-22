@@ -3,13 +3,13 @@ import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/api.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 
 mixin TradeService {
   Api _api = locator<Api>();
-  Future<int>  getAllPrices() async {
+  Future<int> getAllPrices() async {
     final response =
-    await http.get('https://jsonplaceholder.typicode.com/posts/1');
+        await http.get('https://jsonplaceholder.typicode.com/posts/1');
     return 1;
   }
 
@@ -18,17 +18,18 @@ mixin TradeService {
   }
 
   getOrderListChannel(String pair) {
-    var wsString = environment['websocket'] + 'orders'+ '@' + pair;
+    var wsString = environment['websocket'] + 'orders' + '@' + pair;
     return IOWebSocketChannel.connect(wsString);
   }
 
   getTradeListChannel(String pair) {
-    var wsString = environment['websocket'] + 'trades'+ '@' + pair;
+    var wsString = environment['websocket'] + 'trades' + '@' + pair;
     return IOWebSocketChannel.connect(wsString);
   }
 
   getTickerChannel(String pair, String interval) {
-    var wsString = environment['websocket'] + 'ticker'+ '@' + pair+ '@' + interval;
+    var wsString =
+        environment['websocket'] + 'ticker' + '@' + pair + '@' + interval;
     return IOWebSocketChannel.connect(wsString);
   }
 

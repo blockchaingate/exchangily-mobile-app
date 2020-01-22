@@ -36,7 +36,10 @@ class DashboardScreen extends StatelessWidget {
         //  await model.getExchangeAssets();
       },
       builder: (context, model, child) => WillPopScope(
-        onWillPop: () async => new Future(() => false),
+        onWillPop: () async {
+          model.onBackButtonPressed();
+          return new Future(() => false);
+        },
         child: Scaffold(
           key: key,
           //  drawer: AppDrawer(),

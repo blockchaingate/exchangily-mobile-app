@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,23 +16,18 @@ class WalletSetupScreen extends StatefulWidget {
 }
 
 class _WalletSetupScreenState extends State<WalletSetupScreen> {
-  WalletService walletService = locator<WalletService>();
+  SharedService sharedService = locator<SharedService>();
   final log = getLogger('WalletSetupScreen');
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    sharedService.context = context;
     checkExistingWallet();
-  }
-
-  generateMnemonic() {
-    walletService.getRandomMnemonic();
   }
 
   void checkExistingWallet() async {
     final storage = new FlutterSecureStorage();
-
-    //await storage.delete(key: 'wallets');
     await storage.read(key: 'wallets').then((encodedJsonWallets) {
       log.w('wallet setup $encodedJsonWallets');
       if (encodedJsonWallets == null) {
@@ -49,6 +45,7 @@ class _WalletSetupScreenState extends State<WalletSetupScreen> {
     return WillPopScope(
       onWillPop: () {
         log.w('onwillpop');
+        sharedService.onBackButtonPressed();
         return new Future(() => false);
       },
       child: Container(

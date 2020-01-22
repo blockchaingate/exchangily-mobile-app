@@ -73,7 +73,7 @@ class AddGas extends StatelessWidget {
             },
           ),
           middle: Text(
-            "Add Gas",
+            AppLocalizations.of(context).addGas,
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0XFF1f2233),
@@ -84,8 +84,8 @@ class AddGas extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text(AppLocalizations.of(context).amount,
-                    style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                // Text(AppLocalizations.of(context).amount,
+                //     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 TextField(
                   keyboardType: TextInputType.number,

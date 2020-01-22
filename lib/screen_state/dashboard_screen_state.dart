@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -6,13 +7,13 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DashboardScreenState extends BaseState {
   final log = getLogger('DahsboardScreenState');
   List<WalletInfo> walletInfo;
   WalletService walletService = locator<WalletService>();
+  SharedService sharedService = locator<SharedService>();
   final double elevation = 5;
   double totalUsdBalance = 0;
   double coinUsdBalance;
@@ -146,29 +147,8 @@ class DashboardScreenState extends BaseState {
     return walletInfo;
   }
 
-  Future<bool> onBackButtonPressed() async {
-    return showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('Are you sure?'),
-                content: Text('Do you want to close the app'),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('No'),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                  FlatButton(
-                    child: Text('Yes'),
-                    onPressed: () {
-                      log.w('yes');
-                    },
-                  )
-                ],
-              );
-            }) ??
-        false;
+  onBackButtonPressed() async {
+    sharedService.context = context;
+    await sharedService.onBackButtonPressed();
   }
 }

@@ -1,9 +1,10 @@
 import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet_features_screen_state.dart';
-import 'package:exchangilymobileapp/services/api.dart';
-import 'package:exchangilymobileapp/services/db.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/create_password_screen_state.dart';
@@ -20,6 +21,7 @@ void serviceLocator() {
   locator.registerLazySingleton(() => VaultService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => DataBaseService());
+  locator.registerLazySingleton(() => SharedService());
 
 // factory returns the new instance
   locator.registerFactory(() => CreatePasswordScreenState());

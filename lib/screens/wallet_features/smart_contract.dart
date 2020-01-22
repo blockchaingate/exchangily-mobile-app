@@ -1,5 +1,5 @@
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/api.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;

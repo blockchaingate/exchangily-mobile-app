@@ -611,5 +611,137 @@
     "description": "settings_change_wallet_language",
     "type": "text",
     "placeholders": {}
+  },
+  "volume": "volume",
+  "@volume": {
+    "description": "volume_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "price": "price",
+  "@price": {
+    "description": "price_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "high": "high",
+  "@high": {
+    "description": "high_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "low": "low",
+  "@low": {
+    "description": "low_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderBook": "Order Book",
+  "@orderBook": {
+    "description": "order_book_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "marketTrades": "Market Trades",
+  "@marketTrades": {
+    "description": "market_trades_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "coin": "coin",
+  "@coin": {
+    "description": "price_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "amount": "amount",
+  "@amount": {
+    "description": "amount_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lockedAmount": "lockedAmount",
+  "@lockedAmount": {
+    "description": "locked_amount_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "buy": "Buy",
+  "@buy": {
+    "description": "buy_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sell": "Sell",
+  "@sell": {
+    "description": "sell_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactionAmount": "Transaction Amount",
+  "@transactionAmount": {
+    "description": "transaction_amount_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "quantity": "quantity",
+  "@quantity": {
+    "description": "quantity_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "openOrders": "openOrders",
+  "@openOrders": {
+    "description": "open_orders_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "closeOrders": "Close Orders",
+  "@closeOrders": {
+    "description": "close_orders_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assets": "Assets",
+  "@assets": {
+    "description": "assets_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "type": "type",
+  "@type": {
+    "description": "type_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pair": "pair",
+  "@pair": {
+    "description": "pair_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "filledAmount": "Filled Amount",
+  "@filledAmount": {
+    "description": "filled_amount_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "invalidMnemonic": "Invalid Mnemonic",
+  "@invalidMnemonic": {
+    "description": "confirm_mnemonic_error_invalid_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseFillAllTheTextFieldsCorrectly": "Please fill all the text fields correctly",
+  "@pleaseFillAllTheTextFieldsCorrectly": {
+    "description": "confirm_mnemonic_error_please_fill_all_the_text_fields_correctly",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addGas": "Add Gas",
+  "@addGas": {
+    "description": "add_gas",
+    "type": "text",
+    "placeholders": {}
   }
 }

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-21T15:53:16.275543",
+  "@@last_modified": "2020-01-22T12:04:24.705309",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -609,6 +609,12 @@
   "pleaseFillAllTheTextFieldsCorrectly": "Please fill all the text fields correctly",
   "@pleaseFillAllTheTextFieldsCorrectly": {
     "description": "confirm_mnemonic_error_please_fill_all_the_text_fields_correctly",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addGas": "Add Gas",
+  "@addGas": {
+    "description": "add_gas",
     "type": "text",
     "placeholders": {}
   }

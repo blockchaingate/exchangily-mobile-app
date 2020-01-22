@@ -70,7 +70,7 @@ class WalletInfo {
     this._usdValue = usdValue;
     // this._logoColor = logoColor;
     this._name = name;
-    this._assetsInExchange = assetsInExchange;
+    this._assetsInExchange = assetsInExchange ?? 0.0;
   }
 
   Map<String, dynamic> toJson() => {
