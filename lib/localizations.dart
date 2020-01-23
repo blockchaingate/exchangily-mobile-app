@@ -246,14 +246,14 @@ class AppLocalizations {
     return Intl.message(
         'Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using !@#\$&*~',
         name: 'setPasswordConditions',
-        desc: 'setPasswordConditions');
+        desc: 'create_password_set_password_conditions');
   }
 
   String get setPasswordNote {
     return Intl.message(
         'Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet',
         name: 'setPasswordNote',
-        desc: 'set_password_note');
+        desc: 'create_password_set_password_note');
   }
 
   String get warningBackupMnemonic {
@@ -272,12 +272,12 @@ class AppLocalizations {
 
   String get enterPassword {
     return Intl.message('Enter Password',
-        name: 'enterPassword', desc: 'create_enter_password');
+        name: 'enterPassword', desc: 'create_password_enter_password');
   }
 
   String get confirmPassword {
     return Intl.message('Confirm Password',
-        name: 'confirmPassword', desc: 'create_confirm_password');
+        name: 'confirmPassword', desc: 'create_password_confirm_password');
   }
 
   String get available {
@@ -566,7 +566,7 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   bool isSupported(Locale locale) {
-    return ['en', 'hi', 'zh'].contains(locale.languageCode);
+    return ['en', 'zh', 'hi'].contains(locale.languageCode);
   }
 
   @override

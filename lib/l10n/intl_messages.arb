@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-22T18:13:12.828191",
+  "@@last_modified": "2020-01-22T19:14:55.864215",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -278,13 +278,13 @@
   },
   "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using !@#$&*~",
   "@setPasswordConditions": {
-    "description": "setPasswordConditions",
+    "description": "create_password_set_password_conditions",
     "type": "text",
     "placeholders": {}
   },
   "setPasswordNote": "Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet",
   "@setPasswordNote": {
-    "description": "set_password_note",
+    "description": "create_password_set_password_note",
     "type": "text",
     "placeholders": {}
   },
@@ -302,13 +302,13 @@
   },
   "enterPassword": "Enter Password",
   "@enterPassword": {
-    "description": "create_enter_password",
+    "description": "create_password_enter_password",
     "type": "text",
     "placeholders": {}
   },
   "confirmPassword": "Confirm Password",
   "@confirmPassword": {
-    "description": "create_confirm_password",
+    "description": "create_password_confirm_password",
     "type": "text",
     "placeholders": {}
   },

@@ -48,9 +48,9 @@ class MyApp extends StatelessWidget {
       ],
       // locale: Langua,
       supportedLocales: [
-        const Locale("en", "US"), // English
-        const Locale("hi", ""), // Hindi India
+        const Locale("en", ""), // English
         const Locale("zh", ""), // Chinese
+        const Locale("hi", ""), // Hindi India
         /*
             const Locale.fromSubtags(
                 languageCode: 'zh', scriptCode: 'Hans'), // Chinese Simplified
