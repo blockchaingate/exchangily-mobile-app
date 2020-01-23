@@ -445,7 +445,7 @@ class DashboardScreen extends StatelessWidget {
                                 tooltip: 'Deposit',
                                 onPressed: () {
                                   Navigator.pushNamed(context, '/deposit',
-                                      arguments: walletInfo[index]);
+                                      arguments: model.walletInfo[index]);
                                 }),
                           ),
                           // IconButton(
@@ -457,9 +457,12 @@ class DashboardScreen extends StatelessWidget {
                           //     }),
                           Expanded(
                             child: IconButton(
-                                icon: Icon(Icons.info_outline),
-                                tooltip: 'Redeposit',
-                                onPressed: () {}),
+                                icon: Icon(Icons.arrow_upward),
+                                tooltip: 'Withdraw',
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/withdraw',
+                                      arguments: model.walletInfo[index]);
+                                }),
                           ),
                         ],
                       )
