@@ -3,14 +3,92 @@ import 'package:flutter/material.dart';
 import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
 import '../../models/wallet.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'dart:typed_data';
+import 'package:exchangilymobileapp/environments/environment.dart';
 
 class Withdraw extends StatelessWidget {
   final WalletInfo walletInfo;
-  const Withdraw({Key key, this.walletInfo}) : super(key: key);
+
+  DialogService _dialogService = locator<DialogService>();
+  WalletService walletService = locator<WalletService>();
+
+  Withdraw({Key key, this.walletInfo}) : super(key: key);
+  final myController = TextEditingController();
+  checkPass(double amount, context) async {
+
+    if (amount == null ||
+        amount > walletInfo.assetsInExchange) {
+      walletService.showInfoFlushbar(
+          AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          Icons.cancel,
+          globals.red,
+          context);
+      return;
+    }
+
+
+    if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+      walletService.showInfoFlushbar('Minimum amount error',
+          'Your withdraw minimum amount is not satisfied', Icons.cancel, globals.red, context);
+      return;
+    }
+
+
+    var res = await _dialogService.showDialog(
+        title: AppLocalizations.of(context).enterPassword,
+        description:
+        AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context).confirm);
+    if (res.confirmed) {
+      String mnemonic = res.fieldOne;
+      Uint8List seed = walletService.generateSeed(mnemonic);
+      var tokenType = this.walletInfo.tokenType;
+      var coinName = this.walletInfo.tickerName;
+      var coinAddress = this.walletInfo.address;
+      if (coinName == 'USDT') {
+        tokenType = 'ETH';
+      }
+      if (coinName == 'EXG') {
+        tokenType = 'FAB';
+      }
+      var ret =
+      await walletService.withdrawDo(seed, coinName, coinAddress, tokenType, amount);
+
+      if(ret["success"]) {
+        myController.text = '';
+      }
+
+      walletService.showInfoFlushbar(
+          ret["success"]
+              ? 'Withdraw transaction was made successfully'
+              : 'Withdraw transaction failed',
+          ret["success"]
+              ? 'transactionID:' + ret['data']['transactionHash']
+              : ret['data'],
+          Icons.cancel,
+          globals.red,
+          context);
+    } else {
+      if (res.fieldOne != 'Closed') {
+        showNotification(context);
+      }
+    }
+  }
+
+  showNotification(context) {
+    walletService.showInfoFlushbar('Password Mismatch',
+        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final myController = TextEditingController();
+    double bal = this.walletInfo.assetsInExchange;
+    String coinName = this.walletInfo.tickerName;
+
     return Scaffold(
         appBar: CupertinoNavigationBar(
           padding: EdgeInsetsDirectional.only(start: 0),
@@ -58,12 +136,39 @@ class Withdraw extends StatelessWidget {
                   padding: EdgeInsets.all(15),
                   color: globals.primaryColor,
                   textColor: Colors.white,
-                  onPressed: () async {},
+                  onPressed: () async {
+                    print('myController.text=');
+                    print(myController.text);
+                    checkPass(double.parse(myController.text), context);
+                  },
                   child: Text(
                     AppLocalizations.of(context).confirm,
                     style: Theme.of(context).textTheme.button,
                   ),
+                ),
+
+
+                SizedBox(height: 20),
+
+                Row(
+                  children: <Widget>[
+                    Text(
+                      AppLocalizations.of(context).walletbalance +
+                          ' $bal',
+                      style: Theme.of(context).textTheme.headline,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      child: Text(
+                        '$coinName'.toUpperCase(),
+                        style: Theme.of(context).textTheme.headline,
+                      ),
+                    )
+                  ],
                 )
+
               ],
             )));
   }

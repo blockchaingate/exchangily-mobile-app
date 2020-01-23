@@ -63,9 +63,13 @@ Future<Map<String, dynamic>> sendKanbanRawTransaction(String rawKanbanTransactio
     'signedTransactionData': rawKanbanTransaction
   };
 
-  var client = new http.Client();
-  var response = await client.post(url, body: data);
-  print('response from submitDeposit');
-  Map<String, dynamic> res = jsonDecode(response.body);
-  return res;
+  try {
+    var client = new http.Client();
+    var response = await client.post(url, body: data);
+    print('response from submitDeposit');
+    Map<String, dynamic> res = jsonDecode(response.body);
+    return res;
+  } catch(e) {
+    return e;
+  }
 }

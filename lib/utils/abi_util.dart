@@ -8,6 +8,17 @@ import 'dart:typed_data';
 
 // {"success":true,"data":{"transactionID":"3ba8d681cddea5376c9b6ab2963ff243160fa086ec0681a67a3206ad80284d76"}}
 
+getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
+  var abiHex = "3295d51e";
+  abiHex += fixLength(coinType.toString(), 64);
+
+  var amountHex = amountInLink.toRadixString(16);
+  abiHex += fixLength(trimHexPrefix(amountHex), 64);
+
+  abiHex += fixLength(trimHexPrefix(addressInWallet), 64);
+  return abiHex;
+}
+
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink, String addressInKanban, signedMessage) {
   var abiHex = "379eb862";
   print('signedMessage.v=');

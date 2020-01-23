@@ -19,7 +19,7 @@ dependencies:
 
   # Bip39
   bip39: ^1.0.3
-
+  bs58check: ^1.0.1
   # bitcoin Flutter
   bitcoin_flutter: ^1.0.7
 

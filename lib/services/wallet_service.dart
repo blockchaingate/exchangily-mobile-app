@@ -39,6 +39,7 @@ import '../environments/environment.dart';
 import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:encrypt/encrypt.dart' as prefix0;
+import 'package:bs58check/bs58check.dart' as bs58check;
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -349,7 +350,44 @@ class WalletService {
     return buf;
   }
 
-// Future Deposit Do
+  Future<Map<String, dynamic>> withdrawDo(
+      seed, String coinName, String coinAddress, String tokenType, double amount) async {
+    var keyPairKanban = getExgKeyPair(seed);
+    var addressInKanban = keyPairKanban["address"];
+    var amountInLink = BigInt.from(amount * 1e18);
+
+    var addressInWallet = coinAddress;
+    if (coinName == 'BTC' || coinName == 'FAB') {
+      var bytes = bs58check.decode(addressInWallet);
+      addressInWallet = HEX.encode(bytes);
+      //no 0x appended
+    }
+    var coinType = getCoinTypeIdByName(coinName);
+    var abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
+
+    var coinPoolAddress = await getCoinPoolAddress();
+
+    var nonce = await getNonce(addressInKanban);
+
+
+    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
+        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
+
+    print('txKanbanHex=' + txKanbanHex);
+    var res = await sendKanbanRawTransaction(txKanbanHex);
+    print('res======');
+    print(res);
+    if (res['transactionHash']!='') {
+      res['success'] = true;
+      res['data'] = res;
+    } else {
+      res['success'] = false;
+      res['data'] = 'error';
+    }
+    return res;
+  }
+
+  // Future Deposit Do
 
   Future<Map<String, dynamic>> depositDo(
       seed, String coinName, String tokenType, double amount) async {
@@ -362,7 +400,7 @@ class WalletService {
       return errRes;
     }
     var option = {};
-    if ((coinName != null) && (coinName != '')) {
+    if ((coinName != null) && (coinName != '') && (tokenType != null) && (tokenType != '')) {
       option = {
         'tokenType': tokenType,
         'contractAddress': environment["addresses"]["smartContract"][coinName]
@@ -500,6 +538,8 @@ class WalletService {
 
   getFabTransactionHex(seed, addressIndexList, toAddress, double amount,
       double extraTransactionFee, int satoshisPerBytes) async {
+    print('begin getFabTransactionHex, amount=');
+    print(amount);
     final txb = new TransactionBuilder(
         network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);
@@ -514,6 +554,7 @@ class WalletService {
     var bytesPerInput = 148;
     var feePerInput = bytesPerInput * satoshisPerBytes;
 
+    print('111');
     for (var i = 0; i < addressIndexList.length; i++) {
       var index = addressIndexList[i];
       var fabCoinChild = root.derivePath("m/44'/" +
@@ -552,6 +593,7 @@ class WalletService {
         }
       }
 
+      print('222');
       if (!finished) {
         print('not enough fab coin to make the transaction.');
         return {
@@ -604,7 +646,7 @@ class WalletService {
 
   Future sendTransaction(String coin, seed, List addressIndexList,
       String toAddress, double amount, options, bool doSubmit) async {
-    print('seed from sendTransaction=');
+    print('seed from sendTransaction111=');
     print(seed);
     final root = bip32.BIP32.fromSeed(seed);
     log.w('coin=' + coin);
@@ -625,6 +667,7 @@ class WalletService {
     var tokenType = options['tokenType'] ?? '';
     var contractAddress = options['contractAddress'] ?? '';
     var changeAddress = '';
+    print('tokenType=' + tokenType);
     if (coin == 'BTC') {
       var bytesPerInput = 148;
       var amountNum = amount * 1e8;
@@ -781,6 +824,7 @@ class WalletService {
         }
       }
     } else if (tokenType == 'FAB') {
+      print('tokenType=' + tokenType);
       var transferAbi = 'a9059cbb';
       amountSent = (amount * 1e18).round();
       var fxnCallHex = transferAbi +
@@ -790,7 +834,7 @@ class WalletService {
       contractAddress = stringUtils.trimHexPrefix(contractAddress);
 
       var contractInfo = await getFabSmartContract(contractAddress, fxnCallHex);
-
+      print('there we go.');
       var res1 = await getFabTransactionHex(
           seed,
           addressIndexList,
@@ -800,6 +844,8 @@ class WalletService {
           satoshisPerBytes);
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
+      print('txHex11=' + txHex);
+      print('errMsg22=' + errMsg);
       if (txHex != null && txHex != '') {
         if (doSubmit) {
           var res = await _api.postFabTx(txHex);

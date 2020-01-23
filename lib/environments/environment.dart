@@ -36,7 +36,14 @@ Map devConfig = {
       {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'}
     ]
   },
-  "websocket": "wss://kanbantest.fabcoinapi.com/ws/"
+  "websocket": "wss://kanbantest.fabcoinapi.com/ws/",
+  "minimumWithdraw": {
+    "EXG": 10,
+    "BTC": 0.002,
+    "FAB": 0.005,
+    "ETH": 0.01,
+    "USDT": 10
+  }
 };
 
 Map productionConfig = {
@@ -73,7 +80,14 @@ Map productionConfig = {
       {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'}
     ]
   },
-  "websocket": "wss://kanbanprod.fabcoinapi.com/ws/"
+  "websocket": "wss://kanbanprod.fabcoinapi.com/ws/",
+  "minimumWithdraw": {
+    "EXG": 10,
+    "BTC": 0.01,
+    "FAB": 0.01,
+    "ETH": 0.01,
+    "USDT": 10
+  }
 };
 
 final environment = isProduction ? productionConfig : devConfig;
