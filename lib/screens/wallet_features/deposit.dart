@@ -16,12 +16,32 @@ class Deposit extends StatelessWidget {
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   Deposit({Key key, this.walletInfo}) : super(key: key);
+  final myController = TextEditingController();
 
   checkPass(double amount, context) async {
+
+    print('amount=');
+    print(amount);
+
+    print('walletInfo.availableBalance=');
+    print(walletInfo.availableBalance);
+
+    if (amount == null ||
+        amount > walletInfo.availableBalance) {
+      walletService.showInfoFlushbar(
+          AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          Icons.cancel,
+          globals.red,
+          context);
+      return;
+    }
+
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote);
+        AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
@@ -36,6 +56,9 @@ class Deposit extends StatelessWidget {
       var ret =
           await walletService.depositDo(seed, coinName, tokenType, amount);
 
+      if(ret["success"]) {
+        myController.text = '';
+      }
       walletService.showInfoFlushbar(
           ret["success"]
               ? 'Deposit transaction was made successfully'
@@ -64,7 +87,11 @@ class Deposit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myController = TextEditingController();
+
+    double bal = this.walletInfo.availableBalance;
+    String coinName = this.walletInfo.tickerName;
+
+
     return Scaffold(
         appBar: CupertinoNavigationBar(
           padding: EdgeInsetsDirectional.only(start: 0),
@@ -128,7 +155,31 @@ class Deposit extends StatelessWidget {
                     AppLocalizations.of(context).confirm,
                     style: Theme.of(context).textTheme.button,
                   ),
+                ),
+
+
+                SizedBox(height: 20),
+
+                Row(
+                  children: <Widget>[
+                    Text(
+                      AppLocalizations.of(context).walletbalance +
+                          ' $bal',
+                      style: Theme.of(context).textTheme.headline,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      child: Text(
+                        '$coinName'.toUpperCase(),
+                        style: Theme.of(context).textTheme.headline,
+                      ),
+                    )
+                  ],
                 )
+
+
               ],
             )));
   }

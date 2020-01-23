@@ -11,7 +11,7 @@ import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../shared/globals.dart' as globals;
-
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 
 class SendScreenState extends BaseState {
@@ -27,7 +27,7 @@ class SendScreenState extends BaseState {
   WalletInfo walletInfo;
   bool checkSendAmount = false;
 
-  Future verifyPassword(tickerName, toWalletAddress, amount, context) async {
+  Future verifyPassword(tickerName, tokenType, toWalletAddress, amount, context) async {
     log.w('dialog called');
     setState(ViewState.Busy);
     var dialogResponse = await _dialogService.showDialog(
@@ -38,8 +38,22 @@ class SendScreenState extends BaseState {
     if (dialogResponse.confirmed) {
       String mnemonic = dialogResponse.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      log.e(seed);
-      log.w(mnemonic);
+
+      if(tickerName == 'USDT') {
+        tokenType = 'ETH';
+      } else
+      if(tickerName == 'EXG') {
+        tokenType = 'FAB';
+      }
+      if(tokenType != null && tokenType != '') {
+        if ((tickerName != null) && (tickerName != '') && (tokenType != null) && (tokenType != '')) {
+          options = {
+            'tokenType': tokenType,
+            'contractAddress': environment["addresses"]["smartContract"][tickerName]
+          };
+        }
+      }
+
       await walletService
           .sendTransaction(
               tickerName, seed, [0], toWalletAddress, amount, options, true)
@@ -132,7 +146,7 @@ class SendScreenState extends BaseState {
     } else {
       FocusScope.of(context).requestFocus(FocusNode());
       await verifyPassword(
-          walletInfo.tickerName.toUpperCase(), toAddress, amount, context);
+          walletInfo.tickerName.toUpperCase(), walletInfo.tokenType.toUpperCase(), toAddress, amount, context);
       // await updateBalance(widget.walletInfo.address);
       // widget.walletInfo.availableBalance = model.updatedBal['balance'];
     }
