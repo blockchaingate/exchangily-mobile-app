@@ -373,7 +373,17 @@ class WalletService {
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
+    print('txKanbanHex=' + txKanbanHex);
     var res = await sendKanbanRawTransaction(txKanbanHex);
+    print('res======');
+    print(res);
+    if (res['transactionHash']!='') {
+      res['success'] = true;
+      res['data'] = res;
+    } else {
+      res['success'] = false;
+      res['data'] = 'error';
+    }
     return res;
   }
 

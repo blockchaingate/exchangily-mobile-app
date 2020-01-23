@@ -13,9 +13,9 @@ getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
   abiHex += fixLength(coinType.toString(), 64);
 
   var amountHex = amountInLink.toRadixString(16);
-  abiHex += fixLength(amountHex, 64);
+  abiHex += fixLength(trimHexPrefix(amountHex), 64);
 
-  abiHex += fixLength(addressInWallet, 64);
+  abiHex += fixLength(trimHexPrefix(addressInWallet), 64);
   return abiHex;
 }
 

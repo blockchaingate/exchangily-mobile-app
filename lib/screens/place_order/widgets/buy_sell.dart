@@ -128,6 +128,7 @@ class _BuySellState extends State<BuySell>
     print(exgAddress);
     print('nonce===');
     print(nonce);
+    print('abiHex there ou go' + abiHex);
     var keyPairKanban = getExgKeyPair(seed);
     var exchangilyAddress = await getExchangilyAddress();
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
@@ -210,9 +211,10 @@ class _BuySellState extends State<BuySell>
   checkPass(context) async {
     print('checkPass begin');
     var res = await _dialogService.showDialog(
-        title: 'Enter Password',
+        title: AppLocalizations.of(context).enterPassword,
         description:
-            'Type the same password which you entered while creating the wallet');
+        AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+        buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
