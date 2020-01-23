@@ -828,6 +828,8 @@ class WalletService {
           satoshisPerBytes);
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
+      print('txHex=' + txHex);
+      print('errMsg=' + errMsg);
       if (txHex != null && txHex != '') {
         if (doSubmit) {
           var res = await _api.postFabTx(txHex);
