@@ -79,7 +79,7 @@ packages:
     source: hosted
     version: "1.0.5"
   bs58check:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: bs58check
       url: "https://pub.dartlang.org"

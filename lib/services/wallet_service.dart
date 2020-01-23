@@ -39,6 +39,7 @@ import '../environments/environment.dart';
 import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:encrypt/encrypt.dart' as prefix0;
+import 'package:bs58check/bs58check.dart' as bs58check;
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -349,7 +350,34 @@ class WalletService {
     return buf;
   }
 
-// Future Deposit Do
+  Future<Map<String, dynamic>> withdrawDo(
+      seed, String coinName, String coinAddress, String tokenType, double amount) async {
+    var keyPairKanban = getExgKeyPair(seed);
+    var addressInKanban = keyPairKanban["address"];
+    var amountInLink = BigInt.from(amount * 1e18);
+
+    var addressInWallet = coinAddress;
+    if (coinName == 'BTC' || coinName == 'FAB') {
+      var bytes = bs58check.decode(addressInWallet);
+      addressInWallet = HEX.encode(bytes);
+      //no 0x appended
+    }
+    var coinType = getCoinTypeIdByName(coinName);
+    var abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
+
+    var coinPoolAddress = await getCoinPoolAddress();
+
+    var nonce = await getNonce(addressInKanban);
+
+
+    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
+        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
+
+    var res = await sendKanbanRawTransaction(txKanbanHex);
+    return res;
+  }
+
+  // Future Deposit Do
 
   Future<Map<String, dynamic>> depositDo(
       seed, String coinName, String tokenType, double amount) async {

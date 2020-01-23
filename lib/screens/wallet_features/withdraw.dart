@@ -3,10 +3,60 @@ import 'package:flutter/material.dart';
 import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
 import '../../models/wallet.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'dart:typed_data';
 
 class Withdraw extends StatelessWidget {
   final WalletInfo walletInfo;
-  const Withdraw({Key key, this.walletInfo}) : super(key: key);
+
+  DialogService _dialogService = locator<DialogService>();
+  WalletService walletService = locator<WalletService>();
+
+  Withdraw({Key key, this.walletInfo}) : super(key: key);
+
+  checkPass(double amount, context) async {
+    var res = await _dialogService.showDialog(
+        title: 'Enter Password',
+        description:
+        'Type the same password which you entered while creating the wallet');
+    if (res.confirmed) {
+      String mnemonic = res.fieldOne;
+      Uint8List seed = walletService.generateSeed(mnemonic);
+      var tokenType = this.walletInfo.tokenType;
+      var coinName = this.walletInfo.tickerName;
+      var coinAddress = this.walletInfo.address;
+      if (coinName == 'USDT') {
+        tokenType = 'ETH';
+      }
+      if (coinName == 'EXG') {
+        tokenType = 'FAB';
+      }
+      var ret =
+      await walletService.withdrawDo(seed, coinName, coinAddress, tokenType, amount);
+
+      walletService.showInfoFlushbar(
+          ret["success"]
+              ? 'Withdraw transaction was made successfully'
+              : 'Withdraw transaction failed',
+          ret["success"]
+              ? 'transactionID:' + ret['data']['transactionID']
+              : ret['data'],
+          Icons.cancel,
+          globals.red,
+          context);
+    } else {
+      if (res.fieldOne != 'Closed') {
+        showNotification(context);
+      }
+    }
+  }
+
+  showNotification(context) {
+    walletService.showInfoFlushbar('Password Mismatch',
+        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +108,11 @@ class Withdraw extends StatelessWidget {
                   padding: EdgeInsets.all(15),
                   color: globals.primaryColor,
                   textColor: Colors.white,
-                  onPressed: () async {},
+                  onPressed: () async {
+                    print('myController.text=');
+                    print(myController.text);
+                    checkPass(double.parse(myController.text), context);
+                  },
                   child: Text(
                     AppLocalizations.of(context).confirm,
                     style: Theme.of(context).textTheme.button,
