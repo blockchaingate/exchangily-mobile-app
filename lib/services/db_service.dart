@@ -20,35 +20,43 @@ class DataBaseService {
     return _database;
   }
 
-  initDb() async {
+  Future<Database> initDb() async {
     databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
     log.w(path);
-    _database = await openDatabase(path,
-        version: _databaseVersion,
-        onCreate: onCreate(_database, _databaseVersion));
-    log.e(_database);
-    return _database;
+    var theDatabase = await openDatabase(path,
+        version: _databaseVersion, onCreate: _onCreate);
+    log.e(theDatabase);
+    return theDatabase;
   }
 
-  FutureOr<void> onCreate(Database db, int version) async {
+  void _onCreate(Database db, int version) async {
     log.e('in on create $db');
-    await db.execute(
-        "CREATE TABLE $_databaseName(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)");
-    // await db.rawInsert('INSERT INTO testDB (name, age) VALUES ("Barry", 10)');
-    // await db.rawInsert('INSERT INTO testDB (name, age) VALUES ("Ken", 11)');
-    // await db.rawInsert('INSERT INTO testDB (name, age) VALUES ("Paul", 27)');
+    await db.execute("CREATE TABLE wallet_database"
+        " ("
+        "id INTEGER PRIMARY KEY,"
+        "name TEXT,"
+        "age INTEGER)");
+    await db.rawInsert(
+        'INSERT INTO wallet_database (name, age) VALUES ("Barry", 10)');
+    await db.rawInsert(
+        'INSERT INTO wallet_database (name, age) VALUES ("Ken", 11)');
+    await db.rawInsert(
+        'INSERT INTO wallet_database (name, age) VALUES ("Paul", 27)');
   }
 
   Future<List<Test>> getAll() async {
     final Database db = DataBaseService._database;
-    log.w(db);
-    var res = await db.rawQuery(_databaseName);
-    log.w(res);
+    log.w('1 $db');
+    //var res = await db.rawQuery('wallet_database');
+    var res = await db.rawQuery('wallet_database').then((res) {
+      log.w('res $res');
+    });
+    log.w('2 res');
     List<Test> list =
         res.isNotEmpty ? res.map((f) => Test.fromMap(f)).toList() : [];
-    print(res);
-    print(list);
+    print('3 res');
+    print('4 list');
     return list;
   }
 
@@ -61,7 +69,9 @@ class DataBaseService {
     });
   }
 
-  closeDb() async {}
+  Future closeDb() async {
+    var db = await database;
+  }
 
   Future readData() async {
     //  final Database db;
