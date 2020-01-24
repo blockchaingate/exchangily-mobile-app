@@ -40,6 +40,7 @@ import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:bs58check/bs58check.dart' as bs58check;
+import 'package:decimal/decimal.dart';
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -767,7 +768,7 @@ class WalletService {
       final ethCoinChild = root.derivePath(
           "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
-      var amountNum = (amount * 1e18).round();
+      var amountSentInt = BigInt.from(amount * 1e18);
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
       final address = await credentials.extractAddress();
@@ -780,9 +781,6 @@ class WalletService {
       var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
 
-      log.i('amountNum=');
-      log.w(amount);
-      log.w(amountNum);
       final signed = await ethClient.signTransaction(
           credentials,
           Transaction(
@@ -791,14 +789,12 @@ class WalletService {
             gasPrice:
                 EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice.round()),
             maxGas: gasLimit,
-            value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountNum),
+            value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
           ),
           chainId: ropstenChainId,
           fetchChainIdFromNetworkId: false);
-      log.i('signed=');
-      log.w(signed);
+
       txHex = '0x' + HEX.encode(signed);
-      log.w('TxHex $txHex');
       if (doSubmit) {
         var res = await _api.postEthTx(txHex);
         txHash = res['txHash'];
@@ -826,11 +822,14 @@ class WalletService {
     } else if (tokenType == 'FAB') {
       print('tokenType=' + tokenType);
       var transferAbi = 'a9059cbb';
-      amountSent = (amount * 1e18).round();
+      var amountSentInt = BigInt.from(amount * 1e18);
+
+      print('amountSentInt=');
+      print(amountSentInt);
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(
-              stringUtils.trimHexPrefix(amountSent.toRadixString(16)), 64);
+              stringUtils.trimHexPrefix(amountSentInt.toRadixString(16)), 64);
       contractAddress = stringUtils.trimHexPrefix(contractAddress);
 
       var contractInfo = await getFabSmartContract(contractAddress, fxnCallHex);
@@ -867,12 +866,12 @@ class WalletService {
       final addressHex = address.hex;
       final nonce = await _api.getEthNonce(addressHex);
       gasLimit = 100000;
-      var amountSent = (amount * 1e6).round();
+      var amountSentInt = BigInt.from(amount * 1e6);
       var transferAbi = 'a9059cbb';
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(
-              stringUtils.trimHexPrefix(amountSent.toRadixString(16)), 64);
+              stringUtils.trimHexPrefix(amountSentInt.toRadixString(16)), 64);
       var apiUrl =
           "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
