@@ -171,4 +171,7 @@ class Test {
   Map<String, dynamic> toMap() {
     return {'id': id, 'name': name, 'age': age};
   }
+
+  factory Test.fromMap(Map<String, dynamic> json) =>
+      new Test(id: json['id'], age: json['age'], name: json['name']);
 }

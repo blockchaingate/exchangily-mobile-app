@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:exchangilymobileapp/services/db_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
@@ -14,6 +15,7 @@ class DashboardScreenState extends BaseState {
   List<WalletInfo> walletInfo;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
+  DataBaseService databaseService = locator<DataBaseService>();
   final double elevation = 5;
   double totalUsdBalance = 0;
   double coinUsdBalance;
@@ -24,6 +26,21 @@ class DashboardScreenState extends BaseState {
   String wallets;
   List walletInfoCopy = [];
   BuildContext context;
+
+  initDb() {
+    var test = databaseService.initDb();
+    test.then((res) {
+      log.w(res);
+    });
+  }
+
+  deleteDb() async {
+    await databaseService.deleteDb();
+  }
+
+  getAll() {
+    databaseService.getAll();
+  }
 
   calcTotalBal(numberOfCoins) {
     totalUsdBalance = 0;

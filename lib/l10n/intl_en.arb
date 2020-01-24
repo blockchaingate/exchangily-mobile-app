@@ -659,5 +659,17 @@
     "description": "deposit_to_exchange",
     "type": "text",
     "placeholders": {}
+  },
+  "addGasTransactionSuccess": "Add gas transaction was made successfully",
+  "@addGasTransactionSuccess": {
+    "description": "add_gas_transaction_success",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addGasTransactionFailed": "Add gas transaction failed",
+  "@addGasTransactionFailed": {
+    "description": "add_gas_transaction_failed",
+    "type": "text",
+    "placeholders": {}
   }
 }

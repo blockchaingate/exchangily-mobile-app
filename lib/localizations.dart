@@ -559,6 +559,16 @@ class AppLocalizations {
     return Intl.message('to exchange',
         name: 'toExchange', desc: 'deposit_to_exchange');
   }
+
+  String get addGasTransactionSuccess {
+    return Intl.message('Add gas transaction was made successfully',
+        name: 'addGasTransactionSuccess', desc: 'add_gas_transaction_success');
+  }
+
+  String get addGasTransactionFailed {
+    return Intl.message('Add gas transaction failed',
+        name: 'addGasTransactionFailed', desc: 'add_gas_transaction_failed');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

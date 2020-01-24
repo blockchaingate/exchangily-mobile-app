@@ -16,18 +16,18 @@ GetIt locator = GetIt();
 
 void serviceLocator() {
   // singleton returns the old instance
-  locator.registerLazySingleton(() => Api());
   locator.registerLazySingleton(() => WalletService());
   locator.registerLazySingleton(() => VaultService());
+  locator.registerLazySingleton(() => Api());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => DataBaseService());
   locator.registerLazySingleton(() => SharedService());
 
 // factory returns the new instance
+  locator.registerFactory(() => ConfirmMnemonicScreenState());
   locator.registerFactory(() => CreatePasswordScreenState());
   locator.registerFactory(() => DashboardScreenState());
-  locator.registerFactory(() => SendScreenState());
-  locator.registerFactory(() => ConfirmMnemonicScreenState());
   locator.registerFactory(() => WalletFeaturesScreenState());
+  locator.registerFactory(() => SendScreenState());
   locator.registerFactory(() => SettingsScreenState());
 }

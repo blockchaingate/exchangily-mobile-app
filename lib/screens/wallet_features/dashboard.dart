@@ -251,12 +251,30 @@ class DashboardScreen extends StatelessWidget {
                           child: Gas(gasAmount: model.gasAmount),
                         )
                       : Gas(gasAmount: model.gasAmount)),
+
+              // Test Features Buttons Below
               // Container(
-              //   child: IconButton(
-              //     icon: Icon(Icons.assignment_late),
-              //     onPressed: () {
-              //       model.retrieveWallets();
-              //     },
+              //   child: Row(
+              //     children: <Widget>[
+              //       IconButton(
+              //         icon: Icon(Icons.assignment_late),
+              //         onPressed: () {
+              //           model.initDb();
+              //         },
+              //       ),
+              //       IconButton(
+              //         icon: Icon(Icons.delete),
+              //         onPressed: () {
+              //           model.deleteDb();
+              //         },
+              //       ),
+              //       IconButton(
+              //         icon: Icon(Icons.replay),
+              //         onPressed: () {
+              //           model.getAll();
+              //         },
+              //       ),
+              //     ],
               //   ),
               // ),
 

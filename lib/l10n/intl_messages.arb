@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-22T19:14:55.864215",
+  "@@last_modified": "2020-01-23T14:28:57.096281",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -645,6 +645,18 @@
   "toExchange": "to exchange",
   "@toExchange": {
     "description": "deposit_to_exchange",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addGasTransactionSuccess": "Add gas transaction was made successfully",
+  "@addGasTransactionSuccess": {
+    "description": "add_gas_transaction_success",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addGasTransactionFailed": "Add gas transaction failed",
+  "@addGasTransactionFailed": {
+    "description": "add_gas_transaction_failed",
     "type": "text",
     "placeholders": {}
   }
