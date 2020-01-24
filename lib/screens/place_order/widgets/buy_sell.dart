@@ -71,7 +71,7 @@ class _BuySellState extends State<BuySell>
 
       walletInfo = walletInfoList.wallets;
 
-      for(var i = 0; i < walletInfo.length; i++) {
+      for (var i = 0; i < walletInfo.length; i++) {
         var coin = walletInfo[i];
         if (coin.tickerName == 'EXG') {
           exgAddress = coin.address;
@@ -213,7 +213,7 @@ class _BuySellState extends State<BuySell>
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
-        AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
@@ -232,8 +232,12 @@ class _BuySellState extends State<BuySell>
   }
 
   showNotification(context) {
-    walletService.showInfoFlushbar('Password Mismatch',
-        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+    walletService.showInfoFlushbar(
+        AppLocalizations.of(context).passwordMismatch,
+        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        Icons.cancel,
+        globals.red,
+        context);
   }
 
   @override

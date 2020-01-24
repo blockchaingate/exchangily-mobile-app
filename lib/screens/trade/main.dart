@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade-model.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import "package:flutter/material.dart";
@@ -184,7 +185,7 @@ class _TradeState extends State<Trade> with TradeService {
                                       pair: widget.pair, bidOrAsk: true)),
                             );
                           },
-                          child: Text("Buy",
+                          child: Text(AppLocalizations.of(context).buy,
                               style:
                                   TextStyle(fontSize: 16, color: Colors.white)),
                         )),
@@ -199,7 +200,7 @@ class _TradeState extends State<Trade> with TradeService {
                                       pair: widget.pair, bidOrAsk: false)),
                             );
                           },
-                          child: Text("Sell",
+                          child: Text(AppLocalizations.of(context).sell,
                               style:
                                   TextStyle(fontSize: 16, color: Colors.white)),
                         ))

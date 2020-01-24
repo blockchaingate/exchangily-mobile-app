@@ -658,5 +658,29 @@
         "description": "deposit_to_exchange",
         "type": "text",
         "placeholders": {}
+    },
+    "addGasTransactionSuccess": "加燃料操作提交成功",
+    "@addGasTransactionSuccess": {
+        "description": "add_gas_transaction_success",
+        "type": "text",
+        "placeholders": {}
+    },
+    "addGasTransactionFailed": "加燃料操作失败",
+    "@addGasTransactionFailed": {
+        "description": "add_gas_transaction_failed",
+        "type": "text",
+        "placeholders": {}
+    },
+    "sellOrders": "卖单",
+    "@sellOrders": {
+        "description": "trade_widget_market_sell_orders",
+        "type": "text",
+        "placeholders": {}
+    },
+    "buyOrders": "买单",
+    "@buyOrders": {
+        "description": "trade_widget_market_buy_orders",
+        "type": "text",
+        "placeholders": {}
     }
 }

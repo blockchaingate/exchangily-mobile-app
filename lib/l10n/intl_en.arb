@@ -659,5 +659,29 @@
     "description": "deposit_to_exchange",
     "type": "text",
     "placeholders": {}
+  },
+  "addGasTransactionSuccess": "Add gas transaction was made successfully",
+  "@addGasTransactionSuccess": {
+    "description": "add_gas_transaction_success",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addGasTransactionFailed": "Add gas transaction failed",
+  "@addGasTransactionFailed": {
+    "description": "add_gas_transaction_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sellOrders": "Sell Orders",
+  "@sellOrders": {
+    "description": "trade_widget_market_sell_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "buyOrders": "Buy Orders",
+  "@buyOrders": {
+    "description": "trade_widget_market_buy_orders",
+    "type": "text",
+    "placeholders": {}
   }
 }
