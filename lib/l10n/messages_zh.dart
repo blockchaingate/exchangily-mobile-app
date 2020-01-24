@@ -22,6 +22,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "addGas" : MessageLookupByLibrary.simpleMessage("加燃料"),
+    "addGasTransactionFailed" : MessageLookupByLibrary.simpleMessage("加燃料操作失败"),
+    "addGasTransactionSuccess" : MessageLookupByLibrary.simpleMessage("加燃料操作提交成功"),
     "address" : MessageLookupByLibrary.simpleMessage("地址"),
     "addressCopied" : MessageLookupByLibrary.simpleMessage("地超已拷贝"),
     "addressMising" : MessageLookupByLibrary.simpleMessage("请输入地址"),
@@ -35,6 +37,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "available" : MessageLookupByLibrary.simpleMessage("可用余额"),
     "backupMnemonic" : MessageLookupByLibrary.simpleMessage("备份助记词"),
     "buy" : MessageLookupByLibrary.simpleMessage("买入"),
+    "buyOrders" : MessageLookupByLibrary.simpleMessage("买单"),
     "cancel" : MessageLookupByLibrary.simpleMessage("取消"),
     "changeWalletLanguage" : MessageLookupByLibrary.simpleMessage("设置语言"),
     "close" : MessageLookupByLibrary.simpleMessage("关闭"),
@@ -99,6 +102,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "secureYourWallet" : MessageLookupByLibrary.simpleMessage("安全保管您的钱包"),
     "seed" : MessageLookupByLibrary.simpleMessage("助记词"),
     "sell" : MessageLookupByLibrary.simpleMessage("卖出"),
+    "sellOrders" : MessageLookupByLibrary.simpleMessage("卖单"),
     "send" : MessageLookupByLibrary.simpleMessage("发送"),
     "sendError" : MessageLookupByLibrary.simpleMessage("发生错误，请稍候再试。"),
     "sent" : MessageLookupByLibrary.simpleMessage("已发送"),

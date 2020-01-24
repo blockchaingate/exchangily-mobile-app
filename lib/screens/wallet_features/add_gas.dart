@@ -30,10 +30,10 @@ class AddGas extends StatelessWidget {
       print(ret);
       walletService.showInfoFlushbar(
           (ret["errMsg"] == '')
-              ? 'Add gas transaction was made successfully'
-              : 'Add gas transaction failed',
+              ? AppLocalizations.of(context).addGasTransactionSuccess
+              : AppLocalizations.of(context).addGasTransactionFailed,
           (ret["errMsg"] == '')
-              ? 'transactionID:' + ret['txHash']
+              ? AppLocalizations.of(context).transactionId + ret['txHash']
               : ret["errMsg"],
           Icons.cancel,
           globals.red,

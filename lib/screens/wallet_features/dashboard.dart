@@ -253,33 +253,46 @@ class DashboardScreen extends StatelessWidget {
                       : Gas(gasAmount: model.gasAmount)),
 
               // Test Features Buttons Below
-              // Container(
-              //   child: Row(
-              //     children: <Widget>[
-              //       IconButton(
-              //         icon: Icon(
-              //           Icons.assignment_late,
-              //           color: globals.green,
-              //         ),
-              //         onPressed: () {
-              //           model.initDb();
-              //         },
-              //       ),
-              //       IconButton(
-              //         icon: Icon(Icons.delete, color: globals.red),
-              //         onPressed: () {
-              //           model.deleteDb();
-              //         },
-              //       ),
-              //       IconButton(
-              //         icon: Icon(Icons.replay, color: globals.grey),
-              //         onPressed: () {
-              //           model.getAll();
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // ),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(
+                        Icons.assignment_late,
+                        color: globals.green,
+                      ),
+                      onPressed: () {
+                        model.initDb();
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: globals.red),
+                      onPressed: () {
+                        model.deleteDb();
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.replay, color: globals.grey),
+                      onPressed: () {
+                        model.getAll();
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close, color: globals.primaryColor),
+                      onPressed: () {
+                        model.closeDB();
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.add, color: globals.white),
+                      onPressed: () {
+                        model.insert();
+                      },
+                    ),
+                  ],
+                ),
+              ),
 
 /*------------------------------------------------------------------------------
                             Build Wallet List Container

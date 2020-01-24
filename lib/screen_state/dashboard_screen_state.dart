@@ -27,6 +27,12 @@ class DashboardScreenState extends BaseState {
   List walletInfoCopy = [];
   BuildContext context;
 
+  final test = Test(
+    id: 1,
+    name: 'tbar',
+    age: 40,
+  );
+
   initDb() {
     var test = databaseService.initDb();
     test.then((res) {
@@ -37,6 +43,15 @@ class DashboardScreenState extends BaseState {
   deleteDb() async {
     var res = await databaseService.deleteDb();
     log.e(res);
+  }
+
+  closeDB() async {
+    await databaseService.closeDb();
+  }
+
+  insert() async {
+    var res = await databaseService.insert(test);
+    log.w(res);
   }
 
   getAll() {
