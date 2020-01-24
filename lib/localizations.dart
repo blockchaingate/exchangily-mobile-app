@@ -569,6 +569,16 @@ class AppLocalizations {
     return Intl.message('Add gas transaction failed',
         name: 'addGasTransactionFailed', desc: 'add_gas_transaction_failed');
   }
+
+  String get sellOrders {
+    return Intl.message('Sell Orders',
+        name: 'sellOrders', desc: 'trade_widget_market_sell_orders');
+  }
+
+  String get buyOrders {
+    return Intl.message('Buy Orders',
+        name: 'buyOrders', desc: 'trade_widget_market_buy_orders');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

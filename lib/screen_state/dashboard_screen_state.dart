@@ -35,7 +35,8 @@ class DashboardScreenState extends BaseState {
   }
 
   deleteDb() async {
-    await databaseService.deleteDb();
+    var res = await databaseService.deleteDb();
+    log.e(res);
   }
 
   getAll() {

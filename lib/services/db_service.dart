@@ -34,7 +34,7 @@ class DataBaseService {
   FutureOr<void> onCreate(Database db, int version) async {
     log.e('in on create $db');
     await db.execute(
-        "CREATE TABLE $_databaseName(id INTEGER PRIMARY KEY, name TEXT, age INTEGER)");
+        "CREATE TABLE $_databaseName(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)");
     // await db.rawInsert('INSERT INTO testDB (name, age) VALUES ("Barry", 10)');
     // await db.rawInsert('INSERT INTO testDB (name, age) VALUES ("Ken", 11)');
     // await db.rawInsert('INSERT INTO testDB (name, age) VALUES ("Paul", 27)');
@@ -42,7 +42,9 @@ class DataBaseService {
 
   Future<List<Test>> getAll() async {
     final Database db = DataBaseService._database;
-    var res = await db.rawQuery("testDB");
+    log.w(db);
+    var res = await db.rawQuery(_databaseName);
+    log.w(res);
     List<Test> list =
         res.isNotEmpty ? res.map((f) => Test.fromMap(f)).toList() : [];
     print(res);
@@ -52,7 +54,11 @@ class DataBaseService {
 
   deleteDb() async {
     log.w(path);
-    await deleteDatabase(path);
+    await deleteDatabase(path).then((res) {
+      return res;
+    }).catchError((error) {
+      log.e(error);
+    });
   }
 
   closeDb() async {}

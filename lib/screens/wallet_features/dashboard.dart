@@ -257,19 +257,22 @@ class DashboardScreen extends StatelessWidget {
               //   child: Row(
               //     children: <Widget>[
               //       IconButton(
-              //         icon: Icon(Icons.assignment_late),
+              //         icon: Icon(
+              //           Icons.assignment_late,
+              //           color: globals.green,
+              //         ),
               //         onPressed: () {
               //           model.initDb();
               //         },
               //       ),
               //       IconButton(
-              //         icon: Icon(Icons.delete),
+              //         icon: Icon(Icons.delete, color: globals.red),
               //         onPressed: () {
               //           model.deleteDb();
               //         },
               //       ),
               //       IconButton(
-              //         icon: Icon(Icons.replay),
+              //         icon: Icon(Icons.replay, color: globals.grey),
               //         onPressed: () {
               //           model.getAll();
               //         },

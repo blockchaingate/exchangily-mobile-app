@@ -671,5 +671,17 @@
     "description": "add_gas_transaction_failed",
     "type": "text",
     "placeholders": {}
+  },
+  "sellOrders": "Sell Orders",
+  "@sellOrders": {
+    "description": "trade_widget_market_sell_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "buyOrders": "Buy Orders",
+  "@buyOrders": {
+    "description": "trade_widget_market_buy_orders",
+    "type": "text",
+    "placeholders": {}
   }
 }

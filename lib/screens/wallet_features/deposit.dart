@@ -19,15 +19,13 @@ class Deposit extends StatelessWidget {
   final myController = TextEditingController();
 
   checkPass(double amount, context) async {
-
     print('amount=');
     print(amount);
 
     print('walletInfo.availableBalance=');
     print(walletInfo.availableBalance);
 
-    if (amount == null ||
-        amount > walletInfo.availableBalance) {
+    if (amount == null || amount > walletInfo.availableBalance) {
       walletService.showInfoFlushbar(
           AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
@@ -40,7 +38,7 @@ class Deposit extends StatelessWidget {
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
-        AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
@@ -56,13 +54,13 @@ class Deposit extends StatelessWidget {
       var ret =
           await walletService.depositDo(seed, coinName, tokenType, amount);
 
-      if(ret["success"]) {
+      if (ret["success"]) {
         myController.text = '';
       }
       walletService.showInfoFlushbar(
           ret["success"]
-              ? 'Deposit transaction was made successfully'
-              : 'Deposit transaction failed',
+              ? AppLocalizations.of(context).depositTransactionSuccess
+              : AppLocalizations.of(context).depositTransactionFailed,
           ret["success"]
               ? 'transactionID:' + ret['data']['transactionID']
               : ret['data'],
@@ -87,10 +85,8 @@ class Deposit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     double bal = this.walletInfo.availableBalance;
     String coinName = this.walletInfo.tickerName;
-
 
     return Scaffold(
         appBar: CupertinoNavigationBar(
@@ -157,14 +153,12 @@ class Deposit extends StatelessWidget {
                   ),
                 ),
 
-
                 SizedBox(height: 20),
 
                 Row(
                   children: <Widget>[
                     Text(
-                      AppLocalizations.of(context).walletbalance +
-                          ' $bal',
+                      AppLocalizations.of(context).walletbalance + ' $bal',
                       style: Theme.of(context).textTheme.headline,
                     ),
                     Padding(
@@ -178,8 +172,6 @@ class Deposit extends StatelessWidget {
                     )
                   ],
                 )
-
-
               ],
             )));
   }
