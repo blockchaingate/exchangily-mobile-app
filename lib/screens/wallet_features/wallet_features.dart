@@ -89,7 +89,7 @@ class WalletFeaturesScreen extends StatelessWidget {
               ),
             ),
             Container(
-              height: 250,
+              height: 400,
               margin: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -134,10 +134,31 @@ class WalletFeaturesScreen extends StatelessWidget {
                           height: model.containerHeight,
                           child: _featuresCard(context, 3, model),
                         )
+                      ]),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Container(
+                          width: model.containerWidth,
+                          height: model.containerHeight,
+                          child: _featuresCard(context, 4, model),
+                        ),
+
+                        Opacity(
+                            opacity: (walletInfo.tickerName == 'FAB') ? 100.0 : 0.0,
+                          child:
+                          Container(
+                            width: model.containerWidth,
+                            height: model.containerHeight,
+                            child: _featuresCard(context, 5, model),
+                          )
+                        )
+
                       ])
                 ],
               ),
             ),
+            /*
             Container(
               padding: EdgeInsets.symmetric(horizontal: 15),
               child: Visibility(
@@ -153,6 +174,8 @@ class WalletFeaturesScreen extends StatelessWidget {
                     ),
                   )),
             )
+
+             */
           ],
         ),
         bottomNavigationBar: AppBottomNav(count: 0),
@@ -187,6 +210,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                         padding: EdgeInsets.only(left: 15),
                         child: InkWell(
                             onTap: () async {
+                              await model.refreshErrDeposit();
                               await model.refreshBalance();
                             },
                             child: model.state == ViewState.Busy

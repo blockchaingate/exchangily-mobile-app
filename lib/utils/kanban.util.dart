@@ -57,6 +57,14 @@ Future<Map<String, dynamic>> submitDeposit(String rawTransaction, String rawKanb
   return res;
 }
 
+Future getKanbanErrDeposit(String address) async {
+  var url = environment['endpoints']['kanban'] + 'depositerre/' + address;
+  var client = new http.Client();
+  var response = await client.get(url);
+  var json = jsonDecode(response.body);
+  return json;
+}
+
 Future<Map<String, dynamic>> sendKanbanRawTransaction(String rawKanbanTransaction) async {
   var url = environment['endpoints']['kanban'] + 'kanban/sendRawTransaction';
   var data = {

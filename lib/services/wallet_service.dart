@@ -643,6 +643,9 @@ class WalletService {
     }
   }
 
+  Future getErrDeposit(String address) {
+    return getKanbanErrDeposit(address);
+  }
   // Send Transaction
 
   Future sendTransaction(String coin, seed, List addressIndexList,
@@ -826,12 +829,19 @@ class WalletService {
 
       print('amountSentInt=');
       print(amountSentInt);
+      var amountSentHex = amountSentInt.toRadixString(16);
+
+      print('amountSentHex=1' + amountSentHex + '1');
+      print(amountSentHex);
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(
-              stringUtils.trimHexPrefix(amountSentInt.toRadixString(16)), 64);
+              stringUtils.trimHexPrefix(amountSentHex), 64);
+      print('fxnCallHex=');
+      print(fxnCallHex);
       contractAddress = stringUtils.trimHexPrefix(contractAddress);
-
+      print('contractAddress=');
+      print(contractAddress);
       var contractInfo = await getFabSmartContract(contractAddress, fxnCallHex);
       print('there we go.');
       var res1 = await getFabTransactionHex(
