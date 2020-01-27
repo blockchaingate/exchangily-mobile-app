@@ -253,69 +253,77 @@ class DashboardScreen extends StatelessWidget {
                       : Gas(gasAmount: model.gasAmount)),
 
               // Test Features Buttons Below
-              Container(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    InkWell(
-                      child: Text('Create Database',
-                          style: TextStyle(color: globals.white)),
-                      onTap: () {
-                        model.initDb();
-                      },
-                    ),
-                    UIHelper.horizontalSpaceSmall,
-                    InkWell(
-                      child: Text('Delete Database',
-                          style: TextStyle(color: globals.white)),
-                      onTap: () {
-                        model.deleteDb();
-                      },
-                    ),
-                    UIHelper.horizontalSpaceSmall,
-                    InkWell(
-                      child: Text('Get All Records',
-                          style: TextStyle(color: globals.white)),
-                      onTap: () {
-                        model.getAll();
-                      },
-                    ),
-                    UIHelper.horizontalSpaceSmall,
-                    InkWell(
-                      child: Text('Close Database',
-                          style: TextStyle(color: globals.white)),
-                      onTap: () {
-                        model.closeDB();
-                      },
-                    ),
-                    IconButton(
-                      tooltip: 'Add',
-                      icon: Icon(Icons.add, color: globals.white),
-                      onPressed: () {
-                        model.create();
-                      },
-                    ),
-                    UIHelper.horizontalSpaceSmall,
-                    InkWell(
-                      child: Text('Update Database',
-                          style: TextStyle(color: globals.white)),
-                      onTap: () {
-                        model.udpate();
-                      },
-                    ),
-                    UIHelper.horizontalSpaceSmall,
-                    InkWell(
-                      onTap: () {
-                        model.deleteWallet();
-                      },
-                      child: Text(
-                        'Delete Single Object',
-                        style: TextStyle(color: globals.white),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+              // Container(
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     children: <Widget>[
+              //       Column(
+              //         children: <Widget>[
+              //           InkWell(
+              //             child: Text('Create Database',
+              //                 style: TextStyle(color: globals.white)),
+              //             onTap: () {
+              //               model.initDb();
+              //             },
+              //           ),
+              //           UIHelper.horizontalSpaceSmall,
+              //           InkWell(
+              //             child: Text('Delete Database',
+              //                 style: TextStyle(color: globals.white)),
+              //             onTap: () {
+              //               model.deleteDb();
+              //             },
+              //           ),
+              //           UIHelper.horizontalSpaceSmall,
+              //           InkWell(
+              //             child: Text('Get All Records',
+              //                 style: TextStyle(color: globals.white)),
+              //             onTap: () {
+              //               model.getAll();
+              //             },
+              //           ),
+              //         ],
+              //       ),
+              //       Column(
+              //         children: <Widget>[
+              //           UIHelper.horizontalSpaceSmall,
+              //           InkWell(
+              //             child: Text('Close Database',
+              //                 style: TextStyle(color: globals.white)),
+              //             onTap: () {
+              //               model.closeDB();
+              //             },
+              //           ),
+              //           IconButton(
+              //             tooltip: 'Add',
+              //             icon: Icon(Icons.add, color: globals.white),
+              //             onPressed: () {
+              //               model.create();
+              //             },
+              //           ),
+              //           UIHelper.horizontalSpaceSmall,
+              //           InkWell(
+              //             child: Text('Update Database',
+              //                 style: TextStyle(color: globals.white)),
+              //             onTap: () {
+              //               model.udpate();
+              //             },
+              //           ),
+              //           UIHelper.horizontalSpaceSmall,
+              //           InkWell(
+              //             onTap: () {
+              //               model.deleteWallet();
+              //             },
+              //             child: Text(
+              //               'Delete Single Object',
+              //               style: TextStyle(color: globals.white),
+              //             ),
+              //           )
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
 
 /*------------------------------------------------------------------------------
                             Build Wallet List Container

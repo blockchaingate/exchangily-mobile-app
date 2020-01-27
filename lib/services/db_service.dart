@@ -29,7 +29,6 @@ class DataBaseService {
     if (_database != null) return _database;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
-
     log.w(path);
     _database =
         openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
@@ -74,6 +73,29 @@ class DataBaseService {
     return id;
   }
 
+  // Get Single Wallet By Name
+  Future getByName(String name) async {
+    final Database db = await _database;
+    List<Map> res =
+        await db.query(tableName, where: 'name= ?', whereArgs: [name]);
+    log.w('ID - $name --- $res');
+    if (res.length > 0) {
+      return Test.fromMap((res.first));
+    }
+    return null;
+  }
+
+  // Get Single Wallet By Id
+  Future getById(int id) async {
+    final Database db = await _database;
+    List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
+    log.w('ID - $id --- $res');
+    if (res.length > 0) {
+      return Test.fromMap((res.first));
+    }
+    return null;
+  }
+
   // Delete Single Object From Database By Id
   Future<void> deleteWallet(int id) async {
     final db = await _database;
@@ -81,10 +103,15 @@ class DataBaseService {
   }
 
   // Update database
-  Future<void> update(Test test) async {
-    final db = await _database;
-    await db.update(tableName, test.toMap(),
-        where: "$columnId = ?", whereArgs: [test.id]);
+  Future<void> update(WalletInfo walletInfo) async {
+    final Database db = await _database;
+    await db.update(
+      tableName,
+      walletInfo.toJson(),
+      where: "id = ?",
+      whereArgs: [walletInfo.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   // Close Database
@@ -100,18 +127,11 @@ class DataBaseService {
     _database = null;
   }
 
-  // Get Single Data Object
-  // Use below method maybe in the future when requies single wallet from the database
-  Future getById(int id) async {
-    final Database db = await _database;
-    List<Map> res = await db.query(tableName,
-        columns: [columnId, columnName],
-        where: '$columnId = ?',
-        whereArgs: [id]);
-
-    if (res.length > 0) {
-      return Test.fromMap((res.first));
-    }
-    return null;
-  }
+  // Storing TxID
+  // Future insertTxId(String txId) async{
+  //   final Database db = await _database;
+  //   int id = await db.insert('transaction', txid,
+  //       conflictAlgorithm: ConflictAlgorithm.replace);
+  //   return id;
+  // }
 }

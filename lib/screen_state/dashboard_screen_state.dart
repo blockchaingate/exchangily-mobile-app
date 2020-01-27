@@ -37,10 +37,7 @@ class DashboardScreenState extends BaseState {
       assetsInExchange: 12234);
 
   initDb() {
-    var test = databaseService.initDb();
-    test.then((res) {
-      log.w(res);
-    });
+    databaseService.initDb();
   }
 
   deleteDb() async {
@@ -100,27 +97,11 @@ class DashboardScreenState extends BaseState {
     setState(ViewState.Busy);
     await databaseService.getAll().then((res) {
       walletInfo = res;
-      log.w('wallet info $walletInfo');
+      calcTotalBal(walletInfo.length);
+      walletInfoCopy = walletInfo.map((element) => element).toList();
+      log.w('wallet info ${walletInfo.length}');
       setState(ViewState.Idle);
-    })
-
-        // await storage.read(key: 'wallets').then((encodedJsonWallets) async {
-        //   if (encodedJsonWallets == null) {
-        //     log.e('Local storage null');
-        //     Navigator.pushNamed(context, '/walletSetup');
-        //   }
-        //   final decodedWallets = jsonDecode(encodedJsonWallets);
-        //   log.w(decodedWallets);
-        //   WalletInfoList walletInfoList = WalletInfoList.fromJson(decodedWallets);
-        //   log.e(walletInfoList.wallets[0].usdValue);
-
-        //   walletInfo = walletInfoList.wallets;
-        //   walletInfoCopy = walletInfo.map((element) => element).toList();
-        //   log.i(walletInfo.length);
-        //   calcTotalBal(walletInfo.length);
-        //   setState(ViewState.Idle);
-        // })
-        .catchError((error) {
+    }).catchError((error) {
       log.e('Catch Error $error');
       setState(ViewState.Idle);
     });
@@ -140,27 +121,30 @@ class DashboardScreenState extends BaseState {
           walletInfo[j].assetsInExchange = res[i]['amount'];
       }
     }
+    for (int i = 0; i < walletInfo.length; i++) {
+      await databaseService.update(walletInfo[i]);
+      await databaseService.getById(walletInfo[i].id);
+    }
     walletInfoCopy = walletInfo.map((element) => element).toList();
     setState(ViewState.Idle);
   }
 
   Future refreshBalance() async {
     setState(ViewState.Busy);
-    // totalUsdBalance = 0;
     // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
     walletInfoCopy = walletInfo.map((element) => element).toList();
     int length = walletInfoCopy.length;
-    log.w('Wallet copy ${walletInfoCopy.length}');
-    List<String> token = walletService.tokenType;
+    List<String> coinTokenType = walletService.tokenType;
     walletInfo.clear();
     double walletBal = 0;
     double walletLockedBal = 0;
     for (var i = 0; i < length; i++) {
+      int id = i + 1;
       String tickerName = walletInfoCopy[i].tickerName;
       String address = walletInfoCopy[i].address;
       String name = walletInfoCopy[i].name;
       await walletService
-          .coinBalanceByAddress(tickerName, address, token[i])
+          .coinBalanceByAddress(tickerName, address, coinTokenType[i])
           .then((balance) async {
         walletBal = balance['balance'];
         walletLockedBal = balance['lockbalance'];
@@ -168,15 +152,16 @@ class DashboardScreenState extends BaseState {
         coinUsdBalance =
             walletService.calculateCoinUsdBalance(marketPrice, walletBal);
         WalletInfo wi = WalletInfo(
+            id: id,
             tickerName: tickerName,
-            tokenType: token[i],
+            tokenType: coinTokenType[i],
             address: address,
             availableBalance: walletBal,
             lockedBalance: walletLockedBal,
             usdValue: coinUsdBalance,
             name: name);
         walletInfo.add(wi);
-        await databaseService.insert(wi);
+        // await databaseService.update(wi);
       }).catchError((error) {
         log.e('Something went wrong  - $error');
       });
@@ -184,9 +169,6 @@ class DashboardScreenState extends BaseState {
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();
-    wallets = jsonEncode(walletInfo);
-    await storage.delete(key: 'wallets');
-    await storage.write(key: 'wallets', value: wallets);
     setState(ViewState.Idle);
     return walletInfo;
   }

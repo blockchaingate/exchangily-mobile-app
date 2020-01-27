@@ -70,6 +70,13 @@ class WalletInfo {
         name: json['name'] as String,
         assetsInExchange: json['assetsInExchange'] as double);
   }
+
+  int get id => _id;
+
+  set id(int id) {
+    this._id = id;
+  }
+
   String get tickerName => _tickerName;
 
   set tickerName(String tickerName) {

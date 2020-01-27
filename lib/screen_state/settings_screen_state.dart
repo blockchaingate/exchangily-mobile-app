@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/services/db_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class SettingsScreenState extends BaseState {
   final log = getLogger('SendState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  DataBaseService databaseService = locator<DataBaseService>();
   List<String> languages = ['English', 'Chinese'];
   String selectedLanguage;
   final storage = new FlutterSecureStorage();
@@ -43,19 +45,11 @@ class SettingsScreenState extends BaseState {
         .then((res) async {
       if (res.confirmed) {
         log.w('deleting wallet');
-        // await storage.delete(key: 'wallets');
-        await storage.deleteAll().whenComplete(() {
-          log.w('Flutter secure stotage delete all in complete');
-        });
         await walletService.deleteEncryptedData();
-        await storage.deleteAll().whenComplete(() {
-          Navigator.pushNamed(context, '/walletSetup');
-          log.w('Flutter secure stotage delete all in complete');
-        });
+        await databaseService.deleteDb();
         Navigator.pushNamed(context, '/walletSetup');
         setState(ViewState.Idle);
-
-        return '';
+        return null;
       } else if (res.fieldOne == 'Closed') {
         log.e('Dialog Closed By User');
         setState(ViewState.Idle);

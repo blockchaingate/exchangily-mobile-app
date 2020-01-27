@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flushbar/flushbar.dart';
@@ -46,6 +47,7 @@ class WalletService {
   final log = getLogger('Wallet Service');
   Api _api = locator<Api>();
 
+  DataBaseService databaseService = locator<DataBaseService>();
   double coinUsdBalance;
   List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
   List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
@@ -162,9 +164,7 @@ class WalletService {
   Future<List<WalletInfo>> getWalletCoins(String mnemonic) async {
     List<WalletInfo> _walletInfo = [];
     List<double> coinUsdMarketPrice = [];
-    double assetsInExg = 0.0;
     String exgAddress = '';
-    String wallets;
     if (_walletInfo != null) {
       _walletInfo.clear();
     } else {
@@ -185,11 +185,10 @@ class WalletService {
         var bal =
             await getCoinBalanceByAddress(tickerName, addr, tokenType: token);
         double walletBal = bal['balance'];
-        double walletLockedBal = bal['lockBalance'];
-        log.w('tickername $tickerName - address: $addr - balance: $walletBal');
+        double walletLockedBal = bal['lockbalance'];
+        log.w(
+            'tickername $tickerName - address: $addr - balance: $walletBal - Locked balance: $walletLockedBal');
         calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
-        //  log.i('printing calculated bal $coinUsdBalance');
-
         if (tickerName == 'EXG') {
           exgAddress = addr;
           log.e(exgAddress);
@@ -203,9 +202,9 @@ class WalletService {
             usdValue: coinUsdBalance,
             name: name);
         _walletInfo.add(wi);
-        //  wallets = jsonEncode(_walletInfo);
       }
       var res = await assetsBalance(exgAddress);
+      log.w('Assets in exchange $res');
       var length = res.length;
       for (var i = 0; i < length; i++) {
         String coin = res[i]['coin'];
@@ -214,11 +213,9 @@ class WalletService {
             _walletInfo[j].assetsInExchange = res[i]['amount'];
         }
       }
-      // Pushed this line below here to add assets in exchange in the local storage
-      wallets = jsonEncode(_walletInfo);
-      final storage = new FlutterSecureStorage();
-      await storage.delete(key: 'wallets');
-      await storage.write(key: 'wallets', value: wallets);
+      for (int i = 0; i < _walletInfo.length; i++) {
+        await databaseService.insert(_walletInfo[i]);
+      }
       return _walletInfo;
     } catch (e) {
       log.e(e);
@@ -834,8 +831,7 @@ class WalletService {
       print(amountSentHex);
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
-          stringUtils.fixLength(
-              stringUtils.trimHexPrefix(amountSentHex), 64);
+          stringUtils.fixLength(stringUtils.trimHexPrefix(amountSentHex), 64);
       print('fxnCallHex=');
       print(fxnCallHex);
       contractAddress = stringUtils.trimHexPrefix(contractAddress);
