@@ -23,7 +23,7 @@ class AddGas extends StatelessWidget {
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      var ret = await walletService.AddGasDo(seed, amount);
+      var ret = await walletService.addGasDo(seed, amount);
 
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
       print('retfffff=');

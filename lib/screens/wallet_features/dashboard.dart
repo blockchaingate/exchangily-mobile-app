@@ -254,42 +254,65 @@ class DashboardScreen extends StatelessWidget {
 
               // Test Features Buttons Below
               Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    IconButton(
-                      icon: Icon(
-                        Icons.assignment_late,
-                        color: globals.green,
-                      ),
-                      onPressed: () {
+                    InkWell(
+                      child: Text('Create Database',
+                          style: TextStyle(color: globals.white)),
+                      onTap: () {
                         model.initDb();
                       },
                     ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: globals.red),
-                      onPressed: () {
+                    UIHelper.horizontalSpaceSmall,
+                    InkWell(
+                      child: Text('Delete Database',
+                          style: TextStyle(color: globals.white)),
+                      onTap: () {
                         model.deleteDb();
                       },
                     ),
-                    IconButton(
-                      icon: Icon(Icons.replay, color: globals.grey),
-                      onPressed: () {
+                    UIHelper.horizontalSpaceSmall,
+                    InkWell(
+                      child: Text('Get All Records',
+                          style: TextStyle(color: globals.white)),
+                      onTap: () {
                         model.getAll();
                       },
                     ),
-                    IconButton(
-                      icon: Icon(Icons.close, color: globals.primaryColor),
-                      onPressed: () {
+                    UIHelper.horizontalSpaceSmall,
+                    InkWell(
+                      child: Text('Close Database',
+                          style: TextStyle(color: globals.white)),
+                      onTap: () {
                         model.closeDB();
                       },
                     ),
                     IconButton(
+                      tooltip: 'Add',
                       icon: Icon(Icons.add, color: globals.white),
                       onPressed: () {
-                        model.insert();
+                        model.create();
                       },
                     ),
+                    UIHelper.horizontalSpaceSmall,
+                    InkWell(
+                      child: Text('Update Database',
+                          style: TextStyle(color: globals.white)),
+                      onTap: () {
+                        model.udpate();
+                      },
+                    ),
+                    UIHelper.horizontalSpaceSmall,
+                    InkWell(
+                      onTap: () {
+                        model.deleteWallet();
+                      },
+                      child: Text(
+                        'Delete Single Object',
+                        style: TextStyle(color: globals.white),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -308,7 +331,7 @@ class DashboardScreen extends StatelessWidget {
                               return _coinDetailsCard(
                                   '${model.walletInfoCopy[index].tickerName.toLowerCase()}',
                                   model.walletInfoCopy[index].availableBalance,
-                                  //  model.walletInfoCopy[index].lockedBalance,
+                                  model.walletInfoCopy[index].lockedBalance,
                                   model.walletInfoCopy[index].assetsInExchange,
                                   model.walletInfoCopy[index].usdValue,
                                   //  walletInfoCopy[index].logoColor,
@@ -331,7 +354,7 @@ class DashboardScreen extends StatelessWidget {
                               return _coinDetailsCard(
                                   '$name',
                                   model.walletInfo[index].availableBalance,
-                                  //  model.walletInfo[index].lockedBalance,
+                                  model.walletInfo[index].lockedBalance,
                                   model.walletInfo[index].assetsInExchange,
                                   model.walletInfo[index].usdValue,
                                   //  walletInfo[index].logoColor,
@@ -360,7 +383,7 @@ class DashboardScreen extends StatelessWidget {
   Widget _coinDetailsCard(
           String tickerName,
           double available,
-          // double locked,
+          double locked,
           double assetsInExchange,
           double usdValue,
           //   color,
@@ -429,27 +452,27 @@ class DashboardScreen extends StatelessWidget {
                         : Text('$available',
                             textAlign: TextAlign.center,
                             style: TextStyle(color: globals.red)),
-                    // Padding(
-                    //   padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    //   child: Text('Locked',
-                    //       style: Theme.of(context).textTheme.display2),
-                    // ),
-                    // model.state == ViewState.Busy
-                    //     ? SizedBox(
-                    //         child: Shimmer.fromColors(
-                    //         baseColor: globals.red,
-                    //         highlightColor: globals.white,
-                    //         child: Text(
-                    //           '$locked',
-                    //           textAlign: TextAlign.center,
-                    //           style: TextStyle(
-                    //             fontSize: 15.0,
-                    //           ),
-                    //         ),
-                    //       ))
-                    //     : Text('$locked',
-                    //         textAlign: TextAlign.center,
-                    //         style: TextStyle(color: globals.red))
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: Text('Locked',
+                          style: Theme.of(context).textTheme.display2),
+                    ),
+                    model.state == ViewState.Busy
+                        ? SizedBox(
+                            child: Shimmer.fromColors(
+                            baseColor: globals.red,
+                            highlightColor: globals.white,
+                            child: Text(
+                              '$locked',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ))
+                        : Text('$locked',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: globals.red))
                   ],
                 ),
                 Expanded(

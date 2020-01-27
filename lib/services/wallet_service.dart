@@ -179,15 +179,12 @@ class WalletService {
         String token = tokenType[i];
         var marketValue = await getCoinMarketPrice(name);
         coinUsdMarketPrice.add(marketValue);
-        //   log.w('coinUsdMarketPriceList $coinUsdMarketPrice');
         String addr =
             await getAddressForCoin(root, tickerName, tokenType: token);
-        //  log.w('Address $addr');
         var bal =
             await getCoinBalanceByAddress(tickerName, addr, tokenType: token);
-        //   log.w('Bal $bal');
         double walletBal = bal['balance'];
-        // double walletLockedBal = bal['lockedBalance'];
+        double walletLockedBal = bal['lockBalance'];
         log.w('tickername $tickerName - address: $addr - balance: $walletBal');
         calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
         //  log.i('printing calculated bal $coinUsdBalance');
@@ -200,8 +197,8 @@ class WalletService {
             tickerName: tickerName,
             tokenType: token,
             address: addr,
-            // lockedBalance: walletLockedBal,
             availableBalance: walletBal,
+            lockedBalance: walletLockedBal,
             usdValue: coinUsdBalance,
             name: name);
         _walletInfo.add(wi);
@@ -350,8 +347,8 @@ class WalletService {
     return buf;
   }
 
-  Future<Map<String, dynamic>> withdrawDo(
-      seed, String coinName, String coinAddress, String tokenType, double amount) async {
+  Future<Map<String, dynamic>> withdrawDo(seed, String coinName,
+      String coinAddress, String tokenType, double amount) async {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
     var amountInLink = BigInt.from(amount * 1e18);
@@ -369,7 +366,6 @@ class WalletService {
 
     var nonce = await getNonce(addressInKanban);
 
-
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
@@ -377,7 +373,7 @@ class WalletService {
     var res = await sendKanbanRawTransaction(txKanbanHex);
     print('res======');
     print(res);
-    if (res['transactionHash']!='') {
+    if (res['transactionHash'] != '') {
       res['success'] = true;
       res['data'] = res;
     } else {
@@ -400,7 +396,10 @@ class WalletService {
       return errRes;
     }
     var option = {};
-    if ((coinName != null) && (coinName != '') && (tokenType != null) && (tokenType != '')) {
+    if ((coinName != null) &&
+        (coinName != '') &&
+        (tokenType != null) &&
+        (tokenType != '')) {
       option = {
         'tokenType': tokenType,
         'contractAddress': environment["addresses"]["smartContract"][coinName]
@@ -489,7 +488,7 @@ class WalletService {
   }
 
 // Future Add Gas Do
-  Future<Map<String, dynamic>> AddGasDo(seed, double amount) async {
+  Future<Map<String, dynamic>> addGasDo(seed, double amount) async {
     var satoshisPerBytes = 14;
     var scarContractAddress = await getScarAddress();
     scarContractAddress = stringUtils.trimHexPrefix(scarContractAddress);

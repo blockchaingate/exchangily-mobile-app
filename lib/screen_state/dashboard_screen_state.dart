@@ -27,11 +27,14 @@ class DashboardScreenState extends BaseState {
   List walletInfoCopy = [];
   BuildContext context;
 
-  final test = Test(
-    id: 1,
-    name: 'tbar',
-    age: 40,
-  );
+  final wallet = WalletInfo(
+      name: 'bitcoin',
+      tickerName: 'BTC',
+      tokenType: '',
+      address: 'fasdgasghasfdhgafhafh',
+      availableBalance: 45767,
+      lockedBalance: 236526.034,
+      assetsInExchange: 12234);
 
   initDb() {
     var test = databaseService.initDb();
@@ -45,13 +48,21 @@ class DashboardScreenState extends BaseState {
     log.e(res);
   }
 
+  deleteWallet() async {
+    await databaseService.deleteWallet(1);
+  }
+
   closeDB() async {
     await databaseService.closeDb();
   }
 
-  insert() async {
-    var res = await databaseService.insert(test);
+  create() async {
+    var res = await databaseService.insert(wallet);
     log.w(res);
+  }
+
+  udpate() async {
+    //  await databaseService.update(test);
   }
 
   getAll() {
@@ -87,23 +98,29 @@ class DashboardScreenState extends BaseState {
 
   retrieveWallets() async {
     setState(ViewState.Busy);
-
-    await storage.read(key: 'wallets').then((encodedJsonWallets) async {
-      if (encodedJsonWallets == null) {
-        log.e('Local storage null');
-        Navigator.pushNamed(context, '/walletSetup');
-      }
-      final decodedWallets = jsonDecode(encodedJsonWallets);
-      log.w(decodedWallets);
-      WalletInfoList walletInfoList = WalletInfoList.fromJson(decodedWallets);
-      log.e(walletInfoList.wallets[0].usdValue);
-
-      walletInfo = walletInfoList.wallets;
-      walletInfoCopy = walletInfo.map((element) => element).toList();
-      log.i(walletInfo.length);
-      calcTotalBal(walletInfo.length);
+    await databaseService.getAll().then((res) {
+      walletInfo = res;
+      log.w('wallet info $walletInfo');
       setState(ViewState.Idle);
-    }).catchError((error) {
+    })
+
+        // await storage.read(key: 'wallets').then((encodedJsonWallets) async {
+        //   if (encodedJsonWallets == null) {
+        //     log.e('Local storage null');
+        //     Navigator.pushNamed(context, '/walletSetup');
+        //   }
+        //   final decodedWallets = jsonDecode(encodedJsonWallets);
+        //   log.w(decodedWallets);
+        //   WalletInfoList walletInfoList = WalletInfoList.fromJson(decodedWallets);
+        //   log.e(walletInfoList.wallets[0].usdValue);
+
+        //   walletInfo = walletInfoList.wallets;
+        //   walletInfoCopy = walletInfo.map((element) => element).toList();
+        //   log.i(walletInfo.length);
+        //   calcTotalBal(walletInfo.length);
+        //   setState(ViewState.Idle);
+        // })
+        .catchError((error) {
       log.e('Catch Error $error');
       setState(ViewState.Idle);
     });
@@ -137,7 +154,7 @@ class DashboardScreenState extends BaseState {
     List<String> token = walletService.tokenType;
     walletInfo.clear();
     double walletBal = 0;
-    // double walletLockedBal = 0;
+    double walletLockedBal = 0;
     for (var i = 0; i < length; i++) {
       String tickerName = walletInfoCopy[i].tickerName;
       String address = walletInfoCopy[i].address;
@@ -146,26 +163,20 @@ class DashboardScreenState extends BaseState {
           .coinBalanceByAddress(tickerName, address, token[i])
           .then((balance) async {
         walletBal = balance['balance'];
-        //  walletLockedBal = balance['lockbalance'];
+        walletLockedBal = balance['lockbalance'];
         double marketPrice = await walletService.getCoinMarketPrice(name);
         coinUsdBalance =
             walletService.calculateCoinUsdBalance(marketPrice, walletBal);
-
-        // PENDING: Something went wrong  - type 'int' is not a subtype of type 'double'
-        // and sometimes it shows the locked bal but sometimes it doesn't
-        //log.e('$tickerName - $walletLockedBal');
-        //  walletInfo[i].lockedBalance = walletLockedBal;
-
-        // Solution for above error is to add locked balance variable in every coin utils like balance var is already there
-
         WalletInfo wi = WalletInfo(
             tickerName: tickerName,
             tokenType: token[i],
             address: address,
             availableBalance: walletBal,
+            lockedBalance: walletLockedBal,
             usdValue: coinUsdBalance,
             name: name);
         walletInfo.add(wi);
+        await databaseService.insert(wi);
       }).catchError((error) {
         log.e('Something went wrong  - $error');
       });
