@@ -26,7 +26,6 @@ import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/wallet.dart';
 import 'dart:io';
 import 'dart:convert';

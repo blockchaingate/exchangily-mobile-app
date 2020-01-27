@@ -8,7 +8,6 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DashboardScreenState extends BaseState {
   final log = getLogger('DahsboardScreenState');
@@ -22,7 +21,6 @@ class DashboardScreenState extends BaseState {
   double gasAmount = 0;
   String exgAddress = '';
   List<double> assetsInExchange = [];
-  final storage = new FlutterSecureStorage();
   String wallets;
   List walletInfoCopy = [];
   BuildContext context;

@@ -4,7 +4,6 @@ import 'package:exchangilymobileapp/services/db_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:intl/intl.dart';
 
 import '../localizations.dart';
@@ -21,7 +20,6 @@ class SettingsScreenState extends BaseState {
   DataBaseService databaseService = locator<DataBaseService>();
   List<String> languages = ['English', 'Chinese'];
   String selectedLanguage;
-  final storage = new FlutterSecureStorage();
   // bool result = false;
   String errorMessage = '';
   AlertResponse alertResponse;
