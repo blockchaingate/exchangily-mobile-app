@@ -30,7 +30,16 @@ class WalletFeaturesScreenState extends BaseState {
           Icons.equalizer, 'deposit', Colors.purple),
       WalletFeatureName(AppLocalizations.of(context).withdrawToWallet,
           Icons.exit_to_app, 'withdraw', Colors.cyan),
+
+      WalletFeatureName(AppLocalizations.of(context).reDeposit,
+          Icons.vertical_align_bottom, 'redeposit', Colors.redAccent),
+      WalletFeatureName(AppLocalizations.of(context).smartContract, Icons.layers,
+          'smartContract', Colors.lightBlue),
     ];
+  }
+
+  refreshErrDeposit() async {
+
   }
 
   refreshBalance() async {

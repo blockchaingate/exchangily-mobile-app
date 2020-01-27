@@ -579,6 +579,16 @@ class AppLocalizations {
     return Intl.message('Buy Orders',
         name: 'buyOrders', desc: 'trade_widget_market_buy_orders');
   }
+
+  String get reDeposit {
+    return Intl.message('Re Deposit',
+        name: 'reDeposit', desc: 'wallet_feature_redeposit');
+  }
+
+  String get smartContract {
+    return Intl.message('Smart Contract',
+        name: 'smartContract', desc: 'wallet_feature_smart_contract');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
