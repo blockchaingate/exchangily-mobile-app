@@ -145,7 +145,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                         ),
 
                         Opacity(
-                            opacity: (walletInfo.tickerName == 'FAB') ? 100.0 : 0.0,
+                            opacity: ((walletInfo != null) && (walletInfo.tickerName == 'FAB')) ? 1.0 : 0.0,
                           child:
                           Container(
                             width: model.containerWidth,
