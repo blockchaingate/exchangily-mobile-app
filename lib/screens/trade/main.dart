@@ -65,14 +65,17 @@ class _TradeState extends State<Trade> with TradeService {
       //print('trades=');
       //print(trades);
       _updateTrades(trades);
-      setState(() => {this.tradeChannelCompleted = true});
+      if (this.mounted) {
+        setState(() => {this.tradeChannelCompleted = true});
+      }
     });
 
     allOrdersChannel = getOrderListChannel(pair);
     allOrdersChannel.stream.listen((orders) {
       _updateOrders(orders);
-
-      setState(() => {this.orderChannelCompleted = true});
+      if (this.mounted) {
+        setState(() => {this.orderChannelCompleted = true});
+      }
     });
 
     allPriceChannel = getAllPriceChannel();
@@ -115,17 +118,21 @@ class _TradeState extends State<Trade> with TradeService {
           usdPrice = await getCoinMarketPrice('exchangily');
         }
 
-        this._tradePriceState.currentState.showPrice(item, usdPrice);
+        if(this._tradePriceState != null && this._tradePriceState.currentState != null) {
+          this._tradePriceState.currentState.showPrice(item, usdPrice);
+        }
 
-        setState(() => {this.priceChannelCompleted = true});
+        if (this.mounted) {
+          setState(() => {this.priceChannelCompleted = true});
+        }
       }
     });
   }
 
   @override
   void dispose() {
-    allTradesChannel.sink.close();
-    allOrdersChannel.sink.close();
+    //allTradesChannel.sink.close();
+    //allOrdersChannel.sink.close();
     super.dispose();
   }
 
