@@ -534,9 +534,8 @@ class WalletService {
   }
 
   getFabTransactionHex(seed, addressIndexList, toAddress, double amount,
-      double extraTransactionFee, int satoshisPerBytes) async {
-    print('begin getFabTransactionHex, amount=');
-    print(amount);
+    double extraTransactionFee, int satoshisPerBytes) async {
+
     final txb = new TransactionBuilder(
         network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);
@@ -666,7 +665,7 @@ class WalletService {
     var tokenType = options['tokenType'] ?? '';
     var contractAddress = options['contractAddress'] ?? '';
     var changeAddress = '';
-    print('tokenType=' + tokenType);
+    //print('tokenType=' + tokenType);
     if (coin == 'BTC') {
       var bytesPerInput = 148;
       var amountNum = amount * 1e8;
@@ -690,8 +689,8 @@ class WalletService {
         }
         final privateKey = bitCoinChild.privateKey;
         var utxos = await _api.getBtcUtxos(fromAddress);
-        print('utxos=');
-        print(utxos);
+        //print('utxos=');
+        //print(utxos);
         if ((utxos == null) || (utxos.length == 0)) {
           continue;
         }

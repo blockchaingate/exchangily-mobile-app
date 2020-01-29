@@ -74,7 +74,7 @@ class WalletFeaturesScreen extends StatelessWidget {
       } else {
         walletService.showInfoFlushbar(
             'Redeposit error',
-            '',
+            'internal error',
             Icons.cancel,
             globals.red,
             context);
