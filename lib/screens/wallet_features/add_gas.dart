@@ -12,6 +12,7 @@ class AddGas extends StatelessWidget {
   final DialogService _dialogService = locator<DialogService>();
   final WalletService walletService = locator<WalletService>();
   final log = getLogger('AddGas');
+  final myController = TextEditingController();
   AddGas({Key key}) : super(key: key);
 
   checkPass(double amount, context) async {
@@ -23,17 +24,18 @@ class AddGas extends StatelessWidget {
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      var ret = await walletService.AddGasDo(seed, amount);
+      var ret = await walletService.addGasDo(seed, amount);
 
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
       print('retfffff=');
       print(ret);
+      myController.text = '';
       walletService.showInfoFlushbar(
           (ret["errMsg"] == '')
-              ? 'Add gas transaction was made successfully'
-              : 'Add gas transaction failed',
+              ? AppLocalizations.of(context).addGasTransactionSuccess
+              : AppLocalizations.of(context).addGasTransactionFailed,
           (ret["errMsg"] == '')
-              ? 'transactionID:' + ret['txHash']
+              ? AppLocalizations.of(context).transactionId + ret['txHash']
               : ret["errMsg"],
           Icons.cancel,
           globals.red,
@@ -56,7 +58,7 @@ class AddGas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myController = TextEditingController();
+
     return Scaffold(
         appBar: CupertinoNavigationBar(
           padding: EdgeInsetsDirectional.only(start: 0),

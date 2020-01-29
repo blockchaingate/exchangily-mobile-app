@@ -22,6 +22,8 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "addGas" : MessageLookupByLibrary.simpleMessage("Add Gas"),
+    "addGasTransactionFailed" : MessageLookupByLibrary.simpleMessage("Add gas transaction failed"),
+    "addGasTransactionSuccess" : MessageLookupByLibrary.simpleMessage("Add gas transaction was made successfully"),
     "address" : MessageLookupByLibrary.simpleMessage("Address"),
     "addressCopied" : MessageLookupByLibrary.simpleMessage("Address Copied"),
     "addressMising" : MessageLookupByLibrary.simpleMessage("Please Enter an Address"),
@@ -36,6 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "backupMnemonic" : MessageLookupByLibrary.simpleMessage("Backup Mnemonic"),
     "backupYourMnemonic" : MessageLookupByLibrary.simpleMessage("Backup your mnemonic"),
     "buy" : MessageLookupByLibrary.simpleMessage("Buy"),
+    "buyOrders" : MessageLookupByLibrary.simpleMessage("Buy Orders"),
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "changeWalletLanguage" : MessageLookupByLibrary.simpleMessage("Change Wallet Language"),
     "close" : MessageLookupByLibrary.simpleMessage("Close"),
@@ -100,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "secureYourWallet" : MessageLookupByLibrary.simpleMessage("Secure Your Wallet"),
     "seed" : MessageLookupByLibrary.simpleMessage("seed"),
     "sell" : MessageLookupByLibrary.simpleMessage("Sell"),
+    "sellOrders" : MessageLookupByLibrary.simpleMessage("Sell Orders"),
     "send" : MessageLookupByLibrary.simpleMessage("Send"),
     "sendError" : MessageLookupByLibrary.simpleMessage("An error occured. Try again later."),
     "sent" : MessageLookupByLibrary.simpleMessage("Sent"),

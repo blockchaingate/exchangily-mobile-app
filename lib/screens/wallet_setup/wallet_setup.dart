@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,21 +18,21 @@ class WalletSetupScreen extends StatefulWidget {
 
 class _WalletSetupScreenState extends State<WalletSetupScreen> {
   SharedService sharedService = locator<SharedService>();
+  DataBaseService dataBaseService = locator<DataBaseService>();
   final log = getLogger('WalletSetupScreen');
   @override
   void initState() {
     super.initState();
     sharedService.context = context;
+    dataBaseService.initDb();
     checkExistingWallet();
   }
 
   void checkExistingWallet() async {
-    final storage = new FlutterSecureStorage();
-    await storage.read(key: 'wallets').then((encodedJsonWallets) {
-      log.w('wallet setup $encodedJsonWallets');
-      if (encodedJsonWallets == null) {
-        log.w('encodedJsonWallets is null');
-      } else if (encodedJsonWallets.isNotEmpty) {
+    dataBaseService.getAll().then((res) {
+      if (res == null) {
+        log.w('Database is null');
+      } else if (res.isNotEmpty) {
         Navigator.of(context).pushNamed('/dashboard');
       }
     }).catchError((error) {

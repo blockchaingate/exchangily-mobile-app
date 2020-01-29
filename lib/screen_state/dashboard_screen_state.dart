@@ -27,16 +27,39 @@ class DashboardScreenState extends BaseState {
   List walletInfoCopy = [];
   BuildContext context;
 
+  final wallet = WalletInfo(
+      name: 'bitcoin',
+      tickerName: 'BTC',
+      tokenType: '',
+      address: 'fasdgasghasfdhgafhafh',
+      availableBalance: 45767,
+      lockedBalance: 236526.034,
+      assetsInExchange: 12234);
+
   initDb() {
-    var test = databaseService.initDb();
-    test.then((res) {
-      log.w(res);
-    });
+    databaseService.initDb();
   }
 
   deleteDb() async {
     var res = await databaseService.deleteDb();
     log.e(res);
+  }
+
+  deleteWallet() async {
+    await databaseService.deleteWallet(1);
+  }
+
+  closeDB() async {
+    await databaseService.closeDb();
+  }
+
+  create() async {
+    var res = await databaseService.insert(wallet);
+    log.w(res);
+  }
+
+  udpate() async {
+    //  await databaseService.update(test);
   }
 
   getAll() {
@@ -72,21 +95,11 @@ class DashboardScreenState extends BaseState {
 
   retrieveWallets() async {
     setState(ViewState.Busy);
-
-    await storage.read(key: 'wallets').then((encodedJsonWallets) async {
-      if (encodedJsonWallets == null) {
-        log.e('Local storage null');
-        Navigator.pushNamed(context, '/walletSetup');
-      }
-      final decodedWallets = jsonDecode(encodedJsonWallets);
-      log.w(decodedWallets);
-      WalletInfoList walletInfoList = WalletInfoList.fromJson(decodedWallets);
-      log.e(walletInfoList.wallets[0].usdValue);
-
-      walletInfo = walletInfoList.wallets;
-      walletInfoCopy = walletInfo.map((element) => element).toList();
-      log.i(walletInfo.length);
+    await databaseService.getAll().then((res) {
+      walletInfo = res;
       calcTotalBal(walletInfo.length);
+      walletInfoCopy = walletInfo.map((element) => element).toList();
+      log.w('wallet info ${walletInfo.length}');
       setState(ViewState.Idle);
     }).catchError((error) {
       log.e('Catch Error $error');
@@ -108,49 +121,47 @@ class DashboardScreenState extends BaseState {
           walletInfo[j].assetsInExchange = res[i]['amount'];
       }
     }
+    for (int i = 0; i < walletInfo.length; i++) {
+      await databaseService.update(walletInfo[i]);
+      await databaseService.getById(walletInfo[i].id);
+    }
     walletInfoCopy = walletInfo.map((element) => element).toList();
     setState(ViewState.Idle);
   }
 
   Future refreshBalance() async {
     setState(ViewState.Busy);
-    // totalUsdBalance = 0;
     // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
     walletInfoCopy = walletInfo.map((element) => element).toList();
     int length = walletInfoCopy.length;
-    log.w('Wallet copy ${walletInfoCopy.length}');
-    List<String> token = walletService.tokenType;
+    List<String> coinTokenType = walletService.tokenType;
     walletInfo.clear();
     double walletBal = 0;
-    // double walletLockedBal = 0;
+    double walletLockedBal = 0;
     for (var i = 0; i < length; i++) {
+      int id = i + 1;
       String tickerName = walletInfoCopy[i].tickerName;
       String address = walletInfoCopy[i].address;
       String name = walletInfoCopy[i].name;
       await walletService
-          .coinBalanceByAddress(tickerName, address, token[i])
+          .coinBalanceByAddress(tickerName, address, coinTokenType[i])
           .then((balance) async {
         walletBal = balance['balance'];
-        //  walletLockedBal = balance['lockbalance'];
+        walletLockedBal = balance['lockbalance'];
         double marketPrice = await walletService.getCoinMarketPrice(name);
         coinUsdBalance =
             walletService.calculateCoinUsdBalance(marketPrice, walletBal);
-
-        // PENDING: Something went wrong  - type 'int' is not a subtype of type 'double'
-        // and sometimes it shows the locked bal but sometimes it doesn't
-        //log.e('$tickerName - $walletLockedBal');
-        //  walletInfo[i].lockedBalance = walletLockedBal;
-
-        // Solution for above error is to add locked balance variable in every coin utils like balance var is already there
-
         WalletInfo wi = WalletInfo(
+            id: id,
             tickerName: tickerName,
-            tokenType: token[i],
+            tokenType: coinTokenType[i],
             address: address,
             availableBalance: walletBal,
+            lockedBalance: walletLockedBal,
             usdValue: coinUsdBalance,
             name: name);
         walletInfo.add(wi);
+        // await databaseService.update(wi);
       }).catchError((error) {
         log.e('Something went wrong  - $error');
       });
@@ -158,9 +169,6 @@ class DashboardScreenState extends BaseState {
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();
-    wallets = jsonEncode(walletInfo);
-    await storage.delete(key: 'wallets');
-    await storage.write(key: 'wallets', value: wallets);
     setState(ViewState.Idle);
     return walletInfo;
   }

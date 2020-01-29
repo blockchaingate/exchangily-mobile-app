@@ -12,91 +12,71 @@ class WalletFeatureName {
   WalletFeatureName(this.name, this.icon, this.route, this.shadowColor);
 }
 
-class CoinName {
-  final String name;
-  final CoinUsdValue coinUsdValue;
-
-  const CoinName({this.name, this.coinUsdValue});
-
-  factory CoinName.fromJson(Map<String, dynamic> data) {
-    return CoinName(
-        name: data['name'],
-        coinUsdValue: CoinUsdValue.fromJson(data['coinUsdValue']));
-  }
-}
-
-class CoinUsdValue {
-  final String usd;
-  final double value;
-
-  const CoinUsdValue({this.usd, this.value});
-
-  factory CoinUsdValue.fromJson(Map<String, dynamic> data) {
-    return CoinUsdValue(usd: data['usd'], value: data['value']);
-  }
-}
-
 // Wallet Model
 
 class WalletInfo {
-  // final int _id;
+  int _id;
+  String _name;
   String _tickerName;
   String _tokenType;
   String _address;
-  // double _lockedBalance;
+  double _lockedBalance;
   double _availableBalance;
   double _usdValue;
-//  Color _logoColor;
-  String _name;
   double _assetsInExchange;
 
   WalletInfo(
-      {
-      //int id,
+      {int id,
       String tickerName,
       String tokenType,
       String address,
-      //  double lockedBalance,
+      double lockedBalance,
       double availableBalance,
       double usdValue,
-      //   Color logoColor,
       String name,
       double assetsInExchange}) {
+    this._id = id;
     this._tickerName = tickerName;
     this._tokenType = tokenType;
     this._address = address;
-    // this._lockedBalance = lockedBalance;
-    this._availableBalance = availableBalance;
-    this._usdValue = usdValue;
-    // this._logoColor = logoColor;
+    this._lockedBalance = lockedBalance ?? 0.0;
+    this._availableBalance = availableBalance ?? 0.0;
+    this._usdValue = usdValue ?? 0.0;
     this._name = name;
     this._assetsInExchange = assetsInExchange ?? 0.0;
   }
 
   Map<String, dynamic> toJson() => {
+        'id': _id,
         'tickerName': _tickerName,
         'tokenType': _tokenType,
         'address': _address,
-        //  'lockedBalance': _lockedBalance,
+        'lockedBalance': _lockedBalance,
         'availableBalance': _availableBalance,
         'usdValue': _usdValue,
-        //  'logoColor': _logoColor,
         'name': _name,
         'assetsInExchange': _assetsInExchange,
       };
 
   factory WalletInfo.fromJson(Map<String, dynamic> json) {
     return new WalletInfo(
+        id: json['id'] as int,
         tickerName: json['tickerName'] as String,
         tokenType: json['tokenType'] as String,
         address: json['address'] as String,
-        //  lockedBalance: json['lockedBalance'],
+        lockedBalance: json['lockedBalance'],
         availableBalance: json['availableBalance'] as double,
         usdValue: json['usdValue'] as double,
-        //  _logoColor : json['logoColor'],
         name: json['name'] as String,
         assetsInExchange: json['assetsInExchange'] as double);
   }
+
+  int get id => _id;
+
+  set id(int id) {
+    this._id = id;
+  }
+
   String get tickerName => _tickerName;
 
   set tickerName(String tickerName) {
@@ -115,10 +95,10 @@ class WalletInfo {
     this._address = address;
   }
 
-  // double get lockedBalance => _lockedBalance;
-  // set lockedBalance(double lockedBalance) {
-  //   this._lockedBalance = lockedBalance;
-  // }
+  double get lockedBalance => _lockedBalance;
+  set lockedBalance(double lockedBalance) {
+    this._lockedBalance = lockedBalance;
+  }
 
   double get availableBalance => _availableBalance;
 
@@ -142,12 +122,6 @@ class WalletInfo {
   set assetsInExchange(double assetsInExchange) {
     this._assetsInExchange = assetsInExchange;
   }
-
-  // Color get logoColor => _logoColor;
-
-  // set logoColor(Color logoColor) {
-  //   this._logoColor = logoColor;
-  // }
 }
 
 class WalletInfoList {

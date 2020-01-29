@@ -7,69 +7,131 @@ import 'package:path/path.dart';
 
 class DataBaseService {
   final log = getLogger('DatabaseService');
+
   static final _databaseName = 'wallet_database.db';
+  final String tableName = 'wallet';
+  // database table and column names
+  final String columnId = 'id';
+  final String columnName = 'name';
+  final String columnTickerName = 'tickerName';
+  final String columnTokenType = 'tokenType';
+  final String columnAddress = 'address';
+  final String columnLockedBalance = 'lockedBalance';
+  final String columnAvailableBalance = 'availableBalance';
+  final String columnUsdValue = 'usdValue';
+  final String columnAssetsInExchange = 'assetsInExchange';
 
   static final _databaseVersion = 1;
-  static Database _database;
-  var databasePath;
-  String path;
+  static Future<Database> _database;
+  String path = '';
 
-  get database async {
+  Future<Database> initDb() async {
     if (_database != null) return _database;
-    _database = await initDb();
-    return _database;
-  }
-
-  initDb() async {
-    databasePath = await getDatabasesPath();
+    var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
     log.w(path);
-    _database = await openDatabase(path,
-        version: _databaseVersion,
-        onCreate: onCreate(_database, _databaseVersion));
-    log.e(_database);
+    _database =
+        openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
     return _database;
   }
 
-  FutureOr<void> onCreate(Database db, int version) async {
+  void _onCreate(Database db, int version) async {
     log.e('in on create $db');
-    await db.execute(
-        "CREATE TABLE $_databaseName(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER)");
-    // await db.rawInsert('INSERT INTO testDB (name, age) VALUES ("Barry", 10)');
-    // await db.rawInsert('INSERT INTO testDB (name, age) VALUES ("Ken", 11)');
-    // await db.rawInsert('INSERT INTO testDB (name, age) VALUES ("Paul", 27)');
+    await db.execute(''' CREATE TABLE $tableName
+        (
+        $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+        $columnName TEXT,
+        $columnTickerName TEXT,
+        $columnTokenType TEXT,
+        $columnAddress TEXT,
+        $columnLockedBalance REAL,
+        $columnAvailableBalance REAL,
+        $columnUsdValue REAL,
+        $columnAssetsInExchange REAL) ''');
   }
 
-  Future<List<Test>> getAll() async {
-    final Database db = DataBaseService._database;
-    log.w(db);
-    var res = await db.rawQuery(_databaseName);
-    log.w(res);
-    List<Test> list =
-        res.isNotEmpty ? res.map((f) => Test.fromMap(f)).toList() : [];
-    print(res);
-    print(list);
+  // Get All Records From The Database
+
+  Future<List<WalletInfo>> getAll() async {
+    await initDb();
+    final Database db = await _database;
+    log.w('getall $db');
+
+    // res is giving me the same output in the log whether i map it or just take var res
+    final List<Map<String, dynamic>> res = await db.query(tableName);
+    log.w('res $res');
+    List<WalletInfo> list =
+        res.isNotEmpty ? res.map((f) => WalletInfo.fromJson(f)).toList() : [];
     return list;
   }
 
-  deleteDb() async {
+// Insert Data In The Database
+  Future insert(WalletInfo walletInfo) async {
+    final Database db = await _database;
+    int id = await db.insert(tableName, walletInfo.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
+    return id;
+  }
+
+  // Get Single Wallet By Name
+  Future getByName(String name) async {
+    final Database db = await _database;
+    List<Map> res =
+        await db.query(tableName, where: 'name= ?', whereArgs: [name]);
+    log.w('ID - $name --- $res');
+    if (res.length > 0) {
+      return Test.fromMap((res.first));
+    }
+    return null;
+  }
+
+  // Get Single Wallet By Id
+  Future getById(int id) async {
+    final Database db = await _database;
+    List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
+    log.w('ID - $id --- $res');
+    if (res.length > 0) {
+      return Test.fromMap((res.first));
+    }
+    return null;
+  }
+
+  // Delete Single Object From Database By Id
+  Future<void> deleteWallet(int id) async {
+    final db = await _database;
+    await db.delete(tableName, where: "id = ?", whereArgs: [id]);
+  }
+
+  // Update database
+  Future<void> update(WalletInfo walletInfo) async {
+    final Database db = await _database;
+    await db.update(
+      tableName,
+      walletInfo.toJson(),
+      where: "id = ?",
+      whereArgs: [walletInfo.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  // Close Database
+  Future closeDb() async {
+    var db = await _database;
+    return db.close();
+  }
+
+  // Delete Database
+  Future deleteDb() async {
     log.w(path);
-    await deleteDatabase(path).then((res) {
-      return res;
-    }).catchError((error) {
-      log.e(error);
-    });
+    await deleteDatabase(path);
+    _database = null;
   }
 
-  closeDb() async {}
-
-  Future readData() async {
-    //  final Database db;
-  }
-
-  Future insertTest(Test test) async {
-    // var res = await db.insert(_databaseName, test.toMap(),
-    //     conflictAlgorithm: ConflictAlgorithm.replace);
-    // return res;
-  }
+  // Storing TxID
+  // Future insertTxId(String txId) async{
+  //   final Database db = await _database;
+  //   int id = await db.insert('transaction', txid,
+  //       conflictAlgorithm: ConflictAlgorithm.replace);
+  //   return id;
+  // }
 }

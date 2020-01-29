@@ -205,7 +205,7 @@ Future getFabTokenBalanceForABI(
     var unlockBalance = json['executionResult']['output'];
 
     if (unlockBalance == null || unlockBalance == '') {
-      return 0;
+      return 0.0;
     }
     // var unlockInt = int.parse(unlockBalance, radix: 16);
     var unlockInt = BigInt.parse(unlockBalance, radix: 16);
