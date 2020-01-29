@@ -12,6 +12,7 @@ class AddGas extends StatelessWidget {
   final DialogService _dialogService = locator<DialogService>();
   final WalletService walletService = locator<WalletService>();
   final log = getLogger('AddGas');
+  final myController = TextEditingController();
   AddGas({Key key}) : super(key: key);
 
   checkPass(double amount, context) async {
@@ -28,6 +29,7 @@ class AddGas extends StatelessWidget {
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
       print('retfffff=');
       print(ret);
+      myController.text = '';
       walletService.showInfoFlushbar(
           (ret["errMsg"] == '')
               ? AppLocalizations.of(context).addGasTransactionSuccess
@@ -56,7 +58,7 @@ class AddGas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myController = TextEditingController();
+
     return Scaffold(
         appBar: CupertinoNavigationBar(
           padding: EdgeInsetsDirectional.only(start: 0),
