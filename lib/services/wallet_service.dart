@@ -646,8 +646,7 @@ class WalletService {
 
   Future sendTransaction(String coin, seed, List addressIndexList,
       String toAddress, double amount, options, bool doSubmit) async {
-    print('seed from sendTransaction111=');
-    print(seed);
+
     final root = bip32.BIP32.fromSeed(seed);
     log.w('coin=' + coin);
     log.w(addressIndexList);
