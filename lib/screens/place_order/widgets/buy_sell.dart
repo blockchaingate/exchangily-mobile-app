@@ -136,6 +136,7 @@ class _BuySellState extends State<BuySell>
     orderListChannel =
         getOrderListChannel(widget.targetCoinName + widget.baseCoinName);
     orderListChannel.stream.listen((ordersString) {
+
       Orders orders = Decoder.fromOrdersJsonArray(ordersString);
       _showOrders(orders);
     });
@@ -159,16 +160,60 @@ class _BuySellState extends State<BuySell>
   }
 
   _showOrders(Orders orders) {
-    if (!listEquals(orders.buy, this.buy) ||
-        !listEquals(orders.sell, this.sell)) {
+    var newbuy = orders.buy;
+    var newsell = orders.sell;
+    var preItem;
+    for(var i = 0; i < newbuy.length; i++) {
+      var item = newbuy[i];
+      var price = item.price;
+      var orderQuantity = item.orderQuantity;
+
+      var filledQuantity = item.filledQuantity;
+      if(preItem != null) {
+        if(preItem.price == price) {
+          preItem.orderQuantity = doubleAdd(preItem.orderQuantity, orderQuantity) ;
+          preItem.filledQuantity = doubleAdd(preItem.filledQuantity, filledQuantity);
+          newbuy.removeAt(i);
+          i --;
+        } else {
+          preItem = item;
+        }
+      } else {
+        preItem = item;
+      }
+    }
+
+    preItem = null;
+    for(var i = 0; i < newsell.length; i++) {
+      var item = newsell[i];
+      var price = item.price;
+      var orderQuantity = item.orderQuantity;
+      var filledQuantity = item.filledQuantity;
+      if(preItem != null) {
+        if(preItem.price == price) {
+          preItem.orderQuantity = doubleAdd(preItem.orderQuantity, orderQuantity) ;
+          preItem.filledQuantity = doubleAdd(preItem.filledQuantity, filledQuantity);
+          newsell.removeAt(i);
+          i --;
+        } else {
+          preItem = item;
+        }
+      } else {
+        preItem = item;
+      }
+    }
+
+
+    if (!listEquals(newbuy, this.buy) ||
+        !listEquals(newsell, this.sell)) {
       if (this.mounted) {
         setState(() => {
-              this.sell = (orders.sell.length > 5)
-                  ? (orders.sell.sublist(orders.sell.length - 5))
-                  : orders.sell,
-              this.buy = (orders.buy.length > 5)
-                  ? (orders.buy.sublist(0, 5))
-                  : orders.buy
+              this.sell = (newsell.length > 5)
+                  ? (newsell.sublist(newsell.length - 5))
+                  : newsell,
+              this.buy = (newbuy.length > 5)
+                  ? (newbuy.sublist(0, 5))
+                  : newbuy
             });
       }
     }

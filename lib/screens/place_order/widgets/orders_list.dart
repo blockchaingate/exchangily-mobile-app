@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:exchangilymobileapp/localizations.dart';
+import '../../../utils/string_util.dart';
 
 class OrdersList extends StatelessWidget {
   List<Map<String, dynamic>> orderArray;
@@ -92,7 +93,7 @@ class OrdersList extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
                   child:
                   Text(
-                      (item["amount"] + item["filledAmount"]).toString() + "(" + (item["filledAmount"] * 100 / (item["filledAmount"] + item["amount"])).toStringAsFixed(2)  + "%)",
+                      doubleAdd(item["amount"], item["filledAmount"]).toString() + "(" + (item["filledAmount"] * 100 / doubleAdd(item["filledAmount"],item["amount"])).toStringAsFixed(2)  + "%)",
                       style:  new TextStyle(
                           color: Colors.white70,
                           fontSize: 16.0)
