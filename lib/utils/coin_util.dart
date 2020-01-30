@@ -75,8 +75,6 @@ MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
   signer.init(true, PrivateKeyParameter(key));
   var sig = signer.generateSignature(messageHash) as ECSignature;
 
-  print('ssssinhhhere');
-  print(sig);
   /*
 	This is necessary because if a message can be signed by (r, s), it can also
 	be signed by (r, -s (mod N)) which N being the order of the elliptic function
@@ -188,9 +186,6 @@ Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
   Uint8List messageHash =
       magicHash(originalMessage, environment["chains"]["BTC"]["network"]);
 
-  print('messageHash1=');
-  print(messageHash);
-  print(privateKey);
   var signature = sign(messageHash, privateKey);
 
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
@@ -218,11 +213,6 @@ Future<Uint8List> signPersonalMessageWith(
   final concat = uint8ListFromList(prefixBytes + payload);
 
   //final signature = await credential.signToSignature(concat, chainId: chainId);
-
-  print('concat=');
-  print(concat);
-  print(keccak256(concat));
-  print(privateKey);
 
   var signature = sign(keccak256(concat), privateKey);
 
@@ -256,8 +246,7 @@ Uint8List magicHash(String message, [NetworkType network]) {
 }
 
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
-  print('originalMessage=');
-  print(originalMessage);
+
   var r = '';
   var s = '';
   var v = '';
@@ -324,9 +313,7 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
 
     Uint8List messageHash =
         magicHash(originalMessage, environment["chains"]["BTC"]["network"]);
-    print('messageHash=');
-    print(messageHash);
-    print(privateKey);
+
     signedMess = await ecc.sign(messageHash, privateKey);
 
     var recovery = 0;
@@ -343,8 +330,6 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
       print('signiture is wrong');
     }
 
-    print('r1=' + r1);
-    print('s1=' + s1);
     //amount=0.01
     //r1=d2c3555da5b1deb7147e63cbc6d431f4ac15433b16bdd95ab6da214a442c8f12
     //s1=0d6564a5e6ae55ed429330189affc31a3f50a1bcf30c2dbd8d814886d2c7d71e

@@ -73,7 +73,6 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   onTap: () {
                     model.displayMnemonic();
-                    print('mnemonic - ${model.mnemonic}');
                   },
                 ),
                 Padding(

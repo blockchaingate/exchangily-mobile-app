@@ -27,8 +27,7 @@ class AddGas extends StatelessWidget {
       var ret = await walletService.addGasDo(seed, amount);
 
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
-      print('retfffff=');
-      print(ret);
+
       myController.text = '';
       walletService.showInfoFlushbar(
           (ret["errMsg"] == '')

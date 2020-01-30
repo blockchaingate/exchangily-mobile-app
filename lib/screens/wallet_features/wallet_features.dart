@@ -32,14 +32,12 @@ class WalletFeaturesScreen extends StatelessWidget {
     var signedMess = {'r': r, 's': s, 'v': v};
     var abiHex = getDepositFuncABI(coinType, transactionID, amountInLink,
         keyPairKanban['address'], signedMess);
-    print('abiHex====');
-    print(abiHex);
+
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
     var res = await sendKanbanRawTransaction(txKanbanHex);
-    print('res from submitredeposit=');
-    print(res);
+
   }
 
   checkPass(context) async {
@@ -228,13 +226,10 @@ class WalletFeaturesScreen extends StatelessWidget {
                             this.errDepositItem = item;
                             break;
                           }
-                          print('coinType=====' + coinType.toString());
                         }
 
                         if (this.errDepositItem != null) {
-                          print('1');
                           if (walletInfo.tickerName == 'FAB') {
-                            print('11');
                             return Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -255,14 +250,12 @@ class WalletFeaturesScreen extends StatelessWidget {
                                   )
                                 ]);
                           } else {
-                            print('12222');
                             return Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   GestureDetector(
                                       onTap: () async {
-                                        print('go me');
                                         checkPass(context);
                                       },
                                       child: Container(
@@ -280,9 +273,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                                 ]);
                           }
                         } else {
-                          print('2');
                           if (walletInfo.tickerName == 'FAB') {
-                            print('21');
                             return Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,

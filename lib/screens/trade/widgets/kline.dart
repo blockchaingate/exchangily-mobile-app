@@ -59,9 +59,7 @@ Future<String> getKlineData(String pair, String period) async {
   var response = await http.get(url);
   if (response.statusCode == HttpStatus.ok) {
     result = response.body;
-    print(result.toString());
   } else {
-    print('Failed loading trade data.');
   }
   return result;
 }
@@ -81,8 +79,6 @@ class KlinePageBloc extends KlineBloc with TradeService {
 
   @override
   void initData() {
-    print('this.pair=------------');
-    print(this.pair);
     _getData(this.pair, '1min');
     super.initData();
   }
@@ -111,14 +107,12 @@ class KlinePageBloc extends KlineBloc with TradeService {
   }
 
   _getData(String pair, String period) async {
-    print('pair in _getData=');
-    print(pair);
+
     this.showLoadingSinkAdd(true);
     var result = await getKlineData(pair, '$period');
     //future.then((result) {
       final parseJson = json.decode(result);
-      print('parseJson=');
-      print(parseJson);
+
       var i = 0;
       for(i = 0; i < parseJson.length; i++) {
 
@@ -132,8 +126,7 @@ class KlinePageBloc extends KlineBloc with TradeService {
       }
       var parseJsonData = parseJson;
       MarketData marketData = MarketData.fromJson(parseJsonData);
-      print('marketData=');
-      print(marketData);
+
       List<Market> list = List<Market>();
       i = 0;
       for (var item in marketData.data) {

@@ -25,13 +25,9 @@ number2Buffer(num) {
   var neg = (num < 0);
   num = num.abs();
   while (num > 0) {
-    print('num=');
-    print(num);
-    print(buffer.length);
-    print(num & 0xff);
+
     buffer.add (num & 0xff);
-    print('buffer=');
-    print(buffer);
+
     num = num >> 8;
   }
 

@@ -71,10 +71,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                           padding: EdgeInsets.only(bottom: 10.0),
                           child: GestureDetector(
                             onLongPressUp: () {
-                              print('text long press release');
                             },
                             onLongPress: () {
-                              print('Text long press');
                             },
                             child: TextField(
                               maxLines: 1,
@@ -234,7 +232,6 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                             dragStartBehavior: DragStartBehavior.start,
                             activeColor: globals.primaryColor,
                             onChanged: (bool s) {
-                              print(s);
                             },
                           )
                         ],

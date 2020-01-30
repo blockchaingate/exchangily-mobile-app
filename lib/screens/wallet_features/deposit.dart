@@ -145,8 +145,6 @@ class Deposit extends StatelessWidget {
                     // var res = await new WalletService().depositDo('BTC', '', double.parse(myController.text));
                     //print('res from await depositDo=');
                     //print(res);
-                    print('myController.text=');
-                    print(myController.text);
                     checkPass(double.parse(myController.text), context);
                   },
                   child: Text(
