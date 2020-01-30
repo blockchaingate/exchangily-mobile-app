@@ -33,7 +33,7 @@ class WalletFeaturesScreenState extends BaseState {
       WalletFeatureName(AppLocalizations.of(context).withdrawToWallet,
           Icons.exit_to_app, 'withdraw', Colors.cyan),
       WalletFeatureName(AppLocalizations.of(context).confirmDeposit,
-          Icons.vertical_align_bottom, 'redeposit', Colors.redAccent),
+          Icons.vertical_align_bottom, '', Colors.redAccent),
       WalletFeatureName(AppLocalizations.of(context).smartContract,
           Icons.layers, 'smartContract', Colors.lightBlue),
     ];

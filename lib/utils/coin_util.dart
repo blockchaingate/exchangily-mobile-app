@@ -75,6 +75,9 @@ MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
   signer.init(true, PrivateKeyParameter(key));
   var sig = signer.generateSignature(messageHash) as ECSignature;
 
+  print('sig =============');
+  print(sig.r.toString());
+  print(sig.s.toString());
   /*
 	This is necessary because if a message can be signed by (r, s), it can also
 	be signed by (r, -s (mod N)) which N being the order of the elliptic function
@@ -103,12 +106,13 @@ MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
     }
   }
 
+  print('recId===='+ recId.toString());
   if (recId == -1) {
     throw Exception(
         'Could not construct a recoverable key. This should never happen');
   }
 
-  return MsgSignature(sig.r, sig.s, recId + 27);
+  return MsgSignature(sig.r, sig.s, recId);
 }
 
 BigInt _recoverFromSignature(
@@ -190,15 +194,28 @@ Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
 
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
   // be aware that signature.v already is recovery + 27
+
+  /*
   final chainIdV =
       chainId != null ? (signature.v - 27 + (chainId * 2 + 35)) : signature.v;
+  */
 
+  //print('signature.vsignature.vsignature.v=' + signature.v.toString());
+  final chainIdV = signature.v;
   signature = MsgSignature(signature.r, signature.s, chainIdV);
 
+  //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
+  //print('signature.v====');
+  //print(signature.v);
   final r = _padTo32(intToBytes(signature.r));
   final s = _padTo32(intToBytes(signature.s));
-  final v = intToBytes(BigInt.from(signature.v));
+  var v = intToBytes(BigInt.from(signature.v));
 
+  if(signature.v == 0) {
+    v = [0].toList();
+  }
+  //print('vvvv=');
+  //print(v);
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
   return uint8ListFromList(r + s + v);
 }
@@ -271,18 +288,14 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     var signedMessOrig = await credentials
         .signPersonalMessage(stringToUint8List(originalMessage));
 
-    signedMess = await signPersonalMessageWith(
-        _ethMessagePrefix, privateKey, stringToUint8List(originalMessage));
-    String ss = HEX.encode(signedMess);
+    //signedMess = await signPersonalMessageWith(
+    //    _ethMessagePrefix, privateKey, stringToUint8List(originalMessage));
+    //String ss = HEX.encode(signedMess);
     String ss2 = HEX.encode(signedMessOrig);
-    if (ss == ss2) {
-      print('signiture is right');
-    } else {
-      print('signiture is wrong');
-    }
-    r = ss.substring(0, 64);
-    s = ss.substring(64, 128);
-    v = ss.substring(128);
+
+    r = ss2.substring(0, 64);
+    s = ss2.substring(64, 128);
+    v = ss2.substring(128);
   } else if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
     //var hdWallet = new HDWallet.fromSeed(seed, network: testnet);
 
@@ -299,27 +312,25 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     var credentials = EthPrivateKey(privateKey);
 
     signedMess = await signBtcMessageWith(originalMessage, privateKey);
+
     String ss = HEX.encode(signedMess);
+
     r = ss.substring(0, 64);
     s = ss.substring(64, 128);
     v = ss.substring(128);
 
     /*
-    var btcWallet = new HDWallet.fromBase58(bitCoinChild.toBase58(), network: environment["chains"]["BTC"]["network"]);
-    print('privateKey=');
-    print(HEX.decode(btcWallet.privKey));
-    signedMess = await btcWallet.sign(originalMessage);
-    */
-
     Uint8List messageHash =
         magicHash(originalMessage, environment["chains"]["BTC"]["network"]);
 
     signedMess = await ecc.sign(messageHash, privateKey);
-
-    var recovery = 0;
+    */
+    var recovery = int.parse(v);
     var compressed = true;
     var sigwitType;
     v = encodeSignature(signedMess, recovery, compressed, sigwitType);
+
+    /*
     String sss = HEX.encode(signedMess);
     var r1 = sss.substring(0, 64);
     var s1 = sss.substring(64, 128);
@@ -329,7 +340,7 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     } else {
       print('signiture is wrong');
     }
-
+    */
     //amount=0.01
     //r1=d2c3555da5b1deb7147e63cbc6d431f4ac15433b16bdd95ab6da214a442c8f12
     //s1=0d6564a5e6ae55ed429330189affc31a3f50a1bcf30c2dbd8d814886d2c7d71e

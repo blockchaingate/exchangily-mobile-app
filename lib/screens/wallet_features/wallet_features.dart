@@ -28,6 +28,7 @@ class WalletFeaturesScreen extends StatelessWidget {
 
   submitredeposit(amountInLink, keyPairKanban, nonce, coinType, r, s, v,
       transactionID) async {
+    log.w('transactionID for submitredeposit:' + transactionID);
     var coinPoolAddress = await getCoinPoolAddress();
     var signedMess = {'r': r, 's': s, 'v': v};
     var abiHex = getDepositFuncABI(coinType, transactionID, amountInLink,
@@ -37,7 +38,7 @@ class WalletFeaturesScreen extends StatelessWidget {
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
     var res = await sendKanbanRawTransaction(txKanbanHex);
-
+    return res;
   }
 
   checkPass(context) async {
@@ -64,7 +65,9 @@ class WalletFeaturesScreen extends StatelessWidget {
       var resRedeposit = await this.submitredeposit(
           amountInLink, keyPairKanban, nonce, coinType, r, s, v, transactionID);
 
-      if (resRedeposit != null && resRedeposit['transactionHash'] != '') {
+      log.w('resRedeposit=');
+      log.w(resRedeposit);
+      if ((resRedeposit != null) && (resRedeposit['transactionHash'] != null) && (resRedeposit['transactionHash'] != '')) {
         walletService.showInfoFlushbar(
             'Redeposit completed',
             'TransactionId is:' + resRedeposit['transactionHash'],
@@ -216,8 +219,6 @@ class WalletFeaturesScreen extends StatelessWidget {
                       initialData: [],
                       builder: (context, snapShot) {
                         var errDepositData = snapShot.data;
-                        print(
-                            'walletInfo.tickerName===' + walletInfo.tickerName);
                         for (var i = 0; i < errDepositData.length; i++) {
                           var item = errDepositData[i];
                           var coinType = item['coinType'];
