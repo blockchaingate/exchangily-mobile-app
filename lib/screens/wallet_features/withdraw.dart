@@ -137,8 +137,6 @@ class Withdraw extends StatelessWidget {
                   color: globals.primaryColor,
                   textColor: Colors.white,
                   onPressed: () async {
-                    print('myController.text=');
-                    print(myController.text);
                     checkPass(double.parse(myController.text), context);
                   },
                   child: Text(

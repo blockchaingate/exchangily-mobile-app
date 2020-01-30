@@ -180,7 +180,7 @@ class _BuySellState extends State<BuySell>
 
   @override
   void dispose() {
-    orderListChannel.sink.close();
+    // orderListChannel.sink.close();
     super.dispose();
   }
 

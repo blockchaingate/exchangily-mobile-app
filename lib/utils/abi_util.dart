@@ -118,18 +118,8 @@ Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoo
   final encoded =
   uint8ListFromList(rlp.encode(transactionList));
 
-  print('transactionList=');
-  print(transactionList);
-  print('encodedstring=');
-  print(HEX.encode(encoded));
   final signature = await credentials.signToSignature(encoded, chainId: chainId);
 
-  print('chainId=');
-  print(chainId);
-  print('signature=');
-  print(signature.r.toString());
-  print(signature.s.toString());
-  print(signature.v.toString());
   var encodeList = uint8ListFromList(rlp.encode(_encodeToRlp(transaction, signature)));
   return '0x' + HEX.encode(encodeList);
   /*

@@ -4,6 +4,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/db_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,7 @@ class WalletFeaturesScreenState extends BaseState {
 
   WalletInfo walletInfo;
   WalletService walletService = locator<WalletService>();
+  DataBaseService databaseService = locator<DataBaseService>();
   final double elevation = 5;
   double containerWidth = 150;
   double containerHeight = 115;
@@ -38,6 +40,25 @@ class WalletFeaturesScreenState extends BaseState {
   }
 
   refreshErrDeposit() async {}
+
+  Future getExgAddress() async {
+    String address = '';
+    var res = await databaseService.getAll();
+    for (var i = 0; i < res.length; i++) {
+      WalletInfo item = res[i];
+      if (item.tickerName == 'EXG') {
+        address = item.address;
+        break;
+      }
+    }
+    return address;
+  }
+
+  Future getErrDeposit() async {
+    var address = await this.getExgAddress();
+    var result = await walletService.getErrDeposit(address);
+    return result;
+  }
 
   refreshBalance() async {
     setState(ViewState.Busy);

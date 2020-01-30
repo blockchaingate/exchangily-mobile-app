@@ -532,7 +532,6 @@ class DashboardScreen extends StatelessWidget {
                                 icon: Icon(Icons.arrow_downward),
                                 tooltip: 'Deposit',
                                 onPressed: () {
-                                  print('dddd');
                                   Navigator.pushNamed(context, '/deposit',
                                       arguments: model.walletInfo[index]);
                                 }),

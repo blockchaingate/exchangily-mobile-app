@@ -19,11 +19,6 @@ class Deposit extends StatelessWidget {
   final myController = TextEditingController();
 
   checkPass(double amount, context) async {
-    print('amount=');
-    print(amount);
-
-    print('walletInfo.availableBalance=');
-    print(walletInfo.availableBalance);
 
     if (amount == null || amount > walletInfo.availableBalance) {
       walletService.showInfoFlushbar(
