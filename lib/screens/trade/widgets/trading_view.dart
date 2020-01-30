@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
@@ -40,7 +41,9 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     // pair = 'index';
     var pairArray = widget.pair.split('/');
     String fileText = await rootBundle.loadString('assets/pages/index.html');
-    fileText = fileText.replaceAll('BTC', pairArray[0]).replaceAll('USDT', pairArray[1]);
+    fileText = fileText.replaceAll('BTC', pairArray[0]).replaceAll('USDT', pairArray[1])
+        .replaceAll('https://kanbantest.fabcoinapi.com/', environment['endpoints']['kanban'])
+        .replaceAll('wss://kanbantest.fabcoinapi.com/ws/', environment['websocket']);
 
     _controller.loadUrl( Uri.dataFromString(
         fileText,
