@@ -49,7 +49,6 @@ class _WalletSetupScreenState extends State<WalletSetupScreen> {
         Navigator.of(context).pushNamed('/dashboard');
       }
     }).catchError((error) {
-      print('No Wallets found in the Storage $error');
     });
   }
 

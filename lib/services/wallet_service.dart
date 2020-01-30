@@ -366,10 +366,8 @@ class WalletService {
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
-    print('txKanbanHex=' + txKanbanHex);
     var res = await sendKanbanRawTransaction(txKanbanHex);
-    print('res======');
-    print(res);
+
     if (res['transactionHash'] != '') {
       res['success'] = true;
       res['data'] = res;
@@ -407,14 +405,11 @@ class WalletService {
         coinName, seed, [0], officalAddress, amount, option, false);
 
     if (resST['errMsg'] != '') {
-      print(resST['errMsg']);
       errRes['data'] = resST['errMsg'];
       return errRes;
     }
 
     if (resST['txHex'] == '' || resST['txHash'] == '') {
-      print(resST['txHex']);
-      print(resST['txHash']);
       errRes['data'] = 'no txHex or txHash';
       return errRes;
     }
@@ -423,8 +418,7 @@ class WalletService {
     var txHash = resST['txHash'];
 
     var amountInLink = BigInt.from(amount * 1e18);
-    print('amountInLink=');
-    print(amountInLink);
+
 
     var coinType = getCoinTypeIdByName(coinName);
 
@@ -455,8 +449,7 @@ class WalletService {
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
 
     var res = await submitDeposit(txHex, txKanbanHex);
-    print('res from depositDo');
-    print(res);
+
     return res;
   }
 
@@ -489,8 +482,7 @@ class WalletService {
     var satoshisPerBytes = 14;
     var scarContractAddress = await getScarAddress();
     scarContractAddress = stringUtils.trimHexPrefix(scarContractAddress);
-    print('scarContractAddress=');
-    print(scarContractAddress);
+
     var fxnDepositCallHex = '4a58db19';
     var contractInfo =
         await getFabSmartContract(scarContractAddress, fxnDepositCallHex);
@@ -499,8 +491,7 @@ class WalletService {
         amount, contractInfo['totalFee'], satoshisPerBytes);
     var txHex = res1['txHex'];
     var errMsg = res1['errMsg'];
-    print('errMsg=');
-    print(errMsg);
+
     var txHash = '';
     if (txHex != null && txHex != '') {
       var res = await _api.postFabTx(txHex);
@@ -549,7 +540,6 @@ class WalletService {
     var bytesPerInput = 148;
     var feePerInput = bytesPerInput * satoshisPerBytes;
 
-    print('111');
     for (var i = 0; i < addressIndexList.length; i++) {
       var index = addressIndexList[i];
       var fabCoinChild = root.derivePath("m/44'/" +
@@ -557,7 +547,6 @@ class WalletService {
           "'/0'/0/" +
           index.toString());
       final fromAddress = getBtcAddressForNode(fabCoinChild);
-      print('from address=' + fromAddress);
       if (i == 0) {
         changeAddress = fromAddress;
       }
@@ -588,9 +577,7 @@ class WalletService {
         }
       }
 
-      print('222');
       if (!finished) {
-        print('not enough fab coin to make the transaction.');
         return {
           'txHex': '',
           'errMsg': 'not enough fab coin to make the transaction.'
@@ -605,7 +592,6 @@ class WalletService {
       var output2 = (amount * 1e8).round();
 
       if (output1 < 0 || output2 < 0) {
-        print('output1 or output2 should be greater than 0.');
         return {
           'txHex': '',
           'errMsg': 'output1 or output2 should be greater than 0.'
@@ -615,24 +601,16 @@ class WalletService {
       txb.addOutput(changeAddress, output1);
       txb.addOutput(toAddress, output2);
 
-      print('receivePrivateKeyArr.length=' +
-          receivePrivateKeyArr.length.toString());
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
-        print('i=' + i.toString());
         var privateKey = receivePrivateKeyArr[i];
-        print('there we go');
         var alice = ECPair.fromPrivateKey(privateKey,
             compressed: true, network: environment["chains"]["BTC"]["network"]);
-        print('alice.network=');
-        print(alice.network);
+
         txb.sign(i, alice);
-        print('enf for i');
       }
 
-      print('begin build()');
       var txHex = txb.build().toHex();
 
-      print('txHex=' + txHex);
       return {'txHex': txHex, 'errMsg': ''};
     }
   }
@@ -699,12 +677,8 @@ class WalletService {
             continue;
           }
           txb.addInput(tx['txid'], tx['idx']);
-          print('amountNum=' + amountNum.toString());
-          print('txvalue=' + tx['value'].toString());
           amountNum -= tx['value'];
-          print('amountNum1=' + amountNum.toString());
           amountNum += bytesPerInput * satoshisPerBytes;
-          print('amountNum2=' + amountNum.toString());
           totalInput += tx['value'];
           receivePrivateKeyArr.add(privateKey);
           if (amountNum <= 0) {
@@ -714,7 +688,6 @@ class WalletService {
         }
       }
 
-      print('finished=' + finished.toString());
       if (!finished) {
         txHex = '';
         txHash = '';
@@ -728,15 +701,9 @@ class WalletService {
               10;
       var output1 = (totalInput - amount * 1e8 - transFee).round();
       var output2 = (amount * 1e8).round();
-      print('111, output there we go:');
-      print(totalInput);
-      print(output1);
-      print(output2);
-      print(receivePrivateKeyArr.length);
+
       txb.addOutput(changeAddress, output1);
-      print('222');
       txb.addOutput(toAddress, output2);
-      print('333');
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
         var alice = ECPair.fromPrivateKey(privateKey,
@@ -806,8 +773,7 @@ class WalletService {
       if ((errMsg == '') && (txHex != '')) {
         if (doSubmit) {
           var res = await _api.postFabTx(txHex);
-          print('res therrrr');
-          print(res);
+
           txHash = res['txHash'];
           errMsg = res['errMsg'];
         } else {
@@ -816,26 +782,19 @@ class WalletService {
         }
       }
     } else if (tokenType == 'FAB') {
-      print('tokenType=' + tokenType);
       var transferAbi = 'a9059cbb';
       var amountSentInt = BigInt.from(amount * 1e18);
 
-      print('amountSentInt=');
-      print(amountSentInt);
       var amountSentHex = amountSentInt.toRadixString(16);
 
-      print('amountSentHex=1' + amountSentHex + '1');
-      print(amountSentHex);
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(stringUtils.trimHexPrefix(amountSentHex), 64);
-      print('fxnCallHex=');
-      print(fxnCallHex);
+
       contractAddress = stringUtils.trimHexPrefix(contractAddress);
-      print('contractAddress=');
-      print(contractAddress);
+
       var contractInfo = await getFabSmartContract(contractAddress, fxnCallHex);
-      print('there we go.');
+
       var res1 = await getFabTransactionHex(
           seed,
           addressIndexList,
@@ -845,8 +804,6 @@ class WalletService {
           satoshisPerBytes);
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
-      print('txHex11=' + txHex);
-      print('errMsg22=' + errMsg);
       if (txHex != null && txHex != '') {
         if (doSubmit) {
           var res = await _api.postFabTx(txHex);
@@ -928,11 +885,9 @@ class WalletService {
     chunks.add(Uint8List.fromList(stringUtils.hex2Buffer(contractAddress)));
     chunks.add(194);
 
-    print('chunks=');
-    print(chunks);
+
     var contract = script.compile(chunks);
-    print('contract=');
-    print(contract);
+
     var contractSize = contract.toString().length;
 
     totalFee += convertLiuToFabcoin(contractSize * 10);

@@ -192,7 +192,6 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
       Uint8List pngBytes = byteData.buffer.asUint8List();
       return pngBytes;
     } catch (e) {
-      print(e.toString());
       return null;
     }
   }

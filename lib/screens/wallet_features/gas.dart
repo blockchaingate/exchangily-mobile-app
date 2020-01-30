@@ -12,7 +12,6 @@ class Gas extends StatelessWidget {
       children: <Widget>[
         GestureDetector(
             onTap: () {
-              print('gas');
               Navigator.pushNamed(context, '/addGas');
             },
             child: Icon(

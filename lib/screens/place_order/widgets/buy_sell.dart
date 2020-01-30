@@ -119,11 +119,7 @@ class _BuySellState extends State<BuySell>
         false,
         orderHash);
     var nonce = await getNonce(exgAddress);
-    print('exgAddress===');
-    print(exgAddress);
-    print('nonce===');
-    print(nonce);
-    print('abiHex there ou go' + abiHex);
+
     var keyPairKanban = getExgKeyPair(seed);
     var exchangilyAddress = await getExchangilyAddress();
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
@@ -189,8 +185,7 @@ class _BuySellState extends State<BuySell>
   }
 
   void handleTextChanged(String name, String text) {
-    print('name=' + name);
-    print('text=' + text);
+
     if (name == 'price') {
       try {
         this.price = double.parse(text);
@@ -204,7 +199,6 @@ class _BuySellState extends State<BuySell>
   }
 
   checkPass(context) async {
-    print('checkPass begin');
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -213,12 +207,10 @@ class _BuySellState extends State<BuySell>
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      print('seed=');
-      print(seed);
+
       var txHex = await txHexforPlaceOrder(seed);
       var resKanban = await sendKanbanRawTransaction(txHex);
-      print('resKanban111=');
-      print(resKanban);
+
     } else {
       if (res.fieldOne != 'Closed') {
         showNotification(context);

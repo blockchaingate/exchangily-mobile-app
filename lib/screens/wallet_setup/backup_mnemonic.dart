@@ -23,7 +23,6 @@ class _BackupMnemonicWalletScreenState
   void initState() {
     super.initState();
     final randomMnemonicString = walletService.getRandomMnemonic();
-    print('In backup mnemonic $randomMnemonicString');
     // convert string to list to iterate and display single word in a textbox
     BackupMnemonicWalletScreen.randomMnemonicList =
         randomMnemonicString.split(" ").toList();

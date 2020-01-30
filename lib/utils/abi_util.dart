@@ -21,14 +21,11 @@ getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
 
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink, String addressInKanban, signedMessage) {
   var abiHex = "379eb862";
-  print('signedMessage.v=');
-  print(signedMessage["v"]);
   abiHex += trimHexPrefix(signedMessage["v"]);
   abiHex += fixLength(coinType.toString(), 62);
   abiHex += trimHexPrefix(txHash);
   var amountHex = amountInLink.toRadixString(16);
-  print('amountHex=');
-  print(fixLength(amountHex, 64));
+
   abiHex += fixLength(amountHex, 64);
   abiHex += fixLength(trimHexPrefix(addressInKanban), 64);
   abiHex += trimHexPrefix(signedMessage["r"]);
@@ -56,8 +53,7 @@ int timeBeforeExpiration, bool payWithEXG,  String orderHash) {
   var payWithEXGString = payWithEXG?'1':'0';
   abiHex += fixLength(payWithEXGString, 64);
   abiHex += fixLength(orderHash, 64);
-  print('abiHex=');
-  print(abiHex);
+
   return abiHex;
 }
 

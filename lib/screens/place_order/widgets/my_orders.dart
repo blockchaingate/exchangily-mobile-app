@@ -57,7 +57,6 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
   }
 
   refresh(String address) {
-    print('address is::::' + address);
     if(address == null) {
       return;
     }
@@ -66,7 +65,6 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
       var balances = await getAssetsBalance(address);
       var orders = await getOrders(address);
 
-      print(balances.length);
       List<Map<String, dynamic>> newbals = [];
       List<Map<String, dynamic>> openOrds = [];
       List<Map<String, dynamic>> closeOrds = [];

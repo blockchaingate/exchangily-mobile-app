@@ -52,13 +52,20 @@ class Deposit extends StatelessWidget {
       if (ret["success"]) {
         myController.text = '';
       }
+      var errMsg = ret['data'];
+      if(errMsg == null || errMsg == '') {
+        errMsg = ret['error'];
+      }
+      if(errMsg == null || errMsg == '') {
+        errMsg = 'Unknown Error';
+      }
       walletService.showInfoFlushbar(
           ret["success"]
               ? AppLocalizations.of(context).depositTransactionSuccess
               : AppLocalizations.of(context).depositTransactionFailed,
           ret["success"]
               ? 'transactionID:' + ret['data']['transactionID']
-              : ret['data'],
+              : errMsg,
           Icons.cancel,
           globals.red,
           context);
@@ -138,8 +145,6 @@ class Deposit extends StatelessWidget {
                     // var res = await new WalletService().depositDo('BTC', '', double.parse(myController.text));
                     //print('res from await depositDo=');
                     //print(res);
-                    print('myController.text=');
-                    print(myController.text);
                     checkPass(double.parse(myController.text), context);
                   },
                   child: Text(

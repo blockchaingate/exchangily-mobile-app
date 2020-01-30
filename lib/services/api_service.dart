@@ -93,7 +93,6 @@ class Api {
 
   // Post Btc Transaction
   Future postBtcTx(String txHex) async {
-    print('txHex=' + txHex);
     var url = btcBaseUrl + 'postrawtransaction';
     var json;
     var txHash = '';
@@ -101,11 +100,8 @@ class Api {
     try {
       var data = {'rawtx': txHex};
       var response = await client.post(url, body: data);
-      print('response from postrawtransaction: ');
-      print(response.body);
+
       json = jsonDecode(response.body);
-      print('json=');
-      print(json);
     } catch (e) {}
 
     log.w('json= $json');
@@ -162,11 +158,8 @@ class Api {
     if (txHex != '') {
       var data = {'rawtx': txHex};
       try {
-        print('data=');
-        print(data);
         var response = await client.post(url, body: data);
-        print('response from postFabTx=');
-        print(response.body);
+
         var json = jsonDecode(response.body);
         if (json != null) {
           if ((json['txid'] != null) && (json['txid'] != '')) {

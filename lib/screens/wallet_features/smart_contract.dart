@@ -83,8 +83,6 @@ class _SmartContractState extends State<SmartContract> {
       }
     }
 
-    print('_inputs=');
-    print(_inputs);
     setState(() {
       payable = _payable;
       inputs = _inputs;
@@ -93,9 +91,7 @@ class _SmartContractState extends State<SmartContract> {
   }
 
   onSmartContractAddressChanged(String address) async {
-    print('address is:$address');
     var smartContractABI = await getSmartContractABI(address);
-    print(smartContractABI['Name']);
 
     abis = smartContractABI['abi'];
     functionHex = smartContractABI['functionHex'];
@@ -155,7 +151,6 @@ class _SmartContractState extends State<SmartContract> {
                   controller: smartContractAddressController,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                   onChanged: (text) {
-                    print('onTap');
                     onSmartContractAddressChanged(text);
                   },
                 ),
@@ -231,15 +226,11 @@ class _SmartContractState extends State<SmartContract> {
                   textColor: Colors.white,
                   onPressed: () async {
                     // var res = await AddGasDo(double.parse(myController.text));
-                    print('res=');
-                    print(abi);
+
                     for (var i = 0; i < inputs.length; i++) {
                       var text = inputs[i]['controller'].text;
-                      print(text);
                     }
                     if (payable) {
-                      print('payableController.text=');
-                      print(payableController.text);
                     }
 
                     if (abi['stateMutability'] == 'view') {
@@ -267,11 +258,9 @@ class _SmartContractState extends State<SmartContract> {
         }
       }
     }
-    print('abiHex=' + abiHex);
 
     for (var i = 0; i < inputs.length; i++) {
       var text = inputs[i]['controller'].value.text;
-      print(text);
       final number = int.parse(text, radix: 10);
       var hexString = number.toRadixString(16);
       abiHex += stringUtils.fixLength(hexString, 64);
@@ -313,7 +302,6 @@ class _SmartContractState extends State<SmartContract> {
         var res = await _api.postFabTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-        print('txHash=' + txHash);
       }
     } else {
       if (res.fieldOne != 'Closed') {
@@ -338,7 +326,6 @@ class _SmartContractState extends State<SmartContract> {
 
     double value = 0;
     if (payable) {
-      print('payableController.text=');
       value = double.parse(payableController.value.text);
     }
 

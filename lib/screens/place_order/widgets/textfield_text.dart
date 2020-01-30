@@ -39,7 +39,6 @@ class TextfieldText extends StatelessWidget {
                       ThousandsFormatter(allowFraction: true),
                     ],
                     onChanged: (text) {
-                      print("First text field: $text");
                       this.onTextChanged(name, text);
                     },
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
