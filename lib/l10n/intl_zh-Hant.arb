@@ -65,7 +65,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "copyAddress": "拷貝地地",
+    "copyAddress": "拷貝地址",
     "@copyAddress": {
         "description": "receive_copy_text",
         "type": "text",
