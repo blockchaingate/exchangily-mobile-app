@@ -143,17 +143,14 @@ class WalletFeaturesScreen extends StatelessWidget {
                           height: model.containerHeight,
                           child: _featuresCard(context, 4, model),
                         ),
-
                         Opacity(
-                            opacity: (walletInfo.tickerName == 'FAB') ? 100.0 : 0.0,
-                          child:
-                          Container(
-                            width: model.containerWidth,
-                            height: model.containerHeight,
-                            child: _featuresCard(context, 5, model),
-                          )
-                        )
-
+                            opacity:
+                                (walletInfo.tickerName == 'FAB') ? 100.0 : 0.0,
+                            child: Container(
+                              width: model.containerWidth,
+                              height: model.containerHeight,
+                              child: _featuresCard(context, 5, model),
+                            ))
                       ])
                 ],
               ),
@@ -290,7 +287,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                         ]),
                     child: Icon(
                       model.features[index].icon,
-                      size: 65,
+                      size: 60,
                       color: globals.white,
                     )),
                 Text(

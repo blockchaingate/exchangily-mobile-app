@@ -1,4 +1,4 @@
-import 'package:exchangilymobileapp/services/db_service.dart';
+import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:random_string/random_string.dart';
 import "package:flutter/material.dart";
 import "./textfield_text.dart";
@@ -59,7 +59,8 @@ class _BuySellState extends State<BuySell>
       new GlobalKey<MyOrdersState>();
 
   final log = getLogger('BuySell');
-  final DataBaseService dataBaseService = locator<DataBaseService>();
+  final WalletDataBaseService dataBaseService =
+      locator<WalletDataBaseService>();
 
   retrieveWallets() async {
     await dataBaseService.getAll().then((walletList) async {

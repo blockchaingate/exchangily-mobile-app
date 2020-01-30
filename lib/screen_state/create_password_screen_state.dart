@@ -30,7 +30,6 @@ class CreatePasswordScreenState extends BaseState {
                     Get All Coins Future
     -------------------------------------------------- */
   getAllCoins() async {
-    log.w('Future get all coins started');
     log.w(randomMnemonicFromRoute);
     setState(ViewState.Busy);
     _walletInfo = await _walletService
@@ -44,12 +43,12 @@ class CreatePasswordScreenState extends BaseState {
         Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
         randomMnemonicFromRoute = '';
       }
-      return _walletInfo;
+      //  return _walletInfo;
     }).timeout(Duration(seconds: 25), onTimeout: () {
       log.e('Timeout');
       errorMessage =
           AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
-      // Could add retune walletInfo = null to fix the return warning but then i don't have way to test when its actually null
+      // Could add return walletInfo = null to fix the return warning
       setState(ViewState.Idle);
     }).catchError((onError) {
       errorMessage = AppLocalizations.of(context).somethingWentWrong;

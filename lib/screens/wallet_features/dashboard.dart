@@ -1,3 +1,18 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Class Name: DashboardScreen
+*
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -441,7 +456,7 @@ class DashboardScreen extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text('Available',
+                      child: Text(AppLocalizations.of(context).available,
                           style: Theme.of(context).textTheme.display2),
                     ),
                     model.state == ViewState.Busy
@@ -462,7 +477,7 @@ class DashboardScreen extends StatelessWidget {
                             style: TextStyle(color: globals.red)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text('Locked',
+                      child: Text(AppLocalizations.of(context).locked,
                           style: Theme.of(context).textTheme.display2),
                     ),
                     model.state == ViewState.Busy
@@ -549,7 +564,8 @@ class DashboardScreen extends StatelessWidget {
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Text('Value(USD)',
+                        child: Text(
+                            '${AppLocalizations.of(context).value}(USD)',
                             style: Theme.of(context).textTheme.display2),
                       ),
                       model.state == ViewState.Busy
