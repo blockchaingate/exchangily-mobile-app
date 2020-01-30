@@ -52,13 +52,20 @@ class Deposit extends StatelessWidget {
       if (ret["success"]) {
         myController.text = '';
       }
+      var errMsg = ret['data'];
+      if(errMsg == null || errMsg == '') {
+        errMsg = ret['error'];
+      }
+      if(errMsg == null || errMsg == '') {
+        errMsg = 'Unknown Error';
+      }
       walletService.showInfoFlushbar(
           ret["success"]
               ? AppLocalizations.of(context).depositTransactionSuccess
               : AppLocalizations.of(context).depositTransactionFailed,
           ret["success"]
               ? 'transactionID:' + ret['data']['transactionID']
-              : ret['data'],
+              : errMsg,
           Icons.cancel,
           globals.red,
           context);
