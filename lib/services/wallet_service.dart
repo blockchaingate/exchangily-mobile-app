@@ -1,7 +1,7 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/db_service.dart';
+import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flushbar/flushbar.dart';
@@ -26,7 +26,6 @@ import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/wallet.dart';
 import 'dart:io';
 import 'dart:convert';
@@ -47,7 +46,7 @@ class WalletService {
   final log = getLogger('Wallet Service');
   Api _api = locator<Api>();
 
-  DataBaseService databaseService = locator<DataBaseService>();
+  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   double coinUsdBalance;
   List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
   List<String> tokenType = ['', '', '', 'ETH', 'FAB'];

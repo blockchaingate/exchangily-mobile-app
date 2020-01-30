@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
 
 class Gas extends StatelessWidget {
@@ -22,7 +23,7 @@ class Gas extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(left: 5),
           child: Text(
-            "Gas: $gasAmount",
+            "${AppLocalizations.of(context).gas}: $gasAmount",
             style: Theme.of(context)
                 .textTheme
                 .display2

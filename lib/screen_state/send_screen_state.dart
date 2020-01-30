@@ -27,7 +27,8 @@ class SendScreenState extends BaseState {
   WalletInfo walletInfo;
   bool checkSendAmount = false;
 
-  Future verifyPassword(tickerName, tokenType, toWalletAddress, amount, context) async {
+  Future verifyPassword(
+      tickerName, tokenType, toWalletAddress, amount, context) async {
     log.w('dialog called');
     setState(ViewState.Busy);
     var dialogResponse = await _dialogService.showDialog(
@@ -39,17 +40,20 @@ class SendScreenState extends BaseState {
       String mnemonic = dialogResponse.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
 
-      if(tickerName == 'USDT') {
+      if (tickerName == 'USDT') {
         tokenType = 'ETH';
-      } else
-      if(tickerName == 'EXG') {
+      } else if (tickerName == 'EXG') {
         tokenType = 'FAB';
       }
-      if(tokenType != null && tokenType != '') {
-        if ((tickerName != null) && (tickerName != '') && (tokenType != null) && (tokenType != '')) {
+      if (tokenType != null && tokenType != '') {
+        if ((tickerName != null) &&
+            (tickerName != '') &&
+            (tokenType != null) &&
+            (tokenType != '')) {
           options = {
             'tokenType': tokenType,
-            'contractAddress': environment["addresses"]["smartContract"][tickerName]
+            'contractAddress': environment["addresses"]["smartContract"]
+                [tickerName]
           };
         }
       }
@@ -70,10 +74,6 @@ class SendScreenState extends BaseState {
               globals.green,
               context);
           setState(ViewState.Idle);
-        } else if (errorMessage.isNotEmpty) {
-          setState(ViewState.Idle);
-          log.e('errorMessage.isNotEmpty $errorMessage');
-          return errorMessage = 'Transaction Failed';
         } else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
           walletService.showInfoFlushbar(
@@ -145,8 +145,8 @@ class SendScreenState extends BaseState {
           context);
     } else {
       FocusScope.of(context).requestFocus(FocusNode());
-      await verifyPassword(
-          walletInfo.tickerName.toUpperCase(), walletInfo.tokenType.toUpperCase(), toAddress, amount, context);
+      await verifyPassword(walletInfo.tickerName.toUpperCase(),
+          walletInfo.tokenType.toUpperCase(), toAddress, amount, context);
       // await updateBalance(widget.walletInfo.address);
       // widget.walletInfo.availableBalance = model.updatedBal['balance'];
     }

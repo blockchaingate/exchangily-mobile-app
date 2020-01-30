@@ -4,7 +4,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/services/db_service.dart';
+import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class WalletFeaturesScreenState extends BaseState {
 
   WalletInfo walletInfo;
   WalletService walletService = locator<WalletService>();
-  DataBaseService databaseService  = locator<DataBaseService>();
+  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   final double elevation = 5;
   double containerWidth = 150;
   double containerHeight = 115;
@@ -21,8 +21,6 @@ class WalletFeaturesScreenState extends BaseState {
   BuildContext context;
 
   List<WalletFeatureName> features = new List();
-
-
 
   getWalletFeatures() {
     return features = [
@@ -34,24 +32,21 @@ class WalletFeaturesScreenState extends BaseState {
           Icons.equalizer, 'deposit', Colors.purple),
       WalletFeatureName(AppLocalizations.of(context).withdrawToWallet,
           Icons.exit_to_app, 'withdraw', Colors.cyan),
-
-      WalletFeatureName(AppLocalizations.of(context).reDeposit,
-          Icons.vertical_align_bottom, '', Colors.redAccent),
-      WalletFeatureName(AppLocalizations.of(context).smartContract, Icons.layers,
-          'smartContract', Colors.lightBlue),
+      WalletFeatureName(AppLocalizations.of(context).confirmDeposit,
+          Icons.vertical_align_bottom, 'redeposit', Colors.redAccent),
+      WalletFeatureName(AppLocalizations.of(context).smartContract,
+          Icons.layers, 'smartContract', Colors.lightBlue),
     ];
   }
 
-  refreshErrDeposit() async {
+  refreshErrDeposit() async {}
 
-  }
-
-  Future getExgAddress() async{
+  Future getExgAddress() async {
     String address = '';
     var res = await databaseService.getAll();
-    for(var i=0;i < res.length; i++) {
+    for (var i = 0; i < res.length; i++) {
       WalletInfo item = res[i];
-      if(item.tickerName == 'EXG') {
+      if (item.tickerName == 'EXG') {
         address = item.address;
         break;
       }

@@ -1,510 +1,509 @@
 {
-    "title": "Exchangily",
-    "@title": {
-      "description": "Title for the Exchangily App",
-      "type": "text",
-      "placeholders": {}
-    },
-    "confirm": "Confirm",
-    "@confirm": {
-      "description": "confirm_button",
-      "type": "text",
-      "placeholders": {}
-    },
-    "cancel": "Cancel",
-    "@cancel": {
-      "description": "cancel_button",
-      "type": "text",
-      "placeholders": {}
-    },
-    "close": "Close",
-    "@close": {
-      "description": "close_button",
-      "type": "text",
-      "placeholders": {}
-    },
-    "backupMnemonic": "Backup Mnemonic",
-    "@backupMnemonic": {
-        "description": "backup_mnemonic",
-        "type": "text",
-        "placeholders": {}
-    },
-    "send": "Send",
-    "@send": {
-      "description": "send_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "receive": "Receive",
-    "@receive": {
-      "description": "receive_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "sent": "Sent",
-    "@sent": {
-      "description": "sent_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "received": "Received",
-    "@received": {
-      "description": "received_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "transactions": "Transactions",
-    "@transactions": {
-      "description": "transaction_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "addressCopied": "Address Copied",
-    "@addressCopied": {
-      "description": "receive_copied_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "copyAddress": "Copy Address",
-    "@copyAddress": {
-      "description": "receive_copy_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "addressShare": "Share Address",
-    "@addressShare": {
-      "description": "receive_share_text",
-      "type": "text",
-      "placeholders": {}
-    },
-
-    "seed": "seed",
-    "@seed": {
-      "description": "wallet_setup_seed_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "scanBarCode": "Scan Bar Code",
-    "@scanBarCode": {
-      "description": "send_scan_barcode_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "backupYourMnemonic": "Backup your mnemonic",
-    "@backupYourMnemonic": {
-      "description": "wallet_setup_mnemonic_backup_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "importMnemonic": "Import mnemonic",
-    "@importMnemonic": {
-      "description": "wallet_setup_mnemonic",
-      "type": "text",
-      "placeholders": {}
-    },
-    "importMnemonicHint": "Please enter your mnemonic below.",
-    "@importMnemonicHint": {
-      "description": "wallet_setup_mnemonic_hintr",
-      "type": "text",
-      "placeholders": {}
-    },
-    "welcomeText": "Welcome to Exchangily. To begin you may create a new wallet or import an existing one.",
-    "@welcomeText": {
-      "description": "wallet_setup_welcome_title",
-      "type": "text",
-      "placeholders": {}
-    },
-    "createWallet": "Create Wallet",
-    "@createWallet": {
-      "description": "wallet_setup_create_wallet",
-      "type": "text",
-      "placeholders": {}
-    },
-    "importWallet": "Import Wallet",
-    "@importWallet": {
-      "description": "wallet_setup_import_wallet",
-      "type": "text",
-      "placeholders": {}
-    },
-    "sendError": "An error occured. Try again later.",
-    "@sendError": {
-      "description": "send_screen_error_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "enterAmount": "Enter Amount",
-    "@enterAmount": {
-      "description": "send_amount_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "gasFee": "Gas Fee",
-    "@gasFee": {
-      "description": "send_gas_fee",
-      "type": "text",
-      "placeholders": {}
-    },
-    "enterAddress": "Enter Address",
-    "@enterAddress": {
-      "description": "enter_address",
-      "type": "text",
-      "placeholders": {}
-    },
-    "invalidAddress": "Address entered was invalid",
-    "@invalidAddress": {
-      "description": "send_invalid_address",
-      "type": "text",
-      "placeholders": {}
-    },
-    "advance": "advance",
-    "@advance": {
-      "description": "advance",
-      "type": "text",
-      "placeholders": {}
-    },
-    "addressMising": "Please Enter an Address",
-    "@addressMising": {
-      "description": "send_enter_address",
-      "type": "text",
-      "placeholders": {}
-    },
-    "amountMissing": "Please Enter an Amount",
-    "@amountMissing": {
-      "description": "send_enter_amount",
-      "type": "text",
-      "placeholders": {}
-    },
-    "insufficientBalance": "Insufficient Balance",
-    "@insufficientBalance": {
-      "description": "send_insufficient_balance",
-      "type": "text",
-      "placeholders": {}
-    },
-    "wallet": "Wallet",
-    "@wallet": {
-      "description": "app_nav_bar_wallet",
-      "type": "text",
-      "placeholders": {}
-    },
-    "market": "Market",
-    "@market": {
-      "description": "market",
-      "type": "text",
-      "placeholders": {}
-    },
-    "trade": "Trade",
-    "@trade": {
-      "description": "app_nav_bar_trade",
-      "type": "text",
-      "placeholders": {}
-    },
-    "settings": "settings",
-    "@settings": {
-      "description": "app_nav_bar_settings",
-      "type": "text",
-      "placeholders": {}
-    },
-    "totalBalance": "Total Balance",
-    "@totalBalance": {
-      "description": "wallet_feature_total_balance",
-      "type": "text",
-      "placeholders": {}
-    },
-    "assetInExchange": "Asset In Exchange",
-    "@assetInExchange": {
-      "description": "wallet_feature_asset_in_Exchange",
-      "type": "text",
-      "placeholders": {}
-    },
-    "moveAndTrade": "Move & Trade",
-    "@moveAndTrade": {
-      "description": "wallet_feature_move_and_trade",
-      "type": "text",
-      "placeholders": {}
-    },
-    "withdrawToWallet": "Withdraw To Wallet",
-    "@withdrawToWallet": {
-      "description": "wallet_feature_withdraw_to_wallet",
-      "type": "text",
-      "placeholders": {}
-    },
-    "saveAndShareQrCode": "Save and Share QR Code",
-    "@saveAndShareQrCode": {
-      "description": "wallet_feature_save_and_share_qr_code",
-      "type": "text",
-      "placeholders": {}
-    },
-    "hideSmallAmountAssets": "Hide Small Amount Assets",
-    "@hideSmallAmountAssets": {
-      "description": "total_balance_screen_hide_small_Amount_assets",
-      "type": "text",
-      "placeholders": {}
-    },
-    "assetsInExchange": "assetsInExchange",
-    "@assetsInExchange": {
-      "description": "total_balance_screen_assets_in_exchange",
-      "type": "text",
-      "placeholders": {}
-    },
-    "secureYourWallet": "Secure Your Wallet",
-    "@secureYourWallet": {
-      "description": "wallet_setup_secure_your_wallet",
-      "type": "text",
-      "placeholders": {}
-    },
-    "somethingWentWrong": "Something Went Wrong",
-    "@somethingWentWrong": {
-        "description": "wallet_setup_something_went_wrong",
-        "type": "text",
-        "placeholders": {}
-    },
-    "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using any of these",
-    "@setPasswordConditions": {
-      "description": "wallet_setup_set_password_conditions",
-      "type": "text",
-      "placeholders": {}
-    },
-    "setPasswordNote": "Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet",
-    "@setPasswordNote": {
-      "description": "wallet_setup_set_password_note",
-      "type": "text",
-      "placeholders": {}
-    },   
-    "warningBackupMnemonic": "Below are the 12 words mnemonic to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet",
-    "@warningBackupMnemonic": {
-      "description": "warning_backup_mnemonic",
-      "type": "text",
-      "placeholders": {}
-    },
-    "warningImportOrConfirmMnemonic": "Please type in your 12 word mnemonic phrase in the correct sequence to confirm",
-    "@warningImportOrConfirmMnemonic": {
-      "description": "Warning_import_or_confirm_mnemonic",
-      "type": "text",
-      "placeholders": {}
-    },
-    "enterPassword": "Enter Password",
-    "@enterPassword": {
-      "description": "create_enter_password",
-      "type": "text",
-      "placeholders": {}
-    },
-    "confirmPassword": "Confirm Password",
-    "@confirmPassword": {
-      "description": "create_confirm_password",
-      "type": "text",
-      "placeholders": {}
-    },
-    "available": "Available",
-    "@available": {
-      "description": "total_balance_available",
-      "type": "text",
-      "placeholders": {}
-    },
-    "locked": "Locked",
-    "@locked": {
-      "description": "total_balance_locked",
-      "type": "text",
-      "placeholders": {}
-    },
-    "value": "Value",
-    "@value": {
-      "description": "total_balance_value",
-      "type": "text",
-      "placeholders": {}
-    },
-    "walletbalance": "Wallet Balance",
-    "@walletbalance": {
-      "description": "total_balance_wallet_balance",
-      "type": "text",
-      "placeholders": {}
-    },
-    "address": "Address",
-    "@address": {
-      "description": "receive_address",
-      "type": "text",
-      "placeholders": {}
-    },
-    "receiverWalletAddress": "Receiver Wallet Address",
-    "@receiverWalletAddress": {
-      "description": "send_screen_receiver_wallet_address",
-      "type": "text",
-      "placeholders": {}
-    },
-    "taphereToCopyTxId": "Tap here to copy TxId",
-    "@tapHereToCopyTxId": {
-      "description": "send_Screen_tap_here_to_copy_txId",
-      "type": "text",
-      "placeholders": {}
-    },
-    "creatingWallet": "Creating Wallet",
-    "@creatingWallet": {
-      "description": "create_password_creatingWallet",
-      "type": "text",
-      "placeholders": {}
-    },
-    "displayMnemonic": "Display Mnemonic",
-    "@displayMnemonic": {
-      "description": "settings_displayMnemonic",
-      "type": "text",
-      "placeholders": {}
-    },
-    "hideMnemonic": "Hide Mnemonic",
-    "@hideMnemonic": {
-      "description": "settings_hideMnemonic",
-      "type": "text",
-      "placeholders": {}
-    },
-    "deleteWallet": "Delete Wallet",
-    "@deleteWallet": {
-      "description": "settings_deleteWallet",
-      "type": "text",
-      "placeholders": {}
-    },
-    "finishWalletBackup": "Finish Wallet Backup",
-    "@finishWalletBackup": {
-      "description": "confirm_mnemonic_finishWalletBackup",
-      "type": "text",
-      "placeholders": {}
-    },
-    "mnemonic": "Mnemonic",
-    "@mnemonic": {
-      "description": "wallet_setup_menmonic_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "volume": "volume",
-    "@volume": {
-        "description": "volume_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "price": "price",
-    "@price": {
-        "description": "price_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "high": "high",
-    "@high": {
-        "description": "high_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "low": "low",
-    "@low": {
-        "description": "low_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "orderBook": "Order Book",
-    "@orderBook": {
-      "description": "order_book_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "marketTrades": "Market Trades",
-    "@marketTrades": {
-      "description": "market_trades_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "coin": "Coin",
-    "@coin": {
-        "description": "coin_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "amount": "Amount",
-    "@amount": {
-        "description": "amount_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "lockedAmount": "Locked Amount",
-    "@lockedAmount": {
-      "description": "locked_amount_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "buy": "Buy",
-    "@buy": {
-      "description": "buy_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "sell": "Sell",
-    "@sell": {
-      "description": "sell_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "transactionAmount": "Transaction Amount",
-    "@transactionAmount": {
-        "description": "transaction_amount_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "quantity": "quantity",
-    "@quantity": {
-        "description": "quantity_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "openOrders": "Open Orders",
-    "@openOrders": {
-      "description": "open_orders_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "closeOrders": "Close Orders",
-    "@closeOrders": {
-      "description": "close_orders_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "assets": "Assets",
-    "@assets": {
-      "description": "assets_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "type": "Type",
-    "@type": {
-        "description": "type_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "pair": "Pair",
-    "@pair": {
-        "description": "pair_text",
-        "type": "text",
-        "placeholders": {}
-    },
-    "filledAmount": "Filled%",
-    "@filledAmount": {
-      "description": "filled_amount_text",
-      "type": "text",
-      "placeholders": {}
-    },
-    "passwordMatched": "Password Matched",
-    "@passwordMatched": {
-      "description": "create_password_password_matched",
-      "type": "text",
-      "placeholders": {}
-    },
-    "passwordDoesNotMatched": "Password Does Not Matched",
-    "@passwordDoesNotMatched": {
-      "description": "create_password_password_does_not_matched",
-      "type": "text",
-      "placeholders": {}
-    },
-    "serverTimeoutPleaseTryAgainLater": "Server Timeout, Please try again later",
-    "@serverTimeoutPleaseTryAgainLater": {
-      "description": "create_password_server_timeout_please_try_again_later",
-      "type": "text",
-      "placeholders": {}
-    },
-    "serverError": "Server Error",
+  "title": "Exchangily",
+  "@title": {
+    "description": "Title for the Exchangily App",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "confirm_button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "cancel_button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "close": "Close",
+  "@close": {
+    "description": "close_button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMnemonic": "Backup Mnemonic",
+  "@backupMnemonic": {
+    "description": "backup_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "send": "Send",
+  "@send": {
+    "description": "send_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "receive": "Receive",
+  "@receive": {
+    "description": "receive_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sent": "Sent",
+  "@sent": {
+    "description": "sent_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "received": "Received",
+  "@received": {
+    "description": "received_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactions": "Transactions",
+  "@transactions": {
+    "description": "transaction_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addressCopied": "Address Copied",
+  "@addressCopied": {
+    "description": "receive_copied_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "copyAddress": "Copy Address",
+  "@copyAddress": {
+    "description": "receive_copy_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addressShare": "Share Address",
+  "@addressShare": {
+    "description": "receive_share_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "seed": "seed",
+  "@seed": {
+    "description": "wallet_setup_seed_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scanBarCode": "Scan Bar Code",
+  "@scanBarCode": {
+    "description": "send_scan_barcode_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupYourMnemonic": "Backup your mnemonic",
+  "@backupYourMnemonic": {
+    "description": "wallet_setup_mnemonic_backup_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "importMnemonic": "Import mnemonic",
+  "@importMnemonic": {
+    "description": "wallet_setup_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "importMnemonicHint": "Please enter your mnemonic below.",
+  "@importMnemonicHint": {
+    "description": "wallet_setup_mnemonic_hintr",
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcomeText": "Welcome to Exchangily. To begin you may create a new wallet or import an existing one.",
+  "@welcomeText": {
+    "description": "wallet_setup_welcome_title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "createWallet": "Create Wallet",
+  "@createWallet": {
+    "description": "wallet_setup_create_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "importWallet": "Import Wallet",
+  "@importWallet": {
+    "description": "wallet_setup_import_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sendError": "An error occured. Try again later.",
+  "@sendError": {
+    "description": "send_screen_error_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterAmount": "Enter Amount",
+  "@enterAmount": {
+    "description": "send_amount_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gasFee": "Gas Fee",
+  "@gasFee": {
+    "description": "send_gas_fee",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterAddress": "Enter Address",
+  "@enterAddress": {
+    "description": "enter_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "invalidAddress": "Address entered was invalid",
+  "@invalidAddress": {
+    "description": "send_invalid_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "advance": "advance",
+  "@advance": {
+    "description": "advance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "addressMising": "Please Enter an Address",
+  "@addressMising": {
+    "description": "send_enter_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "amountMissing": "Please Enter an Amount",
+  "@amountMissing": {
+    "description": "send_enter_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "insufficientBalance": "Insufficient Balance",
+  "@insufficientBalance": {
+    "description": "send_insufficient_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "wallet": "Wallet",
+  "@wallet": {
+    "description": "app_nav_bar_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "market": "Market",
+  "@market": {
+    "description": "market",
+    "type": "text",
+    "placeholders": {}
+  },
+  "trade": "Trade",
+  "@trade": {
+    "description": "app_nav_bar_trade",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settings": "settings",
+  "@settings": {
+    "description": "app_nav_bar_settings",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalBalance": "Total Balance",
+  "@totalBalance": {
+    "description": "wallet_feature_total_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assetInExchange": "Asset In Exchange",
+  "@assetInExchange": {
+    "description": "wallet_feature_asset_in_Exchange",
+    "type": "text",
+    "placeholders": {}
+  },
+  "moveAndTrade": "Move & Trade",
+  "@moveAndTrade": {
+    "description": "wallet_feature_move_and_trade",
+    "type": "text",
+    "placeholders": {}
+  },
+  "withdrawToWallet": "Withdraw To Wallet",
+  "@withdrawToWallet": {
+    "description": "wallet_feature_withdraw_to_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "saveAndShareQrCode": "Save and Share QR Code",
+  "@saveAndShareQrCode": {
+    "description": "wallet_feature_save_and_share_qr_code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "hideSmallAmountAssets": "Hide Small Amount Assets",
+  "@hideSmallAmountAssets": {
+    "description": "total_balance_screen_hide_small_Amount_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assetsInExchange": "assetsInExchange",
+  "@assetsInExchange": {
+    "description": "total_balance_screen_assets_in_exchange",
+    "type": "text",
+    "placeholders": {}
+  },
+  "secureYourWallet": "Secure Your Wallet",
+  "@secureYourWallet": {
+    "description": "wallet_setup_secure_your_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "somethingWentWrong": "Something Went Wrong",
+  "@somethingWentWrong": {
+    "description": "wallet_setup_something_went_wrong",
+    "type": "text",
+    "placeholders": {}
+  },
+  "setPasswordConditions": "Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using any of these",
+  "@setPasswordConditions": {
+    "description": "wallet_setup_set_password_conditions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "setPasswordNote": "Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet",
+  "@setPasswordNote": {
+    "description": "wallet_setup_set_password_note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "warningBackupMnemonic": "Below are the 12 words mnemonic to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet",
+  "@warningBackupMnemonic": {
+    "description": "warning_backup_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "warningImportOrConfirmMnemonic": "Please type in your 12 word mnemonic phrase in the correct sequence to confirm",
+  "@warningImportOrConfirmMnemonic": {
+    "description": "Warning_import_or_confirm_mnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterPassword": "Enter Password",
+  "@enterPassword": {
+    "description": "create_enter_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "create_confirm_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "available": "Available",
+  "@available": {
+    "description": "total_balance_available",
+    "type": "text",
+    "placeholders": {}
+  },
+  "locked": "Locked",
+  "@locked": {
+    "description": "total_balance_locked",
+    "type": "text",
+    "placeholders": {}
+  },
+  "value": "Value",
+  "@value": {
+    "description": "total_balance_value",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletbalance": "Wallet Balance",
+  "@walletbalance": {
+    "description": "total_balance_wallet_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "address": "Address",
+  "@address": {
+    "description": "receive_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "receiverWalletAddress": "Receiver Wallet Address",
+  "@receiverWalletAddress": {
+    "description": "send_screen_receiver_wallet_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "taphereToCopyTxId": "Tap here to copy TxId",
+  "@tapHereToCopyTxId": {
+    "description": "send_Screen_tap_here_to_copy_txId",
+    "type": "text",
+    "placeholders": {}
+  },
+  "creatingWallet": "Creating Wallet",
+  "@creatingWallet": {
+    "description": "create_password_creatingWallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "displayMnemonic": "Display Mnemonic",
+  "@displayMnemonic": {
+    "description": "settings_displayMnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "hideMnemonic": "Hide Mnemonic",
+  "@hideMnemonic": {
+    "description": "settings_hideMnemonic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deleteWallet": "Delete Wallet",
+  "@deleteWallet": {
+    "description": "settings_deleteWallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "finishWalletBackup": "Finish Wallet Backup",
+  "@finishWalletBackup": {
+    "description": "confirm_mnemonic_finishWalletBackup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "mnemonic": "Mnemonic",
+  "@mnemonic": {
+    "description": "wallet_setup_menmonic_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "volume": "volume",
+  "@volume": {
+    "description": "volume_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "price": "price",
+  "@price": {
+    "description": "price_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "high": "high",
+  "@high": {
+    "description": "high_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "low": "low",
+  "@low": {
+    "description": "low_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderBook": "Order Book",
+  "@orderBook": {
+    "description": "order_book_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "marketTrades": "Market Trades",
+  "@marketTrades": {
+    "description": "market_trades_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "coin": "Coin",
+  "@coin": {
+    "description": "coin_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "amount": "Amount",
+  "@amount": {
+    "description": "amount_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lockedAmount": "Locked Amount",
+  "@lockedAmount": {
+    "description": "locked_amount_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "buy": "Buy",
+  "@buy": {
+    "description": "buy_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sell": "Sell",
+  "@sell": {
+    "description": "sell_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactionAmount": "Transaction Amount",
+  "@transactionAmount": {
+    "description": "transaction_amount_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "quantity": "quantity",
+  "@quantity": {
+    "description": "quantity_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "openOrders": "Open Orders",
+  "@openOrders": {
+    "description": "open_orders_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "closeOrders": "Close Orders",
+  "@closeOrders": {
+    "description": "close_orders_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assets": "Assets",
+  "@assets": {
+    "description": "assets_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "type": "Type",
+  "@type": {
+    "description": "type_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pair": "Pair",
+  "@pair": {
+    "description": "pair_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "filledAmount": "Filled%",
+  "@filledAmount": {
+    "description": "filled_amount_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordMatched": "Password Matched",
+  "@passwordMatched": {
+    "description": "create_password_password_matched",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordDoesNotMatched": "Password Does Not Matched",
+  "@passwordDoesNotMatched": {
+    "description": "create_password_password_does_not_matched",
+    "type": "text",
+    "placeholders": {}
+  },
+  "serverTimeoutPleaseTryAgainLater": "Server Timeout, Please try again later",
+  "@serverTimeoutPleaseTryAgainLater": {
+    "description": "create_password_server_timeout_please_try_again_later",
+    "type": "text",
+    "placeholders": {}
+  },
+  "serverError": "Server Error",
   "@serverError": {
     "description": "create_password_serverError",
     "type": "text",
@@ -681,6 +680,30 @@
   "buyOrders": "Buy Orders",
   "@buyOrders": {
     "description": "trade_widget_market_buy_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "reDeposit": "Re Deposit",
+  "@reDeposit": {
+    "description": "wallet_feature_redeposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "smartContract": "Smart Contract",
+  "@smartContract": {
+    "description": "wallet_feature_smart_contract",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gas": "Gas",
+  "@gas": {
+    "description": "gas_balance_dashboard",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeposit": "Confirm Deposit",
+  "@confirmDeposit": {
+    "description": "confirm_deposit_dashboard",
     "type": "text",
     "placeholders": {}
   }

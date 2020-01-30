@@ -59,13 +59,13 @@
         "type": "text",
         "placeholders": {}
     },
-    "addressCopied": "地超已拷贝",
+    "addressCopied": "地址已拷贝",
     "@addressCopied": {
         "description": "receive_copied_text",
         "type": "text",
         "placeholders": {}
     },
-    "copyAddress": "拷贝地地",
+    "copyAddress": "拷贝地址",
     "@copyAddress": {
         "description": "receive_copy_text",
         "type": "text",
@@ -257,7 +257,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "setPasswordConditions": "请输入密码以保护您的助记词，密码需至少8位，必需至少包含一个大写字母，一个小写字母，一个数字，一个特殊字符(如！@、#、¥、%、&等)",
+    "setPasswordConditions": "请输入密码以保护您的助记词，密码需至少8位，必需至少包含一个大写字母，一个小写字母，一个数字及一个特殊字符(如！@、#、¥、%、&等)",
     "@setPasswordConditions": {
         "description": "wallet_setup_set_password_conditions",
         "type": "text",
@@ -275,7 +275,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "warningImportOrConfirmMnemonic": "请按序重输一遍这12个助记词，以确认您已经准备地备份了它们。",
+    "warningImportOrConfirmMnemonic": "请按序重输一遍这12个助记词，以确认您已经准确地备份了它们。",
     "@warningImportOrConfirmMnemonic": {
         "description": "Warning_import_or_confirm_mnemonic",
         "type": "text",
@@ -329,7 +329,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "taphereToCopyTxId": "点出复制交易号",
+    "taphereToCopyTxId": "复制交易号",
     "@tapHereToCopyTxId": {
         "description": "send_Screen_tap_here_to_copy_txId",
         "type": "text",
@@ -539,7 +539,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "passwordRetype": "请在两处卦写相同密码",
+    "passwordRetype": "请在两处填写相同密码",
     "@passwordRetype": {
         "description": "create_password_password_retype",
         "type": "text",
@@ -680,6 +680,30 @@
     "buyOrders": "买单",
     "@buyOrders": {
         "description": "trade_widget_market_buy_orders",
+        "type": "text",
+        "placeholders": {}
+    },
+    "reDeposit": "确认存款",
+    "@reDeposit": {
+        "description": "wallet_feature_redeposit",
+        "type": "text",
+        "placeholders": {}
+    },
+    "smartContract": "智能合约",
+    "@smartContract": {
+        "description": "wallet_feature_smart_contract",
+        "type": "text",
+        "placeholders": {}
+    },
+    "gas": "燃料",
+    "@gas": {
+        "description": "gas_balance_dashboard",
+        "type": "text",
+        "placeholders": {}
+    },
+    "confirmDeposit": "确认存款",
+    "@confirmDeposit": {
+        "description": "confirm_deposit_dashboard",
         "type": "text",
         "placeholders": {}
     }

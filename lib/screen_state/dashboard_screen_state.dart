@@ -1,5 +1,20 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Class Name: DashboardScreenState
+*
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'dart:convert';
-import 'package:exchangilymobileapp/services/db_service.dart';
+import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
@@ -8,21 +23,19 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DashboardScreenState extends BaseState {
   final log = getLogger('DahsboardScreenState');
   List<WalletInfo> walletInfo;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
-  DataBaseService databaseService = locator<DataBaseService>();
+  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   final double elevation = 5;
   double totalUsdBalance = 0;
   double coinUsdBalance;
   double gasAmount = 0;
   String exgAddress = '';
   List<double> assetsInExchange = [];
-  final storage = new FlutterSecureStorage();
   String wallets;
   List walletInfoCopy = [];
   BuildContext context;

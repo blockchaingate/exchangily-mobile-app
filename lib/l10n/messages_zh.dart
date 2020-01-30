@@ -46,7 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "confirm" : MessageLookupByLibrary.simpleMessage("确认"),
     "confirmPassword" : MessageLookupByLibrary.simpleMessage("确认密码"),
     "copiedSuccessfully" : MessageLookupByLibrary.simpleMessage("成功复制"),
-    "copyAddress" : MessageLookupByLibrary.simpleMessage("拷贝地地"),
+    "copyAddress" : MessageLookupByLibrary.simpleMessage("拷贝地址"),
     "createWallet" : MessageLookupByLibrary.simpleMessage("创建新钱包"),
     "creatingWallet" : MessageLookupByLibrary.simpleMessage("创建钱包"),
     "deleteWallet" : MessageLookupByLibrary.simpleMessage("删除钱包"),

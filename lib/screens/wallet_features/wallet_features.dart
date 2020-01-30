@@ -26,10 +26,12 @@ class WalletFeaturesScreen extends StatelessWidget {
   final log = getLogger('WalletFeatures');
   var errDepositItem;
 
-  submitredeposit(amountInLink, keyPairKanban, nonce, coinType, r, s, v, transactionID) async {
+  submitredeposit(amountInLink, keyPairKanban, nonce, coinType, r, s, v,
+      transactionID) async {
     var coinPoolAddress = await getCoinPoolAddress();
     var signedMess = {'r': r, 's': s, 'v': v};
-    var abiHex = getDepositFuncABI(coinType, transactionID, amountInLink, keyPairKanban['address'], signedMess);
+    var abiHex = getDepositFuncABI(coinType, transactionID, amountInLink,
+        keyPairKanban['address'], signedMess);
     print('abiHex====');
     print(abiHex);
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
@@ -41,11 +43,10 @@ class WalletFeaturesScreen extends StatelessWidget {
   }
 
   checkPass(context) async {
-
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
-        AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
       String mnemonic = res.fieldOne;
@@ -62,9 +63,10 @@ class WalletFeaturesScreen extends StatelessWidget {
       var v = this.errDepositItem['v'];
       var transactionID = this.errDepositItem['transactionID'];
 
-      var resRedeposit = await this.submitredeposit(amountInLink, keyPairKanban, nonce, coinType, r, s, v, transactionID);
+      var resRedeposit = await this.submitredeposit(
+          amountInLink, keyPairKanban, nonce, coinType, r, s, v, transactionID);
 
-      if(resRedeposit != null && resRedeposit['transactionHash'] != '') {
+      if (resRedeposit != null && resRedeposit['transactionHash'] != '') {
         walletService.showInfoFlushbar(
             'Redeposit completed',
             'TransactionId is:' + resRedeposit['transactionHash'],
@@ -72,21 +74,15 @@ class WalletFeaturesScreen extends StatelessWidget {
             globals.white,
             context);
       } else {
-        walletService.showInfoFlushbar(
-            'Redeposit error',
-            'internal error',
-            Icons.cancel,
-            globals.red,
-            context);
+        walletService.showInfoFlushbar('Redeposit error', 'internal error',
+            Icons.cancel, globals.red, context);
       }
-
     } else {
       if (res.fieldOne != 'Closed') {
         showNotification(context);
       }
     }
   }
-
 
   showNotification(context) {
     walletService.showInfoFlushbar(
@@ -96,7 +92,6 @@ class WalletFeaturesScreen extends StatelessWidget {
         globals.red,
         context);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -223,11 +218,13 @@ class WalletFeaturesScreen extends StatelessWidget {
                       initialData: [],
                       builder: (context, snapShot) {
                         var errDepositData = snapShot.data;
-                        print('walletInfo.tickerName===' + walletInfo.tickerName);
-                        for(var i = 0; i < errDepositData.length; i++) {
+                        print(
+                            'walletInfo.tickerName===' + walletInfo.tickerName);
+                        for (var i = 0; i < errDepositData.length; i++) {
                           var item = errDepositData[i];
                           var coinType = item['coinType'];
-                          if(coin_list[coinType]['name'] == walletInfo.tickerName) {
+                          if (coin_list[coinType]['name'] ==
+                              walletInfo.tickerName) {
                             this.errDepositItem = item;
                             break;
                           }
@@ -236,84 +233,73 @@ class WalletFeaturesScreen extends StatelessWidget {
 
                         if (this.errDepositItem != null) {
                           print('1');
-                          if(walletInfo.tickerName == 'FAB') {
+                          if (walletInfo.tickerName == 'FAB') {
                             print('11');
-                            return
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    GestureDetector(
-                                      onTap:() async {
+                            return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  GestureDetector(
+                                      onTap: () async {
                                         checkPass(context);
                                       },
-                                      child:
-                                            Container(
-                                              width: model.containerWidth,
-                                              height: model.containerHeight,
-                                              child: _featuresCard(context, 4, model),
-
-                                            )
-                                    ),
-                                    Container(
-                                      width: model.containerWidth,
-                                      height: model.containerHeight,
-                                      child: _featuresCard(context, 5, model),
-                                    )
-                                  ]);
+                                      child: Container(
+                                        width: model.containerWidth,
+                                        height: model.containerHeight,
+                                        child: _featuresCard(context, 4, model),
+                                      )),
+                                  Container(
+                                    width: model.containerWidth,
+                                    height: model.containerHeight,
+                                    child: _featuresCard(context, 5, model),
+                                  )
+                                ]);
                           } else {
                             print('12222');
-                            return
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-
+                            return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
                                   GestureDetector(
-                                  onTap:() async {
-                                    print('go me');
+                                      onTap: () async {
+                                        print('go me');
                                         checkPass(context);
                                       },
-                                  child:
-                                    Container(
-                                      width: model.containerWidth,
-                                      height: model.containerHeight,
-                                      child: _featuresCard(context, 4, model),
-                                    )
-                                  ),
-                                    Opacity(
-                                        opacity: 0.0,
-                                        child:
-                                        Container(
-                                          width: model.containerWidth,
-                                          height: model.containerHeight,
-                                          child: _featuresCard(context, 5, model),
-                                        )
-                                    )
-                             ]);
+                                      child: Container(
+                                        width: model.containerWidth,
+                                        height: model.containerHeight,
+                                        child: _featuresCard(context, 4, model),
+                                      )),
+                                  Opacity(
+                                      opacity: 0.0,
+                                      child: Container(
+                                        width: model.containerWidth,
+                                        height: model.containerHeight,
+                                        child: _featuresCard(context, 5, model),
+                                      ))
+                                ]);
                           }
                         } else {
                           print('2');
-                          if(walletInfo.tickerName == 'FAB') {
+                          if (walletInfo.tickerName == 'FAB') {
                             print('21');
-                            return
-                              Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: <Widget>[
-                                    Container(
-                                      width: model.containerWidth,
-                                      height: model.containerHeight,
-                                      child: _featuresCard(context, 5, model),
-
-                                    ),
-                                    Opacity(
-                                        opacity: 0.0,
-                                        child:
-                                        Container(
-                                          width: model.containerWidth,
-                                          height: model.containerHeight,
-                                          child: _featuresCard(context, 4, model),
-                                        )
-                                    )
-                                  ]);
+                            return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                    width: model.containerWidth,
+                                    height: model.containerHeight,
+                                    child: _featuresCard(context, 5, model),
+                                  ),
+                                  Opacity(
+                                      opacity: 0.0,
+                                      child: Container(
+                                        width: model.containerWidth,
+                                        height: model.containerHeight,
+                                        child: _featuresCard(context, 4, model),
+                                      ))
+                                ]);
                           }
                         }
                         return Row();
@@ -481,12 +467,14 @@ class WalletFeaturesScreen extends StatelessWidget {
         elevation: model.elevation,
         child: InkWell(
           splashColor: globals.primaryColor.withAlpha(30),
-          onTap: (model.features[index].route != null && model.features[index].route != '') ? () {
-            var route = model.features[index].route;
-            Navigator.pushNamed(context, '/$route',
-                  arguments: model.walletInfo);
-
-          } : null,
+          onTap: (model.features[index].route != null &&
+                  model.features[index].route != '')
+              ? () {
+                  var route = model.features[index].route;
+                  Navigator.pushNamed(context, '/$route',
+                      arguments: model.walletInfo);
+                }
+              : null,
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 2),
             child: Column(
@@ -506,7 +494,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                         ]),
                     child: Icon(
                       model.features[index].icon,
-                      size: 65,
+                      size: 60,
                       color: globals.white,
                     )),
                 Text(

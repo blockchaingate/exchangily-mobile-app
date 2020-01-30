@@ -59,13 +59,13 @@
         "type": "text",
         "placeholders": {}
     },
-    "addressCopied": "地超已拷貝",
+    "addressCopied": "地址已拷貝",
     "@addressCopied": {
         "description": "receive_copied_text",
         "type": "text",
         "placeholders": {}
     },
-    "copyAddress": "拷貝地地",
+    "copyAddress": "拷貝地址",
     "@copyAddress": {
         "description": "receive_copy_text",
         "type": "text",
@@ -275,7 +275,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "warningImportOrConfirmMnemonic": "請按序重輸一遍這12個助記詞，以確認您已經準備地備份了它們。",
+    "warningImportOrConfirmMnemonic": "請按序重輸一遍這12個助記詞，以確認您已經準確地備份了它們。",
     "@warningImportOrConfirmMnemonic": {
         "description": "Warning_import_or_confirm_mnemonic",
         "type": "text",
@@ -329,7 +329,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "taphereToCopyTxId": "點出複制交易號",
+    "taphereToCopyTxId": "複制交易號",
     "@tapHereToCopyTxId": {
         "description": "send_Screen_tap_here_to_copy_txId",
         "type": "text",
@@ -539,7 +539,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "passwordRetype": "請在兩處卦寫相同密碼",
+    "passwordRetype": "請在兩處填寫相同密碼",
     "@passwordRetype": {
         "description": "create_password_password_retype",
         "type": "text",
@@ -680,6 +680,30 @@
     "buyOrders": "買單",
     "@buyOrders": {
         "description": "trade_widget_market_buy_orders",
+        "type": "text",
+        "placeholders": {}
+    },
+    "reDeposit": "確認存款",
+    "@reDeposit": {
+        "description": "wallet_feature_redeposit",
+        "type": "text",
+        "placeholders": {}
+    },
+    "smartContract": "智能合約",
+    "@smartContract": {
+        "description": "wallet_feature_smart_contract",
+        "type": "text",
+        "placeholders": {}
+    },
+    "gas": "燃料",
+    "@gas": {
+        "description": "gas_balance_dashboard",
+        "type": "text",
+        "placeholders": {}
+    },
+    "confirmDeposit": "確認存款",
+    "@confirmDeposit": {
+        "description": "confirm_deposit_dashboard",
         "type": "text",
         "placeholders": {}
     }

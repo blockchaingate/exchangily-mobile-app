@@ -1,3 +1,18 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Class Name: DataBaseService
+*
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'dart:async';
 
 import 'package:exchangilymobileapp/logger.dart';
@@ -5,7 +20,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class DataBaseService {
+class WalletDataBaseService {
   final log = getLogger('DatabaseService');
 
   static final _databaseName = 'wallet_database.db';

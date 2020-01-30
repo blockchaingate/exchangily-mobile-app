@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-23T20:52:58.299669",
+  "@@last_modified": "2020-01-29T19:28:16.739219",
   "title": "Exchangily",
   "@title": {
     "description": "title_exchangily_app",
@@ -669,6 +669,30 @@
   "buyOrders": "Buy Orders",
   "@buyOrders": {
     "description": "trade_widget_market_buy_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "reDeposit": "Re Deposit",
+  "@reDeposit": {
+    "description": "wallet_feature_redeposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "smartContract": "Smart Contract",
+  "@smartContract": {
+    "description": "wallet_feature_smart_contract",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gas": "Gas",
+  "@gas": {
+    "description": "gas_balance_dashboard",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmDeposit": "Confirm Deposit",
+  "@confirmDeposit": {
+    "description": "confirm_deposit_dashboard",
     "type": "text",
     "placeholders": {}
   }

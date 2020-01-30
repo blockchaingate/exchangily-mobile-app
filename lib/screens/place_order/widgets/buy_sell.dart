@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:random_string/random_string.dart';
 import "package:flutter/material.dart";
 import "./textfield_text.dart";
@@ -10,7 +11,6 @@ import '../../../models/orders.dart';
 import '../../../models/order-model.dart';
 import '../../../models/trade-model.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
@@ -59,17 +59,12 @@ class _BuySellState extends State<BuySell>
       new GlobalKey<MyOrdersState>();
 
   final log = getLogger('BuySell');
-  final storage = new FlutterSecureStorage();
+  final WalletDataBaseService dataBaseService =
+      locator<WalletDataBaseService>();
 
   retrieveWallets() async {
-    await storage.read(key: 'wallets').then((encodedJsonWallets) async {
-      print('there we go');
-      final decodedWallets = jsonDecode(encodedJsonWallets);
-      print(decodedWallets);
-      WalletInfoList walletInfoList = WalletInfoList.fromJson(decodedWallets);
-      print(walletInfoList.wallets[0].usdValue);
-
-      walletInfo = walletInfoList.wallets;
+    await dataBaseService.getAll().then((walletList) async {
+      walletInfo = walletList;
 
       for (var i = 0; i < walletInfo.length; i++) {
         var coin = walletInfo[i];

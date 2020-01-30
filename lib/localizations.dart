@@ -589,6 +589,15 @@ class AppLocalizations {
     return Intl.message('Smart Contract',
         name: 'smartContract', desc: 'wallet_feature_smart_contract');
   }
+
+  String get gas {
+    return Intl.message('Gas', name: 'gas', desc: 'gas_balance_dashboard');
+  }
+
+  String get confirmDeposit {
+    return Intl.message('Confirm Deposit',
+        name: 'confirmDeposit', desc: 'confirm_deposit_dashboard');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

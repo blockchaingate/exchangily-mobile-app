@@ -1,12 +1,26 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Class Name: WalletSetupScreen
+*
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/db_service.dart';
+import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../shared/globals.dart' as globals;
 
 class WalletSetupScreen extends StatefulWidget {
@@ -18,7 +32,7 @@ class WalletSetupScreen extends StatefulWidget {
 
 class _WalletSetupScreenState extends State<WalletSetupScreen> {
   SharedService sharedService = locator<SharedService>();
-  DataBaseService dataBaseService = locator<DataBaseService>();
+  WalletDataBaseService dataBaseService = locator<WalletDataBaseService>();
   final log = getLogger('WalletSetupScreen');
   @override
   void initState() {
