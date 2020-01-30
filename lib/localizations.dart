@@ -138,10 +138,6 @@ class AppLocalizations {
         name: 'importWallet', desc: 'import_wallet');
   }
 
-  String get sendError {
-    return Intl.message('Send Error', name: 'sendError', desc: 'send_error');
-  }
-
   String get enterAmount {
     return Intl.message('Enter Amount',
         name: 'enterAmount', desc: 'enter_amount');
@@ -395,7 +391,7 @@ class AppLocalizations {
   String get pleaseProvideTheCorrectPassword {
     return Intl.message('Please provide the correct Password',
         name: 'pleaseProvideTheCorrectPassword',
-        desc: 'send_state_please_provide_the_correct_password');
+        desc: 'dialog_please_provide_the_correct_password');
   }
 
   String get emptyAddress {
@@ -597,6 +593,42 @@ class AppLocalizations {
   String get confirmDeposit {
     return Intl.message('Confirm Deposit',
         name: 'confirmDeposit', desc: 'confirm_deposit_dashboard');
+  }
+
+  String get genericError {
+    return Intl.message('An error occured. Try again later.',
+        name: 'genericError', desc: 'error_generic');
+  }
+
+  String get sendTransactionComplete {
+    return Intl.message('Send Transaction Complete',
+        name: 'sendTransactionComplete',
+        desc: 'flushbar_title_send_transaction_complete');
+  }
+
+  String get isOnItsWay {
+    return Intl.message('is on its way',
+        name: 'isOnItsWay', desc: 'flushbar_message_send_transaction_complete');
+  }
+
+  String get smartContractAddress {
+    return Intl.message('Smart Contract Address',
+        name: 'smartContractAddress', desc: 'smart_contract_address');
+  }
+
+  String get smartContractName {
+    return Intl.message('Smart Contract Name',
+        name: 'smartContractName', desc: 'smart_contract_name');
+  }
+
+  String get payableValue {
+    return Intl.message('Payable Value',
+        name: 'payableValue', desc: 'smart_contract_payable_value');
+  }
+
+  String get function {
+    return Intl.message('Function',
+        name: 'function', desc: 'smart_contract_function');
   }
 }
 

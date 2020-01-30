@@ -706,5 +706,47 @@
     "description": "confirm_deposit_dashboard",
     "type": "text",
     "placeholders": {}
+  },
+  "genericError": "An error occured. Try again later.",
+  "@genericError": {
+    "description": "error_generic",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sendTransactionComplete": "Send Transaction Complete",
+  "@sendTransactionComplete": {
+    "description": "flushbar_title_send_transaction_complete",
+    "type": "text",
+    "placeholders": {}
+  },
+  "isOnItsWay": "is on its way",
+  "@isOnItsWay": {
+    "description": "flushbar_message_send_transaction_complete",
+    "type": "text",
+    "placeholders": {}
+  },
+  "smartContractAddress": "Smart Contract Address",
+  "@smartContractAddress": {
+    "description": "smart_contract_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "smartContractName": "Smart Contract Name",
+  "@smartContractName": {
+    "description": "smart_contract_name",
+    "type": "text",
+    "placeholders": {}
+  },
+  "payableValue": "Payable Value",
+  "@payableValue": {
+    "description": "smart_contract_payable_value",
+    "type": "text",
+    "placeholders": {}
+  },
+  "function": "Function",
+  "@function": {
+    "description": "smart_contract_function",
+    "type": "text",
+    "placeholders": {}
   }
 }

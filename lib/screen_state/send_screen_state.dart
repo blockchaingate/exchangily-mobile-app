@@ -68,8 +68,8 @@ class SendScreenState extends BaseState {
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           walletService.showInfoFlushbar(
-              'Send Completed',
-              '$tickerName Transanction has been sent',
+              AppLocalizations.of(context).sendTransactionComplete,
+              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
               Icons.check_circle_outline,
               globals.green,
               context);
@@ -77,7 +77,7 @@ class SendScreenState extends BaseState {
         } else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
           walletService.showInfoFlushbar(
-              AppLocalizations.of(context).sendError,
+              AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
               Icons.cancel,
               globals.red,
