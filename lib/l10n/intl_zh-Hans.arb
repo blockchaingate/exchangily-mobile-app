@@ -706,5 +706,47 @@
         "description": "confirm_deposit_dashboard",
         "type": "text",
         "placeholders": {}
+    },
+    "genericError": "发生错误，请稍候再试。",
+    "@genericError": {
+        "description": "error_generic",
+        "type": "text",
+        "placeholders": {}
+    },
+    "sendTransactionComplete": "发送完成",
+    "@sendTransactionComplete": {
+        "description": "flushbar_title_send_transaction_complete",
+        "type": "text",
+        "placeholders": {}
+    },
+    "isOnItsWay": "在区块链处理途中",
+    "@isOnItsWay": {
+        "description": "flushbar_message_send_transaction_complete",
+        "type": "text",
+        "placeholders": {}
+    },
+    "smartContractAddress": "智能合约地址",
+    "@smartContractAddress": {
+        "description": "smart_contract_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "smartContractName": "智能合约名称",
+    "@smartContractName": {
+        "description": "smart_contract_name",
+        "type": "text",
+        "placeholders": {}
+    },
+    "payableValue": "应付数量",
+    "@payableValue": {
+        "description": "smart_contract_payable_value",
+        "type": "text",
+        "placeholders": {}
+    },
+    "function": "函数",
+    "@function": {
+        "description": "smart_contract_function",
+        "type": "text",
+        "placeholders": {}
     }
 }

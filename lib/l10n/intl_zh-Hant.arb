@@ -706,5 +706,47 @@
         "description": "confirm_deposit_dashboard",
         "type": "text",
         "placeholders": {}
+    },
+    "genericError": "發生錯誤，請稍候再試。",
+    "@genericError": {
+        "description": "error_generic",
+        "type": "text",
+        "placeholders": {}
+    },
+    "sendTransactionComplete": "發送完成",
+    "@sendTransactionComplete": {
+        "description": "flushbar_title_send_transaction_complete",
+        "type": "text",
+        "placeholders": {}
+    },
+    "isOnItsWay": "在區塊鏈處理途中",
+    "@isOnItsWay": {
+        "description": "flushbar_message_send_transaction_complete",
+        "type": "text",
+        "placeholders": {}
+    },
+    "smartContractAddress": "智能合約地址",
+    "@smartContractAddress": {
+        "description": "smart_contract_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "smartContractName": "智能合約名稱",
+    "@smartContractName": {
+        "description": "smart_contract_name",
+        "type": "text",
+        "placeholders": {}
+    },
+    "payableValue": "應付數量",
+    "@payableValue": {
+        "description": "smart_contract_payable_value",
+        "type": "text",
+        "placeholders": {}
+    },
+    "function": "函數",
+    "@function": {
+        "description": "smart_contract_function",
+        "type": "text",
+        "placeholders": {}
     }
 }
