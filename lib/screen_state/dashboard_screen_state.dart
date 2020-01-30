@@ -35,7 +35,6 @@ class DashboardScreenState extends BaseState {
   double coinUsdBalance;
   double gasAmount = 0;
   String exgAddress = '';
-  List<double> assetsInExchange = [];
   String wallets;
   List walletInfoCopy = [];
   BuildContext context;
@@ -124,14 +123,18 @@ class DashboardScreenState extends BaseState {
 
   getExchangeAssets() async {
     setState(ViewState.Busy);
-    assetsInExchange.clear();
     var res = await walletService.assetsBalance(exgAddress);
     var length = res.length;
     for (var i = 0; i < length; i++) {
+      // Get their tickerName to compare with walletInfo tickernName
       String coin = res[i]['coin'];
-      for (var j = 0; j < length; j++) {
-        if (coin == walletInfo[j].tickerName)
+      // Second For loop to check walletInfo tickerName according to its length and
+      // compare it with the same coin tickername from service until the match or loop ends
+      for (var j = 0; j < walletInfo.length; j++) {
+        if (coin == walletInfo[j].tickerName) {
           walletInfo[j].assetsInExchange = res[i]['amount'];
+          break;
+        }
       }
     }
     for (int i = 0; i < walletInfo.length; i++) {

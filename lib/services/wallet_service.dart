@@ -65,8 +65,9 @@ class WalletService {
     randomMnemonic = bip39.generateMnemonic();
     if (isLocal) {
       randomMnemonic =
-          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-      //'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
+          //   'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+          //'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
+          'cargo wrestle sentence absorb unfair divide reason sad pudding field loud begin';
     }
     log.w('getRandomMnemonic $randomMnemonic');
 
@@ -203,15 +204,21 @@ class WalletService {
         _walletInfo.add(wi);
       }
       var res = await assetsBalance(exgAddress);
-      log.w('Assets in exchange $res');
       var length = res.length;
+      // For Loop Coins Get From Service
       for (var i = 0; i < length; i++) {
+        // Get their tickerName to compare with walletInfo tickernName
         String coin = res[i]['coin'];
-        for (var j = 0; j < length; j++) {
-          if (coin == _walletInfo[j].tickerName)
+        // Second For Loop To Change WalletInfo TickerName According to its length and
+        // compare it with the same coin tickername from service until the match or loop ends
+        for (var j = 0; j < _walletInfo.length; j++) {
+          if (coin == _walletInfo[j].tickerName) {
             _walletInfo[j].assetsInExchange = res[i]['amount'];
+            break;
+          }
         }
       }
+
       for (int i = 0; i < _walletInfo.length; i++) {
         await databaseService.insert(_walletInfo[i]);
       }
@@ -419,7 +426,6 @@ class WalletService {
 
     var amountInLink = BigInt.from(amount * 1e18);
 
-
     var coinType = getCoinTypeIdByName(coinName);
 
     if (coinType == 0) {
@@ -524,8 +530,7 @@ class WalletService {
   }
 
   getFabTransactionHex(seed, addressIndexList, toAddress, double amount,
-    double extraTransactionFee, int satoshisPerBytes) async {
-
+      double extraTransactionFee, int satoshisPerBytes) async {
     final txb = new TransactionBuilder(
         network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);
@@ -622,7 +627,6 @@ class WalletService {
 
   Future sendTransaction(String coin, seed, List addressIndexList,
       String toAddress, double amount, options, bool doSubmit) async {
-
     final root = bip32.BIP32.fromSeed(seed);
     log.w('coin=' + coin);
     log.w(addressIndexList);
@@ -884,7 +888,6 @@ class WalletService {
     chunks.add(Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex)));
     chunks.add(Uint8List.fromList(stringUtils.hex2Buffer(contractAddress)));
     chunks.add(194);
-
 
     var contract = script.compile(chunks);
 

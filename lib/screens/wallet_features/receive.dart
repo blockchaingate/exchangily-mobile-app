@@ -71,6 +71,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                   child: RepaintBoundary(
                     key: _globalKey,
                     child: QrImage(
+                        backgroundColor: globals.white,
                         data: widget.walletInfo.address,
                         version: QrVersions.auto,
                         size: 300,
@@ -91,7 +92,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
           RaisedButton(
               child: Text(AppLocalizations.of(context).saveAndShareQrCode),
               onPressed: () {
-                String receiveFileName = 'share.png';
+                String receiveFileName = 'qr-code.png';
                 getApplicationDocumentsDirectory().then((dir) {
                   String filePath = "${dir.path}/$receiveFileName";
                   File file = File(filePath);
