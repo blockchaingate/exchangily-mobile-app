@@ -4,7 +4,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/services/db_service.dart';
+import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class WalletFeaturesScreenState extends BaseState {
 
   WalletInfo walletInfo;
   WalletService walletService = locator<WalletService>();
-  DataBaseService databaseService = locator<DataBaseService>();
+  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   final double elevation = 5;
   double containerWidth = 150;
   double containerHeight = 115;
