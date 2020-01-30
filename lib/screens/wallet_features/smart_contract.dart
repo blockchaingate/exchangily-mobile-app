@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -130,7 +131,7 @@ class _SmartContractState extends State<SmartContract> {
             },
           ),
           middle: Text(
-            "Smart Contract",
+            AppLocalizations.of(context).smartContract,
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0XFF1f2233),
@@ -140,7 +141,7 @@ class _SmartContractState extends State<SmartContract> {
             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: ListView(
               children: <Widget>[
-                Text("Smart contract address:",
+                Text(AppLocalizations.of(context).smartContractAddress,
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 TextField(
@@ -148,7 +149,7 @@ class _SmartContractState extends State<SmartContract> {
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(
                             color: Color(0XFF871fff), width: 1.0)),
-                    hintText: 'Enter the address',
+                    hintText: AppLocalizations.of(context).enterAddress,
                     hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
                   ),
                   controller: smartContractAddressController,
@@ -159,13 +160,13 @@ class _SmartContractState extends State<SmartContract> {
                   },
                 ),
                 SizedBox(height: 20),
-                Text("Smart contract name:",
+                Text(AppLocalizations.of(context).smartContractName,
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 Text("$_smartContractName",
                     style: new TextStyle(color: Colors.white, fontSize: 18.0)),
                 SizedBox(height: 20),
-                Text("Function:",
+                Text(AppLocalizations.of(context).function,
                     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 new DropdownButton(
@@ -202,7 +203,7 @@ class _SmartContractState extends State<SmartContract> {
                     if (payable)
                       Column(
                         children: <Widget>[
-                          Text("Payable value",
+                          Text(AppLocalizations.of(context).payableValue,
                               style: new TextStyle(
                                   color: Colors.grey, fontSize: 18.0)),
                           SizedBox(height: 10),
@@ -249,7 +250,7 @@ class _SmartContractState extends State<SmartContract> {
                     //   print(res);
                   },
                   child: Text(
-                    'Confirm',
+                    AppLocalizations.of(context).confirm,
                     style: Theme.of(context).textTheme.button,
                   ),
                 )
@@ -290,25 +291,19 @@ class _SmartContractState extends State<SmartContract> {
   callContract() {}
 
   checkPass(abiHex, value, context) async {
-    log.w('dialog called');
     var res = await _dialogService.showDialog(
-        title: 'Enter Password',
+        title: AppLocalizations.of(context).enterPassword,
         description:
-            'Type the same password which you entered while creating the wallet');
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote);
     if (res.confirmed) {
       log.w('Pass matched');
       log.w('${res.fieldOne}');
       String mnemonic = res.fieldOne;
       Uint8List seed = walletService.generateSeed(mnemonic);
 
-      print('contractAddress=' + smartContractAddressController.value.text);
       var contractInfo = await walletService.getFabSmartContract(
           smartContractAddressController.value.text, abiHex);
 
-      print('contractInfo===');
-      print(contractInfo['totalFee']);
-      print(contractInfo['contract']);
-      print('end of contractInfo');
       var res1 = await walletService.getFabTransactionHex(seed, [0],
           contractInfo['contract'], value, contractInfo['totalFee'], 14);
       var txHex = res1['txHex'];
@@ -326,12 +321,15 @@ class _SmartContractState extends State<SmartContract> {
         showNotification(context);
       }
     }
-    log.w('dialog closed');
   }
 
   showNotification(context) {
-    walletService.showInfoFlushbar('Password Mismatch',
-        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+    walletService.showInfoFlushbar(
+        AppLocalizations.of(context).passwordMismatch,
+        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        Icons.cancel,
+        globals.red,
+        context);
   }
 
   execContract() async {
