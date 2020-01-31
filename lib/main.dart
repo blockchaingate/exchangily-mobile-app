@@ -14,7 +14,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
   serviceLocator();
-  Logger.level = Level.info;
+  Logger.level = Level.nothing;
   SystemChannels.textInput
       .invokeMethod('TextInput.hide'); // Hides keyboard initially
   // Force user to use only portrait mode until the development of other screen size design
@@ -51,12 +51,6 @@ class MyApp extends StatelessWidget {
         const Locale("en", ""), // English
         const Locale("zh", ""), // Chinese
         const Locale("hi", ""), // Hindi India
-        /*
-            const Locale.fromSubtags(
-                languageCode: 'zh', scriptCode: 'Hans'), // Chinese Simplified
-            const Locale.fromSubtags(
-                languageCode: 'zh', scriptCode: 'Hant'), // Chinese Traditional
-         */
       ],
       onGenerateTitle: (BuildContext context) =>
           AppLocalizations.of(context).title,

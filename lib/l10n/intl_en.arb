@@ -748,5 +748,23 @@
     "description": "smart_contract_function",
     "type": "text",
     "placeholders": {}
+  },
+  "loading": "Loading",
+  "@loading": {
+    "description": "generic_loading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "checkingExistingWallet": "Checking existing wallet",
+  "@checkingExistingWallet": {
+    "description": "wallet_setup_checking_existing_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "restoringWallet": "Restoring wallet",
+  "@restoringWallet": {
+    "description": "wallet_setup_checking_restoring_wallet",
+    "type": "text",
+    "placeholders": {}
   }
 }

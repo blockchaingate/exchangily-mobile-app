@@ -39,51 +39,10 @@ class DashboardScreenState extends BaseState {
   List walletInfoCopy = [];
   BuildContext context;
 
-  final wallet = WalletInfo(
-      name: 'bitcoin',
-      tickerName: 'BTC',
-      tokenType: '',
-      address: 'fasdgasghasfdhgafhafh',
-      availableBalance: 45767,
-      lockedBalance: 236526.034,
-      assetsInExchange: 12234);
-
-  initDb() {
-    databaseService.initDb();
-  }
-
-  deleteDb() async {
-    var res = await databaseService.deleteDb();
-    log.e(res);
-  }
-
-  deleteWallet() async {
-    await databaseService.deleteWallet(1);
-  }
-
-  closeDB() async {
-    await databaseService.closeDb();
-  }
-
-  create() async {
-    var res = await databaseService.insert(wallet);
-    log.w(res);
-  }
-
-  udpate() async {
-    //  await databaseService.update(test);
-  }
-
-  getAll() {
-    databaseService.getAll();
-  }
-
   calcTotalBal(numberOfCoins) {
     totalUsdBalance = 0;
     for (var i = 0; i < numberOfCoins; i++) {
-      log.e(walletInfo[i].usdValue);
       totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
-      log.i('Total ${totalUsdBalance.toStringAsFixed(2)}');
     }
     setState(ViewState.Idle);
   }
@@ -95,7 +54,6 @@ class DashboardScreenState extends BaseState {
       if (tName == 'EXG') {
         exgAddress = walletInfo[i].address;
         gasAmount = await walletService.gasBalance(exgAddress);
-        log.w(gasAmount);
         setState(ViewState.Idle);
         return gasAmount;
       }
@@ -111,7 +69,6 @@ class DashboardScreenState extends BaseState {
       walletInfo = res;
       calcTotalBal(walletInfo.length);
       walletInfoCopy = walletInfo.map((element) => element).toList();
-      log.w('wallet info ${walletInfo.length}');
       setState(ViewState.Idle);
     }).catchError((error) {
       log.e('Catch Error $error');
@@ -177,7 +134,6 @@ class DashboardScreenState extends BaseState {
             usdValue: coinUsdBalance,
             name: name);
         walletInfo.add(wi);
-        // await databaseService.update(wi);
       }).catchError((error) {
         log.e('Something went wrong  - $error');
       });

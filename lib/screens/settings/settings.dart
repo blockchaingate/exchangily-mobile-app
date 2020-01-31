@@ -49,7 +49,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () async {
-                    await model.verify();
+                    await model.deleteWallet();
                   },
                 ),
                 InkWell(
