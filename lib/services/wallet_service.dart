@@ -235,7 +235,7 @@ class WalletService {
   gasBalance(String addr) async {
     double gasAmount;
     await _api.getGasBalance(addr).then((res) {
-      var newBal = int.parse(res['balance']['FAB']);
+      var newBal = BigInt.parse(res['balance']['FAB']);
       gasAmount = stringUtils.bigNum2Double(newBal);
     }).catchError((onError) {
       log.w('On error $onError');
