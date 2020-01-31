@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/enums/device_screen_type.dart';
 import 'package:flutter/cupertino.dart';
 

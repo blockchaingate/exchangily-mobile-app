@@ -1,10 +1,22 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../localizations.dart';
@@ -31,6 +43,8 @@ class SettingsScreenState extends BaseState {
     isVisible = !isVisible;
   }
 
+  // Delete wallet and local storage
+
   deleteWallet() async {
     errorMessage = '';
     setState(ViewState.Busy);
@@ -52,7 +66,7 @@ class SettingsScreenState extends BaseState {
         Navigator.pushNamed(context, '/');
         setState(ViewState.Idle);
         return null;
-      } else if (res.fieldOne == 'Closed') {
+      } else if (res.returnedText == 'Closed') {
         log.e('Dialog Closed By User');
         setState(ViewState.Idle);
         return errorMessage = '';
@@ -69,6 +83,7 @@ class SettingsScreenState extends BaseState {
     });
   }
 
+  // Show mnemonic
   displayMnemonic() async {
     errorMessage = '';
     setState(ViewState.Busy);
@@ -85,10 +100,10 @@ class SettingsScreenState extends BaseState {
           .then((res) async {
         if (res.confirmed) {
           isVisible = !isVisible;
-          mnemonic = res.fieldOne;
+          mnemonic = res.returnedText;
           setState(ViewState.Idle);
           return '';
-        } else if (res.fieldOne == 'Closed') {
+        } else if (res.returnedText == 'Closed') {
           log.e('Dialog Closed By User');
           setState(ViewState.Idle);
           return errorMessage = '';
@@ -106,6 +121,8 @@ class SettingsScreenState extends BaseState {
     }
   }
 
+  // Change wallet lang
+
   changeWalletLanguage(newValue) {
     setState(ViewState.Busy);
     selectedLanguage = newValue;
@@ -119,4 +136,10 @@ class SettingsScreenState extends BaseState {
     }
     setState(ViewState.Idle);
   }
+
+  // Pin code
+
+  // Change password
+
+  // Change theme
 }

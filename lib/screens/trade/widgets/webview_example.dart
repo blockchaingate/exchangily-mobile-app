@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -25,19 +38,16 @@ class WebViewExample extends StatefulWidget {
 
 class _WebViewExampleState extends State<WebViewExample> {
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
 
   @override
   Widget build(BuildContext context) {
-        return new
-        Container(
-          width: 200,
-          height: 200,
-          child:WebView(
-            initialUrl: 'file:///assets/index.html',
-          )
-        );
-
+    return new Container(
+        width: 200,
+        height: 200,
+        child: WebView(
+          initialUrl: 'file:///assets/index.html',
+        ));
   }
 
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
@@ -166,7 +176,7 @@ class SampleMenu extends StatelessWidget {
   void _onListCookies(
       WebViewController controller, BuildContext context) async {
     final String cookies =
-    await controller.evaluateJavascript('document.cookie');
+        await controller.evaluateJavascript('document.cookie');
     Scaffold.of(context).showSnackBar(SnackBar(
       content: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -214,7 +224,7 @@ class SampleMenu extends StatelessWidget {
   void _onNavigationDelegateExample(
       WebViewController controller, BuildContext context) async {
     final String contentBase64 =
-    base64Encode(const Utf8Encoder().convert(kNavigationExamplePage));
+        base64Encode(const Utf8Encoder().convert(kNavigationExamplePage));
     await controller.loadUrl('data:text/html;base64,$contentBase64');
   }
 
@@ -224,7 +234,7 @@ class SampleMenu extends StatelessWidget {
     }
     final List<String> cookieList = cookies.split(';');
     final Iterable<Text> cookieWidgets =
-    cookieList.map((String cookie) => Text(cookie));
+        cookieList.map((String cookie) => Text(cookie));
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
@@ -255,39 +265,39 @@ class NavigationControls extends StatelessWidget {
               onPressed: !webViewReady
                   ? null
                   : () async {
-                if (await controller.canGoBack()) {
-                  await controller.goBack();
-                } else {
-                  Scaffold.of(context).showSnackBar(
-                    const SnackBar(content: Text("No back history item")),
-                  );
-                  return;
-                }
-              },
+                      if (await controller.canGoBack()) {
+                        await controller.goBack();
+                      } else {
+                        Scaffold.of(context).showSnackBar(
+                          const SnackBar(content: Text("No back history item")),
+                        );
+                        return;
+                      }
+                    },
             ),
             IconButton(
               icon: const Icon(Icons.arrow_forward_ios),
               onPressed: !webViewReady
                   ? null
                   : () async {
-                if (await controller.canGoForward()) {
-                  await controller.goForward();
-                } else {
-                  Scaffold.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text("No forward history item")),
-                  );
-                  return;
-                }
-              },
+                      if (await controller.canGoForward()) {
+                        await controller.goForward();
+                      } else {
+                        Scaffold.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text("No forward history item")),
+                        );
+                        return;
+                      }
+                    },
             ),
             IconButton(
               icon: const Icon(Icons.replay),
               onPressed: !webViewReady
                   ? null
                   : () {
-                controller.reload();
-              },
+                      controller.reload();
+                    },
             ),
           ],
         );

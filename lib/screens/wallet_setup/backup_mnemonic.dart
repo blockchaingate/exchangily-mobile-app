@@ -1,11 +1,22 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
-import 'package:bip39/bip39.dart' as bip39;
 
 class BackupMnemonicWalletScreen extends StatefulWidget {
   const BackupMnemonicWalletScreen({Key key}) : super(key: key);
@@ -98,7 +109,6 @@ class _BackupMnemonicWalletScreenState
         return Container(
             child: TextField(
           textAlign: TextAlign.left,
-          //controller: myController,
           enableInteractiveSelection: false, // readonly
           // enabled: false, // if false use cant see the selection border around
           readOnly: true,

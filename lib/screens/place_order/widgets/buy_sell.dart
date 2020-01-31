@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:random_string/random_string.dart';
 import "package:flutter/material.dart";
@@ -136,7 +149,6 @@ class _BuySellState extends State<BuySell>
     orderListChannel =
         getOrderListChannel(widget.targetCoinName + widget.baseCoinName);
     orderListChannel.stream.listen((ordersString) {
-
       Orders orders = Decoder.fromOrdersJsonArray(ordersString);
       _showOrders(orders);
     });
@@ -163,18 +175,20 @@ class _BuySellState extends State<BuySell>
     var newbuy = orders.buy;
     var newsell = orders.sell;
     var preItem;
-    for(var i = 0; i < newbuy.length; i++) {
+    for (var i = 0; i < newbuy.length; i++) {
       var item = newbuy[i];
       var price = item.price;
       var orderQuantity = item.orderQuantity;
 
       var filledQuantity = item.filledQuantity;
-      if(preItem != null) {
-        if(preItem.price == price) {
-          preItem.orderQuantity = doubleAdd(preItem.orderQuantity, orderQuantity) ;
-          preItem.filledQuantity = doubleAdd(preItem.filledQuantity, filledQuantity);
+      if (preItem != null) {
+        if (preItem.price == price) {
+          preItem.orderQuantity =
+              doubleAdd(preItem.orderQuantity, orderQuantity);
+          preItem.filledQuantity =
+              doubleAdd(preItem.filledQuantity, filledQuantity);
           newbuy.removeAt(i);
-          i --;
+          i--;
         } else {
           preItem = item;
         }
@@ -184,17 +198,19 @@ class _BuySellState extends State<BuySell>
     }
 
     preItem = null;
-    for(var i = 0; i < newsell.length; i++) {
+    for (var i = 0; i < newsell.length; i++) {
       var item = newsell[i];
       var price = item.price;
       var orderQuantity = item.orderQuantity;
       var filledQuantity = item.filledQuantity;
-      if(preItem != null) {
-        if(preItem.price == price) {
-          preItem.orderQuantity = doubleAdd(preItem.orderQuantity, orderQuantity) ;
-          preItem.filledQuantity = doubleAdd(preItem.filledQuantity, filledQuantity);
+      if (preItem != null) {
+        if (preItem.price == price) {
+          preItem.orderQuantity =
+              doubleAdd(preItem.orderQuantity, orderQuantity);
+          preItem.filledQuantity =
+              doubleAdd(preItem.filledQuantity, filledQuantity);
           newsell.removeAt(i);
-          i --;
+          i--;
         } else {
           preItem = item;
         }
@@ -203,17 +219,13 @@ class _BuySellState extends State<BuySell>
       }
     }
 
-
-    if (!listEquals(newbuy, this.buy) ||
-        !listEquals(newsell, this.sell)) {
+    if (!listEquals(newbuy, this.buy) || !listEquals(newsell, this.sell)) {
       if (this.mounted) {
         setState(() => {
               this.sell = (newsell.length > 5)
                   ? (newsell.sublist(newsell.length - 5))
                   : newsell,
-              this.buy = (newbuy.length > 5)
-                  ? (newbuy.sublist(0, 5))
-                  : newbuy
+              this.buy = (newbuy.length > 5) ? (newbuy.sublist(0, 5)) : newbuy
             });
       }
     }
@@ -230,7 +242,6 @@ class _BuySellState extends State<BuySell>
   }
 
   void handleTextChanged(String name, String text) {
-
     if (name == 'price') {
       try {
         this.price = double.parse(text);
@@ -250,14 +261,13 @@ class _BuySellState extends State<BuySell>
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.fieldOne;
+      String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var txHex = await txHexforPlaceOrder(seed);
       var resKanban = await sendKanbanRawTransaction(txHex);
-
     } else {
-      if (res.fieldOne != 'Closed') {
+      if (res.returnedText != 'Closed') {
         showNotification(context);
       }
     }

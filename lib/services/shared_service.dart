@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,7 +32,6 @@ class SharedService {
                     .display3
                     .copyWith(fontWeight: FontWeight.bold),
                 contentTextStyle: TextStyle(color: globals.grey),
-                //  title: Text('Are you sure?'),
                 content: Text(
                   '${AppLocalizations.of(context).closeTheApp}?',
                   style: TextStyle(fontSize: 16),

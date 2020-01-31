@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +32,6 @@ class Deposit extends StatelessWidget {
   final myController = TextEditingController();
 
   checkPass(double amount, context) async {
-
     if (amount == null || amount > walletInfo.availableBalance) {
       walletService.showInfoFlushbar(
           AppLocalizations.of(context).invalidAmount,
@@ -36,7 +48,7 @@ class Deposit extends StatelessWidget {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.fieldOne;
+      String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
       var tokenType = this.walletInfo.tokenType;
       var coinName = this.walletInfo.tickerName;
@@ -53,10 +65,10 @@ class Deposit extends StatelessWidget {
         myController.text = '';
       }
       var errMsg = ret['data'];
-      if(errMsg == null || errMsg == '') {
+      if (errMsg == null || errMsg == '') {
         errMsg = ret['error'];
       }
-      if(errMsg == null || errMsg == '') {
+      if (errMsg == null || errMsg == '') {
         errMsg = 'Unknown Error';
       }
       walletService.showInfoFlushbar(
@@ -70,7 +82,7 @@ class Deposit extends StatelessWidget {
           globals.red,
           context);
     } else {
-      if (res.fieldOne != 'Closed') {
+      if (res.returnedText != 'Closed') {
         showNotification(context);
       }
     }

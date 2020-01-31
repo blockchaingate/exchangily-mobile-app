@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -70,10 +83,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                       Padding(
                           padding: EdgeInsets.only(bottom: 10.0),
                           child: GestureDetector(
-                            onLongPressUp: () {
-                            },
-                            onLongPress: () {
-                            },
+                            onLongPressUp: () {},
+                            onLongPress: () {},
                             child: TextField(
                               maxLines: 1,
                               controller: _receiverWalletAddressTextController,
@@ -137,12 +148,6 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                           },
                           keyboardType:
                               TextInputType.number, // numnber keyboard
-                          // inputFormatters: <TextInputFormatter>[
-                          //   WhitelistingTextInputFormatter(RegExp(
-                          //       '^\$|^(0|([1-9][0-9]{0,})|\.)(\\.[0-9]{0,})?\$'
-                          //       // r"[\d.]"
-                          //       ))
-                          // ],
                           decoration: InputDecoration(
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
@@ -231,8 +236,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                             inactiveTrackColor: globals.grey,
                             dragStartBehavior: DragStartBehavior.start,
                             activeColor: globals.primaryColor,
-                            onChanged: (bool s) {
-                            },
+                            onChanged: (bool s) {},
                           )
                         ],
                       )
@@ -328,17 +332,17 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
           _receiverWalletAddressTextController.text =
-              'User Access Denied'; // add to localization pending
+              AppLocalizations.of(context).userAccessDenied;
         });
       } else {
         setState(() => _receiverWalletAddressTextController.text =
-            'Unknown error: $e'); // add to localization pending
+            '${AppLocalizations.of(context).unknownError}: $e');
       }
     } on FormatException {
       setState(() {
         walletService.showInfoFlushbar(
-            'Scan Cancelled', // add to localization pending
-            'User returned by pressing the back button', // add to localization pending
+            AppLocalizations.of(context).scanCancelled,
+            AppLocalizations.of(context).userReturnedByPressingBackButton,
             Icons.cancel,
             globals.red,
             context);
@@ -346,7 +350,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
     } catch (e) {
       setState(() {
         _receiverWalletAddressTextController.text =
-            'Unknown error: $e'; // add to localization pending
+            '${AppLocalizations.of(context).unknownError}: $e';
       });
     }
   }

@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/screen_state/choose_wallet_language_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings_screen_state.dart';

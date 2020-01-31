@@ -7,8 +7,6 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Class Name: WalletSetupScreen
-*
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */

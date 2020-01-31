@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'dart:convert';
 import 'package:exchangilymobileapp/models/order-model.dart';
 import 'package:exchangilymobileapp/models/trade-model.dart';
@@ -5,6 +18,7 @@ import 'package:exchangilymobileapp/models/trade-model.dart';
 import '../models/price.dart';
 import '../models/orders.dart';
 import '../utils/string_util.dart';
+
 class Decoder {
   //Given a Map (property names are keys, property values are the values), decode as a Student
   static Price fromJsonMap(Map<String, dynamic> json) {
@@ -18,7 +32,8 @@ class Decoder {
 
     double change = (close - open) / open * 100;
     double changeValue = 0.0;
-    Price s = new Price(symbol, price, high, low, open, close, volume, change, changeValue);
+    Price s = new Price(
+        symbol, price, high, low, open, close, volume, change, changeValue);
     return s;
   }
 
@@ -30,7 +45,8 @@ class Decoder {
     int blockNumber = json['blockNumber'];
     int time = json['time'];
     bool bidOrAsk = json['bidOrAsk'];
-    TradeModel s = new TradeModel(orderHash1, orderHash2, price, amount, blockNumber, time, bidOrAsk);
+    TradeModel s = new TradeModel(
+        orderHash1, orderHash2, price, amount, blockNumber, time, bidOrAsk);
     return s;
   }
 
@@ -47,7 +63,19 @@ class Decoder {
     double filledQuantity = bigNum2Double(json['filledQuantity']);
     int time = json['time'];
     bool isActive = json['isActive'];
-    OrderModel s = new OrderModel(payWithExg, orderHash, address, pairLeft, pairRight, orderType, bidOrAsk, price, orderQuantity, filledQuantity, time, isActive);
+    OrderModel s = new OrderModel(
+        payWithExg,
+        orderHash,
+        address,
+        pairLeft,
+        pairRight,
+        orderType,
+        bidOrAsk,
+        price,
+        orderQuantity,
+        filledQuantity,
+        time,
+        isActive);
     return s;
   }
 
@@ -76,7 +104,7 @@ class Decoder {
     return students;
   }
 
-  static Orders fromOrdersJsonArray (String jsonString) {
+  static Orders fromOrdersJsonArray(String jsonString) {
     var dynamicList = jsonDecode(jsonString);
     List<OrderModel> buy = new List<OrderModel>();
     List<OrderModel> sell = new List<OrderModel>();
@@ -86,7 +114,7 @@ class Decoder {
       buy.add(s);
     });
 
-    for(var i = dynamicList['sell'].length - 1; i >= 0; i-- ) {
+    for (var i = dynamicList['sell'].length - 1; i >= 0; i--) {
       var f = dynamicList['sell'][i];
       OrderModel s = fromOrderJsonMap(f);
       sell.add(s);

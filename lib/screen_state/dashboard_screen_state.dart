@@ -7,13 +7,10 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Class Name: DashboardScreenState
-*
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
 
-import 'dart:convert';
 import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +73,7 @@ class DashboardScreenState extends BaseState {
     });
   }
 
-  /* Get Exchange Assets */
+  // Get Exchange Assets
 
   getExchangeAssets() async {
     setState(ViewState.Busy);
@@ -105,6 +102,7 @@ class DashboardScreenState extends BaseState {
   Future refreshBalance() async {
     setState(ViewState.Busy);
     // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
+    // also copy wallet keep the previous balance when loading shows shimmers instead of blank screen or zero bal
     walletInfoCopy = walletInfo.map((element) => element).toList();
     int length = walletInfoCopy.length;
     List<String> coinTokenType = walletService.tokenType;

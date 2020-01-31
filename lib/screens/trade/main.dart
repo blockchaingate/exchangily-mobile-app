@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade-model.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
@@ -118,7 +131,8 @@ class _TradeState extends State<Trade> with TradeService {
           usdPrice = await getCoinMarketPrice('exchangily');
         }
 
-        if(this._tradePriceState != null && this._tradePriceState.currentState != null) {
+        if (this._tradePriceState != null &&
+            this._tradePriceState.currentState != null) {
           this._tradePriceState.currentState.showPrice(item, usdPrice);
         }
 

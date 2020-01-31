@@ -63,12 +63,6 @@ class WalletService {
   String getRandomMnemonic() {
     String randomMnemonic = '';
     randomMnemonic = bip39.generateMnemonic();
-    if (isLocal) {
-      randomMnemonic =
-          //   'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-          //'dune stem onion cliff equip seek kiwi salute area elegant atom injury';
-          'cargo wrestle sentence absorb unfair divide reason sad pudding field loud begin';
-    }
     log.w('getRandomMnemonic $randomMnemonic');
 
     return randomMnemonic;

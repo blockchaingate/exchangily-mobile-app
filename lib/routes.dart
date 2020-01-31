@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/dashboard.dart';
@@ -11,7 +24,6 @@ import 'package:exchangilymobileapp/screens/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/wallet_features.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/withdraw_to_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet_setup/wallet_setup.dart';
-import 'package:exchangilymobileapp/widgets/verify_mnemonic.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';

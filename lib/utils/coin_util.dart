@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/routes.dart';
@@ -106,7 +119,7 @@ MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
     }
   }
 
-  print('recId===='+ recId.toString());
+  print('recId====' + recId.toString());
   if (recId == -1) {
     throw Exception(
         'Could not construct a recoverable key. This should never happen');
@@ -211,7 +224,7 @@ Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
   final s = _padTo32(intToBytes(signature.s));
   var v = intToBytes(BigInt.from(signature.v));
 
-  if(signature.v == 0) {
+  if (signature.v == 0) {
     v = [0].toList();
   }
   //print('vvvv=');
@@ -263,7 +276,6 @@ Uint8List magicHash(String message, [NetworkType network]) {
 }
 
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
-
   var r = '';
   var s = '';
   var v = '';
