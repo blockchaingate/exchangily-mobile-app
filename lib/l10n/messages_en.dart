@@ -44,6 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "checkingExistingWallet" : MessageLookupByLibrary.simpleMessage("Checking existing wallet"),
     "close" : MessageLookupByLibrary.simpleMessage("Close"),
     "closeOrders" : MessageLookupByLibrary.simpleMessage("Close Orders"),
+    "closeTheApp" : MessageLookupByLibrary.simpleMessage("Do you want to close the app"),
     "coin" : MessageLookupByLibrary.simpleMessage("Coin"),
     "confirm" : MessageLookupByLibrary.simpleMessage("Confirm"),
     "confirmDeposit" : MessageLookupByLibrary.simpleMessage("Confirm Deposit"),
@@ -88,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mnemonic" : MessageLookupByLibrary.simpleMessage("Mnemonic"),
     "move" : MessageLookupByLibrary.simpleMessage("Move"),
     "moveAndTrade" : MessageLookupByLibrary.simpleMessage("Move & Trade"),
+    "no" : MessageLookupByLibrary.simpleMessage("No"),
     "openOrders" : MessageLookupByLibrary.simpleMessage("Open Orders"),
     "orderBook" : MessageLookupByLibrary.simpleMessage("Order Book"),
     "pair" : MessageLookupByLibrary.simpleMessage("Pair"),
@@ -145,6 +147,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningBackupMnemonic" : MessageLookupByLibrary.simpleMessage("Below are the 12 words mnemonic to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet"),
     "warningImportOrConfirmMnemonic" : MessageLookupByLibrary.simpleMessage("Please type in your 12 word mnemonic phrase in the correct sequence to confirm"),
     "welcomeText" : MessageLookupByLibrary.simpleMessage("Welcome to Exchangily. To begin you may create a new wallet or import an existing one."),
-    "withdrawToWallet" : MessageLookupByLibrary.simpleMessage("Withdraw To Wallet")
+    "withdrawToWallet" : MessageLookupByLibrary.simpleMessage("Withdraw To Wallet"),
+    "yes" : MessageLookupByLibrary.simpleMessage("Yes"),
   };
 }

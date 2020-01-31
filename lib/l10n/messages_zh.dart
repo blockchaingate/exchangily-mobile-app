@@ -43,6 +43,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "checkingExistingWallet" : MessageLookupByLibrary.simpleMessage("检查现有钱包"),
     "close" : MessageLookupByLibrary.simpleMessage("关闭"),
     "closeOrders" : MessageLookupByLibrary.simpleMessage("成交订单"),
+    "closeTheApp" : MessageLookupByLibrary.simpleMessage("您要关闭App吗"),
     "coin" : MessageLookupByLibrary.simpleMessage("资产"),
     "confirm" : MessageLookupByLibrary.simpleMessage("确认"),
     "confirmDeposit" : MessageLookupByLibrary.simpleMessage("确认存款"),
@@ -87,6 +88,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mnemonic" : MessageLookupByLibrary.simpleMessage("助记词"),
     "move" : MessageLookupByLibrary.simpleMessage("转移"),
     "moveAndTrade" : MessageLookupByLibrary.simpleMessage("存款及交易"),
+    "no" : MessageLookupByLibrary.simpleMessage("否"),
     "openOrders" : MessageLookupByLibrary.simpleMessage("我的委托"),
     "orderBook" : MessageLookupByLibrary.simpleMessage("买卖盘"),
     "pair" : MessageLookupByLibrary.simpleMessage("交易对"),
@@ -144,6 +146,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningBackupMnemonic" : MessageLookupByLibrary.simpleMessage("下面的12个助记词，是您钱包的安全生命线，必需妥善备份，安全保管，不可丢失、遗忘或泄露给别人，不要截屏保存在手机里，不要通过任何社交软件(如Email、微信、QQ等)发送，只要有了这些助记词，就完全拥有了您钱包的控制权，请切记之，务必妥善抄写，认真保存，永远不可丢失。"),
     "warningImportOrConfirmMnemonic" : MessageLookupByLibrary.simpleMessage("请按序重输一遍这12个助记词，以确认您已经准确地备份了它们。"),
     "welcomeText" : MessageLookupByLibrary.simpleMessage("欢迎使用亿币eXchangily去中心化交易所APP，首先请创建新钱包或导入已有钱包，然后才能开始使用。"),
-    "withdrawToWallet" : MessageLookupByLibrary.simpleMessage("转款至钱包")
+    "withdrawToWallet" : MessageLookupByLibrary.simpleMessage("转款至钱包"),
+    "yes" : MessageLookupByLibrary.simpleMessage("是"),
   };
 }
