@@ -784,5 +784,35 @@
         "description": "yes",
         "type": "text",
         "placeholders": {}
-    }
+    },
+"fabLockForExgAirdrop": "FAB锁仓空投亿币方案",
+"@fabLockForExgAirdrop": {
+    "description": "fabLock_for_exg_airdrop",
+    "type": "text",
+    "placeholders": {}
+},
+"userAccessDenied": "用户访问被拒绝",
+"@userAccessDenied": {
+    "description": "send_screen_user_access_denied",
+    "type": "text",
+    "placeholders": {}
+},
+"unknownError": "不明原因错误",
+"@unknownError": {
+    "description": "send_screen_unknown_error",
+    "type": "text",
+    "placeholders": {}
+},
+"scanCancelled": "取消扫描",
+"@scanCancelled": {
+    "description": "send_screen_scan_cancelled",
+    "type": "text",
+    "placeholders": {}
+},
+"userReturnedByPressingBackButton": "用户按返回键返回",
+"@userReturnedByPressingBackButton": {
+    "description": "send_screen_user_returned_by_pressing_back_button",
+    "type": "text",
+    "placeholders": {}
+}
 }

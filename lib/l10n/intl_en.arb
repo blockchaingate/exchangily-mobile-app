@@ -791,18 +791,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "passwordMatched": "Password Matched",
-  "@passwordMatched": {
-    "description": "create_password_password_matched",
-    "type": "text",
-    "placeholders": {}
-  },
-  "passwordDoesNotMatched": "Password does not matched",
-  "@passwordDoesNotMatched": {
-    "description": "create_password_password_does_not_matched",
-    "type": "text",
-    "placeholders": {}
-  },
   "userAccessDenied": "User Access Denied",
   "@userAccessDenied": {
     "description": "send_screen_user_access_denied",
