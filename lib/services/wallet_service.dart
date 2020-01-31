@@ -735,7 +735,7 @@ class WalletService {
 
     else if (coin == 'ETH') {
       // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
-      final ropstenChainId = 3;
+      final chainId = environment["chains"]["ETH"]["chainId"];
       final ethCoinChild = root.derivePath(
           "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
@@ -747,7 +747,7 @@ class WalletService {
       final nonce = await _api.getEthNonce(addressHex);
 
       var apiUrl =
-          "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
+      environment["chains"]["ETH"]["infura"]; //Replace with your API
 
       var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
@@ -762,7 +762,7 @@ class WalletService {
             maxGas: gasLimit,
             value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
           ),
-          chainId: ropstenChainId,
+          chainId: chainId,
           fetchChainIdFromNetworkId: false);
 
       txHex = '0x' + HEX.encode(signed);
@@ -823,7 +823,7 @@ class WalletService {
         }
       }
     } else if (tokenType == 'ETH') {
-      final ropstenChainId = 3;
+      final chainId = environment["chains"]["ETH"]["chainId"];
       final ethCoinChild = root.derivePath(
           "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
@@ -840,7 +840,7 @@ class WalletService {
           stringUtils.fixLength(
               stringUtils.trimHexPrefix(amountSentInt.toRadixString(16)), 64);
       var apiUrl =
-          "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
+          environment["chains"]["ETH"]["infura"]; //Replace with your API
 
       var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
@@ -855,7 +855,7 @@ class WalletService {
               maxGas: gasLimit,
               value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
               data: Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex))),
-          chainId: ropstenChainId,
+          chainId: chainId,
           fetchChainIdFromNetworkId: false);
       log.w('signed=');
       txHex = '0x' + HEX.encode(signed);

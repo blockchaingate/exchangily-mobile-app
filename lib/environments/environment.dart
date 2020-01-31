@@ -7,7 +7,9 @@ Map devConfig = {
     "BTC": {"network": testnet},
     "ETH": {
       "chain": 'ropsten',
-      "hardfork": 'byzantium'
+      "hardfork": 'byzantium',
+      "chainId": 3,
+      "infura": "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212}
@@ -50,7 +52,9 @@ Map productionConfig = {
     "BTC": {"network": bitcoin},
     "ETH": {
       "chain": 'mainnet',
-      "hardfork": 'byzantium'
+      "hardfork": 'byzantium',
+      "chainId": 1,
+      "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"
     },
     "FAB": {
       "chain": {"name": 'mainnet', "networkId": 0, "chainId": 0}
