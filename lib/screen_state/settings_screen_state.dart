@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../localizations.dart';
 import '../logger.dart';
@@ -30,7 +31,7 @@ class SettingsScreenState extends BaseState {
     isVisible = !isVisible;
   }
 
-  verify() async {
+  deleteWallet() async {
     errorMessage = '';
     setState(ViewState.Busy);
 
@@ -45,7 +46,10 @@ class SettingsScreenState extends BaseState {
         log.w('deleting wallet');
         await walletService.deleteEncryptedData();
         await databaseService.deleteDb();
-        Navigator.pushNamed(context, '/walletSetup');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.remove('lang');
+        prefs.clear();
+        Navigator.pushNamed(context, '/');
         setState(ViewState.Idle);
         return null;
       } else if (res.fieldOne == 'Closed') {

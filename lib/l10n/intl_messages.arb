@@ -1,6 +1,6 @@
 {
-  "@@last_modified": "2020-01-30T13:34:01.545303",
-  "title": "Exchangily",
+  "@@last_modified": "2020-01-30T19:30:09.176184",
+  "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
     "type": "text",
@@ -729,6 +729,24 @@
   "function": "Function",
   "@function": {
     "description": "smart_contract_function",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loading": "Loading",
+  "@loading": {
+    "description": "generic_loading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "checkingExistingWallet": "Checking existing wallet",
+  "@checkingExistingWallet": {
+    "description": "wallet_setup_checking_existing_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "restoringWallet": "Restoring wallet",
+  "@restoringWallet": {
+    "description": "wallet_setup_checking_restoring_wallet",
     "type": "text",
     "placeholders": {}
   }

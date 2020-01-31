@@ -1,6 +1,8 @@
+import 'package:exchangilymobileapp/screen_state/choose_wallet_language_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet_features_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet_setup_screen_state.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -30,4 +32,6 @@ void serviceLocator() {
   locator.registerFactory(() => WalletFeaturesScreenState());
   locator.registerFactory(() => SendScreenState());
   locator.registerFactory(() => SettingsScreenState());
+  locator.registerFactory(() => WalletSetupScreenState());
+  locator.registerFactory(() => ChooseWalletLanguageScreenState());
 }

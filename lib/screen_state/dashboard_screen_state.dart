@@ -35,56 +35,14 @@ class DashboardScreenState extends BaseState {
   double coinUsdBalance;
   double gasAmount = 0;
   String exgAddress = '';
-  List<double> assetsInExchange = [];
   String wallets;
   List walletInfoCopy = [];
   BuildContext context;
 
-  final wallet = WalletInfo(
-      name: 'bitcoin',
-      tickerName: 'BTC',
-      tokenType: '',
-      address: 'fasdgasghasfdhgafhafh',
-      availableBalance: 45767,
-      lockedBalance: 236526.034,
-      assetsInExchange: 12234);
-
-  initDb() {
-    databaseService.initDb();
-  }
-
-  deleteDb() async {
-    var res = await databaseService.deleteDb();
-    log.e(res);
-  }
-
-  deleteWallet() async {
-    await databaseService.deleteWallet(1);
-  }
-
-  closeDB() async {
-    await databaseService.closeDb();
-  }
-
-  create() async {
-    var res = await databaseService.insert(wallet);
-    log.w(res);
-  }
-
-  udpate() async {
-    //  await databaseService.update(test);
-  }
-
-  getAll() {
-    databaseService.getAll();
-  }
-
   calcTotalBal(numberOfCoins) {
     totalUsdBalance = 0;
     for (var i = 0; i < numberOfCoins; i++) {
-      log.e(walletInfo[i].usdValue);
       totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
-      log.i('Total ${totalUsdBalance.toStringAsFixed(2)}');
     }
     setState(ViewState.Idle);
   }
@@ -96,7 +54,6 @@ class DashboardScreenState extends BaseState {
       if (tName == 'EXG') {
         exgAddress = walletInfo[i].address;
         gasAmount = await walletService.gasBalance(exgAddress);
-        log.w(gasAmount);
         setState(ViewState.Idle);
         return gasAmount;
       }
@@ -112,7 +69,6 @@ class DashboardScreenState extends BaseState {
       walletInfo = res;
       calcTotalBal(walletInfo.length);
       walletInfoCopy = walletInfo.map((element) => element).toList();
-      log.w('wallet info ${walletInfo.length}');
       setState(ViewState.Idle);
     }).catchError((error) {
       log.e('Catch Error $error');
@@ -124,14 +80,18 @@ class DashboardScreenState extends BaseState {
 
   getExchangeAssets() async {
     setState(ViewState.Busy);
-    assetsInExchange.clear();
     var res = await walletService.assetsBalance(exgAddress);
     var length = res.length;
     for (var i = 0; i < length; i++) {
+      // Get their tickerName to compare with walletInfo tickernName
       String coin = res[i]['coin'];
-      for (var j = 0; j < length; j++) {
-        if (coin == walletInfo[j].tickerName)
+      // Second For loop to check walletInfo tickerName according to its length and
+      // compare it with the same coin tickername from service until the match or loop ends
+      for (var j = 0; j < walletInfo.length; j++) {
+        if (coin == walletInfo[j].tickerName) {
           walletInfo[j].assetsInExchange = res[i]['amount'];
+          break;
+        }
       }
     }
     for (int i = 0; i < walletInfo.length; i++) {
@@ -174,7 +134,6 @@ class DashboardScreenState extends BaseState {
             usdValue: coinUsdBalance,
             name: name);
         walletInfo.add(wi);
-        // await databaseService.update(wi);
       }).catchError((error) {
         log.e('Something went wrong  - $error');
       });

@@ -26,7 +26,7 @@ class AppLocalizations {
 
   // Generic Items
   String get title {
-    return Intl.message('Exchangily',
+    return Intl.message('Exchangily Wallet',
         name: 'title', desc: 'title_exchangily_app');
   }
 
@@ -629,6 +629,22 @@ class AppLocalizations {
   String get function {
     return Intl.message('Function',
         name: 'function', desc: 'smart_contract_function');
+  }
+
+  String get loading {
+    return Intl.message('Loading', name: 'loading', desc: 'generic_loading');
+  }
+
+  String get checkingExistingWallet {
+    return Intl.message('Checking existing wallet',
+        name: 'checkingExistingWallet',
+        desc: 'wallet_setup_checking_existing_wallet');
+  }
+
+  String get restoringWallet {
+    return Intl.message('Restoring wallet',
+        name: 'restoringWallet',
+        desc: 'wallet_setup_checking_restoring_wallet');
   }
 }
 
