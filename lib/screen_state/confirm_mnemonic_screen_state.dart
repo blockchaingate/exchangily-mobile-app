@@ -82,10 +82,10 @@ class ConfirmMnemonicScreenState extends BaseState {
 
 // Create Wallet
   createWallet(context) {
-    if (isLocal || listEquals(randomMnemonicList, userTypedMnemonicList)) {
+    if (listEquals(randomMnemonicList, userTypedMnemonicList)) {
       listToStringMnemonic = randomMnemonicList.join(' ');
       bool isValid = bip39.validateMnemonic(listToStringMnemonic);
-      if (isLocal || isValid) {
+      if (isValid) {
         Navigator.of(context)
             .pushNamed('/createPassword', arguments: listToStringMnemonic);
       } else {
