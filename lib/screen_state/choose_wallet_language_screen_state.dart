@@ -10,17 +10,15 @@ class ChooseWalletLanguageScreenState extends BaseState {
   String errorMessage = '';
 
   Future checkLanguage() async {
+    String lang = '';
     setState(ViewState.Busy);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String lang = prefs.getString('lang');
-    if (lang == null) {
+    lang = prefs.getString('lang');
+    if (lang == null || lang.isEmpty) {
       log.e('null');
-    } else if (lang.isNotEmpty) {
-      setState(ViewState.Idle);
-      Navigator.pushNamed(context, '/walletSetup');
     } else {
       setState(ViewState.Idle);
-      Navigator.pushNamed(context, '/');
+      Navigator.pushNamed(context, '/walletSetup');
     }
     setState(ViewState.Idle);
   }

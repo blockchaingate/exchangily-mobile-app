@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../localizations.dart';
 import '../shared/globals.dart' as globals;
 
 class SharedService {
@@ -20,13 +21,13 @@ class SharedService {
                 contentTextStyle: TextStyle(color: globals.grey),
                 //  title: Text('Are you sure?'),
                 content: Text(
-                  'Do you want to close the app?',
+                  '${AppLocalizations.of(context).closeTheApp}?',
                   style: TextStyle(fontSize: 16),
                 ),
                 actions: <Widget>[
                   FlatButton(
                     child: Text(
-                      'No',
+                      AppLocalizations.of(context).no,
                       style: TextStyle(color: globals.white, fontSize: 16),
                     ),
                     onPressed: () {
@@ -34,7 +35,7 @@ class SharedService {
                     },
                   ),
                   FlatButton(
-                    child: Text('Yes',
+                    child: Text(AppLocalizations.of(context).yes,
                         style: TextStyle(color: globals.white, fontSize: 16)),
                     onPressed: () {
                       SystemChannels.platform

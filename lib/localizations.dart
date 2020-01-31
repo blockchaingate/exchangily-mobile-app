@@ -646,6 +646,19 @@ class AppLocalizations {
         name: 'restoringWallet',
         desc: 'wallet_setup_checking_restoring_wallet');
   }
+
+  String get closeTheApp {
+    return Intl.message('Do you want to close the app',
+        name: 'closeTheApp', desc: 'dialog_popup_close_the_app');
+  }
+
+  String get yes {
+    return Intl.message('Yes', name: 'yes', desc: 'generic_yes');
+  }
+
+  String get no {
+    return Intl.message('No', name: 'no', desc: 'generic_no');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
