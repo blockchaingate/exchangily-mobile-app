@@ -1,3 +1,5 @@
+import 'package:exchangilymobileapp/environments/environment.dart';
+
 import './string_util.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -89,7 +91,7 @@ Uint8List uint8ListFromList(List<int> data) {
 
 Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoolAddress, int nonce) async{
 
-  var chainId = 212;
+  var chainId = environment["chain"]["KANBAN"]["chainId"];
   var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
   var httpClient = new http.Client();

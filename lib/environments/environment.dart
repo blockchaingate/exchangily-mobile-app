@@ -13,6 +13,9 @@ Map devConfig = {
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212}
+    },
+    "KANBAN": {
+      "chainId": 212
     }
   },
   "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150},
@@ -57,6 +60,9 @@ Map productionConfig = {
     },
     "FAB": {
       "chain": {"name": 'mainnet', "networkId": 0, "chainId": 0}
+    },
+    "KANBAN": {
+      "chainId": 211
     }
   },
   "CoinType": {"BTC": 0, "ETH": 60, "FAB": 1150},
