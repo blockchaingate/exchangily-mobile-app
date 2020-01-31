@@ -766,5 +766,23 @@
         "description": "wallet_setup_checking_restoring_wallet",
         "type": "text",
         "placeholders": {}
+    },
+    "closeTheApp": "关闭App",
+    "@closeTheApp": {
+        "description": "close_app",
+        "type": "text",
+        "placeholders": {}
+    },
+    "no": "否",
+    "@no": {
+        "description": "no",
+        "type": "text",
+        "placeholders": {}
+    },
+    "yes": "是",
+    "@yes": {
+        "description": "yes",
+        "type": "text",
+        "placeholders": {}
     }
 }

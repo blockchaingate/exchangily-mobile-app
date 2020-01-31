@@ -766,5 +766,23 @@
     "description": "wallet_setup_checking_restoring_wallet",
     "type": "text",
     "placeholders": {}
+  },
+  "closeTheApp": "Do you want to close the app",
+  "@closeTheApp": {
+    "description": "close_app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no": "No",
+  "@no": {
+    "description": "no",
+    "type": "text",
+    "placeholders": {}
+  },
+  "yes": "Yes",
+  "@yes": {
+    "description": "yes",
+    "type": "text",
+    "placeholders": {}
   }
 }
