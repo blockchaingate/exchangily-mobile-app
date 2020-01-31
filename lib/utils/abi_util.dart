@@ -111,13 +111,13 @@ Uint8List uint8ListFromList(List<int> data) {
 Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoolAddress, int nonce) async{
 
   var chainId = environment["chains"]["KANBAN"]["chainId"];
-  var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
+  //var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
-  var httpClient = new http.Client();
+  //var httpClient = new http.Client();
 
   abiHex = trimHexPrefix(abiHex);
-  var ethClient = new Web3Client(apiUrl, httpClient);
-  var credentials = await ethClient.credentialsFromPrivateKey(privateKey);
+  //var ethClient = new Web3Client(apiUrl, httpClient);
+  var credentials = new EthPrivateKey.fromHex(privateKey);
 
   var transaction = Transaction(
       to: EthereumAddress.fromHex(coinPoolAddress),
