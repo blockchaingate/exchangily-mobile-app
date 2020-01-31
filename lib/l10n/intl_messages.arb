@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-30T19:30:09.176184",
+  "@@last_modified": "2020-01-31T16:49:21.786336",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -747,6 +747,66 @@
   "restoringWallet": "Restoring wallet",
   "@restoringWallet": {
     "description": "wallet_setup_checking_restoring_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "closeTheApp": "Do you want to close the app",
+  "@closeTheApp": {
+    "description": "dialog_popup_close_the_app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "yes": "Yes",
+  "@yes": {
+    "description": "generic_yes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "no": "No",
+  "@no": {
+    "description": "generic_no",
+    "type": "text",
+    "placeholders": {}
+  },
+  "fabLockForExgAirdrop": "Fab Lock For Exg Airdrop",
+  "@fabLockForExgAirdrop": {
+    "description": "fabLock_for_exg_airdrop",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordMatched": "Password Matched",
+  "@passwordMatched": {
+    "description": "create_password_password_matched",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordDoesNotMatched": "Password does not matched",
+  "@passwordDoesNotMatched": {
+    "description": "create_password_password_does_not_matched",
+    "type": "text",
+    "placeholders": {}
+  },
+  "userAccessDenied": "User Access Denied",
+  "@userAccessDenied": {
+    "description": "send_screen_user_access_denied",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unknownError": "Unknown Error",
+  "@unknownError": {
+    "description": "send_screen_unknown_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scanCancelled": "Scan Cancelled",
+  "@scanCancelled": {
+    "description": "send_screen_scan_cancelled",
+    "type": "text",
+    "placeholders": {}
+  },
+  "userReturnedByPressingBackButton": "User returned by pressing the back button",
+  "@userReturnedByPressingBackButton": {
+    "description": "send_screen_user_returned_by_pressing_back_button",
     "type": "text",
     "placeholders": {}
   }

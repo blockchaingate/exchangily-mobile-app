@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/services/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:random_string/random_string.dart';
 import "package:flutter/material.dart";
 import "./textfield_text.dart";

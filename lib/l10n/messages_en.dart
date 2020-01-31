@@ -63,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "enterAddress" : MessageLookupByLibrary.simpleMessage("Enter Address"),
     "enterAmount" : MessageLookupByLibrary.simpleMessage("Enter Amount"),
     "enterPassword" : MessageLookupByLibrary.simpleMessage("Enter Password"),
+    "fabLockForExgAirdrop" : MessageLookupByLibrary.simpleMessage("Fab Lock For Exg Airdrop"),
     "filledAmount" : MessageLookupByLibrary.simpleMessage("Filled%"),
     "finishWalletBackup" : MessageLookupByLibrary.simpleMessage("Finish Wallet Backup"),
     "function" : MessageLookupByLibrary.simpleMessage("Function"),
@@ -95,6 +96,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "pair" : MessageLookupByLibrary.simpleMessage("Pair"),
     "passwordConditions" : MessageLookupByLibrary.simpleMessage("Please enter the password that satisfy above conditions"),
     "passwordConditionsMismatch" : MessageLookupByLibrary.simpleMessage("Password Conditions Mismatch"),
+    "passwordDoesNotMatched" : MessageLookupByLibrary.simpleMessage("Password does not matched"),
+    "passwordMatched" : MessageLookupByLibrary.simpleMessage("Password Matched"),
     "passwordMismatch" : MessageLookupByLibrary.simpleMessage("Password Mismatch"),
     "passwordRetype" : MessageLookupByLibrary.simpleMessage("Please retype the same password in both fields"),
     "payableValue" : MessageLookupByLibrary.simpleMessage("Payable Value"),
@@ -112,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "restoringWallet" : MessageLookupByLibrary.simpleMessage("Restoring wallet"),
     "saveAndShareQrCode" : MessageLookupByLibrary.simpleMessage("Save and Share QR Code"),
     "scanBarCode" : MessageLookupByLibrary.simpleMessage("Scan Bar Code"),
+    "scanCancelled" : MessageLookupByLibrary.simpleMessage("Scan Cancelled"),
     "secureYourWallet" : MessageLookupByLibrary.simpleMessage("Secure Your Wallet"),
     "seed" : MessageLookupByLibrary.simpleMessage("seed"),
     "sell" : MessageLookupByLibrary.simpleMessage("Sell"),
@@ -140,6 +144,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "transanctionFailed" : MessageLookupByLibrary.simpleMessage("Transanction Failed"),
     "type" : MessageLookupByLibrary.simpleMessage("Type"),
     "typeYourWalletPassword" : MessageLookupByLibrary.simpleMessage("Type your wallet password"),
+    "unknownError" : MessageLookupByLibrary.simpleMessage("Unknown Error"),
+    "userAccessDenied" : MessageLookupByLibrary.simpleMessage("User Access Denied"),
+    "userReturnedByPressingBackButton" : MessageLookupByLibrary.simpleMessage("User returned by pressing the back button"),
     "value" : MessageLookupByLibrary.simpleMessage("Value"),
     "volume" : MessageLookupByLibrary.simpleMessage("volume"),
     "wallet" : MessageLookupByLibrary.simpleMessage("Wallet"),
@@ -148,6 +155,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "warningImportOrConfirmMnemonic" : MessageLookupByLibrary.simpleMessage("Please type in your 12 word mnemonic phrase in the correct sequence to confirm"),
     "welcomeText" : MessageLookupByLibrary.simpleMessage("Welcome to Exchangily. To begin you may create a new wallet or import an existing one."),
     "withdrawToWallet" : MessageLookupByLibrary.simpleMessage("Withdraw To Wallet"),
-    "yes" : MessageLookupByLibrary.simpleMessage("Yes"),
+    "yes" : MessageLookupByLibrary.simpleMessage("Yes")
   };
 }

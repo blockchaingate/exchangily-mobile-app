@@ -784,5 +784,47 @@
     "description": "yes",
     "type": "text",
     "placeholders": {}
+  },
+  "fabLockForExgAirdrop": "Fab Lock For Exg Airdrop",
+  "@fabLockForExgAirdrop": {
+    "description": "fabLock_for_exg_airdrop",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordMatched": "Password Matched",
+  "@passwordMatched": {
+    "description": "create_password_password_matched",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordDoesNotMatched": "Password does not matched",
+  "@passwordDoesNotMatched": {
+    "description": "create_password_password_does_not_matched",
+    "type": "text",
+    "placeholders": {}
+  },
+  "userAccessDenied": "User Access Denied",
+  "@userAccessDenied": {
+    "description": "send_screen_user_access_denied",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unknownError": "Unknown Error",
+  "@unknownError": {
+    "description": "send_screen_unknown_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "scanCancelled": "Scan Cancelled",
+  "@scanCancelled": {
+    "description": "send_screen_scan_cancelled",
+    "type": "text",
+    "placeholders": {}
+  },
+  "userReturnedByPressingBackButton": "User returned by pressing the back button",
+  "@userReturnedByPressingBackButton": {
+    "description": "send_screen_user_returned_by_pressing_back_button",
+    "type": "text",
+    "placeholders": {}
   }
 }
