@@ -13,7 +13,7 @@
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
-import 'package:exchangilymobileapp/services/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';

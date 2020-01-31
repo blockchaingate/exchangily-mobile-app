@@ -1,7 +1,7 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
 
-const bool isProduction = false;
-const bool isLocal = true;
+const bool isProduction = true;
+const bool isLocal = false;
 Map devConfig = {
   "chains": {
     "BTC": {"network": testnet},
@@ -14,9 +14,7 @@ Map devConfig = {
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212}
     },
-    "KANBAN": {
-      "chainId": 212
-    }
+    "KANBAN": {"chainId": 212}
   },
   "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150},
   'endpoints': {
@@ -61,9 +59,7 @@ Map productionConfig = {
     "FAB": {
       "chain": {"name": 'mainnet', "networkId": 0, "chainId": 0}
     },
-    "KANBAN": {
-      "chainId": 211
-    }
+    "KANBAN": {"chainId": 211}
   },
   "CoinType": {"BTC": 0, "ETH": 60, "FAB": 1150},
   'endpoints': {

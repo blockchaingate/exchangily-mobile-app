@@ -1,7 +1,7 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import 'package:exchangilymobileapp/services/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flushbar/flushbar.dart';
