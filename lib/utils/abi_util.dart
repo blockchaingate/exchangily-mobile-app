@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import './string_util.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -19,7 +32,8 @@ getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
   return abiHex;
 }
 
-getDepositFuncABI(int coinType, String txHash, BigInt amountInLink, String addressInKanban, signedMessage) {
+getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
+    String addressInKanban, signedMessage) {
   var abiHex = "379eb862";
   abiHex += trimHexPrefix(signedMessage["v"]);
   abiHex += fixLength(coinType.toString(), 62);
@@ -33,9 +47,16 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink, String addre
   return abiHex;
 }
 
-getCreateOrderFuncABI(bool bidOrAsk,
-int orderType, int baseCoin,int targetCoin, BigInt qty, BigInt price,
-int timeBeforeExpiration, bool payWithEXG,  String orderHash) {
+getCreateOrderFuncABI(
+    bool bidOrAsk,
+    int orderType,
+    int baseCoin,
+    int targetCoin,
+    BigInt qty,
+    BigInt price,
+    int timeBeforeExpiration,
+    bool payWithEXG,
+    String orderHash) {
   /*
  0x12a3da170000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000002386f26fc10000000000000000000000000000000000000000000000000000002386f26fc100000000000000000000000000000000000000000000000000000000006296a75020000000000000000000000000000000000000000000000000000000000000000006e328d04a77db9be48be26004e8eb87ccb4432839a10bdff4112a2bffdb3821
    */
@@ -50,7 +71,7 @@ int timeBeforeExpiration, bool payWithEXG,  String orderHash) {
   var priceHex = price.toRadixString(16);
   abiHex += fixLength(priceHex, 64);
   abiHex += fixLength(timeBeforeExpiration.toString(), 64);
-  var payWithEXGString = payWithEXG?'1':'0';
+  var payWithEXGString = payWithEXG ? '1' : '0';
   abiHex += fixLength(payWithEXGString, 64);
   abiHex += fixLength(orderHash, 64);
 
@@ -87,10 +108,11 @@ Uint8List uint8ListFromList(List<int> data) {
   return Uint8List.fromList(data);
 }
 
-Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoolAddress, int nonce) async{
-
+Future signAbiHexWithPrivateKey(
+    String abiHex, String privateKey, String coinPoolAddress, int nonce) async {
   var chainId = 212;
-  var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
+  var apiUrl =
+      "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 
   var httpClient = new http.Client();
 
@@ -98,25 +120,24 @@ Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoo
   var ethClient = new Web3Client(apiUrl, httpClient);
   var credentials = await ethClient.credentialsFromPrivateKey(privateKey);
 
-
   var transaction = Transaction(
       to: EthereumAddress.fromHex(coinPoolAddress),
       gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 6),
       maxGas: 20000000,
       nonce: nonce,
       value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
-      data: HEX.decode(abiHex)
-  );
+      data: HEX.decode(abiHex));
   final innerSignature =
-  chainId == null ? null : MsgSignature(BigInt.zero, BigInt.zero, chainId);
+      chainId == null ? null : MsgSignature(BigInt.zero, BigInt.zero, chainId);
 
   var transactionList = _encodeToRlp(transaction, innerSignature);
-  final encoded =
-  uint8ListFromList(rlp.encode(transactionList));
+  final encoded = uint8ListFromList(rlp.encode(transactionList));
 
-  final signature = await credentials.signToSignature(encoded, chainId: chainId);
+  final signature =
+      await credentials.signToSignature(encoded, chainId: chainId);
 
-  var encodeList = uint8ListFromList(rlp.encode(_encodeToRlp(transaction, signature)));
+  var encodeList =
+      uint8ListFromList(rlp.encode(_encodeToRlp(transaction, signature)));
   return '0x' + HEX.encode(encodeList);
   /*
   var signed = await ethClient.signTransaction(

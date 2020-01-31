@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -29,7 +42,7 @@ class CreatePasswordScreenState extends BaseState {
 /* ---------------------------------------------------
                     Get All Coins Future
     -------------------------------------------------- */
-  getAllCoins() async {
+  Future getAllCoins() async {
     log.w(randomMnemonicFromRoute);
     setState(ViewState.Busy);
     _walletInfo = await _walletService
@@ -48,8 +61,6 @@ class CreatePasswordScreenState extends BaseState {
       log.e('Timeout');
       errorMessage =
           AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
-      // Could add return walletInfo = null to fix the return warning
-      setState(ViewState.Idle);
     }).catchError((onError) {
       errorMessage = AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);

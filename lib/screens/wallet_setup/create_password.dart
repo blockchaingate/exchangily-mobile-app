@@ -7,8 +7,6 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Class Name: CreatePasswordScreen
-*
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
@@ -80,11 +78,13 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                         ? model.passwordMatch && model.password.isNotEmpty
                             ? Center(
                                 child: Text(
-                                'Password Matched',
+                                AppLocalizations.of(context).passwordMatched,
                                 style: TextStyle(color: globals.white),
                               ))
                             : Center(
-                                child: Text('Password does not matched',
+                                child: Text(
+                                    AppLocalizations.of(context)
+                                        .passwordDoesNotMatched,
                                     style: TextStyle(color: globals.grey)))
                         : Text(''),
                     UIHelper.verticalSpaceSmall,

@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import '../packages/bip32/bip32_base.dart' as bip32;
 import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:hex/hex.dart';
@@ -7,10 +20,14 @@ import '../environments/environment.dart';
 getExgKeyPair(seed) {
   final root = bip32.BIP32.fromSeed(
       seed,
-      bip32.NetworkType(wif: environment["chains"]["BTC"]["network"].wif, bip32: new bip32.Bip32Type(public: environment["chains"]["BTC"]["network"].bip32.public, private: environment["chains"]["BTC"]["network"].bip32.private))
-  );
+      bip32.NetworkType(
+          wif: environment["chains"]["BTC"]["network"].wif,
+          bip32: new bip32.Bip32Type(
+              public: environment["chains"]["BTC"]["network"].bip32.public,
+              private: environment["chains"]["BTC"]["network"].bip32.private)));
 
-  final fabCoinChild = root.derivePath("m/44'/" + environment["CoinType"]["FAB"].toString() + "'/0'/0/0");
+  final fabCoinChild = root.derivePath(
+      "m/44'/" + environment["CoinType"]["FAB"].toString() + "'/0'/0/0");
   final fabPublicKey = fabCoinChild.publicKey;
 
   final fabPrivateKey = fabCoinChild.privateKey;
@@ -19,8 +36,5 @@ getExgKeyPair(seed) {
   Digest ripemd160 = new Digest("RIPEMD-160");
   var pass2 = ripemd160.process(pass1);
   var exgAddr = '0x' + HEX.encode(pass2);
-  return {
-    "address": exgAddr,
-    "privateKey": fabPrivateKey
-  };
+  return {"address": exgAddr, "privateKey": fabPrivateKey};
 }

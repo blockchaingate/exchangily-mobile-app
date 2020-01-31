@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import "package:flutter/material.dart";
 import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -16,23 +29,21 @@ class TextfieldText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         height: 61,
-        child:
-
-        Stack(
+        child: Stack(
           children: <Widget>[
             Column(
-
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   TextField(
                     decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.white24)
-                        ),
-                        isDense: true,
-                        labelText: name == "price" ? AppLocalizations.of(context).price : AppLocalizations.of(context).quantity,
-                        labelStyle: new TextStyle(color: Colors.white70),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: new BorderSide(color: Colors.white24)),
+                      isDense: true,
+                      labelText: name == "price"
+                          ? AppLocalizations.of(context).price
+                          : AppLocalizations.of(context).quantity,
+                      labelStyle: new TextStyle(color: Colors.white70),
                     ),
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -57,24 +68,17 @@ class TextfieldText extends StatelessWidget {
                   )
               )
            */
-                ])
-            ,
-
+                ]),
             new Positioned(
-                child:
-                Padding(
+                child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                    child:
-                    new Align(
+                    child: new Align(
                         alignment: FractionalOffset.centerRight,
-                        child:
-                        Text(suffixText, style: TextStyle(fontSize: 18,color: Colors.white70))
-                    )
-                )
-            )
+                        child: Text(suffixText,
+                            style: TextStyle(
+                                fontSize: 18, color: Colors.white70)))))
           ],
-        )
-    );
+        ));
     /*
     return
       Container(

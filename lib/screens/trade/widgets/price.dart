@@ -1,29 +1,38 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import "package:flutter/material.dart";
 import 'package:exchangilymobileapp/models/price.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 
-class TradePrice extends StatefulWidget  {
+class TradePrice extends StatefulWidget {
   TradePrice({Key key}) : super(key: key);
 
   @override
   TradePriceState createState() => TradePriceState();
 }
 
-class TradePriceState extends State<TradePrice>{
+class TradePriceState extends State<TradePrice> {
   Price currentPrice;
   double currentUsdPrice;
   @override
   void initState() {
     super.initState();
-
   }
 
   showPrice(Price price, double usdPrice) {
-
-    setState(() => {
-      this.currentPrice = price,
-      this.currentUsdPrice = usdPrice
-    });
+    setState(
+        () => {this.currentPrice = price, this.currentUsdPrice = usdPrice});
   }
 
   @override
@@ -37,40 +46,61 @@ class TradePriceState extends State<TradePrice>{
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 10, 30.0, 10),
-                    child:
-                    Text((currentPrice!=null ) ? currentPrice.price.toString():'', style: TextStyle(fontSize: 30,color: Color(0xFF0da88b)))
-                ),
-                Text("\$" + ((currentPrice!=null) ? (currentPrice.price * currentUsdPrice) : 0).toString(), style: TextStyle(fontSize: 16,color: Color(0xFF5e617f)))
+                    child: Text(
+                        (currentPrice != null)
+                            ? currentPrice.price.toString()
+                            : '',
+                        style:
+                            TextStyle(fontSize: 30, color: Color(0xFF0da88b)))),
+                Text(
+                    "\$" +
+                        ((currentPrice != null)
+                                ? (currentPrice.price * currentUsdPrice)
+                                : 0)
+                            .toString(),
+                    style: TextStyle(fontSize: 16, color: Color(0xFF5e617f)))
               ],
             ),
             Row(
               children: <Widget>[
                 Padding(
                     padding: EdgeInsets.fromLTRB(10.0, 0, 5, 10),
-                    child:
-                    Text(currentPrice?.changeValue.toString(), style: TextStyle(fontSize: 18,color: Color(0xFF0da88b)))
-                ),
-
+                    child: Text(currentPrice?.changeValue.toString(),
+                        style:
+                            TextStyle(fontSize: 18, color: Color(0xFF0da88b)))),
                 Padding(
                     padding: EdgeInsets.fromLTRB(5, 0, 10.0, 10),
-                    child:
-                    Text( currentPrice?.change.toString() + "%", style: TextStyle(fontSize: 18,color: Color(0xFF0da88b)))
-                ),
+                    child: Text(currentPrice?.change.toString() + "%",
+                        style:
+                            TextStyle(fontSize: 18, color: Color(0xFF0da88b)))),
               ],
             ),
             Padding(
                 padding: EdgeInsets.fromLTRB(10.0, 0, 10, 5),
-                child:Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(AppLocalizations.of(context).low + " " + currentPrice?.low.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
-                    Text(AppLocalizations.of(context).volume + " " + currentPrice?.volume.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f))),
-                    Text(AppLocalizations.of(context).high + " " + currentPrice?.high.toString(), style: TextStyle(fontSize: 15,color: Color(0xFF5e617f)))
+                    Text(
+                        AppLocalizations.of(context).low +
+                            " " +
+                            currentPrice?.low.toString(),
+                        style:
+                            TextStyle(fontSize: 15, color: Color(0xFF5e617f))),
+                    Text(
+                        AppLocalizations.of(context).volume +
+                            " " +
+                            currentPrice?.volume.toString(),
+                        style:
+                            TextStyle(fontSize: 15, color: Color(0xFF5e617f))),
+                    Text(
+                        AppLocalizations.of(context).high +
+                            " " +
+                            currentPrice?.high.toString(),
+                        style:
+                            TextStyle(fontSize: 15, color: Color(0xFF5e617f)))
                   ],
-                )
-            )
+                ))
           ],
-        )
-    );
+        ));
   }
 }

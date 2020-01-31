@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
@@ -37,7 +50,7 @@ class SendScreenState extends BaseState {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (dialogResponse.confirmed) {
-      String mnemonic = dialogResponse.fieldOne;
+      String mnemonic = dialogResponse.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       if (tickerName == 'USDT') {
@@ -95,17 +108,16 @@ class SendScreenState extends BaseState {
         errorMessage = AppLocalizations.of(context).transanctionFailed;
         setState(ViewState.Idle);
       });
-    } else if (dialogResponse.fieldOne != 'Closed') {
+    } else if (dialogResponse.returnedText != 'Closed') {
       setState(ViewState.Idle);
       return errorMessage =
           AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
     } else {
-      // This is when user closes the dialog box by pressing cross icon
       setState(ViewState.Idle);
     }
   }
 
-  // Check Transaction Status
+  // Check transaction status not working yet
 
   checkTxStatus(String txHash, String tickerName) async {
     if (tickerName == 'FAB') {
@@ -153,7 +165,6 @@ class SendScreenState extends BaseState {
   }
 
   bool checkAmount(amount) {
-    // Pattern pattern = r'^\$|^(0|([1-9][0-9]{0,})|\.)(\\.[0-9]{0,})?\$';
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
     log.w(amount);
     var res = RegexValidator(pattern).isValid(amount);

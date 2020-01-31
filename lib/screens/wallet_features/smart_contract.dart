@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -230,8 +243,7 @@ class _SmartContractState extends State<SmartContract> {
                     for (var i = 0; i < inputs.length; i++) {
                       var text = inputs[i]['controller'].text;
                     }
-                    if (payable) {
-                    }
+                    if (payable) {}
 
                     if (abi['stateMutability'] == 'view') {
                       callContract();
@@ -265,16 +277,7 @@ class _SmartContractState extends State<SmartContract> {
       var hexString = number.toRadixString(16);
       abiHex += stringUtils.fixLength(hexString, 64);
     }
-
     return abiHex;
-/*
-    var buf = '';
-    buf += stringUtils.fixLength(coinType.toString(), 4);
-    buf += stringUtils.fixLength(txHash, 64);
-    var hexString = amount.toRadixString(16);
-    buf += stringUtils.fixLength(hexString, 64);
-    buf += stringUtils.fixLength(address, 64);
-*/
   }
 
   callContract() {}
@@ -286,8 +289,8 @@ class _SmartContractState extends State<SmartContract> {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote);
     if (res.confirmed) {
       log.w('Pass matched');
-      log.w('${res.fieldOne}');
-      String mnemonic = res.fieldOne;
+      log.w('${res.returnedText}');
+      String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var contractInfo = await walletService.getFabSmartContract(
@@ -304,7 +307,7 @@ class _SmartContractState extends State<SmartContract> {
         errMsg = res['errMsg'];
       }
     } else {
-      if (res.fieldOne != 'Closed') {
+      if (res.returnedText != 'Closed') {
         log.w('Wrong password');
         showNotification(context);
       }
@@ -330,29 +333,5 @@ class _SmartContractState extends State<SmartContract> {
     }
 
     checkPass(abiHex, value, context);
-
-    /*
-    var randomMnemonic =
-        'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-    var seed = bip39.mnemonicToSeed(randomMnemonic);
-
-    */
-
-    /*
-    EthereumAddress contractAddr =
-    EthereumAddress.fromHex(smartContractAddressController.value.text);
-    final contract =
-    DeployedContract(abis, contractAddr);
-    var params = [];
-    for(var i = 0; i < inputs.length; i++) {
-      params.add(inputs[i]['controller'].value.text);
-    }
-    Transaction.callContract(
-      contract: contract,
-      function: abi,
-      parameters: params,
-    );
-
-     */
   }
 }

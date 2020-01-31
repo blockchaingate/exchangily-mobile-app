@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import "package:flutter/material.dart";
 import 'orders_list.dart';
 import 'assets_list.dart';
@@ -6,14 +19,15 @@ import '../../../services/trade_service.dart';
 import '../../../environments/coins.dart';
 import '../../../utils/string_util.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+
 class MyOrders extends StatefulWidget {
   MyOrders({Key key}) : super(key: key);
   @override
   MyOrdersState createState() => MyOrdersState();
 }
 
-
-class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin, TradeService{
+class MyOrdersState extends State<MyOrders>
+    with SingleTickerProviderStateMixin, TradeService {
   TabController _tabController;
 
   List<Map<String, dynamic>> openOrders = [
@@ -57,7 +71,7 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
   }
 
   refresh(String address) {
-    if(address == null) {
+    if (address == null) {
       return;
     }
     Timer.periodic(Duration(seconds: 3), (Timer time) async {
@@ -69,7 +83,7 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
       List<Map<String, dynamic>> openOrds = [];
       List<Map<String, dynamic>> closeOrds = [];
 
-      for(var i = 0; i < balances.length; i++) {
+      for (var i = 0; i < balances.length; i++) {
         var bal = balances[i];
         var coinType = int.parse(bal['coinType']);
         var unlockedAmount = bigNum2Double(bal['unlockedAmount']);
@@ -81,7 +95,6 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
         };
         newbals.add(newbal);
       }
-
 
       for (var i = 0; i < orders.length; i++) {
         var order = orders[i];
@@ -101,77 +114,72 @@ class MyOrdersState extends State<MyOrders> with SingleTickerProviderStateMixin,
         var newOrd = {
           'orderHash': orderHash,
           'type': (bidOrAsk == true) ? 'Buy' : 'Sell',
-          'pair': coin_list[pairLeft]['name'].toString() + '/' + coin_list[pairRight]['name'].toString(),
+          'pair': coin_list[pairLeft]['name'].toString() +
+              '/' +
+              coin_list[pairRight]['name'].toString(),
           'price': price,
           'amount': orderQuantity,
           'filledAmount': filledQuantity
         };
 
-        if(isActive == true) {
+        if (isActive == true) {
           openOrds.add(newOrd);
         } else {
           closeOrds.add(newOrd);
         }
       }
       if (this.mounted) {
-        setState(() =>
-        {
-          this.balance = newbals,
-          this.openOrders =
-          openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds,
-          this.closedOrders =
-          closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds
-        });
+        setState(() => {
+              this.balance = newbals,
+              this.openOrders =
+                  openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds,
+              this.closedOrders =
+                  closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds
+            });
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return
-      Padding(
-          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-          child:
-          Column(
-            children: <Widget>[
-              TabBar(
-                unselectedLabelColor: Colors.white,
-                labelColor: Colors.white,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Color(0XFF871fff)),
-                tabs: [
-                  Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 8.0),
-                      child:new Text(AppLocalizations.of(context).openOrders)
-                  ),
-                  new Text(AppLocalizations.of(context).closeOrders),
-                  new Text(AppLocalizations.of(context).assets)
-                ],
-                controller: _tabController,
-                indicatorColor: Colors.white,
-              ),
-              Container(
-
-                  decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(width: 1.0, color: Colors.white24)
-                    ),
-                  ),
-                  padding: EdgeInsets.fromLTRB(0.0, 10, 0.0, 0),
-                  margin: EdgeInsets.fromLTRB(0.0, 10, 0.0, 0),
-                  height: 330,
-                  child:TabBarView(
-                    children: [
-                      OrdersList(openOrders),
-                      OrdersList(closedOrders),
-                      AssetssList(balance)
-                    ],
-                    controller: _tabController,)
-              )
-            ],
-          )
-      );
+    return Padding(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        child: Column(
+          children: <Widget>[
+            TabBar(
+              unselectedLabelColor: Colors.white,
+              labelColor: Colors.white,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  color: Color(0XFF871fff)),
+              tabs: [
+                Padding(
+                    padding: const EdgeInsets.only(top: 10.0, bottom: 8.0),
+                    child: new Text(AppLocalizations.of(context).openOrders)),
+                new Text(AppLocalizations.of(context).closeOrders),
+                new Text(AppLocalizations.of(context).assets)
+              ],
+              controller: _tabController,
+              indicatorColor: Colors.white,
+            ),
+            Container(
+                decoration: const BoxDecoration(
+                  border: Border(
+                      top: BorderSide(width: 1.0, color: Colors.white24)),
+                ),
+                padding: EdgeInsets.fromLTRB(0.0, 10, 0.0, 0),
+                margin: EdgeInsets.fromLTRB(0.0, 10, 0.0, 0),
+                height: 330,
+                child: TabBarView(
+                  children: [
+                    OrdersList(openOrders),
+                    OrdersList(closedOrders),
+                    AssetssList(balance)
+                  ],
+                  controller: _tabController,
+                ))
+          ],
+        ));
   }
 }

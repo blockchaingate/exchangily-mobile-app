@@ -1,7 +1,16 @@
-import 'package:bitcoin_flutter/bitcoin_flutter.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 
 final Color primaryColor = Color.fromRGBO(135, 31, 255, 1);
 final Color secondaryColor = Color.fromRGBO(31, 33, 51, 1);

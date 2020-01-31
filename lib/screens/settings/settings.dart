@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: barry-ruprai@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/screen_state/settings_screen_state.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,7 +37,6 @@ class SettingsScreen extends StatelessWidget {
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
-          // width: double.infinity,
           padding: EdgeInsets.all(10),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -37,7 +49,6 @@ class SettingsScreen extends StatelessWidget {
                     elevation: 4,
                     child: Container(
                       color: globals.walletCardColor,
-                      //  width: 200,
                       height: 100,
                       child: Center(
                         child: Text(

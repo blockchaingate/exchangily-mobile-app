@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../localizations.dart';
@@ -18,9 +31,7 @@ class Withdraw extends StatelessWidget {
   Withdraw({Key key, this.walletInfo}) : super(key: key);
   final myController = TextEditingController();
   checkPass(double amount, context) async {
-
-    if (amount == null ||
-        amount > walletInfo.assetsInExchange) {
+    if (amount == null || amount > walletInfo.assetsInExchange) {
       walletService.showInfoFlushbar(
           AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
@@ -30,21 +41,23 @@ class Withdraw extends StatelessWidget {
       return;
     }
 
-
     if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-      walletService.showInfoFlushbar('Minimum amount error',
-          'Your withdraw minimum amount is not satisfied', Icons.cancel, globals.red, context);
+      walletService.showInfoFlushbar(
+          'Minimum amount error',
+          'Your withdraw minimum amount is not satisfied',
+          Icons.cancel,
+          globals.red,
+          context);
       return;
     }
-
 
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
-        AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.fieldOne;
+      String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
       var tokenType = this.walletInfo.tokenType;
       var coinName = this.walletInfo.tickerName;
@@ -55,10 +68,10 @@ class Withdraw extends StatelessWidget {
       if (coinName == 'EXG') {
         tokenType = 'FAB';
       }
-      var ret =
-      await walletService.withdrawDo(seed, coinName, coinAddress, tokenType, amount);
+      var ret = await walletService.withdrawDo(
+          seed, coinName, coinAddress, tokenType, amount);
 
-      if(ret["success"]) {
+      if (ret["success"]) {
         myController.text = '';
       }
 
@@ -73,15 +86,19 @@ class Withdraw extends StatelessWidget {
           globals.red,
           context);
     } else {
-      if (res.fieldOne != 'Closed') {
+      if (res.returnedText != 'Closed') {
         showNotification(context);
       }
     }
   }
 
   showNotification(context) {
-    walletService.showInfoFlushbar('Password Mismatch',
-        'Please enter the correct pasword', Icons.cancel, globals.red, context);
+    walletService.showInfoFlushbar(
+        AppLocalizations.of(context).passwordMismatch,
+        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        Icons.cancel,
+        globals.red,
+        context);
   }
 
   @override
@@ -116,9 +133,6 @@ class Withdraw extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                // Text("Amount:",
-                //     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
-                // SizedBox(height: 10),
                 TextField(
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
@@ -144,15 +158,11 @@ class Withdraw extends StatelessWidget {
                     style: Theme.of(context).textTheme.button,
                   ),
                 ),
-
-
                 SizedBox(height: 20),
-
                 Row(
                   children: <Widget>[
                     Text(
-                      AppLocalizations.of(context).walletbalance +
-                          ' $bal',
+                      AppLocalizations.of(context).walletbalance + ' $bal',
                       style: Theme.of(context).textTheme.headline,
                     ),
                     Padding(
@@ -166,7 +176,6 @@ class Withdraw extends StatelessWidget {
                     )
                   ],
                 )
-
               ],
             )));
   }

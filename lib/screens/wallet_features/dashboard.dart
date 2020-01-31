@@ -7,8 +7,6 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Class Name: DashboardScreen
-*
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
@@ -40,7 +38,7 @@ class DashboardScreen extends StatelessWidget {
       onModelReady: (model) async {
         model.context = context;
         if (walletInfo != null) {
-          log.i('wallet info not null');
+          log.w('wallet info not null');
           model.walletInfo = walletInfo;
           model.calcTotalBal(walletInfo.length);
         } else {
@@ -48,7 +46,6 @@ class DashboardScreen extends StatelessWidget {
           await model.retrieveWallets();
         }
         await model.getGas();
-        //  await model.getExchangeAssets();
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
@@ -106,12 +103,12 @@ class DashboardScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: Stack(
-                          //fit: StackFit.passthrough,
                           overflow: Overflow.visible,
                           alignment: Alignment.bottomCenter,
                           children: <Widget>[
                             Positioned(
                               bottom: -15,
+
 /*------------------------------------------------------------
                       Total Balance Card
 ------------------------------------------------------------*/
@@ -127,7 +124,6 @@ class DashboardScreen extends StatelessWidget {
                                       Container(
                                         padding: EdgeInsets.all(8),
                                         decoration: new BoxDecoration(
-                                            //    color: globals.iconBackgroundColor,
                                             borderRadius:
                                                 new BorderRadius.circular(30)),
                                         child: Image.asset(
@@ -174,7 +170,6 @@ class DashboardScreen extends StatelessWidget {
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline),
-                                            //AddGas()
                                           ],
                                         ),
                                       ),
@@ -258,7 +253,6 @@ class DashboardScreen extends StatelessWidget {
               // Gas Container
               Container(
                   padding: EdgeInsets.only(left: 5, top: 2),
-                  // added model state here and problem of displaying gas amount on the first load solves itself
                   child: model.state == ViewState.Busy
                       ? Shimmer.fromColors(
                           baseColor: globals.primaryColor,
@@ -266,79 +260,6 @@ class DashboardScreen extends StatelessWidget {
                           child: Gas(gasAmount: model.gasAmount),
                         )
                       : Gas(gasAmount: model.gasAmount)),
-
-              // Test Features Buttons Below
-              // Container(
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: <Widget>[
-              //       Column(
-              //         children: <Widget>[
-              //           InkWell(
-              //             child: Text('Create Database',
-              //                 style: TextStyle(color: globals.white)),
-              //             onTap: () {
-              //               model.initDb();
-              //             },
-              //           ),
-              //           UIHelper.horizontalSpaceSmall,
-              //           InkWell(
-              //             child: Text('Delete Database',
-              //                 style: TextStyle(color: globals.white)),
-              //             onTap: () {
-              //               model.deleteDb();
-              //             },
-              //           ),
-              //           UIHelper.horizontalSpaceSmall,
-              //           InkWell(
-              //             child: Text('Get All Records',
-              //                 style: TextStyle(color: globals.white)),
-              //             onTap: () {
-              //               model.getAll();
-              //             },
-              //           ),
-              //         ],
-              //       ),
-              //       Column(
-              //         children: <Widget>[
-              //           UIHelper.horizontalSpaceSmall,
-              //           InkWell(
-              //             child: Text('Close Database',
-              //                 style: TextStyle(color: globals.white)),
-              //             onTap: () {
-              //               model.closeDB();
-              //             },
-              //           ),
-              //           IconButton(
-              //             tooltip: 'Add',
-              //             icon: Icon(Icons.add, color: globals.white),
-              //             onPressed: () {
-              //               model.create();
-              //             },
-              //           ),
-              //           UIHelper.horizontalSpaceSmall,
-              //           InkWell(
-              //             child: Text('Update Database',
-              //                 style: TextStyle(color: globals.white)),
-              //             onTap: () {
-              //               model.udpate();
-              //             },
-              //           ),
-              //           UIHelper.horizontalSpaceSmall,
-              //           InkWell(
-              //             onTap: () {
-              //               model.deleteWallet();
-              //             },
-              //             child: Text(
-              //               'Delete Single Object',
-              //               style: TextStyle(color: globals.white),
-              //             ),
-              //           )
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ),
 
 /*------------------------------------------------------------------------------
                             Build Wallet List Container
@@ -357,7 +278,6 @@ class DashboardScreen extends StatelessWidget {
                                   model.walletInfoCopy[index].lockedBalance,
                                   model.walletInfoCopy[index].assetsInExchange,
                                   model.walletInfoCopy[index].usdValue,
-                                  //  walletInfoCopy[index].logoColor,
                                   index,
                                   model.walletInfoCopy,
                                   model.elevation,
@@ -380,7 +300,6 @@ class DashboardScreen extends StatelessWidget {
                                   model.walletInfo[index].lockedBalance,
                                   model.walletInfo[index].assetsInExchange,
                                   model.walletInfo[index].usdValue,
-                                  //  walletInfo[index].logoColor,
                                   index,
                                   walletInfo,
                                   model.elevation,
@@ -409,7 +328,6 @@ class DashboardScreen extends StatelessWidget {
           double locked,
           double assetsInExchange,
           double usdValue,
-          //   color,
           index,
           walletInfo,
           elevation,
@@ -536,13 +454,6 @@ class DashboardScreen extends StatelessWidget {
                                       arguments: model.walletInfo[index]);
                                 }),
                           ),
-                          // IconButton(
-                          //     icon: Icon(Icons.arrow_upward),
-                          //     tooltip: 'Withdraw',
-                          //     onPressed: () {
-                          //       Navigator.pushNamed(context, '/withdraw',
-                          //           arguments: walletInfo[index]);
-                          //     }),
                           Expanded(
                             child: IconButton(
                                 icon: Icon(Icons.arrow_upward),

@@ -7,8 +7,6 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Class Name: DialogManager
-*
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
@@ -66,7 +64,7 @@ class _DialogManagerState extends State<DialogManager> {
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
           _dialogService.dialogComplete(
-              AlertResponse(fieldOne: 'Closed', confirmed: false));
+              AlertResponse(returnedText: 'Closed', confirmed: false));
         },
         content: Column(
           children: <Widget>[
@@ -96,7 +94,7 @@ class _DialogManagerState extends State<DialogManager> {
               _walletService.readEncryptedData(controller.text).then((data) {
                 if (data != '' && data != null) {
                   _dialogService.dialogComplete(
-                      AlertResponse(fieldOne: data, confirmed: true));
+                      AlertResponse(returnedText: data, confirmed: true));
                   controller.text = '';
                   Navigator.of(context).pop();
                 } else {

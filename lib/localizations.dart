@@ -659,6 +659,43 @@ class AppLocalizations {
   String get no {
     return Intl.message('No', name: 'no', desc: 'generic_no');
   }
+
+  String get fabLockForExgAirdrop {
+    return Intl.message('Fab Lock For Exg Airdrop',
+        name: 'fabLockForExgAirdrop', desc: 'fabLock_for_exg_airdrop');
+  }
+
+  String get passwordMatched {
+    return Intl.message('Password Matched',
+        name: 'passwordMatched', desc: 'create_password_password_matched');
+  }
+
+  String get passwordDoesNotMatched {
+    return Intl.message('Password does not matched',
+        name: 'passwordDoesNotMatched',
+        desc: 'create_password_password_does_not_matched');
+  }
+
+  String get userAccessDenied {
+    return Intl.message('User Access Denied',
+        name: 'userAccessDenied', desc: 'send_screen_user_access_denied');
+  }
+
+  String get unknownError {
+    return Intl.message('Unknown Error',
+        name: 'unknownError', desc: 'send_screen_unknown_error');
+  }
+
+  String get scanCancelled {
+    return Intl.message('Scan Cancelled',
+        name: 'scanCancelled', desc: 'send_screen_scan_cancelled');
+  }
+
+  String get userReturnedByPressingBackButton {
+    return Intl.message('User returned by pressing the back button',
+        name: 'userReturnedByPressingBackButton',
+        desc: 'send_screen_user_returned_by_pressing_back_button');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

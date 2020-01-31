@@ -1,3 +1,16 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +35,7 @@ class AddGas extends StatelessWidget {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.fieldOne;
+      String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
       var ret = await walletService.addGasDo(seed, amount);
 
@@ -40,7 +53,7 @@ class AddGas extends StatelessWidget {
           globals.red,
           context);
     } else {
-      if (res.fieldOne != 'Closed') {
+      if (res.returnedText != 'Closed') {
         showNotification(context);
       }
     }
@@ -57,7 +70,6 @@ class AddGas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         appBar: CupertinoNavigationBar(
           padding: EdgeInsetsDirectional.only(start: 0),

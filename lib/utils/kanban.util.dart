@@ -1,23 +1,38 @@
+/*
+* Copyright (c) 2020 Exchangily LLC
+*
+* Licensed under Apache License v2.0
+* You may obtain a copy of the License at
+*
+*      https://www.apache.org/licenses/LICENSE-2.0
+*
+*----------------------------------------------------------------------
+* Author: ken.qiu@exchangily.com
+*----------------------------------------------------------------------
+*/
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../environments/environment.dart';
 
-Future<String> getScarAddress() async{
+Future<String> getScarAddress() async {
   var url = environment['endpoints']['kanban'] + 'kanban/getScarAddress';
   var client = new http.Client();
   var response = await client.get(url);
   return response.body;
 }
 
-Future<String> getCoinPoolAddress() async{
-  var url = environment['endpoints']['kanban'] + 'exchangily/getCoinPoolAddress';
+Future<String> getCoinPoolAddress() async {
+  var url =
+      environment['endpoints']['kanban'] + 'exchangily/getCoinPoolAddress';
   var client = new http.Client();
   var response = await client.get(url);
   return response.body;
 }
 
-Future<String> getExchangilyAddress() async{
-  var url = environment['endpoints']['kanban'] + 'exchangily/getExchangeAddress';
+Future<String> getExchangilyAddress() async {
+  var url =
+      environment['endpoints']['kanban'] + 'exchangily/getExchangeAddress';
   var client = new http.Client();
   var response = await client.get(url);
   return response.body;
@@ -32,15 +47,18 @@ Future<double> getGas(String address) async {
   return double.parse(fab);
 }
 
-Future<int> getNonce(String address) async{
-  var url = environment['endpoints']['kanban'] + 'kanban/getTransactionCount/' + address;
+Future<int> getNonce(String address) async {
+  var url = environment['endpoints']['kanban'] +
+      'kanban/getTransactionCount/' +
+      address;
   var client = new http.Client();
   var response = await client.get(url);
   var json = jsonDecode(response.body);
   return json["transactionCount"];
 }
 
-Future<Map<String, dynamic>> submitDeposit(String rawTransaction, String rawKanbanTransaction) async {
+Future<Map<String, dynamic>> submitDeposit(
+    String rawTransaction, String rawKanbanTransaction) async {
   var url = environment['endpoints']['kanban'] + 'submitDeposit';
   var data = {
     'rawTransaction': rawTransaction,
@@ -60,11 +78,10 @@ Future getKanbanErrDeposit(String address) async {
   return json;
 }
 
-Future<Map<String, dynamic>> sendKanbanRawTransaction(String rawKanbanTransaction) async {
+Future<Map<String, dynamic>> sendKanbanRawTransaction(
+    String rawKanbanTransaction) async {
   var url = environment['endpoints']['kanban'] + 'kanban/sendRawTransaction';
-  var data = {
-    'signedTransactionData': rawKanbanTransaction
-  };
+  var data = {'signedTransactionData': rawKanbanTransaction};
 
   try {
     var client = new http.Client();
@@ -73,11 +90,8 @@ Future<Map<String, dynamic>> sendKanbanRawTransaction(String rawKanbanTransactio
     print(response.body);
     Map<String, dynamic> res = jsonDecode(response.body);
     return res;
-  } catch(e) {
+  } catch (e) {
     //return e;
-    return {
-      'success': false,
-      'data': 'error'
-    };
+    return {'success': false, 'data': 'error'};
   }
 }
