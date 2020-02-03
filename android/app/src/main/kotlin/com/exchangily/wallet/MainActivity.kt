@@ -1,4 +1,4 @@
-package com.example.exchangilymobileapp
+package com.exchangily.wallet
 
 import android.os.Bundle
 
