@@ -138,7 +138,7 @@ Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoo
   var encodeList =
       uint8ListFromList(rlp.encode(_encodeToRlp(transaction, signature)));
   var finalString = '0x' + HEX.encode(encodeList);
-  print('finalString===' + finalString);
+  // print('finalString===' + finalString);
   return finalString;
   /*
   var signed = await ethClient.signTransaction(

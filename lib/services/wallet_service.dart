@@ -453,7 +453,7 @@ class WalletService {
     var abiHex = getDepositFuncABI(
         coinType, txHash, amountInLink, addressInKanban, signedMess);
 
-    print('abiHexxxxxx=' + abiHex);
+    // print('abiHexxxxxx=' + abiHex);
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
