@@ -46,9 +46,12 @@ class TextfieldText extends StatelessWidget {
                       labelStyle: new TextStyle(color: Colors.white70),
                     ),
                     keyboardType: TextInputType.number,
+                    /*
                     inputFormatters: [
                       ThousandsFormatter(allowFraction: true),
                     ],
+                    
+                     */
                     onChanged: (text) {
                       this.onTextChanged(name, text);
                     },
