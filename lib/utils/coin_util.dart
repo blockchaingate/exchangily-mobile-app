@@ -248,9 +248,16 @@ Future<Uint8List> signPersonalMessageWith(
 
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
   // be aware that signature.v already is recovery + 27
-  final chainIdV =
-      chainId != null ? (signature.v - 27 + (chainId * 2 + 35)) : signature.v;
+  print('signature.v======='+signature.v.toString());
+  print('chainId=' + chainId.toString());
 
+  /*
+  final chainIdV =
+      chainId != null ? (signature.v + (chainId * 2 + 35)) : signature.v;
+
+   */
+  final chainIdV = signature.v + 27;
+  print('chainIdV=' + chainIdV.toString());
   signature = MsgSignature(signature.r, signature.s, chainIdV);
 
   final r = _padTo32(intToBytes(signature.r));
@@ -297,17 +304,25 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     //var credentials = EthPrivateKey.fromHex(privateKey);
     var credentials = EthPrivateKey(privateKey);
 
+
+    var chainId = environment["chains"]["ETH"]["chainId"];
+    // chainId = 0;
+    print('chainId==' + chainId.toString());
+
     var signedMessOrig = await credentials
         .signPersonalMessage(stringToUint8List(originalMessage));
 
-    //signedMess = await signPersonalMessageWith(
-    //    _ethMessagePrefix, privateKey, stringToUint8List(originalMessage));
-    //String ss = HEX.encode(signedMess);
+    signedMess = await signPersonalMessageWith(
+        _ethMessagePrefix, privateKey, stringToUint8List(originalMessage), chainId: chainId);
+    String ss = HEX.encode(signedMess);
     String ss2 = HEX.encode(signedMessOrig);
 
-    r = ss2.substring(0, 64);
-    s = ss2.substring(64, 128);
-    v = ss2.substring(128);
+    print('ss='+ss);
+    print('ss2='+ss2);
+    r = ss.substring(0, 64);
+    s = ss.substring(64, 128);
+    v = ss.substring(128);
+    print('v=' + v);
   } else if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
     //var hdWallet = new HDWallet.fromSeed(seed, network: testnet);
 
