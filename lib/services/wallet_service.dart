@@ -453,6 +453,7 @@ class WalletService {
     var abiHex = getDepositFuncABI(
         coinType, txHash, amountInLink, addressInKanban, signedMess);
 
+    print('abiHexxxxxx=' + abiHex);
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
@@ -766,6 +767,8 @@ class WalletService {
           fetchChainIdFromNetworkId: false);
 
       txHex = '0x' + HEX.encode(signed);
+
+      print('txHex in ETH=' + txHex);
       if (doSubmit) {
         var res = await _api.postEthTx(txHex);
         txHash = res['txHash'];
