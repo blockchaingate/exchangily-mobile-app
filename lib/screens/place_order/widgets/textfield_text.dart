@@ -50,7 +50,7 @@ class TextfieldText extends StatelessWidget {
                     inputFormatters: [
                       ThousandsFormatter(allowFraction: true),
                     ],
-                    
+
                      */
                     onChanged: (text) {
                       this.onTextChanged(name, text);
