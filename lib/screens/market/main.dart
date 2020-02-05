@@ -27,12 +27,9 @@ class _MarketState extends State<Market> with TradeService {
   @override
   void initState() {
     super.initState();
-
   }
 
-
   List<Price> _updatePrice(prices) {
-    // print(prices);
     List<Price> list = Decoder.fromJsonArray(prices);
     for (var item in list) {
       item.open = bigNum2Double(item.open);
@@ -49,29 +46,31 @@ class _MarketState extends State<Market> with TradeService {
     }
     return list;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff1f2233),
-      body:
-      StreamBuilder(
+      body: StreamBuilder(
         stream: getAllPriceChannel().stream,
         builder: (context, snapshot) {
-          return  snapshot.hasData ? ListView(
-            children: <Widget>[
-              MarketOverview(key: _marketOverviewState, data: _updatePrice(snapshot.data)),
-              MarketDetail(key: _marketDetailState, data: _updatePrice(snapshot.data))
-              /*
+          return snapshot.hasData
+              ? ListView(
+                  children: <Widget>[
+                    MarketOverview(
+                        key: _marketOverviewState,
+                        data: _updatePrice(snapshot.data)),
+                    MarketDetail(
+                        key: _marketDetailState,
+                        data: _updatePrice(snapshot.data))
+                    /*
               MarketOverview(key: _marketOverviewState),
               MarketDetail(key: _marketDetailState)
 
                */
-            ],
-          ) :
-          Center(
-            child: CircularProgressIndicator()
-          );
+                  ],
+                )
+              : Center(child: CircularProgressIndicator());
         },
       ),
       bottomNavigationBar: AppBottomNav(count: 1),
@@ -80,7 +79,6 @@ class _MarketState extends State<Market> with TradeService {
 
   @override
   void dispose() {
-    //allPriceChannel.sink.close();
     super.dispose();
   }
 }
