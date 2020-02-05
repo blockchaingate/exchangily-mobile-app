@@ -4,14 +4,14 @@ import '../../../models/price.dart';
 
 class MarketDetail extends StatefulWidget {
   List<Price> data;
-  MarketDetail({Key key,this.data})
-      : super(key: key);
+  MarketDetail({Key key, this.data}) : super(key: key);
 
   @override
   MarketDetailState createState() => MarketDetailState();
 }
 
-class MarketDetailState extends State<MarketDetail> with SingleTickerProviderStateMixin{
+class MarketDetailState extends State<MarketDetail>
+    with SingleTickerProviderStateMixin {
   var usdtWidgets = List<Widget>();
   var btcWidgets = List<Widget>();
   var ethWidgets = List<Widget>();
@@ -21,41 +21,45 @@ class MarketDetailState extends State<MarketDetail> with SingleTickerProviderSta
 
   @override
   void initState() {
-    _tabController = new TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     super.initState();
     this.updatePrices(widget.data);
   }
+
   void updatePrices(List<Price> prices) {
     usdtWidgets = [];
     btcWidgets = [];
     ethWidgets = [];
     exgWidgets = [];
 
-    for(var price in prices) {
-      if(price.symbol.endsWith("USDT")) {
-        usdtWidgets.add(new DetailPair(price.symbol.replaceAll('USDT','/USDT'),price.volume, price.price, price.change, price.low, price.high));
-      }
-      else if( price.symbol.endsWith("BTC")) {
-        btcWidgets.add(new DetailPair(price.symbol.replaceAll('BTC','/BTC'), price.volume, price.price, price.change, price.low, price.high));
-      }
-      else if( price.symbol.endsWith("ETH")) {
-        ethWidgets.add(new DetailPair(price.symbol.replaceAll('ETH','/ETH'), price.volume, price.price, price.change, price.low, price.high));
-      }
-      else if( price.symbol.endsWith("EXG")) {
-        exgWidgets.add(new DetailPair(price.symbol.replaceAll('EXG','/EXG'), price.volume, price.price, price.change, price.low, price.high));
+    for (var price in prices) {
+      if (price.symbol.endsWith("USDT")) {
+        usdtWidgets.add(DetailPair(price.symbol.replaceAll('USDT', '/USDT'),
+            price.volume, price.price, price.change, price.low, price.high));
+      } else if (price.symbol.endsWith("BTC")) {
+        btcWidgets.add(DetailPair(price.symbol.replaceAll('BTC', '/BTC'),
+            price.volume, price.price, price.change, price.low, price.high));
+      } else if (price.symbol.endsWith("ETH")) {
+        ethWidgets.add(DetailPair(price.symbol.replaceAll('ETH', '/ETH'),
+            price.volume, price.price, price.change, price.low, price.high));
+      } else if (price.symbol.endsWith("EXG")) {
+        exgWidgets.add(DetailPair(price.symbol.replaceAll('EXG', '/EXG'),
+            price.volume, price.price, price.change, price.low, price.high));
       }
     }
     setState(() => {
-      this.usdtWidgets = usdtWidgets,
-      this.btcWidgets = btcWidgets,
-      this.ethWidgets = ethWidgets,
-      this.exgWidgets = exgWidgets
-    });
+          this.usdtWidgets = usdtWidgets,
+          this.btcWidgets = btcWidgets,
+          this.ethWidgets = ethWidgets,
+          this.exgWidgets = exgWidgets
+        });
   }
+
   @override
   Widget build(BuildContext context) {
-    return
-      Column(
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: Column(
         children: <Widget>[
           TabBar(
             unselectedLabelColor: Colors.white,
@@ -67,44 +71,27 @@ class MarketDetailState extends State<MarketDetail> with SingleTickerProviderSta
             tabs: [
               Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 8.0),
-                  child:new Text("USDT")
-              ),
-              new Text("BTC"),
-              new Text("ETH"),
-              new Text("EXG")
+                  child: Text("USDT")),
+              Text("BTC"),
+              Text("ETH"),
+              Text("EXG")
             ],
             controller: _tabController,
             indicatorColor: Colors.white,
           ),
           Container(
               height: 530,
-              child:TabBarView(
+              child: TabBarView(
                 children: [
-                  Container(
-                      child: Column(
-                          children: usdtWidgets
-                      )
-                  ),
-                  Container(
-                      child: Column(
-                          children: btcWidgets
-                      )
-                  ),
-                  Container(
-                      child: Column(
-                          children: ethWidgets
-                      )
-                  ),
-                  Container(
-                      child: Column(
-                          children: exgWidgets
-                      )
-                  ),
+                  Container(child: Column(children: usdtWidgets)),
+                  Container(child: Column(children: btcWidgets)),
+                  Container(child: Column(children: ethWidgets)),
+                  Container(child: Column(children: exgWidgets)),
                 ],
-                controller: _tabController,)
-          )
+                controller: _tabController,
+              ))
         ],
-      );
+      ),
+    );
   }
 }
-

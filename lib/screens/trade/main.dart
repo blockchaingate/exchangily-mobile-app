@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade-model.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/cupertino.dart';
@@ -145,8 +146,6 @@ class _TradeState extends State<Trade> with TradeService {
 
   @override
   void dispose() {
-    //allTradesChannel.sink.close();
-    //allOrdersChannel.sink.close();
     super.dispose();
   }
 
@@ -154,7 +153,7 @@ class _TradeState extends State<Trade> with TradeService {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CupertinoNavigationBar(
-          padding: EdgeInsetsDirectional.only(start: 0),
+          padding: EdgeInsetsDirectional.only(top: 5, bottom: 5),
           leading: CupertinoButton(
             padding: EdgeInsets.all(0),
             child: Icon(
@@ -178,7 +177,6 @@ class _TradeState extends State<Trade> with TradeService {
           ListView(
             children: <Widget>[
               TradePrice(key: _tradePriceState),
-              //KlinePage(pair: widget.pair),
               LoadHTMLFileToWEbView(widget.pair),
               Trademarket(key: _tradeMarketState),
               SizedBox(height: 60)
@@ -196,19 +194,22 @@ class _TradeState extends State<Trade> with TradeService {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Flexible(
-                            child: FlatButton(
-                          color: Color(0xFF0da88b),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PlaceOrder(
-                                      pair: widget.pair, bidOrAsk: true)),
-                            );
-                          },
-                          child: Text(AppLocalizations.of(context).buy,
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
+                            child: Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: FlatButton(
+                            color: Color(0xFF0da88b),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PlaceOrder(
+                                        pair: widget.pair, bidOrAsk: true)),
+                              );
+                            },
+                            child: Text(AppLocalizations.of(context).buy,
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white)),
+                          ),
                         )),
                         Flexible(
                             child: FlatButton(
