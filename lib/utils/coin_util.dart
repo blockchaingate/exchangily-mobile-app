@@ -383,7 +383,7 @@ getOfficalAddress(String coinName) {
       .where((addr) => addr['name'] == coinName)
       .toList();
 
-  if (address != null) {
+  if ((address != null) && (address.length > 0)) {
     return address[0]['address'];
   }
   return null;

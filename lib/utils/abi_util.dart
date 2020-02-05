@@ -108,7 +108,7 @@ Uint8List uint8ListFromList(List<int> data) {
   return Uint8List.fromList(data);
 }
 
-Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoolAddress, int nonce) async{
+Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoolAddress, int nonce, int gasPrice, int gasLimit) async{
 
   var chainId = environment["chains"]["KANBAN"]["chainId"];
   //var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
@@ -121,8 +121,8 @@ Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoo
 
   var transaction = Transaction(
       to: EthereumAddress.fromHex(coinPoolAddress),
-      gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, 6),
-      maxGas: 20000000,
+      gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.wei, gasPrice),
+      maxGas: gasLimit,
       nonce: nonce,
       value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
       data: HEX.decode(abiHex));

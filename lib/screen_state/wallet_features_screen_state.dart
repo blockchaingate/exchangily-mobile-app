@@ -28,7 +28,7 @@ import '../utils/keypair_util.dart';
 import '../utils/kanban.util.dart';
 import '../utils/abi_util.dart';
 import 'package:hex/hex.dart';
-
+import '../environments/environment.dart';
 class WalletFeaturesScreenState extends BaseState {
   final log = getLogger('WalletFeaturesScreenState');
 
@@ -163,7 +163,7 @@ class WalletFeaturesScreenState extends BaseState {
         keyPairKanban['address'], signedMess);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
+        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, environment["chains"]["KANBAN"]["gasPrice"], environment["chains"]["KANBAN"]["gasLimit"]);
 
     var res = await sendKanbanRawTransaction(txKanbanHex);
     return res;

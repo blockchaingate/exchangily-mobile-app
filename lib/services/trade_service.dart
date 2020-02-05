@@ -52,9 +52,7 @@ mixin TradeService {
     if (name == 'exchangily') {
       return currentUsdValue = 0.2;
     }
-    print('name=' + name);
-    print('usdVal=');
-    print(usdVal);
+
     if(name == 'btc') {
       name = 'bitcoin';
     } else

@@ -365,7 +365,7 @@ class WalletService {
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
+        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, environment["chains"]["KANBAN"]["gasPrice"], environment["chains"]["KANBAN"]["gasLimit"]);
 
     var res = await sendKanbanRawTransaction(txKanbanHex);
 
@@ -382,7 +382,7 @@ class WalletService {
   // Future Deposit Do
 
   Future<Map<String, dynamic>> depositDo(
-      seed, String coinName, String tokenType, double amount) async {
+      seed, String coinName, String tokenType, double amount, option) async {
     var errRes = new Map();
     errRes['success'] = false;
 
@@ -391,6 +391,7 @@ class WalletService {
       errRes['data'] = 'no official address';
       return errRes;
     }
+    /*
     var option = {};
     if ((coinName != null) &&
         (coinName != '') &&
@@ -401,9 +402,11 @@ class WalletService {
         'contractAddress': environment["addresses"]["smartContract"][coinName]
       };
     }
-
+    */
+    var kanbanGasPrice = option['kanbanGasPrice'];
+    var kanbanGasLimit = option['kanbanGasLimit'];
     var resST = await sendTransaction(
-        coinName, seed, [0], officalAddress, amount, option, false);
+        coinName, seed, [0],[], officalAddress, amount, option, false);
 
     if (resST['errMsg'] != '') {
       errRes['data'] = resST['errMsg'];
@@ -457,7 +460,7 @@ class WalletService {
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce);
+        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, kanbanGasPrice, kanbanGasLimit);
 
     var res = await submitDeposit(txHex, txKanbanHex);
 
@@ -496,10 +499,10 @@ class WalletService {
 
     var fxnDepositCallHex = '4a58db19';
     var contractInfo =
-        await getFabSmartContract(scarContractAddress, fxnDepositCallHex);
+        await getFabSmartContract(scarContractAddress, fxnDepositCallHex, 800000, 50);
 
     var res1 = await getFabTransactionHex(seed, [0], contractInfo['contract'],
-        amount, contractInfo['totalFee'], satoshisPerBytes);
+        amount, contractInfo['totalFee'], satoshisPerBytes, [], false);
     var txHex = res1['txHex'];
     var errMsg = res1['errMsg'];
 
@@ -535,7 +538,7 @@ class WalletService {
   }
 
   getFabTransactionHex(seed, addressIndexList, toAddress, double amount,
-      double extraTransactionFee, int satoshisPerBytes) async {
+      double extraTransactionFee, int satoshisPerBytes, addressList, getTransFeeOnly) async {
     final txb = new TransactionBuilder(
         network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);
@@ -547,6 +550,7 @@ class WalletService {
     var totalAmount = amount + extraTransactionFee;
     var amountNum = totalAmount * 1e8;
 
+    var transFeeDouble = 0.0;
     var bytesPerInput = 148;
     var feePerInput = bytesPerInput * satoshisPerBytes;
 
@@ -556,7 +560,10 @@ class WalletService {
           environment["CoinType"]["FAB"].toString() +
           "'/0'/0/" +
           index.toString());
-      final fromAddress = getBtcAddressForNode(fabCoinChild);
+      var fromAddress = getBtcAddressForNode(fabCoinChild);
+      if(addressList!=null && addressList.length > 0) {
+        fromAddress = addressList[i];
+      }
       if (i == 0) {
         changeAddress = fromAddress;
       }
@@ -590,21 +597,29 @@ class WalletService {
       if (!finished) {
         return {
           'txHex': '',
-          'errMsg': 'not enough fab coin to make the transaction.'
+          'errMsg': 'not enough fab coin to make the transaction.',
+          'transFee': transFeeDouble
         };
       }
 
       var transFee = (receivePrivateKeyArr.length) * feePerInput + 2 * 34 + 10;
-
+      print('extraTransactionFee==' + extraTransactionFee.toString());
+      print('transFee==' + transFee.toString());
+      transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) + Decimal.parse(transFee.toString()) / Decimal.parse('1e8'))).toDouble();
       var output1 =
           (totalInput - amount * 1e8 - extraTransactionFee * 1e8 - transFee)
               .round();
+
+      if(getTransFeeOnly) {
+
+      }
       var output2 = (amount * 1e8).round();
 
       if (output1 < 0 || output2 < 0) {
         return {
           'txHex': '',
-          'errMsg': 'output1 or output2 should be greater than 0.'
+          'errMsg': 'output1 or output2 should be greater than 0.',
+          'transFee': transFeeDouble
         };
       }
 
@@ -621,7 +636,7 @@ class WalletService {
 
       var txHex = txb.build().toHex();
 
-      return {'txHex': txHex, 'errMsg': ''};
+      return {'txHex': txHex, 'errMsg': '', 'transFee': transFeeDouble};
     }
   }
 
@@ -630,7 +645,7 @@ class WalletService {
   }
   // Send Transaction
 
-  Future sendTransaction(String coin, seed, List addressIndexList,
+  Future sendTransaction(String coin, seed, List addressIndexList,List addressList,
       String toAddress, double amount, options, bool doSubmit) async {
     final root = bip32.BIP32.fromSeed(seed);
     log.w('coin=' + coin);
@@ -639,37 +654,67 @@ class WalletService {
     log.w(amount);
     var totalInput = 0;
     var finished = false;
-    var gasPrice = 10.2;
-    var gasLimit = 21000;
-    var satoshisPerBytes = 14;
+    var gasPrice = 0;
+    var gasLimit = 0;
+    var satoshisPerBytes = 0;
+    var bytesPerInput = 0;
+    var getTransFeeOnly = false;
     var txHex = '';
     var txHash = '';
     var errMsg = '';
+    var transFeeDouble = 0.0;
     var amountSent = 0;
     var receivePrivateKeyArr = [];
 
     var tokenType = options['tokenType'] ?? '';
     var contractAddress = options['contractAddress'] ?? '';
     var changeAddress = '';
+
+    if(options != null) {
+      if(options["gasPrice"] != null) {
+        gasPrice = options["gasPrice"];
+      }
+      if(options["gasLimit"] != null) {
+        gasLimit = options["gasLimit"];
+      }
+      if(options["satoshisPerBytes"] != null) {
+        satoshisPerBytes = options["satoshisPerBytes"];
+      }
+      if(options["bytesPerInput"] != null) {
+        bytesPerInput = options["bytesPerInput"];
+      }
+      if(options["getTransFeeOnly"] != null) {
+        getTransFeeOnly = options["getTransFeeOnly"];
+      }
+    }
     //print('tokenType=' + tokenType);
+
+    log.w('gasPrice=' + gasPrice.toString());
+    log.w('gasLimit=' + gasLimit.toString());
+    log.w('satoshisPerBytes=' + satoshisPerBytes.toString());
     if (coin == 'BTC') {
-      var bytesPerInput = 148;
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["BTC"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["BTC"]["satoshisPerBytes"];
+      }
       var amountNum = amount * 1e8;
       amountNum += (2 * 34 + 10);
       final txb = new TransactionBuilder(
           network: environment["chains"]["BTC"]["network"]);
       // txb.setVersion(1);
 
-      log.w('addressIndexList=');
-      log.w(addressIndexList);
-      log.w(addressIndexList.length);
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
         var bitCoinChild = root.derivePath("m/44'/" +
             environment["CoinType"]["BTC"].toString() +
             "'/0'/0/" +
             index.toString());
-        final fromAddress = getBtcAddressForNode(bitCoinChild);
+        var fromAddress = getBtcAddressForNode(bitCoinChild);
+        if(addressList.length > 0) {
+          fromAddress = addressList[i];
+        }
         if (i == 0) {
           changeAddress = fromAddress;
         }
@@ -708,6 +753,18 @@ class WalletService {
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
               2 * 34 +
               10;
+      transFeeDouble = transFee / 1e8;
+
+      if(getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
       var output1 = (totalInput - amount * 1e8 - transFee).round();
       var output2 = (amount * 1e8).round();
 
@@ -736,6 +793,17 @@ class WalletService {
 
     else if (coin == 'ETH') {
       // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
+      transFeeDouble = (Decimal.parse(gasPrice.toString()) * Decimal.parse(gasLimit.toString()) / Decimal.parse('1e18')).toDouble();
+      if(getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
       final chainId = environment["chains"]["ETH"]["chainId"];
       final ethCoinChild = root.derivePath(
           "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
@@ -759,7 +827,7 @@ class WalletService {
             nonce: nonce,
             to: EthereumAddress.fromHex(toAddress),
             gasPrice:
-                EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice.round()),
+                EtherAmount.fromUnitAndValue(EtherUnit.wei, gasPrice.round()),
             maxGas: gasLimit,
             value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
           ),
@@ -778,7 +846,16 @@ class WalletService {
       }
     } else if (coin == 'FAB') {
       var res1 = await getFabTransactionHex(
-          seed, addressIndexList, toAddress, amount, 0, satoshisPerBytes);
+          seed, addressIndexList, toAddress, amount, 0, satoshisPerBytes, addressList, getTransFeeOnly);
+      if(getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': res1["transFee"]
+        };
+      }
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
       if ((errMsg == '') && (txHex != '')) {
@@ -804,7 +881,11 @@ class WalletService {
 
       contractAddress = stringUtils.trimHexPrefix(contractAddress);
 
-      var contractInfo = await getFabSmartContract(contractAddress, fxnCallHex);
+      var contractInfo = await getFabSmartContract(contractAddress, fxnCallHex, gasLimit, gasPrice);
+
+      if(addressList != null && addressList.length > 0) {
+        addressList[0] = exgToFabAddress(addressList[0]);
+      }
 
       var res1 = await getFabTransactionHex(
           seed,
@@ -812,7 +893,21 @@ class WalletService {
           contractInfo['contract'],
           0,
           contractInfo['totalFee'],
-          satoshisPerBytes);
+          satoshisPerBytes, addressList, getTransFeeOnly);
+
+      print('res1 in here=');
+      print(res1);
+
+      if(getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': res1["transFee"]
+        };
+      }
+
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
       if (txHex != null && txHex != '') {
@@ -826,6 +921,19 @@ class WalletService {
         }
       }
     } else if (tokenType == 'ETH') {
+
+      transFeeDouble = (Decimal.parse(gasPrice.toString()) * Decimal.parse(gasLimit.toString()) / Decimal.parse('1e18')).toDouble();
+      log.w('transFeeDouble===' + transFeeDouble.toString());
+      if(getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
       final chainId = environment["chains"]["ETH"]["chainId"];
       final ethCoinChild = root.derivePath(
           "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
@@ -854,7 +962,7 @@ class WalletService {
               nonce: nonce,
               to: EthereumAddress.fromHex(contractAddress),
               gasPrice: EtherAmount.fromUnitAndValue(
-                  EtherUnit.gwei, gasPrice.round()),
+                  EtherUnit.wei, gasPrice.round()),
               maxGas: gasLimit,
               value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
               data: Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex))),
@@ -875,16 +983,16 @@ class WalletService {
       'txHex': txHex,
       'txHash': txHash,
       'errMsg': errMsg,
-      'amountSent': amountSent
+      'amountSent': amountSent,
+      'transFee': transFeeDouble
     };
   }
 
-  getFabSmartContract(String contractAddress, String fxnCallHex) async {
+  getFabSmartContract(String contractAddress, String fxnCallHex, gasLimit, gasPrice) async {
     contractAddress = stringUtils.trimHexPrefix(contractAddress);
     fxnCallHex = stringUtils.trimHexPrefix(fxnCallHex);
-    var gasLimit = 800000;
-    var gasPrice = 40;
-    var totalAmount = gasLimit * gasPrice / 1e8;
+
+    var totalAmount = (Decimal.parse(gasLimit.toString()) * Decimal.parse(gasPrice.toString()) / Decimal.parse('1e8')).toDouble();
     // let cFee = 3000 / 1e8 // fee for the transaction
 
     var totalFee = totalAmount;

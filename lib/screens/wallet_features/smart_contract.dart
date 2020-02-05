@@ -294,10 +294,10 @@ class _SmartContractState extends State<SmartContract> {
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var contractInfo = await walletService.getFabSmartContract(
-          smartContractAddressController.value.text, abiHex);
+          smartContractAddressController.value.text, abiHex, 800000, 50);
 
       var res1 = await walletService.getFabTransactionHex(seed, [0],
-          contractInfo['contract'], value, contractInfo['totalFee'], 14);
+          contractInfo['contract'], value, contractInfo['totalFee'], 14, [], false);
       var txHex = res1['txHex'];
       var errMsg = res1['errMsg'];
       var txHash = '';

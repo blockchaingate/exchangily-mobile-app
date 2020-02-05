@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:random_string/random_string.dart';
 import "package:flutter/material.dart";
@@ -154,7 +155,10 @@ class _BuySellState extends State<BuySell>
 
       var newOpenOrds = openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds;
       var newCloseOrds = closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds;
-      _myordersState.currentState.refreshBalOrds(newbals, newOpenOrds, newCloseOrds);
+      if((_myordersState != null) && (_myordersState.currentState != null)) {
+        _myordersState.currentState.refreshBalOrds(newbals, newOpenOrds, newCloseOrds);
+      }
+
       /*
       if (this.mounted) {
 
@@ -219,7 +223,7 @@ class _BuySellState extends State<BuySell>
     var keyPairKanban = getExgKeyPair(seed);
     var exchangilyAddress = await getExchangilyAddress();
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), exchangilyAddress, nonce);
+        HEX.encode(keyPairKanban["privateKey"]), exchangilyAddress, nonce, environment["chains"]["KANBAN"]["gasPrice"], environment["chains"]["KANBAN"]["gasLimit"]);
     return txKanbanHex;
   }
 

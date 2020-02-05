@@ -556,6 +556,36 @@ class AppLocalizations {
         name: 'toExchange', desc: 'deposit_to_exchange');
   }
 
+  String get gasPrice {
+    return Intl.message('Gas Price',
+        name: 'gasPrice', desc: 'gas_price');
+  }
+
+  String get gasLimit {
+    return Intl.message('Gas Limit',
+        name: 'gasLimit', desc: 'gas_limit');
+  }
+
+  String get kanbanGasFee {
+    return Intl.message('Kanban Gas Fee',
+        name: 'kanbanGasFee', desc: 'kanban_gas_fee');
+  }
+
+  String get kanbanGasPrice {
+    return Intl.message('Kanban Gas Price',
+        name: 'kanbanGasPrice', desc: 'kanban_gas_price');
+  }
+
+  String get kanbanGasLimit {
+    return Intl.message('Kanban Gas Limit',
+        name: 'kanbanGasLimit', desc: 'kanban_gas_limit');
+  }
+
+  String get satoshisPerByte {
+    return Intl.message('Satoshis/byte',
+        name: 'satoshisPerbyte', desc: 'satoshis_per_byte');
+  }
+
   String get addGasTransactionSuccess {
     return Intl.message('Add gas transaction was made successfully',
         name: 'addGasTransactionSuccess', desc: 'add_gas_transaction_success');
