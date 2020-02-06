@@ -6,7 +6,7 @@ Map devConfig = {
   "chains": {
     "BTC": {
       "network": testnet,
-      "satoshisPerBytes": 34,
+      "satoshisPerBytes": 300,
       "bytesPerInput": 150
     },
     "ETH": {
@@ -19,7 +19,7 @@ Map devConfig = {
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
-      "satoshisPerBytes": 14,
+      "satoshisPerBytes": 300,
       "bytesPerInput": 150,
       "gasPrice": 50,
       "gasLimit": 800000
@@ -65,7 +65,7 @@ Map productionConfig = {
   "chains": {
     "BTC": {
       "network": bitcoin,
-      "satoshisPerBytes": 34,
+      "satoshisPerBytes": 300,
       "bytesPerInput": 150
     },
     "ETH": {
@@ -79,7 +79,7 @@ Map productionConfig = {
     "FAB": {
       "chain": {
         "name": 'mainnet', "networkId": 0, "chainId": 0,
-        "satoshisPerBytes": 14,
+        "satoshisPerBytes": 300,
         "bytesPerInput": 150,
         "gasPrice": 50,
         "gasLimit": 800000
