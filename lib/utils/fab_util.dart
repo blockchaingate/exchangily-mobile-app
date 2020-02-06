@@ -17,7 +17,10 @@ import '../environments/environment.dart';
 import './string_util.dart';
 import 'dart:convert';
 import 'package:web3dart/web3dart.dart';
-
+import 'package:crypto/crypto.dart';
+import 'package:convert/convert.dart';
+import "package:hex/hex.dart";
+import 'package:bs58check/bs58check.dart' as bs58check;
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final log = getLogger('fab_util');
 
@@ -201,6 +204,39 @@ Future getFabBalanceByAddress(String address) async {
   }
   var lockbalance = await getFabLockBalanceByAddress(address);
   return {'balance': fabBalance, 'lockbalance': lockbalance};
+}
+
+exgToFabAddress(String address) {
+  var prefix = '6f';
+  if(isProduction) {
+    prefix = '00';
+  }
+  address = prefix + trimHexPrefix(address);
+  /*
+  var bytes = hex.decode(address);
+
+  print('bytes=');
+  var digest1 = sha256.convert(bytes).toString();
+  print('digest1==' + digest1);
+  var bytes1 = hex.decode(digest1);
+  var digest2 = sha256.convert(bytes1).toString();
+  print('digest2=' + digest2);
+  var checksum = digest2.substring(0,8);
+  print('checksum=' + checksum);
+  // address = address + checksum;
+  print('address before encode=' + address);
+
+   */
+  address = bs58check.encode(HEX.decode(address));
+  // print('address after encode=' + address);
+
+  /*
+  var decoded = bs58check.decode('mvLuZXGYMxpRM65kgzbfoKqs3FPcisM6ri');
+  print(decoded);
+  print(HEX.encode(decoded));
+  print(bs58check.encode(decoded));
+  */
+  return address;
 }
 
 Future getFabTokenBalanceForABI(

@@ -20,19 +20,69 @@ import '../../models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'dart:typed_data';
+import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:flutter/gestures.dart';
+import 'package:decimal/decimal.dart';
+
 
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
-class Deposit extends StatelessWidget {
+class Deposit extends StatefulWidget {
   final WalletInfo walletInfo;
+
+  Deposit({Key key, this.walletInfo}) : super(key: key);
+
+  @override
+  _DepositState createState() => _DepositState();
+}
+
+
+class _DepositState extends State<Deposit> {
 
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
-  Deposit({Key key, this.walletInfo}) : super(key: key);
+
+  final _gasPriceTextController = TextEditingController();
+  final _gasLimitTextController = TextEditingController();
+  final _satoshisPerByteTextController = TextEditingController();
+  final _kanbanGasPriceTextController = TextEditingController();
+  final _kanbanGasLimitTextController = TextEditingController();
+  double transFee = 0.0;
+  double kanbanTransFee = 0.0;
+  bool transFeeAdvance = false;
+  String coinName = '';
+  String tokenType = '';
   final myController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    coinName = widget.walletInfo.tickerName;
+    tokenType = widget.walletInfo.tokenType;
+    if(coinName == 'BTC') {
+      _satoshisPerByteTextController.text = environment["chains"]["BTC"]["satoshisPerBytes"].toString();
+    } else
+    if(coinName == 'ETH' || tokenType == 'ETH') {
+      _gasPriceTextController.text = environment["chains"]["ETH"]["gasPrice"].toString();
+      _gasLimitTextController.text = environment["chains"]["ETH"]["gasLimit"].toString();
+    } else
+    if(coinName == 'FAB') {
+      _satoshisPerByteTextController.text = environment["chains"]["FAB"]["satoshisPerBytes"].toString();
+    } else
+    if (tokenType == 'FAB') {
+      _satoshisPerByteTextController.text = environment["chains"]["FAB"]["satoshisPerBytes"].toString();
+      _gasPriceTextController.text = environment["chains"]["FAB"]["gasPrice"].toString();
+      _gasLimitTextController.text = environment["chains"]["FAB"]["gasLimit"].toString();
+    }
+    _kanbanGasPriceTextController.text = environment["chains"]["KANBAN"]["gasPrice"].toString();
+    _kanbanGasLimitTextController.text = environment["chains"]["KANBAN"]["gasLimit"].toString();
+  }
+
+
   checkPass(double amount, context) async {
-    if (amount == null || amount > walletInfo.availableBalance) {
+    if (amount == null || amount > widget.walletInfo.availableBalance) {
       walletService.showInfoFlushbar(
           AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
@@ -50,16 +100,32 @@ class Deposit extends StatelessWidget {
     if (res.confirmed) {
       String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      var tokenType = this.walletInfo.tokenType;
-      var coinName = this.walletInfo.tickerName;
       if (coinName == 'USDT') {
         tokenType = 'ETH';
       }
       if (coinName == 'EXG') {
         tokenType = 'FAB';
       }
+
+
+      var gasPrice = int.tryParse(_gasPriceTextController.text);
+      var gasLimit = int.tryParse(_gasLimitTextController.text);
+      var satoshisPerBytes = int.tryParse(_satoshisPerByteTextController.text);
+      var kanbanGasPrice = int.tryParse(_kanbanGasPriceTextController.text);
+      var kanbanGasLimit = int.tryParse(_kanbanGasLimitTextController.text);
+
+      var option = {
+        "gasPrice": gasPrice,
+        "gasLimit": gasLimit,
+        "satoshisPerBytes": satoshisPerBytes,
+        'kanbanGasPrice': kanbanGasPrice,
+        'kanbanGasLimit': kanbanGasLimit,
+        'tokenType': tokenType,
+        'contractAddress': environment["addresses"]["smartContract"][coinName]
+      };
+
       var ret =
-          await walletService.depositDo(seed, coinName, tokenType, amount);
+          await walletService.depositDo(seed, coinName, tokenType, amount, option);
 
       if (ret["success"]) {
         myController.text = '';
@@ -97,10 +163,47 @@ class Deposit extends StatelessWidget {
         context);
   }
 
+  updateTransFee() async {
+    var to = getOfficalAddress(coinName);;
+    var amount = double.tryParse(myController.text);
+    if(to == null || amount <= 0) {
+      return;
+    }
+    var gasPrice = int.tryParse(_gasPriceTextController.text);
+    var gasLimit = int.tryParse(_gasLimitTextController.text);
+    var satoshisPerBytes = int.tryParse(_satoshisPerByteTextController.text);
+    var options = {
+      "gasPrice": gasPrice,
+      "gasLimit": gasLimit,
+      "satoshisPerBytes": satoshisPerBytes,
+      "tokenType": widget.walletInfo.tokenType,
+      "getTransFeeOnly": true
+
+    };
+    print('widget.walletInfo.address=' + widget.walletInfo.address);
+    var address = widget.walletInfo.address;
+
+    var ret = await walletService.sendTransaction(widget.walletInfo.tickerName, Uint8List.fromList([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]), [0], [address], to, amount, options, false);
+
+    print('ret===');
+    print(ret);
+
+    var kanbanPrice = int.tryParse(_kanbanGasPriceTextController.text);
+    var kanbanGasLimit = int.tryParse(_kanbanGasLimitTextController.text);
+    var kanbanTransFeeDouble = (Decimal.parse(kanbanPrice.toString()) * Decimal.parse(kanbanGasLimit.toString()) / Decimal.parse('1e18')).toDouble();
+    if(ret != null && ret['transFee'] != null) {
+      setState(() {
+        transFee = ret['transFee'];
+        kanbanTransFee = kanbanTransFeeDouble;
+      });
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    double bal = this.walletInfo.availableBalance;
-    String coinName = this.walletInfo.tickerName;
+    double bal = widget.walletInfo.availableBalance;
+    String coinName = widget.walletInfo.tickerName;
 
     return Scaffold(
         appBar: CupertinoNavigationBar(
@@ -118,7 +221,7 @@ class Deposit extends StatelessWidget {
             },
           ),
           middle: Text(
-            '${AppLocalizations.of(context).move}  ${walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
+            '${AppLocalizations.of(context).move}  ${widget.walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0XFF1f2233),
@@ -126,14 +229,17 @@ class Deposit extends StatelessWidget {
         backgroundColor: Color(0xFF1F2233),
         body: Container(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+            child: ListView(
               children: <Widget>[
                 // Text("Amount:",
                 //     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 // SizedBox(height: 10),
                 TextField(
                   keyboardType: TextInputType.number,
+                  onChanged: (String amount) {
+                    // checkSendAmount does not directly work if you use it in if as condition so setting state here to make it work
+                    updateTransFee();
+                  },
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(
@@ -144,6 +250,329 @@ class Deposit extends StatelessWidget {
                   controller: myController,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                 ),
+
+
+
+
+
+
+
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 20, bottom: 10),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              AppLocalizations.of(context).gasFee,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .display3
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left:
+                                  5), // padding left to keep some space from the text
+                              child: Text(
+                                '$transFee',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .display3
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20, bottom: 10),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              AppLocalizations.of(context).kanbanGasFee,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .display3
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left:
+                                  5), // padding left to keep some space from the text
+                              child: Text(
+                                '$kanbanTransFee',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .display3
+                                    .copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      // Switch Row
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context).advance,
+                            style: Theme.of(context)
+                                .textTheme
+                                .display3
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Switch(
+                            value: transFeeAdvance,
+                            inactiveTrackColor: globals.grey,
+                            dragStartBehavior: DragStartBehavior.start,
+                            activeColor: globals.primaryColor,
+                            onChanged: (bool isOn) {
+                              setState(() {
+                                transFeeAdvance = isOn;
+                              });
+                            },
+                          )
+                        ],
+                      ),
+                      Visibility(
+                          visible: transFeeAdvance,
+                          child:
+                          Column(
+                            children: <Widget>[
+
+                              Visibility(
+                                  visible: (coinName == 'ETH' || tokenType == 'ETH' || tokenType == 'FAB'),
+                                  child:
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        AppLocalizations.of(context).gasPrice,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .display3
+                                            .copyWith(fontWeight: FontWeight.bold),
+                                      ),
+                                      Expanded(
+                                          child:
+                                          Padding(
+                                              padding: EdgeInsets.fromLTRB(85, 0, 0, 0),
+                                              child:
+                                              TextField(
+                                                controller: _gasPriceTextController,
+                                                onChanged: (String amount) {
+                                                  updateTransFee();
+                                                },
+                                                keyboardType:
+                                                TextInputType.number, // numnber keyboard
+                                                decoration: InputDecoration(
+                                                    focusedBorder: UnderlineInputBorder(
+                                                        borderSide:
+                                                        BorderSide(color: globals.primaryColor)),
+                                                    enabledBorder: UnderlineInputBorder(
+                                                        borderSide: BorderSide(color: globals.grey)),
+                                                    hintText: '0.00000',
+                                                    hintStyle: Theme.of(context)
+                                                        .textTheme
+                                                        .display2
+                                                        .copyWith(fontSize: 20)),
+                                                style: TextStyle(color: globals.grey, fontSize: 24),
+                                              )
+                                          )
+
+                                      )
+
+                                    ],
+                                  )
+                              ),
+
+                              Visibility(
+                                  visible: (coinName == 'ETH' || tokenType == 'ETH' || tokenType == 'FAB'),
+                                  child:
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        AppLocalizations.of(context).gasLimit,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .display3
+                                            .copyWith(fontWeight: FontWeight.bold),
+                                      ),
+                                      Expanded(
+                                          child:
+                                          Padding(
+                                              padding: EdgeInsets.fromLTRB(85, 0, 0, 0),
+                                              child:
+                                              TextField(
+                                                controller: _gasLimitTextController,
+                                                onChanged: (String amount) {
+                                                  updateTransFee();
+                                                },
+                                                keyboardType:
+                                                TextInputType.number, // numnber keyboard
+                                                decoration: InputDecoration(
+                                                    focusedBorder: UnderlineInputBorder(
+                                                        borderSide:
+                                                        BorderSide(color: globals.primaryColor)),
+                                                    enabledBorder: UnderlineInputBorder(
+                                                        borderSide: BorderSide(color: globals.grey)),
+                                                    hintText: '0.00000',
+                                                    hintStyle: Theme.of(context)
+                                                        .textTheme
+                                                        .display2
+                                                        .copyWith(fontSize: 20)),
+                                                style: TextStyle(color: globals.grey, fontSize: 24),
+                                              )
+                                          )
+
+                                      )
+
+                                    ],
+                                  )
+                              )
+                              ,
+
+                              Visibility(
+                                  visible: (coinName == 'BTC' || coinName == 'FAB' || tokenType == 'FAB'),
+                                  child:
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        AppLocalizations.of(context).satoshisPerByte,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .display3
+                                            .copyWith(fontWeight: FontWeight.bold),
+                                      ),
+                                      Expanded(
+                                          child:
+                                          Padding(
+                                              padding: EdgeInsets.fromLTRB(50, 0, 0, 0),
+                                              child:
+                                              TextField(
+                                                controller: _satoshisPerByteTextController,
+                                                onChanged: (String amount) {
+                                                  updateTransFee();
+                                                },
+                                                keyboardType:
+                                                TextInputType.number, // numnber keyboard
+                                                decoration: InputDecoration(
+                                                    focusedBorder: UnderlineInputBorder(
+                                                        borderSide:
+                                                        BorderSide(color: globals.primaryColor)),
+                                                    enabledBorder: UnderlineInputBorder(
+                                                        borderSide: BorderSide(color: globals.grey)),
+                                                    hintText: '0.00000',
+                                                    hintStyle: Theme.of(context)
+                                                        .textTheme
+                                                        .display2
+                                                        .copyWith(fontSize: 20)),
+                                                style: TextStyle(color: globals.grey, fontSize: 24),
+                                              )
+                                          )
+
+                                      )
+
+                                    ],
+                                  )
+                              ),
+
+
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    AppLocalizations.of(context).kanbanGasPrice,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .display3
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  Expanded(
+                                      child:
+                                      Padding(
+                                          padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                          child:
+                                          TextField(
+                                            controller: _kanbanGasPriceTextController,
+                                            onChanged: (String amount) {
+                                              updateTransFee();
+                                            },
+                                            keyboardType:
+                                            TextInputType.number, // numnber keyboard
+                                            decoration: InputDecoration(
+                                                focusedBorder: UnderlineInputBorder(
+                                                    borderSide:
+                                                    BorderSide(color: globals.primaryColor)),
+                                                enabledBorder: UnderlineInputBorder(
+                                                    borderSide: BorderSide(color: globals.grey)),
+                                                hintText: '0.00000',
+                                                hintStyle: Theme.of(context)
+                                                    .textTheme
+                                                    .display2
+                                                    .copyWith(fontSize: 20)),
+                                            style: TextStyle(color: globals.grey, fontSize: 24),
+                                          )
+                                      )
+
+                                  )
+
+                                ],
+                              ),
+
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    AppLocalizations.of(context).kanbanGasLimit,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .display3
+                                        .copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  Expanded(
+                                      child:
+                                      Padding(
+                                          padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                          child:
+                                          TextField(
+                                            controller: _kanbanGasLimitTextController,
+                                            onChanged: (String amount) {
+                                              updateTransFee();
+                                            },
+                                            keyboardType:
+                                            TextInputType.number, // numnber keyboard
+                                            decoration: InputDecoration(
+                                                focusedBorder: UnderlineInputBorder(
+                                                    borderSide:
+                                                    BorderSide(color: globals.primaryColor)),
+                                                enabledBorder: UnderlineInputBorder(
+                                                    borderSide: BorderSide(color: globals.grey)),
+                                                hintText: '0.00000',
+                                                hintStyle: Theme.of(context)
+                                                    .textTheme
+                                                    .display2
+                                                    .copyWith(fontSize: 20)),
+                                            style: TextStyle(color: globals.grey, fontSize: 24),
+                                          )
+                                      )
+
+                                  )
+
+                                ],
+                              )
+                            ],
+                          )
+                      )
+                    ],
+                  ),
+                ),
+
+
+
+
+
+
+
                 SizedBox(height: 20),
                 MaterialButton(
                   padding: EdgeInsets.all(15),

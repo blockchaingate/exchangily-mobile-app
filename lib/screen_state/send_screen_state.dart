@@ -73,7 +73,7 @@ class SendScreenState extends BaseState {
 
       await walletService
           .sendTransaction(
-              tickerName, seed, [0], toWalletAddress, amount, options, true)
+              tickerName, seed, [0],[], toWalletAddress, amount, options, true)
           .then((res) {
         log.w('Result $res');
         txHash = res["txHash"];

@@ -4,17 +4,31 @@ const bool isProduction = false;
 const bool isLocal = true;
 Map devConfig = {
   "chains": {
-    "BTC": {"network": testnet},
+    "BTC": {
+      "network": testnet,
+      "satoshisPerBytes": 34,
+      "bytesPerInput": 150
+    },
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
       "chainId": 3,
-      "infura": "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"
+      "infura": "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
+      "gasPrice": 6000000000,
+      "gasLimit": 100000
     },
     "FAB": {
-      "chain": {"name": 'test', "networkId": 212, "chainId": 212}
+      "chain": {"name": 'test', "networkId": 212, "chainId": 212},
+      "satoshisPerBytes": 14,
+      "bytesPerInput": 150,
+      "gasPrice": 50,
+      "gasLimit": 800000
     },
-    "KANBAN": {"chainId": 212}
+    "KANBAN": {
+      "chainId": 212,
+      "gasPrice": 8000000000,
+      "gasLimit": 20000000
+  }
   },
   "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150},
   'endpoints': {
@@ -49,17 +63,33 @@ Map devConfig = {
 
 Map productionConfig = {
   "chains": {
-    "BTC": {"network": bitcoin},
+    "BTC": {
+      "network": bitcoin,
+      "satoshisPerBytes": 34,
+      "bytesPerInput": 150
+    },
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',
       "chainId": 1,
-      "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"
+      "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
+      "gasPrice": 6000000000,
+      "gasLimit": 100000
     },
     "FAB": {
-      "chain": {"name": 'mainnet', "networkId": 0, "chainId": 0}
+      "chain": {
+        "name": 'mainnet', "networkId": 0, "chainId": 0,
+        "satoshisPerBytes": 14,
+        "bytesPerInput": 150,
+        "gasPrice": 50,
+        "gasLimit": 800000
+      }
     },
-    "KANBAN": {"chainId": 211}
+    "KANBAN": {
+      "chainId": 211,
+      "gasPrice": 8000000000,
+      "gasLimit": 20000000
+    }
   },
   "CoinType": {"BTC": 0, "ETH": 60, "FAB": 1150},
   'endpoints': {
