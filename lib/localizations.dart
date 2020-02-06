@@ -432,19 +432,19 @@ class AppLocalizations {
   }
 
   String get volume {
-    return Intl.message('volume', name: 'volume', desc: 'volume_text');
+    return Intl.message('Volume', name: 'volume', desc: 'volume_text');
   }
 
   String get price {
-    return Intl.message('price', name: 'price', desc: 'price_text');
+    return Intl.message('Price', name: 'price', desc: 'price_text');
   }
 
   String get high {
-    return Intl.message('high', name: 'high', desc: 'high_text');
+    return Intl.message('High', name: 'high', desc: 'high_text');
   }
 
   String get low {
-    return Intl.message('low', name: 'low', desc: 'low_text');
+    return Intl.message('Low', name: 'low', desc: 'low_text');
   }
 
   String get orderBook {

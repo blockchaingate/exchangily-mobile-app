@@ -70,6 +70,17 @@ class MyOrdersState extends State<MyOrders>
     super.initState();
   }
 
+  refreshBalOrds(newbals, newOpenOrds, newCloseOrds) {
+    if (this.mounted) {
+      setState(() => {
+        this.balance = newbals,
+        this.openOrders = newOpenOrds,
+        this.closedOrders = newCloseOrds
+      });
+    }
+  }
+
+  /*
   refresh(String address) {
     if (address == null) {
       return;
@@ -139,6 +150,7 @@ class MyOrdersState extends State<MyOrders>
       }
     });
   }
+  */
 
   @override
   Widget build(BuildContext context) {

@@ -52,6 +52,18 @@ mixin TradeService {
     if (name == 'exchangily') {
       return currentUsdValue = 0.2;
     }
+    print('name=' + name);
+    print('usdVal=');
+    print(usdVal);
+    if(name == 'btc') {
+      name = 'bitcoin';
+    } else
+    if (name == 'fab') {
+      name = 'fabcoin';
+    } else
+    if (name == 'eth') {
+      name = 'ethereum';
+    }
     currentUsdValue = usdVal[name]['usd'];
     return currentUsdValue;
   }
