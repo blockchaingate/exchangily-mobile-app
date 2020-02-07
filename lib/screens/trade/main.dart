@@ -28,11 +28,12 @@ import '../../models/price.dart';
 import '../../models/orders.dart';
 import 'widgets/trading_view.dart';
 import '../../utils/string_util.dart';
+import '../../shared/globals.dart' as globals;
 
 enum SingingCharacter { lafayette, jefferson }
 
 class Trade extends StatefulWidget {
-  String pair;
+  final pair;
 
   Trade(this.pair);
 
@@ -170,9 +171,9 @@ class _TradeState extends State<Trade> with TradeService {
             widget.pair,
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Color(0XFF1f2233),
+          backgroundColor: globals.walletCardColor,
         ),
-        backgroundColor: Color(0xFF1F2233),
+        //backgroundColor: Color(0xFF1F2233),
         body: Stack(children: <Widget>[
           ListView(
             children: <Widget>[
@@ -197,7 +198,7 @@ class _TradeState extends State<Trade> with TradeService {
                             child: Padding(
                           padding: const EdgeInsets.only(right: 5.0),
                           child: FlatButton(
-                            color: Color(0xFF0da88b),
+                            color: globals.primaryColor,
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -212,8 +213,10 @@ class _TradeState extends State<Trade> with TradeService {
                           ),
                         )),
                         Flexible(
-                            child: FlatButton(
-                          color: Color(0xFFe2103c),
+                            child: RaisedButton(
+                          shape: StadiumBorder(
+                              side: BorderSide(color: globals.red, width: 1)),
+                          color: globals.walletCardColor,
                           onPressed: () {
                             Navigator.push(
                               context,
