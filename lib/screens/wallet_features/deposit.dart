@@ -61,6 +61,7 @@ class _DepositState extends State<Deposit> {
     super.initState();
     coinName = widget.walletInfo.tickerName;
     tokenType = widget.walletInfo.tokenType;
+    print('coinName==' + coinName);
     if(coinName == 'BTC') {
       _satoshisPerByteTextController.text = environment["chains"]["BTC"]["satoshisPerBytes"].toString();
     } else
@@ -78,6 +79,9 @@ class _DepositState extends State<Deposit> {
     }
     _kanbanGasPriceTextController.text = environment["chains"]["KANBAN"]["gasPrice"].toString();
     _kanbanGasLimitTextController.text = environment["chains"]["KANBAN"]["gasLimit"].toString();
+
+    print('_satoshisPerByteTextController=' + _satoshisPerByteTextController.text);
+    print('satoshisPerBytes==' + environment["chains"]["FAB"]["satoshisPerBytes"].toString());
   }
 
 
@@ -164,9 +168,9 @@ class _DepositState extends State<Deposit> {
   }
 
   updateTransFee() async {
-    var to = getOfficalAddress(coinName);;
+    var to = getOfficalAddress(coinName);
     var amount = double.tryParse(myController.text);
-    if(to == null || amount <= 0) {
+    if(to == null || amount == null || amount <= 0) {
       return;
     }
     var gasPrice = int.tryParse(_gasPriceTextController.text);
@@ -180,13 +184,9 @@ class _DepositState extends State<Deposit> {
       "getTransFeeOnly": true
 
     };
-    print('widget.walletInfo.address=' + widget.walletInfo.address);
     var address = widget.walletInfo.address;
 
     var ret = await walletService.sendTransaction(widget.walletInfo.tickerName, Uint8List.fromList([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]), [0], [address], to, amount, options, false);
-
-    print('ret===');
-    print(ret);
 
     var kanbanPrice = int.tryParse(_kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(_kanbanGasLimitTextController.text);

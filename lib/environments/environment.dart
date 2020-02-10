@@ -1,6 +1,6 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
 
-const bool isProduction = false;
+const bool isProduction = true;
 const bool isLocal = false;
 Map devConfig = {
   "chains": {
@@ -79,11 +79,11 @@ Map productionConfig = {
     "FAB": {
       "chain": {
         "name": 'mainnet', "networkId": 0, "chainId": 0,
-        "satoshisPerBytes": 300,
-        "bytesPerInput": 150,
-        "gasPrice": 50,
-        "gasLimit": 800000
-      }
+      },
+      "satoshisPerBytes": 300,
+      "bytesPerInput": 150,
+      "gasPrice": 50,
+      "gasLimit": 800000
     },
     "KANBAN": {
       "chainId": 211,
