@@ -178,7 +178,7 @@ class _TradeState extends State<Trade> with TradeService {
           ListView(
             children: <Widget>[
               TradePrice(key: _tradePriceState),
-              LoadHTMLFileToWEbView(widget.pair),
+              // LoadHTMLFileToWEbView(widget.pair),
               Trademarket(key: _tradeMarketState),
               SizedBox(height: 60)
             ],
