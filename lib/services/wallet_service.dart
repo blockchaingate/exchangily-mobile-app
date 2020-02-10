@@ -346,7 +346,7 @@ class WalletService {
   }
 
   Future<Map<String, dynamic>> withdrawDo(seed, String coinName,
-      String coinAddress, String tokenType, double amount) async {
+      String coinAddress, String tokenType, double amount, kanbanPrice, kanbanGasLimit) async {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
     var amountInLink = BigInt.from(amount * 1e18);
@@ -365,7 +365,7 @@ class WalletService {
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, environment["chains"]["KANBAN"]["gasPrice"], environment["chains"]["KANBAN"]["gasLimit"]);
+        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, kanbanPrice, kanbanGasLimit);
 
     var res = await sendKanbanRawTransaction(txKanbanHex);
 
