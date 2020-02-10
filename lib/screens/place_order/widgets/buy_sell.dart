@@ -43,6 +43,9 @@ import '../../../utils/keypair_util.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import '../../../environments/coins.dart';
 
+
+import 'package:flutter/gestures.dart';
+
 class BuySell extends StatefulWidget {
   BuySell({Key key, this.bidOrAsk, this.baseCoinName, this.targetCoinName})
       : super(key: key);
@@ -56,6 +59,11 @@ class BuySell extends StatefulWidget {
 class _BuySellState extends State<BuySell>
     with SingleTickerProviderStateMixin, TradeService {
   bool bidOrAsk;
+
+  final _kanbanGasPriceTextController = TextEditingController();
+  final _kanbanGasLimitTextController = TextEditingController();
+  double kanbanTransFee = 0.0;
+  bool transFeeAdvance = false;
 
   List<OrderModel> sell;
   List<OrderModel> buy;
@@ -222,14 +230,27 @@ class _BuySellState extends State<BuySell>
 
     var keyPairKanban = getExgKeyPair(seed);
     var exchangilyAddress = await getExchangilyAddress();
+
+    var kanbanPrice = int.tryParse(_kanbanGasPriceTextController.text);
+    var kanbanGasLimit = int.tryParse(_kanbanGasLimitTextController.text);
+
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), exchangilyAddress, nonce, environment["chains"]["KANBAN"]["gasPrice"], environment["chains"]["KANBAN"]["gasLimit"]);
+        HEX.encode(keyPairKanban["privateKey"]), exchangilyAddress, nonce, kanbanPrice, kanbanGasLimit);
     return txKanbanHex;
   }
 
   @override
   void initState() {
     super.initState();
+
+    var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
+    var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
+    _kanbanGasPriceTextController.text = gasPrice.toString();
+    _kanbanGasLimitTextController.text = gasLimit.toString();
+
+    kanbanTransFee = bigNum2Double(gasPrice * gasLimit);
+
+
     this.sell = [];
     this.buy = [];
     bidOrAsk = widget.bidOrAsk;
@@ -256,6 +277,18 @@ class _BuySellState extends State<BuySell>
       }
     });
     retrieveWallets();
+  }
+
+  updateTransFee() async {
+
+    var kanbanPrice = int.tryParse(_kanbanGasPriceTextController.text);
+    var kanbanGasLimit = int.tryParse(_kanbanGasLimitTextController.text);
+    var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
+
+    setState(() {
+      kanbanTransFee = kanbanTransFeeDouble;
+    });
+
   }
 
   _showOrders(Orders orders) {
@@ -485,6 +518,185 @@ class _BuySellState extends State<BuySell>
                                     color: Colors.grey, fontSize: 14.0))
                           ],
                         )),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context).kanbanGasFee,
+                            style: new TextStyle(
+                                color: Colors.grey, fontSize: 14.0),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left:
+                                5), // padding left to keep some space from the text
+                            child: Text(
+                              '$kanbanTransFee',
+                              style: new TextStyle(
+                                  color: Colors.grey, fontSize: 14.0),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    // Switch Row
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      child:
+                        Row(
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context).advance,
+                            style: new TextStyle(
+                                color: Colors.grey, fontSize: 14.0),
+                          ),
+                          Switch(
+                            value: transFeeAdvance,
+                            inactiveTrackColor: globals.grey,
+                            dragStartBehavior: DragStartBehavior.start,
+                            activeColor: globals.primaryColor,
+                            onChanged: (bool isOn) {
+                              setState(() {
+                                transFeeAdvance = isOn;
+                              });
+                            },
+                          )
+                        ],
+                      )
+                    ),
+                    Visibility(
+                        visible: transFeeAdvance,
+                        child:
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child:
+                        Column(
+                          children: <Widget>[
+
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  AppLocalizations.of(context).kanbanGasPrice,
+                                  style: new TextStyle(
+                                      color: Colors.grey, fontSize: 14.0),
+                                ),
+                                Expanded(
+                                    child:
+                                    Padding(
+                                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                        child:
+                                        TextField(
+                                          controller: _kanbanGasPriceTextController,
+                                          onChanged: (String amount) {
+                                            updateTransFee();
+                                          },
+                                          keyboardType:
+                                          TextInputType.number, // numnber keyboard
+                                          decoration: InputDecoration(
+                                              focusedBorder: UnderlineInputBorder(
+                                                  borderSide:
+                                                  BorderSide(color: globals.primaryColor)),
+                                              enabledBorder: UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: globals.grey)),
+                                              hintText: '0.00000',
+                                              hintStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .display2
+                                                  .copyWith(fontSize: 20)),
+                                          style: TextStyle(color: globals.grey, fontSize: 14),
+                                        )
+                                    )
+
+                                )
+
+                              ],
+                            ),
+
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  AppLocalizations.of(context).kanbanGasLimit,
+                                  style: new TextStyle(
+                                      color: Colors.grey, fontSize: 14.0),
+                                ),
+                                Expanded(
+                                    child:
+                                    Padding(
+                                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                        child:
+                                        TextField(
+                                          controller: _kanbanGasLimitTextController,
+                                          onChanged: (String amount) {
+                                            updateTransFee();
+                                          },
+                                          keyboardType:
+                                          TextInputType.number, // numnber keyboard
+                                          decoration: InputDecoration(
+                                              focusedBorder: UnderlineInputBorder(
+                                                  borderSide:
+                                                  BorderSide(color: globals.primaryColor)),
+                                              enabledBorder: UnderlineInputBorder(
+                                                  borderSide: BorderSide(color: globals.grey)),
+                                              hintText: '0.00000',
+                                              hintStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .display2
+                                                  .copyWith(fontSize: 20)),
+                                          style: TextStyle(color: globals.grey, fontSize: 14),
+                                        )
+                                    )
+
+                                )
+
+                              ],
+                            )
+                          ],
+                        )
+                        )
+                    ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     Padding(
                         padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                         child: new SizedBox(

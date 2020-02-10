@@ -25,7 +25,6 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:flutter/gestures.dart';
-import 'package:decimal/decimal.dart';
 import '../../utils/kanban.util.dart';
 import '../../utils/keypair_util.dart';
 import '../../utils/abi_util.dart';
