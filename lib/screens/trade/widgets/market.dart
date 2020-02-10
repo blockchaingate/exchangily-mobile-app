@@ -110,38 +110,68 @@ class TrademarketState extends State<Trademarket> {
       Visibility(
           visible: tabName == 'orders',
           child: Container(
-              padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              // Heading Buy Sell Orders Row
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                Container(
+                  padding: EdgeInsets.all(5.0),
+                  child: Text(AppLocalizations.of(context).sellOrders,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15, color: Colors.white70)),
+                ),
+                Container(
+                  child: Text(AppLocalizations.of(context).buyOrders,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 15, color: Colors.white70)),
+                ),
+              ]),
+              UIHelper.horizontalSpaceSmall,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // Heading Buy Sell Row
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(AppLocalizations.of(context).sellOrders,
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white70)),
-                        Text(AppLocalizations.of(context).buyOrders,
-                            style:
-                                TextStyle(fontSize: 15, color: Colors.white70)),
-                      ]),
-                  UIHelper.horizontalSpaceSmall,
+                  // Column Sell Orders
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          color: globals.walletCardColor,
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          padding: EdgeInsets.all(5.0),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Text('Price',
+                                    style: TextStyle(
+                                        fontSize: 12, color: globals.grey)),
+                                Text('Quantity',
+                                    style: TextStyle(
+                                        fontSize: 12, color: globals.grey)),
+                              ]),
+                        ),
 
-                  // Actual Orders Row Includes 2 Columns Contains Sell and Buy orders
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Column(children: <Widget>[
+                        // Sell Orders For Loop
                         for (var item in sell)
                           Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(
+                                      width: 0.5, color: Color(0xFF4c5684)),
+                                  bottom: BorderSide(
+                                      width: 0.15, color: Color(0xFF4c5684)),
+                                ),
+                                color: Color(0xFF472a4a),
+                              ),
                               width: MediaQuery.of(context).size.width * 0.45,
                               margin: EdgeInsets.only(bottom: 5.0),
                               child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   Container(
                                       alignment: Alignment.center,
-                                      decoration: const BoxDecoration(
-                                          color: Color(0xFF264559)),
                                       padding:
                                           EdgeInsets.fromLTRB(15, 10, 15, 10),
                                       width: MediaQuery.of(context).size.width *
@@ -149,7 +179,7 @@ class TrademarketState extends State<Trademarket> {
                                       child: Text(item.price.toString(),
                                           style: TextStyle(
                                               fontSize: 14,
-                                              color: Color(0xFF0da88b)))),
+                                              color: globals.sellPrice))),
                                   Container(
                                       padding:
                                           EdgeInsets.fromLTRB(15, 10, 15, 10),
@@ -161,68 +191,60 @@ class TrademarketState extends State<Trademarket> {
                               )),
                         SizedBox(height: 10)
                       ]),
-                      // Column Buy Orders
-                      Column(
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.all(5.0),
-                            margin: EdgeInsets.only(bottom: 8.0),
-                            color: globals.walletCardColor,
+                  // Column Buy Orders
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        color: globals.walletCardColor,
+                        width: MediaQuery.of(context).size.width * 0.45,
+                        padding: EdgeInsets.all(5.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text('Price',
+                                  style: TextStyle(
+                                      fontSize: 12, color: globals.grey)),
+                              Text('Quantity',
+                                  style: TextStyle(
+                                      fontSize: 12, color: globals.grey)),
+                            ]),
+                      ),
+                      // Buy Orders For Loop
+                      for (var item in buy)
+                        Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            margin: EdgeInsets.only(bottom: 5.0),
+                            color: Color(0xFF264559),
                             child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(left: 0, right: 10),
-                                    child: Text('Qty',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display2),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    child: Text('Price',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display2),
-                                  ),
-                                ]),
-                          ),
-                          UIHelper.horizontalSpaceSmall,
-                          for (var item in buy)
-                            Container(
-                                width: MediaQuery.of(context).size.width * 0.45,
-                                margin: EdgeInsets.only(bottom: 5.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.2,
-                                        decoration: const BoxDecoration(
-                                            color: Color(0xFF472a4a)),
-                                        padding:
-                                            EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                        child: Text(item.price.toString(),
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Color(0xFFe2103c)))),
-                                    Container(
-                                        padding:
-                                            EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                        child: Text(
-                                            item.orderQuantity.toString(),
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: Color(0xFF5e617f))))
-                                  ],
-                                )),
-                          SizedBox(height: 10)
-                        ],
-                      )
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    padding:
+                                        EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                    child: Text(item.price.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: globals.green))),
+                                Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                    child: Text(item.orderQuantity.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Color(0xFF5e617f))))
+                              ],
+                            )),
+                      SizedBox(height: 10)
                     ],
                   )
                 ],
-              ))),
+              )
+            ],
+          ))),
 
       //  Visibilty Market Trades
       Visibility(
@@ -235,33 +257,35 @@ class TrademarketState extends State<Trademarket> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Text('Quantity',
-                          style: Theme.of(context).textTheme.headline),
                       Text('Price',
-                          style: Theme.of(context).textTheme.headline),
-                      Text('Date', style: Theme.of(context).textTheme.headline)
+                          style: TextStyle(fontSize: 14, color: globals.grey)),
+                      Text('Amount',
+                          style: TextStyle(fontSize: 14, color: globals.grey)),
+                      Text('Date',
+                          style: TextStyle(fontSize: 14, color: globals.grey))
                     ],
                   ),
                   UIHelper.horizontalSpaceSmall,
                   for (var item in trade)
                     Container(
-                      margin: EdgeInsets.only(bottom: 5.0),
+                      padding: EdgeInsets.all(5.0),
+                      color: Color(item.bidOrAsk ? 0xFF264559 : 0xFF472a4a),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
-                              decoration:
-                                  const BoxDecoration(color: Color(0xFF264559)),
+                              // decoration:
+                              //     const BoxDecoration(color: Color(0xFF264559)),
                               padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                               child: Text(item.price.toString(),
                                   style: TextStyle(
-                                      fontSize: 18,
-                                      color: Color(item.bidOrAsk
-                                          ? 0xFF0da88b
-                                          : 0xFFe2103c)))),
+                                      fontSize: 18, color: globals.white))),
                           Container(
                               padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                               child: Text(item.amount.toString(),
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 18, color: Color(0xFF5e617f)))),
                           Container(
