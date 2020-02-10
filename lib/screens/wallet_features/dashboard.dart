@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 import 'gas.dart';
+import '../../environments/environment.dart';
 
 class DashboardScreen extends StatelessWidget {
   final List<WalletInfo> walletInfo;
@@ -90,6 +91,13 @@ class DashboardScreen extends StatelessWidget {
                           ],
                         ),
                       ),
+                      // Comment expand below in production release
+                      Expanded(
+                          child: !isProduction
+                              ? Text('Debug Version',
+                                  style: TextStyle(color: Colors.white))
+                              : Text('Release Version',
+                                  style: TextStyle(color: Colors.white))),
                       Expanded(
                         child: Stack(children: <Widget>[
                           Positioned(
