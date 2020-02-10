@@ -438,8 +438,6 @@ class WalletService {
         amountInLink,
         stringUtils.trimHexPrefix(addressInKanban));
 
-    // originalMessage = '0002952fd4b31c95867902b50f54ac7b0eba7c17b1a25062227ea371d296e127f30800000000000000000000000000000000000000000000000000005af3107a4000000000000000000000000000a2a3720c00c2872397e6d98f41305066cbf0f8b3';
-
     var signedMess =
         await signedMessage(originalMessage, seed, coinName, tokenType);
 

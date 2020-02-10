@@ -546,6 +546,11 @@ class AppLocalizations {
         name: 'move', desc: 'deposit_withdraw_move_header');
   }
 
+  String get redeposit {
+    return Intl.message('Redeposit',
+        name: 'redeposit', desc: 'deposit_withdraw_redeposit_header');
+  }
+
   String get toWallet {
     return Intl.message('to wallet',
         name: 'toWallet', desc: 'withdraw_to_wallet');
