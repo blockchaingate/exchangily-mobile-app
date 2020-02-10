@@ -166,6 +166,7 @@ class TrademarketState extends State<Trademarket> {
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.all(5.0),
+                            margin: EdgeInsets.only(bottom: 8.0),
                             color: globals.walletCardColor,
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
