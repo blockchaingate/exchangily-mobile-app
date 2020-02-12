@@ -814,5 +814,11 @@
         "description": "send_screen_user_returned_by_pressing_back_button",
         "type": "text",
         "placeholders": {}
+    },
+    "date": "日期",
+    "@date": {
+        "description": "generic_Date",
+        "type": "text",
+        "placeholders": {}
     }
 }

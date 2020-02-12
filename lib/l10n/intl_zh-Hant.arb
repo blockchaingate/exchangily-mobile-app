@@ -784,5 +784,11 @@
         "description": "yes",
         "type": "text",
         "placeholders": {}
+    },
+    "date": "日期",
+    "@date": {
+        "description": "generic_Date",
+        "type": "text",
+        "placeholders": {}
     }
 }
