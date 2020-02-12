@@ -58,6 +58,11 @@ class BuySellScreenState extends BaseState {
   String baseCoinName;
   String targetCoinName;
 
+  final kanbanGasPriceTextController = TextEditingController();
+  final kanbanGasLimitTextController = TextEditingController();
+  double kanbanTransFee = 0.0;
+  bool transFeeAdvance = false;
+
   List<OrderModel> sell;
   List<OrderModel> buy;
   DialogService _dialogService = locator<DialogService>();
@@ -100,9 +105,7 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Busy);
     orderListChannel.stream.listen((ordersString) {
       orders = Decoder.fromOrdersJsonArray(ordersString);
-      log.w('3.1');
       showOrders(orders);
-      log.w('3.2');
     });
     setState(ViewState.Idle);
   }
@@ -148,6 +151,8 @@ class BuySellScreenState extends BaseState {
       setState(ViewState.Idle);
     });
   }
+
+  // Refresh Balances and Orders
 
   refresh(String address) {
     setState(ViewState.Busy);
@@ -280,6 +285,16 @@ class BuySellScreenState extends BaseState {
         environment["chains"]["KANBAN"]["gasLimit"]);
     setState(ViewState.Idle);
     return txKanbanHex;
+  }
+
+// Update Transfer Fee
+  updateTransFee() async {
+    setState(ViewState.Busy);
+    var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
+    var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
+    var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
+    kanbanTransFee = kanbanTransFeeDouble;
+    setState(ViewState.Idle);
   }
 
   // Show Orders
