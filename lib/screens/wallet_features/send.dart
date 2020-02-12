@@ -515,6 +515,9 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                 double.tryParse(_sendAmountTextController.text);
                             model.toAddress =
                                 _receiverWalletAddressTextController.text;
+                            model.gasPrice = int.tryParse(_gasPriceTextController.text);
+                            model.gasLimit = int.tryParse(_gasLimitTextController.text);
+                            model.satoshisPerBytes = int.tryParse(_satoshisPerByteTextController.text);
                             model.checkFields(context);
                           },
                         ),

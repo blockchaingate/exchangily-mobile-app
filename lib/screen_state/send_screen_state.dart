@@ -37,6 +37,9 @@ class SendScreenState extends BaseState {
   var updatedBal;
   String toAddress;
   double amount;
+  int gasPrice = 0;
+  int gasLimit = 0;
+  int satoshisPerBytes = 0;
   WalletInfo walletInfo;
   bool checkSendAmount = false;
 
@@ -66,9 +69,18 @@ class SendScreenState extends BaseState {
           options = {
             'tokenType': tokenType,
             'contractAddress': environment["addresses"]["smartContract"]
-                [tickerName]
+                [tickerName],
+            'gasPrice': gasPrice,
+            'gasLimit': gasLimit,
+            'satoshisPerBytes': satoshisPerBytes
           };
         }
+      } else {
+        options = {
+          'gasPrice': gasPrice,
+          'gasLimit': gasLimit,
+          'satoshisPerBytes': satoshisPerBytes
+        };
       }
 
       await walletService

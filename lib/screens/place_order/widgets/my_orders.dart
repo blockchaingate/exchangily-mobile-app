@@ -63,6 +63,8 @@ class MyOrdersState extends State<MyOrders>
      */
   ];
 
+  String exgAddress;
+
   @override
   void initState() {
     _tabController = new TabController(length: 3, vsync: this);
@@ -70,15 +72,17 @@ class MyOrdersState extends State<MyOrders>
     super.initState();
   }
 
-  refreshBalOrds(newbals, newOpenOrds, newCloseOrds) {
+  refreshBalOrds(newbals, newOpenOrds, newCloseOrds, exgAddress) {
     if (this.mounted) {
       setState(() => {
         this.balance = newbals,
         this.openOrders = newOpenOrds,
-        this.closedOrders = newCloseOrds
+        this.closedOrders = newCloseOrds,
+        this.exgAddress = exgAddress
       });
     }
   }
+
 
   /*
   refresh(String address) {
@@ -185,8 +189,8 @@ class MyOrdersState extends State<MyOrders>
                 height: 330,
                 child: TabBarView(
                   children: [
-                    OrdersList(openOrders),
-                    OrdersList(closedOrders),
+                    OrdersList(openOrders, 'open', exgAddress),
+                    OrdersList(closedOrders, 'close', exgAddress),
                     AssetssList(balance)
                   ],
                   controller: _tabController,

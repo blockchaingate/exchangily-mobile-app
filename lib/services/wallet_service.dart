@@ -63,7 +63,6 @@ class WalletService {
   String getRandomMnemonic() {
     String randomMnemonic = '';
     randomMnemonic = bip39.generateMnemonic();
-    log.w('getRandomMnemonic $randomMnemonic');
 
     return randomMnemonic;
   }
@@ -791,6 +790,13 @@ class WalletService {
 
     else if (coin == 'ETH') {
       // Credentials fromHex = EthPrivateKey.fromHex("c87509a[...]dc0d3");
+
+      if (gasPrice == 0) {
+        gasPrice = environment["chains"]["ETH"]["gasPrice"];
+      }
+      if (gasLimit == 0) {
+        gasLimit = environment["chains"]["ETH"]["gasLimit"];
+      }
       transFeeDouble = (Decimal.parse(gasPrice.toString()) * Decimal.parse(gasLimit.toString()) / Decimal.parse('1e18')).toDouble();
       if(getTransFeeOnly) {
         return {
@@ -843,6 +849,13 @@ class WalletService {
         txHash = getTransactionHash(signed);
       }
     } else if (coin == 'FAB') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["FAB"]["satoshisPerBytes"];
+      }
+
       var res1 = await getFabTransactionHex(
           seed, addressIndexList, toAddress, amount, 0, satoshisPerBytes, addressList, getTransFeeOnly);
       if(getTransFeeOnly) {
@@ -868,6 +881,18 @@ class WalletService {
         }
       }
     } else if (tokenType == 'FAB') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["FAB"]["satoshisPerBytes"];
+      }
+      if (gasPrice == 0) {
+        gasPrice = environment["chains"]["FAB"]["gasPrice"];
+      }
+      if (gasLimit == 0) {
+        gasLimit = environment["chains"]["FAB"]["gasLimit"];
+      }
       var transferAbi = 'a9059cbb';
       var amountSentInt = BigInt.from(amount * 1e18);
 
@@ -920,6 +945,12 @@ class WalletService {
       }
     } else if (tokenType == 'ETH') {
 
+      if (gasPrice == 0) {
+        gasPrice = environment["chains"]["ETH"]["gasPrice"];
+      }
+      if (gasLimit == 0) {
+        gasLimit = environment["chains"]["ETH"]["gasLimit"];
+      }
       transFeeDouble = (Decimal.parse(gasPrice.toString()) * Decimal.parse(gasLimit.toString()) / Decimal.parse('1e18')).toDouble();
       log.w('transFeeDouble===' + transFeeDouble.toString());
       if(getTransFeeOnly) {
