@@ -353,7 +353,7 @@ class DashboardScreen extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(10),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(

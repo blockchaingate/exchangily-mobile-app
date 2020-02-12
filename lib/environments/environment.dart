@@ -1,14 +1,10 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
 
-const bool isProduction = true;
+const bool isProduction = false;
 const bool isLocal = true;
 Map devConfig = {
   "chains": {
-    "BTC": {
-      "network": testnet,
-      "satoshisPerBytes": 300,
-      "bytesPerInput": 150
-    },
+    "BTC": {"network": testnet, "satoshisPerBytes": 300, "bytesPerInput": 150},
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
@@ -24,11 +20,7 @@ Map devConfig = {
       "gasPrice": 50,
       "gasLimit": 800000
     },
-    "KANBAN": {
-      "chainId": 212,
-      "gasPrice": 8000000000,
-      "gasLimit": 20000000
-  }
+    "KANBAN": {"chainId": 212, "gasPrice": 8000000000, "gasLimit": 20000000}
   },
   "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150},
   'endpoints': {
@@ -63,11 +55,7 @@ Map devConfig = {
 
 Map productionConfig = {
   "chains": {
-    "BTC": {
-      "network": bitcoin,
-      "satoshisPerBytes": 300,
-      "bytesPerInput": 150
-    },
+    "BTC": {"network": bitcoin, "satoshisPerBytes": 300, "bytesPerInput": 150},
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',
@@ -78,18 +66,16 @@ Map productionConfig = {
     },
     "FAB": {
       "chain": {
-        "name": 'mainnet', "networkId": 0, "chainId": 0,
+        "name": 'mainnet',
+        "networkId": 0,
+        "chainId": 0,
       },
       "satoshisPerBytes": 300,
       "bytesPerInput": 150,
       "gasPrice": 50,
       "gasLimit": 800000
     },
-    "KANBAN": {
-      "chainId": 211,
-      "gasPrice": 8000000000,
-      "gasLimit": 20000000
-    }
+    "KANBAN": {"chainId": 211, "gasPrice": 8000000000, "gasLimit": 20000000}
   },
   "CoinType": {"BTC": 0, "ETH": 60, "FAB": 1150},
   'endpoints': {
