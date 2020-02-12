@@ -4,7 +4,7 @@ const bool isProduction = false;
 const bool isLocal = true;
 Map devConfig = {
   "chains": {
-    "BTC": {"network": testnet, "satoshisPerBytes": 34, "bytesPerInput": 150},
+    "BTC": {"network": testnet, "satoshisPerBytes": 300, "bytesPerInput": 150},
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
@@ -15,7 +15,7 @@ Map devConfig = {
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
-      "satoshisPerBytes": 14,
+      "satoshisPerBytes": 300,
       "bytesPerInput": 150,
       "gasPrice": 50,
       "gasLimit": 800000
@@ -55,7 +55,7 @@ Map devConfig = {
 
 Map productionConfig = {
   "chains": {
-    "BTC": {"network": bitcoin, "satoshisPerBytes": 34, "bytesPerInput": 150},
+    "BTC": {"network": bitcoin, "satoshisPerBytes": 300, "bytesPerInput": 150},
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',
@@ -69,11 +69,11 @@ Map productionConfig = {
         "name": 'mainnet',
         "networkId": 0,
         "chainId": 0,
-        "satoshisPerBytes": 14,
-        "bytesPerInput": 150,
-        "gasPrice": 50,
-        "gasLimit": 800000
-      }
+      },
+      "satoshisPerBytes": 300,
+      "bytesPerInput": 150,
+      "gasPrice": 50,
+      "gasLimit": 800000
     },
     "KANBAN": {"chainId": 211, "gasPrice": 8000000000, "gasLimit": 20000000}
   },

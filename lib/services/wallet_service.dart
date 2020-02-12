@@ -346,7 +346,7 @@ class WalletService {
   }
 
   Future<Map<String, dynamic>> withdrawDo(seed, String coinName,
-      String coinAddress, String tokenType, double amount) async {
+      String coinAddress, String tokenType, double amount, kanbanPrice, kanbanGasLimit) async {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
     var amountInLink = BigInt.from(amount * 1e18);
@@ -365,7 +365,7 @@ class WalletService {
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, environment["chains"]["KANBAN"]["gasPrice"], environment["chains"]["KANBAN"]["gasLimit"]);
+        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, kanbanPrice, kanbanGasLimit);
 
     var res = await sendKanbanRawTransaction(txKanbanHex);
 
@@ -437,8 +437,6 @@ class WalletService {
         stringUtils.trimHexPrefix(txHash),
         amountInLink,
         stringUtils.trimHexPrefix(addressInKanban));
-
-    // originalMessage = '0002952fd4b31c95867902b50f54ac7b0eba7c17b1a25062227ea371d296e127f30800000000000000000000000000000000000000000000000000005af3107a4000000000000000000000000000a2a3720c00c2872397e6d98f41305066cbf0f8b3';
 
     var signedMess =
         await signedMessage(originalMessage, seed, coinName, tokenType);

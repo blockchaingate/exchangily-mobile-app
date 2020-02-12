@@ -14,8 +14,6 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/trade_service.dart';
 import "package:flutter/material.dart";
 import "./textfield_text.dart";
 import "./order_detail.dart";
@@ -177,6 +175,151 @@ class BuySell extends StatelessWidget {
                                         fontSize: 15.0))
                               ],
                             )),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                AppLocalizations.of(context).kanbanGasFee,
+                                style: new TextStyle(
+                                    color: Colors.grey, fontSize: 14.0),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left:
+                                        5), // padding left to keep some space from the text
+                                child: Text(
+                                  '${model.kanbanTransFee}',
+                                  style: new TextStyle(
+                                      color: Colors.grey, fontSize: 14.0),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  AppLocalizations.of(context).advance,
+                                  style: new TextStyle(
+                                      color: Colors.grey, fontSize: 14.0),
+                                ),
+                                Switch(
+                                  value: model.transFeeAdvance,
+                                  inactiveTrackColor: globals.grey,
+                                  // dragStartBehavior: DragStartBehavior.start,
+                                  activeColor: globals.primaryColor,
+                                  onChanged: (bool isOn) {
+                                    //  setState(ViewState.Busy);
+                                    model.transFeeAdvance = isOn;
+                                    //  });
+                                  },
+                                )
+                              ],
+                            )),
+                        Visibility(
+                            visible: model.transFeeAdvance,
+                            child: Padding(
+                                padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          AppLocalizations.of(context)
+                                              .kanbanGasPrice,
+                                          style: new TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14.0),
+                                        ),
+                                        Expanded(
+                                            child: Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    20, 0, 0, 0),
+                                                child: TextField(
+                                                  controller: model
+                                                      .kanbanGasPriceTextController,
+                                                  onChanged: (String amount) {
+                                                    model.updateTransFee();
+                                                  },
+                                                  keyboardType: TextInputType
+                                                      .number, // numnber keyboard
+                                                  decoration: InputDecoration(
+                                                      focusedBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .primaryColor)),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .grey)),
+                                                      hintText: '0.00000',
+                                                      hintStyle:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .display2
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      20)),
+                                                  style: TextStyle(
+                                                      color: globals.grey,
+                                                      fontSize: 14),
+                                                )))
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          AppLocalizations.of(context)
+                                              .kanbanGasLimit,
+                                          style: new TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14.0),
+                                        ),
+                                        Expanded(
+                                            child: Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    20, 0, 0, 0),
+                                                child: TextField(
+                                                  controller: model
+                                                      .kanbanGasLimitTextController,
+                                                  onChanged: (String amount) {
+                                                    model.updateTransFee();
+                                                  },
+                                                  keyboardType: TextInputType
+                                                      .number, // numnber keyboard
+                                                  decoration: InputDecoration(
+                                                      focusedBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .primaryColor)),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .grey)),
+                                                      hintText: '0.00000',
+                                                      hintStyle:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .display2
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      20)),
+                                                  style: TextStyle(
+                                                      color: globals.grey,
+                                                      fontSize: 14),
+                                                )))
+                                      ],
+                                    )
+                                  ],
+                                ))),
                         // Buy Sell Button
                         Padding(
                             padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
