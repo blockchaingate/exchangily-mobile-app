@@ -586,7 +586,7 @@ class AppLocalizations {
 
   String get satoshisPerByte {
     return Intl.message('Satoshis/byte',
-        name: 'satoshisPerbyte', desc: 'satoshis_per_byte');
+        name: 'satoshisPerByte', desc: 'satoshis_per_byte');
   }
 
   String get addGasTransactionSuccess {
@@ -728,6 +728,10 @@ class AppLocalizations {
     return Intl.message('User returned by pressing the back button',
         name: 'userReturnedByPressingBackButton',
         desc: 'send_screen_user_returned_by_pressing_back_button');
+  }
+
+  String get date {
+    return Intl.message('Date', name: 'date', desc: 'generic_Date');
   }
 }
 

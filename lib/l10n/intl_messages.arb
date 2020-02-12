@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-05T23:05:56.697486",
+  "@@last_modified": "2020-02-11T20:11:26.062320",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -204,7 +204,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "trade": "trade",
+  "trade": "Trade",
   "@trade": {
     "description": "trade",
     "type": "text",
@@ -516,7 +516,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "coin": "coin",
+  "coin": "Coin",
   "@coin": {
     "description": "price_text",
     "type": "text",
@@ -528,7 +528,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "lockedAmount": "lockedAmount",
+  "lockedAmount": "Locked Amount",
   "@lockedAmount": {
     "description": "locked_amount_text",
     "type": "text",
@@ -552,13 +552,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "quantity": "quantity",
+  "quantity": "Quantity",
   "@quantity": {
     "description": "quantity_text",
     "type": "text",
     "placeholders": {}
   },
-  "openOrders": "openOrders",
+  "openOrders": "Open Orders",
   "@openOrders": {
     "description": "open_orders_text",
     "type": "text",
@@ -576,13 +576,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "type": "type",
+  "type": "Type",
   "@type": {
     "description": "type_text",
     "type": "text",
     "placeholders": {}
   },
-  "pair": "pair",
+  "pair": "Pair",
   "@pair": {
     "description": "pair_text",
     "type": "text",
@@ -630,13 +630,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "toWallet": "to wallet",
+  "redeposit": "Redeposit",
+  "@redeposit": {
+    "description": "deposit_withdraw_redeposit_header",
+    "type": "text",
+    "placeholders": {}
+  },
+  "toWallet": "To wallet",
   "@toWallet": {
     "description": "withdraw_to_wallet",
     "type": "text",
     "placeholders": {}
   },
-  "toExchange": "to exchange",
+  "toExchange": "To exchange",
   "@toExchange": {
     "description": "deposit_to_exchange",
     "type": "text",
@@ -672,6 +678,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "satoshisPerByte": "Satoshis/byte",
+  "@satoshisPerByte": {
+    "description": "satoshis_per_byte",
+    "type": "text",
+    "placeholders": {}
+  },
   "addGasTransactionSuccess": "Add gas transaction was made successfully",
   "@addGasTransactionSuccess": {
     "description": "add_gas_transaction_success",
@@ -696,7 +708,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "reDeposit": "Re Deposit",
+  "reDeposit": "Re-Deposit",
   "@reDeposit": {
     "description": "wallet_feature_redeposit",
     "type": "text",
@@ -837,6 +849,12 @@
   "userReturnedByPressingBackButton": "User returned by pressing the back button",
   "@userReturnedByPressingBackButton": {
     "description": "send_screen_user_returned_by_pressing_back_button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "date": "Date",
+  "@date": {
+    "description": "generic_Date",
     "type": "text",
     "placeholders": {}
   }

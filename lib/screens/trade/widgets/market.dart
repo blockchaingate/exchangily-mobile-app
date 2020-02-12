@@ -143,10 +143,10 @@ class TrademarketState extends State<Trademarket> {
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Text('Price',
+                                Text(AppLocalizations.of(context).price,
                                     style: TextStyle(
                                         fontSize: 12, color: globals.grey)),
-                                Text('Quantity',
+                                Text(AppLocalizations.of(context).quantity,
                                     style: TextStyle(
                                         fontSize: 12, color: globals.grey)),
                               ]),
@@ -202,10 +202,10 @@ class TrademarketState extends State<Trademarket> {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text('Price',
+                              Text(AppLocalizations.of(context).price,
                                   style: TextStyle(
                                       fontSize: 12, color: globals.grey)),
-                              Text('Quantity',
+                              Text(AppLocalizations.of(context).quantity,
                                   style: TextStyle(
                                       fontSize: 12, color: globals.grey)),
                             ]),
@@ -257,11 +257,11 @@ class TrademarketState extends State<Trademarket> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Text('Price',
+                      Text(AppLocalizations.of(context).price,
                           style: TextStyle(fontSize: 14, color: globals.grey)),
-                      Text('Amount',
+                      Text(AppLocalizations.of(context).quantity,
                           style: TextStyle(fontSize: 14, color: globals.grey)),
-                      Text('Date',
+                      Text(AppLocalizations.of(context).date,
                           style: TextStyle(fontSize: 14, color: globals.grey))
                     ],
                   ),
