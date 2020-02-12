@@ -77,8 +77,7 @@ class _TradeState extends State<Trade> with TradeService {
     var pair = widget.pair.replaceAll(RegExp('/'), '');
     allTradesChannel = getTradeListChannel(pair);
     allTradesChannel.stream.listen((trades) {
-      print('trades in main trade screen=');
-      print(trades);
+
       _updateTrades(trades);
       if (this.mounted) {
         setState(() => {this.tradeChannelCompleted = true});

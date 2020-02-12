@@ -37,6 +37,9 @@ class SendScreenState extends BaseState {
   var updatedBal;
   String toAddress;
   double amount;
+  int gasPrice = 0;
+  int gasLimit = 0;
+  int satoshisPerBytes = 0;
   WalletInfo walletInfo;
   bool checkSendAmount = false;
 
@@ -66,14 +69,23 @@ class SendScreenState extends BaseState {
           options = {
             'tokenType': tokenType,
             'contractAddress': environment["addresses"]["smartContract"]
-                [tickerName]
+                [tickerName],
+            'gasPrice': gasPrice,
+            'gasLimit': gasLimit,
+            'satoshisPerBytes': satoshisPerBytes
           };
         }
+      } else {
+        options = {
+          'gasPrice': gasPrice,
+          'gasLimit': gasLimit,
+          'satoshisPerBytes': satoshisPerBytes
+        };
       }
 
       await walletService
           .sendTransaction(
-              tickerName, seed, [0],[], toWalletAddress, amount, options, true)
+              tickerName, seed, [0], [], toWalletAddress, amount, options, true)
           .then((res) {
         log.w('Result $res');
         txHash = res["txHash"];
@@ -85,6 +97,15 @@ class SendScreenState extends BaseState {
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
               Icons.check_circle_outline,
               globals.green,
+              context);
+          setState(ViewState.Idle);
+        } else if (errorMessage.isNotEmpty) {
+          log.e('Error Message: $errorMessage');
+          walletService.showInfoFlushbar(
+              AppLocalizations.of(context).genericError,
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+              Icons.cancel,
+              globals.red,
               context);
           setState(ViewState.Idle);
         } else if (txHash == '' && errorMessage == '') {
