@@ -73,7 +73,7 @@ class SendScreenState extends BaseState {
 
       await walletService
           .sendTransaction(
-              tickerName, seed, [0],[], toWalletAddress, amount, options, true)
+              tickerName, seed, [0], [], toWalletAddress, amount, options, true)
           .then((res) {
         log.w('Result $res');
         txHash = res["txHash"];
@@ -85,6 +85,15 @@ class SendScreenState extends BaseState {
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
               Icons.check_circle_outline,
               globals.green,
+              context);
+          setState(ViewState.Idle);
+        } else if (errorMessage.isNotEmpty) {
+          log.e('Error Message: $errorMessage');
+          walletService.showInfoFlushbar(
+              AppLocalizations.of(context).genericError,
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+              Icons.cancel,
+              globals.red,
               context);
           setState(ViewState.Idle);
         } else if (txHash == '' && errorMessage == '') {
