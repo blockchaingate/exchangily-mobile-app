@@ -15,8 +15,8 @@ import "package:flutter/material.dart";
 import '../../../models/order-model.dart';
 
 class OrderDetail extends StatelessWidget {
-  List<OrderModel> orderArray;
-  bool bidOrAsk;
+  final List<OrderModel> orderArray;
+  final bool bidOrAsk;
 
   OrderDetail(this.orderArray, this.bidOrAsk);
 
@@ -32,15 +32,16 @@ class OrderDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(item.price.toString(),
-                      style: new TextStyle(
+                      style: TextStyle(
                           color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
-                          fontSize: 18.0)),
+                          fontSize: 13.0)),
                   Container(
-                      padding: EdgeInsets.fromLTRB(10, 1, 10, 1),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                       child: Text(item.orderQuantity.toString(),
-                          style: new TextStyle(
-                              color: Colors.white, fontSize: 18.0)))
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 13.0)))
                 ],
               ))
       ],

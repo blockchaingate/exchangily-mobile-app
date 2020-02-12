@@ -77,8 +77,8 @@ class _TradeState extends State<Trade> with TradeService {
     var pair = widget.pair.replaceAll(RegExp('/'), '');
     allTradesChannel = getTradeListChannel(pair);
     allTradesChannel.stream.listen((trades) {
-      //print('trades=');
-      //print(trades);
+      print('trades in main trade screen=');
+      print(trades);
       _updateTrades(trades);
       if (this.mounted) {
         setState(() => {this.tradeChannelCompleted = true});
@@ -147,6 +147,9 @@ class _TradeState extends State<Trade> with TradeService {
 
   @override
   void dispose() {
+    allTradesChannel.sink.close();
+    allOrdersChannel.sink.close();
+    allPriceChannel.sink.close();
     super.dispose();
   }
 
@@ -192,7 +195,9 @@ class _TradeState extends State<Trade> with TradeService {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
-                    width: 200,
+                    // width: 150,
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
@@ -200,7 +205,10 @@ class _TradeState extends State<Trade> with TradeService {
                             child: Padding(
                           padding: const EdgeInsets.only(right: 5.0),
                           child: FlatButton(
-                            color: globals.primaryColor,
+                            shape: StadiumBorder(
+                                side: BorderSide(
+                                    color: globals.buyPrice, width: 2)),
+                            // color: globals.buyPrice,
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -211,14 +219,14 @@ class _TradeState extends State<Trade> with TradeService {
                             },
                             child: Text(AppLocalizations.of(context).buy,
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white)),
+                                    fontSize: 15, color: globals.white)),
                           ),
                         )),
                         Flexible(
                             child: RaisedButton(
-                          shape: StadiumBorder(
-                              side: BorderSide(color: globals.red, width: 1)),
-                          color: globals.walletCardColor,
+                          // shape: StadiumBorder(
+                          //     side: BorderSide(color: globals.red, width: 1)),
+                          color: globals.sellPrice,
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -229,7 +237,7 @@ class _TradeState extends State<Trade> with TradeService {
                           },
                           child: Text(AppLocalizations.of(context).sell,
                               style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
+                                  TextStyle(fontSize: 15, color: Colors.white)),
                         ))
                       ],
                     )),

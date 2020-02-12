@@ -39,12 +39,6 @@ class _BaseScreenState<T extends BaseState> extends State<BaseScreen<T>> {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   model.dispose();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<T>(

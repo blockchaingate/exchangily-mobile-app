@@ -276,23 +276,19 @@ class TrademarketState extends State<Trademarket> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
-                              // decoration:
-                              //     const BoxDecoration(color: Color(0xFF264559)),
-                              padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                               child: Text(item.price.toString(),
                                   style: TextStyle(
-                                      fontSize: 18, color: globals.white))),
+                                      fontSize: 14, color: globals.white))),
                           Container(
-                              padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                               child: Text(item.amount.toString(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      fontSize: 18, color: Color(0xFF5e617f)))),
+                                      fontSize: 14, color: Color(0xFF5e617f)))),
                           Container(
-                              padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                               child: Text(timeFormatted(item.time),
+                                  textAlign: TextAlign.end,
                                   style: TextStyle(
-                                      fontSize: 18, color: Color(0xFF5e617f)))),
+                                      fontSize: 14, color: Color(0xFF5e617f)))),
                         ],
                       ),
                     ),

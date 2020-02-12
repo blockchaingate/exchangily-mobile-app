@@ -79,6 +79,7 @@ class _MarketState extends State<Market> with TradeService {
 
   @override
   void dispose() {
+    allPriceChannel.sink.close();
     super.dispose();
   }
 }
