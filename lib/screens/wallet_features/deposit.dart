@@ -80,8 +80,6 @@ class _DepositState extends State<Deposit> {
     _kanbanGasPriceTextController.text = environment["chains"]["KANBAN"]["gasPrice"].toString();
     _kanbanGasLimitTextController.text = environment["chains"]["KANBAN"]["gasLimit"].toString();
 
-    print('_satoshisPerByteTextController=' + _satoshisPerByteTextController.text);
-    print('satoshisPerBytes==' + environment["chains"]["FAB"]["satoshisPerBytes"].toString());
   }
 
 
@@ -130,6 +128,7 @@ class _DepositState extends State<Deposit> {
 
       var ret =
           await walletService.depositDo(seed, coinName, tokenType, amount, option);
+
 
       if (ret["success"]) {
         myController.text = '';
