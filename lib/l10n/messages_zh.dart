@@ -52,6 +52,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "copyAddress" : MessageLookupByLibrary.simpleMessage("拷贝地址"),
     "createWallet" : MessageLookupByLibrary.simpleMessage("创建新钱包"),
     "creatingWallet" : MessageLookupByLibrary.simpleMessage("创建钱包"),
+    "date" : MessageLookupByLibrary.simpleMessage("日期"),
     "deleteWallet" : MessageLookupByLibrary.simpleMessage("删除钱包"),
     "depositTransactionFailed" : MessageLookupByLibrary.simpleMessage("存款交易失败"),
     "depositTransactionSuccess" : MessageLookupByLibrary.simpleMessage("存款交易成功，请过一会查看结果"),
