@@ -63,7 +63,6 @@ class WalletService {
   String getRandomMnemonic() {
     String randomMnemonic = '';
     randomMnemonic = bip39.generateMnemonic();
-    log.w('getRandomMnemonic $randomMnemonic');
 
     return randomMnemonic;
   }

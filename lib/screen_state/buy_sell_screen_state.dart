@@ -115,11 +115,9 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Busy);
     tradeListChannel.stream.listen((tradesString) {
       List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
-      log.i('trades= $trades');
-      log.w('5.1');
+
       if (trades != null && trades.length > 0) {
         TradeModel latestTrade = trades[0];
-        log.w('5.2');
         //if (this.mounted) {
         //   setState(() => {
         currentPrice = latestTrade.price;
@@ -220,7 +218,7 @@ class BuySellScreenState extends BaseState {
           closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds;
       if ((myordersState != null) && (myordersState.currentState != null)) {
         myordersState.currentState
-            .refreshBalOrds(newbals, newOpenOrds, newCloseOrds);
+            .refreshBalOrds(newbals, newOpenOrds, newCloseOrds, exgAddress);
       }
     });
     setState(ViewState.Idle);
