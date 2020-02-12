@@ -7,560 +7,405 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Author: ken.qiu@exchangily.com
+* Author: ken.qiu@exchangily.com, barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
-import 'package:random_string/random_string.dart';
+import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/screen_state/buy_sell_screen_state.dart';
+import 'package:exchangilymobileapp/screens/base_screen.dart';
 import "package:flutter/material.dart";
 import "./textfield_text.dart";
 import "./order_detail.dart";
 import "./my_orders.dart";
-import 'package:web_socket_channel/io.dart';
-import '../../../services/trade_service.dart';
-import '../../../utils/decoder.dart';
-import '../../../models/orders.dart';
-import '../../../models/order-model.dart';
-import '../../../models/trade-model.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:async';
-import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/services/dialog_service.dart';
-import 'dart:typed_data';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
-import 'package:keccak/keccak.dart';
-import '../../../utils/string_util.dart';
-import 'package:convert/convert.dart';
-import '../../../utils/kanban.util.dart';
-import 'package:hex/hex.dart';
-import '../../../utils/abi_util.dart';
-import '../../../utils/keypair_util.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import '../../../environments/coins.dart';
 
-class BuySell extends StatefulWidget {
+class BuySell extends StatelessWidget {
   BuySell({Key key, this.bidOrAsk, this.baseCoinName, this.targetCoinName})
       : super(key: key);
   final bool bidOrAsk;
   final String baseCoinName;
   final String targetCoinName;
-  @override
-  _BuySellState createState() => _BuySellState();
-}
-
-class _BuySellState extends State<BuySell>
-    with SingleTickerProviderStateMixin, TradeService {
-  bool bidOrAsk;
-
-  List<OrderModel> sell;
-  List<OrderModel> buy;
-  DialogService _dialogService = locator<DialogService>();
-  WalletService walletService = locator<WalletService>();
-  double currentPrice = 0;
-  double currentQuantity = 0;
-  double _sliderValue = 10.0;
-  IOWebSocketChannel orderListChannel;
-  IOWebSocketChannel tradeListChannel;
-  List<WalletInfo> walletInfo;
-  double price;
-  double quantity;
-  String exgAddress;
-  final GlobalKey<MyOrdersState> _myordersState =
-      new GlobalKey<MyOrdersState>();
-
-  final log = getLogger('BuySell');
-  final WalletDataBaseService dataBaseService =
-      locator<WalletDataBaseService>();
-
-  retrieveWallets() async {
-    await dataBaseService.getAll().then((walletList) async {
-      walletInfo = walletList;
-
-      for (var i = 0; i < walletInfo.length; i++) {
-        var coin = walletInfo[i];
-        if (coin.tickerName == 'EXG') {
-          exgAddress = coin.address;
-          // _myordersState.currentState.refresh(exgAddress);
-          this.refresh(exgAddress);
-          break;
-        }
-      }
-    }).catchError((error) {});
-  }
-
-
-  refresh(String address) {
-    if (address == null) {
-      return;
-    }
-    Timer.periodic(Duration(seconds: 3), (Timer time) async {
-      // print("Yeah, this line is printed after 3 seconds");
-      var balances = await getAssetsBalance(address);
-      var orders = await getOrders(address);
-
-      List<Map<String, dynamic>> newbals = [];
-      List<Map<String, dynamic>> openOrds = [];
-      List<Map<String, dynamic>> closeOrds = [];
-
-      for (var i = 0; i < balances.length; i++) {
-        var bal = balances[i];
-        var coinType = int.parse(bal['coinType']);
-        var unlockedAmount = bigNum2Double(bal['unlockedAmount']);
-        var lockedAmount = bigNum2Double(bal['lockedAmount']);
-        var newbal = {
-          "coin": coin_list[coinType]['name'],
-          "amount": unlockedAmount,
-          "lockedAmount": lockedAmount
-        };
-        newbals.add(newbal);
-      }
-
-      for (var i = 0; i < orders.length; i++) {
-        var order = orders[i];
-        var orderHash = order['orderHash'];
-        var address = order['address'];
-        var orderType = order['orderType'];
-        var bidOrAsk = order['bidOrAsk'];
-        var pairLeft = order['pairLeft'];
-        var pairRight = order['pairRight'];
-        var price = bigNum2Double(order['price']);
-        var orderQuantity = bigNum2Double(order['orderQuantity']);
-        var filledQuantity = bigNum2Double(order['filledQuantity']);
-        var time = order['time'];
-        var isActive = order['isActive'];
-
-        //{ "block":  "absdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
-        var newOrd = {
-          'orderHash': orderHash,
-          'type': (bidOrAsk == true) ? 'Buy' : 'Sell',
-          'pair': coin_list[pairLeft]['name'].toString() +
-              '/' +
-              coin_list[pairRight]['name'].toString(),
-          'price': price,
-          'amount': orderQuantity,
-          'filledAmount': filledQuantity
-        };
-
-        if (isActive == true) {
-          openOrds.add(newOrd);
-        } else {
-          closeOrds.add(newOrd);
-        }
-      }
-
-      var newOpenOrds = openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds;
-      var newCloseOrds = closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds;
-      if((_myordersState != null) && (_myordersState.currentState != null)) {
-        _myordersState.currentState.refreshBalOrds(newbals, newOpenOrds, newCloseOrds);
-      }
-
-      /*
-      if (this.mounted) {
-
-        setState(() => {
-          this.balance = newbals,
-          this.openOrders =
-          openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds,
-          this.closedOrders =
-          closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds
-        });
-
-
-      }
-
-       */
-    });
-  }
-
-  generateOrderHash(bidOrAsk, orderType, baseCoin, targetCoin, amount, price,
-      timeBeforeExpiration) {
-    var randomStr = randomString(32);
-    var concatString = [
-      bidOrAsk,
-      orderType,
-      baseCoin,
-      targetCoin,
-      amount,
-      price,
-      timeBeforeExpiration,
-      randomStr
-    ].join('');
-    var outputHashData = keccak(stringToUint8List(concatString));
-
-    // if needed convert the output byte array into hex string.
-    var output = hex.encode(outputHashData);
-    return output;
-  }
-
-  txHexforPlaceOrder(seed) async {
-    var timeBeforeExpiration = 423434342432;
-    var orderType = 1;
-    var baseCoin = walletService.getCoinTypeIdByName(widget.baseCoinName);
-    var targetCoin = walletService.getCoinTypeIdByName(widget.targetCoinName);
-    var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin,
-        targetCoin, quantity, price, timeBeforeExpiration);
-
-    var qtyBigInt = BigInt.from(quantity * 1e18);
-    var priceBigInt = BigInt.from(price * 1e18);
-
-    var abiHex = getCreateOrderFuncABI(
-        bidOrAsk,
-        orderType,
-        baseCoin,
-        targetCoin,
-        qtyBigInt,
-        priceBigInt,
-        timeBeforeExpiration,
-        false,
-        orderHash);
-    var nonce = await getNonce(exgAddress);
-
-    var keyPairKanban = getExgKeyPair(seed);
-    var exchangilyAddress = await getExchangilyAddress();
-    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), exchangilyAddress, nonce, environment["chains"]["KANBAN"]["gasPrice"], environment["chains"]["KANBAN"]["gasLimit"]);
-    return txKanbanHex;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    this.sell = [];
-    this.buy = [];
-    bidOrAsk = widget.bidOrAsk;
-    orderListChannel =
-        getOrderListChannel(widget.targetCoinName + widget.baseCoinName);
-    orderListChannel.stream.listen((ordersString) {
-      Orders orders = Decoder.fromOrdersJsonArray(ordersString);
-      _showOrders(orders);
-    });
-
-    tradeListChannel =
-        getTradeListChannel(widget.targetCoinName + widget.baseCoinName);
-    tradeListChannel.stream.listen((tradesString) {
-      //print('trades=');
-      //print(trades);
-      List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
-
-      if (trades != null && trades.length > 0) {
-        TradeModel latestTrade = trades[0];
-
-        if (this.mounted) {
-          setState(() => {this.currentPrice = latestTrade.price});
-        }
-      }
-    });
-    retrieveWallets();
-  }
-
-  _showOrders(Orders orders) {
-    var newbuy = orders.buy;
-    var newsell = orders.sell;
-    var preItem;
-    for (var i = 0; i < newbuy.length; i++) {
-      var item = newbuy[i];
-      var price = item.price;
-      var orderQuantity = item.orderQuantity;
-
-      var filledQuantity = item.filledQuantity;
-      if (preItem != null) {
-        if (preItem.price == price) {
-          preItem.orderQuantity =
-              doubleAdd(preItem.orderQuantity, orderQuantity);
-          preItem.filledQuantity =
-              doubleAdd(preItem.filledQuantity, filledQuantity);
-          newbuy.removeAt(i);
-          i--;
-        } else {
-          preItem = item;
-        }
-      } else {
-        preItem = item;
-      }
-    }
-
-    preItem = null;
-    for (var i = 0; i < newsell.length; i++) {
-      var item = newsell[i];
-      var price = item.price;
-      var orderQuantity = item.orderQuantity;
-      var filledQuantity = item.filledQuantity;
-      if (preItem != null) {
-        if (preItem.price == price) {
-          preItem.orderQuantity =
-              doubleAdd(preItem.orderQuantity, orderQuantity);
-          preItem.filledQuantity =
-              doubleAdd(preItem.filledQuantity, filledQuantity);
-          newsell.removeAt(i);
-          i--;
-        } else {
-          preItem = item;
-        }
-      } else {
-        preItem = item;
-      }
-    }
-
-    if (!listEquals(newbuy, this.buy) || !listEquals(newsell, this.sell)) {
-      if (this.mounted) {
-        setState(() => {
-              this.sell = (newsell.length > 5)
-                  ? (newsell.sublist(newsell.length - 5))
-                  : newsell,
-              this.buy = (newbuy.length > 5) ? (newbuy.sublist(0, 5)) : newbuy
-            });
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    // orderListChannel.sink.close();
-    super.dispose();
-  }
-
-  placeOrder() {
-    checkPass(context);
-  }
-
-  void handleTextChanged(String name, String text) {
-    if (name == 'price') {
-      try {
-        this.price = double.parse(text);
-      } catch (e) {}
-    }
-    if (name == 'quantity') {
-      try {
-        this.quantity = double.parse(text);
-      } catch (e) {}
-    }
-  }
-
-  checkPass(context) async {
-    var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
-        description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
-    if (res.confirmed) {
-      String mnemonic = res.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
-
-      var txHex = await txHexforPlaceOrder(seed);
-      var resKanban = await sendKanbanRawTransaction(txHex);
-    } else {
-      if (res.returnedText != 'Closed') {
-        showNotification(context);
-      }
-    }
-  }
-
-  showNotification(context) {
-    walletService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        globals.red,
-        context);
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      Row(
-        children: <Widget>[
-          Container(
-              decoration: BoxDecoration(
-                border: Border(
-                    bottom: bidOrAsk
-                        ? BorderSide(width: 2.0, color: Color(0XFF871fff))
-                        : BorderSide.none),
-              ),
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      bidOrAsk = true;
-                    });
-                  },
-                  child: Text(
-                    AppLocalizations.of(context).buy,
-                    style: new TextStyle(
-                        color: bidOrAsk ? Color(0XFF871fff) : Colors.white,
-                        fontSize: 18.0),
-                  ))),
-          Container(
-              decoration: BoxDecoration(
-                border: Border(
-                    bottom: bidOrAsk
-                        ? BorderSide.none
-                        : BorderSide(width: 2.0, color: Color(0XFF871fff))),
-              ),
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-              child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      bidOrAsk = false;
-                    });
-                  },
-                  child: Text(
-                    AppLocalizations.of(context).sell,
-                    style: new TextStyle(
-                        color: bidOrAsk ? Colors.white : Color(0XFF871fff),
-                        fontSize: 18.0),
-                  )))
-        ],
-      ),
-      Container(
-        decoration: BoxDecoration(
-          color: Color(0xFF2c2c4c),
-          border: Border(
-              top: BorderSide(width: 1.0, color: Colors.white10),
-              bottom: BorderSide(width: 1.0, color: Colors.white10)),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Expanded(
-                flex: 6,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
-                      child: TextfieldText(
-                          "price",
-                          AppLocalizations.of(context).price,
-                          widget.baseCoinName,
-                          handleTextChanged),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(5, 10, 10, 10),
-                      child: TextfieldText(
-                          "quantity",
-                          AppLocalizations.of(context).quantity,
-                          "",
-                          handleTextChanged),
-                    ),
-                    Slider(
-                      activeColor: Colors.indigoAccent,
-                      min: 0.0,
-                      max: 15.0,
-                      onChanged: (newRating) {
-                        setState(() => _sliderValue = newRating);
+    final log = getLogger('BuySellScreen');
+    return BaseScreen<BuySellScreenState>(
+      onModelReady: (model) async {
+        log.w('=0');
+        model.context = context;
+        model.baseCoinName = baseCoinName;
+        model.targetCoinName = targetCoinName;
+        model.sell = [];
+        model.buy = [];
+        model.bidOrAsk = bidOrAsk;
+        model.orderListFromTradeService();
+        model.tradeListFromTradeService();
+        await model.retrieveWallets();
+        await model.orderList();
+        await model.tradeList();
+      },
+      builder: (context, model, child) => WillPopScope(
+        onWillPop: () {
+          // Close Web Socket on back click of hardware button
+          model.closeChannles();
+          // Let the back button push the route to the previous one
+          return new Future(() => true);
+        },
+        child: Column(children: <Widget>[
+          Row(
+            children: <Widget>[
+              Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                        bottom: bidOrAsk
+                            ? BorderSide(width: 2.0, color: Color(0XFF871fff))
+                            : BorderSide.none),
+                  ),
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: GestureDetector(
+                      onTap: () {
+                        //setState(() {
+                        model.bidOrAsk = true;
+                        //   });
                       },
-                      value: _sliderValue,
-                    ),
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              AppLocalizations.of(context).transactionAmount,
-                              style: new TextStyle(
-                                  color: Colors.grey, fontSize: 14.0),
-                            ),
-                            Text("1000" + " " + widget.baseCoinName,
-                                style: new TextStyle(
-                                    color: Colors.grey, fontSize: 14.0))
-                          ],
-                        )),
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(AppLocalizations.of(context).totalBalance,
-                                style: new TextStyle(
-                                    color: Colors.grey, fontSize: 14.0)),
-                            Text("0.0000" + " " + widget.baseCoinName,
-                                style: new TextStyle(
-                                    color: Colors.grey, fontSize: 14.0))
-                          ],
-                        )),
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: new SizedBox(
-                            width: double.infinity,
-                            child: new RaisedButton(
-                              padding: const EdgeInsets.all(8.0),
-                              textColor: Colors.white,
-                              color: bidOrAsk
-                                  ? Color(0xFF0da88b)
-                                  : Color(0xFFe2103c),
-                              onPressed: () => {this.placeOrder()},
-                              child: new Text(
-                                  bidOrAsk
-                                      ? AppLocalizations.of(context).buy
-                                      : AppLocalizations.of(context).sell,
-                                  style: new TextStyle(
-                                      color: Colors.white, fontSize: 18.0)),
-                            )))
-                  ],
-                )),
-            Expanded(
-                flex: 4,
-                child: Padding(
-                    padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                      child: Text(
+                        AppLocalizations.of(context).buy,
+                        style: TextStyle(
+                            color: bidOrAsk ? Color(0XFF871fff) : Colors.white,
+                            fontSize: 18.0),
+                      ))),
+              Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                        bottom: bidOrAsk
+                            ? BorderSide.none
+                            : BorderSide(width: 2.0, color: Color(0XFF871fff))),
+                  ),
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                  child: GestureDetector(
+                      onTap: () {
+                        //   setState(() {
+                        model.bidOrAsk = false;
+                        //    });
+                      },
+                      child: Text(
+                        AppLocalizations.of(context).sell,
+                        style: new TextStyle(
+                            color: bidOrAsk ? Colors.white : Color(0XFF871fff),
+                            fontSize: 18.0),
+                      )))
+            ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Color(0xFF2c2c4c),
+              border: Border(
+                  top: BorderSide(width: 1.0, color: Colors.white10),
+                  bottom: BorderSide(width: 1.0, color: Colors.white10)),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                    flex: 6,
                     child: Column(
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Container(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                        width: 1.0, color: Colors.grey),
-                                  ),
-                                ),
-                                child: Text(AppLocalizations.of(context).price,
-                                    style: new TextStyle(
-                                        color: Colors.white, fontSize: 16.0))),
-                            Container(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                        width: 1.0, color: Colors.grey),
-                                  ),
-                                ),
-                                child: Text(
-                                    AppLocalizations.of(context).quantity,
-                                    style: new TextStyle(
-                                        color: Colors.white, fontSize: 16.0)))
-                          ],
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
+                          child: TextfieldText(
+                              "price",
+                              AppLocalizations.of(context).price,
+                              baseCoinName,
+                              model.handleTextChanged),
                         ),
-                        OrderDetail(sell, false),
-                        Container(
-                            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 10, 10, 10),
+                          child: TextfieldText(
+                              "quantity",
+                              AppLocalizations.of(context).quantity,
+                              "",
+                              model.handleTextChanged),
+                        ),
+                        Slider(
+                          activeColor: Colors.indigoAccent,
+                          min: 0.0,
+                          max: 15.0,
+                          onChanged: (newRating) {
+                            //setState(() =>
+                            model.sliderValue = newRating;
+                            //);
+                          },
+                          value: model.sliderValue,
+                        ),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  AppLocalizations.of(context)
+                                      .transactionAmount,
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 14.0),
+                                ),
+                                Text("1000" + " " + baseCoinName,
+                                    style: TextStyle(
+                                        color: Colors.grey, fontSize: 14.0))
+                              ],
+                            )),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(AppLocalizations.of(context).totalBalance,
+                                    style: TextStyle(
+                                        color: globals.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0)),
+                                Text("0.0000" + " " + baseCoinName,
+                                    style: TextStyle(
+                                        color: globals.primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15.0))
+                              ],
+                            )),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                AppLocalizations.of(context).kanbanGasFee,
+                                style: new TextStyle(
+                                    color: Colors.grey, fontSize: 14.0),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left:
+                                        5), // padding left to keep some space from the text
+                                child: Text(
+                                  '${model.kanbanTransFee}',
+                                  style: new TextStyle(
+                                      color: Colors.grey, fontSize: 14.0),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  AppLocalizations.of(context).advance,
+                                  style: new TextStyle(
+                                      color: Colors.grey, fontSize: 14.0),
+                                ),
+                                Switch(
+                                  value: model.transFeeAdvance,
+                                  inactiveTrackColor: globals.grey,
+                                  // dragStartBehavior: DragStartBehavior.start,
+                                  activeColor: globals.primaryColor,
+                                  onChanged: (bool isOn) {
+                                    //  setState(ViewState.Busy);
+                                    model.transFeeAdvance = isOn;
+                                    //  });
+                                  },
+                                )
+                              ],
+                            )),
+                        Visibility(
+                            visible: model.transFeeAdvance,
+                            child: Padding(
+                                padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                child: Column(
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          AppLocalizations.of(context)
+                                              .kanbanGasPrice,
+                                          style: new TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14.0),
+                                        ),
+                                        Expanded(
+                                            child: Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    20, 0, 0, 0),
+                                                child: TextField(
+                                                  controller: model
+                                                      .kanbanGasPriceTextController,
+                                                  onChanged: (String amount) {
+                                                    model.updateTransFee();
+                                                  },
+                                                  keyboardType: TextInputType
+                                                      .number, // numnber keyboard
+                                                  decoration: InputDecoration(
+                                                      focusedBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .primaryColor)),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .grey)),
+                                                      hintText: '0.00000',
+                                                      hintStyle:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .display2
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      20)),
+                                                  style: TextStyle(
+                                                      color: globals.grey,
+                                                      fontSize: 14),
+                                                )))
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          AppLocalizations.of(context)
+                                              .kanbanGasLimit,
+                                          style: new TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14.0),
+                                        ),
+                                        Expanded(
+                                            child: Padding(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    20, 0, 0, 0),
+                                                child: TextField(
+                                                  controller: model
+                                                      .kanbanGasLimitTextController,
+                                                  onChanged: (String amount) {
+                                                    model.updateTransFee();
+                                                  },
+                                                  keyboardType: TextInputType
+                                                      .number, // numnber keyboard
+                                                  decoration: InputDecoration(
+                                                      focusedBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .primaryColor)),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .grey)),
+                                                      hintText: '0.00000',
+                                                      hintStyle:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .display2
+                                                              .copyWith(
+                                                                  fontSize:
+                                                                      20)),
+                                                  style: TextStyle(
+                                                      color: globals.grey,
+                                                      fontSize: 14),
+                                                )))
+                                      ],
+                                    )
+                                  ],
+                                ))),
+                        // Buy Sell Button
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                            child: SizedBox(
+                                width: double.infinity,
+                                child: RaisedButton(
+                                  padding: const EdgeInsets.all(8.0),
+                                  textColor: Colors.white,
+                                  color: bidOrAsk
+                                      ? Color(0xFF0da88b)
+                                      : Color(0xFFe2103c),
+                                  onPressed: () => {model.placeOrder()},
+                                  child: Text(
+                                      bidOrAsk
+                                          ? AppLocalizations.of(context).buy
+                                          : AppLocalizations.of(context).sell,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20.0)),
+                                )))
+                      ],
+                    )),
+                Expanded(
+                    flex: 4,
+                    child: Padding(
+                        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                        child: Column(
+                          children: <Widget>[
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Container(
                                     padding:
                                         const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                    child: Text(currentPrice.toString(),
-                                        style: new TextStyle(
-                                            color: Color(0xFF17a2b8),
-                                            fontSize: 18.0)))
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            width: 1.0, color: Colors.grey),
+                                      ),
+                                    ),
+                                    child: Text(
+                                        AppLocalizations.of(context).price,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0))),
+                                Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                            width: 1.0, color: Colors.grey),
+                                      ),
+                                    ),
+                                    child: Text(
+                                        AppLocalizations.of(context).quantity,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0)))
                               ],
-                            )),
-                        OrderDetail(buy, true)
-                      ],
-                    )))
-          ],
-        ),
+                            ),
+                            OrderDetail(model.sell, false),
+                            Container(
+                                padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 0, 5),
+                                        child: Text(
+                                            model.currentPrice.toString(),
+                                            style: TextStyle(
+                                                color: Color(0xFF17a2b8),
+                                                fontSize: 18.0)))
+                                  ],
+                                )),
+                            OrderDetail(model.buy, true)
+                          ],
+                        )))
+              ],
+            ),
+          ),
+          MyOrders(key: model.myordersState)
+        ]),
       ),
-      MyOrders(key: _myordersState)
-    ]);
+    );
   }
 }

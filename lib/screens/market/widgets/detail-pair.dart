@@ -24,7 +24,7 @@ class DetailPair extends StatelessWidget {
         child: Container(
             color: globals.walletCardColor,
             padding: EdgeInsets.all(10),
-            margin: EdgeInsets.symmetric(vertical: 10),
+            margin: EdgeInsets.only(top: 10),
             child: Container(
               padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
               margin: EdgeInsets.fromLTRB(10, 10, 10, 0),

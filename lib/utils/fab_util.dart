@@ -57,6 +57,8 @@ Future getFabLockBalanceByAddress(String address) async {
         json['executionResult'] != null &&
         json['executionResult']['output'] != null) {
       var balanceHex = json['executionResult']['output'];
+
+      print('balanceHex===' + balanceHex);
       final abiCode = """
       [
       {
@@ -241,6 +243,7 @@ exgToFabAddress(String address) {
 
 Future getFabTokenBalanceForABI(
     String balanceInfoABI, String smartContractAddress, String address) async {
+
   var body = {
     'address': trimHexPrefix(smartContractAddress),
     'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
@@ -258,8 +261,8 @@ Future getFabTokenBalanceForABI(
     }
     // var unlockInt = int.parse(unlockBalance, radix: 16);
     var unlockInt = BigInt.parse(unlockBalance, radix: 16);
-
     tokenBalance = bigNum2Double(unlockInt);
+
   } catch (e) {}
   return tokenBalance;
 }
@@ -277,7 +280,7 @@ Future getFabTokenBalanceByAddress(String address, String coinName) async {
   String balanceInfoABI = '70a08231';
   var tokenBalance = await getFabTokenBalanceForABI(
       balanceInfoABI, smartContractAddress, address);
-  balanceInfoABI = '43eb7b44';
+  balanceInfoABI = '6ff95d25';
   var tokenLockedBalance = await getFabTokenBalanceForABI(
       balanceInfoABI, smartContractAddress, address);
 

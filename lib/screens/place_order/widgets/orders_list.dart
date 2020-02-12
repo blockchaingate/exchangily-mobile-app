@@ -29,7 +29,7 @@ class OrdersList extends StatelessWidget {
           children: <Widget>[
             Container(
                 child: Text(AppLocalizations.of(context).type,
-                    style: new TextStyle(color: Colors.grey, fontSize: 18.0))),
+                    style: TextStyle(color: Colors.grey, fontSize: 14.0))),
             for (var item in orderArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
@@ -44,25 +44,25 @@ class OrdersList extends StatelessWidget {
         Column(
           children: <Widget>[
             Text(AppLocalizations.of(context).pair,
-                style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                style: new TextStyle(color: Colors.grey, fontSize: 14.0)),
             for (var item in orderArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
                   child: Text(item["pair"],
                       style:
-                          new TextStyle(color: Colors.white70, fontSize: 16.0)))
+                          new TextStyle(color: Colors.white70, fontSize: 14.0)))
           ],
         ),
         Column(
           children: <Widget>[
             Text(AppLocalizations.of(context).price,
-                style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                style: new TextStyle(color: Colors.grey, fontSize: 14.0)),
             for (var item in orderArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
                   child: Text(item["price"].toString(),
                       style:
-                          new TextStyle(color: Colors.white70, fontSize: 16.0)))
+                          new TextStyle(color: Colors.white70, fontSize: 14.0)))
           ],
         ),
         Column(
@@ -72,7 +72,7 @@ class OrdersList extends StatelessWidget {
                     "(" +
                     AppLocalizations.of(context).filledAmount +
                     ")",
-                style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                style: new TextStyle(color: Colors.grey, fontSize: 14.0)),
             for (var item in orderArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
@@ -87,7 +87,7 @@ class OrdersList extends StatelessWidget {
                               .toStringAsFixed(2) +
                           "%)",
                       style:
-                          new TextStyle(color: Colors.white70, fontSize: 16.0)))
+                          new TextStyle(color: Colors.white70, fontSize: 14.0)))
           ],
         )
       ],

@@ -30,6 +30,7 @@ import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/trade/main.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/add_gas.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/deposit.dart';
+import 'package:exchangilymobileapp/screens/wallet_features/redeposit.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/withdraw.dart';
 import 'package:exchangilymobileapp/screens/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings.dart';
@@ -103,6 +104,9 @@ class RouteGenerator {
 
       case '/deposit':
         return MaterialPageRoute(builder: (_) => Deposit(walletInfo: args));
+
+      case '/redeposit':
+        return MaterialPageRoute(builder: (_) => Redeposit(walletInfo: args));
 
       case '/withdraw':
         return MaterialPageRoute(builder: (_) => Withdraw(walletInfo: args));

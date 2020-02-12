@@ -18,7 +18,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 
-mixin TradeService {
+class TradeService {
   Api _api = locator<Api>();
   Future<int> getAllPrices() async {
     final response =
@@ -53,13 +53,11 @@ mixin TradeService {
       return currentUsdValue = 0.2;
     }
 
-    if(name == 'btc') {
+    if (name == 'btc') {
       name = 'bitcoin';
-    } else
-    if (name == 'fab') {
+    } else if (name == 'fab') {
       name = 'fabcoin';
-    } else
-    if (name == 'eth') {
+    } else if (name == 'eth') {
       name = 'ethereum';
     }
     currentUsdValue = usdVal[name]['usd'];

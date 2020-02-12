@@ -185,7 +185,7 @@ class AppLocalizations {
   }
 
   String get trade {
-    return Intl.message('trade', name: 'trade', desc: 'trade');
+    return Intl.message('Trade', name: 'trade', desc: 'trade');
   }
 
   String get settings {
@@ -458,7 +458,7 @@ class AppLocalizations {
   }
 
   String get coin {
-    return Intl.message('coin', name: 'coin', desc: 'price_text');
+    return Intl.message('Coin', name: 'coin', desc: 'price_text');
   }
 
   String get amount {
@@ -466,7 +466,7 @@ class AppLocalizations {
   }
 
   String get lockedAmount {
-    return Intl.message('lockedAmount',
+    return Intl.message('Locked Amount',
         name: 'lockedAmount', desc: 'locked_amount_text');
   }
 
@@ -484,11 +484,11 @@ class AppLocalizations {
   }
 
   String get quantity {
-    return Intl.message('quantity', name: 'quantity', desc: 'quantity_text');
+    return Intl.message('Quantity', name: 'quantity', desc: 'quantity_text');
   }
 
   String get openOrders {
-    return Intl.message('openOrders',
+    return Intl.message('Open Orders',
         name: 'openOrders', desc: 'open_orders_text');
   }
 
@@ -502,11 +502,11 @@ class AppLocalizations {
   }
 
   String get type {
-    return Intl.message('type', name: 'type', desc: 'type_text');
+    return Intl.message('Type', name: 'type', desc: 'type_text');
   }
 
   String get pair {
-    return Intl.message('pair', name: 'pair', desc: 'pair_text');
+    return Intl.message('Pair', name: 'pair', desc: 'pair_text');
   }
 
   String get filledAmount {
@@ -546,24 +546,27 @@ class AppLocalizations {
         name: 'move', desc: 'deposit_withdraw_move_header');
   }
 
+  String get redeposit {
+    return Intl.message('Redeposit',
+        name: 'redeposit', desc: 'deposit_withdraw_redeposit_header');
+  }
+
   String get toWallet {
-    return Intl.message('to wallet',
+    return Intl.message('To wallet',
         name: 'toWallet', desc: 'withdraw_to_wallet');
   }
 
   String get toExchange {
-    return Intl.message('to exchange',
+    return Intl.message('To exchange',
         name: 'toExchange', desc: 'deposit_to_exchange');
   }
 
   String get gasPrice {
-    return Intl.message('Gas Price',
-        name: 'gasPrice', desc: 'gas_price');
+    return Intl.message('Gas Price', name: 'gasPrice', desc: 'gas_price');
   }
 
   String get gasLimit {
-    return Intl.message('Gas Limit',
-        name: 'gasLimit', desc: 'gas_limit');
+    return Intl.message('Gas Limit', name: 'gasLimit', desc: 'gas_limit');
   }
 
   String get kanbanGasFee {
@@ -607,7 +610,7 @@ class AppLocalizations {
   }
 
   String get reDeposit {
-    return Intl.message('Re Deposit',
+    return Intl.message('Re-Deposit',
         name: 'reDeposit', desc: 'wallet_feature_redeposit');
   }
 

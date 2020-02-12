@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-01-31T16:49:21.786336",
+  "@@last_modified": "2020-02-05T23:05:56.697486",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -480,25 +480,25 @@
     "type": "text",
     "placeholders": {}
   },
-  "volume": "volume",
+  "volume": "Volume",
   "@volume": {
     "description": "volume_text",
     "type": "text",
     "placeholders": {}
   },
-  "price": "price",
+  "price": "Price",
   "@price": {
     "description": "price_text",
     "type": "text",
     "placeholders": {}
   },
-  "high": "high",
+  "high": "High",
   "@high": {
     "description": "high_text",
     "type": "text",
     "placeholders": {}
   },
-  "low": "low",
+  "low": "Low",
   "@low": {
     "description": "low_text",
     "type": "text",
@@ -639,6 +639,36 @@
   "toExchange": "to exchange",
   "@toExchange": {
     "description": "deposit_to_exchange",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gasPrice": "Gas Price",
+  "@gasPrice": {
+    "description": "gas_price",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gasLimit": "Gas Limit",
+  "@gasLimit": {
+    "description": "gas_limit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanbanGasFee": "Kanban Gas Fee",
+  "@kanbanGasFee": {
+    "description": "kanban_gas_fee",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanbanGasPrice": "Kanban Gas Price",
+  "@kanbanGasPrice": {
+    "description": "kanban_gas_price",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanbanGasLimit": "Kanban Gas Limit",
+  "@kanbanGasLimit": {
+    "description": "kanban_gas_limit",
     "type": "text",
     "placeholders": {}
   },

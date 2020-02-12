@@ -21,17 +21,53 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'dart:typed_data';
 import 'package:exchangilymobileapp/environments/environment.dart';
+import '../../utils/string_util.dart';
 
-class Withdraw extends StatelessWidget {
+
+
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:flutter/services.dart';
+import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:flutter/gestures.dart';
+
+
+
+
+class Withdraw extends StatefulWidget {
   final WalletInfo walletInfo;
+
+  Withdraw({Key key, this.walletInfo}) : super(key: key);
+
+  @override
+  _WithdrawState createState() => _WithdrawState();
+}
+
+
+class _WithdrawState extends State<Withdraw> {
+  final _kanbanGasPriceTextController = TextEditingController();
+  final _kanbanGasLimitTextController = TextEditingController();
+  double kanbanTransFee = 0.0;
+  bool transFeeAdvance = false;
 
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
 
-  Withdraw({Key key, this.walletInfo}) : super(key: key);
   final myController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
+    var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
+    _kanbanGasPriceTextController.text = gasPrice.toString();
+    _kanbanGasLimitTextController.text = gasLimit.toString();
+
+    kanbanTransFee = bigNum2Double(gasPrice * gasLimit);
+  }
+
+
   checkPass(double amount, context) async {
-    if (amount == null || amount > walletInfo.assetsInExchange) {
+    if (amount == null || amount > widget.walletInfo.assetsInExchange) {
       walletService.showInfoFlushbar(
           AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
@@ -41,7 +77,7 @@ class Withdraw extends StatelessWidget {
       return;
     }
 
-    if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+    if (amount < environment["minimumWithdraw"][widget.walletInfo.tickerName]) {
       walletService.showInfoFlushbar(
           'Minimum amount error',
           'Your withdraw minimum amount is not satisfied',
@@ -59,17 +95,21 @@ class Withdraw extends StatelessWidget {
     if (res.confirmed) {
       String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      var tokenType = this.walletInfo.tokenType;
-      var coinName = this.walletInfo.tickerName;
-      var coinAddress = this.walletInfo.address;
+      var tokenType = widget.walletInfo.tokenType;
+      var coinName = widget.walletInfo.tickerName;
+      var coinAddress = widget.walletInfo.address;
       if (coinName == 'USDT') {
         tokenType = 'ETH';
       }
       if (coinName == 'EXG') {
         tokenType = 'FAB';
       }
+
+      var kanbanPrice = int.tryParse(_kanbanGasPriceTextController.text);
+      var kanbanGasLimit = int.tryParse(_kanbanGasLimitTextController.text);
+
       var ret = await walletService.withdrawDo(
-          seed, coinName, coinAddress, tokenType, amount);
+          seed, coinName, coinAddress, tokenType, amount, kanbanPrice, kanbanGasLimit);
 
       if (ret["success"]) {
         myController.text = '';
@@ -101,10 +141,22 @@ class Withdraw extends StatelessWidget {
         context);
   }
 
+  updateTransFee() async {
+
+    var kanbanPrice = int.tryParse(_kanbanGasPriceTextController.text);
+    var kanbanGasLimit = int.tryParse(_kanbanGasLimitTextController.text);
+    var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
+
+    setState(() {
+      kanbanTransFee = kanbanTransFeeDouble;
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    double bal = this.walletInfo.assetsInExchange;
-    String coinName = this.walletInfo.tickerName;
+    double bal = widget.walletInfo.assetsInExchange;
+    String coinName = widget.walletInfo.tickerName;
 
     return Scaffold(
         appBar: CupertinoNavigationBar(
@@ -122,7 +174,7 @@ class Withdraw extends StatelessWidget {
             },
           ),
           middle: Text(
-            '${AppLocalizations.of(context).move}  ${walletInfo.tickerName}  ${AppLocalizations.of(context).toWallet}',
+            '${AppLocalizations.of(context).move}  ${widget.walletInfo.tickerName}  ${AppLocalizations.of(context).toWallet}',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Color(0XFF1f2233),
@@ -146,6 +198,158 @@ class Withdraw extends StatelessWidget {
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                 ),
                 SizedBox(height: 20),
+
+
+
+
+
+
+                Padding(
+                  padding: EdgeInsets.only(top: 20, bottom: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        AppLocalizations.of(context).kanbanGasFee,
+                        style: Theme.of(context)
+                            .textTheme
+                            .display3
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left:
+                            5), // padding left to keep some space from the text
+                        child: Text(
+                          '$kanbanTransFee',
+                          style: Theme.of(context)
+                              .textTheme
+                              .display3
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                // Switch Row
+                Row(
+                  children: <Widget>[
+                    Text(
+                      AppLocalizations.of(context).advance,
+                      style: Theme.of(context)
+                          .textTheme
+                          .display3
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    Switch(
+                      value: transFeeAdvance,
+                      inactiveTrackColor: globals.grey,
+                      dragStartBehavior: DragStartBehavior.start,
+                      activeColor: globals.primaryColor,
+                      onChanged: (bool isOn) {
+                        setState(() {
+                          transFeeAdvance = isOn;
+                        });
+                      },
+                    )
+                  ],
+                ),
+                Visibility(
+                    visible: transFeeAdvance,
+                    child:
+                    Column(
+                      children: <Widget>[
+
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              AppLocalizations.of(context).kanbanGasPrice,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .display3
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            Expanded(
+                                child:
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                    child:
+                                    TextField(
+                                      controller: _kanbanGasPriceTextController,
+                                      onChanged: (String amount) {
+                                        updateTransFee();
+                                      },
+                                      keyboardType:
+                                      TextInputType.number, // numnber keyboard
+                                      decoration: InputDecoration(
+                                          focusedBorder: UnderlineInputBorder(
+                                              borderSide:
+                                              BorderSide(color: globals.primaryColor)),
+                                          enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: globals.grey)),
+                                          hintText: '0.00000',
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .display2
+                                              .copyWith(fontSize: 20)),
+                                      style: TextStyle(color: globals.grey, fontSize: 24),
+                                    )
+                                )
+
+                            )
+
+                          ],
+                        ),
+
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              AppLocalizations.of(context).kanbanGasLimit,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .display3
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            Expanded(
+                                child:
+                                Padding(
+                                    padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                    child:
+                                    TextField(
+                                      controller: _kanbanGasLimitTextController,
+                                      onChanged: (String amount) {
+                                        updateTransFee();
+                                      },
+                                      keyboardType:
+                                      TextInputType.number, // numnber keyboard
+                                      decoration: InputDecoration(
+                                          focusedBorder: UnderlineInputBorder(
+                                              borderSide:
+                                              BorderSide(color: globals.primaryColor)),
+                                          enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(color: globals.grey)),
+                                          hintText: '0.00000',
+                                          hintStyle: Theme.of(context)
+                                              .textTheme
+                                              .display2
+                                              .copyWith(fontSize: 20)),
+                                      style: TextStyle(color: globals.grey, fontSize: 24),
+                                    )
+                                )
+
+                            )
+
+                          ],
+                        )
+                      ],
+                    )
+                ),
+                SizedBox(height: 20),
+
+
+
+
+
+
                 MaterialButton(
                   padding: EdgeInsets.all(15),
                   color: globals.primaryColor,

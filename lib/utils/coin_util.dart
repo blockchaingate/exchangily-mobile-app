@@ -225,7 +225,7 @@ Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
   var v = intToBytes(BigInt.from(signature.v));
 
   if (signature.v == 0) {
-    v = [0].toList();
+    v = Uint8List.fromList([0].toList());
   }
   //print('vvvv=');
   //print(v);
@@ -283,6 +283,9 @@ Uint8List magicHash(String message, [NetworkType network]) {
 }
 
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
+  print('originalMessage===' + originalMessage);
+  print('coinName===' + coinName);
+  print('tokenType===' + tokenType);
   var r = '';
   var s = '';
   var v = '';
@@ -309,16 +312,16 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     // chainId = 0;
     print('chainId==' + chainId.toString());
 
-    var signedMessOrig = await credentials
-        .signPersonalMessage(stringToUint8List(originalMessage));
+    // var signedMessOrig = await credentials
+    //    .signPersonalMessage(stringToUint8List(originalMessage), chainId: chainId);
 
     signedMess = await signPersonalMessageWith(
         _ethMessagePrefix, privateKey, stringToUint8List(originalMessage), chainId: chainId);
     String ss = HEX.encode(signedMess);
-    String ss2 = HEX.encode(signedMessOrig);
+    //String ss2 = HEX.encode(signedMessOrig);
 
-    print('ss='+ss);
-    print('ss2='+ss2);
+    //print('ss='+ss);
+    //print('ss2='+ss2);
     r = ss.substring(0, 64);
     s = ss.substring(64, 128);
     v = ss.substring(128);
@@ -336,7 +339,7 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     //var btcWallet =
     //    hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
     var privateKey = bitCoinChild.privateKey;
-    var credentials = EthPrivateKey(privateKey);
+    // var credentials = EthPrivateKey(privateKey);
 
     signedMess = await signBtcMessageWith(originalMessage, privateKey);
 

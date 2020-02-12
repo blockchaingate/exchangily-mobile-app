@@ -28,11 +28,12 @@ import '../../models/price.dart';
 import '../../models/orders.dart';
 import 'widgets/trading_view.dart';
 import '../../utils/string_util.dart';
+import '../../shared/globals.dart' as globals;
 
 enum SingingCharacter { lafayette, jefferson }
 
 class Trade extends StatefulWidget {
-  String pair;
+  final pair;
 
   Trade(this.pair);
 
@@ -76,8 +77,8 @@ class _TradeState extends State<Trade> with TradeService {
     var pair = widget.pair.replaceAll(RegExp('/'), '');
     allTradesChannel = getTradeListChannel(pair);
     allTradesChannel.stream.listen((trades) {
-      //print('trades=');
-      //print(trades);
+      print('trades in main trade screen=');
+      print(trades);
       _updateTrades(trades);
       if (this.mounted) {
         setState(() => {this.tradeChannelCompleted = true});
@@ -146,6 +147,9 @@ class _TradeState extends State<Trade> with TradeService {
 
   @override
   void dispose() {
+    allTradesChannel.sink.close();
+    allOrdersChannel.sink.close();
+    allPriceChannel.sink.close();
     super.dispose();
   }
 
@@ -170,14 +174,16 @@ class _TradeState extends State<Trade> with TradeService {
             widget.pair,
             style: TextStyle(color: Colors.white),
           ),
-          backgroundColor: Color(0XFF1f2233),
+          backgroundColor: globals.walletCardColor,
         ),
-        backgroundColor: Color(0xFF1F2233),
+        //backgroundColor: Color(0xFF1F2233),
         body: Stack(children: <Widget>[
           ListView(
             children: <Widget>[
               TradePrice(key: _tradePriceState),
-              LoadHTMLFileToWEbView(widget.pair),
+              Container(
+                  margin: EdgeInsets.symmetric(horizontal: 9.0),
+                  child: LoadHTMLFileToWEbView(widget.pair)),
               Trademarket(key: _tradeMarketState),
               SizedBox(height: 60)
             ],
@@ -189,7 +195,9 @@ class _TradeState extends State<Trade> with TradeService {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
-                    width: 200,
+                    // width: 150,
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
@@ -197,7 +205,10 @@ class _TradeState extends State<Trade> with TradeService {
                             child: Padding(
                           padding: const EdgeInsets.only(right: 5.0),
                           child: FlatButton(
-                            color: Color(0xFF0da88b),
+                            shape: StadiumBorder(
+                                side: BorderSide(
+                                    color: globals.buyPrice, width: 2)),
+                            // color: globals.buyPrice,
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -208,12 +219,14 @@ class _TradeState extends State<Trade> with TradeService {
                             },
                             child: Text(AppLocalizations.of(context).buy,
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.white)),
+                                    fontSize: 15, color: globals.white)),
                           ),
                         )),
                         Flexible(
-                            child: FlatButton(
-                          color: Color(0xFFe2103c),
+                            child: RaisedButton(
+                          // shape: StadiumBorder(
+                          //     side: BorderSide(color: globals.red, width: 1)),
+                          color: globals.sellPrice,
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -224,7 +237,7 @@ class _TradeState extends State<Trade> with TradeService {
                           },
                           child: Text(AppLocalizations.of(context).sell,
                               style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
+                                  TextStyle(fontSize: 15, color: Colors.white)),
                         ))
                       ],
                     )),

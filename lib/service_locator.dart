@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/screen_state/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/choose_wallet_language_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings_screen_state.dart';
@@ -20,6 +21,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/create_password_screen_state.dart';
@@ -37,6 +39,7 @@ void serviceLocator() {
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => WalletDataBaseService());
   locator.registerLazySingleton(() => SharedService());
+  locator.registerLazySingleton(() => TradeService());
 
 // factory returns the new instance
   locator.registerFactory(() => ConfirmMnemonicScreenState());
@@ -47,4 +50,5 @@ void serviceLocator() {
   locator.registerFactory(() => SettingsScreenState());
   locator.registerFactory(() => WalletSetupScreenState());
   locator.registerFactory(() => ChooseWalletLanguageScreenState());
+  locator.registerFactory(() => BuySellScreenState());
 }

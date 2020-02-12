@@ -171,7 +171,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                                 children: <Widget>[
                                   GestureDetector(
                                       onTap: () async {
-                                        model.checkPass(context);
+                                        // model.checkPass(context);
                                       },
                                       child: Container(
                                         width: model.containerWidth,
@@ -191,7 +191,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                                 children: <Widget>[
                                   GestureDetector(
                                       onTap: () async {
-                                        model.checkPass(context);
+                                        // model.checkPass(context);
                                       },
                                       child: Container(
                                         width: model.containerWidth,
