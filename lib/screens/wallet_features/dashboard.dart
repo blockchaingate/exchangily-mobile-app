@@ -63,7 +63,7 @@ class DashboardScreen extends StatelessWidget {
 -------------------------------------------------------------------------------------*/
               Container(
                 // width: double.infinity,
-                height: 210,
+                height: 200,
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage(
@@ -96,8 +96,9 @@ class DashboardScreen extends StatelessWidget {
                           child: !isProduction
                               ? Text('Debug Version',
                                   style: TextStyle(color: Colors.white))
-                              : Text('Release Version',
-                                  style: TextStyle(color: Colors.white))),
+                              : Text(
+                                  '',
+                                )),
                       Expanded(
                         child: Stack(children: <Widget>[
                           Positioned(
@@ -109,18 +110,17 @@ class DashboardScreen extends StatelessWidget {
                           ),
                         ]),
                       ),
+
+/*------------------------------------------------------------
+                      Total Balance Card
+------------------------------------------------------------*/
                       Expanded(
                         child: Stack(
                           overflow: Overflow.visible,
                           alignment: Alignment.bottomCenter,
                           children: <Widget>[
                             Positioned(
-                              bottom: -15,
-
-/*------------------------------------------------------------
-                      Total Balance Card
-------------------------------------------------------------*/
-
+                              bottom: -20,
                               child: Card(
                                 elevation: model.elevation,
                                 color: globals.walletCardColor,

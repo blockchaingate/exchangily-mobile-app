@@ -52,7 +52,7 @@ class _OrdersListState extends State<OrdersList> {
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
-        AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
       String mnemonic = res.returnedText;
@@ -61,9 +61,9 @@ class _OrdersListState extends State<OrdersList> {
       var txHex = await txHexforCancelOrder(seed, orderHash);
       var resKanban = await sendKanbanRawTransaction(txHex);
       print('resKanban===');
-      if(resKanban!=null && resKanban["transactionHash"] != null) {
+      if (resKanban != null && resKanban["transactionHash"] != null) {
         walletService.showInfoFlushbar(
-            'Your cancel order transaction was successfully',
+            'Your cancel order transaction was successfull',
             'txid:' + resKanban["transactionHash"],
             Icons.info,
             globals.green,
@@ -95,69 +95,55 @@ class _OrdersListState extends State<OrdersList> {
 
   @override
   Widget build(BuildContext context) {
-
-    return
-
-      Table(children: [
+    return Table(children: [
+      TableRow(children: [
+        Text(AppLocalizations.of(context).type,
+            style: TextStyle(color: Colors.grey, fontSize: 14.0)),
+        Text(AppLocalizations.of(context).pair,
+            style: new TextStyle(color: Colors.grey, fontSize: 14.0)),
+        Text(AppLocalizations.of(context).price,
+            style: new TextStyle(color: Colors.grey, fontSize: 14.0)),
+        Text(
+            AppLocalizations.of(context).amount +
+                "(" +
+                AppLocalizations.of(context).filledAmount +
+                ")",
+            style: new TextStyle(color: Colors.grey, fontSize: 14.0)),
+        if (widget.type == 'open') Text('')
+      ]),
+      for (var item in widget.orderArray)
         TableRow(children: [
-          Text(AppLocalizations.of(context).type,
-              style: TextStyle(color: Colors.grey, fontSize: 14.0)),
-          Text(AppLocalizations.of(context).pair,
-              style: new TextStyle(color: Colors.grey, fontSize: 14.0)),
-          Text(AppLocalizations.of(context).price,
-              style: new TextStyle(color: Colors.grey, fontSize: 14.0)),
-          Text(
-              AppLocalizations.of(context).amount +
-                  "(" +
-                  AppLocalizations.of(context).filledAmount +
-                  ")",
-              style: new TextStyle(color: Colors.grey, fontSize: 14.0)),
-
-          if(widget.type == 'open')
-            Text('')
-        ]),
-        for (var item in widget.orderArray)
-        TableRow(children:[
           Text(item["type"],
               style: new TextStyle(
-                  color: Color((item["type"] == 'Buy')
-                      ? 0xFF0da88b
-                      : 0xFFe2103c),
+                  color:
+                      Color((item["type"] == 'Buy') ? 0xFF0da88b : 0xFFe2103c),
                   fontSize: 16.0)),
           Text(item["pair"],
-              style:
-              new TextStyle(color: Colors.white70, fontSize: 14.0)),
+              style: new TextStyle(color: Colors.white70, fontSize: 14.0)),
           Text(item["price"].toString(),
-              style:
-              new TextStyle(color: Colors.white70, fontSize: 14.0)),
+              style: new TextStyle(color: Colors.white70, fontSize: 14.0)),
           Text(
-              doubleAdd(item["amount"], item["filledAmount"])
-                  .toString() +
+              doubleAdd(item["amount"], item["filledAmount"]).toString() +
                   "(" +
                   (item["filledAmount"] *
-                      100 /
-                      doubleAdd(
-                          item["filledAmount"], item["amount"]))
+                          100 /
+                          doubleAdd(item["filledAmount"], item["amount"]))
                       .toStringAsFixed(2) +
                   "%)",
-              style:
-              new TextStyle(color: Colors.white70, fontSize: 14.0)),
-
-          if(widget.type == 'open')
+              style: new TextStyle(color: Colors.white70, fontSize: 14.0)),
+          if (widget.type == 'open')
             GestureDetector(
-              child:
-                Icon(
-                  Icons.delete,
-                  color: Colors.white70,
-                  size: 24.0,
-                  semanticLabel: 'Text to announce in accessibility modes',
-                ),
+              child: Icon(
+                Icons.delete,
+                color: Colors.white70,
+                size: 24.0,
+                semanticLabel: 'Text to announce in accessibility modes',
+              ),
               onTap: () {
                 checkPass(context, item["orderHash"]);
               },
             )
         ]),
-      ]);
-
+    ]);
   }
 }

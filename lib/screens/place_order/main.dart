@@ -24,6 +24,8 @@ class PlaceOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var coinsArray = pair.split("/");
+    String baseCoinName = coinsArray[1];
+    String targetCoinName = coinsArray[0];
     return Scaffold(
         appBar: CupertinoNavigationBar(
           padding: EdgeInsetsDirectional.only(start: 0),
@@ -50,8 +52,6 @@ class PlaceOrder extends StatelessWidget {
           children: <Widget>[
             BuySell(
               bidOrAsk: bidOrAsk,
-              baseCoinName: coinsArray[1],
-              targetCoinName: coinsArray[0],
             )
           ],
         ));

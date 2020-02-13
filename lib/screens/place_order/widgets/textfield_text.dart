@@ -18,9 +18,9 @@ import 'package:exchangilymobileapp/localizations.dart';
 typedef void TextChangedCallback(String labelText, String text);
 
 class TextfieldText extends StatelessWidget {
-  String name;
-  String labelText;
-  String suffixText;
+  final String name;
+  final String labelText;
+  final String suffixText;
   final TextChangedCallback onTextChanged;
 
   TextfieldText(this.name, this.labelText, this.suffixText, this.onTextChanged);
@@ -53,7 +53,7 @@ class TextfieldText extends StatelessWidget {
                     style: TextStyle(fontSize: 14.0, color: Colors.white),
                   )
                 ]),
-            new Positioned(
+            Positioned(
                 child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                     child: new Align(
