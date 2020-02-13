@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade-model.dart';
+import 'package:exchangilymobileapp/screens/place_order/widgets/buy_sell.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import "package:flutter/material.dart";
@@ -77,7 +78,7 @@ class _TradeState extends State<Trade> with TradeService {
     var pair = widget.pair.replaceAll(RegExp('/'), '');
     allTradesChannel = getTradeListChannel(pair);
     allTradesChannel.stream.listen((trades) {
-
+      print('Trade Channel $trades');
       _updateTrades(trades);
       if (this.mounted) {
         setState(() => {this.tradeChannelCompleted = true});
@@ -86,6 +87,7 @@ class _TradeState extends State<Trade> with TradeService {
 
     allOrdersChannel = getOrderListChannel(pair);
     allOrdersChannel.stream.listen((orders) {
+      print('Order Channel $orders');
       _updateOrders(orders);
       if (this.mounted) {
         setState(() => {this.orderChannelCompleted = true});
@@ -144,12 +146,11 @@ class _TradeState extends State<Trade> with TradeService {
     });
   }
 
-  @override
-  void dispose() {
+  closeChannels() {
     allTradesChannel.sink.close();
     allOrdersChannel.sink.close();
     allPriceChannel.sink.close();
-    super.dispose();
+    print('Close Channels');
   }
 
   @override
@@ -165,6 +166,7 @@ class _TradeState extends State<Trade> with TradeService {
             ),
             onPressed: () {
               if (Navigator.canPop(context)) {
+                closeChannels();
                 Navigator.pop(context);
               }
             },
@@ -212,7 +214,7 @@ class _TradeState extends State<Trade> with TradeService {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => PlaceOrder(
+                                    builder: (context) => BuySell(
                                         pair: widget.pair, bidOrAsk: true)),
                               );
                             },
@@ -230,7 +232,7 @@ class _TradeState extends State<Trade> with TradeService {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => PlaceOrder(
+                                  builder: (context) => BuySell(
                                       pair: widget.pair, bidOrAsk: false)),
                             );
                           },
@@ -252,5 +254,11 @@ class _TradeState extends State<Trade> with TradeService {
                   child: Center(child: CircularProgressIndicator())))
         ]),
         bottomNavigationBar: AppBottomNav(count: 2));
+  }
+
+  @override
+  void dispose() {
+    closeChannels();
+    super.dispose();
   }
 }

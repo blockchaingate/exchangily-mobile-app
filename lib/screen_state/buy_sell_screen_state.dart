@@ -47,14 +47,16 @@ import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 
 class BuySellScreenState extends BaseState {
-  final log = getLogger(' BuySellScreenState');
+  final log = getLogger('BuySellScreenState');
   List<WalletInfo> walletInfo;
+  WalletInfo wallet;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   BuildContext context;
   bool bidOrAsk;
+  String pair;
   String baseCoinName;
   String targetCoinName;
 
@@ -77,6 +79,14 @@ class BuySellScreenState extends BaseState {
   var coin;
   final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
   Orders orders;
+  double transactionAmount = 0;
+
+  // Split Pair Name
+  splitPair() {
+    var coinsArray = pair.split("/");
+    baseCoinName = coinsArray[1];
+    targetCoinName = coinsArray[0];
+  }
 
   orderListFromTradeService() {
     setState(ViewState.Busy);
@@ -105,6 +115,7 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Busy);
     orderListChannel.stream.listen((ordersString) {
       orders = Decoder.fromOrdersJsonArray(ordersString);
+      log.w(orders);
       showOrders(orders);
     });
     setState(ViewState.Idle);
@@ -138,6 +149,7 @@ class BuySellScreenState extends BaseState {
       for (var i = 0; i < walletInfo.length; i++) {
         coin = walletInfo[i];
         if (coin.tickerName == 'EXG') {
+          wallet = coin;
           exgAddress = coin.address;
           // _myordersState.currentState.refresh(exgAddress);
           this.refresh(exgAddress);
@@ -395,13 +407,44 @@ class BuySellScreenState extends BaseState {
     if (name == 'price') {
       try {
         this.price = double.parse(text);
-      } catch (e) {}
+        caculateTransactionAmount();
+      } catch (e) {
+        log.e('Handle text price changed $e');
+      }
     }
     if (name == 'quantity') {
       try {
         this.quantity = double.parse(text);
-      } catch (e) {}
+        caculateTransactionAmount();
+      } catch (e) {
+        log.e('Handle text quantity changed $e');
+      }
     }
+    setState(ViewState.Idle);
+  }
+
+  caculateTransactionAmount() {
+    if (price != null && quantity != null && price >= 0 && quantity >= 0) {
+      transactionAmount = quantity * price;
+    }
+    return transactionAmount;
+  }
+
+  // Slider Onchange
+  sliderOnchange(newValue) {
+    setState(ViewState.Busy);
+    sliderValue = newValue;
+    var balance = wallet
+        .assetsInExchange; // it will be asset bal for sell and usd bal for buy
+
+    if (price != null && quantity != null && price >= 0 && quantity >= 0) {
+      var balInSliderPercentage = balance % sliderValue;
+      transactionAmount = balInSliderPercentage / price;
+      // Check here if i need transaction quantity to show
+      // As right now app is not showing me the screen due to API error
+      log.e(transactionAmount);
+    }
+    log.w(sliderValue);
     setState(ViewState.Idle);
   }
 

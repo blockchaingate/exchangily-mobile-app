@@ -13,6 +13,7 @@
 
 import 'dart:typed_data';
 
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
@@ -28,9 +29,10 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 
 class SendScreenState extends BaseState {
-  final log = getLogger('SendState');
+  final log = getLogger('SendScreenState');
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  BuildContext context;
   var options = {};
   String txHash = '';
   String errorMessage = '';
@@ -43,6 +45,52 @@ class SendScreenState extends BaseState {
   WalletInfo walletInfo;
   bool checkSendAmount = false;
 
+  final scaffoldKey = new GlobalKey<ScaffoldState>();
+  final receiverWalletAddressTextController = TextEditingController();
+  final sendAmountTextController = TextEditingController();
+  final gasPriceTextController = TextEditingController();
+  final gasLimitTextController = TextEditingController();
+  final satoshisPerByteTextController = TextEditingController();
+  double transFee = 0.0;
+  bool transFeeAdvance = false;
+
+  // Init State
+  initState() {
+    setState(ViewState.Busy);
+    String coinName = walletInfo.tickerName;
+    String tokenType = walletInfo.tokenType;
+    if (coinName == 'BTC') {
+      satoshisPerByteTextController.text =
+          environment["chains"]["BTC"]["satoshisPerBytes"].toString();
+    } else if (coinName == 'ETH' || tokenType == 'ETH') {
+      gasPriceTextController.text =
+          environment["chains"]["ETH"]["gasPrice"].toString();
+      gasLimitTextController.text =
+          environment["chains"]["ETH"]["gasLimit"].toString();
+    } else if (coinName == 'FAB') {
+      satoshisPerByteTextController.text =
+          environment["chains"]["FAB"]["satoshisPerBytes"].toString();
+    } else if (tokenType == 'FAB') {
+      satoshisPerByteTextController.text =
+          environment["chains"]["FAB"]["satoshisPerBytes"].toString();
+      gasPriceTextController.text =
+          environment["chains"]["FAB"]["gasPrice"].toString();
+      gasLimitTextController.text =
+          environment["chains"]["FAB"]["gasLimit"].toString();
+    }
+    setState(ViewState.Idle);
+  }
+
+  pasteClipBoardData() async {
+    setState(ViewState.Busy);
+    log.w('in clipboard');
+    ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
+    log.w('Clipboard data = ${data.text}');
+    receiverWalletAddressTextController.text = data.text;
+    setState(ViewState.Idle);
+  }
+
+  // Verify Password
   Future verifyPassword(
       tickerName, tokenType, toWalletAddress, amount, context) async {
     log.w('dialog called');
@@ -213,5 +261,81 @@ class SendScreenState extends BaseState {
         Icons.check,
         globals.green,
         context);
+  }
+
+  // Update Trans Fee
+  updateTransFee() async {
+    setState(ViewState.Busy);
+    var to = receiverWalletAddressTextController.text;
+    var amount = double.tryParse(sendAmountTextController.text);
+    var gasPrice = int.tryParse(gasPriceTextController.text);
+    var gasLimit = int.tryParse(gasLimitTextController.text);
+    var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
+    var options = {
+      "gasPrice": gasPrice,
+      "gasLimit": gasLimit,
+      "satoshisPerBytes": satoshisPerBytes,
+      "tokenType": walletInfo.tokenType,
+      "getTransFeeOnly": true
+    };
+    print('widget.walletInfo.address=' + walletInfo.address);
+    var address = walletInfo.address;
+
+    var ret = await walletService.sendTransaction(
+        walletInfo.tickerName,
+        Uint8List.fromList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+        [0],
+        [address],
+        to,
+        amount,
+        options,
+        false);
+
+    print('ret===');
+    print(ret);
+
+    if (ret != null && ret['transFee'] != null) {
+      setState(ViewState.Busy);
+      transFee = ret['transFee'];
+      setState(ViewState.Idle);
+    }
+    setState(ViewState.Idle);
+  }
+
+  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                                    Barcode Scan
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+  Future scan() async {
+    setState(ViewState.Busy);
+    try {
+      String barcode = await BarcodeScanner.scan();
+      receiverWalletAddressTextController.text = barcode;
+      setState(ViewState.Idle);
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+        setState(ViewState.Idle);
+        receiverWalletAddressTextController.text =
+            AppLocalizations.of(context).userAccessDenied;
+      } else {
+        setState(ViewState.Idle);
+        receiverWalletAddressTextController.text =
+            '${AppLocalizations.of(context).unknownError}: $e';
+      }
+    } on FormatException {
+      setState(ViewState.Idle);
+      walletService.showInfoFlushbar(
+          AppLocalizations.of(context).scanCancelled,
+          AppLocalizations.of(context).userReturnedByPressingBackButton,
+          Icons.cancel,
+          globals.red,
+          context);
+    } catch (e) {
+      setState(ViewState.Idle);
+      receiverWalletAddressTextController.text =
+          '${AppLocalizations.of(context).unknownError}: $e';
+    }
   }
 }
