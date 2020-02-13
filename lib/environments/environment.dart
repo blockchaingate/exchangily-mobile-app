@@ -13,7 +13,11 @@ Map devConfig = {
       "gasLimit": 100000
     },
     "FAB": {
-      "chain": {"name": 'test', "networkId": 212, "chainId": 212},
+      "chain": {
+        "name": 'test',
+        "networkId": 212,
+        "chainId": 212
+      },
       "satoshisPerBytes": 300,
       "bytesPerInput": 150,
       "gasPrice": 50,

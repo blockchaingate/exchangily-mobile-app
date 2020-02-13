@@ -12,7 +12,7 @@
 */
 
 import 'dart:typed_data';
-
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -26,6 +26,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../shared/globals.dart' as globals;
 
 class SendWalletScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
   }
 
   updateTransFee() async {
-    var to = _receiverWalletAddressTextController.text;
+    var to = getOfficalAddress(widget.walletInfo.tickerName);
     var amount = double.tryParse(_sendAmountTextController.text);
     var gasPrice = int.tryParse(_gasPriceTextController.text);
     var gasLimit = int.tryParse(_gasLimitTextController.text);

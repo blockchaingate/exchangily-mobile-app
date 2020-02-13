@@ -241,8 +241,18 @@ exgToFabAddress(String address) {
   return address;
 }
 
+fabToExgAddress(address) {
+  var bytes = bs58check.decode(address);
+  print('bytes');
+  print(bytes);
+  address = HEX.encode(bytes);
+  address = address.substring(2);
+  return address;
+}
+
 Future getFabTokenBalanceForABI(
     String balanceInfoABI, String smartContractAddress, String address) async {
+
 
   var body = {
     'address': trimHexPrefix(smartContractAddress),
@@ -256,12 +266,15 @@ Future getFabTokenBalanceForABI(
     var json = jsonDecode(response.body);
     var unlockBalance = json['executionResult']['output'];
 
+    print('unlockBalance===' + unlockBalance.toString());
     if (unlockBalance == null || unlockBalance == '') {
       return 0.0;
     }
     // var unlockInt = int.parse(unlockBalance, radix: 16);
     var unlockInt = BigInt.parse(unlockBalance, radix: 16);
+    print('unlockInt===' + unlockInt.toString());
     tokenBalance = bigNum2Double(unlockInt);
+    print('tokenBalance===' + tokenBalance.toString());
 
   } catch (e) {}
   return tokenBalance;
@@ -283,6 +296,7 @@ Future getFabTokenBalanceByAddress(String address, String coinName) async {
   balanceInfoABI = '6ff95d25';
   var tokenLockedBalance = await getFabTokenBalanceForABI(
       balanceInfoABI, smartContractAddress, address);
-
+  print('address=' + address.toString());
+  print('tokenLockedBalance=' + tokenLockedBalance.toString());
   return {'balance': tokenBalance, 'lockbalance': tokenLockedBalance};
 }
