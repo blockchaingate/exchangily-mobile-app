@@ -49,11 +49,11 @@ Map devConfig = {
   },
   "websocket": "wss://kanbantest.fabcoinapi.com/ws/",
   "minimumWithdraw": {
-    "EXG": 10,
+    "EXG": 10.0,
     "BTC": 0.002,
     "FAB": 0.005,
     "ETH": 0.01,
-    "USDT": 10
+    "USDT": 10.0
   }
 };
 
@@ -104,11 +104,11 @@ Map productionConfig = {
   },
   "websocket": "wss://kanbanprod.fabcoinapi.com/ws/",
   "minimumWithdraw": {
-    "EXG": 10,
+    "EXG": 10.0,
     "BTC": 0.01,
     "FAB": 0.01,
     "ETH": 0.01,
-    "USDT": 10
+    "USDT": 10.0
   }
 };
 

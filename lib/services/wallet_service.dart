@@ -363,8 +363,12 @@ class WalletService {
       print(addressInWallet);
 
        */
-      addressInWallet = fabToExgAddress(addressInWallet);
+      addressInWallet = btcToBase58Address(addressInWallet);
       //no 0x appended
+    } else
+    if(tokenType == 'FAB') {
+      addressInWallet = exgToFabAddress(addressInWallet);
+      addressInWallet = btcToBase58Address(addressInWallet);
     }
     var coinType = getCoinTypeIdByName(coinName);
     var abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);

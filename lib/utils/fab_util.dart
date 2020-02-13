@@ -16,10 +16,10 @@ import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 import './string_util.dart';
 import 'dart:convert';
-import 'package:web3dart/web3dart.dart';
-import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
+import 'package:web3dart/web3dart.dart';
 import "package:hex/hex.dart";
+import 'package:crypto/crypto.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final log = getLogger('fab_util');
@@ -241,12 +241,16 @@ exgToFabAddress(String address) {
   return address;
 }
 
-fabToExgAddress(address) {
+btcToBase58Address(address) {
   var bytes = bs58check.decode(address);
-  print('bytes');
-  print(bytes);
+  var digest1 = sha256.convert(bytes).toString();
+  var bytes1 = hex.decode(digest1);
+  var digest2 = sha256.convert(bytes1).toString();
+  var checksum = digest2.substring(0,8);
+
   address = HEX.encode(bytes);
-  address = address.substring(2);
+  address = address + checksum;
+  // print('address for exg=' + address);
   return address;
 }
 
