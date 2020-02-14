@@ -190,6 +190,7 @@ class _TradeState extends State<Trade> with TradeService {
               SizedBox(height: 60)
             ],
           ),
+          // Buy Sell Buttons
           Visibility(
               visible: (tradeChannelCompleted &&
                   priceChannelCompleted &&
@@ -203,14 +204,15 @@ class _TradeState extends State<Trade> with TradeService {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
+                        // Buy Button
                         Flexible(
                             child: Padding(
                           padding: const EdgeInsets.only(right: 5.0),
                           child: FlatButton(
-                            shape: StadiumBorder(
-                                side: BorderSide(
-                                    color: globals.buyPrice, width: 2)),
-                            // color: globals.buyPrice,
+                            // shape: StadiumBorder(
+                            //     side: BorderSide(
+                            //         color: globals.buyPrice, width: 2)),
+                            color: globals.buyPrice,
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -221,14 +223,15 @@ class _TradeState extends State<Trade> with TradeService {
                             },
                             child: Text(AppLocalizations.of(context).buy,
                                 style: TextStyle(
-                                    fontSize: 15, color: globals.white)),
+                                    fontSize: 13, color: globals.white)),
                           ),
                         )),
+                        // Sell button
                         Flexible(
                             child: RaisedButton(
-                          // shape: StadiumBorder(
-                          //     side: BorderSide(color: globals.red, width: 1)),
-                          color: globals.sellPrice,
+                          shape: StadiumBorder(
+                              side: BorderSide(
+                                  color: globals.sellPrice, width: 2)),
                           onPressed: () {
                             Navigator.push(
                               context,

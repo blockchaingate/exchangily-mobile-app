@@ -552,12 +552,12 @@ class AppLocalizations {
   }
 
   String get toWallet {
-    return Intl.message('To wallet',
+    return Intl.message('to wallet',
         name: 'toWallet', desc: 'withdraw_to_wallet');
   }
 
   String get toExchange {
-    return Intl.message('To exchange',
+    return Intl.message('to exchange',
         name: 'toExchange', desc: 'deposit_to_exchange');
   }
 
@@ -742,6 +742,43 @@ class AppLocalizations {
   String get priceChange {
     return Intl.message('Price Change',
         name: 'priceChange', desc: 'trade_price_change');
+  }
+
+  String get redepositCompleted {
+    return Intl.message('Redeposit Completed',
+        name: 'redepositCompleted', desc: 'redeposit_redeposit_ompleted');
+  }
+
+  String get redepositError {
+    return Intl.message('Redeposit error',
+        name: 'redepositError', desc: 'redeposit_error');
+  }
+
+  String get redepositItemNotSelected {
+    return Intl.message('Redeposit item not selected',
+        name: 'redepositItemNotSelected', desc: 'redeposit_item_not_selected');
+  }
+
+  String get minimumAmountError {
+    return Intl.message('Minimum amount error',
+        name: 'minimumAmountError', desc: 'withdraw_Minimum amount error');
+  }
+
+  String get yourWithdrawMinimumAmountaIsNotSatisfied {
+    return Intl.message('Your withdraw minimum amount is not satisfied',
+        name: 'yourWithdrawMinimumAmountaIsNotSatisfied',
+        desc: 'withdraw_your_withdraw_minimum_amount_is_not_satisfied');
+  }
+
+  String get withdrawTransactionSuccessful {
+    return Intl.message('Withdraw transaction was made successfully',
+        name: 'withdrawTransactionSuccessful',
+        desc: 'withdraw_transaction_was_successfully');
+  }
+
+  String get withdrawTransactionFailed {
+    return Intl.message('Withdraw transaction failed',
+        name: 'withdrawTransactionFailed', desc: 'withdraw_transaction_failed');
   }
 }
 

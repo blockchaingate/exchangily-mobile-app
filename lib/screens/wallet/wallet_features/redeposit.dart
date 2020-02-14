@@ -132,8 +132,12 @@ class _RedepositState extends State<Redeposit> {
         }
       }
       if (errDepositItem == null) {
-        walletService.showInfoFlushbar('Redeposit error',
-            'Redeposit item not selected.', Icons.cancel, globals.red, context);
+        walletService.showInfoFlushbar(
+            '${AppLocalizations.of(context).redepositError}',
+            '${AppLocalizations.of(context).redepositItemNotSelected}',
+            Icons.cancel,
+            globals.red,
+            context);
       }
 
       var amountInLink = BigInt.from(errDepositItem['amount']);
@@ -161,8 +165,9 @@ class _RedepositState extends State<Redeposit> {
           (resRedeposit['transactionHash'] != null) &&
           (resRedeposit['transactionHash'] != '')) {
         walletService.showInfoFlushbar(
-            'Redeposit completed',
-            'TransactionId is:' + resRedeposit['transactionHash'],
+            '${AppLocalizations.of(context).redepositCompleted}',
+            '${AppLocalizations.of(context).transactionId}' +
+                resRedeposit['transactionHash'],
             Icons.cancel,
             globals.white,
             context);
@@ -430,13 +435,6 @@ class _RedepositState extends State<Redeposit> {
                   color: globals.primaryColor,
                   textColor: Colors.white,
                   onPressed: () async {
-                    //var res = await new WalletService().depositDo('ETH', '', double.parse(myController.text));
-                    // var res = await new WalletService().depositDo('USDT', 'ETH', double.parse(myController.text));
-                    // var res = await new WalletService().depositDo('FAB', '', double.parse(myController.text));
-                    //var res = await new WalletService().depositDo('EXG', 'FAB', double.parse(myController.text));
-                    // var res = await new WalletService().depositDo('BTC', '', double.parse(myController.text));
-                    //print('res from await depositDo=');
-                    //print(res);
                     checkPass(context);
                   },
                   child: Text(

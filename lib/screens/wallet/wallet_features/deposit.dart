@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -235,84 +236,75 @@ class _DepositState extends State<Deposit> {
         ),
         backgroundColor: Color(0xFF1F2233),
         body: Container(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: ListView(
               children: <Widget>[
-                // Text("Amount:",
-                //     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
-                // SizedBox(height: 10),
                 TextField(
                   keyboardType: TextInputType.number,
                   onChanged: (String amount) {
-                    // checkSendAmount does not directly work if you use it in if as condition so setting state here to make it work
                     updateTransFee();
                   },
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                        borderSide: new BorderSide(
-                            color: Color(0XFF871fff), width: 1.0)),
+                        borderSide:
+                            BorderSide(color: Color(0XFF871fff), width: 1.0)),
                     hintText: AppLocalizations.of(context).enterAmount,
-                    hintStyle: TextStyle(fontSize: 20.0, color: Colors.grey),
+                    hintStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
                   ),
                   controller: myController,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                 ),
-
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
                   child: Column(
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              AppLocalizations.of(context).gasFee,
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context).gasFee,
+                            style: Theme.of(context)
+                                .textTheme
+                                .display3
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left:
+                                    5), // padding left to keep some space from the text
+                            child: Text(
+                              '$transFee',
                               style: Theme.of(context)
                                   .textTheme
                                   .display3
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left:
-                                      5), // padding left to keep some space from the text
-                              child: Text(
-                                '$transFee',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .display3
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            )
-                          ],
-                        ),
+                          )
+                        ],
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              AppLocalizations.of(context).kanbanGasFee,
+                      UIHelper.horizontalSpaceSmall,
+                      // Kanaban Gas Fee Row
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context).kanbanGasFee,
+                            style: Theme.of(context)
+                                .textTheme
+                                .display3
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left:
+                                    5), // padding left to keep some space from the text
+                            child: Text(
+                              '$kanbanTransFee',
                               style: Theme.of(context)
                                   .textTheme
                                   .display3
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left:
-                                      5), // padding left to keep some space from the text
-                              child: Text(
-                                '$kanbanTransFee',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .display3
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            )
-                          ],
-                        ),
+                          )
+                        ],
                       ),
                       // Switch Row
                       Row(
@@ -337,6 +329,7 @@ class _DepositState extends State<Deposit> {
                           )
                         ],
                       ),
+                      // Transaction Fee Advance
                       Visibility(
                           visible: transFeeAdvance,
                           child: Column(
@@ -351,9 +344,7 @@ class _DepositState extends State<Deposit> {
                                         AppLocalizations.of(context).gasPrice,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .display3
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                            .display3,
                                       ),
                                       Expanded(
                                           child: Padding(
@@ -384,10 +375,10 @@ class _DepositState extends State<Deposit> {
                                                         .textTheme
                                                         .display2
                                                         .copyWith(
-                                                            fontSize: 20)),
+                                                            fontSize: 14)),
                                                 style: TextStyle(
                                                     color: globals.grey,
-                                                    fontSize: 24),
+                                                    fontSize: 16),
                                               )))
                                     ],
                                   )),
@@ -401,9 +392,7 @@ class _DepositState extends State<Deposit> {
                                         AppLocalizations.of(context).gasLimit,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .display3
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                            .display3,
                                       ),
                                       Expanded(
                                           child: Padding(
@@ -434,10 +423,10 @@ class _DepositState extends State<Deposit> {
                                                         .textTheme
                                                         .display2
                                                         .copyWith(
-                                                            fontSize: 20)),
+                                                            fontSize: 14)),
                                                 style: TextStyle(
                                                     color: globals.grey,
-                                                    fontSize: 24),
+                                                    fontSize: 16),
                                               )))
                                     ],
                                   )),
@@ -452,9 +441,7 @@ class _DepositState extends State<Deposit> {
                                             .satoshisPerByte,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .display3
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                            .display3,
                                       ),
                                       Expanded(
                                           child: Padding(
@@ -485,10 +472,10 @@ class _DepositState extends State<Deposit> {
                                                         .textTheme
                                                         .display2
                                                         .copyWith(
-                                                            fontSize: 20)),
+                                                            fontSize: 14)),
                                                 style: TextStyle(
                                                     color: globals.grey,
-                                                    fontSize: 24),
+                                                    fontSize: 16),
                                               )))
                                     ],
                                   )),
@@ -496,10 +483,7 @@ class _DepositState extends State<Deposit> {
                                 children: <Widget>[
                                   Text(
                                     AppLocalizations.of(context).kanbanGasPrice,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .display3
-                                        .copyWith(fontWeight: FontWeight.bold),
+                                    style: Theme.of(context).textTheme.display3,
                                   ),
                                   Expanded(
                                       child: Padding(
@@ -528,10 +512,10 @@ class _DepositState extends State<Deposit> {
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .display2
-                                                    .copyWith(fontSize: 20)),
+                                                    .copyWith(fontSize: 14)),
                                             style: TextStyle(
                                                 color: globals.grey,
-                                                fontSize: 24),
+                                                fontSize: 16),
                                           )))
                                 ],
                               ),
@@ -539,10 +523,7 @@ class _DepositState extends State<Deposit> {
                                 children: <Widget>[
                                   Text(
                                     AppLocalizations.of(context).kanbanGasLimit,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .display3
-                                        .copyWith(fontWeight: FontWeight.bold),
+                                    style: Theme.of(context).textTheme.display3,
                                   ),
                                   Expanded(
                                       child: Padding(
@@ -571,10 +552,10 @@ class _DepositState extends State<Deposit> {
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
                                                     .display2
-                                                    .copyWith(fontSize: 20)),
+                                                    .copyWith(fontSize: 14)),
                                             style: TextStyle(
                                                 color: globals.grey,
-                                                fontSize: 24),
+                                                fontSize: 16),
                                           )))
                                 ],
                               )
@@ -583,8 +564,31 @@ class _DepositState extends State<Deposit> {
                     ],
                   ),
                 ),
-
                 SizedBox(height: 20),
+
+                // Wallet Balance
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: Text(
+                        AppLocalizations.of(context).walletbalance + '  $bal',
+                        style: Theme.of(context).textTheme.headline,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      child: Text(
+                        '$coinName'.toUpperCase(),
+                        style: Theme.of(context).textTheme.headline,
+                      ),
+                    )
+                  ],
+                ),
+                UIHelper.horizontalSpaceSmall,
+                // Confirm Button
                 MaterialButton(
                   padding: EdgeInsets.all(15),
                   color: globals.primaryColor,
@@ -604,26 +608,6 @@ class _DepositState extends State<Deposit> {
                     style: Theme.of(context).textTheme.button,
                   ),
                 ),
-
-                SizedBox(height: 20),
-
-                Row(
-                  children: <Widget>[
-                    Text(
-                      AppLocalizations.of(context).walletbalance + ' $bal',
-                      style: Theme.of(context).textTheme.headline,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      child: Text(
-                        '$coinName'.toUpperCase(),
-                        style: Theme.of(context).textTheme.headline,
-                      ),
-                    )
-                  ],
-                )
               ],
             )));
   }
