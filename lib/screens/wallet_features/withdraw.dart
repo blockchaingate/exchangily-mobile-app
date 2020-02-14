@@ -47,6 +47,7 @@ class _WithdrawState extends State<Withdraw> {
   final _kanbanGasPriceTextController = TextEditingController();
   final _kanbanGasLimitTextController = TextEditingController();
   double kanbanTransFee = 0.0;
+  double minimumAmount = 0.0;
   bool transFeeAdvance = false;
 
   DialogService _dialogService = locator<DialogService>();
@@ -59,6 +60,7 @@ class _WithdrawState extends State<Withdraw> {
     super.initState();
     var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
     var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
+    minimumAmount = environment['minimumWithdraw'][widget.walletInfo.tickerName];
     _kanbanGasPriceTextController.text = gasPrice.toString();
     _kanbanGasLimitTextController.text = gasLimit.toString();
 
@@ -202,7 +204,32 @@ class _WithdrawState extends State<Withdraw> {
 
 
 
-
+                Padding(
+                  padding: EdgeInsets.only(top: 20, bottom: 10),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        AppLocalizations.of(context).minimumAmount,
+                        style: Theme.of(context)
+                            .textTheme
+                            .display3
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left:
+                            5), // padding left to keep some space from the text
+                        child: Text(
+                          '$minimumAmount',
+                          style: Theme.of(context)
+                              .textTheme
+                              .display3
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
 
                 Padding(
                   padding: EdgeInsets.only(top: 20, bottom: 10),
@@ -366,7 +393,7 @@ class _WithdrawState extends State<Withdraw> {
                 Row(
                   children: <Widget>[
                     Text(
-                      AppLocalizations.of(context).walletbalance + ' $bal',
+                      AppLocalizations.of(context).assetsInExchange + ' $bal',
                       style: Theme.of(context).textTheme.headline,
                     ),
                     Padding(
