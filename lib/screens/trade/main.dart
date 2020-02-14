@@ -198,7 +198,7 @@ class _TradeState extends State<Trade> with TradeService {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
-                    // width: 150,
+                    width: 250,
                     margin:
                         EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                     child: Row(
@@ -209,9 +209,6 @@ class _TradeState extends State<Trade> with TradeService {
                             child: Padding(
                           padding: const EdgeInsets.only(right: 5.0),
                           child: FlatButton(
-                            // shape: StadiumBorder(
-                            //     side: BorderSide(
-                            //         color: globals.buyPrice, width: 2)),
                             color: globals.buyPrice,
                             onPressed: () {
                               Navigator.push(
@@ -229,6 +226,7 @@ class _TradeState extends State<Trade> with TradeService {
                         // Sell button
                         Flexible(
                             child: RaisedButton(
+                          color: globals.walletCardColor.withAlpha(25),
                           shape: StadiumBorder(
                               side: BorderSide(
                                   color: globals.sellPrice, width: 2)),

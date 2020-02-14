@@ -13,9 +13,10 @@
 
 import "package:flutter/material.dart";
 import 'package:exchangilymobileapp/localizations.dart';
+import '../../../shared/globals.dart' as globals;
 
 class AssetssList extends StatelessWidget {
-  List<Map<String, dynamic>> assetsArray;
+  final List<Map<String, dynamic>> assetsArray;
 
   AssetssList(this.assetsArray);
 
@@ -27,37 +28,45 @@ class AssetssList extends StatelessWidget {
         Column(
           children: <Widget>[
             Text(AppLocalizations.of(context).coin,
-                style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                style: TextStyle(
+                    color: globals.primaryColor,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold)),
             for (var item in assetsArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
                   child: Text(item["coin"],
-                      style:
-                          new TextStyle(color: Colors.white70, fontSize: 16.0)))
+                      style: TextStyle(color: Colors.white70, fontSize: 14.0)))
           ],
         ),
         Column(
           children: <Widget>[
             Text(AppLocalizations.of(context).amount,
-                style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                style: TextStyle(
+                    color: globals.primaryColor,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold)),
             for (var item in assetsArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
                   child: Text(item["amount"].toString(),
                       style:
-                          new TextStyle(color: Colors.white70, fontSize: 16.0)))
+                          new TextStyle(color: Colors.white70, fontSize: 14.0)))
           ],
         ),
         Column(
           children: <Widget>[
             Text(AppLocalizations.of(context).lockedAmount,
-                style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
+                style: TextStyle(
+                    color: globals.primaryColor,
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold)),
             for (var item in assetsArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
                   child: Text(item["lockedAmount"].toString(),
                       style:
-                          new TextStyle(color: Colors.white70, fontSize: 16.0)))
+                          new TextStyle(color: Colors.white70, fontSize: 14.0)))
           ],
         )
       ],
