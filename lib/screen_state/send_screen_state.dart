@@ -81,11 +81,11 @@ class SendScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
+  // Paste Clipboard Data In Receiver Address
+
   pasteClipBoardData() async {
     setState(ViewState.Busy);
-    log.w('in clipboard');
     ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
-    log.w('Clipboard data = ${data.text}');
     receiverWalletAddressTextController.text = data.text;
     setState(ViewState.Idle);
   }

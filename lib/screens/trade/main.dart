@@ -78,7 +78,7 @@ class _TradeState extends State<Trade> with TradeService {
     var pair = widget.pair.replaceAll(RegExp('/'), '');
     allTradesChannel = getTradeListChannel(pair);
     allTradesChannel.stream.listen((trades) {
-      print('Trade Channel $trades');
+      // print('Trade Channel $trades');
       _updateTrades(trades);
       if (this.mounted) {
         setState(() => {this.tradeChannelCompleted = true});
@@ -87,7 +87,7 @@ class _TradeState extends State<Trade> with TradeService {
 
     allOrdersChannel = getOrderListChannel(pair);
     allOrdersChannel.stream.listen((orders) {
-      print('Order Channel $orders');
+      // print('Order Channel $orders');
       _updateOrders(orders);
       if (this.mounted) {
         setState(() => {this.orderChannelCompleted = true});
@@ -96,6 +96,7 @@ class _TradeState extends State<Trade> with TradeService {
 
     allPriceChannel = getAllPriceChannel();
     allPriceChannel.stream.listen((prices) async {
+      //   print('Price Channel $prices');
       if (this._tradePriceState == null ||
           this._tradePriceState.currentState == null) {
         return;
@@ -258,7 +259,7 @@ class _TradeState extends State<Trade> with TradeService {
 
   @override
   void dispose() {
-    closeChannels();
     super.dispose();
+    closeChannels();
   }
 }

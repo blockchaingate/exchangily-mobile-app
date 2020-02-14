@@ -63,14 +63,14 @@ class DashboardScreen extends StatelessWidget {
 -------------------------------------------------------------------------------------*/
               Container(
                 // width: double.infinity,
-                height: 200,
+                height: 130,
                 decoration: BoxDecoration(
                     image: DecorationImage(
                         image: AssetImage(
                             'assets/images/wallet-page/background.png'),
                         fit: BoxFit.cover)),
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Expanded(
                         child: Stack(
@@ -92,23 +92,27 @@ class DashboardScreen extends StatelessWidget {
                         ),
                       ),
                       // Comment expand below in production release
+                      // Expanded(
+                      //     child: !isProduction
+                      //         ? Text('Debug Version',
+                      //             style: TextStyle(color: Colors.white))
+                      //         : Text(
+                      //             '',
+                      //           )),
                       Expanded(
-                          child: !isProduction
-                              ? Text('Debug Version',
-                                  style: TextStyle(color: Colors.white))
-                              : Text(
-                                  '',
-                                )),
-                      Expanded(
-                        child: Stack(children: <Widget>[
-                          Positioned(
-                            child: Image.asset(
-                              'assets/images/start-page/logo.png',
-                              width: 250,
-                              color: globals.white,
-                            ),
-                          ),
-                        ]),
+                        child: Stack(
+                            alignment: Alignment.center,
+                            overflow: Overflow.visible,
+                            children: <Widget>[
+                              Positioned(
+                                top: -10,
+                                child: Image.asset(
+                                  'assets/images/start-page/logo.png',
+                                  width: 180,
+                                  color: globals.white,
+                                ),
+                              ),
+                            ]),
                       ),
 
 /*------------------------------------------------------------
