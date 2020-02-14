@@ -44,6 +44,7 @@ class SendScreenState extends BaseState {
   int satoshisPerBytes = 0;
   WalletInfo walletInfo;
   bool checkSendAmount = false;
+  double amountDouble = 0;
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final receiverWalletAddressTextController = TextEditingController();
@@ -233,15 +234,19 @@ class SendScreenState extends BaseState {
     }
   }
 
-  bool checkAmount(amount) {
+  // Check Send Amount
+
+  checkAmount(amount) {
+    setState(ViewState.Busy);
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
-    log.w(amount);
+    log.e(amount);
     var res = RegexValidator(pattern).isValid(amount);
     checkSendAmount = res;
     log.w('check send amount $checkSendAmount');
-    return checkSendAmount;
+    setState(ViewState.Idle);
   }
 
+// Pending update balance after send transaction
   updateBalance(String address) async {
     var bal = await walletService.getFabBalance(address);
     log.w(bal['balance']);
@@ -253,6 +258,7 @@ class SendScreenState extends BaseState {
     // log.w('Not in if Updated Bal ${updatedBal}');
   }
 
+// Copy Address
   copyAddress(context) {
     Clipboard.setData(new ClipboardData(text: txHash));
     walletService.showInfoFlushbar(

@@ -38,7 +38,6 @@ class SendWalletScreen extends StatefulWidget {
 }
 
 class _SendWalletScreenState extends State<SendWalletScreen> {
-
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   WalletService walletService = WalletService();
   final _receiverWalletAddressTextController = TextEditingController();
@@ -68,23 +67,28 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
       "satoshisPerBytes": satoshisPerBytes,
       "tokenType": widget.walletInfo.tokenType,
       "getTransFeeOnly": true
-
     };
     print('widget.walletInfo.address=' + widget.walletInfo.address);
     var address = widget.walletInfo.address;
 
-    var ret = await walletService.sendTransaction(widget.walletInfo.tickerName, Uint8List.fromList([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]), [0], [address], to, amount, options, false);
+    var ret = await walletService.sendTransaction(
+        widget.walletInfo.tickerName,
+        Uint8List.fromList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+        [0],
+        [address],
+        to,
+        amount,
+        options,
+        false);
 
     print('ret===');
     print(ret);
 
-
-    if(ret != null && ret['transFee'] != null) {
+    if (ret != null && ret['transFee'] != null) {
       setState(() {
         transFee = ret['transFee'];
       });
     }
-
   }
 
   @override
@@ -92,22 +96,27 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
     super.initState();
     String coinName = widget.walletInfo.tickerName;
     String tokenType = widget.walletInfo.tokenType;
-    if(coinName == 'BTC') {
-      _satoshisPerByteTextController.text = environment["chains"]["BTC"]["satoshisPerBytes"].toString();
-    } else
-    if(coinName == 'ETH' || tokenType == 'ETH') {
-      _gasPriceTextController.text = environment["chains"]["ETH"]["gasPrice"].toString();
-      _gasLimitTextController.text = environment["chains"]["ETH"]["gasLimit"].toString();
-    } else
-    if(coinName == 'FAB') {
-      _satoshisPerByteTextController.text = environment["chains"]["FAB"]["satoshisPerBytes"].toString();
-    } else
-    if (tokenType == 'FAB') {
-      _satoshisPerByteTextController.text = environment["chains"]["FAB"]["satoshisPerBytes"].toString();
-      _gasPriceTextController.text = environment["chains"]["FAB"]["gasPrice"].toString();
-      _gasLimitTextController.text = environment["chains"]["FAB"]["gasLimit"].toString();
+    if (coinName == 'BTC') {
+      _satoshisPerByteTextController.text =
+          environment["chains"]["BTC"]["satoshisPerBytes"].toString();
+    } else if (coinName == 'ETH' || tokenType == 'ETH') {
+      _gasPriceTextController.text =
+          environment["chains"]["ETH"]["gasPrice"].toString();
+      _gasLimitTextController.text =
+          environment["chains"]["ETH"]["gasLimit"].toString();
+    } else if (coinName == 'FAB') {
+      _satoshisPerByteTextController.text =
+          environment["chains"]["FAB"]["satoshisPerBytes"].toString();
+    } else if (tokenType == 'FAB') {
+      _satoshisPerByteTextController.text =
+          environment["chains"]["FAB"]["satoshisPerBytes"].toString();
+      _gasPriceTextController.text =
+          environment["chains"]["FAB"]["gasPrice"].toString();
+      _gasLimitTextController.text =
+          environment["chains"]["FAB"]["gasLimit"].toString();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     double bal = widget.walletInfo.availableBalance;
@@ -203,10 +212,14 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                           controller: model.sendAmountTextController,
                           onChanged: (String amount) {
                             // checkSendAmount does not directly work if you use it in if as condition so setting state here to make it work
-                            model.updateTransFee();
-                            setState(() {
-                              model.checkSendAmount = model.checkAmount(amount);
-                            });
+                            //  setState(() {
+                            model.amountDouble = double.parse(amount);
+                            model.checkAmount(amount);
+                            if (model.checkSendAmount == true &&
+                                model.amountDouble <= bal) {
+                              model.updateTransFee();
+                            }
+                            //  });
                           },
                           keyboardType:
                               TextInputType.number, // numnber keyboard
@@ -217,13 +230,12 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                               enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: globals.grey)),
                               hintText: '0.00000',
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .display2
-                                  .copyWith(fontSize: 20)),
-                          style: model.checkSendAmount
-                              ? TextStyle(color: globals.grey, fontSize: 24)
-                              : TextStyle(color: globals.red, fontSize: 24),
+                              hintStyle:
+                                  TextStyle(fontSize: 18, color: globals.grey)),
+                          style:
+                              model.checkSendAmount && model.amountDouble <= bal
+                                  ? TextStyle(color: globals.grey, fontSize: 20)
+                                  : TextStyle(color: globals.red, fontSize: 20),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
@@ -231,17 +243,12 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                             children: <Widget>[
                               Text(
                                 AppLocalizations.of(context).walletbalance +
-                                    ' $bal',
+                                    ' $bal ',
                                 style: Theme.of(context).textTheme.headline,
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                ),
-                                child: Text(
-                                  '$coinName'.toUpperCase(),
-                                  style: Theme.of(context).textTheme.headline,
-                                ),
+                              Text(
+                                '$coinName'.toUpperCase(),
+                                style: Theme.of(context).textTheme.headline,
                               )
                             ],
                           ),
@@ -258,15 +265,13 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
+                        padding: EdgeInsets.only(top: 15, bottom: 10),
                         child: Row(
                           children: <Widget>[
                             Text(
                               AppLocalizations.of(context).gasFee,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .display3
-                                  .copyWith(fontWeight: FontWeight.bold),
+                              style:
+                                  TextStyle(fontSize: 16, color: globals.white),
                             ),
                             Padding(
                               padding: EdgeInsets.only(
@@ -274,24 +279,20 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                       5), // padding left to keep some space from the text
                               child: Text(
                                 '${model.transFee}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .display3
-                                    .copyWith(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    fontSize: 16, color: globals.white),
                               ),
                             )
                           ],
                         ),
                       ),
-                      // Switch Row
+                      // Switch Row Advance
                       Row(
                         children: <Widget>[
                           Text(
                             AppLocalizations.of(context).advance,
-                            style: Theme.of(context)
-                                .textTheme
-                                .display3
-                                .copyWith(fontWeight: FontWeight.bold),
+                            style:
+                                TextStyle(fontSize: 16, color: globals.white),
                           ),
                           Switch(
                             value: model.transFeeAdvance,
@@ -318,11 +319,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                     children: <Widget>[
                                       Text(
                                         AppLocalizations.of(context).gasPrice,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display3
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                            fontSize: 16, color: globals.white),
                                       ),
                                       Expanded(
                                           child: Padding(
@@ -349,14 +347,12 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                                                     color: globals
                                                                         .grey)),
                                                     hintText: '0.00000',
-                                                    hintStyle: Theme.of(context)
-                                                        .textTheme
-                                                        .display2
-                                                        .copyWith(
-                                                            fontSize: 20)),
+                                                    hintStyle: TextStyle(
+                                                        fontSize: 16,
+                                                        color: globals.white)),
                                                 style: TextStyle(
                                                     color: globals.grey,
-                                                    fontSize: 24),
+                                                    fontSize: 16),
                                               )))
                                     ],
                                   )),
@@ -368,11 +364,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                     children: <Widget>[
                                       Text(
                                         AppLocalizations.of(context).gasLimit,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display3
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                            fontSize: 16, color: globals.white),
                                       ),
                                       Expanded(
                                           child: Padding(
@@ -399,14 +392,12 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                                                     color: globals
                                                                         .grey)),
                                                     hintText: '0.00000',
-                                                    hintStyle: Theme.of(context)
-                                                        .textTheme
-                                                        .display2
-                                                        .copyWith(
-                                                            fontSize: 20)),
+                                                    hintStyle: TextStyle(
+                                                        fontSize: 16,
+                                                        color: globals.white)),
                                                 style: TextStyle(
                                                     color: globals.grey,
-                                                    fontSize: 24),
+                                                    fontSize: 16),
                                               )))
                                     ],
                                   )),
@@ -419,11 +410,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                       Text(
                                         AppLocalizations.of(context)
                                             .satoshisPerByte,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display3
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                            fontSize: 16, color: globals.white),
                                       ),
                                       Expanded(
                                           child: Padding(
@@ -450,14 +438,12 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                                                     color: globals
                                                                         .grey)),
                                                     hintText: '0.00000',
-                                                    hintStyle: Theme.of(context)
-                                                        .textTheme
-                                                        .display2
-                                                        .copyWith(
-                                                            fontSize: 20)),
+                                                    hintStyle: TextStyle(
+                                                        fontSize: 16,
+                                                        color: globals.white)),
                                                 style: TextStyle(
                                                     color: globals.grey,
-                                                    fontSize: 24),
+                                                    fontSize: 16),
                                               )))
                                     ],
                                   ))
@@ -515,11 +501,14 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   alignment: Alignment(0.0, 1.0),
                   child: model.state == ViewState.Busy
-                      ? CircularProgressIndicator()
+                      ? Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: CircularProgressIndicator(),
+                        )
                       : RaisedButton(
                           disabledColor: model.checkSendAmount
                               ? globals.grey
-                              : globals.primaryColor,
+                              : globals.green,
                           child: Text(AppLocalizations.of(context).send),
                           onPressed: () async {
                             model.txHash = '';
