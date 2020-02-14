@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/models/price.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 
+// This class is the top of trade tab when you first open it that contains price and change
 class TradePrice extends StatefulWidget {
   TradePrice({Key key}) : super(key: key);
 

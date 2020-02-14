@@ -12,27 +12,27 @@
 */
 
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/backup_mnemonic.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/dashboard.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/confirm_mnemonic.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/create_password.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/import_wallet.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/choose_wallet_language.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/move_and_trade.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/receive.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/send.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/wallet_features.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/withdraw_to_wallet.dart';
-import 'package:exchangilymobileapp/screens/wallet_setup/wallet_setup.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_setup/create_password.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_setup/import_wallet.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_setup/choose_wallet_language.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_and_trade.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/receive.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/send.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/withdraw_to_wallet.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/trade/main.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/add_gas.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/deposit.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/redeposit.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/withdraw.dart';
-import 'package:exchangilymobileapp/screens/wallet_features/smart_contract.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/deposit.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/withdraw.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings.dart';
 
 final log = getLogger('Routes');
@@ -66,7 +66,7 @@ class RouteGenerator {
 
       case '/dashboard':
         return MaterialPageRoute(
-            builder: (_) => DashboardScreen(walletInfo: args));
+            builder: (_) => WalletDashboardScreen(walletInfo: args));
 
       case '/walletFeatures':
         return MaterialPageRoute(

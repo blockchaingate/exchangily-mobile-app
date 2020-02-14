@@ -13,14 +13,12 @@
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade-model.dart';
-import 'package:exchangilymobileapp/screens/place_order/widgets/buy_sell.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/cupertino.dart';
 import "widgets//price.dart";
 import "widgets/market.dart";
-import "../place_order/main.dart";
 import 'package:web_socket_channel/io.dart';
 import '../../services/trade_service.dart';
 // import "widgets/kline.dart";
@@ -183,9 +181,11 @@ class _TradeState extends State<Trade> with TradeService {
           ListView(
             children: <Widget>[
               TradePrice(key: _tradePriceState),
+              // Below container contains trading view chart in the trade tab
               Container(
                   margin: EdgeInsets.symmetric(horizontal: 9.0),
                   child: LoadHTMLFileToWEbView(widget.pair)),
+              // Below class contains the order book and market trades
               Trademarket(key: _tradeMarketState),
               SizedBox(height: 60)
             ],
