@@ -820,5 +820,41 @@
         "description": "generic_Date",
         "type": "text",
         "placeholders": {}
+    },
+    "minimumAmount": "最小数量",
+    "@minimumAmount": {
+        "description": "minimum_amount",
+        "type": "text",
+        "placeholders": {}
+    },
+    "kanbanGasFee": "看板燃料费",
+    "@kanbanGasFee": {
+        "description": "kanban_gas_fee",
+        "type": "text",
+        "placeholders": {}
+    },
+    "kanbanGasPrice": "看板燃料价格",
+    "@kanbanGasPrice": {
+        "description": "kanban_gas_price",
+        "type": "text",
+        "placeholders": {}
+    },
+    "kanbanGasLimit": "看板燃料限额",
+    "@kanbanGasLimit": {
+        "description": "kanban_gas_limit",
+        "type": "text",
+        "placeholders": {}
+    },
+    "satoshisPerByte": "锍/字节",
+    "@satoshisPerByte": {
+        "description": "satoshis_per_byte",
+        "type": "text",
+        "placeholders": {}
+    },
+    "priceChange": "价格变动",
+    "@priceChange": {
+        "description": "trade_price_change",
+        "type": "text",
+        "placeholders": {}
     }
 }
