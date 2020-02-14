@@ -95,6 +95,9 @@ dependencies:
   # Path
   path: ^1.6.4
 
+  # Build version
+  package_info: 0.4.0+12
+
   # Share files
   share:
     git:

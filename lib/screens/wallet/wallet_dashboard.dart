@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 import './wallet_features/gas.dart';
+import 'package:exchangilymobileapp/environments/environment.dart';
 
 class WalletDashboardScreen extends StatelessWidget {
   final List<WalletInfo> walletInfo;
@@ -92,12 +93,11 @@ class WalletDashboardScreen extends StatelessWidget {
                       ),
                       // Comment expand below in production release
                       // Expanded(
-                      //     child: !isProduction
-                      //         ? Text('Debug Version',
-                      //             style: TextStyle(color: Colors.white))
-                      //         : Text(
-                      //             '',
-                      //           )),
+                      //     child: Visibility(
+                      //   visible: !isProduction,
+                      //   child: Text('Debug Version',
+                      //       style: TextStyle(color: Colors.white)),
+                      // )),
                       Expanded(
                         child: Stack(
                             alignment: Alignment.center,
