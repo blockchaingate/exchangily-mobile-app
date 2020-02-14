@@ -47,8 +47,10 @@ import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 
 class BuySellScreenState extends BaseState {
-  final log = getLogger(' BuySellScreenState');
+  final log = getLogger('BuySellScreenState');
   List<WalletInfo> walletInfo;
+  WalletInfo targetCoinWalletData;
+  WalletInfo baseCoinWalletData;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
@@ -60,6 +62,8 @@ class BuySellScreenState extends BaseState {
 
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
+  TextEditingController quantityTextController = TextEditingController();
+  TextEditingController priceTextController = TextEditingController();
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
@@ -74,9 +78,24 @@ class BuySellScreenState extends BaseState {
   double price;
   double quantity;
   String exgAddress;
-  var coin;
+  WalletInfo coin;
   final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
   Orders orders;
+  double transactionAmount = 0;
+
+  // Split Pair Name
+  splitPair(pair) {
+    var coinsArray = pair.split("/");
+    baseCoinName = coinsArray[1];
+    targetCoinName = coinsArray[0];
+  }
+
+  selectBuySellTab(bool value) {
+    setState(ViewState.Busy);
+    bidOrAsk = value;
+    log.w(bidOrAsk);
+    setState(ViewState.Idle);
+  }
 
   orderListFromTradeService() {
     setState(ViewState.Busy);
@@ -95,9 +114,11 @@ class BuySellScreenState extends BaseState {
   // Close the Web Socket Connection
 
   closeChannles() {
+    setState(ViewState.Busy);
     orderListChannel.sink.close();
     tradeListChannel.sink.close();
     log.e('close channels');
+    setState(ViewState.Idle);
   }
 
   // Order List
@@ -105,6 +126,7 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Busy);
     orderListChannel.stream.listen((ordersString) {
       orders = Decoder.fromOrdersJsonArray(ordersString);
+      //  log.w(orders);
       showOrders(orders);
     });
     setState(ViewState.Idle);
@@ -118,11 +140,9 @@ class BuySellScreenState extends BaseState {
 
       if (trades != null && trades.length > 0) {
         TradeModel latestTrade = trades[0];
-        //if (this.mounted) {
-        //   setState(() => {
+        setState(ViewState.Busy);
         currentPrice = latestTrade.price;
-        //   });
-        //  }
+        setState(ViewState.Idle);
       }
     });
     setState(ViewState.Idle);
@@ -137,11 +157,13 @@ class BuySellScreenState extends BaseState {
 
       for (var i = 0; i < walletInfo.length; i++) {
         coin = walletInfo[i];
-        if (coin.tickerName == 'EXG') {
+        if (coin.tickerName == targetCoinName.toUpperCase()) {
+          targetCoinWalletData = coin;
           exgAddress = coin.address;
-          // _myordersState.currentState.refresh(exgAddress);
           this.refresh(exgAddress);
-          break;
+        }
+        if (coin.tickerName == baseCoinName.toUpperCase()) {
+          baseCoinWalletData = coin;
         }
       }
       setState(ViewState.Idle);
@@ -347,14 +369,12 @@ class BuySellScreenState extends BaseState {
     }
 
     if (!listEquals(newbuy, this.buy) || !listEquals(newsell, this.sell)) {
-      // if (this.mounted) {
-      //setState(() => {
+      setState(ViewState.Busy);
       this.sell = (newsell.length > 5)
           ? (newsell.sublist(newsell.length - 5))
           : newsell;
       this.buy = (newbuy.length > 5) ? (newbuy.sublist(0, 5)) : newbuy;
-      //   });
-      // }
+      setState(ViewState.Idle);
     }
     setState(ViewState.Idle);
   }
@@ -394,14 +414,63 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Busy);
     if (name == 'price') {
       try {
-        this.price = double.parse(text);
-      } catch (e) {}
+        price = double.parse(text);
+        caculateTransactionAmount();
+      } catch (e) {
+        setState(ViewState.Idle);
+        log.e('Handle text price changed $e');
+      }
     }
     if (name == 'quantity') {
       try {
-        this.quantity = double.parse(text);
-      } catch (e) {}
+        quantity = double.parse(text);
+        caculateTransactionAmount();
+      } catch (e) {
+        setState(ViewState.Idle);
+        log.e('Handle text quantity changed $e');
+      }
     }
+    setState(ViewState.Idle);
+  }
+
+  // Calculate Transaction Amount
+
+  caculateTransactionAmount() {
+    if (price != null && quantity != null && price >= 0 && quantity >= 0) {
+      transactionAmount = quantity * price;
+    }
+    return transactionAmount;
+  }
+
+  // Slider Onchange
+  sliderOnchange(newValue) {
+    setState(ViewState.Busy);
+    sliderValue = newValue;
+    var targetCoinbalance =
+        targetCoinWalletData.assetsInExchange; // usd bal for buy
+    var baseCoinbalance = baseCoinWalletData //coin(asset) bal for sell
+        .assetsInExchange;
+    if (price != null &&
+        quantity != null &&
+        !price.isNegative &&
+        !quantity.isNegative) {
+      if (bidOrAsk == false) {
+        var changeBalanceWithSlider = targetCoinbalance * sliderValue / 100;
+        quantity = changeBalanceWithSlider / price;
+        transactionAmount = quantity * price;
+        quantityTextController.text = quantity.toString();
+        log.i(transactionAmount);
+        log.e(changeBalanceWithSlider);
+      } else {
+        var changeBalanceWithSlider = baseCoinbalance * sliderValue / 100;
+        quantity = changeBalanceWithSlider / price;
+        transactionAmount = quantity * price;
+        quantityTextController.text = quantity.toString();
+        log.i(transactionAmount);
+        log.e(changeBalanceWithSlider);
+      }
+    }
+    log.w(sliderValue);
     setState(ViewState.Idle);
   }
 

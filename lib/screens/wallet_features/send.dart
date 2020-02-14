@@ -12,7 +12,7 @@
 */
 
 import 'dart:typed_data';
-
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -26,6 +26,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import '../../shared/globals.dart' as globals;
 
 class SendWalletScreen extends StatefulWidget {
@@ -37,6 +38,7 @@ class SendWalletScreen extends StatefulWidget {
 }
 
 class _SendWalletScreenState extends State<SendWalletScreen> {
+
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   WalletService walletService = WalletService();
   final _receiverWalletAddressTextController = TextEditingController();
@@ -55,7 +57,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
   }
 
   updateTransFee() async {
-    var to = _receiverWalletAddressTextController.text;
+    var to = getOfficalAddress(widget.walletInfo.tickerName);
     var amount = double.tryParse(_sendAmountTextController.text);
     var gasPrice = int.tryParse(_gasPriceTextController.text);
     var gasLimit = int.tryParse(_gasLimitTextController.text);
@@ -112,6 +114,11 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
     String coinName = widget.walletInfo.tickerName;
     String tokenType = widget.walletInfo.tokenType;
     return BaseScreen<SendScreenState>(
+      onModelReady: (model) {
+        model.context = context;
+        model.walletInfo = widget.walletInfo;
+        model.initState();
+      },
       builder: (context, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -142,20 +149,15 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                       Padding(
                           padding: EdgeInsets.only(bottom: 10.0),
                           child: GestureDetector(
-                            onLongPressUp: () {},
-                            onLongPress: () {},
                             child: TextField(
                               maxLines: 1,
-                              controller: _receiverWalletAddressTextController,
+                              controller:
+                                  model.receiverWalletAddressTextController,
                               decoration: InputDecoration(
                                   suffixIcon: IconButton(
                                     icon: Icon(Icons.content_paste),
                                     onPressed: () async {
-                                      ClipboardData data =
-                                          await Clipboard.getData(
-                                              Clipboard.kTextPlain);
-                                      _receiverWalletAddressTextController
-                                          .text = data.text;
+                                      await model.pasteClipBoardData();
                                     },
                                     iconSize: 25,
                                     color: globals.primaryColor,
@@ -170,7 +172,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                       RaisedButton(
                           padding: EdgeInsets.all(10),
                           onPressed: () {
-                            scan(context);
+                            model.scan();
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -198,10 +200,10 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         TextField(
-                          controller: _sendAmountTextController,
+                          controller: model.sendAmountTextController,
                           onChanged: (String amount) {
                             // checkSendAmount does not directly work if you use it in if as condition so setting state here to make it work
-                            updateTransFee();
+                            model.updateTransFee();
                             setState(() {
                               model.checkSendAmount = model.checkAmount(amount);
                             });
@@ -271,7 +273,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                   left:
                                       5), // padding left to keep some space from the text
                               child: Text(
-                                '$transFee',
+                                '${model.transFee}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .display3
@@ -292,163 +294,175 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                 .copyWith(fontWeight: FontWeight.bold),
                           ),
                           Switch(
-                            value: transFeeAdvance,
+                            value: model.transFeeAdvance,
                             inactiveTrackColor: globals.grey,
                             dragStartBehavior: DragStartBehavior.start,
                             activeColor: globals.primaryColor,
                             onChanged: (bool isOn) {
                               setState(() {
-                                transFeeAdvance = isOn;
+                                model.transFeeAdvance = isOn;
                               });
                             },
                           )
                         ],
                       ),
                       Visibility(
-                        visible: transFeeAdvance,
-                        child:
-                          Column(
+                          visible: model.transFeeAdvance,
+                          child: Column(
                             children: <Widget>[
-
                               Visibility(
-                                  visible: (coinName == 'ETH' || tokenType == 'ETH' || tokenType == 'FAB'),
-                                  child:
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    AppLocalizations.of(context).gasPrice,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .display3
-                                        .copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  Expanded(
-                                    child:
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(55, 0, 0, 0),
-                                          child:
-                                            TextField(
-                                              controller: _gasPriceTextController,
-                                              onChanged: (String amount) {
-                                                updateTransFee();
-                                              },
-                                              keyboardType:
-                                              TextInputType.number, // numnber keyboard
-                                              decoration: InputDecoration(
-                                                  focusedBorder: UnderlineInputBorder(
-                                                      borderSide:
-                                                      BorderSide(color: globals.primaryColor)),
-                                                  enabledBorder: UnderlineInputBorder(
-                                                      borderSide: BorderSide(color: globals.grey)),
-                                                  hintText: '0.00000',
-                                                  hintStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .display2
-                                                      .copyWith(fontSize: 20)),
-                                              style: TextStyle(color: globals.grey, fontSize: 24),
-                                            )
-                                        )
-
-                                  )
-
-                                ],
-                              )
-                            ),
-
-                            Visibility(
-                              visible: (coinName == 'ETH' || tokenType == 'ETH' || tokenType == 'FAB'),
-                              child:
-                                Row(
-                                  children: <Widget>[
-                                    Text(
-                                      AppLocalizations.of(context).gasLimit,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .display3
-                                          .copyWith(fontWeight: FontWeight.bold),
-                                    ),
-                                    Expanded(
-                                        child:
-                                        Padding(
-                                            padding: EdgeInsets.fromLTRB(55, 0, 0, 0),
-                                            child:
-                                            TextField(
-                                              controller: _gasLimitTextController,
-                                              onChanged: (String amount) {
-                                                updateTransFee();
-                                              },
-                                              keyboardType:
-                                              TextInputType.number, // numnber keyboard
-                                              decoration: InputDecoration(
-                                                  focusedBorder: UnderlineInputBorder(
-                                                      borderSide:
-                                                      BorderSide(color: globals.primaryColor)),
-                                                  enabledBorder: UnderlineInputBorder(
-                                                      borderSide: BorderSide(color: globals.grey)),
-                                                  hintText: '0.00000',
-                                                  hintStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .display2
-                                                      .copyWith(fontSize: 20)),
-                                              style: TextStyle(color: globals.grey, fontSize: 24),
-                                            )
-                                        )
-
-                                    )
-
-                                  ],
-                                )
-                              )
-                              ,
-
-                              Visibility(
-                                visible: (coinName == 'BTC' || coinName == 'FAB' || tokenType == 'FAB'),
-                                child:
-                                  Row(
+                                  visible: (coinName == 'ETH' ||
+                                      tokenType == 'ETH' ||
+                                      tokenType == 'FAB'),
+                                  child: Row(
                                     children: <Widget>[
                                       Text(
-                                        AppLocalizations.of(context).satoshisPerByte,
+                                        AppLocalizations.of(context).gasPrice,
                                         style: Theme.of(context)
                                             .textTheme
                                             .display3
-                                            .copyWith(fontWeight: FontWeight.bold),
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold),
                                       ),
                                       Expanded(
-                                          child:
-                                          Padding(
-                                              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                              child:
-                                              TextField(
-                                                controller: _satoshisPerByteTextController,
+                                          child: Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  55, 0, 0, 0),
+                                              child: TextField(
+                                                controller: model
+                                                    .gasPriceTextController,
                                                 onChanged: (String amount) {
-                                                  updateTransFee();
+                                                  model.updateTransFee();
                                                 },
-                                                keyboardType:
-                                                TextInputType.number, // numnber keyboard
+                                                keyboardType: TextInputType
+                                                    .number, // numnber keyboard
                                                 decoration: InputDecoration(
-                                                    focusedBorder: UnderlineInputBorder(
-                                                        borderSide:
-                                                        BorderSide(color: globals.primaryColor)),
-                                                    enabledBorder: UnderlineInputBorder(
-                                                        borderSide: BorderSide(color: globals.grey)),
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: globals
+                                                                    .primaryColor)),
+                                                    enabledBorder:
+                                                        UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: globals
+                                                                        .grey)),
                                                     hintText: '0.00000',
                                                     hintStyle: Theme.of(context)
                                                         .textTheme
                                                         .display2
-                                                        .copyWith(fontSize: 20)),
-                                                style: TextStyle(color: globals.grey, fontSize: 24),
-                                              )
-                                          )
-
-                                      )
-
+                                                        .copyWith(
+                                                            fontSize: 20)),
+                                                style: TextStyle(
+                                                    color: globals.grey,
+                                                    fontSize: 24),
+                                              )))
                                     ],
-                                  )
-                              )
-
+                                  )),
+                              Visibility(
+                                  visible: (coinName == 'ETH' ||
+                                      tokenType == 'ETH' ||
+                                      tokenType == 'FAB'),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        AppLocalizations.of(context).gasLimit,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .display3
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      Expanded(
+                                          child: Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  55, 0, 0, 0),
+                                              child: TextField(
+                                                controller: model
+                                                    .gasLimitTextController,
+                                                onChanged: (String amount) {
+                                                  model.updateTransFee();
+                                                },
+                                                keyboardType: TextInputType
+                                                    .number, // numnber keyboard
+                                                decoration: InputDecoration(
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: globals
+                                                                    .primaryColor)),
+                                                    enabledBorder:
+                                                        UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: globals
+                                                                        .grey)),
+                                                    hintText: '0.00000',
+                                                    hintStyle: Theme.of(context)
+                                                        .textTheme
+                                                        .display2
+                                                        .copyWith(
+                                                            fontSize: 20)),
+                                                style: TextStyle(
+                                                    color: globals.grey,
+                                                    fontSize: 24),
+                                              )))
+                                    ],
+                                  )),
+                              Visibility(
+                                  visible: (coinName == 'BTC' ||
+                                      coinName == 'FAB' ||
+                                      tokenType == 'FAB'),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        AppLocalizations.of(context)
+                                            .satoshisPerByte,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .display3
+                                            .copyWith(
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      Expanded(
+                                          child: Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  20, 0, 0, 0),
+                                              child: TextField(
+                                                controller: model
+                                                    .satoshisPerByteTextController,
+                                                onChanged: (String amount) {
+                                                  model.updateTransFee();
+                                                },
+                                                keyboardType: TextInputType
+                                                    .number, // numnber keyboard
+                                                decoration: InputDecoration(
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                                color: globals
+                                                                    .primaryColor)),
+                                                    enabledBorder:
+                                                        UnderlineInputBorder(
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: globals
+                                                                        .grey)),
+                                                    hintText: '0.00000',
+                                                    hintStyle: Theme.of(context)
+                                                        .textTheme
+                                                        .display2
+                                                        .copyWith(
+                                                            fontSize: 20)),
+                                                style: TextStyle(
+                                                    color: globals.grey,
+                                                    fontSize: 24),
+                                              )))
+                                    ],
+                                  ))
                             ],
-                          )
-                      )
+                          ))
                     ],
                   ),
                 ),
@@ -511,13 +525,16 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                             model.txHash = '';
                             model.errorMessage = '';
                             model.walletInfo = widget.walletInfo;
-                            model.amount =
-                                double.tryParse(_sendAmountTextController.text);
+                            model.amount = double.tryParse(
+                                model.sendAmountTextController.text);
                             model.toAddress =
-                                _receiverWalletAddressTextController.text;
-                            model.gasPrice = int.tryParse(_gasPriceTextController.text);
-                            model.gasLimit = int.tryParse(_gasLimitTextController.text);
-                            model.satoshisPerBytes = int.tryParse(_satoshisPerByteTextController.text);
+                                model.receiverWalletAddressTextController.text;
+                            model.gasPrice =
+                                int.tryParse(model.gasPriceTextController.text);
+                            model.gasLimit =
+                                int.tryParse(model.gasLimitTextController.text);
+                            model.satoshisPerBytes = int.tryParse(
+                                model.satoshisPerByteTextController.text);
                             model.checkFields(context);
                           },
                         ),
@@ -528,42 +545,5 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
         ),
       ),
     );
-  }
-
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-                                    Barcode Scan
-
---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-
-  Future scan(context) async {
-    try {
-      String barcode = await BarcodeScanner.scan();
-      setState(() => _receiverWalletAddressTextController.text = barcode);
-    } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
-        setState(() {
-          _receiverWalletAddressTextController.text =
-              AppLocalizations.of(context).userAccessDenied;
-        });
-      } else {
-        setState(() => _receiverWalletAddressTextController.text =
-            '${AppLocalizations.of(context).unknownError}: $e');
-      }
-    } on FormatException {
-      setState(() {
-        walletService.showInfoFlushbar(
-            AppLocalizations.of(context).scanCancelled,
-            AppLocalizations.of(context).userReturnedByPressingBackButton,
-            Icons.cancel,
-            globals.red,
-            context);
-      });
-    } catch (e) {
-      setState(() {
-        _receiverWalletAddressTextController.text =
-            '${AppLocalizations.of(context).unknownError}: $e';
-      });
-    }
   }
 }

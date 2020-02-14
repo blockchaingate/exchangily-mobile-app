@@ -352,9 +352,23 @@ class WalletService {
 
     var addressInWallet = coinAddress;
     if (coinName == 'BTC' || coinName == 'FAB') {
+      /*
+      print('addressInWallet before');
+      print(addressInWallet);
       var bytes = bs58check.decode(addressInWallet);
+      print('bytes');
+      print(bytes);
       addressInWallet = HEX.encode(bytes);
+      print('addressInWallet after');
+      print(addressInWallet);
+
+       */
+      addressInWallet = btcToBase58Address(addressInWallet);
       //no 0x appended
+    } else
+    if(tokenType == 'FAB') {
+      addressInWallet = exgToFabAddress(addressInWallet);
+      addressInWallet = btcToBase58Address(addressInWallet);
     }
     var coinType = getCoinTypeIdByName(coinName);
     var abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);

@@ -733,6 +733,10 @@ class AppLocalizations {
   String get date {
     return Intl.message('Date', name: 'date', desc: 'generic_Date');
   }
+
+  String get minimumAmount {
+    return Intl.message('Minimum amount', name: 'minimum_amount', desc: 'minimum_amount');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
