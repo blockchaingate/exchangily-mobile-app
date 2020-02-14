@@ -851,9 +851,51 @@
         "type": "text",
         "placeholders": {}
     },
-    "priceChange": "价格变动",
+    "priceChange": "价格升跌",
     "@priceChange": {
         "description": "trade_price_change",
+        "type": "text",
+        "placeholders": {}
+    },
+    "redepositCompleted": "存款确认完毕",
+    "@redepositCompleted": {
+        "description": "redeposit_redeposit_ompleted",
+        "type": "text",
+        "placeholders": {}
+    },
+    "redepositError": "存款确认失败",
+    "@redepositError": {
+        "description": "redeposit_error",
+        "type": "text",
+        "placeholders": {}
+    },
+    "redepositItemNotSelected": "未选取确认项目",
+    "@redepositItemNotSelected": {
+        "description": "redeposit_item_not_selected",
+        "type": "text",
+        "placeholders": {}
+    },
+    "minimumAmountError": "最小限额错误",
+    "@minimumAmountError": {
+        "description": "withdraw_Minimum amount error",
+        "type": "text",
+        "placeholders": {}
+    },
+    "yourWithdrawMinimumAmountaIsNotSatisfied": "您的提款低于最小限额",
+    "@yourWithdrawMinimumAmountaIsNotSatisfied": {
+        "description": "withdraw_your_withdraw_minimum_amount_is_not_satisfied",
+        "type": "text",
+        "placeholders": {}
+    },
+    "withdrawTransactionSuccessful": "转钱包交易成功发送",
+    "@withdrawTransactionSuccessful": {
+        "description": "withdraw_transaction_was_successfully",
+        "type": "text",
+        "placeholders": {}
+    },
+    "withdrawTransactionFailed": "转钱包交易失败",
+    "@withdrawTransactionFailed": {
+        "description": "withdraw_transaction_failed",
         "type": "text",
         "placeholders": {}
     }
