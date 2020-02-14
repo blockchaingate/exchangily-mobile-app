@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../localizations.dart';
@@ -75,8 +76,8 @@ class _WithdrawState extends State<Withdraw> {
 
     if (amount < environment["minimumWithdraw"][widget.walletInfo.tickerName]) {
       walletService.showInfoFlushbar(
-          'Minimum amount error',
-          'Your withdraw minimum amount is not satisfied',
+          AppLocalizations.of(context).minimumAmountError,
+          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
           Icons.cancel,
           globals.red,
           context);
@@ -113,10 +114,11 @@ class _WithdrawState extends State<Withdraw> {
 
       walletService.showInfoFlushbar(
           ret["success"]
-              ? 'Withdraw transaction was made successfully'
-              : 'Withdraw transaction failed',
+              ? AppLocalizations.of(context).withdrawTransactionSuccessful
+              : AppLocalizations.of(context).withdrawTransactionFailed,
           ret["success"]
-              ? 'transactionID:' + ret['data']['transactionHash']
+              ? '${AppLocalizations.of(context).transactionId}' +
+                  ret['data']['transactionHash']
               : ret['data'],
           Icons.cancel,
           globals.red,
@@ -349,19 +351,6 @@ class _WithdrawState extends State<Withdraw> {
                     )),
                 SizedBox(height: 20),
 
-                MaterialButton(
-                  padding: EdgeInsets.all(15),
-                  color: globals.primaryColor,
-                  textColor: Colors.white,
-                  onPressed: () async {
-                    checkPass(double.parse(myController.text), context);
-                  },
-                  child: Text(
-                    AppLocalizations.of(context).confirm,
-                    style: Theme.of(context).textTheme.button,
-                  ),
-                ),
-                SizedBox(height: 20),
                 Row(
                   children: <Widget>[
                     Text(
@@ -378,7 +367,20 @@ class _WithdrawState extends State<Withdraw> {
                       ),
                     )
                   ],
-                )
+                ),
+                UIHelper.horizontalSpaceSmall,
+                MaterialButton(
+                  padding: EdgeInsets.all(15),
+                  color: globals.primaryColor,
+                  textColor: Colors.white,
+                  onPressed: () async {
+                    checkPass(double.parse(myController.text), context);
+                  },
+                  child: Text(
+                    AppLocalizations.of(context).confirm,
+                    style: Theme.of(context).textTheme.button,
+                  ),
+                ),
               ],
             )));
   }
