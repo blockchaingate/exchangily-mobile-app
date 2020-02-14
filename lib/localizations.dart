@@ -569,26 +569,6 @@ class AppLocalizations {
     return Intl.message('Gas Limit', name: 'gasLimit', desc: 'gas_limit');
   }
 
-  String get kanbanGasFee {
-    return Intl.message('Kanban Gas Fee',
-        name: 'kanbanGasFee', desc: 'kanban_gas_fee');
-  }
-
-  String get kanbanGasPrice {
-    return Intl.message('Kanban Gas Price',
-        name: 'kanbanGasPrice', desc: 'kanban_gas_price');
-  }
-
-  String get kanbanGasLimit {
-    return Intl.message('Kanban Gas Limit',
-        name: 'kanbanGasLimit', desc: 'kanban_gas_limit');
-  }
-
-  String get satoshisPerByte {
-    return Intl.message('Satoshis/byte',
-        name: 'satoshisPerByte', desc: 'satoshis_per_byte');
-  }
-
   String get addGasTransactionSuccess {
     return Intl.message('Add gas transaction was made successfully',
         name: 'addGasTransactionSuccess', desc: 'add_gas_transaction_success');
@@ -735,7 +715,33 @@ class AppLocalizations {
   }
 
   String get minimumAmount {
-    return Intl.message('Minimum amount', name: 'minimum_amount', desc: 'minimum_amount');
+    return Intl.message('Minimum amount',
+        name: 'minimumAmount', desc: 'minimum_amount');
+  }
+
+  String get kanbanGasFee {
+    return Intl.message('Kanban Gas Fee',
+        name: 'kanbanGasFee', desc: 'kanban_gas_fee');
+  }
+
+  String get kanbanGasPrice {
+    return Intl.message('Kanban Gas Price',
+        name: 'kanbanGasPrice', desc: 'kanban_gas_price');
+  }
+
+  String get kanbanGasLimit {
+    return Intl.message('Kanban Gas Limit',
+        name: 'kanbanGasLimit', desc: 'kanban_gas_limit');
+  }
+
+  String get satoshisPerByte {
+    return Intl.message('Satoshis/byte',
+        name: 'satoshisPerByte', desc: 'satoshis_per_byte');
+  }
+
+  String get priceChange {
+    return Intl.message('Price Change',
+        name: 'priceChange', desc: 'trade_price_change');
   }
 }
 

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-11T20:11:26.062320",
+  "@@last_modified": "2020-02-14T16:38:20.334608",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -660,30 +660,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "kanbanGasFee": "Kanban Gas Fee",
-  "@kanbanGasFee": {
-    "description": "kanban_gas_fee",
-    "type": "text",
-    "placeholders": {}
-  },
-  "kanbanGasPrice": "Kanban Gas Price",
-  "@kanbanGasPrice": {
-    "description": "kanban_gas_price",
-    "type": "text",
-    "placeholders": {}
-  },
-  "kanbanGasLimit": "Kanban Gas Limit",
-  "@kanbanGasLimit": {
-    "description": "kanban_gas_limit",
-    "type": "text",
-    "placeholders": {}
-  },
-  "satoshisPerByte": "Satoshis/byte",
-  "@satoshisPerByte": {
-    "description": "satoshis_per_byte",
-    "type": "text",
-    "placeholders": {}
-  },
   "addGasTransactionSuccess": "Add gas transaction was made successfully",
   "@addGasTransactionSuccess": {
     "description": "add_gas_transaction_success",
@@ -855,6 +831,42 @@
   "date": "Date",
   "@date": {
     "description": "generic_Date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "minimumAmount": "Minimum amount",
+  "@minimumAmount": {
+    "description": "minimum_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanbanGasFee": "Kanban Gas Fee",
+  "@kanbanGasFee": {
+    "description": "kanban_gas_fee",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanbanGasPrice": "Kanban Gas Price",
+  "@kanbanGasPrice": {
+    "description": "kanban_gas_price",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanbanGasLimit": "Kanban Gas Limit",
+  "@kanbanGasLimit": {
+    "description": "kanban_gas_limit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "satoshisPerByte": "Satoshis/byte",
+  "@satoshisPerByte": {
+    "description": "satoshis_per_byte",
+    "type": "text",
+    "placeholders": {}
+  },
+  "priceChange": "Price Change",
+  "@priceChange": {
+    "description": "trade_price_change",
     "type": "text",
     "placeholders": {}
   }

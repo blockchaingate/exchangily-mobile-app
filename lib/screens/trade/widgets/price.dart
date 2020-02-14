@@ -77,7 +77,7 @@ class TradePriceState extends State<TradePrice> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text('Price change',
+                        Text(AppLocalizations.of(context).priceChange,
                             style: Theme.of(context)
                                 .textTheme
                                 .display2
