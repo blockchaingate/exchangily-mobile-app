@@ -288,24 +288,34 @@ class SendScreenState extends BaseState {
     print('widget.walletInfo.address=' + walletInfo.address);
     var address = walletInfo.address;
 
-    var ret = await walletService.sendTransaction(
-        walletInfo.tickerName,
-        Uint8List.fromList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-        [0],
-        [address],
-        to,
-        amount,
-        options,
-        false);
-
-    print('ret===');
-    print(ret);
-
-    if (ret != null && ret['transFee'] != null) {
-      setState(ViewState.Busy);
-      transFee = ret['transFee'];
+    await walletService
+        .sendTransaction(
+            walletInfo.tickerName,
+            Uint8List.fromList(
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+            [0],
+            [address],
+            to,
+            amount,
+            options,
+            false)
+        .then((ret) {
+      if (ret != null && ret['transFee'] != null) {
+        transFee = ret['transFee'];
+        setState(ViewState.Idle);
+      }
       setState(ViewState.Idle);
-    }
+    }).catchError((err) {
+      setState(ViewState.Idle);
+      log.e(err);
+      walletService.showInfoFlushbar(
+          AppLocalizations.of(context).genericError,
+          '${AppLocalizations.of(context).transanctionFailed}',
+          Icons.cancel,
+          globals.red,
+          context);
+    });
+
     setState(ViewState.Idle);
   }
 
