@@ -27,6 +27,7 @@ import 'package:flutter/services.dart';
 import '../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 
 class SendScreenState extends BaseState {
   final log = getLogger('SendScreenState');
@@ -272,7 +273,7 @@ class SendScreenState extends BaseState {
   // Update Trans Fee
   updateTransFee() async {
     setState(ViewState.Busy);
-    var to = receiverWalletAddressTextController.text;
+    var to = getOfficalAddress(walletInfo.tickerName.toUpperCase());
     var amount = double.tryParse(sendAmountTextController.text);
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);
