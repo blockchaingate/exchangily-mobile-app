@@ -116,13 +116,13 @@ class TrademarketState extends State<Trademarket> {
               // Heading Buy Sell Orders Row
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
                 Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: Text(AppLocalizations.of(context).sellOrders,
+                  child: Text(AppLocalizations.of(context).buyOrders,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 15, color: Colors.white70)),
                 ),
                 Container(
-                  child: Text(AppLocalizations.of(context).buyOrders,
+                  padding: EdgeInsets.all(5.0),
+                  child: Text(AppLocalizations.of(context).sellOrders,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 15, color: Colors.white70)),
                 ),
@@ -132,6 +132,58 @@ class TrademarketState extends State<Trademarket> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  // Column Buy Orders
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        color: globals.walletCardColor,
+                        width: MediaQuery.of(context).size.width * 0.45,
+                        padding: EdgeInsets.all(5.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Text(AppLocalizations.of(context).quantity,
+                                  style: TextStyle(
+                                      fontSize: 12, color: globals.grey)),
+                              Text(AppLocalizations.of(context).price,
+                                  style: TextStyle(
+                                      fontSize: 12, color: globals.grey))
+                            ]),
+                      ),
+                      // Buy Orders For Loop
+                      for (var item in buy)
+                        Container(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            margin: EdgeInsets.only(bottom: 5.0),
+                            color: Color(0xFF264559),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                // Quantity Container
+                                Container(
+                                    padding:
+                                        EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                    child: Text(item.orderQuantity.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Color(0xFF5e617f)))),
+                                // Price Container
+                                Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    padding:
+                                        EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                    child: Text(item.price.toString(),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: globals.green))),
+                              ],
+                            )),
+                      SizedBox(height: 10)
+                    ],
+                  ),
                   // Column Sell Orders
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -191,56 +243,6 @@ class TrademarketState extends State<Trademarket> {
                               )),
                         SizedBox(height: 10)
                       ]),
-                  // Column Buy Orders
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        color: globals.walletCardColor,
-                        width: MediaQuery.of(context).size.width * 0.45,
-                        padding: EdgeInsets.all(5.0),
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text(AppLocalizations.of(context).price,
-                                  style: TextStyle(
-                                      fontSize: 12, color: globals.grey)),
-                              Text(AppLocalizations.of(context).quantity,
-                                  style: TextStyle(
-                                      fontSize: 12, color: globals.grey)),
-                            ]),
-                      ),
-                      // Buy Orders For Loop
-                      for (var item in buy)
-                        Container(
-                            width: MediaQuery.of(context).size.width * 0.45,
-                            margin: EdgeInsets.only(bottom: 5.0),
-                            color: Color(0xFF264559),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.2,
-                                    padding:
-                                        EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                    child: Text(item.price.toString(),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: globals.green))),
-                                Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                    child: Text(item.orderQuantity.toString(),
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: Color(0xFF5e617f))))
-                              ],
-                            )),
-                      SizedBox(height: 10)
-                    ],
-                  )
                 ],
               )
             ],

@@ -13,14 +13,12 @@
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade-model.dart';
-import 'package:exchangilymobileapp/screens/place_order/widgets/buy_sell.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/cupertino.dart';
 import "widgets//price.dart";
 import "widgets/market.dart";
-import "../place_order/main.dart";
 import 'package:web_socket_channel/io.dart';
 import '../../services/trade_service.dart';
 // import "widgets/kline.dart";
@@ -183,13 +181,16 @@ class _TradeState extends State<Trade> with TradeService {
           ListView(
             children: <Widget>[
               TradePrice(key: _tradePriceState),
+              // Below container contains trading view chart in the trade tab
               Container(
                   margin: EdgeInsets.symmetric(horizontal: 9.0),
                   child: LoadHTMLFileToWEbView(widget.pair)),
+              // Below class contains the order book and market trades
               Trademarket(key: _tradeMarketState),
               SizedBox(height: 60)
             ],
           ),
+          // Buy Sell Buttons
           Visibility(
               visible: (tradeChannelCompleted &&
                   priceChannelCompleted &&
@@ -197,20 +198,18 @@ class _TradeState extends State<Trade> with TradeService {
               child: Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
-                    // width: 150,
+                    width: 250,
                     margin:
                         EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
+                        // Buy Button
                         Flexible(
                             child: Padding(
                           padding: const EdgeInsets.only(right: 5.0),
                           child: FlatButton(
-                            shape: StadiumBorder(
-                                side: BorderSide(
-                                    color: globals.buyPrice, width: 2)),
-                            // color: globals.buyPrice,
+                            color: globals.buyPrice,
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -221,14 +220,16 @@ class _TradeState extends State<Trade> with TradeService {
                             },
                             child: Text(AppLocalizations.of(context).buy,
                                 style: TextStyle(
-                                    fontSize: 15, color: globals.white)),
+                                    fontSize: 13, color: globals.white)),
                           ),
                         )),
+                        // Sell button
                         Flexible(
                             child: RaisedButton(
-                          // shape: StadiumBorder(
-                          //     side: BorderSide(color: globals.red, width: 1)),
-                          color: globals.sellPrice,
+                          color: globals.walletCardColor.withAlpha(25),
+                          shape: StadiumBorder(
+                              side: BorderSide(
+                                  color: globals.sellPrice, width: 2)),
                           onPressed: () {
                             Navigator.push(
                               context,

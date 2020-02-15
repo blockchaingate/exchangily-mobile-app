@@ -11,8 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/screen_state/settings_screen_state.dart';
-import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +27,7 @@ class SettingsScreen extends StatelessWidget {
     return BaseScreen<SettingsScreenState>(
       onModelReady: (model) {
         model.context = context;
+        model.getAppVersion();
       },
       builder: (context, model, child) => Scaffold(
         // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
@@ -87,13 +87,16 @@ class SettingsScreen extends StatelessWidget {
                     model.displayMnemonic();
                   },
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                      child: Text(
-                    !model.isVisible ? '' : model.mnemonic,
-                    style: Theme.of(context).textTheme.headline,
-                  )),
+                Visibility(
+                  visible: model.isVisible,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                        child: Text(
+                      model.mnemonic,
+                      style: Theme.of(context).textTheme.headline,
+                    )),
+                  ),
                 ),
                 Card(
                   elevation: 5,
@@ -126,6 +129,29 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                // Version Code
+                Card(
+                  elevation: 5,
+                  child: Container(
+                    color: globals.primaryColor,
+                    width: 200,
+                    height: 50,
+                    child: Center(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'v ${model.versionName}',
+                          style: TextStyle(
+                              color: globals.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    )),
+                  ),
+                ),
                 Container(
                   padding: EdgeInsets.all(5),
                   child: Center(
@@ -135,7 +161,7 @@ class SettingsScreen extends StatelessWidget {
                             .display2
                             .copyWith(color: Colors.red)),
                   ),
-                )
+                ),
               ]),
         ),
         bottomNavigationBar: AppBottomNav(count: 3),

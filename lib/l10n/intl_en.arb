@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-11T20:11:26.062320",
+  "@@last_modified": "2020-02-14T17:48:43.217209",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -636,13 +636,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "toWallet": "To wallet",
+  "toWallet": "to wallet",
   "@toWallet": {
     "description": "withdraw_to_wallet",
     "type": "text",
     "placeholders": {}
   },
-  "toExchange": "To exchange",
+  "toExchange": "to exchange",
   "@toExchange": {
     "description": "deposit_to_exchange",
     "type": "text",
@@ -657,30 +657,6 @@
   "gasLimit": "Gas Limit",
   "@gasLimit": {
     "description": "gas_limit",
-    "type": "text",
-    "placeholders": {}
-  },
-  "kanbanGasFee": "Kanban Gas Fee",
-  "@kanbanGasFee": {
-    "description": "kanban_gas_fee",
-    "type": "text",
-    "placeholders": {}
-  },
-  "kanbanGasPrice": "Kanban Gas Price",
-  "@kanbanGasPrice": {
-    "description": "kanban_gas_price",
-    "type": "text",
-    "placeholders": {}
-  },
-  "kanbanGasLimit": "Kanban Gas Limit",
-  "@kanbanGasLimit": {
-    "description": "kanban_gas_limit",
-    "type": "text",
-    "placeholders": {}
-  },
-  "satoshisPerByte": "Satoshis/byte",
-  "@satoshisPerByte": {
-    "description": "satoshis_per_byte",
     "type": "text",
     "placeholders": {}
   },
@@ -855,6 +831,84 @@
   "date": "Date",
   "@date": {
     "description": "generic_Date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "minimumAmount": "Minimum amount",
+  "@minimumAmount": {
+    "description": "minimum_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanbanGasFee": "Kanban Gas Fee",
+  "@kanbanGasFee": {
+    "description": "kanban_gas_fee",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanbanGasPrice": "Kanban Gas Price",
+  "@kanbanGasPrice": {
+    "description": "kanban_gas_price",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanbanGasLimit": "Kanban Gas Limit",
+  "@kanbanGasLimit": {
+    "description": "kanban_gas_limit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "satoshisPerByte": "Satoshis/byte",
+  "@satoshisPerByte": {
+    "description": "satoshis_per_byte",
+    "type": "text",
+    "placeholders": {}
+  },
+  "priceChange": "Price Change",
+  "@priceChange": {
+    "description": "trade_price_change",
+    "type": "text",
+    "placeholders": {}
+  },
+  "redepositCompleted": "Redeposit Completed",
+  "@redepositCompleted": {
+    "description": "redeposit_redeposit_ompleted",
+    "type": "text",
+    "placeholders": {}
+  },
+  "redepositError": "Redeposit error",
+  "@redepositError": {
+    "description": "redeposit_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "redepositItemNotSelected": "Redeposit item not selected",
+  "@redepositItemNotSelected": {
+    "description": "redeposit_item_not_selected",
+    "type": "text",
+    "placeholders": {}
+  },
+  "minimumAmountError": "Minimum amount error",
+  "@minimumAmountError": {
+    "description": "withdraw_Minimum amount error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "yourWithdrawMinimumAmountaIsNotSatisfied": "Your withdraw minimum amount is not satisfied",
+  "@yourWithdrawMinimumAmountaIsNotSatisfied": {
+    "description": "withdraw_your_withdraw_minimum_amount_is_not_satisfied",
+    "type": "text",
+    "placeholders": {}
+  },
+  "withdrawTransactionSuccessful": "Withdraw transaction was made successfully",
+  "@withdrawTransactionSuccessful": {
+    "description": "withdraw_transaction_was_successfully",
+    "type": "text",
+    "placeholders": {}
+  },
+  "withdrawTransactionFailed": "Withdraw transaction failed",
+  "@withdrawTransactionFailed": {
+    "description": "withdraw_transaction_failed",
     "type": "text",
     "placeholders": {}
   }
