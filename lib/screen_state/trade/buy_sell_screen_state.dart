@@ -401,6 +401,14 @@ class BuySellScreenState extends BaseState {
 
       var txHex = await txHexforPlaceOrder(seed);
       var resKanban = await sendKanbanRawTransaction(txHex);
+      if(resKanban != null && resKanban['transactionHash'] != null) {
+        walletService.showInfoFlushbar(
+            AppLocalizations.of(context).placeorderSuccessfully,
+            'txid:' + resKanban['transactionHash'],
+            Icons.cancel,
+            globals.red,
+            context);
+      }
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);

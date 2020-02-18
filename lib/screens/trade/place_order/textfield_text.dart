@@ -55,7 +55,7 @@ class TextfieldText extends StatelessWidget {
             Positioned(
                 child: Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                    child: new Align(
+                    child: Align(
                         alignment: FractionalOffset.centerRight,
                         child: Text(suffixText,
                             style: TextStyle(

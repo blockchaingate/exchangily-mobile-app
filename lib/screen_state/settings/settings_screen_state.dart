@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../localizations.dart';
@@ -37,7 +38,8 @@ class SettingsScreenState extends BaseState {
   String errorMessage = '';
   AlertResponse alertResponse;
   BuildContext context;
-
+  String versionName = '';
+  String versionCode = '';
   void showMnemonic() async {
     await displayMnemonic();
     isVisible = !isVisible;
@@ -121,7 +123,7 @@ class SettingsScreenState extends BaseState {
     }
   }
 
-  // Change wallet lang
+  // Change wallet language
 
   changeWalletLanguage(newValue) {
     setState(ViewState.Busy);
@@ -142,4 +144,13 @@ class SettingsScreenState extends BaseState {
   // Change password
 
   // Change theme
+
+  // Get app version Code
+
+  getAppVersion() async {
+    setState(ViewState.Busy);
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    versionName = packageInfo.version;
+    setState(ViewState.Idle);
+  }
 }

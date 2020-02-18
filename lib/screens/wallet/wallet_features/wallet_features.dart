@@ -229,80 +229,10 @@ class WalletFeaturesScreen extends StatelessWidget {
                           }
                         }
                         return Row();
-                        /*
-                        return errDepositItem != null ?
-                            Row(
-
-                            );
-
-                         */
                       })
-                  /*
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FutureBuilder(
-                          builder: (context, snapShot) {
-                            var errDepositData = snapShot.data;
-                            print('errDepositData=======================');
-                            print(errDepositData);
-                            var errDepositItem;
-                            for(var i = 0; i < errDepositData.length; i++) {
-                              var item = errDepositData[i];
-                              var coinType = item['coinType'];
-                              if(coin_list[coinType]['name'] == walletInfo.tickerName) {
-                                errDepositItem = item;
-                                break;
-                              }
-                              print('coinType=====' + coinType.toString());
-                            }
-                            return (errDepositItem != null) ?
-                              Container(
-                              width: model.containerWidth,
-                              height: model.containerHeight,
-                              child: _featuresCard(context, 4, model)
-                            ):
-
-                            SizedBox.shrink()
-                            ;
-                          },
-                          future: model.getErrDeposit(),
-                        ),
-
-
-                        Opacity(
-                            opacity: ((walletInfo != null) && (walletInfo.tickerName == 'FAB')) ? 1.0 : 0.0,
-                          child:
-                          Container(
-                            width: model.containerWidth,
-                            height: model.containerHeight,
-                            child: _featuresCard(context, 5, model),
-                          )
-                        )
-
-                      ])
-                  */
                 ],
               ),
             ),
-            /*
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: Visibility(
-                  visible: (walletInfo.tickerName == 'FAB'),
-                  child: Container(
-                    width: 190,
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/smartContract');
-                      },
-                      child: Text(walletInfo.tickerName + 'Smart Contract',
-                          style: TextStyle(fontSize: 15)),
-                    ),
-                  )),
-            )
-
-             */
           ],
         ),
         bottomNavigationBar: AppBottomNav(count: 0),
