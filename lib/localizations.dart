@@ -780,6 +780,12 @@ class AppLocalizations {
     return Intl.message('Withdraw transaction failed',
         name: 'withdrawTransactionFailed', desc: 'withdraw_transaction_failed');
   }
+
+  String get placeorderSuccessfully {
+    return Intl.message('Place order transaction was made successfully',
+        name: 'placeOrderTransactionSuccessful',
+        desc: 'place_order_transaction_was_successfully');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
