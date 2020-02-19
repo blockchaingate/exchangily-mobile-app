@@ -1,0 +1,56 @@
+{
+  "DVTSourceControlWorkspaceBlueprintLocationsKey" : {
+    "3DBC5E771A5F19EB553008601BFA3A2CB454A7D4+++D2C47A5" : {
+      "DVTSourceControlBranchIdentifierKey" : "ios",
+      "DVTSourceControlLocationRevisionKey" : "96d74c28008c9255f78f2665f60ebbd4a4d29546",
+      "DVTSourceControlBranchOptionsKey" : 4,
+      "DVTSourceControlBranchRemoteNameKey" : "origin",
+      "DVTSourceControlWorkspaceBlueprintLocationTypeKey" : "DVTSourceControlBranch"
+    },
+    "98A3C30ABC97D592882929FAF5EFB935A32282D9+++41E6B9F" : {
+      "DVTSourceControlWorkspaceBlueprintLocationTypeKey" : "DVTSourceControlLockedRevisionLocation",
+      "DVTSourceControlLocationRevisionKey" : "900165b300b16489bf2b5d4a55b30be7c799293f"
+    },
+    "98A3C30ABC97D592882929FAF5EFB935A32282D9+++F6169BE" : {
+      "DVTSourceControlWorkspaceBlueprintLocationTypeKey" : "DVTSourceControlLockedRevisionLocation",
+      "DVTSourceControlLocationRevisionKey" : "900165b300b16489bf2b5d4a55b30be7c799293f"
+    },
+    "ECD0A59EC88E1BC7C473949BACEA86800ADECCFD+++2F1FEDB" : {
+      "DVTSourceControlWorkspaceBlueprintLocationTypeKey" : "DVTSourceControlLockedRevisionLocation",
+      "DVTSourceControlLocationRevisionKey" : "c382b8e990b6976f610764179f94e0416d82c057"
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "3DBC5E771A5F19EB553008601BFA3A2CB454A7D4+++D2C47A5",
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6FD9A7D4-4D1E-40EF-96F7-316D47EDFF18",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "3DBC5E771A5F19EB553008601BFA3A2CB454A7D4+++D2C47A5" : "exchangily-mobile-app\/",
+    "98A3C30ABC97D592882929FAF5EFB935A32282D9+++41E6B9F" : "flutter\/.pub-cache\/git\/plugins-900165b300b16489bf2b5d4a55b30be7c799293f\/",
+    "98A3C30ABC97D592882929FAF5EFB935A32282D9+++F6169BE" : "..\/.pub-cache\/git\/plugins-900165b300b16489bf2b5d4a55b30be7c799293f",
+    "ECD0A59EC88E1BC7C473949BACEA86800ADECCFD+++2F1FEDB" : "flutter\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Runner",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ios\/Runner.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/blockchaingate\/exchangily-mobile-app.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3DBC5E771A5F19EB553008601BFA3A2CB454A7D4+++D2C47A5"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "\/Users\/barry\/Documents\/flutter\/.pub-cache\/git\/cache\/plugins-983b211bfe42812d0b5500ade29b05dcf71f3bc8",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98A3C30ABC97D592882929FAF5EFB935A32282D9+++41E6B9F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "\/Users\/barry\/.pub-cache\/git\/cache\/plugins-983b211bfe42812d0b5500ade29b05dcf71f3bc8",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "98A3C30ABC97D592882929FAF5EFB935A32282D9+++F6169BE"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/flutter\/flutter.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "ECD0A59EC88E1BC7C473949BACEA86800ADECCFD+++2F1FEDB"
+    }
+  ]
+}

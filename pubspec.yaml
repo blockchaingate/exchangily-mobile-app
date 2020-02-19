@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.0.3+8
+version: 1.0.0+1
 
 environment:
   sdk: ">=2.3.2 <3.0.0"
@@ -78,19 +78,19 @@ dependencies:
 
   # Device Preview
   device_preview:
-  webview_flutter: ^0.3.19+4
+  webview_flutter: ^0.3.14
 
   # rflutter Alert
   rflutter_alert: ^1.0.3
 
   # Shared Preferences
-  shared_preferences: ^0.5.6+1
+  shared_preferences: ^0.5.4+1
 
   # Shimmer
   shimmer: ^1.0.1
 
   # Sqflite
-  sqflite: ^1.2.0
+  sqflite: ^1.1.7
 
   # Path
   path: ^1.6.4
@@ -124,7 +124,7 @@ flutter:
     - assets/images/wallet-page/
 
 flutter_icons:
-  image_path: "assets/images/launcher/mobile-icon.png"
+  image_path: "assets/images/launcher/mobile-icon-ios.png"
   android: true
   ios: true
   #  - lib/l10n/en.json
