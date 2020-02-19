@@ -240,7 +240,7 @@ class AppLocalizations {
 
   String get setPasswordConditions {
     return Intl.message(
-        'Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using !@#\$&*~',
+        'Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using !@#\$&*~`%^()-_',
         name: 'setPasswordConditions',
         desc: 'create_password_set_password_conditions');
   }
