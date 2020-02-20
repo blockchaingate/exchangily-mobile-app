@@ -786,6 +786,12 @@ class AppLocalizations {
         name: 'placeOrderTransactionSuccessful',
         desc: 'place_order_transaction_was_successfully');
   }
+
+  String get transactionHistory {
+    return Intl.message('Transaction History',
+        name: 'transactionHistory',
+        desc: 'wallet_features_transaction_history');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

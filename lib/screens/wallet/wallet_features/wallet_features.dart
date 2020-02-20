@@ -41,7 +41,7 @@ class WalletFeaturesScreen extends StatelessWidget {
         body: ListView(
           children: <Widget>[
             Container(
-              height: 250,
+              height: 200,
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
@@ -53,7 +53,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                   Container(
                     child: Image.asset(
                       'assets/images/start-page/logo.png',
-                      width: 250,
+                      width: 200,
                       height: 60,
                       color: globals.white,
                     ),
@@ -102,7 +102,7 @@ class WalletFeaturesScreen extends StatelessWidget {
               ),
             ),
             Container(
-              height: 400,
+              //   height: 400,
               margin: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -146,23 +146,24 @@ class WalletFeaturesScreen extends StatelessWidget {
                           width: model.containerWidth,
                           height: model.containerHeight,
                           child: _featuresCard(context, 3, model),
-                        )
+                        ),
                       ]),
                   FutureBuilder(
                       future: model.getErrDeposit(),
                       initialData: [],
                       builder: (context, snapShot) {
                         var errDepositData = snapShot.data;
-                        for (var i = 0; i < errDepositData.length; i++) {
-                          var item = errDepositData[i];
-                          var coinType = item['coinType'];
-                          if (coin_list[coinType]['name'] ==
-                              walletInfo.tickerName) {
-                            model.errDepositItem = item;
-                            break;
+                        if (snapShot.data != null) {
+                          for (var i = 0; i < errDepositData.length; i++) {
+                            var item = errDepositData[i];
+                            var coinType = item['coinType'];
+                            if (coin_list[coinType]['name'] ==
+                                walletInfo.tickerName) {
+                              model.errDepositItem = item;
+                              break;
+                            }
                           }
                         }
-
                         if (model.errDepositItem != null) {
                           if (walletInfo.tickerName == 'FAB') {
                             return Row(
@@ -229,7 +230,64 @@ class WalletFeaturesScreen extends StatelessWidget {
                           }
                         }
                         return Row();
-                      })
+                      }),
+                  UIHelper.horizontalSpaceSmall,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 22.0, vertical: 5.0),
+                        child: Card(
+                          color: globals.walletCardColor,
+                          elevation: model.elevation,
+                          child: InkWell(
+                            splashColor: globals.primaryColor.withAlpha(30),
+                            onTap: () {
+                              var route = model.features[6].route;
+                              Navigator.pushNamed(
+                                context,
+                                '/$route',
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 3),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                      decoration: BoxDecoration(
+                                          color: globals.walletCardColor,
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: model
+                                                    .features[6].shadowColor
+                                                    .withOpacity(0.2),
+                                                offset: Offset(0, 2),
+                                                blurRadius: 10,
+                                                spreadRadius: 3)
+                                          ]),
+                                      child: Icon(
+                                        model.features[6].icon,
+                                        size: 20,
+                                        color: globals.white,
+                                      )),
+                                  Text(
+                                    model.features[6].name,
+                                    style: Theme.of(context).textTheme.headline,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -316,7 +374,7 @@ class WalletFeaturesScreen extends StatelessWidget {
         ),
       );
 
-  // Four Features Card
+  // Features Card
 
   Widget _featuresCard(context, index, model) => Card(
         color: globals.walletCardColor,

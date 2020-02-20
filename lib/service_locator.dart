@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/screen_state/trade/buy_sell_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wallet_language_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
@@ -51,4 +52,5 @@ void serviceLocator() {
   locator.registerFactory(() => WalletSetupScreenState());
   locator.registerFactory(() => ChooseWalletLanguageScreenState());
   locator.registerFactory(() => BuySellScreenState());
+  locator.registerFactory(() => TransactionHistoryScreenState());
 }

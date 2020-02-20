@@ -52,6 +52,8 @@ class WalletFeaturesScreenState extends BaseState {
           Icons.vertical_align_bottom, 'redeposit', Colors.redAccent),
       WalletFeatureName(AppLocalizations.of(context).smartContract,
           Icons.layers, 'smartContract', Colors.lightBlue),
+      WalletFeatureName(AppLocalizations.of(context).transactionHistory,
+          Icons.layers, 'transactionHistory', Colors.lightBlue),
     ];
   }
 
