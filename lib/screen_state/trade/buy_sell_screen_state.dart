@@ -320,9 +320,6 @@ class BuySellScreenState extends BaseState {
 
 // Update Transfer Fee
   updateTransFee() async {
-    var test = environment["chains"]["KANBAN"]["gasPrice"];
-
-    log.e(test);
     setState(ViewState.Busy);
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
@@ -441,6 +438,7 @@ class BuySellScreenState extends BaseState {
       try {
         price = double.parse(text);
         caculateTransactionAmount();
+        updateTransFee();
       } catch (e) {
         setState(ViewState.Idle);
         log.e('Handle text price changed $e');
@@ -450,6 +448,7 @@ class BuySellScreenState extends BaseState {
       try {
         quantity = double.parse(text);
         caculateTransactionAmount();
+        updateTransFee();
       } catch (e) {
         setState(ViewState.Idle);
         log.e('Handle text quantity changed $e');
@@ -484,6 +483,7 @@ class BuySellScreenState extends BaseState {
         quantity = changeBalanceWithSlider / price;
         transactionAmount = quantity * price;
         quantityTextController.text = quantity.toString();
+        updateTransFee();
         log.i(transactionAmount);
         log.e(changeBalanceWithSlider);
       } else {
@@ -491,6 +491,7 @@ class BuySellScreenState extends BaseState {
         quantity = changeBalanceWithSlider / price;
         transactionAmount = quantity * price;
         quantityTextController.text = quantity.toString();
+        updateTransFee();
         log.i(transactionAmount);
         log.e(changeBalanceWithSlider);
       }
