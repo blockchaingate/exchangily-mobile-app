@@ -45,6 +45,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
+import 'dart:core';
 
 class BuySellScreenState extends BaseState {
   final log = getLogger('BuySellScreenState');
@@ -327,7 +328,9 @@ class BuySellScreenState extends BaseState {
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
     if (kanbanGasLimit != null && kanbanPrice != null) {
-      var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
+      var kanbanPriceBig = BigInt.from(kanbanPrice);
+      var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
+      var kanbanTransFeeDouble = bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
       kanbanTransFee = kanbanTransFeeDouble;
       log.w('$kanbanPrice $kanbanGasLimit $kanbanTransFeeDouble');
     }
