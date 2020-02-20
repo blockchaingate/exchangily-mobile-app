@@ -585,9 +585,10 @@ class WalletService {
 
     var totalAmount = amount + extraTransactionFee;
     var amountNum = totalAmount * 1e8;
+    amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
     var transFeeDouble = 0.0;
-    var bytesPerInput = 148;
+    var bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
     var feePerInput = bytesPerInput * satoshisPerBytes;
 
     for (var i = 0; i < addressIndexList.length; i++) {
@@ -638,7 +639,7 @@ class WalletService {
         };
       }
 
-      var transFee = (receivePrivateKeyArr.length) * feePerInput + 2 * 34 + 10;
+      var transFee = (receivePrivateKeyArr.length) * feePerInput + (2 * 34 + 10) * satoshisPerBytes;
       print('extraTransactionFee==' + extraTransactionFee.toString());
       print('transFee==' + transFee.toString());
       transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
@@ -691,10 +692,7 @@ class WalletService {
       options,
       bool doSubmit) async {
     final root = bip32.BIP32.fromSeed(seed);
-    log.w('coin=' + coin);
-    log.w(addressIndexList);
-    log.w(toAddress);
-    log.w(amount);
+
     var totalInput = 0;
     var finished = false;
     var gasPrice = 0;
@@ -743,7 +741,7 @@ class WalletService {
         satoshisPerBytes = environment["chains"]["BTC"]["satoshisPerBytes"];
       }
       var amountNum = amount * 1e8;
-      amountNum += (2 * 34 + 10);
+      amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
           network: environment["chains"]["BTC"]["network"]);
       // txb.setVersion(1);
@@ -794,8 +792,7 @@ class WalletService {
 
       var transFee =
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
-              2 * 34 +
-              10;
+              (2 * 34 + 10) * satoshisPerBytes;
       transFeeDouble = transFee / 1e8;
 
       if (getTransFeeOnly) {
