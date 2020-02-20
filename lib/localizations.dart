@@ -240,7 +240,7 @@ class AppLocalizations {
 
   String get setPasswordConditions {
     return Intl.message(
-        'Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using !@#\$&*~',
+        'Enter password which is minimum 8 characters long and contains at least 1 uppercase, lowercase, number and a special character using !@#\$&*~`%^()-_',
         name: 'setPasswordConditions',
         desc: 'create_password_set_password_conditions');
   }
@@ -779,6 +779,12 @@ class AppLocalizations {
   String get withdrawTransactionFailed {
     return Intl.message('Withdraw transaction failed',
         name: 'withdrawTransactionFailed', desc: 'withdraw_transaction_failed');
+  }
+
+  String get placeorderSuccessfully {
+    return Intl.message('Place order transaction was made successfully',
+        name: 'placeOrderTransactionSuccessful',
+        desc: 'place_order_transaction_was_successfully');
   }
 }
 

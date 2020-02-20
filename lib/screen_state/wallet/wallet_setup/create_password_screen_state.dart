@@ -37,7 +37,7 @@ class CreatePasswordScreenState extends BaseState {
   String confirmPassword = '';
   String errorMessage = '';
   Pattern pattern =
-      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[`~!@#\$%\^&*\(\)-_\+\=\{\[\}\]]).{8,}$';
 
 /* ---------------------------------------------------
                     Get All Coins Future
