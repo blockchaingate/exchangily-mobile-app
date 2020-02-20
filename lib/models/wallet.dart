@@ -146,18 +146,3 @@ class WalletInfoList {
     return new WalletInfoList(wallets: wallets);
   }
 }
-
-class Test {
-  final int id;
-  final String name;
-  final int age;
-
-  Test({this.id, this.name, this.age});
-
-  Map<String, dynamic> toMap() {
-    return {'id': id, 'name': name, 'age': age};
-  }
-
-  factory Test.fromMap(Map<String, dynamic> json) =>
-      new Test(id: json['id'], age: json['age'], name: json['name']);
-}

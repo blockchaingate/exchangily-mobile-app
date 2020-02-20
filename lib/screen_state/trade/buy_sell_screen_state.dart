@@ -60,8 +60,8 @@ class BuySellScreenState extends BaseState {
   String baseCoinName;
   String targetCoinName;
 
-  final kanbanGasPriceTextController = TextEditingController();
-  final kanbanGasLimitTextController = TextEditingController();
+  TextEditingController kanbanGasPriceTextController = TextEditingController();
+  TextEditingController kanbanGasLimitTextController = TextEditingController();
   TextEditingController quantityTextController = TextEditingController();
   TextEditingController priceTextController = TextEditingController();
   double kanbanTransFee = 0.0;
@@ -82,6 +82,14 @@ class BuySellScreenState extends BaseState {
   final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
   Orders orders;
   double transactionAmount = 0;
+
+  // Set default price for kanban gas price and limit
+  setDefaultGasPrice() {
+    kanbanGasLimitTextController.text =
+        environment["chains"]["KANBAN"]["gasLimit"].toString();
+    kanbanGasPriceTextController.text =
+        environment["chains"]["KANBAN"]["gasPrice"].toString();
+  }
 
   // Split Pair Name
   splitPair(pair) {
@@ -296,24 +304,33 @@ class BuySellScreenState extends BaseState {
 
     var keyPairKanban = getExgKeyPair(seed);
     var exchangilyAddress = await getExchangilyAddress();
+    int kanbanGasPrice = int.parse(kanbanGasPriceTextController.text);
+    int kanbanGasLimit = int.parse(kanbanGasLimitTextController.text);
+
     var txKanbanHex = await signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         exchangilyAddress,
         nonce,
-        environment["chains"]["KANBAN"]["gasPrice"],
-        environment["chains"]["KANBAN"]["gasLimit"]);
+        kanbanGasPrice,
+        kanbanGasLimit);
     setState(ViewState.Idle);
     return txKanbanHex;
   }
 
 // Update Transfer Fee
   updateTransFee() async {
+    var test = environment["chains"]["KANBAN"]["gasPrice"];
+
+    log.e(test);
     setState(ViewState.Busy);
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
-    var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
-    kanbanTransFee = kanbanTransFeeDouble;
+    if (kanbanGasLimit != null && kanbanPrice != null) {
+      var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
+      kanbanTransFee = kanbanTransFeeDouble;
+      log.w('$kanbanPrice $kanbanGasLimit $kanbanTransFeeDouble');
+    }
     setState(ViewState.Idle);
   }
 
@@ -401,7 +418,7 @@ class BuySellScreenState extends BaseState {
 
       var txHex = await txHexforPlaceOrder(seed);
       var resKanban = await sendKanbanRawTransaction(txHex);
-      if(resKanban != null && resKanban['transactionHash'] != null) {
+      if (resKanban != null && resKanban['transactionHash'] != null) {
         walletService.showInfoFlushbar(
             AppLocalizations.of(context).placeorderSuccessfully,
             'txid:' + resKanban['transactionHash'],
