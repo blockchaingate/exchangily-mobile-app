@@ -63,8 +63,10 @@ class TransactionHistory extends StatelessWidget {
                             '0.2',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                    fontSize: 18, color: globals.grey,
-                          ),
+                              fontSize: 18,
+                              color: globals.grey,
+                            ),
+                          )
                         ],
                       ),
                     ],

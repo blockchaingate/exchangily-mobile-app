@@ -35,6 +35,7 @@ class BuySell extends StatelessWidget {
       onModelReady: (model) async {
         model.context = context;
         model.splitPair(pair);
+        model.setDefaultGasPrice();
         model.sell = [];
         model.buy = [];
         model.bidOrAsk = bidOrAsk;
@@ -344,7 +345,7 @@ class BuySell extends StatelessWidget {
                                               Text(
                                                 AppLocalizations.of(context)
                                                     .kanbanGasPrice,
-                                                style: new TextStyle(
+                                                style: TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 14.0),
                                               ),
