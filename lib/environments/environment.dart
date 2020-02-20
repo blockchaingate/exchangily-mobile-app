@@ -3,7 +3,7 @@ import 'package:bitcoin_flutter/src/models/networks.dart';
 const bool isProduction = true;
 Map devConfig = {
   "chains": {
-    "BTC": {"network": testnet, "satoshisPerBytes": 300, "bytesPerInput": 150},
+    "BTC": {"network": testnet, "satoshisPerBytes": 600, "bytesPerInput": 150},
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
@@ -54,7 +54,7 @@ Map devConfig = {
 
 Map productionConfig = {
   "chains": {
-    "BTC": {"network": bitcoin, "satoshisPerBytes": 300, "bytesPerInput": 150},
+    "BTC": {"network": bitcoin, "satoshisPerBytes": 600, "bytesPerInput": 150},
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',
