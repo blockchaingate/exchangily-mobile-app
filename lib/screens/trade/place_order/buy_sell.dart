@@ -470,6 +470,7 @@ class BuySell extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
+                                      // Heading Price
                                       Container(
                                           padding: const EdgeInsets.fromLTRB(
                                               0, 0, 0, 5),
@@ -486,6 +487,7 @@ class BuySell extends StatelessWidget {
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 16.0))),
+                                      // Heading Quantity
                                       Container(
                                           padding: const EdgeInsets.fromLTRB(
                                               0, 0, 0, 5),
@@ -504,24 +506,29 @@ class BuySell extends StatelessWidget {
                                                   fontSize: 16.0)))
                                     ],
                                   ),
-                                  OrderDetail(model.sell, false),
-                                  Container(
-                                      padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Container(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 0, 0, 5),
-                                              child: Text(
-                                                  model.currentPrice.toString(),
-                                                  style: TextStyle(
-                                                      color: Color(0xFF17a2b8),
-                                                      fontSize: 18.0)))
-                                        ],
-                                      )),
+                                  InkWell(
+                                      onTap: () {
+                                        model.priceTextController.text =
+                                            model.price.toString();
+                                      },
+                                      child: OrderDetail(model.sell, false)),
+                                  // Container(
+                                  //     padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                  //     child: Row(
+                                  //       mainAxisAlignment:
+                                  //           MainAxisAlignment.spaceBetween,
+                                  //       children: <Widget>[
+                                  //         Container(
+                                  //             padding:
+                                  //                 const EdgeInsets.fromLTRB(
+                                  //                     0, 0, 0, 5),
+                                  //             child: Text(
+                                  //                 model.currentPrice.toString(),
+                                  //                 style: TextStyle(
+                                  //                     color: Color(0xFF17a2b8),
+                                  //                     fontSize: 14.0)))
+                                  //       ],
+                                  //     )),
                                   OrderDetail(model.buy, true)
                                 ],
                               )))
