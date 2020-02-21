@@ -868,5 +868,17 @@
         "description": "withdraw_transaction_failed",
         "type": "text",
         "placeholders": {}
+    },
+    "placeOrderTransactionSuccessful": "下單成功",
+    "@placeOrderTransactionSuccessful": {
+        "description": "place_order_transaction_was_successfully",
+        "type": "text",
+        "placeholders": {}
+    },
+    "transactionHistory": "交易歷史",
+    "@transactionHistory": {
+        "description": "wallet_features_transaction_history",
+        "type": "text",
+        "placeholders": {}
     }
 }

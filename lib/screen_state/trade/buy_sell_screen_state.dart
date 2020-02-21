@@ -327,7 +327,8 @@ class BuySellScreenState extends BaseState {
     if (kanbanGasLimit != null && kanbanPrice != null) {
       var kanbanPriceBig = BigInt.from(kanbanPrice);
       var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
-      var kanbanTransFeeDouble = bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
+      var kanbanTransFeeDouble =
+          bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
       kanbanTransFee = kanbanTransFeeDouble;
       log.w('$kanbanPrice $kanbanGasLimit $kanbanTransFeeDouble');
     }
@@ -420,7 +421,7 @@ class BuySellScreenState extends BaseState {
       var resKanban = await sendKanbanRawTransaction(txHex);
       if (resKanban != null && resKanban['transactionHash'] != null) {
         walletService.showInfoFlushbar(
-            AppLocalizations.of(context).placeorderSuccessfully,
+            AppLocalizations.of(context).placeOrderTransactionSuccessful,
             'txid:' + resKanban['transactionHash'],
             Icons.cancel,
             globals.red,

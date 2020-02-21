@@ -1,6 +1,8 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
 
 const bool isProduction = false;
+const bool isLocal = true;
+
 Map devConfig = {
   "chains": {
     "BTC": {"network": testnet, "satoshisPerBytes": 50, "bytesPerInput": 152},

@@ -42,6 +42,27 @@ class CreatePasswordScreenState extends BaseState {
 /* ---------------------------------------------------
                     Get All Coins Future
     -------------------------------------------------- */
+
+  Future createOfflineWallets() async {
+    setState(ViewState.Busy);
+    _walletInfo = await _walletService
+        .createOfflineWallets(randomMnemonicFromRoute)
+        .then((data) {
+      _walletInfo = data;
+      Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
+      randomMnemonicFromRoute = '';
+      setState(ViewState.Idle);
+    }).catchError((onError) {
+      errorMessage = AppLocalizations.of(context).somethingWentWrong;
+      log.e(onError);
+      setState(ViewState.Idle);
+    });
+    setState(ViewState.Idle);
+  }
+
+/* ---------------------------------------------------
+                    Get All Coins Future
+    -------------------------------------------------- */
   Future getAllCoins() async {
     log.w(randomMnemonicFromRoute);
     setState(ViewState.Busy);

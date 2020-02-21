@@ -125,16 +125,20 @@ class SettingsScreenState extends BaseState {
 
   // Change wallet language
 
-  changeWalletLanguage(newValue) {
+  changeWalletLanguage(newValue) async {
     setState(ViewState.Busy);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     selectedLanguage = newValue;
     log.w('Selec $selectedLanguage');
     if (newValue == 'Chinese') {
       log.e('in zh');
+
       AppLocalizations.load(Locale('zh', 'ZH'));
+      prefs.setString('lang', 'zh');
     } else if (newValue == 'English') {
       log.e('in en');
       AppLocalizations.load(Locale('en', 'EN'));
+      prefs.setString('lang', 'en');
     }
     setState(ViewState.Idle);
   }

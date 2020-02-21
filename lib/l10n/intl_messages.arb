@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-14T17:48:43.217209",
+  "@@last_modified": "2020-02-20T19:26:47.530732",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -228,19 +228,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "moveAndTrade": "Move And Trade",
+  "moveAndTrade": "Move to Exchange",
   "@moveAndTrade": {
     "description": "move_and_trade",
     "type": "text",
     "placeholders": {}
   },
-  "withdrawToWallet": "Withdraw To Wallet",
+  "withdrawToWallet": "Move To Wallet",
   "@withdrawToWallet": {
     "description": "withdraw_to_wallet",
     "type": "text",
     "placeholders": {}
   },
-  "saveAndShareQrCode": "Save and Share Qr Code",
+  "saveAndShareQrCode": "Save and Share QR Code",
   "@saveAndShareQrCode": {
     "description": "save_and_share_qr_code",
     "type": "text",
@@ -909,6 +909,18 @@
   "withdrawTransactionFailed": "Withdraw transaction failed",
   "@withdrawTransactionFailed": {
     "description": "withdraw_transaction_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "placeOrderTransactionSuccessful": "Place order transaction was made successfully",
+  "@placeOrderTransactionSuccessful": {
+    "description": "place_order_transaction_was_successfully",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactionHistory": "Transaction History",
+  "@transactionHistory": {
+    "description": "wallet_features_transaction_history",
     "type": "text",
     "placeholders": {}
   }

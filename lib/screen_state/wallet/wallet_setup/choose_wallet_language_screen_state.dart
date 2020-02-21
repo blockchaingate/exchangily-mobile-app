@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +28,11 @@ class ChooseWalletLanguageScreenState extends BaseState {
     setState(ViewState.Busy);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = prefs.getString('lang');
-    if (lang == null || lang.isEmpty) {
-      log.e('null');
+    if (lang == null || lang == '') {
+      log.e('language empty');
     } else {
       setState(ViewState.Idle);
+      setLangauge(lang);
       Navigator.pushNamed(context, '/walletSetup');
     }
     setState(ViewState.Idle);
@@ -39,8 +41,8 @@ class ChooseWalletLanguageScreenState extends BaseState {
   setLangauge(String languageCode) async {
     setState(ViewState.Busy);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    log.w('Lang code $languageCode');
     prefs.setString('lang', languageCode);
+    AppLocalizations.load(Locale(languageCode, languageCode.toUpperCase()));
     setState(ViewState.Idle);
   }
 }

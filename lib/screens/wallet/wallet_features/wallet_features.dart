@@ -232,62 +232,63 @@ class WalletFeaturesScreen extends StatelessWidget {
                         return Row();
                       }),
                   UIHelper.horizontalSpaceSmall,
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 22.0, vertical: 5.0),
-                        child: Card(
-                          color: globals.walletCardColor,
-                          elevation: model.elevation,
-                          child: InkWell(
-                            splashColor: globals.primaryColor.withAlpha(30),
-                            onTap: () {
-                              var route = model.features[6].route;
-                              Navigator.pushNamed(
-                                context,
-                                '/$route',
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 3),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                      decoration: BoxDecoration(
-                                          color: globals.walletCardColor,
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          boxShadow: [
-                                            BoxShadow(
-                                                color: model
-                                                    .features[6].shadowColor
-                                                    .withOpacity(0.2),
-                                                offset: Offset(0, 2),
-                                                blurRadius: 10,
-                                                spreadRadius: 3)
-                                          ]),
-                                      child: Icon(
-                                        model.features[6].icon,
-                                        size: 20,
-                                        color: globals.white,
-                                      )),
-                                  Text(
-                                    model.features[6].name,
-                                    style: Theme.of(context).textTheme.headline,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
+                  // Transaction History Column
+                  // Column(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   crossAxisAlignment: CrossAxisAlignment.stretch,
+                  //   children: <Widget>[
+                  //     Container(
+                  //       padding: EdgeInsets.symmetric(
+                  //           horizontal: 22.0, vertical: 5.0),
+                  //       child: Card(
+                  //         color: globals.walletCardColor,
+                  //         elevation: model.elevation,
+                  //         child: InkWell(
+                  //           splashColor: globals.primaryColor.withAlpha(30),
+                  //           onTap: () {
+                  //             var route = model.features[6].route;
+                  //             Navigator.pushNamed(
+                  //               context,
+                  //               '/$route',
+                  //             );
+                  //           },
+                  //           child: Container(
+                  //             padding: EdgeInsets.symmetric(
+                  //                 vertical: 6, horizontal: 3),
+                  //             child: Row(
+                  //               mainAxisAlignment: MainAxisAlignment.center,
+                  //               children: <Widget>[
+                  //                 Container(
+                  //                     decoration: BoxDecoration(
+                  //                         color: globals.walletCardColor,
+                  //                         borderRadius:
+                  //                             BorderRadius.circular(50),
+                  //                         boxShadow: [
+                  //                           BoxShadow(
+                  //                               color: model
+                  //                                   .features[6].shadowColor
+                  //                                   .withOpacity(0.2),
+                  //                               offset: Offset(0, 2),
+                  //                               blurRadius: 10,
+                  //                               spreadRadius: 3)
+                  //                         ]),
+                  //                     child: Icon(
+                  //                       model.features[6].icon,
+                  //                       size: 20,
+                  //                       color: globals.white,
+                  //                     )),
+                  //                 Text(
+                  //                   model.features[6].name,
+                  //                   style: Theme.of(context).textTheme.headline,
+                  //                 )
+                  //               ],
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // )
                 ],
               ),
             ),
