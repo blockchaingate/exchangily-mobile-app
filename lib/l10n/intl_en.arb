@@ -911,5 +911,17 @@
     "description": "withdraw_transaction_failed",
     "type": "text",
     "placeholders": {}
+  },
+  "placeOrderTransactionSuccessful": "Place order transaction was made successfully",
+  "@placeOrderTransactionSuccessful": {
+    "description": "place_order_transaction_was_successfully",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactionHistory": "Transaction History",
+  "@transactionHistory": {
+    "description": "wallet_features_transaction_history",
+    "type": "text",
+    "placeholders": {}
   }
 }

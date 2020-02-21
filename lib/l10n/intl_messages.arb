@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-14T17:48:43.217209",
+  "@@last_modified": "2020-02-20T19:26:47.530732",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -909,6 +909,18 @@
   "withdrawTransactionFailed": "Withdraw transaction failed",
   "@withdrawTransactionFailed": {
     "description": "withdraw_transaction_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "placeOrderTransactionSuccessful": "Place order transaction was made successfully",
+  "@placeOrderTransactionSuccessful": {
+    "description": "place_order_transaction_was_successfully",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactionHistory": "Transaction History",
+  "@transactionHistory": {
+    "description": "wallet_features_transaction_history",
     "type": "text",
     "placeholders": {}
   }

@@ -781,7 +781,7 @@ class AppLocalizations {
         name: 'withdrawTransactionFailed', desc: 'withdraw_transaction_failed');
   }
 
-  String get placeorderSuccessfully {
+  String get placeOrderTransactionSuccessful {
     return Intl.message('Place order transaction was made successfully',
         name: 'placeOrderTransactionSuccessful',
         desc: 'place_order_transaction_was_successfully');
