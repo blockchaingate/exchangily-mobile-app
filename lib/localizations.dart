@@ -204,17 +204,17 @@ class AppLocalizations {
   }
 
   String get moveAndTrade {
-    return Intl.message('Move And Trade',
+    return Intl.message('Move to Exchange',
         name: 'moveAndTrade', desc: 'move_and_trade');
   }
 
   String get withdrawToWallet {
-    return Intl.message('Withdraw To Wallet',
+    return Intl.message('Move To Wallet',
         name: 'withdrawToWallet', desc: 'withdraw_to_wallet');
   }
 
   String get saveAndShareQrCode {
-    return Intl.message('Save and Share Qr Code',
+    return Intl.message('Save and Share QR Code',
         name: 'saveAndShareQrCode', desc: 'save_and_share_qr_code');
   }
 
