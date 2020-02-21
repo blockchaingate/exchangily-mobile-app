@@ -5,7 +5,7 @@ const bool isLocal = false;
 
 Map devConfig = {
   "chains": {
-    "BTC": {"network": testnet, "satoshisPerBytes": 300, "bytesPerInput": 150},
+    "BTC": {"network": testnet, "satoshisPerBytes": 50, "bytesPerInput": 152},
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
@@ -16,8 +16,8 @@ Map devConfig = {
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
-      "satoshisPerBytes": 300,
-      "bytesPerInput": 150,
+      "satoshisPerBytes": 50,
+      "bytesPerInput": 152,
       "gasPrice": 50,
       "gasLimit": 800000
     },
@@ -56,7 +56,7 @@ Map devConfig = {
 
 Map productionConfig = {
   "chains": {
-    "BTC": {"network": bitcoin, "satoshisPerBytes": 300, "bytesPerInput": 150},
+    "BTC": {"network": bitcoin, "satoshisPerBytes": 50, "bytesPerInput": 152},
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',
@@ -71,8 +71,8 @@ Map productionConfig = {
         "networkId": 0,
         "chainId": 0,
       },
-      "satoshisPerBytes": 300,
-      "bytesPerInput": 150,
+      "satoshisPerBytes": 50,
+      "bytesPerInput": 152,
       "gasPrice": 50,
       "gasLimit": 800000
     },

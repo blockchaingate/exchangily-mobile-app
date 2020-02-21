@@ -45,6 +45,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
+import 'dart:core';
 
 class BuySellScreenState extends BaseState {
   final log = getLogger('BuySellScreenState');
@@ -60,8 +61,8 @@ class BuySellScreenState extends BaseState {
   String baseCoinName;
   String targetCoinName;
 
-  final kanbanGasPriceTextController = TextEditingController();
-  final kanbanGasLimitTextController = TextEditingController();
+  TextEditingController kanbanGasPriceTextController = TextEditingController();
+  TextEditingController kanbanGasLimitTextController = TextEditingController();
   TextEditingController quantityTextController = TextEditingController();
   TextEditingController priceTextController = TextEditingController();
   double kanbanTransFee = 0.0;
@@ -82,6 +83,14 @@ class BuySellScreenState extends BaseState {
   final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
   Orders orders;
   double transactionAmount = 0;
+
+  // Set default price for kanban gas price and limit
+  setDefaultGasPrice() {
+    kanbanGasLimitTextController.text =
+        environment["chains"]["KANBAN"]["gasLimit"].toString();
+    kanbanGasPriceTextController.text =
+        environment["chains"]["KANBAN"]["gasPrice"].toString();
+  }
 
   // Split Pair Name
   splitPair(pair) {
@@ -296,13 +305,16 @@ class BuySellScreenState extends BaseState {
 
     var keyPairKanban = getExgKeyPair(seed);
     var exchangilyAddress = await getExchangilyAddress();
+    int kanbanGasPrice = int.parse(kanbanGasPriceTextController.text);
+    int kanbanGasLimit = int.parse(kanbanGasLimitTextController.text);
+
     var txKanbanHex = await signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         exchangilyAddress,
         nonce,
-        environment["chains"]["KANBAN"]["gasPrice"],
-        environment["chains"]["KANBAN"]["gasLimit"]);
+        kanbanGasPrice,
+        kanbanGasLimit);
     setState(ViewState.Idle);
     return txKanbanHex;
   }
@@ -312,8 +324,14 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Busy);
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
-    var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
-    kanbanTransFee = kanbanTransFeeDouble;
+    if (kanbanGasLimit != null && kanbanPrice != null) {
+      var kanbanPriceBig = BigInt.from(kanbanPrice);
+      var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
+      var kanbanTransFeeDouble =
+          bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
+      kanbanTransFee = kanbanTransFeeDouble;
+      log.w('$kanbanPrice $kanbanGasLimit $kanbanTransFeeDouble');
+    }
     setState(ViewState.Idle);
   }
 
@@ -401,9 +419,9 @@ class BuySellScreenState extends BaseState {
 
       var txHex = await txHexforPlaceOrder(seed);
       var resKanban = await sendKanbanRawTransaction(txHex);
-      if(resKanban != null && resKanban['transactionHash'] != null) {
+      if (resKanban != null && resKanban['transactionHash'] != null) {
         walletService.showInfoFlushbar(
-            AppLocalizations.of(context).placeorderSuccessfully,
+            AppLocalizations.of(context).placeOrderTransactionSuccessful,
             'txid:' + resKanban['transactionHash'],
             Icons.cancel,
             globals.red,
@@ -424,6 +442,7 @@ class BuySellScreenState extends BaseState {
       try {
         price = double.parse(text);
         caculateTransactionAmount();
+        updateTransFee();
       } catch (e) {
         setState(ViewState.Idle);
         log.e('Handle text price changed $e');
@@ -433,6 +452,7 @@ class BuySellScreenState extends BaseState {
       try {
         quantity = double.parse(text);
         caculateTransactionAmount();
+        updateTransFee();
       } catch (e) {
         setState(ViewState.Idle);
         log.e('Handle text quantity changed $e');
@@ -467,6 +487,7 @@ class BuySellScreenState extends BaseState {
         quantity = changeBalanceWithSlider / price;
         transactionAmount = quantity * price;
         quantityTextController.text = quantity.toString();
+        updateTransFee();
         log.i(transactionAmount);
         log.e(changeBalanceWithSlider);
       } else {
@@ -474,6 +495,7 @@ class BuySellScreenState extends BaseState {
         quantity = changeBalanceWithSlider / price;
         transactionAmount = quantity * price;
         quantityTextController.text = quantity.toString();
+        updateTransFee();
         log.i(transactionAmount);
         log.e(changeBalanceWithSlider);
       }
