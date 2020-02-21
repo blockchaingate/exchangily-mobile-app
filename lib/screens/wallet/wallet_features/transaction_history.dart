@@ -43,9 +43,9 @@ class TransactionHistory extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Icon(
-                                  Icons.arrow_downward,
+                                  Icons.arrow_upward,
                                   size: 35,
-                                  color: globals.grey,
+                                  color: globals.sellPrice,
                                 ),
                                 Container(
                                   width: 230,
@@ -55,19 +55,15 @@ class TransactionHistory extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Text(transaction.tickerName,
-                                          style: TextStyle(
-                                              fontSize: 17,
-                                              color: globals.white)),
                                       Text(
-                                        transaction.address,
+                                        '${transaction.tickerName} : ${transaction.address}',
                                         style: TextStyle(
                                             color: globals.primaryColor),
                                       ),
                                       Text(
                                         transaction.date,
                                         style: TextStyle(
-                                            fontSize: 14, color: globals.grey),
+                                            fontSize: 14, color: globals.white),
                                       ),
                                     ],
                                   ),
@@ -80,9 +76,9 @@ class TransactionHistory extends StatelessWidget {
                                       transaction.amount.toString(),
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                        fontSize: 18,
-                                        color: globals.grey,
-                                      ),
+                                          fontSize: 18,
+                                          color: globals.white,
+                                          fontWeight: FontWeight.bold),
                                     )
                                   ],
                                 ),
