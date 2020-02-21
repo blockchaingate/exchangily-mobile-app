@@ -142,7 +142,10 @@ class _WithdrawState extends State<Withdraw> {
   updateTransFee() async {
     var kanbanPrice = int.tryParse(_kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(_kanbanGasLimitTextController.text);
-    var kanbanTransFeeDouble = bigNum2Double(kanbanPrice * kanbanGasLimit);
+
+    var kanbanPriceBig = BigInt.from(kanbanPrice);
+    var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
+    var kanbanTransFeeDouble = bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
 
     setState(() {
       kanbanTransFee = kanbanTransFeeDouble;

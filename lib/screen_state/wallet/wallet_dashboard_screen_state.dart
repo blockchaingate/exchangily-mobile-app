@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +133,17 @@ class WalletDashboardScreenState extends BaseState {
             usdValue: coinUsdBalance,
             name: name);
         walletInfo.add(wi);
+      }).timeout(Duration(seconds: 45), onTimeout: () {
+        setState(ViewState.Idle);
+        log.e('Timeout');
+        walletService.showInfoFlushbar(
+            AppLocalizations.of(context).genericError,
+            AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater,
+            Icons.cancel,
+            Colors.red,
+            context);
       }).catchError((error) {
+        setState(ViewState.Idle);
         log.e('Something went wrong  - $error');
       });
     }

@@ -62,8 +62,12 @@ class WalletService {
   // Get Random Mnemonic
   String getRandomMnemonic() {
     String randomMnemonic = '';
+    if (isLocal == true) {
+      randomMnemonic =
+          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+      return randomMnemonic;
+    }
     randomMnemonic = bip39.generateMnemonic();
-
     return randomMnemonic;
   }
 
@@ -153,6 +157,45 @@ class WalletService {
     return currentUsdValue;
   }
 
+  // Offline Wallet Creation
+
+  Future createOfflineWallets(String mnemonic) async {
+    List<WalletInfo> _walletInfo = [];
+    if (_walletInfo != null) {
+      _walletInfo.clear();
+    } else {
+      _walletInfo = [];
+    }
+    var seed = generateSeed(mnemonic);
+    var root = bip32.BIP32.fromSeed(seed);
+
+    try {
+      for (int i = 0; i < coinTickers.length; i++) {
+        String tickerName = coinTickers[i];
+        String name = coinNames[i];
+        String token = tokenType[i];
+        String addr =
+            await getAddressForCoin(root, tickerName, tokenType: token);
+        WalletInfo wi = new WalletInfo(
+            tickerName: tickerName,
+            tokenType: token,
+            address: addr,
+            availableBalance: 0.0,
+            lockedBalance: 0.0,
+            usdValue: 0.0,
+            name: name);
+        _walletInfo.add(wi);
+        await databaseService.insert(_walletInfo[i]);
+      }
+      return _walletInfo;
+    } catch (e) {
+      log.e(e);
+      _walletInfo = null;
+      log.e('Catch GetAll Wallets Failed $e');
+      return _walletInfo;
+    }
+  }
+
 // Future GetWalletCoins
   Future<List<WalletInfo>> getWalletCoins(String mnemonic) async {
     List<WalletInfo> _walletInfo = [];
@@ -198,12 +241,12 @@ class WalletService {
       }
       var res = await assetsBalance(exgAddress);
       var length = res.length;
-      // For Loop Coins Get From Service
+      // For loop over asset balance result
       for (var i = 0; i < length; i++) {
-        // Get their tickerName to compare with walletInfo tickernName
+        // Get their tickerName to compare with walletInfo tickerName
         String coin = res[i]['coin'];
-        // Second For Loop To Change WalletInfo TickerName According to its length and
-        // compare it with the same coin tickername from service until the match or loop ends
+        // Second For Loop To check WalletInfo TickerName According to its length and
+        // compare it with the same coin tickername from asset balance result until the match or loop ends
         for (var j = 0; j < _walletInfo.length; j++) {
           if (coin == _walletInfo[j].tickerName) {
             _walletInfo[j].assetsInExchange = res[i]['amount'];
@@ -226,10 +269,14 @@ class WalletService {
 
   // Gas Balance
   gasBalance(String addr) async {
-    double gasAmount;
+    double gasAmount = 0.0;
     await _api.getGasBalance(addr).then((res) {
-      var newBal = BigInt.parse(res['balance']['FAB']);
-      gasAmount = stringUtils.bigNum2Double(newBal);
+      if (res != null &&
+          res['balance'] != null &&
+          res['balance']['FAB'] != null) {
+        var newBal = BigInt.parse(res['balance']['FAB']);
+        gasAmount = stringUtils.bigNum2Double(newBal);
+      }
     }).catchError((onError) {
       log.w('On error $onError');
       gasAmount = 0.0;
@@ -582,9 +629,10 @@ class WalletService {
 
     var totalAmount = amount + extraTransactionFee;
     var amountNum = totalAmount * 1e8;
+    amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
     var transFeeDouble = 0.0;
-    var bytesPerInput = 148;
+    var bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
     var feePerInput = bytesPerInput * satoshisPerBytes;
 
     for (var i = 0; i < addressIndexList.length; i++) {
@@ -635,7 +683,7 @@ class WalletService {
         };
       }
 
-      var transFee = (receivePrivateKeyArr.length) * feePerInput + 2 * 34 + 10;
+      var transFee = (receivePrivateKeyArr.length) * feePerInput + (2 * 34 + 10) * satoshisPerBytes;
       print('extraTransactionFee==' + extraTransactionFee.toString());
       print('transFee==' + transFee.toString());
       transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
@@ -688,10 +736,7 @@ class WalletService {
       options,
       bool doSubmit) async {
     final root = bip32.BIP32.fromSeed(seed);
-    log.w('coin=' + coin);
-    log.w(addressIndexList);
-    log.w(toAddress);
-    log.w(amount);
+
     var totalInput = 0;
     var finished = false;
     var gasPrice = 0;
@@ -740,7 +785,7 @@ class WalletService {
         satoshisPerBytes = environment["chains"]["BTC"]["satoshisPerBytes"];
       }
       var amountNum = amount * 1e8;
-      amountNum += (2 * 34 + 10);
+      amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
           network: environment["chains"]["BTC"]["network"]);
       // txb.setVersion(1);
@@ -791,8 +836,7 @@ class WalletService {
 
       var transFee =
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
-              2 * 34 +
-              10;
+              (2 * 34 + 10) * satoshisPerBytes;
       transFeeDouble = transFee / 1e8;
 
       if (getTransFeeOnly) {

@@ -37,7 +37,28 @@ class CreatePasswordScreenState extends BaseState {
   String confirmPassword = '';
   String errorMessage = '';
   Pattern pattern =
-      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[`~!@#\$%\^&*\(\)-_\+\=\{\[\}\]]).{8,}$';
+
+/* ---------------------------------------------------
+                    Get All Coins Future
+    -------------------------------------------------- */
+
+  Future createOfflineWallets() async {
+    setState(ViewState.Busy);
+    _walletInfo = await _walletService
+        .createOfflineWallets(randomMnemonicFromRoute)
+        .then((data) {
+      _walletInfo = data;
+      Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
+      randomMnemonicFromRoute = '';
+      setState(ViewState.Idle);
+    }).catchError((onError) {
+      errorMessage = AppLocalizations.of(context).somethingWentWrong;
+      log.e(onError);
+      setState(ViewState.Idle);
+    });
+    setState(ViewState.Idle);
+  }
 
 /* ---------------------------------------------------
                     Get All Coins Future

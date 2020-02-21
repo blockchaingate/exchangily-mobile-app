@@ -221,7 +221,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           _confirmPassTextController.text = '';
           model.errorMessage = '';
           if (passSuccess) {
-            await model.getAllCoins();
+            await model.createOfflineWallets();
           }
         },
         child: Text(
