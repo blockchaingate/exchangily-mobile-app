@@ -158,7 +158,7 @@ class SettingsScreen extends StatelessWidget {
                     child: Text(model.errorMessage,
                         style: Theme.of(context)
                             .textTheme
-                            .display2
+                            .bodyText2
                             .copyWith(color: Colors.red)),
                   ),
                 ),

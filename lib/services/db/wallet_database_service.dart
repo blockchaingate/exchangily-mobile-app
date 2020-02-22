@@ -32,9 +32,9 @@ class WalletDataBaseService {
   final String columnLockedBalance = 'lockedBalance';
   final String columnAvailableBalance = 'availableBalance';
   final String columnUsdValue = 'usdValue';
-  final String columnAssetsInExchange = 'assetsInExchange';
+  final String columnInExchange = 'inExchange';
 
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 2;
   static Future<Database> _database;
   String path = '';
 
@@ -60,7 +60,7 @@ class WalletDataBaseService {
         $columnLockedBalance REAL,
         $columnAvailableBalance REAL,
         $columnUsdValue REAL,
-        $columnAssetsInExchange REAL) ''');
+        $columnInExchange REAL) ''');
   }
 
   // Get All Records From The Database
