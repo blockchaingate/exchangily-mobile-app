@@ -62,11 +62,6 @@ class WalletService {
   // Get Random Mnemonic
   String getRandomMnemonic() {
     String randomMnemonic = '';
-    if (isLocal == true) {
-      randomMnemonic =
-          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-      return randomMnemonic;
-    }
     randomMnemonic = bip39.generateMnemonic();
     return randomMnemonic;
   }
