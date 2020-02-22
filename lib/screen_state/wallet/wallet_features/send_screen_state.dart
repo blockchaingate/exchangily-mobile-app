@@ -146,6 +146,8 @@ class SendScreenState extends BaseState {
         errorMessage = res["errMsg"];
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
+          receiverWalletAddressTextController.text = '';
+          sendAmountTextController.text = '';
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
               tickerName: tickerName,
