@@ -135,9 +135,9 @@ class WalletDashboardScreen extends StatelessWidget {
                                     children: <Widget>[
                                       Container(
                                         padding: EdgeInsets.all(8),
-                                        decoration: new BoxDecoration(
+                                        decoration: BoxDecoration(
                                             borderRadius:
-                                                new BorderRadius.circular(30)),
+                                                BorderRadius.circular(30)),
                                         child: Image.asset(
                                           'assets/images/wallet-page/dollar-sign.png',
                                           width: 40,
@@ -158,7 +158,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                                     .totalBalance,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline
+                                                    .headline4
                                                     .copyWith(
                                                         fontWeight:
                                                             FontWeight.bold)),
@@ -173,7 +173,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                                       '${model.totalUsdBalance.toStringAsFixed(2)} USD',
                                                       style: Theme.of(context)
                                                           .textTheme
-                                                          .headline,
+                                                          .subtitle1,
                                                     ),
                                                   )
                                                 : Text(
@@ -181,7 +181,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                                     textAlign: TextAlign.center,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline),
+                                                        .subtitle1),
                                           ],
                                         ),
                                       ),
@@ -241,7 +241,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                       .hideSmallAmountAssets,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .display2
+                                      .headline5
                                       .copyWith(wordSpacing: 1.25),
                                 ),
                               )
@@ -251,9 +251,9 @@ class WalletDashboardScreen extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      decoration: new BoxDecoration(
+                      decoration: BoxDecoration(
                           color: globals.primaryColor,
-                          borderRadius: new BorderRadius.circular(50)),
+                          borderRadius: BorderRadius.circular(50)),
                       child: Icon(
                         Icons.add,
                         color: globals.white,
@@ -288,7 +288,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                   '${model.walletInfoCopy[index].tickerName.toLowerCase()}',
                                   model.walletInfoCopy[index].availableBalance,
                                   model.walletInfoCopy[index].lockedBalance,
-                                  model.walletInfoCopy[index].assetsInExchange,
+                                  model.walletInfoCopy[index].inExchange,
                                   model.walletInfoCopy[index].usdValue,
                                   index,
                                   model.walletInfoCopy,
@@ -310,7 +310,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                   '$name',
                                   model.walletInfo[index].availableBalance,
                                   model.walletInfo[index].lockedBalance,
-                                  model.walletInfo[index].assetsInExchange,
+                                  model.walletInfo[index].inExchange,
                                   model.walletInfo[index].usdValue,
                                   index,
                                   walletInfo,
@@ -363,13 +363,13 @@ class WalletDashboardScreen extends StatelessWidget {
                 Container(
                     margin: EdgeInsets.only(right: 12),
                     padding: EdgeInsets.all(8),
-                    decoration: new BoxDecoration(
+                    decoration: BoxDecoration(
                         color: globals.walletCardColor,
-                        borderRadius: new BorderRadius.circular(50),
+                        borderRadius: BorderRadius.circular(50),
                         boxShadow: [
-                          new BoxShadow(
+                          BoxShadow(
                               color: globals.fabLogoColor,
-                              offset: new Offset(1.0, 5.0),
+                              offset: Offset(1.0, 5.0),
                               blurRadius: 10.0,
                               spreadRadius: 1.0),
                         ]),
@@ -378,81 +378,120 @@ class WalletDashboardScreen extends StatelessWidget {
                     width: 40,
                     height: 40),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       '$tickerName'.toUpperCase(),
-                      style: Theme.of(context).textTheme.display1,
+                      style: Theme.of(context).textTheme.headline2,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text(AppLocalizations.of(context).available,
-                          style: Theme.of(context).textTheme.display2),
+                    // Available Row
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: Text(AppLocalizations.of(context).available,
+                              style: Theme.of(context).textTheme.bodyText1),
+                        ),
+                        model.state == ViewState.Busy
+                            ? SizedBox(
+                                child: Shimmer.fromColors(
+                                baseColor: globals.red,
+                                highlightColor: globals.white,
+                                child: Text(
+                                  '$available',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
+                              ))
+                            : Text('$available',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyText2),
+                      ],
                     ),
-                    model.state == ViewState.Busy
-                        ? SizedBox(
-                            child: Shimmer.fromColors(
-                            baseColor: globals.red,
-                            highlightColor: globals.white,
-                            child: Text(
-                              '$available',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ))
-                        : Text('$available',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: globals.red)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: Text(AppLocalizations.of(context).locked,
-                          style: Theme.of(context).textTheme.display2),
+                    // Locked Row
+                    Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: Text(AppLocalizations.of(context).locked,
+                              style: Theme.of(context).textTheme.bodyText1),
+                        ),
+                        model.state == ViewState.Busy
+                            ? SizedBox(
+                                child: Shimmer.fromColors(
+                                baseColor: globals.red,
+                                highlightColor: globals.white,
+                                child: Text('$locked',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2),
+                              ))
+                            : Text('$locked',
+                                style: Theme.of(context).textTheme.bodyText2)
+                      ],
                     ),
-                    model.state == ViewState.Busy
-                        ? SizedBox(
-                            child: Shimmer.fromColors(
-                            baseColor: globals.red,
-                            highlightColor: globals.white,
-                            child: Text(
-                              '$locked',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 15.0,
-                              ),
-                            ),
-                          ))
-                        : Text('$locked',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: globals.red))
+                    Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //    crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          // width: 70,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 5.0),
+                            child: Text(AppLocalizations.of(context).inExchange,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.bodyText1),
+                          ),
+                        ),
+                        model.state == ViewState.Busy
+                            ? SizedBox(
+                                child: Shimmer.fromColors(
+                                baseColor: globals.primaryColor,
+                                highlightColor: globals.white,
+                                child: Text(
+                                  '$assetsInExchange',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ))
+                            : Text('$assetsInExchange',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: globals.primaryColor)),
+                      ],
+                    ),
                   ],
                 ),
+                // Asset in exchange Column
                 Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 0),
-                        child: Text(
-                            AppLocalizations.of(context).assetInExchange,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.display2),
-                      ),
-                      model.state == ViewState.Busy
-                          ? SizedBox(
-                              child: Shimmer.fromColors(
-                              baseColor: globals.primaryColor,
-                              highlightColor: globals.white,
-                              child: Text(
-                                '$assetsInExchange',
-                                textAlign: TextAlign.center,
-                              ),
-                            ))
-                          : Text('$assetsInExchange',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: globals.primaryColor)),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   crossAxisAlignment: CrossAxisAlignment.center,
+                      //   children: <Widget>[
+                      //     Container(
+                      //       width: 70,
+                      //       child: Text(
+                      //           AppLocalizations.of(context).assetInExchange,
+                      //           textAlign: TextAlign.center,
+                      //           style: Theme.of(context).textTheme.bodyText1),
+                      //     ),
+                      //     model.state == ViewState.Busy
+                      //         ? SizedBox(
+                      //             child: Shimmer.fromColors(
+                      //             baseColor: globals.primaryColor,
+                      //             highlightColor: globals.white,
+                      //             child: Text(
+                      //               '$assetsInExchange',
+                      //               textAlign: TextAlign.center,
+                      //             ),
+                      //           ))
+                      //         : Text('$assetsInExchange',
+                      //             textAlign: TextAlign.center,
+                      //             style:
+                      //                 TextStyle(color: globals.primaryColor)),
+                      //   ],
+                      // ),
+
+                      // Deposit and withdraw Row
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -480,29 +519,33 @@ class WalletDashboardScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+                // Value USD Column
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Text(
-                            '${AppLocalizations.of(context).value}(USD)',
-                            style: Theme.of(context).textTheme.display2),
-                      ),
-                      model.state == ViewState.Busy
-                          ? Shimmer.fromColors(
-                              baseColor: globals.green,
-                              highlightColor: globals.white,
-                              child: Text(
-                                '${usdValue.toStringAsFixed(2)}',
-                                style: TextStyle(color: globals.green),
-                              ),
-                            )
-                          : Text('${usdValue.toStringAsFixed(2)}',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: globals.green))
-                    ],
+                  child: Container(
+                    width: 100,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5.0),
+                          child: Text(
+                              'USD ${AppLocalizations.of(context).value}',
+                              style: Theme.of(context).textTheme.headline5),
+                        ),
+                        model.state == ViewState.Busy
+                            ? Shimmer.fromColors(
+                                baseColor: globals.green,
+                                highlightColor: globals.white,
+                                child: Text(
+                                  '${usdValue.toStringAsFixed(2)}',
+                                  style: TextStyle(color: globals.green),
+                                ),
+                              )
+                            : Text('${usdValue.toStringAsFixed(2)}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: globals.green))
+                      ],
+                    ),
                   ),
                 ),
               ],

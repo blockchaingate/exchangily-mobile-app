@@ -55,7 +55,10 @@ class WalletSetupScreen extends StatelessWidget {
               Container(
                   child: Text(
                 AppLocalizations.of(context).welcomeText,
-                style: Theme.of(context).textTheme.display2,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline4
+                    .copyWith(fontWeight: FontWeight.normal),
               )),
               // Middle Graphics Container
               Container(
@@ -72,7 +75,7 @@ class WalletSetupScreen extends StatelessWidget {
                       child: Center(
                         child: Text(
                           '${AppLocalizations.of(context).checkingExistingWallet}...',
-                          style: Theme.of(context).textTheme.headline,
+                          style: Theme.of(context).textTheme.bodyText1,
                         ),
                       ),
                     )
@@ -83,7 +86,7 @@ class WalletSetupScreen extends StatelessWidget {
                           child: Center(
                             child: Text(
                               '${AppLocalizations.of(context).restoringWallet}...',
-                              style: Theme.of(context).textTheme.headline,
+                              style: Theme.of(context).textTheme.bodyText1,
                             ),
                           ),
                         )
@@ -101,7 +104,7 @@ class WalletSetupScreen extends StatelessWidget {
                                             .createWallet,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .display3),
+                                            .headline4),
                                     onPressed: () {
                                       Navigator.of(context)
                                           .pushNamed('/backupMnemonic');
@@ -114,11 +117,13 @@ class WalletSetupScreen extends StatelessWidget {
                                   elevation: 5,
                                   shape: StadiumBorder(
                                       side: BorderSide(
-                                          color: globals.white, width: 1)),
+                                          color: globals.primaryColor,
+                                          width: 2)),
                                   color: globals.secondaryColor,
                                   child: Text(
                                     AppLocalizations.of(context).importWallet,
-                                    style: Theme.of(context).textTheme.display3,
+                                    style:
+                                        Theme.of(context).textTheme.headline4,
                                   ),
                                   onPressed: () {
                                     Navigator.of(context).pushNamed(

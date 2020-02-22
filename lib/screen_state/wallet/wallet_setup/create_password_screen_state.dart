@@ -109,6 +109,7 @@ class CreatePasswordScreenState extends BaseState {
   }
 
   bool validatePassword(pass, confirmPass) {
+    setState(ViewState.Busy);
     RegExp regex = new RegExp(pattern);
 
     if (pass.isEmpty) {
@@ -122,6 +123,7 @@ class CreatePasswordScreenState extends BaseState {
           Icons.cancel,
           Colors.red,
           context);
+      setState(ViewState.Idle);
       return false;
     } else {
       if (!regex.hasMatch(pass)) {
@@ -135,6 +137,7 @@ class CreatePasswordScreenState extends BaseState {
             Icons.cancel,
             Colors.red,
             context);
+        setState(ViewState.Idle);
         return false;
       } else if (pass != confirmPass) {
         password = '';
@@ -147,12 +150,14 @@ class CreatePasswordScreenState extends BaseState {
             Icons.cancel,
             Colors.red,
             context);
+        setState(ViewState.Idle);
         return false;
       } else {
         password = '';
         confirmPassword = '';
         _vaultService.secureMnemonic(context, pass, randomMnemonicFromRoute);
         log.w('In else');
+        setState(ViewState.Idle);
         return true;
       }
     }

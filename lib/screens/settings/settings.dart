@@ -55,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
                         child: Text(
                           AppLocalizations.of(context).deleteWallet,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.display3,
+                          style: Theme.of(context).textTheme.headline4,
                         ),
                       ),
                     ),
@@ -78,7 +78,7 @@ class SettingsScreen extends StatelessWidget {
                               ? AppLocalizations.of(context).displayMnemonic
                               : AppLocalizations.of(context).hideMnemonic,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.display3,
+                          style: Theme.of(context).textTheme.headline4,
                         ),
                       ),
                     ),
@@ -94,7 +94,7 @@ class SettingsScreen extends StatelessWidget {
                     child: Center(
                         child: Text(
                       model.mnemonic,
-                      style: Theme.of(context).textTheme.headline,
+                      style: Theme.of(context).textTheme.bodyText1,
                     )),
                   ),
                 ),
@@ -109,7 +109,7 @@ class SettingsScreen extends StatelessWidget {
                         hint: Text(
                           AppLocalizations.of(context).changeWalletLanguage,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.display3,
+                          style: Theme.of(context).textTheme.headline4,
                         ),
                         value: model.selectedLanguage,
                         onChanged: (newValue) {
@@ -120,7 +120,7 @@ class SettingsScreen extends StatelessWidget {
                             child: Center(
                               child: Text(language,
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.display3),
+                                  style: Theme.of(context).textTheme.headline4),
                             ),
                             value: language,
                           );

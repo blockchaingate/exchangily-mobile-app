@@ -64,7 +64,7 @@ class _WithdrawState extends State<Withdraw> {
   }
 
   checkPass(double amount, context) async {
-    if (amount == null || amount > widget.walletInfo.assetsInExchange) {
+    if (amount == null || amount > widget.walletInfo.inExchange) {
       walletService.showInfoFlushbar(
           AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
@@ -145,7 +145,8 @@ class _WithdrawState extends State<Withdraw> {
 
     var kanbanPriceBig = BigInt.from(kanbanPrice);
     var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
-    var kanbanTransFeeDouble = bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
+    var kanbanTransFeeDouble =
+        bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
 
     setState(() {
       kanbanTransFee = kanbanTransFeeDouble;
@@ -154,7 +155,7 @@ class _WithdrawState extends State<Withdraw> {
 
   @override
   Widget build(BuildContext context) {
-    double bal = widget.walletInfo.assetsInExchange;
+    double bal = widget.walletInfo.inExchange;
     String coinName = widget.walletInfo.tickerName;
 
     return Scaffold(
@@ -217,7 +218,7 @@ class _WithdrawState extends State<Withdraw> {
                           '$minimumAmount',
                           style: Theme.of(context)
                               .textTheme
-                              .display3
+                              .headline5
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
                       )
@@ -233,7 +234,7 @@ class _WithdrawState extends State<Withdraw> {
                         AppLocalizations.of(context).kanbanGasFee,
                         style: Theme.of(context)
                             .textTheme
-                            .display3
+                            .headline5
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                       Padding(
@@ -244,7 +245,7 @@ class _WithdrawState extends State<Withdraw> {
                           '$kanbanTransFee',
                           style: Theme.of(context)
                               .textTheme
-                              .display3
+                              .headline5
                               .copyWith(fontWeight: FontWeight.bold),
                         ),
                       )
@@ -258,7 +259,7 @@ class _WithdrawState extends State<Withdraw> {
                       AppLocalizations.of(context).advance,
                       style: Theme.of(context)
                           .textTheme
-                          .display3
+                          .headline5
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                     Switch(
@@ -284,7 +285,7 @@ class _WithdrawState extends State<Withdraw> {
                               AppLocalizations.of(context).kanbanGasPrice,
                               style: Theme.of(context)
                                   .textTheme
-                                  .display3
+                                  .headline5
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
                             Expanded(
@@ -307,7 +308,7 @@ class _WithdrawState extends State<Withdraw> {
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .display2
+                                              .headline5
                                               .copyWith(fontSize: 20)),
                                       style: TextStyle(
                                           color: globals.grey, fontSize: 24),
@@ -320,7 +321,7 @@ class _WithdrawState extends State<Withdraw> {
                               AppLocalizations.of(context).kanbanGasLimit,
                               style: Theme.of(context)
                                   .textTheme
-                                  .display3
+                                  .headline5
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
                             Expanded(
@@ -343,7 +344,7 @@ class _WithdrawState extends State<Withdraw> {
                                           hintText: '0.00000',
                                           hintStyle: Theme.of(context)
                                               .textTheme
-                                              .display2
+                                              .headline4
                                               .copyWith(fontSize: 20)),
                                       style: TextStyle(
                                           color: globals.grey, fontSize: 24),
@@ -357,8 +358,8 @@ class _WithdrawState extends State<Withdraw> {
                 Row(
                   children: <Widget>[
                     Text(
-                      AppLocalizations.of(context).assetsInExchange + ' $bal',
-                      style: Theme.of(context).textTheme.headline,
+                      AppLocalizations.of(context).inExchange + ' $bal',
+                      style: Theme.of(context).textTheme.headline5,
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -366,7 +367,7 @@ class _WithdrawState extends State<Withdraw> {
                       ),
                       child: Text(
                         '$coinName'.toUpperCase(),
-                        style: Theme.of(context).textTheme.headline,
+                        style: Theme.of(context).textTheme.headline5,
                       ),
                     )
                   ],

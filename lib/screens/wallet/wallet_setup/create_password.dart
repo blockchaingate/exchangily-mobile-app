@@ -67,7 +67,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context).setPasswordConditions,
-                      style: Theme.of(context).textTheme.headline,
+                      style: Theme.of(context).textTheme.bodyText1,
                       textAlign: TextAlign.left,
                     ),
                     UIHelper.verticalSpaceSmall,
@@ -92,7 +92,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                         child: Text(model.errorMessage,
                             style: Theme.of(context)
                                 .textTheme
-                                .display2
+                                .headline5
                                 .copyWith(color: globals.red))),
                     UIHelper.verticalSpaceLarge,
                     UIHelper.verticalSpaceLarge,
@@ -157,8 +157,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                         child: Icon(Icons.clear, color: globals.grey)),
             labelText: AppLocalizations.of(context).enterPassword,
             prefixIcon: Icon(Icons.lock_outline, color: Colors.white),
-            labelStyle: Theme.of(context).textTheme.headline,
-            helperStyle: Theme.of(context).textTheme.display2));
+            labelStyle: Theme.of(context).textTheme.headline5,
+            helperStyle: Theme.of(context).textTheme.headline5));
   }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -191,8 +191,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     child: Icon(Icons.clear, color: globals.grey)),
             labelText: AppLocalizations.of(context).confirmPassword,
             prefixIcon: Icon(Icons.lock, color: Colors.white),
-            labelStyle: Theme.of(context).textTheme.headline,
-            helperStyle: Theme.of(context).textTheme.display2));
+            labelStyle: Theme.of(context).textTheme.headline5,
+            helperStyle: Theme.of(context).textTheme.headline5));
   }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------

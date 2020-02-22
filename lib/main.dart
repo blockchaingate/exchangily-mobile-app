@@ -81,20 +81,28 @@ class MyApp extends StatelessWidget {
         canvasColor: globals.secondaryColor,
         primaryColor: globals.primaryColor,
         textTheme: TextTheme(
-            button: TextStyle(
-                fontSize: 20, letterSpacing: 1.15, color: globals.white),
-            headline: TextStyle(fontSize: 15, color: globals.white),
-            display1: TextStyle(
-                fontSize: 22,
-                color: globals.white,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.25),
-            display2: TextStyle(fontSize: 14, color: globals.grey),
-            display3: TextStyle(fontSize: 18, color: globals.white),
-            display4: TextStyle(
-                fontSize: 16,
-                color: globals.white,
-                fontWeight: FontWeight.bold)),
+          button: TextStyle(
+              fontSize: 20, letterSpacing: 1.15, color: globals.white),
+          headline1: TextStyle(
+              fontSize: 22,
+              color: globals.white,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.25),
+          headline2: TextStyle(
+              fontSize: 20, color: globals.white, fontWeight: FontWeight.bold),
+          headline3: TextStyle(fontSize: 18, color: globals.white),
+          headline4: TextStyle(
+              fontSize: 16, color: globals.white, fontWeight: FontWeight.bold),
+          subtitle1: TextStyle(fontSize: 15, color: globals.white),
+          headline5: TextStyle(fontSize: 14, color: globals.white),
+          subtitle2: TextStyle(fontSize: 14, color: globals.grey),
+          bodyText1: TextStyle(
+              fontSize: 13,
+              color: globals.white38,
+              fontWeight: FontWeight.normal),
+          bodyText2: TextStyle(fontSize: 13, color: globals.red),
+          headline6: TextStyle(fontSize: 12, color: globals.white),
+        ),
       ),
       // Removed the home and scaffold because initial route has set
       initialRoute: '/',
