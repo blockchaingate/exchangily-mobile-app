@@ -174,8 +174,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                   labelText: AppLocalizations.of(context)
                                       .receiverWalletAddress,
                                   labelStyle:
-                                      Theme.of(context).textTheme.display2),
-                              style: Theme.of(context).textTheme.display2,
+                                      Theme.of(context).textTheme.headline5),
+                              style: Theme.of(context).textTheme.headline5,
                             ),
                           )),
                       RaisedButton(
@@ -189,7 +189,8 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                               Padding(
                                   padding: EdgeInsets.only(right: 5),
                                   child: Icon(Icons.camera_enhance)),
-                              Text(AppLocalizations.of(context).scanBarCode)
+                              Text(AppLocalizations.of(context).scanBarCode,
+                                  style: Theme.of(context).textTheme.headline3)
                             ],
                           ))
                     ],

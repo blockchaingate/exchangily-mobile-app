@@ -4,6 +4,7 @@ const bool isProduction = false;
 const bool isLocal = true;
 
 Map devConfig = {
+  "decimal": {'priceDecimal': 6, 'volDecimal': 4},
   "chains": {
     "BTC": {"network": testnet, "satoshisPerBytes": 50, "bytesPerInput": 152},
     "ETH": {

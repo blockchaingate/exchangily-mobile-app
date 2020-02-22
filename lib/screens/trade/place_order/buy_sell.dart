@@ -153,9 +153,10 @@ class BuySell extends StatelessWidget {
                                   decoration: InputDecoration(
                                       labelText:
                                           AppLocalizations.of(context).price,
-                                      labelStyle:
-                                          Theme.of(context).textTheme.display2),
-                                  style: Theme.of(context).textTheme.display2,
+                                      labelStyle: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                  style: Theme.of(context).textTheme.headline4,
                                 ),
                               ),
                               Padding(
@@ -169,9 +170,10 @@ class BuySell extends StatelessWidget {
                                   decoration: InputDecoration(
                                       labelText:
                                           AppLocalizations.of(context).quantity,
-                                      labelStyle:
-                                          Theme.of(context).textTheme.display2),
-                                  style: Theme.of(context).textTheme.display2,
+                                      labelStyle: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                  style: Theme.of(context).textTheme.headline5,
                                 ),
                               ),
                               Slider(
@@ -269,7 +271,7 @@ class BuySell extends StatelessWidget {
                                           // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
                                           model.bidOrAsk == true
                                               ? Text(
-                                                  "${model.baseCoinWalletData.assetsInExchange}" +
+                                                  "${model.baseCoinWalletData.inExchange}" +
                                                       " " +
                                                       model.baseCoinName,
                                                   style: TextStyle(
@@ -279,7 +281,7 @@ class BuySell extends StatelessWidget {
                                                           FontWeight.bold,
                                                       fontSize: 15.0))
                                               : Text(
-                                                  "${model.targetCoinWalletData.assetsInExchange}" +
+                                                  "${model.targetCoinWalletData.inExchange}" +
                                                       " " +
                                                       model.targetCoinName,
                                                   style: TextStyle(
@@ -377,7 +379,7 @@ class BuySell extends StatelessWidget {
                                                             hintStyle: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .display2
+                                                                .headline5
                                                                 .copyWith(
                                                                     fontSize:
                                                                         20)),
@@ -424,7 +426,7 @@ class BuySell extends StatelessWidget {
                                                             hintStyle: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .display2
+                                                                .headline5
                                                                 .copyWith(
                                                                     fontSize:
                                                                         20)),

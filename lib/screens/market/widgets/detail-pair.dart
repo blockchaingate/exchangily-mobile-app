@@ -14,6 +14,9 @@ class DetailPair extends StatelessWidget {
       this.pair, this.volume, this.price, this.change, this.low, this.high);
   @override
   Widget build(BuildContext context) {
+    var coinsArray = pair.split("/");
+
+    String targetCoinName = coinsArray[0];
     return GestureDetector(
         onTap: () {
           Navigator.push(
@@ -23,62 +26,67 @@ class DetailPair extends StatelessWidget {
         },
         child: Container(
             color: globals.walletCardColor,
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            margin: EdgeInsets.only(top: 5),
             child: Container(
-              padding: EdgeInsets.fromLTRB(5, 8, 5, 8),
-              margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              //    padding: EdgeInsets.symmetric(vertical: 5),
+              // margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Text(pair,
+                  Container(
+                    width: 100,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(targetCoinName,
                             style:
                                 TextStyle(color: Colors.white, fontSize: 18.0)),
-                      ),
-                      Text(
-                          AppLocalizations.of(context).volume +
-                              ": " +
-                              volume.toString(),
-                          style: TextStyle(color: globals.red, fontSize: 16.0))
-                    ],
+                        Text(
+                            AppLocalizations.of(context).volume +
+                                ": " +
+                                volume.toStringAsFixed(2),
+                            style:
+                                TextStyle(color: globals.red, fontSize: 14.0))
+                      ],
+                    ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                          AppLocalizations.of(context).price +
-                              ": " +
-                              price.toString(),
-                          style:
-                              TextStyle(color: Colors.white38, fontSize: 16.0)),
-                      Text(
-                          AppLocalizations.of(context).high +
-                              ": " +
-                              high.toString(),
-                          style:
-                              TextStyle(color: Colors.white38, fontSize: 16.0)),
-                      Text(
-                          AppLocalizations.of(context).low +
-                              ": " +
-                              low.toString(),
-                          style:
-                              TextStyle(color: Colors.white38, fontSize: 16.0)),
-                    ],
-                  ),
+                  // Price High Low Column
                   Container(
-                      width: 57,
+                    width: 100,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                            AppLocalizations.of(context).price +
+                                ": " +
+                                price.toString(),
+                            style: Theme.of(context).textTheme.bodyText1),
+                        Text(
+                            AppLocalizations.of(context).high +
+                                ": " +
+                                high.toString(),
+                            style: Theme.of(context).textTheme.bodyText1),
+                        Text(
+                            AppLocalizations.of(context).low +
+                                ": " +
+                                low.toString(),
+                            style: Theme.of(context).textTheme.bodyText1),
+                      ],
+                    ),
+                  ),
+                  // Change Container
+                  Container(
+                      width: 70,
                       padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
                       color:
                           change >= 0 ? Color(0xFF264559) : Color(0xFF472a4a),
                       child: Text(
                           change >= 0
-                              ? "+" + change.toString()
-                              : change.toString(),
+                              ? "+" + change.toStringAsFixed(2)
+                              : change.toStringAsFixed(2),
+                          textAlign: TextAlign.center,
                           style: TextStyle(
                               color:
                                   Color(change >= 0 ? 0XFF0da88b : 0XFFe2103c),

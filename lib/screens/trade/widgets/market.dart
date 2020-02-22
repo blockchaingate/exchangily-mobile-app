@@ -156,26 +156,26 @@ class TrademarketState extends State<Trademarket> {
                         Container(
                             width: MediaQuery.of(context).size.width * 0.45,
                             margin: EdgeInsets.only(bottom: 5.0),
-                            color: Color(0xFF264559),
+                            color: Color(0xFF264559).withAlpha(75),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
                                 // Quantity Container
                                 Container(
-                                    padding:
-                                        EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                    child: Text(item.orderQuantity.toString(),
+                                    width: 100,
+                                    child: Text(
+                                        item.orderQuantity.toStringAsFixed(2),
+                                        textAlign: TextAlign.start,
                                         style: TextStyle(
                                             fontSize: 14,
                                             color: Color(0xFF5e617f)))),
                                 // Price Container
                                 Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.2,
+                                    width: 50,
                                     padding:
-                                        EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                    child: Text(item.price.toString(),
-                                        textAlign: TextAlign.center,
+                                        EdgeInsets.symmetric(vertical: 7.0),
+                                    child: Text(item.price.toStringAsFixed(3),
+                                        textAlign: TextAlign.end,
                                         style: TextStyle(
                                             fontSize: 14,
                                             color: globals.green))),
@@ -205,37 +205,37 @@ class TrademarketState extends State<Trademarket> {
                         ),
 
                         // Sell Orders For Loop
-                        for (var item in sell)
+                        for (var item in sell.reversed)
                           Container(
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  top: BorderSide(
-                                      width: 0.5, color: Color(0xFF4c5684)),
-                                  bottom: BorderSide(
-                                      width: 0.15, color: Color(0xFF4c5684)),
-                                ),
-                                color: Color(0xFF472a4a),
-                              ),
+                              // decoration: const BoxDecoration(
+                              //   border: Border(
+                              //     top: BorderSide(
+                              //         width: 0.5, color: Color(0xFF4c5684)),
+                              //     bottom: BorderSide(
+                              //         width: 0.15, color: Color(0xFF4c5684)),
+                              //   ),
+                              //   //  color: Color(0xFF472a4a),
+                              // ),
                               width: MediaQuery.of(context).size.width * 0.45,
                               margin: EdgeInsets.only(bottom: 5.0),
+                              color: Color(0xFF472a4a).withAlpha(75),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: <Widget>[
                                   Container(
-                                      alignment: Alignment.center,
-                                      padding:
-                                          EdgeInsets.fromLTRB(15, 10, 15, 10),
-                                      width: MediaQuery.of(context).size.width *
-                                          0.2,
-                                      child: Text(item.price.toString(),
+                                      width: 100,
+                                      child: Text(item.price.toStringAsFixed(3),
+                                          textAlign: TextAlign.start,
                                           style: TextStyle(
                                               fontSize: 14,
                                               color: globals.sellPrice))),
                                   Container(
+                                      width: 50,
                                       padding:
-                                          EdgeInsets.fromLTRB(15, 10, 15, 10),
+                                          EdgeInsets.symmetric(vertical: 7.0),
                                       child: Text(item.orderQuantity.toString(),
+                                          textAlign: TextAlign.start,
                                           style: TextStyle(
                                               fontSize: 14,
                                               color: Color(0xFF5e617f))))
@@ -252,9 +252,9 @@ class TrademarketState extends State<Trademarket> {
       Visibility(
           visible: tabName == 'trades',
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+            margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -273,22 +273,26 @@ class TrademarketState extends State<Trademarket> {
                       padding: EdgeInsets.all(5.0),
                       color: Color(item.bidOrAsk ? 0xFF264559 : 0xFF472a4a),
                       margin:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
-                              child: Text(item.price.toString(),
+                              width: 100,
+                              child: Text(item.price.toStringAsFixed(5),
+                                  textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 14, color: globals.white))),
                           Container(
+                              width: 100,
                               child: Text(item.amount.toString(),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       fontSize: 14, color: Color(0xFF5e617f)))),
                           Container(
+                              width: 100,
                               child: Text(timeFormatted(item.time),
-                                  textAlign: TextAlign.end,
+                                  textAlign: TextAlign.start,
                                   style: TextStyle(
                                       fontSize: 14, color: Color(0xFF5e617f)))),
                         ],

@@ -53,10 +53,10 @@ class _DialogManagerState extends State<DialogManager> {
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
             backgroundColor: globals.walletCardColor,
-            descStyle: Theme.of(context).textTheme.display2,
+            descStyle: Theme.of(context).textTheme.bodyText1,
             titleStyle: Theme.of(context)
                 .textTheme
-                .display3
+                .headline3
                 .copyWith(fontWeight: FontWeight.bold)),
         context: context,
         title: request.title,
@@ -75,7 +75,7 @@ class _DialogManagerState extends State<DialogManager> {
               decoration: InputDecoration(
                 labelStyle: Theme.of(context)
                     .textTheme
-                    .display2
+                    .bodyText1
                     .copyWith(color: globals.white),
                 icon: Icon(
                   Icons.security,

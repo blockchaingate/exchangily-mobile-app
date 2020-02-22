@@ -474,10 +474,9 @@ class BuySellScreenState extends BaseState {
   sliderOnchange(newValue) {
     setState(ViewState.Busy);
     sliderValue = newValue;
-    var targetCoinbalance =
-        targetCoinWalletData.assetsInExchange; // usd bal for buy
+    var targetCoinbalance = targetCoinWalletData.inExchange; // usd bal for buy
     var baseCoinbalance = baseCoinWalletData //coin(asset) bal for sell
-        .assetsInExchange;
+        .inExchange;
     if (price != null &&
         quantity != null &&
         !price.isNegative &&

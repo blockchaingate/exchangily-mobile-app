@@ -53,7 +53,7 @@ class TradePriceState extends State<TradePrice> {
                     padding: EdgeInsets.fromLTRB(10.0, 10, 30.0, 10),
                     child: Text(
                         (currentPrice != null)
-                            ? currentPrice.price.toString()
+                            ? currentPrice.price.toStringAsFixed(4)
                             : '',
                         style: TextStyle(
                             fontSize: 50, color: globals.priceColor))),
@@ -62,11 +62,11 @@ class TradePriceState extends State<TradePrice> {
                         ((currentPrice != null)
                                 ? (currentPrice.price * currentUsdPrice)
                                 : 0)
-                            .toString(),
-                    style: Theme.of(context).textTheme.display4)
+                            .toStringAsFixed(6),
+                    style: Theme.of(context).textTheme.headline2)
               ],
             ),
-            // Change Value Row
+            // Change Price Value Row
             Container(
               padding: EdgeInsets.all(8.0),
               color: globals.walletCardColor,
@@ -75,24 +75,17 @@ class TradePriceState extends State<TradePrice> {
                   children: <Widget>[
                     Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(AppLocalizations.of(context).priceChange,
-                            style: Theme.of(context)
-                                .textTheme
-                                .display2
-                                .copyWith(color: globals.grey, fontSize: 18)),
-                        UIHelper.horizontalSpaceSmall,
+                            style: Theme.of(context).textTheme.headline4),
                         Text(currentPrice?.changeValue.toString(),
                             style: Theme.of(context)
                                 .textTheme
-                                .display2
+                                .headline3
                                 .copyWith(color: globals.yellow)),
                         Text(currentPrice?.change.toString() + "%",
-                            style: Theme.of(context)
-                                .textTheme
-                                .display2
-                                .copyWith(color: globals.yellow)),
+                            style: Theme.of(context).textTheme.headline4),
                       ],
                     ),
                     // Low Volume High Row
@@ -104,19 +97,17 @@ class TradePriceState extends State<TradePrice> {
                             AppLocalizations.of(context).low +
                                 " " +
                                 currentPrice?.low.toString(),
-                            style: TextStyle(
-                                fontSize: 15, color: Color(0xFF5e617f))),
+                            style: Theme.of(context).textTheme.subtitle2),
                         Text(
                             AppLocalizations.of(context).volume +
                                 " " +
                                 currentPrice?.volume.toString(),
-                            style: TextStyle(fontSize: 15, color: globals.red)),
+                            style: Theme.of(context).textTheme.subtitle2),
                         Text(
                             AppLocalizations.of(context).high +
                                 " " +
                                 currentPrice?.high.toString(),
-                            style: TextStyle(
-                                fontSize: 15, color: Color(0xFF5e617f)))
+                            style: Theme.of(context).textTheme.subtitle2)
                       ],
                     ),
                   ]),
