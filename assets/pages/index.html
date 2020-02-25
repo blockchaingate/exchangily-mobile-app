@@ -6014,7 +6014,7 @@
 
         }
 
-        function showChart(pairLeft, pairRight, interval) {
+        function showChart(pairLeft, pairRight, interval, locale) {
             const chartPrice = LightweightCharts.createChart(document.getElementById('price'), {
                 width: window.innerWidth,
                 height: window.innerHeight,
@@ -6036,6 +6036,9 @@
                     horzLines: {
                         color: 'rgba(42, 46, 57, 0.6)',
                     },
+                },
+                localization: {
+                    locale: locale,
                 },
             });
 
@@ -6091,7 +6094,7 @@
     </script>
 </head>
 
-<body onload="showChart('BTC', 'USDT', '30m')" style="margin:0">
+<body onload="showChart('BTC', 'USDT', '30m', 'en-US')" style="margin:0">
 <div id="price">
 
 </div>

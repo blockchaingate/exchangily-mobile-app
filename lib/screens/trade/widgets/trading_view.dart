@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // realtime: https://jsfiddle.net/TradingView/yozeu6k1/
 
@@ -48,11 +49,23 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
   _loadHtmlFromAssets() async {
     //var pair = widget.pair.replaceAll(RegExp('/'), '');
     // pair = 'index';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var lang = prefs.getString('lang');
+    print('lang=' + lang);
+    if (lang == 'en') {
+      lang = 'en-US';
+    } else
+    if (lang == 'zh') {
+      lang = 'zh-CN';
+    }
+
+    print('lang==' + lang);
     var pairArray = widget.pair.split('/');
     String fileText = await rootBundle.loadString('assets/pages/index.html');
     fileText = fileText
         .replaceAll('BTC', pairArray[0])
         .replaceAll('USDT', pairArray[1])
+        .replaceAll('en_US', lang)
         .replaceAll('https://kanbantest.fabcoinapi.com/',
             environment['endpoints']['kanban'])
         .replaceAll(
