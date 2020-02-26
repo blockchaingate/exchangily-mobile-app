@@ -97,7 +97,7 @@ class WalletDashboardScreenState extends BaseState {
           .then((balance) async {
         walletBal = balance['balance'];
         walletLockedBal = balance['lockbalance'];
-      }).timeout(Duration(seconds: 25), onTimeout: () {
+      }).timeout(Duration(seconds: 25), onTimeout: () async {
         setState(ViewState.Idle);
         walletService.showInfoFlushbar(
             'Timeout',
@@ -105,9 +105,11 @@ class WalletDashboardScreenState extends BaseState {
             Icons.cancel,
             Colors.red,
             context);
+        await retrieveWallets();
         log.e('Timeout');
-      }).catchError((error) {
+      }).catchError((error) async {
         setState(ViewState.Idle);
+        await retrieveWallets();
         log.e('Something went wrong  - $error');
       });
       double marketPrice = await walletService.getCoinMarketPrice(name);
@@ -153,7 +155,7 @@ class WalletDashboardScreenState extends BaseState {
         }
       }
     }
-    // walletInfoCopy = walletInfo.map((element) => element).toList();
+    walletInfoCopy = walletInfo.map((element) => element).toList();
     setState(ViewState.Idle);
   }
 

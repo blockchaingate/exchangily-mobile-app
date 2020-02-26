@@ -348,22 +348,6 @@ class WalletService {
     return coinUsdBalance;
   }
 
-  // Calculate Total Usd Balance
-
-  // calculateTotalUsdBalance() {
-  //   sum = 0;
-  //   if (totalUsdBalance.isNotEmpty) {
-  //     log.w('Total usd balance list count ${totalUsdBalance.length}');
-  //     for (var i = 0; i < totalUsdBalance.length; i++) {
-  //       sum = sum + totalUsdBalance[i];
-  //     }
-  //     log.w('Sum $sum');
-  //     return sum;
-  //   }
-  //   log.w('totalUsdBalance List empty');
-  //   return 0.0;
-  // }
-
 // Add Gas
   Future<int> addGas() async {
     return 0;

@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -43,29 +44,33 @@ class WalletSetupScreen extends StatelessWidget {
           alignment: Alignment.center,
           color: globals.walletCardColor,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.start,
+            //  crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               // Logo Container
+              UIHelper.horizontalSpaceLarge,
               Container(
                 height: 50,
                 child: Image.asset('assets/images/start-page/logo.png'),
               ),
               Container(
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
-                AppLocalizations.of(context).welcomeText,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline4
-                    .copyWith(fontWeight: FontWeight.normal),
-              )),
+                    AppLocalizations.of(context).welcomeText,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(fontWeight: FontWeight.normal),
+                  )),
+              UIHelper.horizontalSpaceLarge,
               // Middle Graphics Container
               Container(
                 padding: EdgeInsets.all(25),
                 child:
                     Image.asset('assets/images/start-page/middle-design.png'),
               ),
+              UIHelper.horizontalSpaceLarge,
 
               // Button Container
               model.state == ViewState.Busy
