@@ -223,7 +223,8 @@ class WalletDashboardScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Container(
-                      margin: EdgeInsets.all(5),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -251,6 +252,8 @@ class WalletDashboardScreen extends StatelessWidget {
                       ),
                     ),
                     Container(
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
                       decoration: BoxDecoration(
                           color: globals.primaryColor,
                           borderRadius: BorderRadius.circular(50)),
@@ -264,7 +267,7 @@ class WalletDashboardScreen extends StatelessWidget {
               ),
               // Gas Container
               Container(
-                  padding: EdgeInsets.only(left: 5, top: 2),
+                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
                   child: model.state == ViewState.Busy
                       ? Shimmer.fromColors(
                           baseColor: globals.primaryColor,
@@ -279,7 +282,7 @@ class WalletDashboardScreen extends StatelessWidget {
               Expanded(
                   child: model.state == ViewState.Busy
                       ? Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(horizontal: 8.0),
                           child: ListView.builder(
                             shrinkWrap: true,
                             itemCount: model.walletInfoCopy.length,
@@ -299,7 +302,7 @@ class WalletDashboardScreen extends StatelessWidget {
                           ),
                         )
                       : Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          margin: EdgeInsets.symmetric(horizontal: 8.0),
                           child: ListView.builder(
                             shrinkWrap: true,
                             itemCount: model.walletInfo.length,
@@ -360,8 +363,9 @@ class WalletDashboardScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                // Card logo container
                 Container(
-                    margin: EdgeInsets.only(right: 12),
+                    margin: EdgeInsets.only(left: 4.0, right: 12),
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         color: globals.walletCardColor,
@@ -377,121 +381,100 @@ class WalletDashboardScreen extends StatelessWidget {
                         'assets/images/wallet-page/$tickerName.png'),
                     width: 40,
                     height: 40),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '$tickerName'.toUpperCase(),
-                      style: Theme.of(context).textTheme.headline2,
-                    ),
-                    // Available Row
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: Text(AppLocalizations.of(context).available,
-                              style: Theme.of(context).textTheme.bodyText1),
-                        ),
-                        model.state == ViewState.Busy
-                            ? SizedBox(
-                                child: Shimmer.fromColors(
-                                baseColor: globals.red,
-                                highlightColor: globals.white,
-                                child: Text(
-                                  '$available',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
-                              ))
-                            : Text('$available',
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyText2),
-                      ],
-                    ),
-                    // Locked Row
-                    Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: Text(AppLocalizations.of(context).locked,
-                              style: Theme.of(context).textTheme.bodyText1),
-                        ),
-                        model.state == ViewState.Busy
-                            ? SizedBox(
-                                child: Shimmer.fromColors(
-                                baseColor: globals.red,
-                                highlightColor: globals.white,
-                                child: Text('$locked',
-                                    style:
-                                        Theme.of(context).textTheme.bodyText2),
-                              ))
-                            : Text('$locked',
-                                style: Theme.of(context).textTheme.bodyText2)
-                      ],
-                    ),
-                    Row(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //    crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          // width: 70,
-                          child: Padding(
+                // Tickername available locked and inexchange column
+                Container(
+                  margin: EdgeInsets.only(right: 5.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '$tickerName'.toUpperCase(),
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                      // Available Row
+                      Row(
+                        children: <Widget>[
+                          Padding(
                             padding: const EdgeInsets.only(right: 5.0),
-                            child: Text(AppLocalizations.of(context).inExchange,
-                                textAlign: TextAlign.center,
+                            child: Text(AppLocalizations.of(context).available,
                                 style: Theme.of(context).textTheme.bodyText1),
                           ),
-                        ),
-                        model.state == ViewState.Busy
-                            ? SizedBox(
-                                child: Shimmer.fromColors(
-                                baseColor: globals.primaryColor,
-                                highlightColor: globals.white,
-                                child: Text(
-                                  '$assetsInExchange',
+                          model.state == ViewState.Busy
+                              ? SizedBox(
+                                  child: Shimmer.fromColors(
+                                  baseColor: globals.red,
+                                  highlightColor: globals.white,
+                                  child: Text(
+                                    '$available',
+                                    textAlign: TextAlign.center,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                ))
+                              : Text('$available',
                                   textAlign: TextAlign.center,
-                                ),
-                              ))
-                            : Text('$assetsInExchange',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: globals.primaryColor)),
-                      ],
-                    ),
-                  ],
+                                  style: Theme.of(context).textTheme.bodyText2),
+                        ],
+                      ),
+                      // Locked Row
+                      Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(right: 5.0),
+                            child: Text(AppLocalizations.of(context).locked,
+                                style: Theme.of(context).textTheme.bodyText1),
+                          ),
+                          model.state == ViewState.Busy
+                              ? SizedBox(
+                                  child: Shimmer.fromColors(
+                                  baseColor: globals.red,
+                                  highlightColor: globals.white,
+                                  child: Text('$locked',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2),
+                                ))
+                              : Text('$locked',
+                                  style: Theme.of(context).textTheme.bodyText2)
+                        ],
+                      ),
+                      Row(
+                        //       mainAxisAlignment: MainAxisAlignment.center,
+                        //    crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            // width: 70,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 5.0),
+                              child: Text(
+                                  AppLocalizations.of(context).inExchange,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.bodyText1),
+                            ),
+                          ),
+                          model.state == ViewState.Busy
+                              ? SizedBox(
+                                  child: Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.white,
+                                  child: Text(
+                                    '$assetsInExchange',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ))
+                              : Text('$assetsInExchange',
+                                  textAlign: TextAlign.center,
+                                  style:
+                                      TextStyle(color: globals.primaryColor)),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                // Asset in exchange Column
+                // Deposit and Withdraw expand andrRow
                 Expanded(
                   child: Column(
                     children: <Widget>[
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   crossAxisAlignment: CrossAxisAlignment.center,
-                      //   children: <Widget>[
-                      //     Container(
-                      //       width: 70,
-                      //       child: Text(
-                      //           AppLocalizations.of(context).assetInExchange,
-                      //           textAlign: TextAlign.center,
-                      //           style: Theme.of(context).textTheme.bodyText1),
-                      //     ),
-                      //     model.state == ViewState.Busy
-                      //         ? SizedBox(
-                      //             child: Shimmer.fromColors(
-                      //             baseColor: globals.primaryColor,
-                      //             highlightColor: globals.white,
-                      //             child: Text(
-                      //               '$assetsInExchange',
-                      //               textAlign: TextAlign.center,
-                      //             ),
-                      //           ))
-                      //         : Text('$assetsInExchange',
-                      //             textAlign: TextAlign.center,
-                      //             style:
-                      //                 TextStyle(color: globals.primaryColor)),
-                      //   ],
-                      // ),
-
-                      // Deposit and withdraw Row
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -524,7 +507,7 @@ class WalletDashboardScreen extends StatelessWidget {
                   child: Container(
                     width: 100,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5.0),
