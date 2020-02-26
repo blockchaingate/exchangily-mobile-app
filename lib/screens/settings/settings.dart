@@ -105,27 +105,40 @@ class SettingsScreen extends StatelessWidget {
                     width: 200,
                     height: 100,
                     child: Center(
-                      child: DropdownButton(
-                        hint: Text(
-                          AppLocalizations.of(context).changeWalletLanguage,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        value: model.selectedLanguage,
-                        onChanged: (newValue) {
-                          model.changeWalletLanguage(newValue);
-                        },
-                        items: model.languages.map((language) {
-                          return DropdownMenuItem(
-                            child: Center(
-                              child: Text(language,
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline4),
+                      child: Theme.of(context).platform == TargetPlatform.iOS
+                          ? CupertinoPicker(
+                              itemExtent: 1,
+                              onSelectedItemChanged: (int value) {
+                                // Check if it the widget works in ios device first then provide logic here
+                              },
+                              children: <Widget>[
+                                Center(child: Text('${model.languages}'))
+                              ],
+                            )
+                          : DropdownButton(
+                              hint: Text(
+                                AppLocalizations.of(context)
+                                    .changeWalletLanguage,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
+                              value: model.selectedLanguage,
+                              onChanged: (newValue) {
+                                model.changeWalletLanguage(newValue);
+                              },
+                              items: model.languages.map((language) {
+                                return DropdownMenuItem(
+                                  child: Center(
+                                    child: Text(language,
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4),
+                                  ),
+                                  value: language,
+                                );
+                              }).toList(),
                             ),
-                            value: language,
-                          );
-                        }).toList(),
-                      ),
                     ),
                   ),
                 ),
@@ -164,7 +177,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ]),
         ),
-        bottomNavigationBar: AppBottomNav(count: 3),
+        bottomNavigationBar: AppBottomNav(count: 4),
       ),
     );
   }

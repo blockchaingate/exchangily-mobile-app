@@ -25,10 +25,10 @@ import '../../logger.dart';
 import '../../service_locator.dart';
 import '../base_state.dart';
 
-class SettingsScreenState extends BaseState {
+class OtcScreenState extends BaseState {
   bool isVisible = false;
   String mnemonic = '';
-  final log = getLogger('SettingsState');
+  final log = getLogger('OtcState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();

@@ -53,6 +53,11 @@ class AppBottomNav extends StatelessWidget {
                 padding: EdgeInsets.only(top: paddingValue),
                 child: Text(AppLocalizations.of(context).trade))),
         BottomNavigationBarItem(
+            icon: Icon(Icons.branding_watermark, size: iconSize),
+            title: Padding(
+                padding: EdgeInsets.only(top: paddingValue),
+                child: Text('OTC'))),
+        BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.cog, size: iconSize),
             title: Padding(
                 padding: EdgeInsets.only(top: paddingValue),
@@ -70,6 +75,9 @@ class AppBottomNav extends StatelessWidget {
             Navigator.pushNamed(context, '/trade');
             break;
           case 3:
+            Navigator.pushNamed(context, '/otc');
+            break;
+          case 4:
             Navigator.pushNamed(context, '/settings');
             break;
         }
