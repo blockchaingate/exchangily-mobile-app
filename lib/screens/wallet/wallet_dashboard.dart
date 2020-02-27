@@ -161,7 +161,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                                     .headline4
                                                     .copyWith(
                                                         fontWeight:
-                                                            FontWeight.bold)),
+                                                            FontWeight.w400)),
                                             UIHelper.verticalSpaceSmall,
                                             model.state == ViewState.Busy
                                                 ? Shimmer.fromColors(
@@ -181,7 +181,11 @@ class WalletDashboardScreen extends StatelessWidget {
                                                     textAlign: TextAlign.center,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .subtitle1),
+                                                        .subtitle1
+                                                        .copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w400)),
                                           ],
                                         ),
                                       ),

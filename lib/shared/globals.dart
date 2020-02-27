@@ -21,6 +21,7 @@ final Color grey = Colors.grey;
 final Color green = Colors.green;
 final Color yellow = Colors.yellow;
 final Color white38 = Colors.white38;
+final Color white54 = Colors.white54;
 final Color priceColor = Color(0xFF0da88b);
 final Color sellOrders = Color(0xFF472a4a);
 final Color sellPrice = Color(0xFFe2103c);

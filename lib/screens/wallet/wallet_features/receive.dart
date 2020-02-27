@@ -46,15 +46,19 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).receive),
+        title: Text(AppLocalizations.of(context).receive,
+            style: Theme.of(context).textTheme.headline3),
         centerTitle: true,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          buildCopyAddressContainer(context),
-          buildQrImageContainer(),
-        ],
+      body: Container(
+        margin: EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            buildCopyAddressContainer(context),
+            buildQrImageContainer(),
+          ],
+        ),
       ),
     );
   }
@@ -102,24 +106,31 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                   ),
                 ),
               )),
-          RaisedButton(
-              child: Text(AppLocalizations.of(context).saveAndShareQrCode),
-              onPressed: () {
-                String receiveFileName = 'qr-code.png';
-                getApplicationDocumentsDirectory().then((dir) {
-                  String filePath = "${dir.path}/$receiveFileName";
-                  File file = File(filePath);
+          Container(
+            padding: EdgeInsets.all(10.0),
+            child: RaisedButton(
+                child: Text(AppLocalizations.of(context).saveAndShareQrCode,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4
+                        .copyWith(fontWeight: FontWeight.w400)),
+                onPressed: () {
+                  String receiveFileName = 'qr-code.png';
+                  getApplicationDocumentsDirectory().then((dir) {
+                    String filePath = "${dir.path}/$receiveFileName";
+                    File file = File(filePath);
 
-                  Future.delayed(new Duration(milliseconds: 30), () {
-                    _capturePng().then((byteData) {
-                      file.writeAsBytes(byteData).then((onFile) {
-                        Share.shareFile(onFile,
-                            text: widget.walletInfo.address);
+                    Future.delayed(new Duration(milliseconds: 30), () {
+                      _capturePng().then((byteData) {
+                        file.writeAsBytes(byteData).then((onFile) {
+                          Share.shareFile(onFile,
+                              text: widget.walletInfo.address);
+                        });
                       });
                     });
                   });
-                });
-              })
+                }),
+          )
         ],
       ),
     );
@@ -142,9 +153,9 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(AppLocalizations.of(context).address,
-              style: Theme.of(context).textTheme.display1),
+              style: Theme.of(context).textTheme.subtitle1),
           Text(widget.walletInfo.address,
-              style: Theme.of(context).textTheme.headline),
+              style: Theme.of(context).textTheme.bodyText2),
           Container(
             width: 200,
             child: RaisedButton(
@@ -155,7 +166,13 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Icon(Icons.content_copy),
-                  Text(AppLocalizations.of(context).copyAddress),
+                  Text(
+                    AppLocalizations.of(context).copyAddress,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline4
+                        .copyWith(fontWeight: FontWeight.w400),
+                  ),
                 ],
               ),
               onPressed: () {
@@ -179,15 +196,14 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
     Clipboard.setData(new ClipboardData(text: walletAddress));
     Flushbar(
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
-      title: AppLocalizations.of(context).addressCopied,
-      message: 'Address copied to the Clipboard',
+      message: AppLocalizations.of(context).addressCopied,
       icon: Icon(
         Icons.done,
         size: 24,
         color: globals.primaryColor,
       ),
       leftBarIndicatorColor: globals.green,
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 4),
     ).show(context);
   }
 
