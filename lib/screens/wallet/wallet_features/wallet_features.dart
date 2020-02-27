@@ -315,10 +315,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                   Text(
                     '${walletInfo.tickerName} ' +
                         AppLocalizations.of(context).totalBalance,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.subtitle1,
                   ),
                   Padding(
                       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 2.0, 0.0),

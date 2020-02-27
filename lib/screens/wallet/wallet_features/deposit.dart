@@ -230,7 +230,7 @@ class _DepositState extends State<Deposit> {
           ),
           middle: Text(
             '${AppLocalizations.of(context).move}  ${widget.walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
-            style: TextStyle(color: Colors.white),
+            style: Theme.of(context).textTheme.headline3,
           ),
           backgroundColor: Color(0XFF1f2233),
         ),
@@ -249,10 +249,13 @@ class _DepositState extends State<Deposit> {
                         borderSide:
                             BorderSide(color: Color(0XFF871fff), width: 1.0)),
                     hintText: AppLocalizations.of(context).enterAmount,
-                    hintStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
+                    hintStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
                   ),
                   controller: myController,
-                  style: TextStyle(fontSize: 16.0, color: Colors.white),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline5
+                      .copyWith(fontWeight: FontWeight.w300),
                 ),
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
@@ -260,24 +263,20 @@ class _DepositState extends State<Deposit> {
                     children: <Widget>[
                       Row(
                         children: <Widget>[
-                          Text(
-                            AppLocalizations.of(context).gasFee,
-                            style: Theme.of(context)
-                                .textTheme
-                                .display3
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
+                          Text(AppLocalizations.of(context).gasFee,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(fontWeight: FontWeight.w300)),
                           Padding(
                             padding: EdgeInsets.only(
                                 left:
                                     5), // padding left to keep some space from the text
-                            child: Text(
-                              '$transFee',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .display3
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
+                            child: Text('$transFee',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w300)),
                           )
                         ],
                       ),
@@ -285,37 +284,31 @@ class _DepositState extends State<Deposit> {
                       // Kanaban Gas Fee Row
                       Row(
                         children: <Widget>[
-                          Text(
-                            AppLocalizations.of(context).kanbanGasFee,
-                            style: Theme.of(context)
-                                .textTheme
-                                .display3
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
+                          Text(AppLocalizations.of(context).kanbanGasFee,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(fontWeight: FontWeight.w300)),
                           Padding(
                             padding: EdgeInsets.only(
                                 left:
                                     5), // padding left to keep some space from the text
-                            child: Text(
-                              '$kanbanTransFee',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .display3
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
+                            child: Text('$kanbanTransFee',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w300)),
                           )
                         ],
                       ),
                       // Switch Row
                       Row(
                         children: <Widget>[
-                          Text(
-                            AppLocalizations.of(context).advance,
-                            style: Theme.of(context)
-                                .textTheme
-                                .display3
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
+                          Text(AppLocalizations.of(context).advance,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(fontWeight: FontWeight.w300)),
                           Switch(
                             value: transFeeAdvance,
                             inactiveTrackColor: globals.grey,
@@ -341,45 +334,46 @@ class _DepositState extends State<Deposit> {
                                   child: Row(
                                     children: <Widget>[
                                       Text(
-                                        AppLocalizations.of(context).gasPrice,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display3,
-                                      ),
+                                          AppLocalizations.of(context).gasPrice,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w300)),
                                       Expanded(
                                           child: Padding(
                                               padding: EdgeInsets.fromLTRB(
                                                   85, 0, 0, 0),
                                               child: TextField(
-                                                controller:
-                                                    _gasPriceTextController,
-                                                onChanged: (String amount) {
-                                                  updateTransFee();
-                                                },
-                                                keyboardType: TextInputType
-                                                    .number, // numnber keyboard
-                                                decoration: InputDecoration(
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: globals
-                                                                    .primaryColor)),
-                                                    enabledBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                    color: globals
-                                                                        .grey)),
-                                                    hintText: '0.00000',
-                                                    hintStyle: Theme.of(context)
-                                                        .textTheme
-                                                        .display2
-                                                        .copyWith(
-                                                            fontSize: 14)),
-                                                style: TextStyle(
-                                                    color: globals.grey,
-                                                    fontSize: 16),
-                                              )))
+                                                  controller:
+                                                      _gasPriceTextController,
+                                                  onChanged: (String amount) {
+                                                    updateTransFee();
+                                                  },
+                                                  keyboardType: TextInputType
+                                                      .number, // numnber keyboard
+                                                  decoration: InputDecoration(
+                                                      focusedBorder: UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: globals
+                                                                  .primaryColor)),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .grey)),
+                                                      hintText: '0.00000',
+                                                      hintStyle: Theme.of(context)
+                                                          .textTheme
+                                                          .headline5
+                                                          .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300)),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5
+                                                      .copyWith(fontWeight: FontWeight.w300))))
                                     ],
                                   )),
                               Visibility(
@@ -389,45 +383,46 @@ class _DepositState extends State<Deposit> {
                                   child: Row(
                                     children: <Widget>[
                                       Text(
-                                        AppLocalizations.of(context).gasLimit,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display3,
-                                      ),
+                                          AppLocalizations.of(context).gasLimit,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w300)),
                                       Expanded(
                                           child: Padding(
                                               padding: EdgeInsets.fromLTRB(
                                                   85, 0, 0, 0),
                                               child: TextField(
-                                                controller:
-                                                    _gasLimitTextController,
-                                                onChanged: (String amount) {
-                                                  updateTransFee();
-                                                },
-                                                keyboardType: TextInputType
-                                                    .number, // numnber keyboard
-                                                decoration: InputDecoration(
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: globals
-                                                                    .primaryColor)),
-                                                    enabledBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                    color: globals
-                                                                        .grey)),
-                                                    hintText: '0.00000',
-                                                    hintStyle: Theme.of(context)
-                                                        .textTheme
-                                                        .display2
-                                                        .copyWith(
-                                                            fontSize: 14)),
-                                                style: TextStyle(
-                                                    color: globals.grey,
-                                                    fontSize: 16),
-                                              )))
+                                                  controller:
+                                                      _gasLimitTextController,
+                                                  onChanged: (String amount) {
+                                                    updateTransFee();
+                                                  },
+                                                  keyboardType: TextInputType
+                                                      .number, // numnber keyboard
+                                                  decoration: InputDecoration(
+                                                      focusedBorder: UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: globals
+                                                                  .primaryColor)),
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: globals
+                                                                      .grey)),
+                                                      hintText: '0.00000',
+                                                      hintStyle: Theme.of(context)
+                                                          .textTheme
+                                                          .headline5
+                                                          .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w300)),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5
+                                                      .copyWith(fontWeight: FontWeight.w300))))
                                     ],
                                   )),
                               Visibility(
@@ -437,12 +432,13 @@ class _DepositState extends State<Deposit> {
                                   child: Row(
                                     children: <Widget>[
                                       Text(
-                                        AppLocalizations.of(context)
-                                            .satoshisPerByte,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display3,
-                                      ),
+                                          AppLocalizations.of(context)
+                                              .satoshisPerByte,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w300)),
                                       Expanded(
                                           child: Padding(
                                               padding: EdgeInsets.fromLTRB(
@@ -470,9 +466,11 @@ class _DepositState extends State<Deposit> {
                                                     hintText: '0.00000',
                                                     hintStyle: Theme.of(context)
                                                         .textTheme
-                                                        .display2
+                                                        .headline5
                                                         .copyWith(
-                                                            fontSize: 14)),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w300)),
                                                 style: TextStyle(
                                                     color: globals.grey,
                                                     fontSize: 16),
@@ -482,49 +480,57 @@ class _DepositState extends State<Deposit> {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    AppLocalizations.of(context).kanbanGasPrice,
-                                    style: Theme.of(context).textTheme.display3,
-                                  ),
+                                      AppLocalizations.of(context)
+                                          .kanbanGasPrice,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5
+                                          .copyWith(
+                                              fontWeight: FontWeight.w300)),
                                   Expanded(
                                       child: Padding(
                                           padding:
                                               EdgeInsets.fromLTRB(20, 0, 0, 0),
                                           child: TextField(
-                                            controller:
-                                                _kanbanGasPriceTextController,
-                                            onChanged: (String amount) {
-                                              updateTransFee();
-                                            },
-                                            keyboardType: TextInputType
-                                                .number, // numnber keyboard
-                                            decoration: InputDecoration(
-                                                focusedBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: globals
-                                                                .primaryColor)),
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                globals.grey)),
-                                                hintText: '0.00000',
-                                                hintStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .display2
-                                                    .copyWith(fontSize: 14)),
-                                            style: TextStyle(
-                                                color: globals.grey,
-                                                fontSize: 16),
-                                          )))
+                                              controller:
+                                                  _kanbanGasPriceTextController,
+                                              onChanged: (String amount) {
+                                                updateTransFee();
+                                              },
+                                              keyboardType: TextInputType
+                                                  .number, // numnber keyboard
+                                              decoration: InputDecoration(
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: globals
+                                                                  .primaryColor)),
+                                                  enabledBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: globals.grey)),
+                                                  hintText: '0.00000',
+                                                  hintStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5
+                                                      .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w300)),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w300))))
                                 ],
                               ),
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    AppLocalizations.of(context).kanbanGasLimit,
-                                    style: Theme.of(context).textTheme.display3,
-                                  ),
+                                      AppLocalizations.of(context)
+                                          .kanbanGasLimit,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
                                   Expanded(
                                       child: Padding(
                                           padding:
@@ -551,8 +557,10 @@ class _DepositState extends State<Deposit> {
                                                 hintText: '0.00000',
                                                 hintStyle: Theme.of(context)
                                                     .textTheme
-                                                    .display2
-                                                    .copyWith(fontSize: 14)),
+                                                    .headline5
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w300)),
                                             style: TextStyle(
                                                 color: globals.grey,
                                                 fontSize: 16),
@@ -564,7 +572,6 @@ class _DepositState extends State<Deposit> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
 
                 // Wallet Balance
                 Row(
@@ -572,18 +579,15 @@ class _DepositState extends State<Deposit> {
                     Padding(
                       padding: const EdgeInsets.only(left: 5.0),
                       child: Text(
-                        AppLocalizations.of(context).walletbalance + '  $bal',
-                        style: Theme.of(context).textTheme.headline,
-                      ),
+                          AppLocalizations.of(context).walletbalance + '  $bal',
+                          style: Theme.of(context).textTheme.bodyText2),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 10,
                       ),
-                      child: Text(
-                        '$coinName'.toUpperCase(),
-                        style: Theme.of(context).textTheme.headline,
-                      ),
+                      child: Text('$coinName'.toUpperCase(),
+                          style: Theme.of(context).textTheme.bodyText2),
                     )
                   ],
                 ),
@@ -603,10 +607,8 @@ class _DepositState extends State<Deposit> {
                     //print(res);
                     checkPass(double.parse(myController.text), context);
                   },
-                  child: Text(
-                    AppLocalizations.of(context).confirm,
-                    style: Theme.of(context).textTheme.button,
-                  ),
+                  child: Text(AppLocalizations.of(context).confirm,
+                      style: Theme.of(context).textTheme.headline4),
                 ),
               ],
             )));
