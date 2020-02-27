@@ -122,6 +122,7 @@ flutter:
     - assets/pages/
     - assets/images/start-page/
     - assets/images/wallet-page/
+    - assets/images/otc/
 
 flutter_icons:
   image_path: "assets/images/launcher/mobile-icon.png"

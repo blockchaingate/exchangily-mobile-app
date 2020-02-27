@@ -41,6 +41,7 @@ class Api {
     return log.e('getCoinsUsdValue Failed to load the data from the API');
   }
 
+// Get Gas Balance
   Future getGasBalance(String exgAddress) async {
     try {
       final res = await http
@@ -49,11 +50,13 @@ class Api {
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
-    } catch (e) {}
-    log.e('getGasBalance Failed to load the data from the API');
+    } catch (e) {
+      log.e('getGasBalance Failed to load the data from the API $e');
+    }
     return {};
   }
 
+  // Get Assets balance
   Future getAssetsBalance(String exgAddress) async {
     try {
       final res = await http
@@ -61,11 +64,13 @@ class Api {
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
-    } catch (e) {}
-    log.e('getAssetsBalance Failed to load the data from the API');
+    } catch (e) {
+      log.e('getAssetsBalance Failed to load the data from the API, $e');
+    }
     return {};
   }
 
+// Get Orders
   Future getOrders(String exgAddress) async {
     try {
       final res = await http
@@ -73,8 +78,9 @@ class Api {
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
-    } catch (e) {}
-    log.e('getOrders Failed to load the data from the API');
+    } catch (e) {
+      log.e('getOrders Failed to load the data from the API， $e');
+    }
     return {};
   }
 

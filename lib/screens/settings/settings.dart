@@ -34,7 +34,8 @@ class SettingsScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).settings),
+          title: Text(AppLocalizations.of(context).settings,
+              style: Theme.of(context).textTheme.headline3),
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
@@ -105,7 +106,19 @@ class SettingsScreen extends StatelessWidget {
                     width: 200,
                     height: 100,
                     child: Center(
-                      child: DropdownButton(
+                      child:
+                          //Theme.of(context).platform == TargetPlatform.iOS
+                          // ? CupertinoPicker(
+                          //     itemExtent: 1,
+                          //     onSelectedItemChanged: (int value) {
+                          //       // Check if it the widget works in ios device first then provide logic here
+                          //     },
+                          //     children: <Widget>[
+                          //       Center(child: Text('${model.languages}'))
+                          //     ],
+                          //   )
+                          // :
+                          DropdownButton(
                         hint: Text(
                           AppLocalizations.of(context).changeWalletLanguage,
                           textAlign: TextAlign.center,
@@ -120,7 +133,7 @@ class SettingsScreen extends StatelessWidget {
                             child: Center(
                               child: Text(language,
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline4),
+                                  style: Theme.of(context).textTheme.headline5),
                             ),
                             value: language,
                           );
@@ -143,10 +156,7 @@ class SettingsScreen extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           'v ${model.versionName}',
-                          style: TextStyle(
-                              color: globals.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                          style: Theme.of(context).textTheme.headline4,
                         )
                       ],
                     )),
