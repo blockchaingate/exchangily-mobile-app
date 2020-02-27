@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
             padding: EdgeInsets.all(15),
             shape: StadiumBorder(),
             textTheme: ButtonTextTheme.primary),
-        fontFamily: 'Open Sans',
+        fontFamily: 'Roboto',
         canvasColor: globals.secondaryColor,
         primaryColor: globals.primaryColor,
         textTheme: TextTheme(

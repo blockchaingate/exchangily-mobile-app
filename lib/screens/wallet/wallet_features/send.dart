@@ -238,11 +238,11 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                   borderSide: BorderSide(color: globals.grey)),
                               hintText: '0.00000',
                               hintStyle:
-                                  TextStyle(fontSize: 18, color: globals.grey)),
+                                  TextStyle(fontSize: 14, color: globals.grey)),
                           style:
                               model.checkSendAmount && model.amountDouble <= bal
-                                  ? TextStyle(color: globals.grey, fontSize: 20)
-                                  : TextStyle(color: globals.red, fontSize: 20),
+                                  ? TextStyle(color: globals.grey, fontSize: 14)
+                                  : TextStyle(color: globals.red, fontSize: 14),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),

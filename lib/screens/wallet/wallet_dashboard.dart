@@ -215,13 +215,13 @@ class WalletDashboardScreen extends StatelessWidget {
                       ),
                     ]),
               ),
-              Container(
-                padding: EdgeInsets.only(right: 10, top: 15),
 
 /*-----------------------------------------------------------------
                       Hide Small Amount Row
 -----------------------------------------------------------------*/
 
+              Container(
+                padding: EdgeInsets.only(right: 10, top: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,
@@ -255,6 +255,7 @@ class WalletDashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    // Plus sign container
                     Container(
                       margin:
                           EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
@@ -271,7 +272,7 @@ class WalletDashboardScreen extends StatelessWidget {
               ),
               // Gas Container
               Container(
-                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                  margin: EdgeInsets.only(left: 8.0),
                   child: model.state == ViewState.Busy
                       ? Shimmer.fromColors(
                           baseColor: globals.primaryColor,
@@ -362,14 +363,13 @@ class WalletDashboardScreen extends StatelessWidget {
                 arguments: model.walletInfo[index]);
           },
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: EdgeInsets.symmetric(vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 // Card logo container
                 Container(
-                    margin: EdgeInsets.only(left: 4.0, right: 12),
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         color: globals.walletCardColor,
@@ -387,7 +387,7 @@ class WalletDashboardScreen extends StatelessWidget {
                     height: 40),
                 // Tickername available locked and inexchange column
                 Container(
-                  margin: EdgeInsets.only(right: 5.0),
+                  width: 180,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -397,6 +397,7 @@ class WalletDashboardScreen extends StatelessWidget {
                       ),
                       // Available Row
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.only(right: 5.0),
@@ -410,14 +411,16 @@ class WalletDashboardScreen extends StatelessWidget {
                                   highlightColor: globals.white,
                                   child: Text(
                                     '$available',
-                                    textAlign: TextAlign.center,
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
                                   ),
                                 ))
-                              : Text('$available',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyText2),
+                              : Expanded(
+                                  child: Text('$available',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2),
+                                ),
                         ],
                       ),
                       // Locked Row
@@ -442,12 +445,10 @@ class WalletDashboardScreen extends StatelessWidget {
                                   style: Theme.of(context).textTheme.bodyText2)
                         ],
                       ),
+                      // Inexchange Row
                       Row(
-                        //       mainAxisAlignment: MainAxisAlignment.center,
-                        //    crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Container(
-                            // width: 70,
                             child: Padding(
                               padding: const EdgeInsets.only(right: 5.0),
                               child: Text(
@@ -475,64 +476,69 @@ class WalletDashboardScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Deposit and Withdraw expand andrRow
-                Expanded(
+
+                // Value USD and deposit - withdraw Container column
+                Container(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: IconButton(
-                                icon: Icon(Icons.arrow_downward),
-                                tooltip: 'Deposit',
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/deposit',
-                                      arguments: model.walletInfo[index]);
-                                }),
-                          ),
-                          Expanded(
-                            child: IconButton(
-                                icon: Icon(Icons.arrow_upward),
-                                tooltip: 'Withdraw',
-                                onPressed: () {
-                                  Navigator.pushNamed(context, '/withdraw',
-                                      arguments: model.walletInfo[index]);
-                                }),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                // Value USD Column
-                Expanded(
-                  child: Container(
-                    width: 100,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 5.0),
-                          child: Text(
-                              'USD ${AppLocalizations.of(context).value}',
-                              style: Theme.of(context).textTheme.headline5),
+                      Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text('USD ${AppLocalizations.of(context).value}',
+                                style: Theme.of(context).textTheme.headline5),
+
+                            model.state == ViewState.Busy
+                                ? Shimmer.fromColors(
+                                    baseColor: globals.green,
+                                    highlightColor: globals.white,
+                                    child: Text(
+                                      '${usdValue.toStringAsFixed(2)}',
+                                      style: TextStyle(color: globals.green),
+                                    ),
+                                  )
+                                : Text('${usdValue.toStringAsFixed(2)}',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: globals.green)),
+
+                            // Deposit and Withdraw Container Row
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                InkWell(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, right: 5.0),
+                                      child: Icon(Icons.arrow_downward,
+                                          color: globals.green, size: 20),
+                                    ),
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/deposit',
+                                          arguments: model.walletInfo[index]);
+                                    }),
+                                InkWell(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, left: 5.0),
+                                      child: Icon(
+                                        Icons.arrow_upward,
+                                        color: globals.red,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.pushNamed(context, '/withdraw',
+                                          arguments: model.walletInfo[index]);
+                                    }),
+                              ],
+                            ),
+                          ],
                         ),
-                        model.state == ViewState.Busy
-                            ? Shimmer.fromColors(
-                                baseColor: globals.green,
-                                highlightColor: globals.white,
-                                child: Text(
-                                  '${usdValue.toStringAsFixed(2)}',
-                                  style: TextStyle(color: globals.green),
-                                ),
-                              )
-                            : Text('${usdValue.toStringAsFixed(2)}',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: globals.green))
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ],
