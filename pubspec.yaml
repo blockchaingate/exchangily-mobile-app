@@ -4,7 +4,7 @@ description: Decentralized Wallet App.
 version: 1.0.7+12
 
 environment:
-  sdk: '>=2.3.2 <3.0.0'
+  sdk: ">=2.3.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -106,8 +106,8 @@ dependencies:
       ref: master
 
 dev_dependencies:
-  intl_translation: '^0.17.0'
-  flutter_launcher_icons: '^0.7.3'
+  intl_translation: "^0.17.0"
+  flutter_launcher_icons: "^0.7.3"
 
   flutter_test:
     sdk: flutter
@@ -125,8 +125,14 @@ flutter:
     - assets/images/otc/
 
 flutter_icons:
-  image_path: 'assets/images/launcher/mobile-icon.png'
+  image_path: "assets/images/launcher/mobile-icon.png"
   android: true
   ios: true
+
+fonts:
+  - family: Roboto
+    fonts:
+      - asset: Roboto-Italic.ttf
+      - asset: Roboto-normal.ttf
   #  - lib/l10n/en.json
   #  - lib/l10n/zh.json

@@ -31,6 +31,7 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_pass
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_state.dart';
 import 'package:get_it/get_it.dart';
+import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
 
 GetIt locator = GetIt();
 
@@ -57,4 +58,5 @@ void serviceLocator() {
   locator.registerFactory(() => BuySellScreenState());
   locator.registerFactory(() => TransactionHistoryScreenState());
   locator.registerFactory(() => OtcScreenState());
+  locator.registerFactory(() => OtcDetailsScreenState());
 }

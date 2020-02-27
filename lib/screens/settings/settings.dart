@@ -175,7 +175,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ]),
         ),
-        bottomNavigationBar: AppBottomNav(count: 4),
+        bottomNavigationBar: AppBottomNav(count: 3),
       ),
     );
   }
