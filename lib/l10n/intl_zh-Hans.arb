@@ -239,12 +239,6 @@
         "type": "text",
         "placeholders": {}
     },
-    "assetsInExchange": "在交易所资产",
-    "@assetsInExchange": {
-        "description": "total_balance_screen_assets_in_exchange",
-        "type": "text",
-        "placeholders": {}
-    },
     "inExchange": "在交易所",
     "@inExchange": {
         "description": "assets_in_exchange",
