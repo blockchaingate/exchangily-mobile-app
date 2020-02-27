@@ -72,14 +72,15 @@ class WalletFeaturesScreen extends StatelessWidget {
                               children: <Widget>[
                                 Text('${walletInfo.tickerName}',
                                     style:
-                                        Theme.of(context).textTheme.headline),
+                                        Theme.of(context).textTheme.subtitle1),
                                 Icon(
                                   Icons.arrow_forward,
                                   size: 17,
                                   color: globals.white,
                                 ),
                                 Text('${walletInfo.name}',
-                                    style: Theme.of(context).textTheme.headline)
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1)
                               ],
                             ),
                           ),
@@ -233,62 +234,61 @@ class WalletFeaturesScreen extends StatelessWidget {
                       }),
                   UIHelper.horizontalSpaceSmall,
                   // Transaction History Column
-                  // Column(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  //   children: <Widget>[
-                  //     Container(
-                  //       padding: EdgeInsets.symmetric(
-                  //           horizontal: 22.0, vertical: 5.0),
-                  //       child: Card(
-                  //         color: globals.walletCardColor,
-                  //         elevation: model.elevation,
-                  //         child: InkWell(
-                  //           splashColor: globals.primaryColor.withAlpha(30),
-                  //           onTap: () {
-                  //             var route = model.features[6].route;
-                  //             Navigator.pushNamed(
-                  //               context,
-                  //               '/$route',
-                  //             );
-                  //           },
-                  //           child: Container(
-                  //             padding: EdgeInsets.symmetric(
-                  //                 vertical: 6, horizontal: 3),
-                  //             child: Row(
-                  //               mainAxisAlignment: MainAxisAlignment.center,
-                  //               children: <Widget>[
-                  //                 Container(
-                  //                     decoration: BoxDecoration(
-                  //                         color: globals.walletCardColor,
-                  //                         borderRadius:
-                  //                             BorderRadius.circular(50),
-                  //                         boxShadow: [
-                  //                           BoxShadow(
-                  //                               color: model
-                  //                                   .features[6].shadowColor
-                  //                                   .withOpacity(0.2),
-                  //                               offset: Offset(0, 2),
-                  //                               blurRadius: 10,
-                  //                               spreadRadius: 3)
-                  //                         ]),
-                  //                     child: Icon(
-                  //                       model.features[6].icon,
-                  //                       size: 20,
-                  //                       color: globals.white,
-                  //                     )),
-                  //                 Text(
-                  //                   model.features[6].name,
-                  //                   style: Theme.of(context).textTheme.headline,
-                  //                 )
-                  //               ],
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // )
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 22.0, vertical: 5.0),
+                        child: Card(
+                          color: globals.walletCardColor,
+                          elevation: model.elevation,
+                          child: InkWell(
+                            splashColor: globals.primaryColor.withAlpha(30),
+                            onTap: () {
+                              var route = model.features[6].route;
+                              Navigator.pushNamed(context, '/$route',
+                                  arguments: walletInfo.tickerName);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 6, horizontal: 3),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                      decoration: BoxDecoration(
+                                          color: globals.walletCardColor,
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: model
+                                                    .features[6].shadowColor
+                                                    .withOpacity(0.2),
+                                                offset: Offset(0, 2),
+                                                blurRadius: 10,
+                                                spreadRadius: 3)
+                                          ]),
+                                      child: Icon(
+                                        model.features[6].icon,
+                                        size: 20,
+                                        color: globals.white,
+                                      )),
+                                  Text(
+                                    model.features[6].name,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -317,7 +317,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                         AppLocalizations.of(context).totalBalance,
                     style: Theme.of(context)
                         .textTheme
-                        .headline
+                        .subtitle1
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   Padding(
@@ -345,7 +345,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                     child: Text(
                       '${model.walletInfo.usdValue.toStringAsFixed(2)} USD',
                       textAlign: TextAlign.right,
-                      style: Theme.of(context).textTheme.headline,
+                      style: Theme.of(context).textTheme.subtitle1,
                     ),
                   )
                 ],
@@ -356,18 +356,18 @@ class WalletFeaturesScreen extends StatelessWidget {
                   Text(
                       '${walletInfo.tickerName} '.toUpperCase() +
                           AppLocalizations.of(context).walletbalance,
-                      style: Theme.of(context).textTheme.headline),
-                  Text(AppLocalizations.of(context).assetInExchange,
-                      style: Theme.of(context).textTheme.headline)
+                      style: Theme.of(context).textTheme.subtitle1),
+                  Text(AppLocalizations.of(context).inExchange,
+                      style: Theme.of(context).textTheme.subtitle1)
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text('${model.walletInfo.availableBalance}',
-                      style: Theme.of(context).textTheme.headline),
-                  Text('${model.walletInfo.assetsInExchange}',
-                      style: Theme.of(context).textTheme.headline)
+                      style: Theme.of(context).textTheme.subtitle1),
+                  Text('${model.walletInfo.inExchange}',
+                      style: Theme.of(context).textTheme.subtitle1)
                 ],
               )
             ],
@@ -414,7 +414,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                     )),
                 Text(
                   model.features[index].name,
-                  style: Theme.of(context).textTheme.headline,
+                  style: Theme.of(context).textTheme.subtitle1,
                 )
               ],
             ),

@@ -35,7 +35,7 @@ class WalletInfo {
   double _lockedBalance;
   double _availableBalance;
   double _usdValue;
-  double _assetsInExchange;
+  double _inExchange;
 
   WalletInfo(
       {int id,
@@ -46,7 +46,7 @@ class WalletInfo {
       double availableBalance,
       double usdValue,
       String name,
-      double assetsInExchange}) {
+      double inExchange}) {
     this._id = id;
     this._tickerName = tickerName;
     this._tokenType = tokenType;
@@ -55,7 +55,7 @@ class WalletInfo {
     this._availableBalance = availableBalance ?? 0.0;
     this._usdValue = usdValue ?? 0.0;
     this._name = name;
-    this._assetsInExchange = assetsInExchange ?? 0.0;
+    this._inExchange = inExchange ?? 0.0;
   }
 
   Map<String, dynamic> toJson() => {
@@ -67,7 +67,7 @@ class WalletInfo {
         'availableBalance': _availableBalance,
         'usdValue': _usdValue,
         'name': _name,
-        'assetsInExchange': _assetsInExchange,
+        'inExchange': _inExchange,
       };
 
   factory WalletInfo.fromJson(Map<String, dynamic> json) {
@@ -80,7 +80,7 @@ class WalletInfo {
         availableBalance: json['availableBalance'] as double,
         usdValue: json['usdValue'] as double,
         name: json['name'] as String,
-        assetsInExchange: json['assetsInExchange'] as double);
+        inExchange: json['inExchange'] as double);
   }
 
   int get id => _id;
@@ -130,9 +130,9 @@ class WalletInfo {
     this._name = name;
   }
 
-  double get assetsInExchange => _assetsInExchange;
-  set assetsInExchange(double assetsInExchange) {
-    this._assetsInExchange = assetsInExchange;
+  double get inExchange => _inExchange;
+  set inExchange(double inExchange) {
+    this._inExchange = inExchange;
   }
 }
 

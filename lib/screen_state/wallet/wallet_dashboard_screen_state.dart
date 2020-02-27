@@ -23,7 +23,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 
 class WalletDashboardScreenState extends BaseState {
-  final log = getLogger('DahsboardScreenState');
+  final log = getLogger('WalletDahsboardScreenState');
   List<WalletInfo> walletInfo;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
@@ -51,7 +51,10 @@ class WalletDashboardScreenState extends BaseState {
       String tName = walletInfo[i].tickerName;
       if (tName == 'EXG') {
         exgAddress = walletInfo[i].address;
-        gasAmount = await walletService.gasBalance(exgAddress);
+        await walletService
+            .gasBalance(exgAddress)
+            .then((data) => gasAmount = data)
+            .catchError((onError) => log.e(onError));
         setState(ViewState.Idle);
         return gasAmount;
       }
@@ -74,32 +77,6 @@ class WalletDashboardScreenState extends BaseState {
     });
   }
 
-  // Get Exchange Assets
-
-  getExchangeAssets() async {
-    setState(ViewState.Busy);
-    var res = await walletService.assetsBalance(exgAddress);
-    var length = res.length;
-    for (var i = 0; i < length; i++) {
-      // Get their tickerName to compare with walletInfo tickernName
-      String coin = res[i]['coin'];
-      // Second For loop to check walletInfo tickerName according to its length and
-      // compare it with the same coin tickername from service until the match or loop ends
-      for (var j = 0; j < walletInfo.length; j++) {
-        if (coin == walletInfo[j].tickerName) {
-          walletInfo[j].assetsInExchange = res[i]['amount'];
-          break;
-        }
-      }
-    }
-    for (int i = 0; i < walletInfo.length; i++) {
-      await databaseService.update(walletInfo[i]);
-      await databaseService.getById(walletInfo[i].id);
-    }
-    walletInfoCopy = walletInfo.map((element) => element).toList();
-    setState(ViewState.Idle);
-  }
-
   Future refreshBalance() async {
     setState(ViewState.Busy);
     // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
@@ -120,38 +97,66 @@ class WalletDashboardScreenState extends BaseState {
           .then((balance) async {
         walletBal = balance['balance'];
         walletLockedBal = balance['lockbalance'];
-        double marketPrice = await walletService.getCoinMarketPrice(name);
-        coinUsdBalance =
-            walletService.calculateCoinUsdBalance(marketPrice, walletBal);
-        WalletInfo wi = WalletInfo(
-            id: id,
-            tickerName: tickerName,
-            tokenType: coinTokenType[i],
-            address: address,
-            availableBalance: walletBal,
-            lockedBalance: walletLockedBal,
-            usdValue: coinUsdBalance,
-            name: name);
-        walletInfo.add(wi);
-      }).timeout(Duration(seconds: 45), onTimeout: () {
+      }).timeout(Duration(seconds: 25), onTimeout: () async {
         setState(ViewState.Idle);
-        log.e('Timeout');
         walletService.showInfoFlushbar(
-            AppLocalizations.of(context).genericError,
+            'Timeout',
             AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater,
             Icons.cancel,
             Colors.red,
             context);
-      }).catchError((error) {
+        await retrieveWallets();
+        log.e('Timeout');
+      }).catchError((error) async {
         setState(ViewState.Idle);
+        await retrieveWallets();
         log.e('Something went wrong  - $error');
       });
-    }
+      double marketPrice = await walletService.getCoinMarketPrice(name);
+      coinUsdBalance =
+          walletService.calculateCoinUsdBalance(marketPrice, walletBal);
+      WalletInfo wi = WalletInfo(
+          id: id,
+          tickerName: tickerName,
+          tokenType: coinTokenType[i],
+          address: address,
+          availableBalance: walletBal,
+          lockedBalance: walletLockedBal,
+          usdValue: coinUsdBalance,
+          name: name);
+      walletInfo.add(wi);
+    } // For loop ends
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();
+    for (int i = 0; i < walletInfo.length; i++) {
+      await databaseService.update(walletInfo[i]);
+      await databaseService.getById(walletInfo[i].id);
+    }
     setState(ViewState.Idle);
     return walletInfo;
+  }
+
+  // Get Exchange Assets
+
+  getExchangeAssets() async {
+    setState(ViewState.Busy);
+    var res = await walletService.assetsBalance(exgAddress);
+    var length = res.length;
+    for (var i = 0; i < length; i++) {
+      // Get their tickerName to compare with walletInfo tickernName
+      String coin = res[i]['coin'];
+      // Second For loop to check walletInfo tickerName according to its length and
+      // compare it with the same coin tickername from service until the match or loop ends
+      for (var j = 0; j < walletInfo.length; j++) {
+        if (coin == walletInfo[j].tickerName) {
+          walletInfo[j].inExchange = res[i]['amount'];
+          break;
+        }
+      }
+    }
+    walletInfoCopy = walletInfo.map((element) => element).toList();
+    setState(ViewState.Idle);
   }
 
   onBackButtonPressed() async {

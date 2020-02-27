@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-20T19:26:47.530732",
+  "@@last_modified": "2020-02-21T20:24:17.384985",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -222,12 +222,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "assetInExchange": "Asset In Exchange",
-  "@assetInExchange": {
-    "description": "asset_in_exchange",
-    "type": "text",
-    "placeholders": {}
-  },
   "moveAndTrade": "Move to Exchange",
   "@moveAndTrade": {
     "description": "move_and_trade",
@@ -252,8 +246,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "assetsInExchange": "Assets In Exchange",
-  "@assetsInExchange": {
+  "inExchange": "In Exchange",
+  "@inExchange": {
     "description": "assets_in_exchange",
     "type": "text",
     "placeholders": {}

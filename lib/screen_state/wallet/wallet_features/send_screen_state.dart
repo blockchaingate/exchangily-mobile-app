@@ -16,8 +16,10 @@ import 'dart:typed_data';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/transaction-history.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -33,6 +35,8 @@ class SendScreenState extends BaseState {
   final log = getLogger('SendScreenState');
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+      locator<TransactionHistoryDatabaseService>();
   BuildContext context;
   var options = {};
   String txHash = '';
@@ -136,12 +140,25 @@ class SendScreenState extends BaseState {
       await walletService
           .sendTransaction(
               tickerName, seed, [0], [], toWalletAddress, amount, options, true)
-          .then((res) {
+          .then((res) async {
         log.w('Result $res');
         txHash = res["txHash"];
         errorMessage = res["errMsg"];
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
+          receiverWalletAddressTextController.text = '';
+          sendAmountTextController.text = '';
+          String date = DateTime.now().toString();
+          TransactionHistory transactionHistory = new TransactionHistory(
+              tickerName: tickerName,
+              address: toWalletAddress,
+              amount: amount,
+              date: date);
+          await transactionHistoryDatabaseService
+              .insert(transactionHistory)
+              .then((data) => log.w('Saved in transaction history database'))
+              .catchError(
+                  (onError) => log.e('Could not save in database $onError'));
           walletService.showInfoFlushbar(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',

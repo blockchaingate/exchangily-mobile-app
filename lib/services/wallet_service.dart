@@ -249,7 +249,7 @@ class WalletService {
         // compare it with the same coin tickername from asset balance result until the match or loop ends
         for (var j = 0; j < _walletInfo.length; j++) {
           if (coin == _walletInfo[j].tickerName) {
-            _walletInfo[j].assetsInExchange = res[i]['amount'];
+            _walletInfo[j].inExchange = res[i]['amount'];
             break;
           }
         }
@@ -268,7 +268,7 @@ class WalletService {
   }
 
   // Gas Balance
-  gasBalance(String addr) async {
+  Future<double> gasBalance(String addr) async {
     double gasAmount = 0.0;
     await _api.getGasBalance(addr).then((res) {
       if (res != null &&
@@ -277,6 +277,9 @@ class WalletService {
         var newBal = BigInt.parse(res['balance']['FAB']);
         gasAmount = stringUtils.bigNum2Double(newBal);
       }
+    }).timeout(Duration(seconds: 25), onTimeout: () {
+      log.e('Timeout');
+      gasAmount = 0.0;
     }).catchError((onError) {
       log.w('On error $onError');
       gasAmount = 0.0;
@@ -344,22 +347,6 @@ class WalletService {
     }
     return coinUsdBalance;
   }
-
-  // Calculate Total Usd Balance
-
-  // calculateTotalUsdBalance() {
-  //   sum = 0;
-  //   if (totalUsdBalance.isNotEmpty) {
-  //     log.w('Total usd balance list count ${totalUsdBalance.length}');
-  //     for (var i = 0; i < totalUsdBalance.length; i++) {
-  //       sum = sum + totalUsdBalance[i];
-  //     }
-  //     log.w('Sum $sum');
-  //     return sum;
-  //   }
-  //   log.w('totalUsdBalance List empty');
-  //   return 0.0;
-  // }
 
 // Add Gas
   Future<int> addGas() async {
@@ -683,7 +670,8 @@ class WalletService {
         };
       }
 
-      var transFee = (receivePrivateKeyArr.length) * feePerInput + (2 * 34 + 10) * satoshisPerBytes;
+      var transFee = (receivePrivateKeyArr.length) * feePerInput +
+          (2 * 34 + 10) * satoshisPerBytes;
       print('extraTransactionFee==' + extraTransactionFee.toString());
       print('transFee==' + transFee.toString());
       transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +

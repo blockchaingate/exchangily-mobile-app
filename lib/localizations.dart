@@ -198,11 +198,6 @@ class AppLocalizations {
         name: 'totalBalance', desc: 'total_balance');
   }
 
-  String get assetInExchange {
-    return Intl.message('Asset In Exchange',
-        name: 'assetInExchange', desc: 'asset_in_exchange');
-  }
-
   String get moveAndTrade {
     return Intl.message('Move to Exchange',
         name: 'moveAndTrade', desc: 'move_and_trade');
@@ -223,9 +218,9 @@ class AppLocalizations {
         name: 'hideSmallAmountAssets', desc: 'hide_small_amount_assets');
   }
 
-  String get assetsInExchange {
-    return Intl.message('Assets In Exchange',
-        name: 'assetsInExchange', desc: 'assets_in_exchange');
+  String get inExchange {
+    return Intl.message('In Exchange',
+        name: 'inExchange', desc: 'assets_in_exchange');
   }
 
   String get secureYourWallet {

@@ -1,10 +1,10 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.0.1+2
+version: 1.0.2+3
 
 environment:
-  sdk: '>=2.3.2 <3.0.0'
+  sdk: ">=2.3.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -106,8 +106,8 @@ dependencies:
       ref: master
 
 dev_dependencies:
-  intl_translation: '^0.17.0'
-  flutter_launcher_icons: '^0.7.3'
+  intl_translation: "^0.17.0"
+  flutter_launcher_icons: "^0.7.3"
 
   flutter_test:
     sdk: flutter

@@ -116,7 +116,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SettingsScreen());
 
       case '/transactionHistory':
-        return MaterialPageRoute(builder: (_) => TransactionHistory());
+        return MaterialPageRoute(
+            builder: (_) => TransactionHistory(
+                  tickerName: args,
+                ));
 
       default:
         return _errorRoute(settings);

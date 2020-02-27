@@ -80,16 +80,17 @@ class MarketDetailState extends State<MarketDetail>
             indicatorColor: Colors.white,
           ),
           Container(
-              height: 530,
-              child: TabBarView(
-                children: [
-                  Container(child: Column(children: usdtWidgets)),
-                  Container(child: Column(children: btcWidgets)),
-                  Container(child: Column(children: ethWidgets)),
-                  Container(child: Column(children: exgWidgets)),
-                ],
-                controller: _tabController,
-              ))
+            height: 550,
+            child: TabBarView(
+              children: [
+                Container(child: Column(children: usdtWidgets)),
+                Container(child: Column(children: btcWidgets)),
+                Container(child: Column(children: ethWidgets)),
+                Container(child: Column(children: exgWidgets)),
+              ],
+              controller: _tabController,
+            ),
+          )
         ],
       ),
     );

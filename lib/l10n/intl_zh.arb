@@ -209,13 +209,13 @@
         "type": "text",
         "placeholders": {}
     },
-    "assetInExchange": "交易所资产",
+    "assetInExchange": "在交易所资产",
     "@assetInExchange": {
         "description": "wallet_feature_asset_in_Exchange",
         "type": "text",
         "placeholders": {}
     },
-    "moveAndTrade": "存款及交易",
+    "moveAndTrade": "转去交易所",
     "@moveAndTrade": {
         "description": "wallet_feature_move_and_trade",
         "type": "text",
@@ -239,9 +239,9 @@
         "type": "text",
         "placeholders": {}
     },
-    "assetsInExchange": "交易所资产",
-    "@assetsInExchange": {
-        "description": "total_balance_screen_assets_in_exchange",
+    "inExchange": "在交易所",
+    "@inExchange": {
+        "description": "assets_in_exchange",
         "type": "text",
         "placeholders": {}
     },

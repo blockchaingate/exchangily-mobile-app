@@ -72,6 +72,7 @@ class TransactionHistoryDatabaseService {
 
 // Insert Data In The Database
   Future insert(TransactionHistory transactionHistory) async {
+    await initDb();
     final Database db = await _database;
     int id = await db.insert(tableName, transactionHistory.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
@@ -79,15 +80,18 @@ class TransactionHistoryDatabaseService {
   }
 
   // Get Single Wallet By Name
-  Future getByName(String name) async {
+  Future<List<TransactionHistory>> getByName(String name) async {
+    await initDb();
     final Database db = await _database;
     List<Map> res =
-        await db.query(tableName, where: 'name= ?', whereArgs: [name]);
-    log.w('ID - $name --- $res');
-    if (res.length > 0) {
-      return TransactionHistory.fromJson((res.first));
-    }
-    return null;
+        await db.query(tableName, where: 'tickerName= ?', whereArgs: [name]);
+    log.w('Name - $name --- $res');
+
+    List<TransactionHistory> list = res.isNotEmpty
+        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
+        : [];
+    return list;
+    // return TransactionHistory.fromJson((res.first));
   }
 
   // Get Single Wallet By Id

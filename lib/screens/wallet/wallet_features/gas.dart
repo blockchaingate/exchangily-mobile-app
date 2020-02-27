@@ -38,7 +38,7 @@ class Gas extends StatelessWidget {
             "${AppLocalizations.of(context).gas}: $gasAmount",
             style: Theme.of(context)
                 .textTheme
-                .display2
+                .headline5
                 .copyWith(wordSpacing: 1.25),
           ),
         )

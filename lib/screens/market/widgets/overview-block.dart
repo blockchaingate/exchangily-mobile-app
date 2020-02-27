@@ -3,19 +3,22 @@ import "package:flutter/material.dart";
 import '../../../shared/globals.dart' as globals;
 
 class MarketOverviewBlock extends StatelessWidget {
-  String pair;
-  double price;
-  double change;
+  final String pair;
+  final double price;
+  final double change;
   MarketOverviewBlock(this.pair, this.price, this.change);
   @override
   Widget build(BuildContext context) {
     return Container(
         child: Column(
       children: <Widget>[
-        Text(pair, style: Theme.of(context).textTheme.display4),
+        Text(pair, style: Theme.of(context).textTheme.headline4),
         UIHelper.horizontalSpaceSmall,
         Text(price.toString(),
-            style: TextStyle(color: globals.primaryColor, fontSize: 14)),
+            style: Theme.of(context)
+                .textTheme
+                .headline4
+                .copyWith(color: globals.primaryColor)),
         Text(
             (((change != null) && (change >= 0)) ? "+" : "") +
                 change.toString() +

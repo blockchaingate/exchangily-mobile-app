@@ -3,6 +3,7 @@ import 'package:bitcoin_flutter/src/models/networks.dart';
 const bool isProduction = true;
 const bool isLocal = false;
 Map devConfig = {
+  "decimal": {'priceDecimal': 6, 'volDecimal': 4},
   "chains": {
     "BTC": {"network": testnet, "satoshisPerBytes": 50, "bytesPerInput": 152},
     "ETH": {
