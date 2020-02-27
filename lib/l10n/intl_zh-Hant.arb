@@ -245,6 +245,12 @@
         "type": "text",
         "placeholders": {}
     },
+    "inExchange": "在交易所",
+    "@inExchange": {
+        "description": "assets_in_exchange",
+        "type": "text",
+        "placeholders": {}
+    },
     "secureYourWallet": "安全保管您的錢包",
     "@secureYourWallet": {
         "description": "wallet_setup_secure_your_wallet",
