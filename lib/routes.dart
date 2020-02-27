@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
+import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
@@ -123,6 +124,8 @@ class RouteGenerator {
                 ));
       case '/otc':
         return MaterialPageRoute(builder: (_) => OtcScreen());
+      case '/otcDetails':
+        return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
 
       default:
         return _errorRoute(settings);

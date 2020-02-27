@@ -242,8 +242,8 @@ class OtcScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    onTap: () async {
-                      await model.deleteWallet();
+                    onTap: () {
+                      Navigator.pushNamed(context, '/otcDetails');
                     })
               ],
             )),

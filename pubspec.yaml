@@ -128,5 +128,11 @@ flutter_icons:
   image_path: "assets/images/launcher/mobile-icon.png"
   android: true
   ios: true
+
+fonts:
+  - family: Roboto
+    fonts:
+      - asset: Roboto-Italic.ttf
+      - asset: Roboto-normal.ttf
   #  - lib/l10n/en.json
   #  - lib/l10n/zh.json
