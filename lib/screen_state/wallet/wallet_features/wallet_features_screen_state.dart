@@ -88,10 +88,12 @@ class WalletFeaturesScreenState extends BaseState {
       log.w(data);
       log.w(walletBalance);
       walletBalance = data['balance'];
+      double walletLockedBal = data['lockbalance'];
       walletInfo.availableBalance = walletBalance;
       double currentUsdValue =
           await walletService.getCoinMarketPrice(walletInfo.name);
-      walletService.calculateCoinUsdBalance(currentUsdValue, walletBalance);
+      walletService.calculateCoinUsdBalance(
+          currentUsdValue, walletBalance, walletLockedBal);
       walletInfo.usdValue = walletService.coinUsdBalance;
     }).catchError((onError) {
       log.e(onError);

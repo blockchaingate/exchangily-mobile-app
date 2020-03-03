@@ -64,7 +64,7 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
                   Expanded(
                     child: Text('Please choose the language',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.display3),
+                        style: Theme.of(context).textTheme.headline5),
                   )
                 ],
               ),
@@ -77,7 +77,7 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
                     child: Center(
                       child: Text(
                         'Loading...',
-                        style: Theme.of(context).textTheme.headline,
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),
                   )
@@ -89,7 +89,10 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
                         children: <Widget>[
                           // English Lang Button
                           RaisedButton(
-                            child: Text('English'),
+                            child: Text(
+                              'English',
+                              style: Theme.of(context).textTheme.headline4,
+                            ),
                             onPressed: () {
                               model.setLangauge('en');
                               AppLocalizations.load(Locale('en', 'US'));
@@ -102,7 +105,8 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
                                 side: BorderSide(
                                     color: globals.primaryColor, width: 2)),
                             color: globals.secondaryColor,
-                            child: Text('中文'),
+                            child: Text('中文',
+                                style: Theme.of(context).textTheme.headline4),
                             onPressed: () {
                               model.setLangauge('zh');
                               AppLocalizations.load(Locale('zh', 'ZH'));

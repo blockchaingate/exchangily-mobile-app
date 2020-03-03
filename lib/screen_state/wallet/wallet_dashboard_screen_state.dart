@@ -113,8 +113,8 @@ class WalletDashboardScreenState extends BaseState {
         log.e('Something went wrong  - $error');
       });
       double marketPrice = await walletService.getCoinMarketPrice(name);
-      coinUsdBalance =
-          walletService.calculateCoinUsdBalance(marketPrice, walletBal);
+      coinUsdBalance = walletService.calculateCoinUsdBalance(
+          marketPrice, walletBal, walletLockedBal);
       WalletInfo wi = WalletInfo(
           id: id,
           tickerName: tickerName,

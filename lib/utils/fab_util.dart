@@ -21,6 +21,7 @@ import 'package:web3dart/web3dart.dart';
 import "package:hex/hex.dart";
 import 'package:crypto/crypto.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
+
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final log = getLogger('fab_util');
 
@@ -28,7 +29,9 @@ Future getFabTransactionStatus(String txid) async {
   var url = fabBaseUrl + 'gettransactionjson/' + txid;
   var client = new http.Client();
   var response = await client.get(url);
-  return response;
+  print(url);
+  log.w(response.body);
+  return response.body;
 }
 
 getFabNode(root, {index = 0}) {
@@ -210,7 +213,7 @@ Future getFabBalanceByAddress(String address) async {
 
 exgToFabAddress(String address) {
   var prefix = '6f';
-  if(isProduction) {
+  if (isProduction) {
     prefix = '00';
   }
   address = prefix + trimHexPrefix(address);
@@ -246,7 +249,7 @@ btcToBase58Address(address) {
   var digest1 = sha256.convert(bytes).toString();
   var bytes1 = hex.decode(digest1);
   var digest2 = sha256.convert(bytes1).toString();
-  var checksum = digest2.substring(0,8);
+  var checksum = digest2.substring(0, 8);
 
   address = HEX.encode(bytes);
   address = address + checksum;
@@ -256,8 +259,6 @@ btcToBase58Address(address) {
 
 Future getFabTokenBalanceForABI(
     String balanceInfoABI, String smartContractAddress, String address) async {
-
-
   var body = {
     'address': trimHexPrefix(smartContractAddress),
     'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
@@ -279,7 +280,6 @@ Future getFabTokenBalanceForABI(
     print('unlockInt===' + unlockInt.toString());
     tokenBalance = bigNum2Double(unlockInt);
     print('tokenBalance===' + tokenBalance.toString());
-
   } catch (e) {}
   return tokenBalance;
 }

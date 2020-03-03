@@ -224,7 +224,8 @@ class WalletService {
         double walletLockedBal = bal['lockbalance'];
         log.w(
             'tickername $tickerName - address: $addr - balance: $walletBal - Locked balance: $walletLockedBal');
-        calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
+        calculateCoinUsdBalance(
+            coinUsdMarketPrice[i], walletBal, walletLockedBal);
         if (tickerName == 'EXG') {
           exgAddress = addr;
           log.e(exgAddress);
@@ -333,11 +334,12 @@ class WalletService {
 
   // Calculate Only Usd Balance For Individual Coin
   double calculateCoinUsdBalance(
-      double marketPrice, double actualWalletBalance) {
-    log.w('usdVal =$marketPrice, actualwallet bal $actualWalletBalance');
+      double marketPrice, double actualWalletBalance, double lockedBalance) {
+    log.w(
+        'usdVal =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
     if (actualWalletBalance != 0 && marketPrice != null) {
       coinUsdBalance = (marketPrice * actualWalletBalance);
-
+      coinUsdBalance = coinUsdBalance + lockedBalance;
       // totalUsdBalance.add(coinUsdBalance);
       // log.w('Total coin usd balance list $totalUsdBalance');
       return coinUsdBalance;
