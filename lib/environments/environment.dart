@@ -22,7 +22,7 @@ Map devConfig = {
       "gasPrice": 50,
       "gasLimit": 800000
     },
-    "KANBAN": {"chainId": 212, "gasPrice": 5000000000, "gasLimit": 200000}
+    "KANBAN": {"chainId": 212, "gasPrice": 500000000, "gasLimit": 2000000}
   },
   "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150},
   'endpoints': {
@@ -77,7 +77,7 @@ Map productionConfig = {
       "gasPrice": 50,
       "gasLimit": 800000
     },
-    "KANBAN": {"chainId": 211, "gasPrice": 5000000000, "gasLimit": 200000}
+    "KANBAN": {"chainId": 211, "gasPrice": 500000000, "gasLimit": 2000000}
   },
   "CoinType": {"BTC": 0, "ETH": 60, "FAB": 1150},
   'endpoints': {
