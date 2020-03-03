@@ -36,7 +36,17 @@ class WalletDashboardScreenState extends BaseState {
   String wallets;
   List walletInfoCopy = [];
   BuildContext context;
+  bool isHideSmallAmountAssets = false;
 
+// Hide Small Amount Assets
+
+  hideSmallAmountAssets() {
+    setState(ViewState.Busy);
+    isHideSmallAmountAssets = !isHideSmallAmountAssets;
+    setState(ViewState.Idle);
+  }
+
+// Calculate Total Usd Balance of Coins
   calcTotalBal(numberOfCoins) {
     totalUsdBalance = 0;
     for (var i = 0; i < numberOfCoins; i++) {
