@@ -426,6 +426,13 @@ class BuySellScreenState extends BaseState {
             Icons.cancel,
             globals.red,
             context);
+      } else {
+        walletService.showInfoFlushbar(
+            AppLocalizations.of(context).placeOrderTransactionFailed,
+            resKanban.toString(),
+            Icons.cancel,
+            globals.red,
+            context);
       }
     } else {
       if (res.returnedText != 'Closed') {
