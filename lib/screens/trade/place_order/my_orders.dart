@@ -64,7 +64,7 @@ class MyOrdersState extends State<MyOrders>
 
   @override
   void initState() {
-    _tabController = new TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
 
     super.initState();
   }
@@ -80,82 +80,13 @@ class MyOrdersState extends State<MyOrders>
     }
   }
 
-  /*
-  refresh(String address) {
-    if (address == null) {
-      return;
-    }
-    Timer.periodic(Duration(seconds: 3), (Timer time) async {
-      // print("Yeah, this line is printed after 3 seconds");
-      var balances = await getAssetsBalance(address);
-      var orders = await getOrders(address);
-
-      List<Map<String, dynamic>> newbals = [];
-      List<Map<String, dynamic>> openOrds = [];
-      List<Map<String, dynamic>> closeOrds = [];
-
-      for (var i = 0; i < balances.length; i++) {
-        var bal = balances[i];
-        var coinType = int.parse(bal['coinType']);
-        var unlockedAmount = bigNum2Double(bal['unlockedAmount']);
-        var lockedAmount = bigNum2Double(bal['lockedAmount']);
-        var newbal = {
-          "coin": coin_list[coinType]['name'],
-          "amount": unlockedAmount,
-          "lockedAmount": lockedAmount
-        };
-        newbals.add(newbal);
-      }
-
-      for (var i = 0; i < orders.length; i++) {
-        var order = orders[i];
-        var orderHash = order['orderHash'];
-        var address = order['address'];
-        var orderType = order['orderType'];
-        var bidOrAsk = order['bidOrAsk'];
-        var pairLeft = order['pairLeft'];
-        var pairRight = order['pairRight'];
-        var price = bigNum2Double(order['price']);
-        var orderQuantity = bigNum2Double(order['orderQuantity']);
-        var filledQuantity = bigNum2Double(order['filledQuantity']);
-        var time = order['time'];
-        var isActive = order['isActive'];
-
-        //{ "block":  "absdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
-        var newOrd = {
-          'orderHash': orderHash,
-          'type': (bidOrAsk == true) ? 'Buy' : 'Sell',
-          'pair': coin_list[pairLeft]['name'].toString() +
-              '/' +
-              coin_list[pairRight]['name'].toString(),
-          'price': price,
-          'amount': orderQuantity,
-          'filledAmount': filledQuantity
-        };
-
-        if (isActive == true) {
-          openOrds.add(newOrd);
-        } else {
-          closeOrds.add(newOrd);
-        }
-      }
-      if (this.mounted) {
-        setState(() => {
-              this.balance = newbals,
-              this.openOrders =
-                  openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds,
-              this.closedOrders =
-                  closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds
-            });
-      }
-    });
-  }
-  */
-
   @override
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+        /*-----------------------------------------------------------------
+                      Hide Small Amount Row
+-----------------------------------------------------------------*/
         child: Column(
           children: <Widget>[
             TabBar(
@@ -168,9 +99,9 @@ class MyOrdersState extends State<MyOrders>
               tabs: [
                 Padding(
                     padding: const EdgeInsets.only(top: 10.0, bottom: 8.0),
-                    child: new Text(AppLocalizations.of(context).openOrders)),
-                new Text(AppLocalizations.of(context).closeOrders),
-                new Text(AppLocalizations.of(context).assets)
+                    child: Text(AppLocalizations.of(context).openOrders)),
+                Text(AppLocalizations.of(context).closeOrders),
+                Text(AppLocalizations.of(context).assets)
               ],
               controller: _tabController,
               indicatorColor: Colors.white,

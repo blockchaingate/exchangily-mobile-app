@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
@@ -50,6 +51,7 @@ class SendScreenState extends BaseState {
   WalletInfo walletInfo;
   bool checkSendAmount = false;
   double amountDouble = 0;
+  Timer timer;
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final receiverWalletAddressTextController = TextEditingController();
@@ -149,16 +151,21 @@ class SendScreenState extends BaseState {
           receiverWalletAddressTextController.text = '';
           sendAmountTextController.text = '';
           String date = DateTime.now().toString();
+          // Build transaction history object
           TransactionHistory transactionHistory = new TransactionHistory(
               tickerName: tickerName,
               address: toWalletAddress,
               amount: amount,
               date: date);
+          // Add transaction history object in database
           await transactionHistoryDatabaseService
               .insert(transactionHistory)
               .then((data) => log.w('Saved in transaction history database'))
               .catchError(
                   (onError) => log.e('Could not save in database $onError'));
+          timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
+            checkTxStatus(tickerName, txHash);
+          });
           walletService.showInfoFlushbar(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
@@ -207,16 +214,32 @@ class SendScreenState extends BaseState {
 
   // Check transaction status not working yet
 
-  checkTxStatus(String txHash, String tickerName) async {
+  checkTxStatus(String tickerName, String txHash) async {
     if (tickerName == 'FAB') {
-      var res = await walletService.getFabTxStatus(txHash);
-      log.w('$tickerName TX Status response $res');
+      await walletService.getFabTxStatus(txHash).then((res) {
+        if (res != null) {
+          var confirmations = res['confirmations'];
+          // timer?.cancel();
+          log.w('$tickerName Not null $confirmations');
+        }
+
+        log.w('$tickerName TX Status response $res');
+      }).catchError((onError) {
+        timer.cancel();
+        log.e(onError);
+      });
       //  Navigator.pushNamed(context, '/walletFeatures');
     } else if (tickerName == 'ETH') {
-      var res = await walletService.getEthTxStatus(txHash);
-      log.w('$tickerName TX Status response $res');
+      await walletService.getEthTxStatus(txHash).then((res) {
+        timer.cancel();
+        log.w('$tickerName TX Status response $res');
+      }).catchError((onError) {
+        timer.cancel();
+        log.e(onError);
+      });
       //  Navigator.pushNamed(context, '/walletFeatures');
     } else {
+      timer.cancel();
       log.e('No Check TX Status found');
     }
   }

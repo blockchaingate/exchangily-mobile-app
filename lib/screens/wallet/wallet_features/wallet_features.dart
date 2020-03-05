@@ -315,38 +315,46 @@ class WalletFeaturesScreen extends StatelessWidget {
                   Text(
                     '${walletInfo.tickerName} ' +
                         AppLocalizations.of(context).totalBalance,
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        .copyWith(color: globals.buyPrice),
                   ),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(8.0, 0.0, 2.0, 0.0),
-                      child: Container(
-                        padding: EdgeInsets.only(left: 15),
-                        child: InkWell(
-                            onTap: () async {
-                              await model.refreshErrDeposit();
-                              await model.refreshBalance();
-                            },
-                            child: model.state == ViewState.Busy
-                                ? SizedBox(
-                                    child: CircularProgressIndicator(),
-                                    width: 20,
-                                    height: 20,
-                                  )
-                                : Icon(
-                                    Icons.refresh,
-                                    color: globals.white,
-                                    size: 30,
-                                  )),
-                      )),
+                  Container(
+                    width: 100,
+                    padding: EdgeInsets.only(left: 15),
+                    child: InkWell(
+                        onTap: () async {
+                          await model.refreshErrDeposit();
+                          await model.refreshBalance();
+                        },
+                        child: model.state == ViewState.Busy
+                            ? SizedBox(
+                                child: CircularProgressIndicator(),
+                                width: 20,
+                                height: 20,
+                              )
+                            : Center(
+                                child: Icon(
+                                  Icons.refresh,
+                                  color: globals.white,
+                                  size: 28,
+                                ),
+                              )),
+                  ),
                   Expanded(
                     child: Text(
                       '${model.walletInfo.usdValue.toStringAsFixed(2)} USD',
                       textAlign: TextAlign.right,
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: globals.buyPrice),
                     ),
                   )
                 ],
               ),
+              // Middle column row containes wallet balance and in exchnage text
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -358,6 +366,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.subtitle1)
                 ],
               ),
+              // Last column row contains wallet balance and exchange balance
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[

@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class WalletDashboardScreenState extends BaseState {
   final log = getLogger('WalletDahsboardScreenState');
@@ -36,7 +37,25 @@ class WalletDashboardScreenState extends BaseState {
   String wallets;
   List walletInfoCopy = [];
   BuildContext context;
+  bool isHideSmallAmountAssets = false;
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
+  // Pull to refresh
+  void onRefresh() async {
+    await refreshBalance();
+    refreshController.refreshCompleted();
+  }
+
+// Hide Small Amount Assets
+
+  hideSmallAmountAssets() {
+    setState(ViewState.Busy);
+    isHideSmallAmountAssets = !isHideSmallAmountAssets;
+    setState(ViewState.Idle);
+  }
+
+// Calculate Total Usd Balance of Coins
   calcTotalBal(numberOfCoins) {
     totalUsdBalance = 0;
     for (var i = 0; i < numberOfCoins; i++) {
@@ -113,8 +132,8 @@ class WalletDashboardScreenState extends BaseState {
         log.e('Something went wrong  - $error');
       });
       double marketPrice = await walletService.getCoinMarketPrice(name);
-      coinUsdBalance =
-          walletService.calculateCoinUsdBalance(marketPrice, walletBal);
+      coinUsdBalance = walletService.calculateCoinUsdBalance(
+          marketPrice, walletBal, walletLockedBal);
       WalletInfo wi = WalletInfo(
           id: id,
           tickerName: tickerName,

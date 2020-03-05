@@ -56,14 +56,14 @@ class TradePriceState extends State<TradePrice> {
                             ? currentPrice.price.toStringAsFixed(4)
                             : '',
                         style: TextStyle(
-                            fontSize: 50, color: globals.priceColor))),
+                            fontSize: 40, color: globals.priceColor))),
                 Text(
                     "\$" +
                         ((currentPrice != null)
                                 ? (currentPrice.price * currentUsdPrice)
                                 : 0)
                             .toStringAsFixed(6),
-                    style: Theme.of(context).textTheme.headline2)
+                    style: Theme.of(context).textTheme.headline3)
               ],
             ),
             // Change Price Value Row
