@@ -3,7 +3,7 @@ import "detail-pair.dart";
 import '../../../models/price.dart';
 
 class MarketDetail extends StatefulWidget {
-  List<Price> data;
+  final List<Price> data;
   MarketDetail({Key key, this.data}) : super(key: key);
 
   @override

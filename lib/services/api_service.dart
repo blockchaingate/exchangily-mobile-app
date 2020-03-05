@@ -61,6 +61,8 @@ class Api {
     try {
       final res = await http
           .get(environment['endpoints']['kanban'] + assetsBalance + exgAddress);
+      log.e(
+          '${environment['endpoints']['kanban'] + assetsBalance + exgAddress}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
@@ -72,7 +74,6 @@ class Api {
 
 // Get Orders
   Future getOrders(String exgAddress) async {
-    log.w(exgAddress);
     try {
       final res = await http
           .get(environment['endpoints']['kanban'] + orders + exgAddress);
