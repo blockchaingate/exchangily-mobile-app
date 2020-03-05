@@ -43,9 +43,9 @@ class WalletDashboardScreen extends StatelessWidget {
           log.w('wallet info not null');
           model.walletInfo = walletInfo;
           await model.refreshBalance();
-          model.calcTotalBal(walletInfo.length);
+          //  model.calcTotalBal(walletInfo.length);
         } else {
-          log.w('wallet info empty, Retrieving wallets from local storage');
+          log.w('Retrieving wallets from local storage');
           await model.retrieveWallets();
         }
         await model.getGas();
@@ -93,13 +93,6 @@ class WalletDashboardScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      // Comment expand below in production release
-                      // Expanded(
-                      //     child: Visibility(
-                      //   visible: !isProduction,
-                      //   child: Text('Debug Version',
-                      //       style: TextStyle(color: Colors.white)),
-                      // )),
                       Expanded(
                         child: Stack(
                             alignment: Alignment.center,
@@ -190,22 +183,22 @@ class WalletDashboardScreen extends StatelessWidget {
                                           ],
                                         ),
                                       ),
-                                      // InkWell(
-                                      //     onTap: () async {
-                                      //       await model.refreshBalance();
-                                      //     },
-                                      //     child: model.state == ViewState.Busy
-                                      //         ? SizedBox(
-                                      //             child:
-                                      //                 CircularProgressIndicator(),
-                                      //             width: 18,
-                                      //             height: 18,
-                                      //           )
-                                      //         : Icon(
-                                      //             Icons.refresh,
-                                      //             color: globals.white,
-                                      //             size: 28,
-                                      //           ))
+                                      InkWell(
+                                          onTap: () async {
+                                            await model.refreshBalance();
+                                          },
+                                          child: model.state == ViewState.Busy
+                                              ? SizedBox(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                  width: 18,
+                                                  height: 18,
+                                                )
+                                              : Icon(
+                                                  Icons.refresh,
+                                                  color: globals.white,
+                                                  size: 28,
+                                                ))
                                     ],
                                   ),
                                 ),
