@@ -106,29 +106,34 @@ class DepositScreenState extends BaseState {
         'contractAddress': environment["addresses"]["smartContract"][coinName]
       };
 
-      var ret = await walletService.depositDo(
-          seed, coinName, tokenType, amount, option);
-
-      if (ret["success"]) {
-        myController.text = '';
-      }
-      var errMsg = ret['data'];
-      if (errMsg == null || errMsg == '') {
-        errMsg = ret['error'];
-      }
-      if (errMsg == null || errMsg == '') {
-        errMsg = 'Unknown Error';
-      }
-      walletService.showInfoFlushbar(
-          ret["success"]
-              ? AppLocalizations.of(context).depositTransactionSuccess
-              : AppLocalizations.of(context).depositTransactionFailed,
-          ret["success"]
-              ? 'transactionID:' + ret['data']['transactionID']
-              : errMsg,
-          Icons.cancel,
-          globals.red,
-          context);
+      await walletService
+          .depositDo(seed, coinName, tokenType, amount, option)
+          .then((ret) {
+        if (ret["success"]) {
+          myController.text = '';
+        }
+        var errMsg = ret['data'];
+        if (errMsg == null || errMsg == '') {
+          errMsg = ret['error'];
+        }
+        if (errMsg == null || errMsg == '') {
+          errMsg = 'Unknown Error';
+        }
+        walletService.showInfoFlushbar(
+            ret["success"]
+                ? AppLocalizations.of(context).depositTransactionSuccess
+                : AppLocalizations.of(context).depositTransactionFailed,
+            ret["success"]
+                ? 'transactionID:' + ret['data']['transactionID']
+                : errMsg,
+            Icons.cancel,
+            globals.red,
+            context);
+        setState(ViewState.Idle);
+      }).catchError((onError) {
+        setState(ViewState.Idle);
+        log.e(onError);
+      });
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
@@ -168,28 +173,35 @@ class DepositScreenState extends BaseState {
     };
     var address = walletInfo.address;
 
-    var ret = await walletService.sendTransaction(
-        walletInfo.tickerName,
-        Uint8List.fromList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-        [0],
-        [address],
-        to,
-        amount,
-        options,
-        false);
-
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
     var kanbanTransFeeDouble = (Decimal.parse(kanbanPrice.toString()) *
             Decimal.parse(kanbanGasLimit.toString()) /
             Decimal.parse('1e18'))
         .toDouble();
-    if (ret != null && ret['transFee'] != null) {
-      setState(ViewState.Busy);
-      transFee = ret['transFee'];
-      kanbanTransFee = kanbanTransFeeDouble;
+    await walletService
+        .sendTransaction(
+            walletInfo.tickerName,
+            Uint8List.fromList(
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+            [0],
+            [address],
+            to,
+            amount,
+            options,
+            false)
+        .then((ret) {
+      if (ret != null && ret['transFee'] != null) {
+        setState(ViewState.Busy);
+        transFee = ret['transFee'];
+        kanbanTransFee = kanbanTransFeeDouble;
+        setState(ViewState.Idle);
+      }
+    }).catchError((onError) {
       setState(ViewState.Idle);
-    }
+      log.e(onError);
+    });
+
     setState(ViewState.Idle);
   }
 }
