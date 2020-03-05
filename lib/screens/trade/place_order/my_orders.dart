@@ -84,11 +84,11 @@ class MyOrdersState extends State<MyOrders>
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-        /*-----------------------------------------------------------------
-                      Hide Small Amount Row
------------------------------------------------------------------*/
         child: Column(
           children: <Widget>[
+/*-----------------------------------------------------------------
+                      Tab bar and container of tabs
+-----------------------------------------------------------------*/
             TabBar(
               unselectedLabelColor: Colors.white,
               labelColor: Colors.white,
