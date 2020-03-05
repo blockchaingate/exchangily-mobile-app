@@ -582,7 +582,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "filledAmount": "Filled Amount",
+  "filledAmount": "Filled",
   "@filledAmount": {
     "description": "filled_amount_text",
     "type": "text",

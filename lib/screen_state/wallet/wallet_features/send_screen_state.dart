@@ -163,9 +163,9 @@ class SendScreenState extends BaseState {
               .then((data) => log.w('Saved in transaction history database'))
               .catchError(
                   (onError) => log.e('Could not save in database $onError'));
-          timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
-            checkTxStatus(tickerName, txHash);
-          });
+          // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
+          //   checkTxStatus(tickerName, txHash);
+          // });
           walletService.showInfoFlushbar(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',

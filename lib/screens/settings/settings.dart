@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
@@ -152,17 +153,26 @@ class SettingsScreen extends StatelessWidget {
                     width: 200,
                     height: 50,
                     child: Center(
-                        child: Column(
+                        child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'v ${model.versionName}',
                           style: Theme.of(context).textTheme.headline4,
-                        )
+                        ),
+                        if (!isProduction)
+                          Text(' Debug', style: TextStyle(color: Colors.white))
                       ],
                     )),
                   ),
                 ),
+                // Comment expand below in production release
+                // Expanded(
+                //     child: Visibility(
+                //   visible: !isProduction,
+                //   child: Text('Debug Version',
+                //       style: TextStyle(color: Colors.white)),
+                // )),
                 Container(
                   padding: EdgeInsets.all(5),
                   child: Center(

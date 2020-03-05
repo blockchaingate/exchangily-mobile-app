@@ -148,19 +148,27 @@ class WalletDashboardScreenState extends BaseState {
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();
+    await updateWalletDatabase();
+    setState(ViewState.Idle);
+    return walletInfo;
+  }
+
+  // Update wallet database
+  updateWalletDatabase() async {
+    log.w('test t4estdsfasdgfasg ');
     for (int i = 0; i < walletInfo.length; i++) {
       await databaseService.update(walletInfo[i]);
       await databaseService.getById(walletInfo[i].id);
     }
-    setState(ViewState.Idle);
-    return walletInfo;
   }
 
   // Get Exchange Assets
 
   getExchangeAssets() async {
     setState(ViewState.Busy);
+    log.e(exgAddress);
     var res = await walletService.assetsBalance(exgAddress);
+    log.e(res);
     var length = res.length;
     for (var i = 0; i < length; i++) {
       // Get their tickerName to compare with walletInfo tickernName
@@ -169,7 +177,9 @@ class WalletDashboardScreenState extends BaseState {
       // compare it with the same coin tickername from service until the match or loop ends
       for (var j = 0; j < walletInfo.length; j++) {
         if (coin == walletInfo[j].tickerName) {
+          log.e('$coin - $walletInfo[j].tickerName');
           walletInfo[j].inExchange = res[i]['amount'];
+          log.w(walletInfo[j].inExchange);
           break;
         }
       }

@@ -321,7 +321,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                         .copyWith(color: globals.buyPrice),
                   ),
                   Container(
-                    width: 100,
+                    //width: 100,
                     padding: EdgeInsets.only(left: 15),
                     child: InkWell(
                         onTap: () async {

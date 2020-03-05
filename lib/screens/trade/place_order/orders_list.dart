@@ -41,11 +41,7 @@ class OrdersList extends StatelessWidget {
               style: Theme.of(context).textTheme.subtitle2),
           Text(AppLocalizations.of(context).price,
               style: Theme.of(context).textTheme.subtitle2),
-          Text(
-              AppLocalizations.of(context).amount +
-                  "(" +
-                  AppLocalizations.of(context).filledAmount +
-                  ")",
+          Text(AppLocalizations.of(context).filledAmount,
               style: Theme.of(context).textTheme.subtitle2),
           if (type == 'open') Text('')
         ]),

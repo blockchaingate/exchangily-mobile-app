@@ -479,7 +479,7 @@ class BuySell extends StatelessWidget {
                                                   .price,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline4)),
+                                                  .headline5)),
                                       // Heading Quantity
                                       Container(
                                           padding: const EdgeInsets.fromLTRB(
@@ -496,7 +496,7 @@ class BuySell extends StatelessWidget {
                                                   .quantity,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline4))
+                                                  .headline5))
                                     ],
                                   ),
                                   InkWell(

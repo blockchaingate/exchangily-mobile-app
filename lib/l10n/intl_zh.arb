@@ -473,7 +473,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "filledAmount": "成交",
+    "filledAmount": "已成交",
     "@filledAmount": {
         "description": "filled_amount_text",
         "type": "text",
