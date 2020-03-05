@@ -422,8 +422,8 @@ class WalletDashboardScreen extends StatelessWidget {
                       ]),
                   child:
                       Image.asset('assets/images/wallet-page/$tickerName.png'),
-                  width: 40,
-                  height: 40),
+                  width: 35,
+                  height: 35),
               // Tickername available locked and inexchange column
               Container(
                 width: 180,

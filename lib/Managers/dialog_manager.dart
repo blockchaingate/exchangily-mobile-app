@@ -107,7 +107,7 @@ class _DialogManagerState extends State<DialogManager> {
             },
             child: Text(
               request.buttonTitle,
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              style: Theme.of(context).textTheme.headline4,
             ),
           )
         ]).show();

@@ -421,7 +421,6 @@ class _DepositState extends State<Deposit> {
               UIHelper.horizontalSpaceSmall,
               // Confirm Button
               MaterialButton(
-                height: 20,
                 padding: EdgeInsets.all(15),
                 color: globals.primaryColor,
                 textColor: Colors.white,
@@ -438,9 +437,10 @@ class _DepositState extends State<Deposit> {
                   model.checkPass();
                 },
                 child: model.state == ViewState.Busy
-                    ? CircularProgressIndicator(
-                        strokeWidth: 1,
-                      )
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 1,))
                     : Text(AppLocalizations.of(context).confirm,
                         style: Theme.of(context).textTheme.headline4),
               ),
