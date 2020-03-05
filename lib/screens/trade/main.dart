@@ -226,7 +226,7 @@ class _TradeState extends State<Trade> with TradeService {
                         // Sell button
                         Flexible(
                             child: RaisedButton(
-                          color: globals.walletCardColor.withAlpha(25),
+                          color: globals.sellPrice.withAlpha(175),
                           shape: StadiumBorder(
                               side: BorderSide(
                                   color: globals.sellPrice, width: 2)),

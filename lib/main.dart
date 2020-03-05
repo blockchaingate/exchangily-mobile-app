@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
             padding: EdgeInsets.all(15),
             shape: StadiumBorder(),
             textTheme: ButtonTextTheme.primary),
-        fontFamily: 'Montserrat',
+        fontFamily: 'Roboto',
         canvasColor: globals.secondaryColor,
         primaryColor: globals.primaryColor,
         textTheme: TextTheme(
@@ -89,17 +89,18 @@ class MyApp extends StatelessWidget {
               fontWeight: FontWeight.bold,
               letterSpacing: 1.25),
           headline2: TextStyle(
-              fontSize: 20, color: globals.white, fontWeight: FontWeight.bold),
+              fontSize: 20, color: globals.white, fontWeight: FontWeight.w300),
           headline3: TextStyle(fontSize: 18, color: globals.white),
           headline4: TextStyle(
-              fontSize: 16, color: globals.white, fontWeight: FontWeight.bold),
-          subtitle1: TextStyle(fontSize: 15, color: globals.white),
-          headline5: TextStyle(fontSize: 14, color: globals.white),
-          subtitle2: TextStyle(fontSize: 14, color: globals.grey),
+              fontSize: 16, color: globals.white, fontWeight: FontWeight.w400),
+          subtitle1: TextStyle(
+              fontSize: 15, color: globals.white, fontWeight: FontWeight.w300),
+          headline5: TextStyle(
+              fontSize: 14, color: globals.white, fontWeight: FontWeight.w300),
+          subtitle2: TextStyle(
+              fontSize: 14, color: globals.grey, fontWeight: FontWeight.w300),
           bodyText1: TextStyle(
-              fontSize: 13,
-              color: globals.white38,
-              fontWeight: FontWeight.normal),
+              fontSize: 13, color: globals.white, fontWeight: FontWeight.w300),
           bodyText2: TextStyle(fontSize: 13, color: globals.red),
           headline6: TextStyle(fontSize: 12, color: globals.white),
         ),

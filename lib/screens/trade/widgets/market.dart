@@ -118,13 +118,13 @@ class TrademarketState extends State<Trademarket> {
                 Container(
                   child: Text(AppLocalizations.of(context).buyOrders,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 15, color: Colors.white70)),
+                      style: Theme.of(context).textTheme.bodyText1),
                 ),
                 Container(
                   padding: EdgeInsets.all(5.0),
                   child: Text(AppLocalizations.of(context).sellOrders,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 15, color: Colors.white70)),
+                      style: Theme.of(context).textTheme.bodyText1),
                 ),
               ]),
               UIHelper.horizontalSpaceSmall,
@@ -141,7 +141,7 @@ class TrademarketState extends State<Trademarket> {
                         width: MediaQuery.of(context).size.width * 0.45,
                         padding: EdgeInsets.all(5.0),
                         child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(AppLocalizations.of(context).quantity,
                                   style: TextStyle(
@@ -158,26 +158,26 @@ class TrademarketState extends State<Trademarket> {
                             margin: EdgeInsets.only(bottom: 5.0),
                             color: Color(0xFF264559).withAlpha(75),
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 // Quantity Container
                                 Container(
-                                    width: 100,
+                                    width: 50,
                                     child: Text(
                                         item.orderQuantity.toStringAsFixed(2),
                                         textAlign: TextAlign.start,
                                         style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: Color(0xFF5e617f)))),
                                 // Price Container
                                 Container(
-                                    width: 50,
+                                    width: 100,
                                     padding:
                                         EdgeInsets.symmetric(vertical: 7.0),
                                     child: Text(item.price.toStringAsFixed(3),
                                         textAlign: TextAlign.end,
                                         style: TextStyle(
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             color: globals.green))),
                               ],
                             )),
@@ -193,7 +193,7 @@ class TrademarketState extends State<Trademarket> {
                           width: MediaQuery.of(context).size.width * 0.45,
                           padding: EdgeInsets.all(5.0),
                           child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(AppLocalizations.of(context).price,
                                     style: TextStyle(
@@ -221,23 +221,23 @@ class TrademarketState extends State<Trademarket> {
                               color: Color(0xFF472a4a).withAlpha(75),
                               child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Container(
                                       width: 100,
                                       child: Text(item.price.toStringAsFixed(3),
                                           textAlign: TextAlign.start,
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 12,
                                               color: globals.sellPrice))),
                                   Container(
                                       width: 50,
                                       padding:
                                           EdgeInsets.symmetric(vertical: 7.0),
                                       child: Text(item.orderQuantity.toString(),
-                                          textAlign: TextAlign.start,
+                                          textAlign: TextAlign.end,
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 12,
                                               color: Color(0xFF5e617f))))
                                 ],
                               )),

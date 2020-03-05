@@ -20,7 +20,8 @@ class TransactionHistory extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).transactionHistory),
+          title: Text(AppLocalizations.of(context).transactionHistory,
+              style: Theme.of(context).textTheme.headline3),
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
@@ -75,10 +76,8 @@ class TransactionHistory extends StatelessWidget {
                                     Text(
                                       transaction.amount.toString(),
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          color: globals.white,
-                                          fontWeight: FontWeight.bold),
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
                                     )
                                   ],
                                 ),

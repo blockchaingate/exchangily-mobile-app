@@ -47,8 +47,11 @@ class _ConfirmMnemonictWalletScreenState
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
             centerTitle: true,
-            title: Text(AppLocalizations.of(context).confirm +
-                AppLocalizations.of(context).mnemonic),
+            title: Text(
+              AppLocalizations.of(context).confirm +
+                  AppLocalizations.of(context).mnemonic,
+              style: Theme.of(context).textTheme.headline3,
+            ),
             backgroundColor: globals.secondaryColor),
         body: Container(
           padding: EdgeInsets.all(10),
@@ -65,7 +68,7 @@ class _ConfirmMnemonictWalletScreenState
                 child: RaisedButton(
                   child: Text(
                     AppLocalizations.of(context).finishWalletBackup,
-                    style: Theme.of(context).textTheme.button,
+                    style: Theme.of(context).textTheme.headline4,
                   ),
                   onPressed: () {
                     model.verifyMnemonic(controller, context, count, 'create');

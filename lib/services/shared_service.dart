@@ -29,10 +29,11 @@ class SharedService {
                 backgroundColor: globals.walletCardColor.withOpacity(0.85),
                 titleTextStyle: Theme.of(context)
                     .textTheme
-                    .display3
+                    .headline5
                     .copyWith(fontWeight: FontWeight.bold),
                 contentTextStyle: TextStyle(color: globals.grey),
                 content: Text(
+                  // add here cupertino widget to check in these small widgets first then the entire app
                   '${AppLocalizations.of(context).closeTheApp}?',
                   style: TextStyle(fontSize: 16),
                 ),

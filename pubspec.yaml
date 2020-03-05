@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.0.7+12
+version: 1.0.11+17
 
 environment:
   sdk: ">=2.3.2 <3.0.0"
@@ -98,6 +98,9 @@ dependencies:
   # Build version
   package_info: 0.4.0+12
 
+  # Pull to refresh
+  pull_to_refresh: ^1.5.7
+
   # Share files
   share:
     git:
@@ -122,10 +125,17 @@ flutter:
     - assets/pages/
     - assets/images/start-page/
     - assets/images/wallet-page/
+    - assets/images/otc/
 
 flutter_icons:
   image_path: "assets/images/launcher/mobile-icon.png"
   android: true
   ios: true
+
+fonts:
+  - family: Roboto
+    fonts:
+      - asset: Roboto-Italic.ttf
+      - asset: Roboto-normal.ttf
   #  - lib/l10n/en.json
   #  - lib/l10n/zh.json

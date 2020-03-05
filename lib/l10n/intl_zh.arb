@@ -209,12 +209,6 @@
         "type": "text",
         "placeholders": {}
     },
-    "assetInExchange": "在交易所资产",
-    "@assetInExchange": {
-        "description": "wallet_feature_asset_in_Exchange",
-        "type": "text",
-        "placeholders": {}
-    },
     "moveAndTrade": "转去交易所",
     "@moveAndTrade": {
         "description": "wallet_feature_move_and_trade",
