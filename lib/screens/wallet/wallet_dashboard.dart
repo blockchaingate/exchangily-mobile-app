@@ -22,6 +22,7 @@ import 'package:exchangilymobileapp/widgets/app_drawer.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 import './wallet_features/gas.dart';
@@ -189,22 +190,22 @@ class WalletDashboardScreen extends StatelessWidget {
                                           ],
                                         ),
                                       ),
-                                      InkWell(
-                                          onTap: () async {
-                                            await model.refreshBalance();
-                                          },
-                                          child: model.state == ViewState.Busy
-                                              ? SizedBox(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                  width: 18,
-                                                  height: 18,
-                                                )
-                                              : Icon(
-                                                  Icons.refresh,
-                                                  color: globals.white,
-                                                  size: 28,
-                                                ))
+                                      // InkWell(
+                                      //     onTap: () async {
+                                      //       await model.refreshBalance();
+                                      //     },
+                                      //     child: model.state == ViewState.Busy
+                                      //         ? SizedBox(
+                                      //             child:
+                                      //                 CircularProgressIndicator(),
+                                      //             width: 18,
+                                      //             height: 18,
+                                      //           )
+                                      //         : Icon(
+                                      //             Icons.refresh,
+                                      //             color: globals.white,
+                                      //             size: 28,
+                                      //           ))
                                     ],
                                   ),
                                 ),
@@ -321,47 +322,56 @@ class WalletDashboardScreen extends StatelessWidget {
                         )
                       : Container(
                           margin: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: model.walletInfo.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              var name = model.walletInfo[index].tickerName
-                                  .toLowerCase();
-                              var usdVal = model.walletInfo[index].usdValue;
+                          child: SmartRefresher(
+                            enablePullDown: true,
+                            header:
+                                Theme.of(context).platform == TargetPlatform.iOS
+                                    ? ClassicHeader()
+                                    : MaterialClassicHeader(),
+                            controller: model.refreshController,
+                            onRefresh: model.onRefresh,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: model.walletInfo.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                var name = model.walletInfo[index].tickerName
+                                    .toLowerCase();
+                                var usdVal = model.walletInfo[index].usdValue;
 
-                              return Visibility(
-                                // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
-                                visible: usdVal >= 0 &&
-                                    !model.isHideSmallAmountAssets,
-                                child: _coinDetailsCard(
-                                    '$name',
-                                    model.walletInfo[index].availableBalance,
-                                    model.walletInfo[index].lockedBalance,
-                                    model.walletInfo[index].inExchange,
-                                    model.walletInfo[index].usdValue,
-                                    index,
-                                    walletInfo,
-                                    model.elevation,
-                                    context,
-                                    model),
-                                // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
-                                replacement: Visibility(
-                                    visible: model.isHideSmallAmountAssets &&
-                                        usdVal != 0,
-                                    child: _coinDetailsCard(
-                                        '$name',
-                                        model
-                                            .walletInfo[index].availableBalance,
-                                        model.walletInfo[index].lockedBalance,
-                                        model.walletInfo[index].inExchange,
-                                        model.walletInfo[index].usdValue,
-                                        index,
-                                        walletInfo,
-                                        model.elevation,
-                                        context,
-                                        model)),
-                              );
-                            },
+                                return Visibility(
+                                  // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
+                                  visible: usdVal >= 0 &&
+                                      !model.isHideSmallAmountAssets,
+                                  child: _coinDetailsCard(
+                                      '$name',
+                                      model.walletInfo[index].availableBalance,
+                                      model.walletInfo[index].lockedBalance,
+                                      model.walletInfo[index].inExchange,
+                                      model.walletInfo[index].usdValue,
+                                      index,
+                                      walletInfo,
+                                      model.elevation,
+                                      context,
+                                      model),
+                                  // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
+                                  replacement: Visibility(
+                                      visible: model.isHideSmallAmountAssets &&
+                                          usdVal != 0,
+                                      child: _coinDetailsCard(
+                                          '$name',
+                                          model.walletInfo[index]
+                                              .availableBalance,
+                                          model.walletInfo[index].lockedBalance,
+                                          model.walletInfo[index].inExchange,
+                                          model.walletInfo[index].usdValue,
+                                          index,
+                                          walletInfo,
+                                          model.elevation,
+                                          context,
+                                          model)),
+                                );
+                              },
+                            ),
                           ),
                         ))
             ],

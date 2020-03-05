@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class WalletDashboardScreenState extends BaseState {
   final log = getLogger('WalletDahsboardScreenState');
@@ -37,6 +38,14 @@ class WalletDashboardScreenState extends BaseState {
   List walletInfoCopy = [];
   BuildContext context;
   bool isHideSmallAmountAssets = false;
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
+
+  // Pull to refresh
+  void onRefresh() async {
+    await refreshBalance();
+    refreshController.refreshCompleted();
+  }
 
 // Hide Small Amount Assets
 

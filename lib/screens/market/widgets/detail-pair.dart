@@ -41,14 +41,12 @@ class DetailPair extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(targetCoinName,
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0)),
+                            style: Theme.of(context).textTheme.headline4),
                         Text(
                             AppLocalizations.of(context).volume +
                                 ": " +
                                 volume.toStringAsFixed(2),
-                            style:
-                                TextStyle(color: globals.red, fontSize: 14.0))
+                            style: Theme.of(context).textTheme.bodyText2)
                       ],
                     ),
                   ),
@@ -79,13 +77,10 @@ class DetailPair extends StatelessWidget {
                   // Change Container
                   Container(
                       width: 70,
-                      padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
-                      color:
-                          change >= 0 ? Color(0xFF264559) : Color(0xFF472a4a),
                       child: Text(
                           change >= 0
-                              ? "+" + change.toStringAsFixed(2)
-                              : change.toStringAsFixed(2),
+                              ? "+" + change.toStringAsFixed(2) + '%'
+                              : change.toStringAsFixed(2) + '%',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               color:

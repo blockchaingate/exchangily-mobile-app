@@ -70,16 +70,16 @@ class BuySell extends StatelessWidget {
               ),
               middle: Text(
                 pair,
-                style: TextStyle(color: Colors.white),
+                style: Theme.of(context).textTheme.headline3,
               ),
               backgroundColor: Color(0XFF1f2233),
             ),
             backgroundColor: Color(0xFF1F2233),
             body: ListView(children: <Widget>[
               Column(children: <Widget>[
+                // Buy and Sell Select Container Option at the Top
                 Row(
                   children: <Widget>[
-                    // Buy and Sell Select Container Option at the Top
                     Container(
                         decoration: BoxDecoration(
                           border: Border(
@@ -128,6 +128,7 @@ class BuySell extends StatelessWidget {
                             )))
                   ],
                 ),
+                // Price and quantity text
                 Container(
                   decoration: BoxDecoration(
                     color: Color(0xFF2c2c4c),
@@ -176,6 +177,7 @@ class BuySell extends StatelessWidget {
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                               ),
+                              // Slider
                               Slider(
                                 divisions: 6,
                                 label:
@@ -188,6 +190,7 @@ class BuySell extends StatelessWidget {
                                 },
                                 value: model.sliderValue,
                               ),
+                              // Transaction Amount text
                               Padding(
                                   padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                                   child: Row(
@@ -240,7 +243,6 @@ class BuySell extends StatelessWidget {
                                               .totalBalance,
                                           style: TextStyle(
                                               color: globals.primaryColor,
-                                              fontWeight: FontWeight.bold,
                                               fontSize: 15.0)),
                                       // First Check if Object is null
                                       model.targetCoinWalletData == null &&
@@ -254,8 +256,6 @@ class BuySell extends StatelessWidget {
                                                   style: TextStyle(
                                                       color:
                                                           globals.primaryColor,
-                                                      fontWeight:
-                                                          FontWeight.bold,
                                                       fontSize: 15.0))
                                               : Text(
                                                   "0.00" +
@@ -264,8 +264,6 @@ class BuySell extends StatelessWidget {
                                                   style: TextStyle(
                                                       color:
                                                           globals.primaryColor,
-                                                      fontWeight:
-                                                          FontWeight.bold,
                                                       fontSize: 15.0))
                                           :
                                           // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
@@ -277,8 +275,6 @@ class BuySell extends StatelessWidget {
                                                   style: TextStyle(
                                                       color:
                                                           globals.primaryColor,
-                                                      fontWeight:
-                                                          FontWeight.bold,
                                                       fontSize: 15.0))
                                               : Text(
                                                   "${model.targetCoinWalletData.inExchange}" +
@@ -287,10 +283,10 @@ class BuySell extends StatelessWidget {
                                                   style: TextStyle(
                                                       color:
                                                           globals.primaryColor,
-                                                      fontWeight: FontWeight.bold,
                                                       fontSize: 15.0))
                                     ],
                                   )),
+                              // kanban gas fee
                               Padding(
                                 padding: EdgeInsets.fromLTRB(5, 5, 5, 0),
                                 child: Row(
@@ -313,7 +309,7 @@ class BuySell extends StatelessWidget {
                                   ],
                                 ),
                               ),
-
+// Advance
                               Padding(
                                   padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                   child: Row(
@@ -342,61 +338,59 @@ class BuySell extends StatelessWidget {
                                       padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                       child: Column(
                                         children: <Widget>[
+                                          // Kanban gas price
                                           Row(
                                             children: <Widget>[
                                               Text(
                                                 AppLocalizations.of(context)
                                                     .kanbanGasPrice,
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 14.0),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
                                               ),
                                               Expanded(
                                                   child: Padding(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              20, 0, 0, 0),
-                                                      child: TextField(
-                                                        controller: model
-                                                            .kanbanGasPriceTextController,
-                                                        onChanged:
-                                                            (String amount) {
-                                                          model
-                                                              .updateTransFee();
-                                                        },
-                                                        keyboardType: TextInputType
-                                                            .number, // numnber keyboard
-                                                        decoration: InputDecoration(
-                                                            focusedBorder: UnderlineInputBorder(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    20, 0, 0, 0),
+                                                child: TextField(
+                                                    controller: model
+                                                        .kanbanGasPriceTextController,
+                                                    onChanged: (String amount) {
+                                                      model.updateTransFee();
+                                                    },
+                                                    keyboardType: TextInputType
+                                                        .number, // numnber keyboard
+                                                    decoration: InputDecoration(
+                                                        focusedBorder:
+                                                            UnderlineInputBorder(
                                                                 borderSide: BorderSide(
                                                                     color: globals
                                                                         .primaryColor)),
-                                                            enabledBorder: UnderlineInputBorder(
+                                                        enabledBorder:
+                                                            UnderlineInputBorder(
                                                                 borderSide: BorderSide(
                                                                     color: globals
                                                                         .grey)),
-                                                            hintText: '0.00000',
-                                                            hintStyle: Theme.of(
-                                                                    context)
+                                                        hintText: '0.00000',
+                                                        hintStyle:
+                                                            Theme.of(context)
                                                                 .textTheme
-                                                                .headline5
-                                                                .copyWith(
-                                                                    fontSize:
-                                                                        20)),
-                                                        style: TextStyle(
-                                                            color: globals.grey,
-                                                            fontSize: 14),
-                                                      )))
+                                                                .headline5),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5),
+                                              ))
                                             ],
                                           ),
+                                          // Kanban gas limit
                                           Row(
                                             children: <Widget>[
                                               Text(
                                                 AppLocalizations.of(context)
                                                     .kanbanGasLimit,
-                                                style: new TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 14.0),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5,
                                               ),
                                               Expanded(
                                                   child: Padding(
@@ -426,13 +420,10 @@ class BuySell extends StatelessWidget {
                                                             hintStyle: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline5
-                                                                .copyWith(
-                                                                    fontSize:
-                                                                        20)),
-                                                        style: TextStyle(
-                                                            color: globals.grey,
-                                                            fontSize: 14),
+                                                                .headline5),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline5,
                                                       )))
                                             ],
                                           )
@@ -442,8 +433,8 @@ class BuySell extends StatelessWidget {
                               Padding(
                                   padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: SizedBox(
-                                      width: double.infinity,
-                                      child: RaisedButton(
+                                    width: double.infinity,
+                                    child: RaisedButton(
                                         padding: const EdgeInsets.all(8.0),
                                         textColor: Colors.white,
                                         color: model.bidOrAsk
@@ -456,10 +447,10 @@ class BuySell extends StatelessWidget {
                                                     .buy
                                                 : AppLocalizations.of(context)
                                                     .sell,
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20.0)),
-                                      )))
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4)),
+                                  ))
                             ],
                           )),
                       Expanded(
@@ -486,9 +477,9 @@ class BuySell extends StatelessWidget {
                                           child: Text(
                                               AppLocalizations.of(context)
                                                   .price,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16.0))),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4)),
                                       // Heading Quantity
                                       Container(
                                           padding: const EdgeInsets.fromLTRB(
@@ -503,9 +494,9 @@ class BuySell extends StatelessWidget {
                                           child: Text(
                                               AppLocalizations.of(context)
                                                   .quantity,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16.0)))
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4))
                                     ],
                                   ),
                                   InkWell(
