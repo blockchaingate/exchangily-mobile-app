@@ -84,8 +84,8 @@ class MyOrdersState extends State<MyOrders>
   Widget build(BuildContext context) {
     return Padding(
         padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-        /*-----------------------------------------------------------------
-                      Hide Small Amount Row
+/*-----------------------------------------------------------------
+                      Orders Tabs
 -----------------------------------------------------------------*/
         child: Column(
           children: <Widget>[

@@ -148,12 +148,17 @@ class WalletDashboardScreenState extends BaseState {
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();
+    await updateWalletDatabase();
+    setState(ViewState.Idle);
+    return walletInfo;
+  }
+
+  // Update wallet database
+  updateWalletDatabase() async {
     for (int i = 0; i < walletInfo.length; i++) {
       await databaseService.update(walletInfo[i]);
       await databaseService.getById(walletInfo[i].id);
     }
-    setState(ViewState.Idle);
-    return walletInfo;
   }
 
   // Get Exchange Assets

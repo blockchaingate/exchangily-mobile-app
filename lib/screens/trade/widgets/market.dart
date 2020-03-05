@@ -235,7 +235,7 @@ class TrademarketState extends State<Trademarket> {
                                       padding:
                                           EdgeInsets.symmetric(vertical: 7.0),
                                       child: Text(item.orderQuantity.toString(),
-                                          textAlign: TextAlign.start,
+                                          textAlign: TextAlign.end,
                                           style: TextStyle(
                                               fontSize: 12,
                                               color: Color(0xFF5e617f))))

@@ -72,6 +72,7 @@ class Api {
 
 // Get Orders
   Future getOrders(String exgAddress) async {
+    log.w(exgAddress);
     try {
       final res = await http
           .get(environment['endpoints']['kanban'] + orders + exgAddress);
