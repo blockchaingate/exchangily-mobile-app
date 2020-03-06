@@ -35,7 +35,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     return Container(
         padding: EdgeInsets.all(0),
         margin: EdgeInsets.all(0),
-        height: 460,
+        height: 300,
         child: WebView(
           initialUrl: '',
           javascriptMode: JavascriptMode.unrestricted,
@@ -54,8 +54,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     print('lang=' + lang);
     if (lang == 'en') {
       lang = 'en-US';
-    } else
-    if (lang == 'zh') {
+    } else if (lang == 'zh') {
       lang = 'zh-CN';
     }
 

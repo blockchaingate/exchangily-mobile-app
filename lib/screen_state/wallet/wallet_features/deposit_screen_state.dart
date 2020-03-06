@@ -8,6 +8,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,8 @@ import '../../../shared/globals.dart' as globals;
 class DepositScreenState extends BaseState {
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  SharedService sharedService = locator<SharedService>();
+
   WalletInfo walletInfo;
   BuildContext context;
   final gasPriceTextController = TextEditingController();
@@ -30,6 +33,7 @@ class DepositScreenState extends BaseState {
   String coinName = '';
   String tokenType = '';
   final myController = TextEditingController();
+  bool isValid = false;
 
   void initState() {
     setState(ViewState.Busy);
@@ -62,15 +66,20 @@ class DepositScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  checkPass(double amount, context) async {
+// Check Pass
+  checkPass() async {
     setState(ViewState.Busy);
-    if (amount == null || amount > walletInfo.availableBalance) {
-      walletService.showInfoFlushbar(
-          AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterValidNumber,
-          Icons.cancel,
-          globals.red,
-          context);
+    // if (!isValid) {
+    //   sharedService.alertError(AppLocalizations.of(context).invalidAmount,
+    //       AppLocalizations.of(context).pleaseEnterValidNumber);
+    //   setState(ViewState.Idle);
+    //   return;
+    // }
+    var amount = double.tryParse(myController.text);
+    log.i(amount);
+    if (amount == null || amount > walletInfo.availableBalance || amount == 0) {
+      sharedService.alertError(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber);
       setState(ViewState.Idle);
       return;
     }
@@ -154,13 +163,17 @@ class DepositScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
+  // update Transaction Fee
+
   updateTransFee() async {
     setState(ViewState.Busy);
     var to = getOfficalAddress(coinName);
     var amount = double.tryParse(myController.text);
     if (to == null || amount == null || amount <= 0) {
+      setState(ViewState.Idle);
       return;
     }
+    isValid = true;
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);
     var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
@@ -191,8 +204,8 @@ class DepositScreenState extends BaseState {
             options,
             false)
         .then((ret) {
+      log.w(ret);
       if (ret != null && ret['transFee'] != null) {
-        setState(ViewState.Busy);
         transFee = ret['transFee'];
         kanbanTransFee = kanbanTransFeeDouble;
         setState(ViewState.Idle);

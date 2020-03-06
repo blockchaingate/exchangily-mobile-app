@@ -424,7 +424,7 @@ class _DepositState extends State<Deposit> {
                 padding: EdgeInsets.all(15),
                 color: globals.primaryColor,
                 textColor: Colors.white,
-                onPressed: () async {
+                onPressed: () {
                   //var res = await new WalletService().depositDo('ETH', '', double.parse(myController.text));
                   // var res = await new WalletService().depositDo('USDT', 'ETH', double.parse(myController.text));
                   // var res = await new WalletService().depositDo('FAB', '', double.parse(myController.text));
@@ -432,11 +432,15 @@ class _DepositState extends State<Deposit> {
                   // var res = await new WalletService().depositDo('BTC', '', double.parse(myController.text));
                   //print('res from await depositDo=');
                   //print(res);
-                  model.checkPass(
-                      double.parse(model.myController.text), context);
+                  // double amount = double.parse(model.myController.text);
+
+                  model.checkPass();
                 },
                 child: model.state == ViewState.Busy
-                    ? CircularProgressIndicator()
+                    ? SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 1,))
                     : Text(AppLocalizations.of(context).confirm,
                         style: Theme.of(context).textTheme.headline4),
               ),
