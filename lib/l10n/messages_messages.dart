@@ -108,6 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordMismatch" : MessageLookupByLibrary.simpleMessage("Password Mismatch"),
     "passwordRetype" : MessageLookupByLibrary.simpleMessage("Please retype the same password in both fields"),
     "payableValue" : MessageLookupByLibrary.simpleMessage("Payable Value"),
+    "placeOrderTransactionFailed" : MessageLookupByLibrary.simpleMessage("Place order transaction failed"),
     "placeOrderTransactionSuccessful" : MessageLookupByLibrary.simpleMessage("Place order transaction was made successfully"),
     "pleaseEnterAnAddress" : MessageLookupByLibrary.simpleMessage("Please enter an address"),
     "pleaseEnterValidNumber" : MessageLookupByLibrary.simpleMessage("Please enter a valid number"),
