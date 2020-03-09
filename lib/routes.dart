@@ -25,7 +25,6 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_and_trad
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/receive.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/withdraw_to_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -89,9 +88,6 @@ class RouteGenerator {
 
       case '/moveToExchange':
         return MaterialPageRoute(builder: (_) => MoveToExchangeScreen());
-
-      case '/withdrawToWallet':
-        return MaterialPageRoute(builder: (_) => WithdrawToWalletScreen());
 
       case '/market':
         return MaterialPageRoute(builder: (_) => Market());

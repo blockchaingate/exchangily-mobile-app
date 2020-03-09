@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/order-model.dart';
 import 'package:exchangilymobileapp/screen_state/trade/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -93,7 +94,6 @@ class BuySell extends StatelessWidget {
                         child: GestureDetector(
                             onTap: () {
                               model.selectBuySellTab(true);
-                              log.i(model.bidOrAsk);
                             },
                             child: Text(
                               AppLocalizations.of(context).buy,
@@ -101,7 +101,7 @@ class BuySell extends StatelessWidget {
                                   color: model.bidOrAsk
                                       ? Color(0XFF871fff)
                                       : Colors.white,
-                                  fontSize: 18.0),
+                                  fontSize: 14.0),
                             ))),
                     Container(
                         decoration: BoxDecoration(
@@ -116,7 +116,6 @@ class BuySell extends StatelessWidget {
                         child: GestureDetector(
                             onTap: () {
                               model.selectBuySellTab(false);
-                              log.i(model.bidOrAsk);
                             },
                             child: Text(
                               AppLocalizations.of(context).sell,
@@ -124,7 +123,7 @@ class BuySell extends StatelessWidget {
                                   color: model.bidOrAsk
                                       ? Colors.white
                                       : Color(0XFF871fff),
-                                  fontSize: 18.0),
+                                  fontSize: 14.0),
                             )))
                   ],
                 ),
@@ -157,7 +156,7 @@ class BuySell extends StatelessWidget {
                                       labelStyle: Theme.of(context)
                                           .textTheme
                                           .headline5),
-                                  style: Theme.of(context).textTheme.headline4,
+                                  style: Theme.of(context).textTheme.headline5,
                                 ),
                               ),
                               Padding(
@@ -223,7 +222,7 @@ class BuySell extends StatelessWidget {
                                             : Text(
                                                 "${model.transactionAmount.toStringAsFixed(5)}" +
                                                     " " +
-                                                    model.targetCoinName,
+                                                    model.baseCoinName,
                                                 textAlign: TextAlign.end,
                                                 style: TextStyle(
                                                     color: Colors.grey,
@@ -309,7 +308,7 @@ class BuySell extends StatelessWidget {
                                   ],
                                 ),
                               ),
-// Advance
+                              // Advance
                               Padding(
                                   padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                   child: Row(
@@ -453,6 +452,7 @@ class BuySell extends StatelessWidget {
                                   ))
                             ],
                           )),
+                      // Price and Quantity side
                       Expanded(
                           flex: 4,
                           child: Padding(
@@ -479,7 +479,7 @@ class BuySell extends StatelessWidget {
                                                   .price,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5)),
+                                                  .headline6)),
                                       // Heading Quantity
                                       Container(
                                           padding: const EdgeInsets.fromLTRB(
@@ -496,33 +496,23 @@ class BuySell extends StatelessWidget {
                                                   .quantity,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline5))
+                                                  .headline6))
                                     ],
                                   ),
-                                  InkWell(
-                                      onTap: () {
-                                        model.priceTextController.text =
-                                            model.price.toString();
-                                      },
-                                      child: OrderDetail(model.sell, false)),
-                                  // Container(
-                                  //     padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                  //     child: Row(
-                                  //       mainAxisAlignment:
-                                  //           MainAxisAlignment.spaceBetween,
-                                  //       children: <Widget>[
-                                  //         Container(
-                                  //             padding:
-                                  //                 const EdgeInsets.fromLTRB(
-                                  //                     0, 0, 0, 5),
-                                  //             child: Text(
-                                  //                 model.currentPrice.toString(),
-                                  //                 style: TextStyle(
-                                  //                     color: Color(0xFF17a2b8),
-                                  //                     fontSize: 14.0)))
-                                  //       ],
-                                  //     )),
-                                  OrderDetail(model.buy, true)
+                                  orderDetail(model.sell, false, model),
+                                  Container(
+                                      padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text(model.currentPrice.toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4)
+                                        ],
+                                      )),
+                                  orderDetail(model.buy, true, model)
                                 ],
                               )))
                     ],
@@ -532,6 +522,41 @@ class BuySell extends StatelessWidget {
               ]),
             ]),
           )),
+    );
+  }
+
+  // Using orderDetail here in this buy and sell screen to fill the price and quanity in text fields when user click on the order
+  Widget orderDetail(
+      final List<OrderModel> orderArray, final bool bidOrAsk, model) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        for (var item in orderArray)
+          InkWell(
+            onTap: () {
+              model.quantityTextController.text = item.orderQuantity.toString();
+              model.priceTextController.text = item.price.toString();
+            },
+            child: Padding(
+                padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(item.price.toString(),
+                        style: TextStyle(
+                            color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
+                            fontSize: 13.0)),
+                    Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                        color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
+                        child: Text(item.orderQuantity.toString(),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 13.0)))
+                  ],
+                )),
+          )
+      ],
     );
   }
 }

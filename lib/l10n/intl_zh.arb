@@ -203,7 +203,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "totalBalance": "总额",
+    "totalBalance": "可用余额",
     "@totalBalance": {
         "description": "wallet_feature_total_balance",
         "type": "text",
@@ -431,7 +431,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "transactionAmount": "交易数量",
+    "transactionAmount": "交易额",
     "@transactionAmount": {
         "description": "transaction_amount_text",
         "type": "text",
