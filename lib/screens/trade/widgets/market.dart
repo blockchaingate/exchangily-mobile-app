@@ -281,20 +281,20 @@ class TrademarketState extends State<Trademarket> {
                               width: 100,
                               child: Text(item.price.toStringAsFixed(5),
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 14, color: globals.white))),
+                                  style:
+                                      Theme.of(context).textTheme.headline6)),
                           Container(
                               width: 100,
                               child: Text(item.amount.toString(),
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 14, color: Color(0xFF5e617f)))),
+                                  style:
+                                      Theme.of(context).textTheme.headline6)),
                           Container(
                               width: 100,
                               child: Text(timeFormatted(item.time),
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      fontSize: 14, color: Color(0xFF5e617f)))),
+                                  textAlign: TextAlign.center,
+                                  style:
+                                      Theme.of(context).textTheme.headline6)),
                         ],
                       ),
                     ),

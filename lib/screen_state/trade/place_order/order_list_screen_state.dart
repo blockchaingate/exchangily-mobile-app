@@ -20,6 +20,7 @@ class OrderListScreenState extends BaseState {
   List<Map<String, dynamic>> orderArray;
   String type;
   String exgAddress;
+  String baseCoinName;
 
   showNotification(context) {
     walletService.showInfoFlushbar(

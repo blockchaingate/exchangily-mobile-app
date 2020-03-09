@@ -118,16 +118,13 @@ class WalletDashboardScreenState extends BaseState {
         walletLockedBal = balance['lockbalance'];
       }).timeout(Duration(seconds: 25), onTimeout: () async {
         setState(ViewState.Idle);
-        walletService.showInfoFlushbar(
-            'Timeout',
-            AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater,
-            Icons.cancel,
-            Colors.red,
-            context);
+        sharedService.alertError(
+            '', AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
         await retrieveWallets();
         log.e('Timeout');
       }).catchError((error) async {
         setState(ViewState.Idle);
+        sharedService.alertError('', AppLocalizations.of(context).genericError);
         await retrieveWallets();
         log.e('Something went wrong  - $error');
       });
@@ -155,7 +152,6 @@ class WalletDashboardScreenState extends BaseState {
 
   // Update wallet database
   updateWalletDatabase() async {
-    log.w('test t4estdsfasdgfasg ');
     for (int i = 0; i < walletInfo.length; i++) {
       await databaseService.update(walletInfo[i]);
       await databaseService.getById(walletInfo[i].id);

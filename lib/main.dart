@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
           bodyText1: TextStyle(
               fontSize: 13, color: globals.white, fontWeight: FontWeight.w300),
           bodyText2: TextStyle(fontSize: 13, color: globals.red),
-          headline6: TextStyle(fontSize: 12, color: globals.white),
+          headline6: TextStyle(fontSize: 12, color: globals.white, fontWeight: FontWeight.w300),
         ),
       ),
       // Removed the home and scaffold because initial route has set

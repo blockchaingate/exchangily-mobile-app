@@ -338,10 +338,7 @@ class WalletService {
     log.w(
         'usdVal =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
     if (actualWalletBalance != 0 && marketPrice != null) {
-      coinUsdBalance = (marketPrice * actualWalletBalance);
-      coinUsdBalance = coinUsdBalance + lockedBalance;
-      // totalUsdBalance.add(coinUsdBalance);
-      // log.w('Total coin usd balance list $totalUsdBalance');
+      coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
       return coinUsdBalance;
     } else {
       coinUsdBalance = 0.0;

@@ -423,12 +423,15 @@ class BuySellScreenState extends BaseState {
       var txHex = await txHexforPlaceOrder(seed);
       var resKanban = await sendKanbanRawTransaction(txHex);
       if (resKanban != null && resKanban['transactionHash'] != null) {
-        walletService.showInfoFlushbar(
+        sharedService.alertError(
             AppLocalizations.of(context).placeOrderTransactionSuccessful,
-            'txid:' + resKanban['transactionHash'],
-            Icons.cancel,
-            globals.red,
-            context);
+            'txid:' + resKanban['transactionHash']);
+        // walletService.showInfoFlushbar(
+        //     AppLocalizations.of(context).placeOrderTransactionSuccessful,
+        //     'txid:' + resKanban['transactionHash'],
+        //     Icons.cancel,
+        //     globals.red,
+        //     context);
       } else {
         walletService.showInfoFlushbar(
             AppLocalizations.of(context).placeOrderTransactionFailed,

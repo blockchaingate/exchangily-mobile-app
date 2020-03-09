@@ -51,8 +51,9 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
             ),
             // Language Text and Icon Container
             Container(
-              margin: EdgeInsets.only(bottom: 10),
+              width: 200,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.only(right: 1.0),
@@ -83,7 +84,7 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
                   )
                 : Container(
                     // width: 225,
-                    height: 150,
+                    height: 120,
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
