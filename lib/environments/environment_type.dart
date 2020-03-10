@@ -1,2 +1,2 @@
-const bool isProduction = false;
-const bool isLocal = true;
+const bool isProduction = true;
+const bool isLocal = false;
