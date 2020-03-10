@@ -26,7 +26,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 import './wallet_features/gas.dart';
-import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 class WalletDashboardScreen extends StatelessWidget {
   final List<WalletInfo> walletInfo;
@@ -121,7 +121,9 @@ class WalletDashboardScreen extends StatelessWidget {
                               bottom: -20,
                               child: Card(
                                 elevation: model.elevation,
-                                color: globals.walletCardColor,
+                                color: isProduction
+                                    ? globals.walletCardColor
+                                    : globals.red.withAlpha(200),
                                 child: Container(
                                   width: 270,
                                   padding: EdgeInsets.all(10),

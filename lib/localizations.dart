@@ -793,6 +793,15 @@ class AppLocalizations {
         name: 'placeOrderTransactionFailed',
         desc: 'place_order_transaction_failed');
   }
+
+  String get notice {
+    return Intl.message('Notice', name: 'notice', desc: 'notice');
+  }
+
+  String get testVersion {
+    return Intl.message('You are using the test version',
+        name: 'debugVersion', desc: 'debug_version');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

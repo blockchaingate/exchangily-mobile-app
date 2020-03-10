@@ -41,6 +41,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -131,6 +132,7 @@ class WalletService {
 // Future Get Coin Balance By Address
   Future coinBalanceByAddress(
       String name, String address, String tokenType) async {
+    log.w('$name $address $tokenType');
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
     log.w('$name - Coin Balance $bal');
@@ -1107,6 +1109,7 @@ class WalletService {
 
     var totalFee = totalAmount;
     var chunks = new List<dynamic>();
+    log.w('Address $contractAddress');
     chunks.add(84);
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasLimit)));
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasPrice)));

@@ -21,6 +21,7 @@ import 'package:web3dart/web3dart.dart';
 import "package:hex/hex.dart";
 import 'package:crypto/crypto.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final log = getLogger('fab_util');

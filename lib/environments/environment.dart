@@ -1,7 +1,5 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
-
-const bool isProduction = true;
-const bool isLocal = false;
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 Map devConfig = {
   "decimal": {'priceDecimal': 6, 'volDecimal': 4},
