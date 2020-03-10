@@ -24,6 +24,7 @@
 **/doc/api/
 .dart_tool/
 .flutter-plugins
+.flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
@@ -71,13 +72,6 @@
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-pubspec.yaml
 android/key.properties
-.flutter-plugins-dependencies
-pubspec.lock
-pubspec.lock
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
-.flutter-plugins-dependencies
+lib/environments/environment_type.dart
 pubspec.lock
