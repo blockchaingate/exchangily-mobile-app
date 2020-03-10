@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -146,6 +147,7 @@ class WalletDashboardScreenState extends BaseState {
     await getGas();
     await getExchangeAssets();
     await updateWalletDatabase();
+    if (!isProduction) debugVersionPopup();
     setState(ViewState.Idle);
     return walletInfo;
   }
@@ -158,6 +160,11 @@ class WalletDashboardScreenState extends BaseState {
     }
   }
 
+// test version pop up
+  debugVersionPopup() {
+    sharedService.alertError(AppLocalizations.of(context).notice,
+        AppLocalizations.of(context).testVersion);
+  }
   // Get Exchange Assets
 
   getExchangeAssets() async {

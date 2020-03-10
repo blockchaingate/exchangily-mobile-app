@@ -79,6 +79,7 @@ class SharedService {
                 actions: <Widget>[
                   Center(
                     child: FlatButton(
+                      padding: EdgeInsets.all(0),
                       child: Text(
                         AppLocalizations.of(context).close,
                         style: TextStyle(color: globals.grey, fontSize: 14),
