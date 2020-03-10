@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
