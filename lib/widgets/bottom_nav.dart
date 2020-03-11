@@ -16,9 +16,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
 
-class AppBottomNav extends StatelessWidget {
+class BottomNavBar extends StatelessWidget {
   final int count;
-  AppBottomNav({Key key, this.count}) : super(key: key);
+  BottomNavBar({Key key, this.count}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +58,12 @@ class AppBottomNav extends StatelessWidget {
         //         padding: EdgeInsets.only(top: paddingValue),
         //         child: Text('OTC'))),
         BottomNavigationBarItem(
+            icon: Icon(Icons.event, size: iconSize),
+            title: Padding(
+                padding: EdgeInsets.only(top: paddingValue),
+                child: Text('Event'))),
+
+        BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.cog, size: iconSize),
             title: Padding(
                 padding: EdgeInsets.only(top: paddingValue),
@@ -74,8 +80,11 @@ class AppBottomNav extends StatelessWidget {
           case 2:
             Navigator.pushNamed(context, '/trade');
             break;
-            // case 3:
-            //   Navigator.pushNamed(context, '/otc');
+          // case 3:
+          //   Navigator.pushNamed(context, '/otc');
+          // break;
+          case 3:
+            Navigator.pushNamed(context, '/campaignInstructions');
             break;
           case 3:
             Navigator.pushNamed(context, '/settings');

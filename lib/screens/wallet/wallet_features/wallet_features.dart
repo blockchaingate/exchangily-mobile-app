@@ -294,7 +294,7 @@ class WalletFeaturesScreen extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: AppBottomNav(count: 0),
+        bottomNavigationBar: BottomNavBar(count: 0),
       ),
     );
   }

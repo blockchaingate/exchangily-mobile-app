@@ -101,6 +101,9 @@ dependencies:
   # Pull to refresh
   pull_to_refresh: ^1.5.7
 
+  # Flutter SVG
+  flutter_svg: ^0.17.3+1
+
   # Share files
   share:
     git:
@@ -126,6 +129,7 @@ flutter:
     - assets/images/start-page/
     - assets/images/wallet-page/
     - assets/images/otc/
+    - assets/images/otc-campaign/
 
 flutter_icons:
   image_path: "assets/images/launcher/mobile-icon.png"

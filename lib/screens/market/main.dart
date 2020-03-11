@@ -73,7 +73,7 @@ class _MarketState extends State<Market> with TradeService {
               : Center(child: CircularProgressIndicator());
         },
       ),
-      bottomNavigationBar: AppBottomNav(count: 1),
+      bottomNavigationBar: BottomNavBar(count: 1),
     );
   }
 
