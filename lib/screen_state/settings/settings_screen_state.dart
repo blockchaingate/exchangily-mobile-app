@@ -28,7 +28,7 @@ import '../base_state.dart';
 class SettingsScreenState extends BaseState {
   bool isVisible = false;
   String mnemonic = '';
-  final log = getLogger('SendState');
+  final log = getLogger('SettingsState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();

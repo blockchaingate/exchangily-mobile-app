@@ -1,7 +1,6 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 
-const bool isProduction = true;
-const bool isLocal = false;
 Map devConfig = {
   "decimal": {'priceDecimal': 6, 'volDecimal': 4},
   "chains": {
@@ -21,7 +20,7 @@ Map devConfig = {
       "gasPrice": 50,
       "gasLimit": 800000
     },
-    "KANBAN": {"chainId": 212, "gasPrice": 8000000000, "gasLimit": 20000000}
+    "KANBAN": {"chainId": 212, "gasPrice": 50000000, "gasLimit": 20000000}
   },
   "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150},
   'endpoints': {
@@ -76,7 +75,7 @@ Map productionConfig = {
       "gasPrice": 50,
       "gasLimit": 800000
     },
-    "KANBAN": {"chainId": 211, "gasPrice": 8000000000, "gasLimit": 20000000}
+    "KANBAN": {"chainId": 211, "gasPrice": 50000000, "gasLimit": 20000000}
   },
   "CoinType": {"BTC": 0, "ETH": 60, "FAB": 1150},
   'endpoints': {

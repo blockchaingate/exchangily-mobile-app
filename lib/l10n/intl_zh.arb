@@ -203,15 +203,9 @@
         "type": "text",
         "placeholders": {}
     },
-    "totalBalance": "总额",
+    "totalBalance": "可用余额",
     "@totalBalance": {
         "description": "wallet_feature_total_balance",
-        "type": "text",
-        "placeholders": {}
-    },
-    "assetInExchange": "在交易所资产",
-    "@assetInExchange": {
-        "description": "wallet_feature_asset_in_Exchange",
         "type": "text",
         "placeholders": {}
     },
@@ -437,7 +431,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "transactionAmount": "交易数量",
+    "transactionAmount": "交易额",
     "@transactionAmount": {
         "description": "transaction_amount_text",
         "type": "text",
@@ -479,7 +473,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "filledAmount": "成交",
+    "filledAmount": "已成交",
     "@filledAmount": {
         "description": "filled_amount_text",
         "type": "text",

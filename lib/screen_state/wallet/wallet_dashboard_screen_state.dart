@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -21,6 +22,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class WalletDashboardScreenState extends BaseState {
   final log = getLogger('WalletDahsboardScreenState');
@@ -36,7 +38,25 @@ class WalletDashboardScreenState extends BaseState {
   String wallets;
   List walletInfoCopy = [];
   BuildContext context;
+  bool isHideSmallAmountAssets = false;
+  RefreshController refreshController =
+      RefreshController(initialRefresh: false);
 
+  // Pull to refresh
+  void onRefresh() async {
+    await refreshBalance();
+    refreshController.refreshCompleted();
+  }
+
+// Hide Small Amount Assets
+
+  hideSmallAmountAssets() {
+    setState(ViewState.Busy);
+    isHideSmallAmountAssets = !isHideSmallAmountAssets;
+    setState(ViewState.Idle);
+  }
+
+// Calculate Total Usd Balance of Coins
   calcTotalBal(numberOfCoins) {
     totalUsdBalance = 0;
     for (var i = 0; i < numberOfCoins; i++) {
@@ -99,22 +119,19 @@ class WalletDashboardScreenState extends BaseState {
         walletLockedBal = balance['lockbalance'];
       }).timeout(Duration(seconds: 25), onTimeout: () async {
         setState(ViewState.Idle);
-        walletService.showInfoFlushbar(
-            'Timeout',
-            AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater,
-            Icons.cancel,
-            Colors.red,
-            context);
+        sharedService.alertError(
+            '', AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
         await retrieveWallets();
         log.e('Timeout');
       }).catchError((error) async {
         setState(ViewState.Idle);
+        sharedService.alertError('', AppLocalizations.of(context).genericError);
         await retrieveWallets();
         log.e('Something went wrong  - $error');
       });
       double marketPrice = await walletService.getCoinMarketPrice(name);
-      coinUsdBalance =
-          walletService.calculateCoinUsdBalance(marketPrice, walletBal);
+      coinUsdBalance = walletService.calculateCoinUsdBalance(
+          marketPrice, walletBal, walletLockedBal);
       WalletInfo wi = WalletInfo(
           id: id,
           tickerName: tickerName,
@@ -129,19 +146,32 @@ class WalletDashboardScreenState extends BaseState {
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();
-    for (int i = 0; i < walletInfo.length; i++) {
-      await databaseService.update(walletInfo[i]);
-      await databaseService.getById(walletInfo[i].id);
-    }
+    await updateWalletDatabase();
+    if (!isProduction) debugVersionPopup();
     setState(ViewState.Idle);
     return walletInfo;
   }
 
+  // Update wallet database
+  updateWalletDatabase() async {
+    for (int i = 0; i < walletInfo.length; i++) {
+      await databaseService.update(walletInfo[i]);
+      await databaseService.getById(walletInfo[i].id);
+    }
+  }
+
+// test version pop up
+  debugVersionPopup() {
+    sharedService.alertError(AppLocalizations.of(context).notice,
+        AppLocalizations.of(context).testVersion);
+  }
   // Get Exchange Assets
 
   getExchangeAssets() async {
     setState(ViewState.Busy);
+    log.e(exgAddress);
     var res = await walletService.assetsBalance(exgAddress);
+    log.e(res);
     var length = res.length;
     for (var i = 0; i < length; i++) {
       // Get their tickerName to compare with walletInfo tickernName
@@ -150,7 +180,9 @@ class WalletDashboardScreenState extends BaseState {
       // compare it with the same coin tickername from service until the match or loop ends
       for (var j = 0; j < walletInfo.length; j++) {
         if (coin == walletInfo[j].tickerName) {
+          log.e('$coin - $walletInfo[j].tickerName');
           walletInfo[j].inExchange = res[i]['amount'];
+          log.w(walletInfo[j].inExchange);
           break;
         }
       }

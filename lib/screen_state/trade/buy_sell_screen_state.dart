@@ -168,11 +168,13 @@ class BuySellScreenState extends BaseState {
         coin = walletInfo[i];
         if (coin.tickerName == targetCoinName.toUpperCase()) {
           targetCoinWalletData = coin;
-          exgAddress = coin.address;
-          this.refresh(exgAddress);
         }
         if (coin.tickerName == baseCoinName.toUpperCase()) {
           baseCoinWalletData = coin;
+        }
+        if (coin.tickerName == 'EXG') {
+          exgAddress = coin.address;
+          this.refresh(exgAddress);
         }
       }
       setState(ViewState.Idle);
@@ -184,6 +186,7 @@ class BuySellScreenState extends BaseState {
   // Refresh Balances and Orders
 
   refresh(String address) {
+    log.e(address);
     setState(ViewState.Busy);
     if (address == null) {
       return;
@@ -420,9 +423,19 @@ class BuySellScreenState extends BaseState {
       var txHex = await txHexforPlaceOrder(seed);
       var resKanban = await sendKanbanRawTransaction(txHex);
       if (resKanban != null && resKanban['transactionHash'] != null) {
-        walletService.showInfoFlushbar(
+        sharedService.alertError(
             AppLocalizations.of(context).placeOrderTransactionSuccessful,
-            'txid:' + resKanban['transactionHash'],
+            'txid:' + resKanban['transactionHash']);
+        // walletService.showInfoFlushbar(
+        //     AppLocalizations.of(context).placeOrderTransactionSuccessful,
+        //     'txid:' + resKanban['transactionHash'],
+        //     Icons.cancel,
+        //     globals.red,
+        //     context);
+      } else {
+        walletService.showInfoFlushbar(
+            AppLocalizations.of(context).placeOrderTransactionFailed,
+            resKanban.toString(),
             Icons.cancel,
             globals.red,
             context);

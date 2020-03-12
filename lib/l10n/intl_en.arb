@@ -216,7 +216,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "totalBalance": "Total Balance",
+  "totalBalance": "Available Balance",
   "@totalBalance": {
     "description": "total_balance",
     "type": "text",
@@ -582,7 +582,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "filledAmount": "Filled Amount",
+  "filledAmount": "Filled",
   "@filledAmount": {
     "description": "filled_amount_text",
     "type": "text",

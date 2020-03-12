@@ -25,14 +25,15 @@ class SharedService {
             context: context,
             builder: (context) {
               return AlertDialog(
-                elevation: 10,
+                elevation: 5,
                 backgroundColor: globals.walletCardColor.withOpacity(0.85),
                 titleTextStyle: Theme.of(context)
                     .textTheme
-                    .display3
+                    .headline5
                     .copyWith(fontWeight: FontWeight.bold),
                 contentTextStyle: TextStyle(color: globals.grey),
                 content: Text(
+                  // add here cupertino widget to check in these small widgets first then the entire app
                   '${AppLocalizations.of(context).closeTheApp}?',
                   style: TextStyle(fontSize: 16),
                 ),
@@ -54,6 +55,40 @@ class SharedService {
                           .invokeMethod('SystemNavigator.pop');
                     },
                   )
+                ],
+              );
+            }) ??
+        false;
+  }
+
+  Future<bool> alertError(String title, String message) async {
+    return showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                elevation: 5,
+                backgroundColor: globals.walletCardColor.withOpacity(0.95),
+                title: Text(title),
+                titleTextStyle: Theme.of(context).textTheme.headline4,
+                contentTextStyle: TextStyle(color: globals.grey),
+                content: Text(
+                  // add here cupertino widget to check in these small widgets first then the entire app
+                  message,
+                  style: Theme.of(context).textTheme.headline5,
+                ),
+                actions: <Widget>[
+                  Center(
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0),
+                      child: Text(
+                        AppLocalizations.of(context).close,
+                        style: TextStyle(color: globals.grey, fontSize: 14),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                  ),
                 ],
               );
             }) ??

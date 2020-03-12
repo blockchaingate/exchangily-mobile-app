@@ -41,6 +41,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -136,6 +137,7 @@ class WalletService {
 // Future Get Coin Balance By Address
   Future coinBalanceByAddress(
       String name, String address, String tokenType) async {
+    log.w('$name $address $tokenType');
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
     log.w('$name - Coin Balance $bal');
@@ -224,7 +226,8 @@ class WalletService {
         double walletLockedBal = bal['lockbalance'];
         log.w(
             'tickername $tickerName - address: $addr - balance: $walletBal - Locked balance: $walletLockedBal');
-        calculateCoinUsdBalance(coinUsdMarketPrice[i], walletBal);
+        calculateCoinUsdBalance(
+            coinUsdMarketPrice[i], walletBal, walletLockedBal);
         if (tickerName == 'EXG') {
           exgAddress = addr;
           log.e(exgAddress);
@@ -333,13 +336,11 @@ class WalletService {
 
   // Calculate Only Usd Balance For Individual Coin
   double calculateCoinUsdBalance(
-      double marketPrice, double actualWalletBalance) {
-    log.w('usdVal =$marketPrice, actualwallet bal $actualWalletBalance');
+      double marketPrice, double actualWalletBalance, double lockedBalance) {
+    log.w(
+        'usdVal =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
     if (actualWalletBalance != 0 && marketPrice != null) {
-      coinUsdBalance = (marketPrice * actualWalletBalance);
-
-      // totalUsdBalance.add(coinUsdBalance);
-      // log.w('Total coin usd balance list $totalUsdBalance');
+      coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
       return coinUsdBalance;
     } else {
       coinUsdBalance = 0.0;
@@ -1113,6 +1114,7 @@ class WalletService {
 
     var totalFee = totalAmount;
     var chunks = new List<dynamic>();
+    log.w('Address $contractAddress');
     chunks.add(84);
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasLimit)));
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasPrice)));

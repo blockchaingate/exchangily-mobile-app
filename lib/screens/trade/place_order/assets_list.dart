@@ -29,9 +29,9 @@ class AssetssList extends StatelessWidget {
           children: <Widget>[
             Text(AppLocalizations.of(context).coin,
                 style: TextStyle(
-                    color: globals.primaryColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold)),
+                  color: globals.primaryColor,
+                  fontSize: 14.0,
+                )),
             for (var item in assetsArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
@@ -43,9 +43,9 @@ class AssetssList extends StatelessWidget {
           children: <Widget>[
             Text(AppLocalizations.of(context).amount,
                 style: TextStyle(
-                    color: globals.primaryColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold)),
+                  color: globals.primaryColor,
+                  fontSize: 14.0,
+                )),
             for (var item in assetsArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
@@ -58,9 +58,9 @@ class AssetssList extends StatelessWidget {
           children: <Widget>[
             Text(AppLocalizations.of(context).lockedAmount,
                 style: TextStyle(
-                    color: globals.primaryColor,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold)),
+                  color: globals.primaryColor,
+                  fontSize: 14.0,
+                )),
             for (var item in assetsArray)
               Padding(
                   padding: EdgeInsets.fromLTRB(0, 3, 0, 3),

@@ -51,7 +51,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).secureYourWallet),
+          title: Text(AppLocalizations.of(context).secureYourWallet,
+              style: Theme.of(context).textTheme.headline3),
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
@@ -226,7 +227,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         },
         child: Text(
           AppLocalizations.of(context).createWallet,
-          style: Theme.of(context).textTheme.button,
+          style: Theme.of(context).textTheme.headline4,
         ),
       ),
     );

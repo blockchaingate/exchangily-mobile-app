@@ -29,7 +29,7 @@ getTransactionHash(Uint8List signTransaction) {
 }
 
 Future getEthTransactionStatus(String txid) async {
-  var url = ethBaseUrl + 'gettransactionstatus/' + txid;
+  var url = ethBaseUrl + 'getconfirmationcount/' + txid;
   var client = new http.Client();
   var response = await client.get(url);
   return response;

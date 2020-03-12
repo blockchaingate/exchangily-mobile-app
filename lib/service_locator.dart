@@ -11,7 +11,9 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/trade/buy_sell_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wallet_language_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_screen_state.dart';
@@ -28,8 +30,10 @@ import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/deposit_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_state.dart';
 import 'package:get_it/get_it.dart';
+import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
 
 GetIt locator = GetIt();
 
@@ -55,4 +59,8 @@ void serviceLocator() {
   locator.registerFactory(() => ChooseWalletLanguageScreenState());
   locator.registerFactory(() => BuySellScreenState());
   locator.registerFactory(() => TransactionHistoryScreenState());
+  locator.registerFactory(() => OtcScreenState());
+  locator.registerFactory(() => OtcDetailsScreenState());
+  locator.registerFactory(() => OrderListScreenState());
+  locator.registerFactory(() => DepositScreenState());
 }
