@@ -84,7 +84,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           onChanged: (value) {
                                             model.radioButtonSelection(value);
                                           },
-                                          groupValue: model.value,
+                                          groupValue: model.groupValue,
                                           value: 'USD'),
                                     ],
                                   ),
@@ -101,7 +101,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           onChanged: (t) {
                                             model.radioButtonSelection(t);
                                           },
-                                          groupValue: model.value,
+                                          groupValue: model.groupValue,
                                           value: 'USDT'),
                                     ],
                                   ),
@@ -109,6 +109,74 @@ class CampaignPaymentScreen extends StatelessWidget {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                      UIHelper.horizontalSpaceSmall,
+                      // On USD radio button select show Bank details container
+                      Container(
+                        color: globals.grey.withAlpha(75),
+                        width: MediaQuery.of(context).size.width - 100,
+                        child: Visibility(
+                          visible: model.groupValue == 'USD',
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    'Bank Name',
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  Text('Key Bank')
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text('Routing Numnber'),
+                                  Text('041001039')
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text('Bank Account #'),
+                                  Text('350211024087')
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      UIHelper.horizontalSpaceSmall,
+                      // On USDT radio button select show usdt address container
+                      Container(
+                        color: globals.grey.withAlpha(75),
+                        width: MediaQuery.of(context).size.width - 100,
+                        child: Visibility(
+                          visible: model.groupValue == 'USDT',
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Text(
+                                    'USDT Recieve Address',
+                                    textAlign: TextAlign.start,
+                                  ),
+                                  Expanded(
+                                      child: Text(
+                                          '0xgsdgknknnk3kdnfi3nkflndfnfnd44nfdkk'))
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       UIHelper.horizontalSpaceSmall,
