@@ -14,8 +14,10 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
 import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/payment_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/reward_details_screen.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
@@ -130,8 +132,14 @@ class RouteGenerator {
       case '/campaignInstructions':
         return MaterialPageRoute(builder: (_) => CampaignInstructionScreen());
 
-      case '/campaignPaymentScreen':
+      case '/campaignPayment':
         return MaterialPageRoute(builder: (_) => CampaignPaymentScreen());
+
+      case '/campaignDashboard':
+        return MaterialPageRoute(builder: (_) => CampaignDashboardScreen());
+
+      case '/campaignMyRewardDetails':
+        return MaterialPageRoute(builder: (_) => RewardDetailsScreen());
 
       default:
         return _errorRoute(settings);

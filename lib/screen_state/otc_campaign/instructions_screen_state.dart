@@ -12,6 +12,8 @@ class CampaignInstructionsScreenState extends BaseState {
   ];
   final List<Widget> _tierListSvg = <Widget>[];
   List<Widget> get tierListSvg => _tierListSvg;
+  // Later change this after checking if user has paid or not
+  bool isPaid = false;
 
   // Init state
   initState() {

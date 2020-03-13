@@ -47,9 +47,15 @@ class CampaignPaymentScreen extends StatelessWidget {
                           Expanded(
                             flex: 3,
                             child: SizedBox(
-                              height: 0,
-                              width: 100,
+                              //  width: 50,
+                              height: 40,
                               child: TextField(
+                                decoration: InputDecoration(
+                                    hintText: 'Enter the amount',
+                                    hintStyle:
+                                        Theme.of(context).textTheme.bodyText1,
+                                    border: OutlineInputBorder(gapPadding: 1)),
+                                keyboardType: TextInputType.number,
                                 cursorColor: globals.primaryColor,
                               ),
                             ),
@@ -97,6 +103,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               .textTheme
                                               .headline6),
                                       Radio(
+                                          focusColor: globals.white54,
                                           activeColor: globals.primaryColor,
                                           onChanged: (t) {
                                             model.radioButtonSelection(t);
@@ -221,7 +228,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           .headline5),
                                   onPressed: () {
                                     Navigator.of(context)
-                                        .pushNamed('/walletSetup');
+                                        .pushNamed('/campaignDashboard');
                                   },
                                 ),
                               )
