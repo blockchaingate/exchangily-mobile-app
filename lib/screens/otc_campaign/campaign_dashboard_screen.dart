@@ -80,7 +80,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 child: InkWell(
                                     onTap: () {
                                       Navigator.pushNamed(
-                                          context, '/campaignMyRewardDetails');
+                                          context, '/campaignRewardDetails');
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(25.0),
@@ -111,7 +111,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 color: globals.walletCardColor,
                                 child: InkWell(
                                   onTap: () {
-                                    print('test');
+                                    Navigator.pushNamed(
+                                        context, '/campaignRefferalDetails');
                                   },
                                   child: Container(
                                       padding: EdgeInsets.all(25.0),
@@ -133,18 +134,18 @@ class CampaignDashboardScreen extends StatelessWidget {
                           Expanded(
                             flex: 5,
                             child: Card(
-                                color: globals.walletCardColor,
+                                color: globals.buyPrice.withAlpha(150),
                                 child: InkWell(
                                   onTap: () {
                                     Navigator.pushNamed(
-                                        context, '/campaignInstructions');
+                                        context, '/campaignPayment');
                                   },
                                   child: Container(
                                       padding: EdgeInsets.all(25.0),
                                       child: Column(
                                         children: <Widget>[
                                           UIHelper.horizontalSpaceSmall,
-                                          Text('Read Instructions',
+                                          Text('Buy More',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5),
@@ -157,12 +158,40 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 )),
                           ),
                         ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Card(
+                              color: globals.walletCardColor,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, '/campaignInstructions');
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.all(25.0),
+                                    child: Column(
+                                      children: <Widget>[
+                                        UIHelper.horizontalSpaceSmall,
+                                        Text('Read Instructions',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
+                                        Text('',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5)
+                                      ],
+                                    )),
+                              )),
+                        ],
                       )
                     ],
                   ))
                 ]),
           ),
-          bottomNavigationBar: BottomNavBar(count: 3)),
+          bottomNavigationBar: BottomNavBar(count: 2)),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -48,13 +49,16 @@ class CampaignPaymentScreen extends StatelessWidget {
                             flex: 3,
                             child: SizedBox(
                               //  width: 50,
-                              height: 40,
+                              height: 45,
                               child: TextField(
                                 decoration: InputDecoration(
                                     hintText: 'Enter the amount',
                                     hintStyle:
                                         Theme.of(context).textTheme.bodyText1,
-                                    border: OutlineInputBorder(gapPadding: 1)),
+                                    border: OutlineInputBorder(
+                                        gapPadding: 1,
+                                        borderSide:
+                                            BorderSide(color: globals.white))),
                                 keyboardType: TextInputType.number,
                                 cursorColor: globals.primaryColor,
                               ),
@@ -75,114 +79,128 @@ class CampaignPaymentScreen extends StatelessWidget {
                             // Row that contains both radio buttons
                             Expanded(
                               flex: 3,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  // USD radio button row
-                                  Row(
-                                    children: <Widget>[
-                                      Text('USD',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6),
-                                      Radio(
-                                          activeColor: globals.primaryColor,
-                                          onChanged: (value) {
-                                            model.radioButtonSelection(value);
-                                          },
-                                          groupValue: model.groupValue,
-                                          value: 'USD'),
-                                    ],
-                                  ),
+                              child: Container(
+                                padding: EdgeInsets.only(left: 8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    // USD radio button row
+                                    Row(
+                                      children: <Widget>[
+                                        Text('USD',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6),
+                                        Radio(
+                                            activeColor: globals.primaryColor,
+                                            onChanged: (value) {
+                                              model.radioButtonSelection(value);
+                                            },
+                                            groupValue: model.groupValue,
+                                            value: 'USD'),
+                                      ],
+                                    ),
 
-                                  // USDT radio button row
-                                  Row(
-                                    children: <Widget>[
-                                      Text('USDT',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6),
-                                      Radio(
-                                          focusColor: globals.white54,
-                                          activeColor: globals.primaryColor,
-                                          onChanged: (t) {
-                                            model.radioButtonSelection(t);
-                                          },
-                                          groupValue: model.groupValue,
-                                          value: 'USDT'),
-                                    ],
-                                  ),
-                                ],
+                                    // USDT radio button row
+                                    Row(
+                                      children: <Widget>[
+                                        Text('USDT',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6),
+                                        Radio(
+                                            focusColor: globals.white54,
+                                            activeColor: globals.primaryColor,
+                                            onChanged: (t) {
+                                              model.radioButtonSelection(t);
+                                            },
+                                            groupValue: model.groupValue,
+                                            value: 'USDT'),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      UIHelper.horizontalSpaceSmall,
+
                       // On USD radio button select show Bank details container
                       Container(
+                        // cannot give padding here as it shows empty container when no radio button selected
                         color: globals.grey.withAlpha(75),
                         width: MediaQuery.of(context).size.width - 100,
                         child: Visibility(
                           visible: model.groupValue == 'USD',
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text(
-                                    'Bank Name',
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  Text('Key Bank')
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text('Routing Numnber'),
-                                  Text('041001039')
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text('Bank Account #'),
-                                  Text('350211024087')
-                                ],
-                              )
-                            ],
+                          child: Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      'Bank Details',
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
+                                    ),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      'Bank Name',
+                                      textAlign: TextAlign.start,
+                                    ),
+                                    Text('Key Bank')
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text('Routing Numnber'),
+                                    Text('041001039')
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text('Bank Account #'),
+                                    Text('350211024087')
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                      UIHelper.horizontalSpaceSmall,
+
                       // On USDT radio button select show usdt address container
                       Container(
+                        // cannot give padding here as it shows empty container when no radio button selected
                         color: globals.grey.withAlpha(75),
                         width: MediaQuery.of(context).size.width - 100,
                         child: Visibility(
                           visible: model.groupValue == 'USDT',
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text(
-                                    'USDT Recieve Address',
-                                    textAlign: TextAlign.start,
-                                  ),
-                                  Expanded(
-                                      child: Text(
-                                          '0xgsdgknknnk3kdnfi3nkflndfnfnd44nfdkk'))
-                                ],
-                              )
-                            ],
+                          child: Container(
+                            padding: EdgeInsets.all(10.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text(
+                                  'USDT Recieve Address',
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                                UIHelper.horizontalSpaceSmall,
+                                Text('0xgsdgknknnk3kdnfi3nkflndfnfnd44nfdkk')
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -212,7 +230,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     ),
                                     onPressed: () {
                                       Navigator.of(context)
-                                          .pushNamed('/walletSetup');
+                                          .pushNamed('/campaignInstructions');
                                     },
                                   ),
                                 ),
@@ -227,8 +245,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           .textTheme
                                           .headline5),
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .pushNamed('/campaignDashboard');
+                                    model.navigateToDashboard();
                                   },
                                 ),
                               )
@@ -270,6 +287,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                 ),
               )
             ]),
+        bottomNavigationBar: BottomNavBar(count: 2),
       ),
     );
   }

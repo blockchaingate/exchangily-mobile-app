@@ -42,11 +42,11 @@ class BottomNavBar extends StatelessWidget {
               padding: EdgeInsets.only(top: paddingValue),
               child: Text(AppLocalizations.of(context).wallet)),
         ),
-        BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.chartBar, size: iconSize),
-            title: Padding(
-                padding: EdgeInsets.only(top: paddingValue),
-                child: Text(AppLocalizations.of(context).market))),
+        // BottomNavigationBarItem(
+        //     icon: Icon(FontAwesomeIcons.chartBar, size: iconSize),
+        //     title: Padding(
+        //         padding: EdgeInsets.only(top: paddingValue),
+        //         child: Text(AppLocalizations.of(context).market))),
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.coins, size: iconSize),
             title: Padding(
@@ -74,18 +74,16 @@ class BottomNavBar extends StatelessWidget {
           case 0:
             Navigator.pushNamed(context, '/dashboard');
             break;
+
           case 1:
             Navigator.pushNamed(context, '/market');
             break;
           case 2:
-            Navigator.pushNamed(context, '/trade');
+            Navigator.pushNamed(context, '/campaignInstructions');
             break;
           // case 3:
           //   Navigator.pushNamed(context, '/otc');
           // break;
-          case 3:
-            Navigator.pushNamed(context, '/campaignInstructions');
-            break;
           case 3:
             Navigator.pushNamed(context, '/settings');
             break;

@@ -27,6 +27,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
@@ -50,6 +51,7 @@ void serviceLocator() {
   locator.registerLazySingleton(() => SharedService());
   locator.registerLazySingleton(() => TradeService());
   locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
+  locator.registerLazySingleton(() => NavigationService());
 
 // factory returns the new instance
   locator.registerFactory(() => ConfirmMnemonicScreenState());

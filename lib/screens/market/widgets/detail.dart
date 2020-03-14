@@ -59,6 +59,7 @@ class MarketDetailState extends State<MarketDetail>
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
+      margin: EdgeInsets.only(bottom: 5.0),
       child: Column(
         children: <Widget>[
           TabBar(
@@ -79,6 +80,36 @@ class MarketDetailState extends State<MarketDetail>
             controller: _tabController,
             indicatorColor: Colors.white,
           ),
+          Container(
+              margin: EdgeInsets.only(top: 5.0),
+              padding: EdgeInsets.all(5.0),
+              color: Colors.grey.withAlpha(75),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: Text('Ticker'),
+                      )),
+                  Expanded(
+                    flex: 1,
+                    child: Text('Volume', textAlign: TextAlign.end),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text('High', textAlign: TextAlign.end),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text('Low', textAlign: TextAlign.end),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text('Change', textAlign: TextAlign.end),
+                  ),
+                ],
+              )),
           Container(
             height: 550,
             child: TabBarView(

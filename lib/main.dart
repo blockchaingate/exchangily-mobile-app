@@ -15,6 +15,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 import 'package:flutter/services.dart';
@@ -47,6 +48,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // locale: DevicePreview.of(context).locale,
+      navigatorKey: locator<NavigationService>().navigatorKey,
+
       builder: (context, widget) => Navigator(
           onGenerateRoute: (settings) => MaterialPageRoute(
               builder: (context) => DialogManager(
@@ -102,7 +105,8 @@ class MyApp extends StatelessWidget {
           bodyText1: TextStyle(
               fontSize: 13, color: globals.white, fontWeight: FontWeight.w300),
           bodyText2: TextStyle(fontSize: 13, color: globals.red),
-          headline6: TextStyle(fontSize: 12, color: globals.white, fontWeight: FontWeight.w300),
+          headline6: TextStyle(
+              fontSize: 12, color: globals.white, fontWeight: FontWeight.w300),
         ),
       ),
       // Removed the home and scaffold because initial route has set
