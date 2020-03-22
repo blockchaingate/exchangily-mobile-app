@@ -52,11 +52,11 @@ class BottomNavBar extends StatelessWidget {
             title: Padding(
                 padding: EdgeInsets.only(top: paddingValue),
                 child: Text(AppLocalizations.of(context).trade))),
-        // BottomNavigationBarItem(
-        //     icon: Icon(Icons.branding_watermark, size: iconSize),
-        //     title: Padding(
-        //         padding: EdgeInsets.only(top: paddingValue),
-        //         child: Text('OTC'))),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.branding_watermark, size: iconSize),
+            title: Padding(
+                padding: EdgeInsets.only(top: paddingValue),
+                child: Text('OTC'))),
         BottomNavigationBarItem(
             icon: Icon(Icons.event, size: iconSize),
             title: Padding(
@@ -79,12 +79,12 @@ class BottomNavBar extends StatelessWidget {
             Navigator.pushNamed(context, '/market');
             break;
           case 2:
+            Navigator.pushNamed(context, '/otc');
+            break;
+          case 3:
             Navigator.pushNamed(context, '/campaignInstructions');
             break;
-          // case 3:
-          //   Navigator.pushNamed(context, '/otc');
-          // break;
-          case 3:
+          case 4:
             Navigator.pushNamed(context, '/settings');
             break;
         }

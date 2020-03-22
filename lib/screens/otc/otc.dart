@@ -247,7 +247,7 @@ class OtcScreen extends StatelessWidget {
                     })
               ],
             )),
-        bottomNavigationBar: BottomNavBar(count: 3),
+        bottomNavigationBar: BottomNavBar(count: 2),
       ),
     );
   }

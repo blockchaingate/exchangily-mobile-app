@@ -1,31 +1,48 @@
 class Campaign {
   String id;
-  String logo;
+  String name;
+  String logoUrl;
   DateTime startDate;
   DateTime endDate;
-  double minimumEntryAmount;
+  double minPay;
   Campaign(
       {this.id,
-      this.logo,
+      this.name,
+      this.logoUrl,
       this.startDate,
       this.endDate,
-      this.minimumEntryAmount});
+      this.minPay});
 
   Campaign.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    logo = json['logo'];
+    name = json['name'];
+    logoUrl = json['logo'];
     startDate = json['startDate'];
     endDate = json['endDate'];
-    minimumEntryAmount = json['minimumEntryAmount'];
+    minPay = json['minimumEntryAmount'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['logo'] = this.logo;
+    data['name'] = this.name;
+    data['logo'] = this.logoUrl;
     data['startDate'] = this.startDate;
     data['endDate'] = this.endDate;
-    data['minimumEntryAmount'] = this.minimumEntryAmount;
+    data['minimumEntryAmount'] = this.minPay;
     return data;
+  }
+
+
+  String get _id => id;
+
+  set _id(String id) {
+    this.id = id;
+  }
+
+  String get _name => name;
+
+  set _name(String name) {
+    this.name = name;
   }
 }

@@ -287,7 +287,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                 ),
               )
             ]),
-        bottomNavigationBar: BottomNavBar(count: 2),
+        bottomNavigationBar: BottomNavBar(count: 3),
       ),
     );
   }
