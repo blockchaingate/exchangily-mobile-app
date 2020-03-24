@@ -249,7 +249,7 @@ class AppLocalizations {
 
   String get warningBackupMnemonic {
     return Intl.message(
-        'Below are the 12 words mnemonic to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet',
+        'Please accurately record and securely store the following twelve word mnemonic, do not disclose the mnemonic anybody else. Disclosure of your mnemonic will result in your account being compromised and you will lose all of your funds.',
         name: 'warningBackupMnemonic',
         desc: 'warning_backup_mnemonic');
   }
@@ -800,7 +800,11 @@ class AppLocalizations {
 
   String get testVersion {
     return Intl.message('You are using the test version',
-        name: 'debugVersion', desc: 'debug_version');
+        name: 'testVersion', desc: 'test_version');
+  }
+    String get continueText {
+    return Intl.message('Continue',
+        name: 'continueText', desc: 'continue_text');
   }
 }
 

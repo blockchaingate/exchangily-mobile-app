@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import "widgets/overview.dart";
 import "widgets/detail.dart";
@@ -70,7 +71,10 @@ class _MarketState extends State<Market> with TradeService {
                */
                   ],
                 )
-              : Center(child: CircularProgressIndicator());
+              : Center(
+                  child: Theme.of(context).platform == TargetPlatform.iOS
+                      ? CupertinoActivityIndicator()
+                      : CircularProgressIndicator());
         },
       ),
       bottomNavigationBar: AppBottomNav(count: 1),

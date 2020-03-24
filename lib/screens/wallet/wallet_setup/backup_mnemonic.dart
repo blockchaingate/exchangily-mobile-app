@@ -44,7 +44,7 @@ class _BackupMnemonicWalletScreenState
     return Scaffold(
       appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).backupMnemonic,
+          title: Text(AppLocalizations.of(context).mnemonic,
               style: Theme.of(context).textTheme.headline3),
           backgroundColor: globals.secondaryColor),
       body: Container(
@@ -64,7 +64,7 @@ class _BackupMnemonicWalletScreenState
                 Expanded(
                     child: Text(
                   AppLocalizations.of(context).warningBackupMnemonic,
-                  style: Theme.of(context).textTheme.headline,
+                  style: Theme.of(context).textTheme.headline5,
                 )),
               ],
             ),
@@ -81,7 +81,7 @@ class _BackupMnemonicWalletScreenState
               padding: EdgeInsets.all(15),
               child: RaisedButton(
                 child: Text(
-                  AppLocalizations.of(context).confirm,
+                  AppLocalizations.of(context).continueText,
                   style: Theme.of(context).textTheme.headline4,
                 ),
                 onPressed: () {

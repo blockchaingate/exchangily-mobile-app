@@ -440,7 +440,10 @@ class _DepositState extends State<Deposit> {
                     ? SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 1,))
+                        child: Theme.of(context)
+                                                              .platform ==
+                                                          TargetPlatform.iOS
+                                                      ? CupertinoActivityIndicator() : CircularProgressIndicator(strokeWidth: 1,))
                     : Text(AppLocalizations.of(context).confirm,
                         style: Theme.of(context).textTheme.headline4),
               ),

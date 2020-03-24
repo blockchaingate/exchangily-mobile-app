@@ -917,5 +917,29 @@
     "description": "wallet_features_transaction_history",
     "type": "text",
     "placeholders": {}
+  },
+  "placeOrderTransactionFailed": "Place order transaction failed",
+  "@placeOrderTransactionFailed": {
+    "description": "place_order_transaction_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notice": "Notice",
+  "@notice": {
+    "description": "notice",
+    "type": "text",
+    "placeholders": {}
+  },
+  "testVersion": "You are using the test version",
+  "@testVersion": {
+    "description": "test_version",
+    "type": "text",
+    "placeholders": {}
+  },
+  "continueText": "Continue",
+  "@continueText": {
+    "description": "continue_text",
+    "type": "text",
+    "placeholders": {}
   }
 }

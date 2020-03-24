@@ -300,14 +300,14 @@
 			<key>entitlements</key>
 			<dict>
 				<key>application-identifier</key>
-				<string>592K4M6XB5.com.exchangily.wallet</string>
+				<string>592K4M6XB5.com.exchangily.app</string>
 				<key>com.apple.developer.team-identifier</key>
 				<string>592K4M6XB5</string>
 				<key>get-task-allow</key>
 				<false/>
 				<key>keychain-access-groups</key>
 				<array>
-					<string>592K4M6XB5.com.exchangily.wallet</string>
+					<string>592K4M6XB5.com.exchangily.app</string>
 				</array>
 			</dict>
 			<key>name</key>
@@ -317,7 +317,7 @@
 				<key>UUID</key>
 				<string>d19b8cea-8937-4664-8906-23d636f22300</string>
 				<key>name</key>
-				<string>iOS Team Ad Hoc Provisioning Profile: com.exchangily.wallet</string>
+				<string>iOS Team Ad Hoc Provisioning Profile: com.exchangily.app</string>
 			</dict>
 			<key>team</key>
 			<dict>

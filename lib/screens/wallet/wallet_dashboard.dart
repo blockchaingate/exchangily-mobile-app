@@ -191,8 +191,11 @@ class WalletDashboardScreen extends StatelessWidget {
                                           },
                                           child: model.state == ViewState.Busy
                                               ? SizedBox(
-                                                  child:
-                                                      CircularProgressIndicator(),
+                                                  child: Theme.of(context)
+                                                              .platform ==
+                                                          TargetPlatform.iOS
+                                                      ? CupertinoActivityIndicator()
+                                                      : CircularProgressIndicator(),
                                                   width: 18,
                                                   height: 18,
                                                 )

@@ -253,7 +253,10 @@ class _TradeState extends State<Trade> with TradeService {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   color: Color(0xFF2c2c4c),
-                  child: Center(child: CircularProgressIndicator())))
+                  child: Center(
+                      child: Theme.of(context).platform == TargetPlatform.iOS
+                          ? CupertinoActivityIndicator()
+                          : CircularProgressIndicator())))
         ]),
         bottomNavigationBar: AppBottomNav(count: 2));
   }

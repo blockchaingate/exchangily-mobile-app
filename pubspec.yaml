@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.0.12+19
+version: 1.0.2+4
 
 environment:
   sdk: ">=2.3.2 <3.0.0"
@@ -52,7 +52,10 @@ dependencies:
 
   # Path Provider
   path_provider: 1.4.2
+
+  # Random String
   random_string: ^2.0.1
+
   # Keccak
   keccak: ^1.0.3
 
@@ -70,7 +73,13 @@ dependencies:
   barcode_scan: 1.0.0
 
   # Flushbar instead of Snackbar for notifications
-  flushbar: ^1.9.1
+  # flushbar: 1.9.1
+  flushbar:
+    git:
+      url: git://github.com/valterh4ck3r/flushbar
+      ref: master
+
+  # Decimal
   decimal: ^0.3.5
 
   # Dependency injection

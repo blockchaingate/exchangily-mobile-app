@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_f
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/models/wallet.dart';
@@ -330,7 +331,10 @@ class WalletFeaturesScreen extends StatelessWidget {
                         },
                         child: model.state == ViewState.Busy
                             ? SizedBox(
-                                child: CircularProgressIndicator(),
+                                child: Theme.of(context).platform ==
+                                        TargetPlatform.iOS
+                                    ? CupertinoActivityIndicator()
+                                    : CircularProgressIndicator(),
                                 width: 20,
                                 height: 20,
                               )

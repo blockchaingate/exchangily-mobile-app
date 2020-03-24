@@ -39,38 +39,36 @@ class WalletSetupScreen extends StatelessWidget {
           return new Future(() => false);
         },
         child: Container(
-          height: MediaQuery.of(context).size.height * 1,
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+          padding: EdgeInsets.all(40),
           alignment: Alignment.center,
           color: globals.walletCardColor,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            //  crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               // Logo Container
               UIHelper.horizontalSpaceLarge,
+              UIHelper.horizontalSpaceMedium,
               Container(
-                height: 50,
+                height: 40,
                 child: Image.asset('assets/images/start-page/logo.png'),
               ),
               Container(
                   padding: EdgeInsets.all(8.0),
                   child: Text(
-                    AppLocalizations.of(context).welcomeText,
+                    AppLocalizations.of(context).welcomeText,textAlign: TextAlign.center,
                     style: Theme.of(context)
                         .textTheme
                         .headline5
                         .copyWith(fontWeight: FontWeight.normal),
                   )),
-              UIHelper.horizontalSpaceLarge,
+              UIHelper.horizontalSpaceMedium,
               // Middle Graphics Container
               Container(
                 padding: EdgeInsets.all(25),
                 child:
                     Image.asset('assets/images/start-page/middle-design.png'),
               ),
-              UIHelper.horizontalSpaceLarge,
+              UIHelper.horizontalSpaceMedium,
 
               // Button Container
               model.state == ViewState.Busy

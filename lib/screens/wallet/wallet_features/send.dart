@@ -528,7 +528,10 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                   child: model.state == ViewState.Busy
                       ? Padding(
                           padding: const EdgeInsets.all(5.0),
-                          child: CircularProgressIndicator(),
+                          child: Theme.of(context)
+                                                              .platform ==
+                                                          TargetPlatform.iOS
+                                                      ? CupertinoActivityIndicator() : CircularProgressIndicator(),
                         )
                       : RaisedButton(
                           disabledColor: model.checkSendAmount
