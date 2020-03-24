@@ -29,6 +29,7 @@ class SettingsScreen extends StatelessWidget {
       onModelReady: (model) {
         model.context = context;
         model.getAppVersion();
+        model.checkLanguage();
       },
       builder: (context, model, child) => Scaffold(
         // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
@@ -108,13 +109,14 @@ class SettingsScreen extends StatelessWidget {
                     height: 100,
                     child: Theme.of(context).platform == TargetPlatform.iOS
                         ? CupertinoPicker(
+                          scrollController: FixedExtentScrollController(initialItem: model.initialLanguageValue),
                         magnification: 1.25,
                             itemExtent: 25,
                             onSelectedItemChanged: (newValue) {
-                           if(newValue == 0)
-                              model.changeWalletLanguage('English');
-                              else if(newValue == 1)
-                              model.changeWalletLanguage('Chinese');
+                          // if(newValue == 0)
+                              model.changeWalletLanguage(model.languages[newValue]);
+                           //   else if(newValue == 1)
+                           //   model.changeWalletLanguage('zh');
                               print(newValue);
                             },
                             children: <Widget>[

@@ -40,6 +40,9 @@ class SettingsScreenState extends BaseState {
   BuildContext context;
   String versionName = '';
   String versionCode = '';
+  int initialLanguageValue;
+
+
   void showMnemonic() async {
     await displayMnemonic();
     isVisible = !isVisible;
@@ -123,6 +126,13 @@ class SettingsScreenState extends BaseState {
     }
   }
 
+  checkLanguage() async{
+   SharedPreferences prefs = await SharedPreferences.getInstance();
+    var lang = prefs.getString('lang');
+    log.w('lang $lang');
+    changeWalletLanguage(lang);
+  }
+
   // Change wallet language
 
   changeWalletLanguage(newValue) async {
@@ -130,15 +140,14 @@ class SettingsScreenState extends BaseState {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     selectedLanguage = newValue;
     log.w('Selec $selectedLanguage');
-    if (newValue == 'Chinese') {
-      log.e('in zh');
-
-      AppLocalizations.load(Locale('zh', 'ZH'));
-      prefs.setString('lang', 'zh');
-    } else if (newValue == 'English') {
-      log.e('in en');
+    if (newValue == 'English' || newValue == 'en') {
+      initialLanguageValue = 0;
       AppLocalizations.load(Locale('en', 'EN'));
       prefs.setString('lang', 'en');
+    } else if (newValue == 'Chinese' || newValue == 'zh') {
+      initialLanguageValue = 1;
+      AppLocalizations.load(Locale('zh', 'ZH'));
+      prefs.setString('lang', 'zh');
     }
     setState(ViewState.Idle);
   }
