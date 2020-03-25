@@ -1,17 +1,25 @@
 class Campaign {
-  String id;
-  String name;
-  String logoUrl;
-  DateTime startDate;
-  DateTime endDate;
-  double minPay;
+  String _id;
+  String _name;
+  String _logoUrl;
+  DateTime _startDate;
+  DateTime _endDate;
+  double _minPay;
+
   Campaign(
-      {this.id,
-      this.name,
-      this.logoUrl,
-      this.startDate,
-      this.endDate,
-      this.minPay});
+      {String id,
+      String name,
+      String logoUrl,
+      DateTime startDate,
+      DateTime endDate,
+      double minPay}) {
+    this._id = id;
+    this._name = name;
+    this._logoUrl = logoUrl;
+    this._startDate = startDate;
+    this._endDate = endDate;
+    this._minPay = minPay;
+  }
 
   Campaign.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -24,25 +32,46 @@ class Campaign {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['logo'] = this.logoUrl;
-    data['startDate'] = this.startDate;
-    data['endDate'] = this.endDate;
-    data['minimumEntryAmount'] = this.minPay;
+    data['id'] = this._id;
+    data['name'] = this._name;
+    data['logo'] = this._logoUrl;
+    data['startDate'] = this._startDate;
+    data['endDate'] = this._endDate;
+    data['minimumEntryAmount'] = this._minPay;
     return data;
   }
 
+  String get id => _id;
 
-  String get _id => id;
-
-  set _id(String id) {
-    this.id = id;
+  set id(String id) {
+    this._id = id;
   }
 
-  String get _name => name;
+  String get name => name;
 
-  set _name(String name) {
-    this.name = name;
+  set name(String name) {
+    this._name = name;
+  }
+
+  String get logoUrl => logoUrl;
+
+  set logoUrl(String logoUrl) {
+    this._logoUrl = logoUrl;
+  }
+
+  DateTime get startDate => startDate;
+  set startDate(DateTime startDate) {
+    this._startDate = startDate;
+  }
+
+  DateTime get endDate => endDate;
+  set endDate(DateTime startDate) {
+    this._endDate = endDate;
+  }
+
+  double get minPay => minPay;
+
+  set minPay(double name) {
+    this._minPay = minPay;
   }
 }
