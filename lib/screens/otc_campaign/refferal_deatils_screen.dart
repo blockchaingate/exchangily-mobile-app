@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 
-class RefferalDetailsScreen extends StatelessWidget {
-  const RefferalDetailsScreen({Key key}) : super(key: key);
+class CampaignRefferalDetailsScreen extends StatelessWidget {
+  const CampaignRefferalDetailsScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

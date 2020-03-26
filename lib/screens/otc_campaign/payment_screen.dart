@@ -255,7 +255,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              UIHelper.horizontalSpaceSmall,
+
               // 2nd contianer row Order info
               Expanded(
                 flex: 5,

@@ -60,7 +60,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                             child: Text('Tap here to enter in campaign',
                                 style: Theme.of(context).textTheme.headline4),
                             onPressed: () {
-                              Navigator.pushNamed(context, '/campaignPayment');
+                              Navigator.pushNamed(context, '/campaignLogin');
                             },
                           )
                         : RaisedButton(

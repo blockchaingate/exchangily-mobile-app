@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/instructions_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/trade/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_screen_state.dart';
@@ -32,6 +33,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/deposit_screen_state.dart';
@@ -52,6 +54,7 @@ void serviceLocator() {
   locator.registerLazySingleton(() => TradeService());
   locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
   locator.registerLazySingleton(() => NavigationService());
+  locator.registerLazySingleton(() => CampaignService());
 
 // factory returns the new instance
   locator.registerFactory(() => ConfirmMnemonicScreenState());
@@ -71,4 +74,5 @@ void serviceLocator() {
   locator.registerFactory(() => CampaignInstructionsScreenState());
   locator.registerFactory(() => CampaignPaymentScreenState());
   locator.registerFactory(() => CampaignDashboardScreenState());
+  locator.registerFactory(() => CampaignLoginScreenState());
 }

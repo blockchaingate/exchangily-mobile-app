@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignDashboardScreen extends StatelessWidget {
-  const CampaignDashboardScreen({Key key}) : super(key: key);
+  final userData;
+  const CampaignDashboardScreen({Key key, this.userData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +28,28 @@ class CampaignDashboardScreen extends StatelessWidget {
                   Container(
                     color: globals.primaryColor,
                     padding: EdgeInsets.all(15.0),
-                    child: Center(
-                        child: Text('My Campaign Dashboard',
-                            style: Theme.of(context).textTheme.headline4)),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 5,
+                          child: Center(
+                              child: Text('Welcome ${userData['email']}',
+                                  style:
+                                      Theme.of(context).textTheme.headline4)),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: FlatButton(
+                              onPressed: () {
+                                model.logout();
+                              },
+                              child: Text(
+                                'Logout',
+                                style: Theme.of(context).textTheme.headline5,
+                              )),
+                        )
+                      ],
+                    ),
                   ),
                   UIHelper.horizontalSpaceSmall,
                   // Level container
@@ -134,6 +154,40 @@ class CampaignDashboardScreen extends StatelessWidget {
                           Expanded(
                             flex: 5,
                             child: Card(
+                              color: globals.walletCardColor,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, '/campaignRefferalDetails');
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.all(25.0),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text('My Referral Code',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
+                                        UIHelper.horizontalSpaceSmall,
+                                        userData != null
+                                            ? Text(userData['referralCode'],
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5)
+                                            : Text(''),
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 5,
+                            child: Card(
                                 color: globals.buyPrice.withAlpha(150),
                                 child: InkWell(
                                   onTap: () {
@@ -145,7 +199,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                       child: Column(
                                         children: <Widget>[
                                           UIHelper.horizontalSpaceSmall,
-                                          Text('Buy More',
+                                          Text('Buy',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5),
@@ -157,34 +211,32 @@ class CampaignDashboardScreen extends StatelessWidget {
                                       )),
                                 )),
                           ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Card(
-                              color: globals.walletCardColor,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, '/campaignInstructions');
-                                },
-                                child: Container(
-                                    padding: EdgeInsets.all(25.0),
-                                    child: Column(
-                                      children: <Widget>[
-                                        UIHelper.horizontalSpaceSmall,
-                                        Text('Read Instructions',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5),
-                                        Text('',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5)
-                                      ],
-                                    )),
-                              )),
+                          Expanded(
+                            flex: 5,
+                            child: Card(
+                                color: globals.walletCardColor,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, '/campaignInstructions');
+                                  },
+                                  child: Container(
+                                      padding: EdgeInsets.all(25.0),
+                                      child: Column(
+                                        children: <Widget>[
+                                          UIHelper.horizontalSpaceSmall,
+                                          Text('Read Instructions',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5),
+                                          Text('',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5)
+                                        ],
+                                      )),
+                                )),
+                          ),
                         ],
                       )
                     ],

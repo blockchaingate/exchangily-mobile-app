@@ -16,6 +16,8 @@ import 'package:exchangilymobileapp/screens/otc/otc.dart';
 import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/login_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/register_account_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/payment_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/refferal_deatils_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/reward_details_screen.dart';
@@ -137,13 +139,24 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => CampaignPaymentScreen());
 
       case '/campaignDashboard':
-        return MaterialPageRoute(builder: (_) => CampaignDashboardScreen());
+        return MaterialPageRoute(
+            builder: (_) => CampaignDashboardScreen(
+                  userData: args,
+                ));
 
       case '/campaignRewardDetails':
-        return MaterialPageRoute(builder: (_) => RewardDetailsScreen());
+        return MaterialPageRoute(builder: (_) => CampaignRewardDetailsScreen());
 
       case '/campaignRefferalDetails':
-        return MaterialPageRoute(builder: (_) => RefferalDetailsScreen());
+        return MaterialPageRoute(
+            builder: (_) => CampaignRefferalDetailsScreen());
+
+      case '/campaignLogin':
+        return MaterialPageRoute(builder: (_) => CampaignLoginScreen());
+
+      case '/campaignRegisterAccount':
+        return MaterialPageRoute(
+            builder: (_) => CampaignRegisterAccountScreen());
 
       default:
         return _errorRoute(settings);
