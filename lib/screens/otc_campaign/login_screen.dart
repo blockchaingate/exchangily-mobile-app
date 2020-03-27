@@ -70,6 +70,13 @@ class CampaignLoginScreen extends StatelessWidget {
                       ],
                     ),
                     UIHelper.horizontalSpaceMedium,
+                    Visibility(
+                        visible: model.error,
+                        child: model.busy == true
+                            ? Text('Loading...')
+                            : Text(model.errorMessage,
+                                style: Theme.of(context).textTheme.bodyText2)),
+                    UIHelper.horizontalSpaceSmall,
                     // Button row
                     Row(
                       children: <Widget>[
@@ -112,7 +119,7 @@ class CampaignLoginScreen extends StatelessWidget {
                                         Theme.of(context).textTheme.headline4,
                                   ),
                             onPressed: () {
-                              model.getLogin();
+                              model.checkCredentials();
                             },
                           ),
                         )

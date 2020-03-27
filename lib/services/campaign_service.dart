@@ -25,15 +25,14 @@ class CampaignService {
   }
 
   Future login(User user) async {
-    Map<String, dynamic> data = {'appId': appId};
-    log.i(BASE_URL);
-    var response = await client.post(loginUrl, body: {
-      "email": 'barry-ruprai@exchangily.com',
-      "password": '123456789',
-      "appId": appId
-    });
+    // You cannot add key/pair directly to user object
+    Map<String, dynamic> body =
+        user.toJson(); // Assign user data to Map type json variable
+    body.addAll({'appId': appId}); // Add another key/pair value
+    log.w(body);
+    var response = await client.post(loginUrl, body: body);
     log.w(response.body);
-    return json.decode(response
-        .body); // when i use then here and return the response variable it was showing output in console for service but not in the login state
+    return json.decode(response.body);
+    // when i use then here and return the response variable it was showing output in console for service but not in the login state
   }
 }

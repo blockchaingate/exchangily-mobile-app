@@ -3,76 +3,105 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
+import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/models/campaign/user.dart';
+import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignLoginScreenState extends BaseState {
-  final log = getLogger('RegisterScreenState');
+  final log = getLogger('LoginScreenState');
   BuildContext context;
-  String errorMessage;
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
   CampaignService campaignService = locator<CampaignService>();
+  CampaignUserDatabaseService campaignUserDatabaseService =
+      locator<CampaignUserDatabaseService>();
   NavigationService navigationService = locator<NavigationService>();
+  bool error = false;
+  User user;
+  CampaignUserData userData;
 
   // To check if user already logged in
   init() async {
     setBusy(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
-    var referralCode = prefs.getString('referralCode');
-    var email = prefs.getString('email');
+    log.w('login token $loginToken');
     if (loginToken != '' && loginToken != null) {
-      var passDataUsingRoute = {
-        "token": loginToken,
-        "referralCode": referralCode,
-        "email": email
-      };
-      setBusy(false);
-      navigationService.navigateTo('/campaignDashboard',
-          arguments: passDataUsingRoute);
+      await campaignUserDatabaseService
+          .getUserDataByToken(loginToken)
+          .then((res) {
+        log.w('database response $res');
+        if (res != null) {
+          userData = res;
+          setBusy(false);
+          navigationService.navigateTo('/campaignDashboard',
+              arguments: userData);
+        } else {
+          setErrorMessage('Entry does not found in database');
+        }
+      });
     } else {
       log.w('already in the login');
-      // navigationService.navigateTo('/campaignLogin');
       setBusy(false);
     }
     setBusy(false);
   }
 
-  Future getLogin() async {
+  Future login(User user) async {
     setBusy(true);
-    // setState(ViewState.Busy);
-    User user = new User(
-        email: emailTextController.text, password: passwordTextController.text);
+
     log.w('User ${user.toJson()}');
-    await campaignService.login(user).then((response) {
+    await campaignService.login(user).then((response) async {
       // json deconde in campaign api let us see the response then its properties
-      // log.w(response["token"]);
-      String loginToken = response['token'];
-      String email = response['email'];
-      String referralCode = response['appUser']['referralCode'];
-      saveUserDataLocally(loginToken, referralCode, email);
-      var passDataUsingRoute = {
-        "token": loginToken,
-        "referralCode": referralCode,
-        "email": email
-      };
-      log.w(passDataUsingRoute);
-      navigationService.navigateTo('/campaignDashboard',
-          arguments: passDataUsingRoute);
-      setBusy(false);
+      if (response['message'] == '' || response['message'] == null) {
+        log.e(response['message']);
+        userData = new CampaignUserData(
+            email: response['email'],
+            token: response['token'],
+            parentDiscount: response['appUser']['parentDiscount'],
+            totalUSDMadeByChildren: response['appUser']
+                ['totalUSDMadeByChildren'],
+            totalTokensPurchased: response['appUser']['totalTokensPurchased'],
+            pointsEarned: response['appUser']['pointsEarned'],
+            referralCode: response['appUser']['referralCode']);
+        String loginToken = response['token'];
+        await saveUserDataLocally(loginToken);
+        navigationService.navigateTo('/campaignDashboard', arguments: userData);
+        setBusy(false);
+        return '';
+      } else {
+        error = true;
+        setErrorMessage(response['message']);
+        // errorMessage = response['message'];
+        setBusy(false);
+        return '';
+      }
     }).catchError((err) {
       setBusy(false);
     });
   }
 
-  saveUserDataLocally(
-      String loginToken, String referralCode, String email) async {
+// Check fields before calling the api
+  checkCredentials() {
+    setBusy(true);
+    user = new User(
+        email: emailTextController.text, password: passwordTextController.text);
+    if (user.email.isEmpty || user.password.isEmpty) {
+      error = true;
+      setErrorMessage('Please fill all fields');
+    } else {
+      login(user);
+    }
+    setBusy(false);
+  }
+
+// Save user data locally
+  saveUserDataLocally(String loginToken) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('loginToken', loginToken);
-    prefs.setString('referralCode', referralCode);
-    prefs.setString('email', email);
+    await campaignUserDatabaseService.insert(userData);
   }
 }

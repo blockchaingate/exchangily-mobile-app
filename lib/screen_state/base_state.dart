@@ -26,7 +26,7 @@ class BaseState extends ChangeNotifier {
 
   // better state handling with error
   bool _busy = false;
-  String _errorMessage;
+  String _errorMessage = '';
 
   bool get busy => _busy;
   String get errorMessage => _errorMessage;

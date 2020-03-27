@@ -14,6 +14,7 @@ class CampaignPaymentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScreen<CampaignPaymentScreenState>(
       onModelReady: (model) {
+        model.context = context;
         model.initState();
       },
       builder: (context, model, child) => Scaffold(
@@ -51,6 +52,17 @@ class CampaignPaymentScreen extends StatelessWidget {
                               //  width: 50,
                               height: 45,
                               child: TextField(
+                                style: model.checkSendAmount
+                                    // && model.amountDouble <= bal
+                                    ? Theme.of(context).textTheme.headline5
+                                    : Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(color: globals.red),
+                                onChanged: (value) {
+                                  model.checkAmount(value);
+                                },
+                                controller: model.sendAmountTextController,
                                 decoration: InputDecoration(
                                     hintText: 'Enter the amount',
                                     hintStyle:
@@ -195,15 +207,29 @@ class CampaignPaymentScreen extends StatelessWidget {
                               children: <Widget>[
                                 Text(
                                   'USDT Recieve Address',
-                                  style: Theme.of(context).textTheme.headline5,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .copyWith(fontWeight: FontWeight.bold),
                                 ),
                                 UIHelper.horizontalSpaceSmall,
-                                Text('0xgsdgknknnk3kdnfi3nkflndfnfnd44nfdkk')
+                                Text(
+                                    '0xae397cfc8f67c46d533b844bfff25ad5ae89e63a',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1)
                               ],
                             ),
                           ),
                         ),
                       ),
+                      UIHelper.horizontalSpaceSmall,
+                      Visibility(
+                          visible: model.errorMessage != '',
+                          child: model.busy == true
+                              ? Text('Loading...')
+                              : Text(model.errorMessage,
+                                  style:
+                                      Theme.of(context).textTheme.bodyText2)),
                       UIHelper.horizontalSpaceSmall,
                       // Button row container
                       Container(
@@ -230,7 +256,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     ),
                                     onPressed: () {
                                       Navigator.of(context)
-                                          .pushNamed('/campaignInstructions');
+                                          .pushNamed('/campaignDashboard');
                                     },
                                   ),
                                 ),
@@ -245,7 +271,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           .textTheme
                                           .headline5),
                                   onPressed: () {
-                                    model.navigateToDashboard();
+                                    model.checkFields(context);
                                   },
                                 ),
                               )
@@ -287,7 +313,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                 ),
               )
             ]),
-        bottomNavigationBar: BottomNavBar(count: 3),
+        // bottomNavigationBar: BottomNavBar(count: 3),
       ),
     );
   }

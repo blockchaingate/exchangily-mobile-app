@@ -25,7 +25,7 @@ class SharedService {
             context: context,
             builder: (context) {
               return AlertDialog(
-                elevation: 5,
+                elevation: 10,
                 backgroundColor: globals.walletCardColor.withOpacity(0.85),
                 titleTextStyle: Theme.of(context)
                     .textTheme
@@ -61,20 +61,23 @@ class SharedService {
         false;
   }
 
-  Future<bool> alertError(String title, String message) async {
+  Future<bool> alertResponse(String title, String message) async {
     return showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
-                elevation: 5,
+                elevation: 10,
                 backgroundColor: globals.walletCardColor.withOpacity(0.95),
                 title: Text(title),
                 titleTextStyle: Theme.of(context).textTheme.headline4,
                 contentTextStyle: TextStyle(color: globals.grey),
-                content: Text(
-                  // add here cupertino widget to check in these small widgets first then the entire app
-                  message,
-                  style: Theme.of(context).textTheme.headline5,
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    // add here cupertino widget to check in these small widgets first then the entire app
+                    message,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
                 ),
                 actions: <Widget>[
                   Center(

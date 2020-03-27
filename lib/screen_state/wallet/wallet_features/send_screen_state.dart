@@ -167,37 +167,20 @@ class SendScreenState extends BaseState {
           // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
           //   checkTxStatus(tickerName, txHash);
           // });
-          sharedService.alertError(
+          sharedService.alertResponse(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}');
-          // walletService.showInfoFlushbar(
-          //     AppLocalizations.of(context).sendTransactionComplete,
-          //     '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
-          //     Icons.check_circle_outline,
-          //     globals.green,
-          //     context);
+
           setState(ViewState.Idle);
         } else if (errorMessage.isNotEmpty) {
           log.e('Error Message: $errorMessage');
-          sharedService.alertError(AppLocalizations.of(context).genericError,
+          sharedService.alertResponse(AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
-          // walletService.showInfoFlushbar(
-          //     AppLocalizations.of(context).genericError,
-          //     '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
-          //     Icons.cancel,
-          //     globals.red,
-          //     context);
           setState(ViewState.Idle);
         } else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
-          sharedService.alertError(AppLocalizations.of(context).genericError,
+          sharedService.alertResponse(AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
-          // walletService.showInfoFlushbar(
-          //     AppLocalizations.of(context).genericError,
-          //     '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
-          //     Icons.cancel,
-          //     globals.red,
-          //     context);
           setState(ViewState.Idle);
         }
         return txHash;
@@ -208,7 +191,7 @@ class SendScreenState extends BaseState {
             AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
       }).catchError((error) {
         log.e('In Catch error - $error');
-        sharedService.alertError(AppLocalizations.of(context).genericError,
+        sharedService.alertResponse(AppLocalizations.of(context).genericError,
             '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
         //errorMessage = AppLocalizations.of(context).transanctionFailed;
         setState(ViewState.Idle);
@@ -261,25 +244,13 @@ class SendScreenState extends BaseState {
     log.w(walletInfo.availableBalance);
     if (toAddress == '') {
       log.w('Address $toAddress');
-      sharedService.alertError(AppLocalizations.of(context).emptyAddress,
+      sharedService.alertResponse(AppLocalizations.of(context).emptyAddress,
           AppLocalizations.of(context).pleaseEnterAnAddress);
-      // walletService.showInfoFlushbar(
-      //     AppLocalizations.of(context).emptyAddress,
-      //     AppLocalizations.of(context).pleaseEnterAnAddress,
-      //     Icons.cancel,
-      //     globals.red,
-      //     context);
     } else if (amount == null ||
         !checkSendAmount ||
         amount > walletInfo.availableBalance) {
-      sharedService.alertError(AppLocalizations.of(context).invalidAmount,
+      sharedService.alertResponse(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber);
-      // walletService.showInfoFlushbar(
-      //     AppLocalizations.of(context).invalidAmount,
-      //     AppLocalizations.of(context).pleaseEnterValidNumber,
-      //     Icons.cancel,
-      //     globals.red,
-      //     context);
     } else {
       FocusScope.of(context).requestFocus(FocusNode());
       await verifyPassword(walletInfo.tickerName.toUpperCase(),
@@ -316,14 +287,8 @@ class SendScreenState extends BaseState {
 // Copy Address
   copyAddress(context) {
     Clipboard.setData(new ClipboardData(text: txHash));
-    sharedService.alertError(AppLocalizations.of(context).transactionId,
+    sharedService.alertResponse(AppLocalizations.of(context).transactionId,
         AppLocalizations.of(context).copiedSuccessfully);
-    // walletService.showInfoFlushbar(
-    //     AppLocalizations.of(context).transactionId,
-    //     AppLocalizations.of(context).copiedSuccessfully,
-    //     Icons.check,
-    //     globals.green,
-    //     context);
   }
 
   // Update Trans Fee
@@ -363,22 +328,14 @@ class SendScreenState extends BaseState {
     }).catchError((err) {
       setState(ViewState.Idle);
       log.e(err);
-      sharedService.alertError(AppLocalizations.of(context).genericError,
+      sharedService.alertResponse(AppLocalizations.of(context).genericError,
           AppLocalizations.of(context).transanctionFailed);
-      // walletService.showInfoFlushbar(
-      //     AppLocalizations.of(context).genericError,
-      //     '${AppLocalizations.of(context).transanctionFailed}',
-      //     Icons.cancel,
-      //     globals.red,
-      //     context);
     });
     setState(ViewState.Idle);
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
                                     Barcode Scan
-
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Future scan() async {
@@ -390,29 +347,25 @@ class SendScreenState extends BaseState {
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(ViewState.Idle);
-        sharedService.alertError(
+        sharedService.alertResponse(
             '', AppLocalizations.of(context).userAccessDenied);
         // receiverWalletAddressTextController.text =
         //     AppLocalizations.of(context).userAccessDenied;
       } else {
         setState(ViewState.Idle);
-        sharedService.alertError('', AppLocalizations.of(context).unknownError);
+        sharedService.alertResponse(
+            '', AppLocalizations.of(context).unknownError);
         // receiverWalletAddressTextController.text =
         //     '${AppLocalizations.of(context).unknownError}: $e';
       }
     } on FormatException {
       setState(ViewState.Idle);
-      sharedService.alertError(AppLocalizations.of(context).scanCancelled,
+      sharedService.alertResponse(AppLocalizations.of(context).scanCancelled,
           AppLocalizations.of(context).userReturnedByPressingBackButton);
-      // walletService.showInfoFlushbar(
-      //     AppLocalizations.of(context).scanCancelled,
-      //     AppLocalizations.of(context).userReturnedByPressingBackButton,
-      //     Icons.cancel,
-      //     globals.red,
-      //     context);
     } catch (e) {
       setState(ViewState.Idle);
-      sharedService.alertError('', AppLocalizations.of(context).unknownError);
+      sharedService.alertResponse(
+          '', AppLocalizations.of(context).unknownError);
       // receiverWalletAddressTextController.text =
       //     '${AppLocalizations.of(context).unknownError}: $e';
     }

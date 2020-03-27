@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -7,14 +8,16 @@ import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignDashboardScreen extends StatelessWidget {
-  final userData;
+  final CampaignUserData userData;
   const CampaignDashboardScreen({Key key, this.userData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BaseScreen<CampaignDashboardScreenState>(
       onModelReady: (model) {
-        // model.initState();
+        if (userData == null) {
+          model.initState();
+        }
       },
       builder: (context, model, child) => Scaffold(
           body: Container(
@@ -33,7 +36,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                         Expanded(
                           flex: 5,
                           child: Center(
-                              child: Text('Welcome ${userData['email']}',
+                              child: Text('Welcome ${userData.email}',
                                   style:
                                       Theme.of(context).textTheme.headline4)),
                         ),
@@ -170,7 +173,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                                 .headline5),
                                         UIHelper.horizontalSpaceSmall,
                                         userData != null
-                                            ? Text(userData['referralCode'],
+                                            ? Text(userData.referralCode,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline5)
