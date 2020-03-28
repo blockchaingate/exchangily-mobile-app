@@ -13,7 +13,7 @@ class Campaign {
       DateTime startDate,
       DateTime endDate,
       double minPay}) {
-    this._id = id;
+    this._id = id ?? '5e7e6a1601a0961bbabb36c9';
     this._name = name;
     this._logoUrl = logoUrl;
     this._startDate = startDate;

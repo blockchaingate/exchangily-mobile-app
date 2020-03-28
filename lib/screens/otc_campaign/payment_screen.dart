@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -222,6 +223,40 @@ class CampaignPaymentScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+
+                      UIHelper.horizontalSpaceSmall,
+                      //Selected Wallet Balance row
+                      model.groupValue != '' &&
+                              model.groupValue != 'USD' &&
+                              model.walletInfo != null
+                          ? Container(
+                              width: MediaQuery.of(context).size.width - 100,
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Expanded(
+                                        flex: 5,
+                                        child: Text(
+                                          'Available ${model.walletInfo.tickerName} Balance',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        )),
+                                    Expanded(
+                                        flex: 5,
+                                        child: Center(
+                                          child: Text(
+                                            '${model.walletInfo.availableBalance}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          ),
+                                        )),
+                                  ]),
+                            )
+                          : Container(),
+
                       UIHelper.horizontalSpaceSmall,
                       Visibility(
                           visible: model.errorMessage != '',
@@ -261,6 +296,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                              // Confirm button
                               Expanded(
                                 flex: 4,
                                 child: RaisedButton(
@@ -271,7 +307,14 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           .textTheme
                                           .headline5),
                                   onPressed: () {
-                                    model.checkFields(context);
+                                    CampaignOrder campaignOrder =
+                                        new CampaignOrder();
+                                    //  model.checkFields(context);
+                                    model.createCampaignOrder(
+                                        '0x41d9b291469c7d9046e8154b04b3d6e1e76c910bba9fce6acf73298d79984cfd',
+                                        333);
+                                    //  model.campaignService
+                                    //   .createCampaignOrder(campaignOrder);
                                   },
                                 ),
                               )

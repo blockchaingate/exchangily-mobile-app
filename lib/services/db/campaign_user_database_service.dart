@@ -21,19 +21,16 @@ class CampaignUserDatabaseService {
   final log = getLogger('CampaignUserDatabaseService');
 
   static final _databaseName = 'campaign_user_database.db';
-  final String tableName = 'campaign_user';
+  final String tableName = 'campaign_user_data';
   // database table and column names
   final String columnId = 'id';
   final String columnEmail = 'email';
   final String columnToken = 'token';
   final String columnReferralCode = 'referralCode';
   final String columnDateCreated = 'dateCreated';
-  final String columnParentDiscount = 'parentDiscount';
-  final String columnTotalUSDMadeByChildren = 'totalUSDMadeByChildren';
-  final String columnTotalTokensPurchased = 'totalTokensPurchased';
-  final String columnPointsEarned = 'pointsEarned';
+  final String columnMemberId = 'memberId';
 
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 5;
   static Future<Database> _database;
   String path = '';
 
@@ -54,12 +51,9 @@ class CampaignUserDatabaseService {
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
         $columnEmail TEXT,
         $columnToken TEXT,
-        $columnReferralCode TEXT,      
+        $columnReferralCode TEXT,
         $columnDateCreated TEXT,
-        $columnParentDiscount REAL,  
-        $columnTotalUSDMadeByChildren REAL,  
-        $columnTotalTokensPurchased REAL,  
-        $columnPointsEarned REAL)    
+        $columnMemberId TEXT)    
         ''');
   }
 
@@ -101,7 +95,7 @@ class CampaignUserDatabaseService {
   }
 
   // Get User By Token
-  Future getUserDataByToken(String token) async {
+  Future<CampaignUserData> getUserDataByToken(String token) async {
     await initDb();
     final Database db = await _database;
     log.w('db $db');

@@ -3,10 +3,15 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
+import 'package:exchangilymobileapp/models/campaign/user_data.dart';
+import 'package:exchangilymobileapp/models/transaction-info.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/campaign_service.dart';
+import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -14,6 +19,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignPaymentScreenState extends BaseState {
   final log = getLogger('PaymentScreenState');
@@ -21,6 +27,9 @@ class CampaignPaymentScreenState extends BaseState {
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
+  CampaignService campaignService = locator<CampaignService>();
+  CampaignUserDatabaseService campaignUserDatabaseService =
+      locator<CampaignUserDatabaseService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
   final sendAmountTextController = TextEditingController();
@@ -36,6 +45,11 @@ class CampaignPaymentScreenState extends BaseState {
   int satoshisPerBytes = 50;
   bool checkSendAmount = false;
   WalletInfo walletInfo;
+  String exgWalletAddress = '';
+  CampaignUserData userData;
+  String errorMessage = '';
+  CampaignOrder campaignOrder;
+  TransactionInfo transactionInfo;
 
   // Initial logic
   initState() {
@@ -44,10 +58,13 @@ class CampaignPaymentScreenState extends BaseState {
 
   // Radio button selection
 
-  radioButtonSelection(value) {
+  radioButtonSelection(value) async {
     setState(ViewState.Busy);
     print(value);
     _groupValue = value;
+    if (value != 'USD') {
+      await getWallet();
+    }
     setErrorMessage('');
     setState((ViewState.Idle));
   }
@@ -98,14 +115,13 @@ class CampaignPaymentScreenState extends BaseState {
         'satoshisPerBytes': satoshisPerBytes
       };
       // }
-      log.e('$tickerName, $seed, $usdtToWalletAddress,$amount, $options');
       await walletService
           .sendTransaction(tickerName, seed, [0], [], usdtToWalletAddress,
               amount, options, true)
           .then((res) async {
         log.w('Result $res');
         String txHash = res["txHash"];
-        setErrorMessage(res["errMsg"]);
+        errorMessage = res["errMsg"];
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           sendAmountTextController.text = '';
@@ -124,11 +140,10 @@ class CampaignPaymentScreenState extends BaseState {
           // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
           //   checkTxStatus(tickerName, txHash);
           // });
+          await createCampaignOrder(txHash, amount);
           sharedService.alertResponse(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}');
-
-          setBusy(false);
         } else if (errorMessage.isNotEmpty) {
           log.e('Error Message: $errorMessage');
           sharedService.alertResponse(AppLocalizations.of(context).genericError,
@@ -164,21 +179,57 @@ class CampaignPaymentScreenState extends BaseState {
     }
   }
 
+  // Create campaign order after payment
+
+  createCampaignOrder(String txHash, double amount) async {
+    // get exg address
+    await getExgWalletAddr();
+    // get login token from local storage to get the userData from local database
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String loginToken = prefs.getString('loginToken');
+    // get the userdata from local database using login token
+    await campaignUserDatabaseService
+        .getUserDataByToken(loginToken)
+        .then((res) {
+      userData = res;
+      // contructing campaign order object to send to buy coin api request
+      campaignOrder = new CampaignOrder(
+          memberId: userData.memberId,
+          walletAdd: exgWalletAddress,
+          paymentType: _groupValue,
+          txId: txHash,
+          amount: amount);
+    }).catchError((err) => log.e('Campaign database service catch $err'));
+    // calling api and passing the campaign order object
+    await campaignService.createCampaignOrder(campaignOrder).then((res) async {
+      //  log.w(res);
+      if (res != null) {
+        await campaignService.getOrderByWalletAddress(exgWalletAddress).then(
+            (res) {
+          log.e(res['status']);
+          // int status = int.parse(res['status']);
+          // transactionInfo = new TransactionInfo(
+          //     amount: res['amount'], date: res['dateCreated'], status: status);
+          // log.e(transactionInfo.date);
+        }).catchError(
+            (err) => log.e('Campaign service getOrderByWalletAddress $err'));
+      } else {
+        log.e('Create order else failed');
+      }
+    }).catchError((err) => log.e('Campaign service buying coin catch $err'));
+    setBusy(false);
+  }
+
   // Check input fields
   checkFields(context) async {
+    log.i('checking fields');
     setBusy(true);
     if (sendAmountTextController.text == '' || _groupValue == null) {
+      log.i('1');
       setErrorMessage('Please fill all the fields');
       setBusy(false);
       return;
     }
-    // Get coin details which we are making transaction through like USDT
-    await walletDataBaseService.getBytickerName(_groupValue).then((res) {
-      log.e('res $res');
-      tickerName = _groupValue;
-      walletInfo = res;
-      log.w('wallet info ${walletInfo.availableBalance}');
-    });
     double amount = double.parse(sendAmountTextController.text);
     if (amount == null ||
         !checkSendAmount ||
@@ -191,6 +242,25 @@ class CampaignPaymentScreenState extends BaseState {
       await verifyWalletPassword(amount);
     }
     setBusy(false);
+  }
+
+// Get wallet info by using which user is making the payment
+  getWallet() async {
+    // Get coin details which we are making transaction through like USDT
+    await walletDataBaseService.getBytickerName(_groupValue).then((res) {
+      tickerName = _groupValue;
+      walletInfo = res;
+      log.w('wallet info ${walletInfo.availableBalance}');
+    });
+  }
+
+// Get exg wallet address
+  getExgWalletAddr() async {
+    // Get coin details which we are making transaction through like USDT
+    await walletDataBaseService.getBytickerName('EXG').then((res) {
+      exgWalletAddress = res.address;
+      log.w('Exg wallet address $exgWalletAddress');
+    });
   }
 
   // Check Send Amount

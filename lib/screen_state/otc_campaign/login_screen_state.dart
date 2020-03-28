@@ -52,22 +52,17 @@ class CampaignLoginScreenState extends BaseState {
 
   Future login(User user) async {
     setBusy(true);
-
-    log.w('User ${user.toJson()}');
     await campaignService.login(user).then((response) async {
       // json deconde in campaign api let us see the response then its properties
-      if (response['message'] == '' || response['message'] == null) {
-        log.e(response['message']);
+      String loginToken = response['token'];
+      if (response != null) {
         userData = new CampaignUserData(
             email: response['email'],
-            token: response['token'],
-            parentDiscount: response['appUser']['parentDiscount'],
-            totalUSDMadeByChildren: response['appUser']
-                ['totalUSDMadeByChildren'],
-            totalTokensPurchased: response['appUser']['totalTokensPurchased'],
-            pointsEarned: response['appUser']['pointsEarned'],
-            referralCode: response['appUser']['referralCode']);
-        String loginToken = response['token'];
+            token: loginToken,
+            referralCode: response['appUser']['referralCode'],
+            dateCreated: response['appUser']['dateCreated'],
+            memberId: response['appUser']['userId']);
+        log.i('Test user data object ${userData.referralCode}');
         await saveUserDataLocally(loginToken);
         navigationService.navigateTo('/campaignDashboard', arguments: userData);
         setBusy(false);
@@ -75,7 +70,7 @@ class CampaignLoginScreenState extends BaseState {
       } else {
         error = true;
         setErrorMessage(response['message']);
-        // errorMessage = response['message'];
+        log.e('In else ${response['message']}');
         setBusy(false);
         return '';
       }
@@ -103,5 +98,14 @@ class CampaignLoginScreenState extends BaseState {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('loginToken', loginToken);
     await campaignUserDatabaseService.insert(userData);
+    await campaignUserDatabaseService
+        .getUserDataByToken(loginToken)
+        .then((value) => log.w(value));
+  }
+
+  deleteDb() async {
+    await campaignUserDatabaseService
+        .deleteDb()
+        .then((value) => log.w('delete finish $value'));
   }
 }

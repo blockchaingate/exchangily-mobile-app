@@ -80,6 +80,21 @@ class CampaignLoginScreen extends StatelessWidget {
                     // Button row
                     Row(
                       children: <Widget>[
+                        // Expanded(
+                        //   child: Container(
+                        //     margin: EdgeInsets.only(right: 5),
+                        //     child: RaisedButton(
+                        //       padding: EdgeInsets.all(2.0),
+                        //       elevation: 5,
+                        //       focusElevation: 5,
+                        //       child: Text('Delete Db',
+                        //           style: Theme.of(context).textTheme.headline4),
+                        //       onPressed: () {
+                        //         model.deleteDb();
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                         Expanded(
                           child: Container(
                             margin: EdgeInsets.only(right: 5),

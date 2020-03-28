@@ -4,30 +4,22 @@ class CampaignUserData {
   String _token;
   String _referralCode;
   String _dateCreated;
-  double _parentDiscount;
-  double _totalUSDMadeByChildren;
-  double _totalTokensPurchased;
-  double _pointsEarned;
-
+  String _memberId;
+// AppUser appUser;
   CampaignUserData(
       {int id,
       String email,
       String token,
       String referralCode,
-      double parentDiscount,
       String dateCreated,
-      double totalUSDMadeByChildren,
-      double totalTokensPurchased,
-      double pointsEarned}) {
+      String memberId}) {
     this._id = id;
     this._email = email;
     this._token = token;
     this._referralCode = referralCode ?? '';
-    this._parentDiscount = parentDiscount ?? 0.0;
     this._dateCreated = dateCreated ?? '';
-    this._totalUSDMadeByChildren = totalUSDMadeByChildren ?? 0.0;
-    this._totalTokensPurchased = totalTokensPurchased ?? 0.0;
-    this._pointsEarned = pointsEarned ?? 0.0;
+
+    this._memberId = memberId;
   }
 
   Map<String, dynamic> toJson() => {
@@ -35,11 +27,8 @@ class CampaignUserData {
         'email': _email,
         'token': _token,
         'referralCode': _referralCode,
-        'parentDiscount': _parentDiscount,
         'dateCreated': _dateCreated,
-        'totalUSDMadeByChildren': _totalUSDMadeByChildren,
-        'totalTokensPurchased': _totalTokensPurchased,
-        'pointsEarned': _pointsEarned
+        'memberId': _memberId
       };
 
   factory CampaignUserData.fromJson(Map<String, dynamic> json) {
@@ -48,11 +37,8 @@ class CampaignUserData {
         email: json['email'] as String,
         token: json['token'] as String,
         referralCode: json['referralCode'],
-        parentDiscount: json['parentDiscount'] as double,
         dateCreated: json['dateCreated'] as String,
-        totalUSDMadeByChildren: json['totalUSDMadeByChildren'],
-        totalTokensPurchased: json['totalTokensPurchased'],
-        pointsEarned: json['pointsEarned']);
+        memberId: json['memberId']);
   }
 
   int get id => _id;
@@ -63,7 +49,7 @@ class CampaignUserData {
 
   String get email => _email;
 
-  set tickerName(String email) {
+  set email(String email) {
     this._email = email;
   }
 
@@ -79,33 +65,14 @@ class CampaignUserData {
     this._referralCode = referralCode;
   }
 
-  double get parentDiscount => _parentDiscount;
-
-  set parentDiscount(double parentDiscount) {
-    this._parentDiscount = parentDiscount;
-  }
-
   String get dateCreated => _dateCreated;
 
-  set name(String dateCreated) {
+  set dateCreated(String dateCreated) {
     this._dateCreated = dateCreated;
   }
 
-  double get totalUSDMadeByChildren => _totalUSDMadeByChildren;
-
-  set totalUSDMadeByChildren(double totalUSDMadeByChildren) {
-    this._totalUSDMadeByChildren = totalUSDMadeByChildren;
-  }
-
-  double get totalTokensPurchased => _totalTokensPurchased;
-
-  set totalTokensPurchased(double totalTokensPurchased) {
-    this._totalTokensPurchased = totalTokensPurchased;
-  }
-
-  double get pointsEarned => _pointsEarned;
-
-  set pointsEarned(double pointsEarned) {
-    this._pointsEarned = pointsEarned;
+  String get memberId => _memberId;
+  set memberId(String memberId) {
+    this._memberId = memberId;
   }
 }

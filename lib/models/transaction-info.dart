@@ -1,17 +1,27 @@
-class TransactionHistory {
+class TransactionInfo {
   int _id;
   String _tickerName;
   String _address;
   double _amount;
   String _date;
+  String _txid;
+  int _status;
 
-  TransactionHistory(
-      {int id, String tickerName, String address, double amount, String date}) {
+  TransactionInfo(
+      {int id,
+      String tickerName,
+      String address,
+      double amount,
+      String date,
+      String txid,
+      int status}) {
     this._id = id;
-    this._tickerName = tickerName;
-    this._address = address;
+    this._tickerName = tickerName ?? '';
+    this._address = address ?? '';
     this._amount = amount ?? 0.0;
-    this._date = date;
+    this._date = date ?? '';
+    this._txid = txid ?? '';
+    this._status = status ?? 0;
   }
 
   Map<String, dynamic> toJson() => {
@@ -20,15 +30,19 @@ class TransactionHistory {
         'address': _address,
         'amount': _amount,
         'date': _date,
+        'txid': _txid,
+        'status': _status
       };
 
-  factory TransactionHistory.fromJson(Map<String, dynamic> json) {
-    return new TransactionHistory(
+  factory TransactionInfo.fromJson(Map<String, dynamic> json) {
+    return new TransactionInfo(
         id: json['id'] as int,
         tickerName: json['tickerName'] as String,
         address: json['address'] as String,
         amount: json['amount'] as double,
-        date: json['date'] as String);
+        date: json['date'] as String,
+        txid: json['txid'],
+        status: json['status']);
   }
 
   int get id => _id;
@@ -59,5 +73,16 @@ class TransactionHistory {
 
   set name(String date) {
     this._date = date;
+  }
+
+  String get txid => _txid;
+
+  set txid(String txid) {
+    this._txid = txid;
+  }
+
+  int get status => _status;
+  set status(int status) {
+    this._status = status;
   }
 }
