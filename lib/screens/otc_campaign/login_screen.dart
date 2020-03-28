@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state.dart';
@@ -58,15 +59,41 @@ class CampaignLoginScreen extends StatelessWidget {
                             child: Text(
                               'Password',
                               style: Theme.of(context).textTheme.headline5,
-                              // textAlign: TextAlign.center,
                             )),
-                        Expanded(
-                            flex: 2,
-                            child: TextField(
-                              controller: model.passwordTextController,
-                              obscureText: true,
-                              keyboardType: TextInputType.visiblePassword,
-                            ))
+                        model.isPasswordTextVisible == true
+                            ? Expanded(
+                                flex: 2,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                          onPressed: () {
+                                            model.setBusy(true);
+                                            model.isPasswordTextVisible = false;
+                                            model.setBusy(false);
+                                          },
+                                          icon: Icon(Icons.remove_red_eye))),
+                                  controller: model.passwordTextController,
+                                  obscureText: false,
+                                  keyboardType: TextInputType.visiblePassword,
+                                ))
+                            : Expanded(
+                                flex: 2,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                          onPressed: () {
+                                            model.setBusy(true);
+                                            model.isPasswordTextVisible = true;
+                                            model.setBusy(false);
+                                          },
+                                          icon: Icon(
+                                            Icons.remove_red_eye,
+                                            color: globals.grey,
+                                          ))),
+                                  controller: model.passwordTextController,
+                                  obscureText: true,
+                                  keyboardType: TextInputType.visiblePassword,
+                                ))
                       ],
                     ),
                     UIHelper.horizontalSpaceMedium,

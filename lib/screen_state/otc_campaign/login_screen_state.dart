@@ -22,6 +22,7 @@ class CampaignLoginScreenState extends BaseState {
   bool error = false;
   User user;
   CampaignUserData userData;
+  bool isPasswordTextVisible = false;
 
   // To check if user already logged in
   init() async {

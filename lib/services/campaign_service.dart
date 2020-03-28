@@ -47,6 +47,7 @@ class CampaignService {
   Future createCampaignOrder(CampaignOrder campaignOrder) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String loginToken = prefs.getString('loginToken');
+
     Map<String, dynamic> body = campaignOrder.toJson();
     //  {
     //   "campaignId": "5e7e68682212d41ad0a5cf07",
@@ -58,7 +59,6 @@ class CampaignService {
     //   "paymentType": "USDT",
     //   "status": ""
     // };
-
     body.addAll({'campaignId': campaignId});
     log.w(body);
     Map<String, String> headers = {'x-access-token': loginToken};
