@@ -1,53 +1,55 @@
 class TransactionInfo {
-  int _id;
+  String _id;
   String _tickerName;
   String _address;
-  double _amount;
-  String _date;
+  int _amount;
+  String _dateCreated;
   String _txid;
-  int _status;
+  String _status;
 
   TransactionInfo(
-      {int id,
+      {String id,
       String tickerName,
       String address,
-      double amount,
-      String date,
+      int amount,
+      String dateCreated,
       String txid,
-      int status}) {
+      String status}) {
     this._id = id;
     this._tickerName = tickerName ?? '';
     this._address = address ?? '';
-    this._amount = amount ?? 0.0;
-    this._date = date ?? '';
+    this._amount = amount ?? 0;
+    this._dateCreated = dateCreated ?? '';
     this._txid = txid ?? '';
     this._status = status ?? 0;
   }
 
-  Map<String, dynamic> toJson() => {
-        'id': _id,
-        'tickerName': _tickerName,
-        'address': _address,
-        'amount': _amount,
-        'date': _date,
-        'txid': _txid,
-        'status': _status
-      };
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = this._id;
+    data['tickerName'] = this._tickerName;
+    data['address'] = this._address;
+    data['amount'] = this._amount;
+    data['dateCreated'] = this._dateCreated;
+    data['txid'] = this._txid;
+    data['status'] = this._status;
+    return data;
+  }
 
   factory TransactionInfo.fromJson(Map<String, dynamic> json) {
-    return new TransactionInfo(
-        id: json['id'] as int,
+    return TransactionInfo(
+        id: json['id'] as String,
         tickerName: json['tickerName'] as String,
         address: json['address'] as String,
-        amount: json['amount'] as double,
-        date: json['date'] as String,
+        amount: json['amount'],
+        dateCreated: json['dateCreated'] as String,
         txid: json['txid'],
         status: json['status']);
   }
 
-  int get id => _id;
+  String get id => _id;
 
-  set id(int id) {
+  set id(String id) {
     this._id = id;
   }
 
@@ -63,16 +65,16 @@ class TransactionInfo {
     this._address = address;
   }
 
-  double get amount => _amount;
+  int get amount => _amount;
 
-  set amount(double amount) {
+  set amount(int amount) {
     this._amount = amount;
   }
 
-  String get date => _date;
+  String get dateCreated => _dateCreated;
 
-  set name(String date) {
-    this._date = date;
+  set dateCreated(String dateCreated) {
+    this._dateCreated = dateCreated;
   }
 
   String get txid => _txid;
@@ -81,8 +83,19 @@ class TransactionInfo {
     this._txid = txid;
   }
 
-  int get status => _status;
-  set status(int status) {
+  String get status => _status;
+  set status(String status) {
     this._status = status;
+  }
+}
+
+class TransactionInfoList {
+  final List<TransactionInfo> transactions;
+  TransactionInfoList({this.transactions});
+
+  factory TransactionInfoList.fromJson(List<dynamic> parsedJson) {
+    List<TransactionInfo> transactions = new List<TransactionInfo>();
+    transactions = parsedJson.map((i) => TransactionInfo.fromJson(i)).toList();
+    return new TransactionInfoList(transactions: transactions);
   }
 }

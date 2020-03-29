@@ -157,7 +157,7 @@ class SendScreenState extends BaseState {
               tickerName: tickerName,
               address: toWalletAddress,
               amount: amount,
-              date: date);
+              dateCreated: date);
           // Add transaction history object in database
           await transactionHistoryDatabaseService
               .insert(transactionHistory)

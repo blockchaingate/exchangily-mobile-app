@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../shared/globals.dart' as globals;
 
 class CampaignPaymentScreenState extends BaseState {
   final log = getLogger('PaymentScreenState');
@@ -49,11 +50,13 @@ class CampaignPaymentScreenState extends BaseState {
   CampaignUserData userData;
   String errorMessage = '';
   CampaignOrder campaignOrder;
-  TransactionInfo transactionInfo;
+  List<TransactionInfo> transactionInfoList = [];
+  Color containerListColor;
 
   // Initial logic
-  initState() {
+  initState() async {
     print('in payment screen');
+    await getCampaignOrdeList();
   }
 
   // Radio button selection
@@ -91,21 +94,7 @@ class CampaignPaymentScreenState extends BaseState {
       } else if (tickerName == 'EXG') {
         tokenType = 'FAB';
       }
-      // if (tokenType != null && tokenType != '') {
-      //   if ((tickerName != null) &&
-      //       (tickerName != '') &&
-      //       (tokenType != null) &&
-      //       (tokenType != '')) {
-      //     options = {
-      //       'tokenType': tokenType,
-      //       'contractAddress': environment["addresses"]["smartContract"]
-      //           [tickerName],
-      //       'gasPrice': gasPrice,
-      //       'gasLimit': gasLimit,
-      //       'satoshisPerBytes': satoshisPerBytes
-      //     };
-      //   }
-      // } else {
+
       options = {
         'tokenType': tokenType,
         'contractAddress': environment["addresses"]["smartContract"]
@@ -182,16 +171,21 @@ class CampaignPaymentScreenState extends BaseState {
   // Create campaign order after payment
 
   createCampaignOrder(String txHash, double amount) async {
+    setBusy(true);
+
     // get exg address
     await getExgWalletAddr();
+
     // get login token from local storage to get the userData from local database
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String loginToken = prefs.getString('loginToken');
+
     // get the userdata from local database using login token
     await campaignUserDatabaseService
         .getUserDataByToken(loginToken)
         .then((res) {
       userData = res;
+
       // contructing campaign order object to send to buy coin api request
       campaignOrder = new CampaignOrder(
           memberId: userData.memberId,
@@ -200,24 +194,38 @@ class CampaignPaymentScreenState extends BaseState {
           txId: txHash,
           amount: amount);
     }).catchError((err) => log.e('Campaign database service catch $err'));
+
     // calling api and passing the campaign order object
     await campaignService.createCampaignOrder(campaignOrder).then((res) async {
-      //  log.w(res);
+      log.w(res);
       if (res != null) {
-        await campaignService.getOrderByWalletAddress(exgWalletAddress).then(
-            (res) {
-          log.e(res['status']);
-          // int status = int.parse(res['status']);
-          // transactionInfo = new TransactionInfo(
-          //     amount: res['amount'], date: res['dateCreated'], status: status);
-          // log.e(transactionInfo.date);
-        }).catchError(
-            (err) => log.e('Campaign service getOrderByWalletAddress $err'));
+        await getCampaignOrdeList();
       } else {
-        log.e('Create order else failed');
+        log.e('Create order failed');
       }
     }).catchError((err) => log.e('Campaign service buying coin catch $err'));
     setBusy(false);
+  }
+
+  //------------------------------------------
+  //        Get Campaign Order List
+  //------------------------------------------
+  getCampaignOrdeList() async {
+    setBusy(true);
+    await getExgWalletAddr();
+
+    await campaignService
+        .getOrderByWalletAddress(exgWalletAddress)
+        .then((orderListFromApi) {
+      // log.w(orderListFromApi.length);
+      transactionInfoList = orderListFromApi;
+
+      log.e(transactionInfoList.length);
+      setBusy(false);
+    }).catchError((err) {
+      log.e('Campaign service getOrderByWalletAddress $err');
+      setBusy(false);
+    });
   }
 
   // Check input fields
@@ -275,5 +283,13 @@ class CampaignPaymentScreenState extends BaseState {
         ? setErrorMessage('Please enter the valid amount')
         : setErrorMessage('');
     setState(ViewState.Idle);
+  }
+
+  // order list container color
+  Color evenOrOddColor(int index) {
+    index.isOdd
+        ? containerListColor = globals.walletCardColor
+        : containerListColor = globals.grey.withAlpha(20);
+    return containerListColor;
   }
 }
