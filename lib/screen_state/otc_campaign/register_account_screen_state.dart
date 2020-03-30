@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/cupertino.dart';
 
-class RegisterScreenState extends BaseState {
+class CampaignRegisterAccountScreenState extends BaseState {
   final log = getLogger('RegisterScreenState');
 
   BuildContext context;
@@ -11,6 +11,7 @@ class RegisterScreenState extends BaseState {
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
   final confirmPasswordTextController = TextEditingController();
+  final referralCodeTextController = TextEditingController();
 
   signUp() {}
 

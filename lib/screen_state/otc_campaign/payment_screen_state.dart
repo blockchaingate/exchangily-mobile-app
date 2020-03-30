@@ -285,7 +285,7 @@ class CampaignPaymentScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // order list container color
+  // Order list container color according to even/odd index input from the UI list builder
   Color evenOrOddColor(int index) {
     index.isOdd
         ? containerListColor = globals.walletCardColor

@@ -36,7 +36,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    UIHelper.horizontalSpaceMedium,
+                    UIHelper.horizontalSpaceLarge,
                     // Amount text and input row
                     Container(
                       width: MediaQuery.of(context).size.width - 100,
@@ -65,9 +65,14 @@ class CampaignPaymentScreen extends StatelessWidget {
                               },
                               controller: model.sendAmountTextController,
                               decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: globals.white,
+                                  isDense: true,
                                   hintText: 'Enter the amount',
-                                  hintStyle:
-                                      Theme.of(context).textTheme.bodyText1,
+                                  hintStyle: Theme.of(context)
+                                      .textTheme
+                                      .headline6
+                                      .copyWith(color: globals.primaryColor),
                                   border: OutlineInputBorder(
                                       gapPadding: 1,
                                       borderSide:
@@ -361,6 +366,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                               shrinkWrap: true,
                               itemBuilder: (context, index) {
                                 return Container(
+                                  color: model.evenOrOddColor(index),
                                   padding: EdgeInsets.all(5.0),
                                   child: Row(
                                     mainAxisAlignment:
@@ -405,7 +411,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                               },
                             ))
                         : SizedBox(
-                            height: MediaQuery.of(context).size.height - 480,
+                            height: MediaQuery.of(context).size.height - 510,
                             child: model.transactionInfoList != null
                                 ? ListView.builder(
                                     scrollDirection: Axis.vertical,
