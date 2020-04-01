@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignInstructionScreen extends StatelessWidget {
@@ -26,17 +27,16 @@ class CampaignInstructionScreen extends StatelessWidget {
           body: Column(
             children: <Widget>[
               // List of instruction SVG images
-              model.state == ViewState.Busy
-                  ? SizedBox(
-                      width: 25,
-                      height: 25,
-                      child: CircularProgressIndicator(
-                        backgroundColor: globals.primaryColor,
+              model.busy
+                  ? Shimmer.fromColors(
+                      baseColor: globals.primaryColor,
+                      highlightColor: globals.white,
+                      child: Column(
+                        children: <Widget>[
+                          Text('Loading...'),
+                        ],
                       ))
                   : Expanded(
-                      child: Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5.0),
                       child: SizedBox(
                           height: MediaQuery.of(context).size.height - 100,
                           child: ListView.separated(
@@ -48,31 +48,22 @@ class CampaignInstructionScreen extends StatelessWidget {
                                     const Divider(color: Colors.blueGrey),
                             itemCount: model.tierListSvg.length,
                           )),
-                    )),
+                    ),
 
               // Buy container
-              Container(
-                child: SizedBox(
-                    width: 250,
-                    child: model.isPaid == false
-                        ? RaisedButton(
-                            padding: EdgeInsets.all(0),
-                            child: Text('Tap here to enter in campaign',
-                                style: Theme.of(context).textTheme.headline4),
-                            onPressed: () {
-                              Navigator.pushNamed(context, '/campaignLogin');
-                            },
-                          )
-                        : RaisedButton(
-                            padding: EdgeInsets.all(0),
-                            child: Text('Go to dashboard',
-                                style: Theme.of(context).textTheme.headline4),
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                  context, '/campaignDashboard');
-                            },
-                          )),
-              ),
+              model.busy == true
+                  ? Container()
+                  : Container(
+                      width: 250,
+                      child: RaisedButton(
+                        padding: EdgeInsets.all(0),
+                        child: Text('Tap here to enter in campaign',
+                            style: Theme.of(context).textTheme.headline4),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/campaignLogin');
+                        },
+                      ),
+                    ),
               UIHelper.horizontalSpaceSmall,
             ],
           ),

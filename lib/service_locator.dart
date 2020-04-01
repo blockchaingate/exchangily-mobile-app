@@ -42,6 +42,7 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/deposit_
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 GetIt locator = GetIt();
 
@@ -58,6 +59,9 @@ void serviceLocator() {
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => CampaignService());
   locator.registerLazySingleton(() => CampaignUserDatabaseService());
+
+  // Singelton
+  locator.registerSingleton(() => LocalStorageService.getInstance());
 
 // factory returns the new instance
   locator.registerFactory(() => ConfirmMnemonicScreenState());

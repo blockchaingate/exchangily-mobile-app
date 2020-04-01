@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -27,6 +29,7 @@ class CampaignLoginScreenState extends BaseState {
   // To check if user already logged in
   init() async {
     setBusy(true);
+    setErrorMessage('Checking login details');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
     log.w('login token $loginToken');
@@ -37,65 +40,77 @@ class CampaignLoginScreenState extends BaseState {
         log.w('database response $res');
         if (res != null) {
           userData = res;
-          setBusy(false);
-          navigationService.navigateTo('/campaignDashboard',
-              arguments: userData);
+
+          Timer(Duration(seconds: 2), () {
+            navigationService.navigateTo('/campaignDashboard',
+                arguments: userData);
+            setBusy(false);
+            setErrorMessage('');
+          });
         } else {
+          setBusy(false);
+          setErrorMessage('');
           setErrorMessage('Entry does not found in database');
         }
       });
     } else {
+      setErrorMessage('');
       log.w('already in the login');
       setBusy(false);
     }
     setBusy(false);
   }
 
+// Login
+
   Future login(User user) async {
     setBusy(true);
-    await campaignService.login(user).then((response) async {
+    await campaignService.login(user).then((res) async {
       // json deconde in campaign api let us see the response then its properties
-      String loginToken = response['token'];
-      if (response != null) {
-        userData = new CampaignUserData(
-            email: response['email'],
-            token: loginToken,
-            referralCode: response['appUser']['referralCode'],
-            dateCreated: response['appUser']['dateCreated'],
-            memberId: response['appUser']['userId']);
-        log.i('Test user data object ${userData.referralCode}');
-        await saveUserDataLocally(loginToken);
+      if (res == null) {
+        setErrorMessage('Server error, Please try again later.');
+        return false;
+      }
+      String error = res['message'];
+      if (res != null && (error == null || error == '')) {
+        userData = CampaignUserData.fromJson(res);
+        log.i('Test user data object ${userData.toJson()}');
+        //await campaignService.saveCampaignUserDataLocally(loginToken, userData);
         navigationService.navigateTo('/campaignDashboard', arguments: userData);
         setBusy(false);
         return '';
       } else {
-        error = true;
-        setErrorMessage(response['message']);
-        log.e('In else ${response['message']}');
+        setErrorMessage(error);
+        log.e('In else ${res['message']}');
         setBusy(false);
         return '';
       }
     }).catchError((err) {
       setBusy(false);
+      setErrorMessage('');
+      log.e('In catch $err');
     });
   }
 
 // Check fields before calling the api
   checkCredentials() {
     setBusy(true);
-    user = new User(
-        email: emailTextController.text, password: passwordTextController.text);
-    if (user.email.isEmpty || user.password.isEmpty) {
-      error = true;
-      setErrorMessage('Please fill all fields');
+
+    if (emailTextController.text.isEmpty) {
+      setErrorMessage('Please enter your login email address');
+    } else if (passwordTextController.text.isEmpty) {
+      setErrorMessage('Please enter your password');
     } else {
+      user = new User(
+          email: emailTextController.text,
+          password: passwordTextController.text);
       login(user);
     }
     setBusy(false);
   }
 
 // Save user data locally
-  saveUserDataLocally(String loginToken) async {
+  saveUserDataLocally(String loginToken, CampaignUserData userData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('loginToken', loginToken);
     await campaignUserDatabaseService.insert(userData);

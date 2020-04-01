@@ -27,10 +27,9 @@ class CampaignUserDatabaseService {
   final String columnEmail = 'email';
   final String columnToken = 'token';
   final String columnReferralCode = 'referralCode';
-  final String columnDateCreated = 'dateCreated';
   final String columnMemberId = 'memberId';
 
-  static final _databaseVersion = 5;
+  static final _databaseVersion = 6;
   static Future<Database> _database;
   String path = '';
 
@@ -48,11 +47,10 @@ class CampaignUserDatabaseService {
     log.e('in on create $db');
     await db.execute(''' CREATE TABLE $tableName
         (
-        $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+        $columnId INTEGER PRIMARY,
         $columnEmail TEXT,
         $columnToken TEXT,
         $columnReferralCode TEXT,
-        $columnDateCreated TEXT,
         $columnMemberId TEXT)    
         ''');
   }

@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
+import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/models/transaction-info.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +21,7 @@ class CampaignService {
   Campaign campaign;
 
   static const BASE_URL = 'https://test.blockchaingate.com/v2/';
-  static const createAccountUrl = BASE_URL + 'members/create';
+  static const registerAccountUrl = BASE_URL + 'members/create';
   static const loginUrl = BASE_URL + 'members/login';
   static const kycWithTokenUrl = BASE_URL + 'kyc/create';
   static const createCampaignOrderUrl = BASE_URL + 'campaign-order/create';
@@ -26,24 +29,56 @@ class CampaignService {
       BASE_URL + 'campaign-order/wallet-orders/';
   static const rewardsWithTokenUrl = BASE_URL + 'coinorders/rewards';
   static const setTokenUrl = BASE_URL + 'coinorders/rewards?token=';
+  CampaignUserDatabaseService campaignUserDatabaseService =
+      locator<CampaignUserDatabaseService>();
 
-  Future<User> registerAccount(User user) {}
+/*-------------------------------------------------------------------------------------
+                          Register
+-------------------------------------------------------------------------------------*/
 
-  // Login
+  Future registerAccount(User user, String referralCode) async {
+    Map<String, dynamic> body =
+        user.toJson(); // Assign user data to Map type json variable
+    body.addAll({
+      "app": appName,
+      "appId": appId,
+      "referralCode": referralCode,
+      "campaignId": "1"
+    }); // Add another key/pair value
+    log.w(body);
+    try {
+      var response = await client.post(registerAccountUrl, body: body);
+      log.w(json.decode(response.body));
+      return json.decode(response.body);
+    } catch (err) {
+      log.e(err);
+    }
+  }
+
+/*-------------------------------------------------------------------------------------
+                                Login
+-------------------------------------------------------------------------------------*/
 
   Future login(User user) async {
     // You cannot add key/pair directly to user object
     Map<String, dynamic> body =
         user.toJson(); // Assign user data to Map type json variable
     body.addAll({'appId': appId}); // Add another key/pair value
-    log.w(body);
-    var response = await client.post(loginUrl, body: body);
-    log.w(json.decode(response.body));
-    return json.decode(response.body);
+
+    try {
+      var response = await client.post(loginUrl, body: body);
+      var json = jsonDecode(response.body);
+      return json;
+    }
     // when i use then here and return the response variable it was showing output in console for service but not in the login state
+    catch (err) {
+      log.e(err);
+    }
   }
 
-  // Buy coin - create order
+/*-------------------------------------------------------------------------------------
+                          Buy coin - create order
+-------------------------------------------------------------------------------------*/
 
   Future createCampaignOrder(CampaignOrder campaignOrder) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -71,7 +106,9 @@ class CampaignService {
     }
   }
 
-  // Get orders by wallet address
+/*-------------------------------------------------------------------------------------
+                                  Get orders by wallet address
+-------------------------------------------------------------------------------------*/
 
   Future<List<TransactionInfo>> getOrderByWalletAddress(
       String exgWalletAddress) async {
@@ -91,5 +128,19 @@ class CampaignService {
       log.e('In getOrderByWalletAddress catch $err');
       return null;
     }
+  }
+
+/*-------------------------------------------------------------------------------------
+                          Save user data locally
+-------------------------------------------------------------------------------------*/
+
+  Future saveCampaignUserDataLocally(
+      String loginToken, CampaignUserData userData) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('loginToken', loginToken);
+    await campaignUserDatabaseService.insert(userData);
+    await campaignUserDatabaseService
+        .getUserDataByToken(loginToken)
+        .then((value) => log.w(value));
   }
 }

@@ -13,8 +13,8 @@ class CampaignLoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScreen<CampaignLoginScreenState>(
-      onModelReady: (model) {
-        model.init();
+      onModelReady: (model) async {
+        await model.init();
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
@@ -23,153 +23,211 @@ class CampaignLoginScreen extends StatelessWidget {
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(
-                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-                margin: EdgeInsets.all(10.0),
-                color: globals.walletCardColor,
-                child: Column(
-                  children: <Widget>[
-                    // Email row
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              'Email',
-                              style: Theme.of(context).textTheme.headline5,
-                              //  textAlign: TextAlign.center,
-                            )),
-                        Expanded(
-                            flex: 2,
-                            child: TextField(
-                              controller: model.emailTextController,
-                              keyboardType: TextInputType.emailAddress,
-                            ))
-                      ],
-                    ),
-                    // Password row
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              'Password',
-                              style: Theme.of(context).textTheme.headline5,
-                            )),
-                        model.isPasswordTextVisible == true
-                            ? Expanded(
-                                flex: 2,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            model.setBusy(true);
-                                            model.isPasswordTextVisible = false;
-                                            model.setBusy(false);
-                                          },
-                                          icon: Icon(Icons.remove_red_eye))),
-                                  controller: model.passwordTextController,
-                                  obscureText: false,
-                                  keyboardType: TextInputType.visiblePassword,
+              padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+              margin: EdgeInsets.all(10.0),
+              color: globals.walletCardColor,
+              child: model.busy == true
+                  ? Container(
+                      width: 250,
+                      child: Center(
+                        child: Row(
+                          children: <Widget>[
+                            Shimmer.fromColors(
+                                baseColor: globals.primaryColor,
+                                highlightColor: globals.grey,
+                                child: Center(
+                                  child: Text(model.errorMessage,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1
+                                          .copyWith(
+                                              color: globals.primaryColor)),
                                 ))
-                            : Expanded(
-                                flex: 2,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            model.setBusy(true);
-                                            model.isPasswordTextVisible = true;
-                                            model.setBusy(false);
-                                          },
-                                          icon: Icon(
-                                            Icons.remove_red_eye,
-                                            color: globals.grey,
-                                          ))),
-                                  controller: model.passwordTextController,
-                                  obscureText: true,
-                                  keyboardType: TextInputType.visiblePassword,
-                                ))
-                      ],
-                    ),
-                    UIHelper.horizontalSpaceMedium,
-                    Visibility(
-                        visible: model.error,
-                        child: model.busy == true
-                            ? Text('Loading...')
-                            : Text(model.errorMessage,
-                                style: Theme.of(context).textTheme.bodyText2)),
-                    UIHelper.horizontalSpaceSmall,
-                    // Button row
-                    Row(
-                      children: <Widget>[
-                        // Expanded(
-                        //   child: Container(
-                        //     margin: EdgeInsets.only(right: 5),
-                        //     child: RaisedButton(
-                        //       padding: EdgeInsets.all(2.0),
-                        //       elevation: 5,
-                        //       focusElevation: 5,
-                        //       child: Text('Delete Db',
-                        //           style: Theme.of(context).textTheme.headline4),
-                        //       onPressed: () {
-                        //         model.deleteDb();
-                        //       },
-                        //     ),
-                        //   ),
-                        // ),
-                        Expanded(
-                          child: Container(
-                            margin: EdgeInsets.only(right: 5),
-                            child: RaisedButton(
-                              padding: EdgeInsets.all(2.0),
-                              elevation: 5,
-                              focusElevation: 5,
-                              child: Text('Register',
-                                  style: Theme.of(context).textTheme.headline4),
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .pushNamed('/campaignRegisterAccount');
-                              },
-                            ),
-                          ),
+                          ],
                         ),
-                        Expanded(
-                          child: RaisedButton(
-                            padding: EdgeInsets.all(2.0),
-                            elevation: 5,
-                            shape: StadiumBorder(
-                                side: BorderSide(
-                                    color: globals.primaryColor, width: 2)),
-                            color: globals.secondaryColor,
-                            child: model.busy == true
-                                ? Shimmer.fromColors(
-                                    baseColor: globals.primaryColor,
-                                    highlightColor: globals.grey,
-                                    child: Text(
-                                      ('Login'),
-                                      style:
-                                          Theme.of(context).textTheme.headline4,
-                                    ))
-                                : Text(
-                                    ('Login'),
+                      ),
+                    )
+                  : Column(
+                      children: <Widget>[
+                        // Email row
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                                flex: 1,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 7.0),
+                                  child: Text(
+                                    'Email',
                                     style:
-                                        Theme.of(context).textTheme.headline4,
+                                        Theme.of(context).textTheme.headline5,
+                                    //  textAlign: TextAlign.center,
                                   ),
-                            onPressed: () {
-                              model.checkCredentials();
-                            },
-                          ),
-                        )
+                                )),
+                            Expanded(
+                                flex: 2,
+                                child: TextField(
+                                  textAlign: TextAlign.center,
+                                  textAlignVertical: TextAlignVertical.center,
+                                  decoration: InputDecoration(
+                                      isDense: true,
+                                      suffixIcon: Icon(
+                                        Icons.email,
+                                        color: globals.grey,
+                                        size: 16,
+                                      )),
+                                  controller: model.emailTextController,
+                                  keyboardType: TextInputType.emailAddress,
+                                ))
+                          ],
+                        ),
+                        // Password row (it has two input expanded widgets one to show the password and another is to hide it)
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                                flex: 1,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 7.0),
+                                  child: Text(
+                                    'Password',
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                )),
+                            model.isPasswordTextVisible == true
+                                ? Expanded(
+                                    flex: 2,
+                                    child: TextField(
+                                      textAlign: TextAlign.center,
+                                      decoration: InputDecoration(
+                                          isDense: true,
+                                          suffixIcon: IconButton(
+                                              iconSize: 18,
+                                              tooltip:
+                                                  'Click to see the password',
+                                              onPressed: () {
+                                                model.setBusy(true);
+                                                model.isPasswordTextVisible =
+                                                    false;
+                                                model.setBusy(false);
+                                              },
+                                              icon:
+                                                  Icon(Icons.remove_red_eye))),
+                                      controller: model.passwordTextController,
+                                      obscureText: false,
+                                      keyboardType:
+                                          TextInputType.visiblePassword,
+                                    ))
+                                : Expanded(
+                                    flex: 2,
+                                    child: TextField(
+                                      //   textAlignVertical: TextAlignVertical.bottom,
+                                      textAlign: TextAlign.center,
+                                      decoration: InputDecoration(
+                                          suffixIcon: IconButton(
+                                              iconSize: 18,
+                                              tooltip:
+                                                  'Click to see the password',
+                                              onPressed: () {
+                                                model.setBusy(true);
+                                                model.isPasswordTextVisible =
+                                                    true;
+                                                model.setBusy(false);
+                                              },
+                                              icon: Icon(
+                                                Icons.remove_red_eye,
+                                                color: globals.grey,
+                                              ))),
+                                      controller: model.passwordTextController,
+                                      obscureText: true,
+                                      keyboardType:
+                                          TextInputType.visiblePassword,
+                                    ))
+                          ],
+                        ),
+                        UIHelper.horizontalSpaceMedium,
+                        Visibility(
+                            visible: model.errorMessage != '',
+                            child: model.busy == true
+                                ? Text('Loading...')
+                                : Text(model.errorMessage,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2)),
+                        UIHelper.horizontalSpaceSmall,
+                        // Button row
+                        Row(
+                          children: <Widget>[
+                            // Expanded(
+                            //   child: Container(
+                            //     margin: EdgeInsets.only(right: 5),
+                            //     child: RaisedButton(
+                            //       padding: EdgeInsets.all(2.0),
+                            //       elevation: 5,
+                            //       focusElevation: 5,
+                            //       child: Text('Delete Db',
+                            //           style: Theme.of(context).textTheme.headline4),
+                            //       onPressed: () {
+                            //         model.deleteDb();
+                            //       },
+                            //     ),
+                            //   ),
+                            // ),
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(right: 5),
+                                child: RaisedButton(
+                                  padding: EdgeInsets.all(2.0),
+                                  elevation: 5,
+                                  focusElevation: 5,
+                                  child: Text('Register',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline4),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed('/campaignRegisterAccount');
+                                  },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: RaisedButton(
+                                padding: EdgeInsets.all(2.0),
+                                elevation: 5,
+                                shape: StadiumBorder(
+                                    side: BorderSide(
+                                        color: globals.primaryColor, width: 2)),
+                                color: globals.secondaryColor,
+                                child: model.busy == true
+                                    ? Shimmer.fromColors(
+                                        baseColor: globals.primaryColor,
+                                        highlightColor: globals.grey,
+                                        child: Text(
+                                          ('Login'),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
+                                        ))
+                                    : Text(
+                                        ('Login'),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4,
+                                      ),
+                                onPressed: () {
+                                  model.checkCredentials();
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                        UIHelper.horizontalSpaceMedium
                       ],
                     ),
-                    UIHelper.horizontalSpaceMedium
-                  ],
-                )),
+            ),
           ],
         ),
       ),

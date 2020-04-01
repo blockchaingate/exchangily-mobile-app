@@ -4,6 +4,7 @@ import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
 
@@ -20,14 +21,50 @@ class CampaignDashboardScreen extends StatelessWidget {
         }
       },
       builder: (context, model, child) => Scaffold(
+          key: key,
+          drawer: Drawer(
+            elevation: 5,
+            child: ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                AppBar(
+                  automaticallyImplyLeading: false,
+                  title: Text('Menu'),
+                ),
+                DrawerHeader(
+                  child: Text('Settings'),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                ),
+                ListTile(
+                  title: Text('Logout'),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+                ListTile(
+                  title: Text('Read Instructions'),
+                  onTap: () {
+                    // Update the state of the app.
+                    // ...
+                  },
+                ),
+              ],
+            ),
+          ),
           body: Container(
             margin: EdgeInsets.all(10.0),
             child: Column(
+
                 // mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   UIHelper.horizontalSpaceLarge,
                   // Header of the page container
+
                   Container(
                     color: globals.primaryColor,
                     padding: EdgeInsets.all(15.0),
@@ -172,8 +209,10 @@ class CampaignDashboardScreen extends StatelessWidget {
                                                 .textTheme
                                                 .headline5),
                                         UIHelper.horizontalSpaceSmall,
-                                        userData != null
-                                            ? Text(userData.referralCode,
+                                        userData.referralCode != null
+                                            ? Text(
+                                                userData.referralCode
+                                                    .toString(),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline5)
