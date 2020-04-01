@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 class CampaignInstructionsScreenState extends BaseState {
   final log = getLogger('CampaignInstructionsScreenState');
@@ -16,6 +18,7 @@ class CampaignInstructionsScreenState extends BaseState {
   ];
   final List<Widget> _tierListSvg = <Widget>[];
   List<Widget> get tierListSvg => _tierListSvg;
+  LocalStorageService localStorageService = locator<LocalStorageService>();
 
   // Init state
   initState() {
@@ -31,5 +34,9 @@ class CampaignInstructionsScreenState extends BaseState {
       }
       setBusy(false);
     });
+  }
+
+  checkLoginUSer() {
+//localStorageService.
   }
 }

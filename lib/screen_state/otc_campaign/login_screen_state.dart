@@ -52,6 +52,10 @@ class CampaignLoginScreenState extends BaseState {
           setErrorMessage('');
           setErrorMessage('Entry does not found in database');
         }
+      }).catchError((err) {
+        setErrorMessage('');
+        log.w('Fetch user from database failed');
+        setBusy(false);
       });
     } else {
       setErrorMessage('');
@@ -75,7 +79,7 @@ class CampaignLoginScreenState extends BaseState {
       if (res != null && (error == null || error == '')) {
         userData = CampaignUserData.fromJson(res);
         log.i('Test user data object ${userData.toJson()}');
-        //await campaignService.saveCampaignUserDataLocally(loginToken, userData);
+        await campaignService.saveCampaignUserDataLocally(userData);
         navigationService.navigateTo('/campaignDashboard', arguments: userData);
         setBusy(false);
         return '';

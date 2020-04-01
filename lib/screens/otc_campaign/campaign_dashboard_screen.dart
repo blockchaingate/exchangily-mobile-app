@@ -10,8 +10,9 @@ import '../../shared/globals.dart' as globals;
 
 class CampaignDashboardScreen extends StatelessWidget {
   final CampaignUserData userData;
-  const CampaignDashboardScreen({Key key, this.userData}) : super(key: key);
+  CampaignDashboardScreen({Key key, this.userData}) : super(key: key);
 
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return BaseScreen<CampaignDashboardScreenState>(
@@ -21,7 +22,7 @@ class CampaignDashboardScreen extends StatelessWidget {
         }
       },
       builder: (context, model, child) => Scaffold(
-          key: key,
+          key: _scaffoldKey,
           drawer: Drawer(
             elevation: 5,
             child: ListView(
@@ -30,26 +31,39 @@ class CampaignDashboardScreen extends StatelessWidget {
               children: <Widget>[
                 AppBar(
                   automaticallyImplyLeading: false,
-                  title: Text('Menu'),
+                  title: Center(child: Text('Campaign Name')),
                 ),
-                DrawerHeader(
-                  child: Text('Settings'),
-                  decoration: BoxDecoration(
-                    color: Colors.blue,
+                ListTile(
+                  title: Text(
+                    '${userData.email}',
+                    style: Theme.of(context).textTheme.headline4,
                   ),
                 ),
+                UIHelper.divider,
                 ListTile(
-                  title: Text('Logout'),
-                  onTap: () {
-                    // Update the state of the app.
-                    // ...
-                  },
-                ),
-                ListTile(
+                  trailing: Icon(
+                    Icons.event_note,
+                    color: globals.primaryColor,
+                  ),
                   title: Text('Read Instructions'),
                   onTap: () {
-                    // Update the state of the app.
-                    // ...
+                    Navigator.pushNamed(context, '/campaignInstructions');
+                  },
+                ),
+                Divider(
+                  color: globals.grey,
+                  height: 1,
+                ),
+                ListTile(
+                  trailing: Icon(
+                    Icons.clear_all,
+                    color: globals.red,
+                  ),
+                  title: Text(
+                    'Logout',
+                  ),
+                  onTap: () {
+                    model.logout();
                   },
                 ),
               ],
@@ -62,31 +76,44 @@ class CampaignDashboardScreen extends StatelessWidget {
                 // mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  UIHelper.horizontalSpaceLarge,
+                  UIHelper.horizontalSpaceMedium,
                   // Header of the page container
 
                   Container(
-                    color: globals.primaryColor,
                     padding: EdgeInsets.all(15.0),
-                    child: Row(
+                    child:
+                        // First row that contains user email, menu button and logout button
+                        Row(
                       children: <Widget>[
-                        Expanded(
-                          flex: 5,
-                          child: Center(
+                        // Burger button and user email row
+                        Row(children: [
+                          IconButton(
+                              icon: Icon(
+                                Icons.menu,
+                                color: globals.primaryColor,
+                              ),
+                              onPressed: () {
+                                _scaffoldKey.currentState.openDrawer();
+                              }),
+                          Center(
                               child: Text('Welcome ${userData.email}',
                                   style:
-                                      Theme.of(context).textTheme.headline4)),
-                        ),
+                                      Theme.of(context).textTheme.headline5)),
+                        ]),
                         Expanded(
-                          flex: 2,
-                          child: FlatButton(
-                              onPressed: () {
-                                model.logout();
-                              },
-                              child: Text(
-                                'Logout',
-                                style: Theme.of(context).textTheme.headline5,
-                              )),
+                          flex: 1,
+                          child: Container(
+                            padding: EdgeInsets.only(left: 45),
+                            child: FlatButton(
+                                onPressed: () {
+                                  model.logout();
+                                },
+                                child: Text(
+                                  'Logout',
+                                  style: Theme.of(context).textTheme.bodyText2,
+                                  textAlign: TextAlign.end,
+                                )),
+                          ),
                         )
                       ],
                     ),
@@ -242,32 +269,6 @@ class CampaignDashboardScreen extends StatelessWidget {
                                         children: <Widget>[
                                           UIHelper.horizontalSpaceSmall,
                                           Text('Buy',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5),
-                                          Text('',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5)
-                                        ],
-                                      )),
-                                )),
-                          ),
-                          Expanded(
-                            flex: 5,
-                            child: Card(
-                                color: globals.walletCardColor,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, '/campaignInstructions');
-                                  },
-                                  child: Container(
-                                      padding: EdgeInsets.all(25.0),
-                                      child: Column(
-                                        children: <Widget>[
-                                          UIHelper.horizontalSpaceSmall,
-                                          Text('Read Instructions',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5),

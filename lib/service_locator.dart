@@ -46,7 +46,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 GetIt locator = GetIt();
 
-void serviceLocator() {
+Future serviceLocator() async {
   // singleton returns the old instance
   locator.registerLazySingleton(() => WalletService());
   locator.registerLazySingleton(() => VaultService());
@@ -61,7 +61,8 @@ void serviceLocator() {
   locator.registerLazySingleton(() => CampaignUserDatabaseService());
 
   // Singelton
-  locator.registerSingleton(() => LocalStorageService.getInstance());
+  var instance = await LocalStorageService.getInstance();
+  locator.registerSingleton<LocalStorageService>(instance);
 
 // factory returns the new instance
   locator.registerFactory(() => ConfirmMnemonicScreenState());

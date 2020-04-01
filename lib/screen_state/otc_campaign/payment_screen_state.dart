@@ -188,7 +188,7 @@ class CampaignPaymentScreenState extends BaseState {
 
       // contructing campaign order object to send to buy coin api request
       campaignOrder = new CampaignOrder(
-          memberId: userData.memberId,
+          memberId: userData.id,
           walletAdd: exgWalletAddress,
           paymentType: _groupValue,
           txId: txHash,

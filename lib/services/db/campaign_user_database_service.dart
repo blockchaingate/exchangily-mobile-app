@@ -27,7 +27,6 @@ class CampaignUserDatabaseService {
   final String columnEmail = 'email';
   final String columnToken = 'token';
   final String columnReferralCode = 'referralCode';
-  final String columnMemberId = 'memberId';
 
   static final _databaseVersion = 6;
   static Future<Database> _database;
@@ -47,11 +46,11 @@ class CampaignUserDatabaseService {
     log.e('in on create $db');
     await db.execute(''' CREATE TABLE $tableName
         (
-        $columnId INTEGER PRIMARY,
+        $columnId TEXT PRIMARY KEY,
         $columnEmail TEXT,
         $columnToken TEXT,
-        $columnReferralCode TEXT,
-        $columnMemberId TEXT)    
+        $columnReferralCode INT
+        )    
         ''');
   }
 

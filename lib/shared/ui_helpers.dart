@@ -12,6 +12,7 @@
 */
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class UIHelper {
   // Vertical Spacing
@@ -37,4 +38,8 @@ class UIHelper {
       SizedBox(height: _HorizontalSpaceMedium);
   static const Widget horizontalSpaceLarge =
       SizedBox(height: _HorizontalSpaceLarge);
+  static const Widget divider = Divider(
+    color: Colors.grey,
+    height: 1,
+  );
 }

@@ -29,25 +29,26 @@ class CampaignLoginScreen extends StatelessWidget {
               margin: EdgeInsets.all(10.0),
               color: globals.walletCardColor,
               child: model.busy == true
-                  ? Container(
-                      width: 250,
-                      child: Center(
-                        child: Row(
-                          children: <Widget>[
-                            Shimmer.fromColors(
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Container(
+                          alignment: Alignment.center,
+                          // width: 250,
+                          child: Center(
+                            child: Shimmer.fromColors(
                                 baseColor: globals.primaryColor,
                                 highlightColor: globals.grey,
-                                child: Center(
-                                  child: Text(model.errorMessage,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .copyWith(
-                                              color: globals.primaryColor)),
-                                ))
-                          ],
+                                child: Text(model.errorMessage,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                            color: globals.primaryColor))),
+                          ),
                         ),
-                      ),
+                      ],
                     )
                   : Column(
                       children: <Widget>[
@@ -168,7 +169,9 @@ class CampaignLoginScreen extends StatelessWidget {
                             //       elevation: 5,
                             //       focusElevation: 5,
                             //       child: Text('Delete Db',
-                            //           style: Theme.of(context).textTheme.headline4),
+                            //           style: Theme.of(context)
+                            //               .textTheme
+                            //               .headline4),
                             //       onPressed: () {
                             //         model.deleteDb();
                             //       },

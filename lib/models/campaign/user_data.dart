@@ -3,28 +3,24 @@ class CampaignUserData {
   String _email;
   String _token;
   int _referralCode;
-  String _memberId;
-// AppUser appUser;
+
   CampaignUserData(
       {String id,
       String email,
       String token,
       int referralCode,
-      String dateCreated,
-      String memberId}) {
+      String dateCreated}) {
     this._id = id;
     this._email = email;
     this._token = token;
     this._referralCode = referralCode ?? '';
-    this._memberId = memberId;
   }
 
   Map<String, dynamic> toJson() => {
         'id': _id,
         'email': _email,
         'token': _token,
-        'referralCode': _referralCode,
-        'memberId': _memberId
+        'referralCode': _referralCode
       };
 
   factory CampaignUserData.fromJson(Map<String, dynamic> json) {
@@ -32,8 +28,7 @@ class CampaignUserData {
         id: json['id'] as String,
         email: json['email'] as String,
         token: json['token'] as String,
-        referralCode: json['referralCode'] as int,
-        memberId: json['memberId'] as String);
+        referralCode: json['referralCode'] as int);
   }
 
   String get id => _id;
@@ -58,10 +53,5 @@ class CampaignUserData {
 
   set referralCode(int referralCode) {
     this._referralCode = referralCode;
-  }
-
-  String get memberId => _memberId;
-  set memberId(String memberId) {
-    this._memberId = memberId;
   }
 }
