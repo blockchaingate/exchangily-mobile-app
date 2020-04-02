@@ -36,7 +36,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    UIHelper.horizontalSpaceLarge,
+                    UIHelper.verticalSpaceLarge,
                     // Amount text and input row
                     Container(
                       width: MediaQuery.of(context).size.width - 100,
@@ -51,7 +51,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                           flex: 3,
                           child: SizedBox(
                             //  width: 50,
-                            height: 45,
+                            height: 35,
                             child: TextField(
                               style: model.checkSendAmount
                                   // && model.amountDouble <= bal
@@ -66,13 +66,13 @@ class CampaignPaymentScreen extends StatelessWidget {
                               controller: model.sendAmountTextController,
                               decoration: InputDecoration(
                                   filled: true,
-                                  fillColor: globals.white,
+                                  fillColor: globals.walletCardColor,
                                   isDense: true,
                                   hintText: 'Enter the amount',
                                   hintStyle: Theme.of(context)
                                       .textTheme
                                       .headline6
-                                      .copyWith(color: globals.primaryColor),
+                                      .copyWith(color: globals.white54),
                                   border: OutlineInputBorder(
                                       gapPadding: 1,
                                       borderSide:
@@ -181,7 +181,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text('Routing Numnber'),
+                                  Text('Routing Number'),
                                   Text('041001039')
                                 ],
                               ),
@@ -218,10 +218,10 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     .headline5
                                     .copyWith(fontWeight: FontWeight.bold),
                               ),
-                              UIHelper.horizontalSpaceSmall,
+                              UIHelper.verticalSpaceSmall,
                               Text('0xae397cfc8f67c46d533b844bfff25ad5ae89e63a',
                                   style: Theme.of(context).textTheme.bodyText1),
-                              UIHelper.horizontalSpaceSmall,
+                              UIHelper.verticalSpaceSmall,
                               //Selected Wallet Balance row
                               model.groupValue != '' &&
                                       model.groupValue != 'USD' &&
@@ -264,14 +264,14 @@ class CampaignPaymentScreen extends StatelessWidget {
                       ),
                     ),
 
-                    UIHelper.horizontalSpaceSmall,
+                    UIHelper.verticalSpaceSmall,
                     Visibility(
                         visible: model.errorMessage != '',
                         child: model.busy == true
                             ? Text('Loading...')
                             : Text(model.errorMessage,
                                 style: Theme.of(context).textTheme.bodyText2)),
-                    UIHelper.horizontalSpaceSmall,
+                    UIHelper.verticalSpaceSmall,
                     // Button row container
                     Container(
                       width: MediaQuery.of(context).size.width - 100,
@@ -344,7 +344,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                     Center(
                         child: Text('Order Information',
                             style: Theme.of(context).textTheme.headline4)),
-                    UIHelper.horizontalSpaceSmall,
+                    UIHelper.verticalSpaceSmall,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
@@ -356,7 +356,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodyText1)
                       ],
                     ),
-                    UIHelper.horizontalSpaceSmall,
+                    UIHelper.verticalSpaceSmall,
                     model.busy == true
                         ? SizedBox(
                             height: 220,
@@ -411,7 +411,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                               },
                             ))
                         : SizedBox(
-                            height: MediaQuery.of(context).size.height - 510,
+                            height: MediaQuery.of(context).size.height -
+                                model.orderInfoContainerHeight,
                             child: model.transactionInfoList != null
                                 ? ListView.builder(
                                     scrollDirection: Axis.vertical,

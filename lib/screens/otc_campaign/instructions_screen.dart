@@ -33,6 +33,9 @@ class CampaignInstructionScreen extends StatelessWidget {
                       highlightColor: globals.white,
                       child: Column(
                         children: <Widget>[
+                          UIHelper.verticalSpaceLarge,
+                          UIHelper.verticalSpaceLarge,
+                          UIHelper.verticalSpaceLarge,
                           Text('Loading...'),
                         ],
                       ))

@@ -33,11 +33,12 @@ class UIHelper {
       SizedBox(height: _VerticalSpaceLarge);
 
   static const Widget horizontalSpaceSmall =
-      SizedBox(height: _HorizontalSpaceSmall);
+      SizedBox(width: _HorizontalSpaceSmall);
   static const Widget horizontalSpaceMedium =
-      SizedBox(height: _HorizontalSpaceMedium);
+      SizedBox(width: _HorizontalSpaceMedium);
   static const Widget horizontalSpaceLarge =
-      SizedBox(height: _HorizontalSpaceLarge);
+      SizedBox(width: _HorizontalSpaceLarge);
+
   static const Widget divider = Divider(
     color: Colors.grey,
     height: 1,

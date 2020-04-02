@@ -79,6 +79,18 @@ class CampaignUserDatabaseService {
     return id;
   }
 
+  // Get User By Id
+  Future getByMemberId(String id) async {
+    final Database db = await _database;
+    List<Map> res =
+        await db.query(tableName, where: 'email= ?', whereArgs: [id]);
+    log.w('ID - $id --- $res');
+    if (res.length > 0) {
+      return CampaignUserData.fromJson((res.first));
+    }
+    return null;
+  }
+
 // Get User By Email
   Future getByEmail(String email) async {
     final Database db = await _database;

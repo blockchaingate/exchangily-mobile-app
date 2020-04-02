@@ -52,6 +52,7 @@ class CampaignPaymentScreenState extends BaseState {
   CampaignOrder campaignOrder;
   List<TransactionInfo> transactionInfoList = [];
   Color containerListColor;
+  int orderInfoContainerHeight = 430;
 
   // Initial logic
   initState() async {
@@ -64,6 +65,7 @@ class CampaignPaymentScreenState extends BaseState {
   radioButtonSelection(value) async {
     setState(ViewState.Busy);
     print(value);
+    orderInfoContainerHeight = 510;
     _groupValue = value;
     if (value != 'USD') {
       await getWallet();
@@ -192,7 +194,7 @@ class CampaignPaymentScreenState extends BaseState {
           walletAdd: exgWalletAddress,
           paymentType: _groupValue,
           txId: txHash,
-          amount: amount);
+          quantity: amount);
     }).catchError((err) => log.e('Campaign database service catch $err'));
 
     // calling api and passing the campaign order object

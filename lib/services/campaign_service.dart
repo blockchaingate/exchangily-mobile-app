@@ -29,6 +29,10 @@ class CampaignService {
       BASE_URL + 'campaign-order/wallet-orders/';
   static const rewardsWithTokenUrl = BASE_URL + 'coinorders/rewards';
   static const setTokenUrl = BASE_URL + 'coinorders/rewards?token=';
+  static const campaignNameUrl = BASE_URL + 'campaign/1';
+  static const memberReferralsUrl = BASE_URL + 'campaign-referral/referrals/';
+  static const memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
+
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
 
@@ -90,7 +94,7 @@ class CampaignService {
       "memberId": campaignOrder.memberId,
       "walletAdd": campaignOrder.walletAdd,
       "txId": campaignOrder.txId,
-      "amount": campaignOrder.amount.toString(),
+      "quantity": campaignOrder.quantity.toString(),
       "paymentType": campaignOrder.paymentType
     };
     body.addAll({'campaignId': campaignId});
@@ -104,6 +108,28 @@ class CampaignService {
       return json;
     } catch (err) {
       log.e('In createCampaignOrder catch $err');
+    }
+  }
+
+  /*-------------------------------------------------------------------------------------
+                                  Get orders by member id
+-------------------------------------------------------------------------------------*/
+
+  Future<List<TransactionInfo>> getOrderById(String memberId) async {
+    try {
+      var response = await client.get(listOrdersByWalletAddressUrl + memberId);
+
+      var json = jsonDecode(response.body)
+          as List; // making this a list what i was missing earlier
+      log.w(json);
+      TransactionInfoList orderList = TransactionInfoList.fromJson(json);
+      // List<TransactionInfo> orderList =
+      //     json.map((e) => TransactionInfo.fromJson(e)).toList();
+      log.w(orderList.transactions[5].dateCreated);
+      return orderList.transactions;
+    } catch (err) {
+      log.e('In getOrderByWalletAddress catch $err');
+      return null;
     }
   }
 
@@ -142,5 +168,59 @@ class CampaignService {
     await campaignUserDatabaseService
         .getUserDataByToken(userData.token)
         .then((value) => log.w(value));
+  }
+
+  /*-------------------------------------------------------------------------------------
+                                  Get Campaign Name
+-------------------------------------------------------------------------------------*/
+
+  Future getCampaignName() async {
+    try {
+      var response = await client.get(campaignNameUrl);
+      var json = jsonDecode(response.body);
+      log.w(json);
+      return json;
+    } catch (err) {
+      log.e('In getCampaignName catch $err');
+    }
+  }
+
+  /*-------------------------------------------------------------------------------------
+                                  Get Member Referrals By MemberID
+-------------------------------------------------------------------------------------*/
+
+  Future getReferralsById(CampaignUserData userData) async {
+    log.e(userData.toJson());
+    String memberId = userData.id;
+    Map<String, String> headers = {'x-access-token': userData.token};
+    try {
+      var response =
+          await client.get(memberReferralsUrl + memberId, headers: headers);
+      var json = jsonDecode(response.body) as List;
+      log.w('getMemberReferrals $json');
+
+      return json;
+    } catch (err) {
+      log.e('In getMemberReferrals catch $err');
+    }
+  }
+
+/*-------------------------------------------------------------------------------------
+                                  Get Member Reward By MemberID
+-------------------------------------------------------------------------------------*/
+
+  Future getRewardById(CampaignUserData userData) async {
+    String memberId = userData.id;
+    Map<String, String> headers = {'x-access-token': userData.token};
+    try {
+      var response =
+          await client.get(memberRewardUrl + memberId, headers: headers);
+      var json = jsonDecode(response.body);
+      log.w(' getRewardById $json');
+
+      return json;
+    } catch (err) {
+      log.e('In getRewardById catch $err');
+    }
   }
 }

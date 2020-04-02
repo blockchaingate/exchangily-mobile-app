@@ -25,11 +25,12 @@ class CampaignLoginScreenState extends BaseState {
   User user;
   CampaignUserData userData;
   bool isPasswordTextVisible = false;
+  bool isLoggedIn = false;
 
   // To check if user already logged in
   init() async {
     setBusy(true);
-    setErrorMessage('Checking login details');
+    setErrorMessage('Checking account details');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
     log.w('login token $loginToken');
@@ -40,8 +41,8 @@ class CampaignLoginScreenState extends BaseState {
         log.w('database response $res');
         if (res != null) {
           userData = res;
-
-          Timer(Duration(seconds: 2), () {
+          isLoggedIn = true;
+          Timer(Duration(seconds: 1), () {
             navigationService.navigateTo('/campaignDashboard',
                 arguments: userData);
             setBusy(false);
@@ -99,7 +100,7 @@ class CampaignLoginScreenState extends BaseState {
 // Check fields before calling the api
   checkCredentials() {
     setBusy(true);
-
+    setErrorMessage('Checking credentials');
     if (emailTextController.text.isEmpty) {
       setErrorMessage('Please enter your login email address');
     } else if (passwordTextController.text.isEmpty) {
@@ -127,5 +128,9 @@ class CampaignLoginScreenState extends BaseState {
     await campaignUserDatabaseService
         .deleteDb()
         .then((value) => log.w('delete finish $value'));
+  }
+
+  onBackButtonPressed() {
+    navigationService.navigateTo('/dashboard');
   }
 }

@@ -1,25 +1,29 @@
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
+import 'package:exchangilymobileapp/packages/bip32/utils/ecurve.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignDashboardScreen extends StatelessWidget {
   final CampaignUserData userData;
   CampaignDashboardScreen({Key key, this.userData}) : super(key: key);
 
-  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return BaseScreen<CampaignDashboardScreenState>(
-      onModelReady: (model) {
+      onModelReady: (model) async {
         if (userData == null) {
           model.initState();
         }
+        await model.myReferralsById(userData);
+        await model.getCampaignName();
+        await model.myRewardById(userData);
       },
       builder: (context, model, child) => Scaffold(
           key: _scaffoldKey,
@@ -30,13 +34,22 @@ class CampaignDashboardScreen extends StatelessWidget {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 AppBar(
+                  elevation: 5,
                   automaticallyImplyLeading: false,
-                  title: Center(child: Text('Campaign Name')),
+                  title: Center(
+                      child: Text(
+                    model.campaignName,
+                    style: Theme.of(context).textTheme.headline4,
+                  )),
                 ),
                 ListTile(
+                  trailing: Icon(
+                    Icons.email,
+                    color: globals.primaryColor,
+                  ),
                   title: Text(
                     '${userData.email}',
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headline5,
                   ),
                 ),
                 UIHelper.divider,
@@ -72,64 +85,65 @@ class CampaignDashboardScreen extends StatelessWidget {
           body: Container(
             margin: EdgeInsets.all(10.0),
             child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                UIHelper.verticalSpaceMedium,
+                // Header of the page container
 
-                // mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  UIHelper.horizontalSpaceMedium,
-                  // Header of the page container
-
-                  Container(
-                    padding: EdgeInsets.all(15.0),
-                    child:
-                        // First row that contains user email, menu button and logout button
-                        Row(
-                      children: <Widget>[
-                        // Burger button and user email row
-                        Row(children: [
-                          IconButton(
-                              icon: Icon(
-                                Icons.menu,
-                                color: globals.primaryColor,
-                              ),
+                Container(
+                  margin: EdgeInsets.only(top: 25.0),
+                  child:
+                      // First row that contains user email, menu button and logout button
+                      Row(
+                    children: <Widget>[
+                      // Burger button and user email row
+                      Row(children: [
+                        IconButton(
+                            padding: EdgeInsets.all(0),
+                            iconSize: 28,
+                            icon: Icon(
+                              Icons.menu,
+                              color: globals.primaryColor,
+                            ),
+                            onPressed: () {
+                              _scaffoldKey.currentState.openDrawer();
+                            }),
+                        Center(
+                            child: Text('Welcome ${userData.email}',
+                                style: Theme.of(context).textTheme.headline5)),
+                      ]),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.only(left: 45),
+                          child: FlatButton(
                               onPressed: () {
-                                _scaffoldKey.currentState.openDrawer();
-                              }),
-                          Center(
-                              child: Text('Welcome ${userData.email}',
-                                  style:
-                                      Theme.of(context).textTheme.headline5)),
-                        ]),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            padding: EdgeInsets.only(left: 45),
-                            child: FlatButton(
-                                onPressed: () {
-                                  model.logout();
-                                },
-                                child: Text(
-                                  'Logout',
-                                  style: Theme.of(context).textTheme.bodyText2,
-                                  textAlign: TextAlign.end,
-                                )),
-                          ),
-                        )
-                      ],
-                    ),
+                                model.logout();
+                              },
+                              child: Text(
+                                'Logout',
+                                style: Theme.of(context).textTheme.headline5,
+                                textAlign: TextAlign.end,
+                              )),
+                        ),
+                      )
+                    ],
                   ),
-                  UIHelper.horizontalSpaceSmall,
-                  // Level container
-                  Container(
-                    padding: EdgeInsets.all(5.0),
-                    child: Center(
-                        child: Text('Level: Gold',
-                            style: Theme.of(context).textTheme.headline5)),
-                  ),
-                  UIHelper.horizontalSpaceLarge,
-                  // Grid Card Container that contains main column and then rows inside
-                  Container(
-                      child: Column(
+                ),
+                UIHelper.verticalSpaceSmall,
+                // Level container
+                Container(
+                  padding: EdgeInsets.all(5.0),
+                  child: Center(
+                      child: Text('Level: ${model.memberLevel}',
+                          style: Theme.of(context).textTheme.headline5)),
+                ),
+                UIHelper.verticalSpaceSmall,
+
+                // Grid Card Container that contains main column and then rows inside
+                Container(
+                  child: Column(
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -151,11 +165,24 @@ class CampaignDashboardScreen extends StatelessWidget {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5),
-                                          UIHelper.horizontalSpaceSmall,
-                                          Text('2115',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5)
+                                          UIHelper.verticalSpaceSmall,
+                                          model.busy == true
+                                              ? Shimmer.fromColors(
+                                                  baseColor:
+                                                      globals.primaryColor,
+                                                  highlightColor: globals.grey,
+                                                  child: Text(
+                                                    ('0.000'),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5,
+                                                  ))
+                                              : Text(
+                                                  model.myTotalInvestmentValue
+                                                      .toStringAsFixed(2),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5)
                                         ],
                                       )),
                                 )),
@@ -166,22 +193,35 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 color: globals.walletCardColor,
                                 child: InkWell(
                                     onTap: () {
-                                      Navigator.pushNamed(
-                                          context, '/campaignRewardDetails');
+                                      model.myRewardById(userData);
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(25.0),
                                       child: Column(
                                         children: <Widget>[
-                                          Text('My Total Reward',
+                                          Text('Investment Quantity',
+                                              textAlign: TextAlign.center,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5),
-                                          UIHelper.horizontalSpaceSmall,
-                                          Text('105',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5)
+                                          UIHelper.verticalSpaceSmall,
+                                          model.busy == true
+                                              ? Shimmer.fromColors(
+                                                  baseColor:
+                                                      globals.primaryColor,
+                                                  highlightColor: globals.grey,
+                                                  child: Text(
+                                                    ('0.000'),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5,
+                                                  ))
+                                              : Text(
+                                                  model.myToalInvestmentQuantity
+                                                      .toStringAsFixed(4),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5)
                                         ],
                                       ),
                                     ))),
@@ -198,8 +238,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 color: globals.walletCardColor,
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.pushNamed(
-                                        context, '/campaignRefferalDetails');
+                                    model.myReferralsById(userData);
                                   },
                                   child: Container(
                                       padding: EdgeInsets.all(25.0),
@@ -209,11 +248,23 @@ class CampaignDashboardScreen extends StatelessWidget {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5),
-                                          UIHelper.horizontalSpaceSmall,
-                                          Text('15',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5)
+                                          UIHelper.verticalSpaceSmall,
+                                          model.busy == true
+                                              ? Shimmer.fromColors(
+                                                  baseColor:
+                                                      globals.primaryColor,
+                                                  highlightColor: globals.grey,
+                                                  child: Text(
+                                                    ('0'),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5,
+                                                  ))
+                                              : Text(
+                                                  model.myReferrals.toString(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5)
                                         ],
                                       )),
                                 )),
@@ -223,10 +274,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             child: Card(
                               color: globals.walletCardColor,
                               child: InkWell(
-                                onTap: () {
-                                  Navigator.pushNamed(
-                                      context, '/campaignRefferalDetails');
-                                },
+                                onTap: () {},
                                 child: Container(
                                     padding: EdgeInsets.all(25.0),
                                     child: Column(
@@ -235,7 +283,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5),
-                                        UIHelper.horizontalSpaceSmall,
+                                        UIHelper.verticalSpaceSmall,
                                         userData.referralCode != null
                                             ? Text(
                                                 userData.referralCode
@@ -254,6 +302,44 @@ class CampaignDashboardScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
+                          Expanded(
+                            flex: 5,
+                            child: Card(
+                                color: globals.walletCardColor,
+                                child: InkWell(
+                                    onTap: () {
+                                      model.myRewardById(userData);
+                                    },
+                                    child: Container(
+                                      padding: EdgeInsets.all(25.0),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Text('My Total Reward',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5),
+                                          UIHelper.verticalSpaceSmall,
+                                          model.busy == true
+                                              ? Shimmer.fromColors(
+                                                  baseColor:
+                                                      globals.primaryColor,
+                                                  highlightColor: globals.grey,
+                                                  child: Text(
+                                                    ('0.000'),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5,
+                                                  ))
+                                              : Text(
+                                                  model.myTotalReward
+                                                      .toStringAsFixed(4),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5)
+                                        ],
+                                      ),
+                                    ))),
+                          ),
                           Expanded(
                             flex: 5,
                             child: Card(
@@ -281,10 +367,12 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 )),
                           ),
                         ],
-                      )
+                      ),
                     ],
-                  ))
-                ]),
+                  ),
+                ),
+              ],
+            ),
           ),
           bottomNavigationBar: BottomNavBar(count: 3)),
     );

@@ -1,5 +1,5 @@
 class CampaignUserData {
-  String _id;
+  String _id; // this is actually member id
   String _email;
   String _token;
   int _referralCode;

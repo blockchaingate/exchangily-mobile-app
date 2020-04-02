@@ -1,6 +1,6 @@
 class CampaignRefferals {
   String id;
-  double refferals;
+  int refferals;
   double name;
   double paid;
 
