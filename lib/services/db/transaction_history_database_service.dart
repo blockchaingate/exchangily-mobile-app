@@ -13,7 +13,7 @@
 
 import 'dart:async';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/transaction-info.dart';
+import 'package:exchangilymobileapp/models/transaction_info.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

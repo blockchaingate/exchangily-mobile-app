@@ -17,40 +17,28 @@ class CampaignDashboardScreenState extends BaseState {
   CampaignUserData userData;
   String campaignName = '';
   final List<String> campaignLevelsList = ['Bronze', 'Gold', 'Diamond'];
+  final List<int> campaignLevelsColor = [0xff696969, 0xffE6BE8A, 0xffffffff];
   String memberLevel = '';
+  int levelTextColor = 0xff696969;
   double myTotalInvestmentValue = 0;
-  double myToalInvestmentQuantity = 0;
+  double myTotalInvestmentQuantity = 0;
   double myTotalReward = 0;
   int myReferrals = 0;
 
-  // To check if user already logged in
   initState() async {
     log.w(' In init');
-    setBusy(true);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var loginToken = prefs.getString('loginToken');
-    if (loginToken != '' && loginToken != null) {
-      await campaignUserDatabaseService
-          .getUserDataByToken(loginToken)
-          .then((res) async {
-        if (res != null) {
-          userData = res;
-        } else {
-          log.e('User data null from database');
-          navigationService.navigateTo('campaignLogin');
-        }
-      });
-    } else {
-      log.e('Token not found');
-    }
-    setBusy(false);
   }
 
   getCampaignName() async {
     setBusy(true);
     await campaignService.getCampaignName().then((res) {
-      campaignName = res['name'];
-      log.w(res);
+      if (res != null) {
+        campaignName = res['name'];
+        log.w(res);
+      } else {
+        setBusy(false);
+        log.w('In get campaign name else, res is null');
+      }
     });
     setBusy(false);
   }
@@ -84,6 +72,7 @@ class CampaignDashboardScreenState extends BaseState {
         // navigationService.navigateTo('/campaignRefferalDetails');
       } else {
         log.w(' In myreferral else');
+        setBusy(false);
       }
     }).catchError((err) {
       log.e(err);
@@ -99,16 +88,23 @@ class CampaignDashboardScreenState extends BaseState {
   myRewardById(CampaignUserData userData) async {
     setBusy(true);
     await campaignService.getRewardById(userData).then((res) {
-      int level = res['_body']['myLevel'];
-      memberLevel = campaignLevelsList[level];
-      log.e(memberLevel);
-      // if i convert and assign the value directly to double variable then i get cast error so this is the solution
-      var x = res['_body']['myselfValue'];
-      myTotalInvestmentValue = x.toDouble();
-      var y = res['_body']['myselfQuantity'];
-      myToalInvestmentQuantity = y.toDouble();
-      // navigationService.navigateTo('/campaignRewardDetails');
-      calculateMyTotalReward();
+      if (res != null) {
+        int level = res['_body']['myLevel'];
+        memberLevel = campaignLevelsList[level];
+        levelTextColor = campaignLevelsColor[level];
+        log.e(memberLevel);
+        log.e(levelTextColor.toString());
+        // if i convert and assign the value directly to double variable then i get cast error so this is the solution
+        var x = res['_body']['myselfValue'];
+        myTotalInvestmentValue = x.toDouble();
+        var y = res['_body']['myselfQuantity'];
+        myTotalInvestmentQuantity = y.toDouble();
+        // navigationService.navigateTo('/campaignRewardDetails');
+        calculateMyTotalReward();
+      } else {
+        log.w('In myReward else, res is null from api');
+        setBusy(false);
+      }
     }).catchError((err) {
       log.e(err);
       setBusy(false);
@@ -119,7 +115,12 @@ class CampaignDashboardScreenState extends BaseState {
   // Calculate my total reward
   calculateMyTotalReward() {
     var price = 2;
-    myTotalReward = myToalInvestmentQuantity * price;
+    myTotalReward = myTotalInvestmentQuantity * price;
     return myTotalReward;
+  }
+
+  // Generic Navigate
+  navigateByRouteName(String routeName) {
+    navigationService.navigateTo(routeName);
   }
 }

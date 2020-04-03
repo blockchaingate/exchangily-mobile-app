@@ -25,9 +25,9 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              UIHelper.horizontalSpaceLarge,
-              UIHelper.horizontalSpaceLarge,
-              UIHelper.horizontalSpaceMedium,
+              UIHelper.verticalSpaceLarge,
+              UIHelper.verticalSpaceLarge,
+              UIHelper.verticalSpaceMedium,
               Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
@@ -176,7 +176,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                               ))
                         ],
                       ),
-                      UIHelper.horizontalSpaceSmall,
+                      UIHelper.verticalSpaceMedium,
                       //----------------------- Error goes here
                       Visibility(
                         visible: model.errorMessage != '' &&
@@ -195,7 +195,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                         ),
                       ),
 
-                      UIHelper.horizontalSpaceSmall,
+                      UIHelper.verticalSpaceSmall,
                       // Button row
                       Row(
                         children: <Widget>[
@@ -249,7 +249,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                           )
                         ],
                       ),
-                      UIHelper.horizontalSpaceMedium
+                      UIHelper.verticalSpaceMedium
                     ],
                   )),
             ],

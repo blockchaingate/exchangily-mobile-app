@@ -4,7 +4,8 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
-import 'package:exchangilymobileapp/models/transaction-info.dart';
+import 'package:exchangilymobileapp/models/transaction_info.dart';
+import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +13,7 @@ import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignService {
-  final log = getLogger('API');
+  final log = getLogger('CampaignApi');
   final client = new http.Client();
 
   final String appName = 'eXchangily';
@@ -27,14 +28,35 @@ class CampaignService {
   static const createCampaignOrderUrl = BASE_URL + 'campaign-order/create';
   static const listOrdersByWalletAddressUrl =
       BASE_URL + 'campaign-order/wallet-orders/';
+  static const listOrdersByMemberIdUrl =
+      BASE_URL + 'campaign-order/member-orders/';
   static const rewardsWithTokenUrl = BASE_URL + 'coinorders/rewards';
   static const setTokenUrl = BASE_URL + 'coinorders/rewards?token=';
   static const campaignNameUrl = BASE_URL + 'campaign/1';
   static const memberReferralsUrl = BASE_URL + 'campaign-referral/referrals/';
   static const memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
-
+  CampaignUserData userData;
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
+
+// Get user data from database by token
+  Future<CampaignUserData> getUserDataFromDatabase() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var loginToken = prefs.getString('loginToken');
+    log.w(loginToken);
+    if (loginToken != '' && loginToken != null) {
+      await campaignUserDatabaseService
+          .getUserDataByToken(loginToken)
+          .then((res) async {
+        if (res != null) {
+          userData = res;
+        }
+      });
+    } else {
+      log.e('Token not found');
+    }
+    return userData;
+  }
 
 /*-------------------------------------------------------------------------------------
                           Register
@@ -115,20 +137,39 @@ class CampaignService {
                                   Get orders by member id
 -------------------------------------------------------------------------------------*/
 
-  Future<List<TransactionInfo>> getOrderById(String memberId) async {
+  Future<List<OrderInfo>> getOrderById(String memberId) async {
+    String url = listOrdersByMemberIdUrl + memberId;
+    OrderInfo orderInfo;
+    List<OrderInfo> orderInfoList = [];
+    log.w(url);
     try {
-      var response = await client.get(listOrdersByWalletAddressUrl + memberId);
-
-      var json = jsonDecode(response.body)
-          as List; // making this a list what i was missing earlier
-      log.w(json);
-      TransactionInfoList orderList = TransactionInfoList.fromJson(json);
+      var response = await client.get(listOrdersByMemberIdUrl + memberId);
+      var json = jsonDecode(response.body);
+      var jsonList = json['_body'] as List;
+      log.w(jsonList);
+      log.e(jsonList.length);
+      for (int i = 0; i <= jsonList.length; i++) {
+        String quantity = jsonList[i]['quantity'].toString();
+        double castedQuantity = double.parse(quantity);
+        orderInfo = new OrderInfo(
+            id: jsonList[i]['_id'],
+            dateCreated: jsonList[i]['dateCreated'],
+            txid: jsonList[i]['txId'],
+            status: jsonList[i]['status'],
+            quantity: castedQuantity);
+        log.w(orderInfoList.length);
+        orderInfoList.add(orderInfo);
+        log.w(orderInfo.toJson());
+      }
+      return orderInfoList;
+      // OrderInfoList orderInfoList = OrderInfoList.fromJson(jsonList);
+      //TransactionInfoList orderList = TransactionInfoList.fromJson(json);
       // List<TransactionInfo> orderList =
       //     json.map((e) => TransactionInfo.fromJson(e)).toList();
-      log.w(orderList.transactions[5].dateCreated);
-      return orderList.transactions;
+
+      // return orderList.transactions;
     } catch (err) {
-      log.e('In getOrderByWalletAddress catch $err');
+      log.e('In getOrderById catch $err');
       return null;
     }
   }
@@ -190,15 +231,14 @@ class CampaignService {
 -------------------------------------------------------------------------------------*/
 
   Future getReferralsById(CampaignUserData userData) async {
-    log.e(userData.toJson());
     String memberId = userData.id;
+    log.e(memberId);
     Map<String, String> headers = {'x-access-token': userData.token};
     try {
       var response =
           await client.get(memberReferralsUrl + memberId, headers: headers);
       var json = jsonDecode(response.body) as List;
       log.w('getMemberReferrals $json');
-
       return json;
     } catch (err) {
       log.e('In getMemberReferrals catch $err');

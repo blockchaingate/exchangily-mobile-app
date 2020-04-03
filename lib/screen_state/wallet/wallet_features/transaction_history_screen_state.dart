@@ -1,6 +1,6 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/transaction-info.dart';
+import 'package:exchangilymobileapp/models/transaction_info.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';

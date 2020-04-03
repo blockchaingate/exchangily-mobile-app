@@ -5,7 +5,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
-import 'package:exchangilymobileapp/models/transaction-info.dart';
+import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -50,9 +50,18 @@ class CampaignPaymentScreenState extends BaseState {
   CampaignUserData userData;
   String errorMessage = '';
   CampaignOrder campaignOrder;
-  List<TransactionInfo> transactionInfoList = [];
+  List<OrderInfo> orderInfoList = [];
   Color containerListColor;
   int orderInfoContainerHeight = 430;
+  final List<String> orderStatusNameList = [
+    'Waiting',
+    'Paid',
+    'Payment Received',
+    'Failed',
+    'Order Cancelled'
+  ];
+  String orderStatus = '';
+  List<int> orderStatusNumberList = [];
 
   // Initial logic
   initState() async {
@@ -116,21 +125,6 @@ class CampaignPaymentScreenState extends BaseState {
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           sendAmountTextController.text = '';
-          // String date = DateTime.now().toString();
-          // Build transaction history object
-          // TransactionHistory transactionHistory = new TransactionHistory(
-
-          //     amount: amount,
-          //     date: date);
-          // Add transaction history object in database
-          // await transactionHistoryDatabaseService
-          //     .insert(transactionHistory)
-          //     .then((data) => log.w('Saved in transaction history database'))
-          //     .catchError(
-          //         (onError) => log.e('Could not save in database $onError'));
-          // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
-          //   checkTxStatus(tickerName, txHash);
-          // });
           await createCampaignOrder(txHash, amount);
           sharedService.alertResponse(
               AppLocalizations.of(context).sendTransactionComplete,
@@ -172,7 +166,7 @@ class CampaignPaymentScreenState extends BaseState {
 
   // Create campaign order after payment
 
-  createCampaignOrder(String txHash, double amount) async {
+  createCampaignOrder(String txHash, double quantity) async {
     setBusy(true);
 
     // get exg address
@@ -194,7 +188,7 @@ class CampaignPaymentScreenState extends BaseState {
           walletAdd: exgWalletAddress,
           paymentType: _groupValue,
           txId: txHash,
-          quantity: amount);
+          quantity: quantity);
     }).catchError((err) => log.e('Campaign database service catch $err'));
 
     // calling api and passing the campaign order object
@@ -214,18 +208,35 @@ class CampaignPaymentScreenState extends BaseState {
   //------------------------------------------
   getCampaignOrdeList() async {
     setBusy(true);
-    await getExgWalletAddr();
-
+    // await getExgWalletAddr();
     await campaignService
-        .getOrderByWalletAddress(exgWalletAddress)
-        .then((orderListFromApi) {
-      // log.w(orderListFromApi.length);
-      transactionInfoList = orderListFromApi;
+        .getUserDataFromDatabase()
+        .then((res) => userData = res);
+    if (userData == null) return false;
+    await campaignService.getOrderById(userData.id).then((orderListFromApi) {
+      if (orderListFromApi != null) {
+        log.w(orderListFromApi.length);
+        orderInfoList = orderListFromApi;
 
-      log.e(transactionInfoList.length);
-      setBusy(false);
+        for (int i = 0; i <= orderInfoList.length; i++) {
+          int status = int.parse(orderInfoList[i].status);
+          if (status.isNaN || status == null) {
+            log.e('status code null');
+
+            orderStatusNumberList.add(1);
+          } else {
+            orderStatusNumberList.add(status);
+            log.i(orderInfoList[i].status);
+            log.e(orderStatusNumberList.length);
+          }
+        }
+        setBusy(false);
+      } else {
+        log.e('Api result null');
+        setBusy(false);
+      }
     }).catchError((err) {
-      log.e('Campaign service getOrderByWalletAddress $err');
+      log.e('getCampaignOrdeList $err');
       setBusy(false);
     });
   }

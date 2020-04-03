@@ -296,8 +296,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         Theme.of(context).textTheme.headline5,
                                   ),
                                   onPressed: () {
-                                    Navigator.of(context)
-                                        .pushNamed('/campaignDashboard');
+                                    Navigator.of(context).pop();
                                   },
                                 ),
                               ),
@@ -332,11 +331,13 @@ class CampaignPaymentScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
+              UIHelper.verticalSpaceSmall,
               // 2nd contianer row Order info
               Container(
-                margin: EdgeInsets.all(10.0),
-                color: globals.walletCardColor,
+                margin: EdgeInsets.symmetric(horizontal: 20.0),
+                decoration: BoxDecoration(
+                    color: globals.walletCardColor,
+                    borderRadius: BorderRadius.all(Radius.circular(5.0))),
                 padding: EdgeInsets.all(10.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -372,39 +373,10 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: <Widget>[
-                                      Expanded(
-                                          flex: 3,
-                                          child: SizedBox(
-                                              child: Shimmer.fromColors(
-                                            baseColor: globals.red,
-                                            highlightColor: globals.white,
-                                            child: Text('2020-03-15',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1),
-                                          ))),
-                                      Expanded(
-                                          flex: 2,
-                                          child: SizedBox(
-                                              child: Shimmer.fromColors(
-                                            baseColor: globals.red,
-                                            highlightColor: globals.white,
-                                            child: Text('1550',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1),
-                                          ))),
-                                      Expanded(
-                                          flex: 1,
-                                          child: SizedBox(
-                                              child: Shimmer.fromColors(
-                                            baseColor: globals.red,
-                                            highlightColor: globals.white,
-                                            child: Text('1',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1),
-                                          )))
+                                      Shimmer.fromColors(
+                                          baseColor: globals.red,
+                                          highlightColor: globals.white,
+                                          child: Text(''))
                                     ],
                                   ),
                                 );
@@ -413,10 +385,10 @@ class CampaignPaymentScreen extends StatelessWidget {
                         : SizedBox(
                             height: MediaQuery.of(context).size.height -
                                 model.orderInfoContainerHeight,
-                            child: model.transactionInfoList != null
+                            child: model.orderInfoList != null
                                 ? ListView.builder(
                                     scrollDirection: Axis.vertical,
-                                    itemCount: model.transactionInfoList.length,
+                                    itemCount: model.orderInfoList.length,
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) {
                                       return Container(
@@ -429,21 +401,18 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             Expanded(
                                               flex: 3,
                                               child: Text(
-                                                  model
-                                                      .transactionInfoList[
-                                                          index]
+                                                  model.orderInfoList[index]
                                                       .dateCreated,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyText1),
                                             ),
+                                            //  UiHelper.
                                             Expanded(
                                               flex: 2,
                                               child: Text(
-                                                  model
-                                                      .transactionInfoList[
-                                                          index]
-                                                      .amount
+                                                  model.orderInfoList[index]
+                                                      .quantity
                                                       .toString(),
                                                   style: Theme.of(context)
                                                       .textTheme
@@ -452,9 +421,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             Expanded(
                                               flex: 1,
                                               child: Text(
-                                                  model
-                                                      .transactionInfoList[
-                                                          index]
+                                                  model.orderInfoList[index]
                                                       .status,
                                                   style: Theme.of(context)
                                                       .textTheme

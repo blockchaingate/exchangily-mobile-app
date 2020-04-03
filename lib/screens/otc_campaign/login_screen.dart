@@ -24,7 +24,7 @@ class CampaignLoginScreen extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Login'),
+            title: Text('Login', style: Theme.of(context).textTheme.headline3),
             centerTitle: true,
           ),
           body: model.isLoggedIn

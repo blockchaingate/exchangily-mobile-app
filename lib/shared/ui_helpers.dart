@@ -41,6 +41,6 @@ class UIHelper {
 
   static const Widget divider = Divider(
     color: Colors.grey,
-    height: 1,
+    height: 0.5,
   );
 }

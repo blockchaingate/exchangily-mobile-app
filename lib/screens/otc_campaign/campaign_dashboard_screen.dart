@@ -18,15 +18,18 @@ class CampaignDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScreen<CampaignDashboardScreenState>(
       onModelReady: (model) async {
-        if (userData == null) {
-          model.initState();
-        }
+        // if (userData == null) {
+        //   await model.initState();
+        // }
         await model.myReferralsById(userData);
         await model.getCampaignName();
         await model.myRewardById(userData);
       },
       builder: (context, model, child) => Scaffold(
           key: _scaffoldKey,
+/*-------------------------------------------------------------------------------------
+                                  App Drawer
+-------------------------------------------------------------------------------------*/
           drawer: Drawer(
             elevation: 5,
             child: ListView(
@@ -44,8 +47,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                 ),
                 ListTile(
                   trailing: Icon(
-                    Icons.email,
-                    color: globals.primaryColor,
+                    Icons.person,
+                    color: globals.white54,
                   ),
                   title: Text(
                     '${userData.email}',
@@ -56,17 +59,27 @@ class CampaignDashboardScreen extends StatelessWidget {
                 ListTile(
                   trailing: Icon(
                     Icons.event_note,
-                    color: globals.primaryColor,
+                    color: globals.green,
                   ),
-                  title: Text('Read Instructions'),
+                  title: Text('Read Campaign Instructions'),
                   onTap: () {
                     Navigator.pushNamed(context, '/campaignInstructions');
                   },
                 ),
-                Divider(
-                  color: globals.grey,
-                  height: 1,
+                UIHelper.divider,
+                ListTile(
+                  title: Text('My Referral Code'),
+                  trailing: userData.referralCode != null
+                      ? Text(userData.referralCode.toString(),
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                              color: globals.primaryColor,
+                              fontWeight: FontWeight.bold))
+                      : Text(''),
+                  onTap: () {
+                    // May call copy to clipboard here
+                  },
                 ),
+                UIHelper.divider,
                 ListTile(
                   trailing: Icon(
                     Icons.clear_all,
@@ -82,295 +95,260 @@ class CampaignDashboardScreen extends StatelessWidget {
               ],
             ),
           ),
+
+/*-------------------------------------------------------------------------------------
+                                  Scaffold body Container
+-------------------------------------------------------------------------------------*/
           body: Container(
             margin: EdgeInsets.all(10.0),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 UIHelper.verticalSpaceMedium,
-                // Header of the page container
-
+/*-------------------------------------------------------------------------------------
+                            Header with email and logout
+-------------------------------------------------------------------------------------*/
                 Container(
-                  margin: EdgeInsets.only(top: 25.0),
-                  child:
-                      // First row that contains user email, menu button and logout button
-                      Row(
+                  child: Column(
                     children: <Widget>[
-                      // Burger button and user email row
-                      Row(children: [
-                        IconButton(
-                            padding: EdgeInsets.all(0),
-                            iconSize: 28,
-                            icon: Icon(
-                              Icons.menu,
-                              color: globals.primaryColor,
-                            ),
-                            onPressed: () {
-                              _scaffoldKey.currentState.openDrawer();
-                            }),
-                        Center(
+                      ListTile(
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: IconButton(
+                                alignment: Alignment.centerLeft,
+                                padding: EdgeInsets.only(right: 10),
+                                iconSize: 28,
+                                icon: Icon(
+                                  Icons.menu,
+                                  color: globals.primaryColor,
+                                ),
+                                onPressed: () {
+                                  _scaffoldKey.currentState.openDrawer();
+                                }),
+                          ),
+                          title: Padding(
+                            padding: const EdgeInsets.only(top: 2.0),
                             child: Text('Welcome ${userData.email}',
-                                style: Theme.of(context).textTheme.headline5)),
-                      ]),
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          padding: EdgeInsets.only(left: 45),
-                          child: FlatButton(
-                              onPressed: () {
+                                style: Theme.of(context).textTheme.headline5),
+                          ),
+                          trailing: InkWell(
+                              onTap: () {
                                 model.logout();
                               },
                               child: Text(
                                 'Logout',
                                 style: Theme.of(context).textTheme.headline5,
                                 textAlign: TextAlign.end,
-                              )),
-                        ),
-                      )
+                              )))
                     ],
                   ),
-                ),
-                UIHelper.verticalSpaceSmall,
-                // Level container
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: Center(
-                      child: Text('Level: ${model.memberLevel}',
-                          style: Theme.of(context).textTheme.headline5)),
                 ),
                 UIHelper.verticalSpaceSmall,
 
-                // Grid Card Container that contains main column and then rows inside
+/*-------------------------------------------------------------------------------------
+                                My total investment container with list tiles
+-------------------------------------------------------------------------------------*/
                 Container(
+                  color: globals.walletCardColor,
+                  padding: EdgeInsets.only(top: 5.0),
                   child: Column(
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 5,
-                            child: Card(
-                                color: globals.walletCardColor,
-                                child: InkWell(
-                                  onTap: () {
-                                    print('test');
-                                  },
-                                  child: Container(
-                                      padding: EdgeInsets.all(25.0),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Text('My Total Investment',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5),
-                                          UIHelper.verticalSpaceSmall,
-                                          model.busy == true
-                                              ? Shimmer.fromColors(
-                                                  baseColor:
-                                                      globals.primaryColor,
-                                                  highlightColor: globals.grey,
-                                                  child: Text(
-                                                    ('0.000'),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5,
-                                                  ))
-                                              : Text(
-                                                  model.myTotalInvestmentValue
-                                                      .toStringAsFixed(2),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline5)
-                                        ],
-                                      )),
-                                )),
-                          ),
-                          Expanded(
-                            flex: 5,
-                            child: Card(
-                                color: globals.walletCardColor,
-                                child: InkWell(
-                                    onTap: () {
-                                      model.myRewardById(userData);
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(25.0),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Text('Investment Quantity',
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5),
-                                          UIHelper.verticalSpaceSmall,
-                                          model.busy == true
-                                              ? Shimmer.fromColors(
-                                                  baseColor:
-                                                      globals.primaryColor,
-                                                  highlightColor: globals.grey,
-                                                  child: Text(
-                                                    ('0.000'),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5,
-                                                  ))
-                                              : Text(
-                                                  model.myToalInvestmentQuantity
-                                                      .toStringAsFixed(4),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline5)
-                                        ],
-                                      ),
-                                    ))),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 5,
-                            child: Card(
-                                color: globals.walletCardColor,
-                                child: InkWell(
-                                  onTap: () {
-                                    model.myReferralsById(userData);
-                                  },
-                                  child: Container(
-                                      padding: EdgeInsets.all(25.0),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Text('My Refferals',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5),
-                                          UIHelper.verticalSpaceSmall,
-                                          model.busy == true
-                                              ? Shimmer.fromColors(
-                                                  baseColor:
-                                                      globals.primaryColor,
-                                                  highlightColor: globals.grey,
-                                                  child: Text(
-                                                    ('0'),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5,
-                                                  ))
-                                              : Text(
-                                                  model.myReferrals.toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline5)
-                                        ],
-                                      )),
-                                )),
-                          ),
-                          Expanded(
-                            flex: 5,
-                            child: Card(
-                              color: globals.walletCardColor,
-                              child: InkWell(
-                                onTap: () {},
-                                child: Container(
-                                    padding: EdgeInsets.all(25.0),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Text('My Referral Code',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5),
-                                        UIHelper.verticalSpaceSmall,
-                                        userData.referralCode != null
-                                            ? Text(
-                                                userData.referralCode
-                                                    .toString(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5)
-                                            : Text(''),
-                                      ],
-                                    )),
-                              ),
+                      ListTile(
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Icon(
+                              Icons.monetization_on,
+                              color: globals.buyPrice,
+                              size: 24,
                             ),
                           ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 5,
-                            child: Card(
-                                color: globals.walletCardColor,
-                                child: InkWell(
-                                    onTap: () {
-                                      model.myRewardById(userData);
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(25.0),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Text('My Total Reward',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5),
-                                          UIHelper.verticalSpaceSmall,
-                                          model.busy == true
-                                              ? Shimmer.fromColors(
-                                                  baseColor:
-                                                      globals.primaryColor,
-                                                  highlightColor: globals.grey,
-                                                  child: Text(
-                                                    ('0.000'),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5,
-                                                  ))
-                                              : Text(
-                                                  model.myTotalReward
-                                                      .toStringAsFixed(4),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline5)
-                                        ],
-                                      ),
-                                    ))),
+                          trailing: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 3.0),
+                                child: Text(
+                                  'Level',
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                              ),
+                              model.busy
+                                  ? Container(
+                                      color: globals.grey,
+                                      child: Shimmer.fromColors(
+                                          baseColor: globals.primaryColor,
+                                          highlightColor: globals.grey,
+                                          child: Text(
+                                            (''),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          )),
+                                    )
+                                  : Text(model.memberLevel,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5
+                                          .copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color:
+                                                  Color(model.levelTextColor)))
+                            ],
                           ),
-                          Expanded(
-                            flex: 5,
-                            child: Card(
-                                color: globals.buyPrice.withAlpha(150),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, '/campaignPayment');
-                                  },
-                                  child: Container(
-                                      padding: EdgeInsets.all(25.0),
-                                      child: Column(
-                                        children: <Widget>[
-                                          UIHelper.horizontalSpaceSmall,
-                                          Text('Buy',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5),
-                                          Text('',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5)
-                                        ],
-                                      )),
-                                )),
+                          title: Text(
+                            'My Total Investment',
+                            style: TextStyle(letterSpacing: 1.25),
                           ),
-                        ],
-                      ),
+                          subtitle: model.busy
+                              ? Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.grey,
+                                  child: Text(
+                                    ('0.000'),
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ))
+                              : Text(
+                                  model.myTotalInvestmentValue
+                                      .toStringAsFixed(2),
+                                  style: Theme.of(context).textTheme.headline5))
                     ],
                   ),
                 ),
+/*-------------------------------------------------------------------------------------
+                                Investment quantity container with list tiles
+-------------------------------------------------------------------------------------*/
+                Container(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Icon(
+                              Icons.confirmation_number,
+                              color: globals.exgLogoColor,
+                              size: 22,
+                            ),
+                          ),
+                          title: Text('Total Investment Quantity'),
+                          subtitle: model.busy
+                              ? Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.grey,
+                                  child: Text(
+                                    ('0.000'),
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ))
+                              : Text(
+                                  model.myTotalInvestmentQuantity
+                                      .toStringAsFixed(4),
+                                  style: Theme.of(context).textTheme.headline5),
+                          trailing: Icon(
+                            Icons.navigate_next,
+                            color: globals.white54,
+                          ))
+                    ],
+                  ),
+                ),
+                UIHelper.divider,
+
+/*-------------------------------------------------------------------------------------
+                                Total reward container with list tiles
+-------------------------------------------------------------------------------------*/
+                Container(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                          onTap: () {
+                            model.navigateByRouteName('/campaignRewardDetails');
+                          },
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Icon(
+                              Icons.card_giftcard,
+                              color: globals.fabLogoColor,
+                              size: 22,
+                            ),
+                          ),
+                          title: Text('My Total Reward'),
+                          subtitle: model.busy
+                              ? Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.grey,
+                                  child: Text(
+                                    ('0.000'),
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ))
+                              : Text(model.myTotalReward.toStringAsFixed(4),
+                                  style: Theme.of(context).textTheme.headline5),
+                          trailing: Icon(
+                            Icons.navigate_next,
+                            color: globals.white54,
+                          ))
+                    ],
+                  ),
+                ),
+                UIHelper.divider,
+
+/*-------------------------------------------------------------------------------------
+                                My referrals container with list tiles
+-------------------------------------------------------------------------------------*/
+                Container(
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                          onTap: () {
+                            model.navigateByRouteName(
+                                '/campaignRefferalDetails');
+                          },
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Icon(
+                              Icons.people_outline,
+                              color: globals.primaryColor,
+                              size: 22,
+                            ),
+                          ),
+                          title: Text('My Referrals'),
+                          subtitle: model.busy
+                              ? Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.grey,
+                                  child: Text(
+                                    ('0.000'),
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ))
+                              : Text(model.myReferrals.toString(),
+                                  style: Theme.of(context).textTheme.headline5),
+                          trailing: Icon(
+                            Icons.navigate_next,
+                            color: globals.white54,
+                          ))
+                    ],
+                  ),
+                ),
+                UIHelper.verticalSpaceLarge,
+/*-------------------------------------------------------------------------------------
+                        Button Container
+-------------------------------------------------------------------------------------*/
+                Container(
+                    child: SizedBox(
+                  width: 150,
+                  child: RaisedButton(
+                      padding: EdgeInsets.all(0),
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/campaignPayment');
+                      },
+                      child: Text('Buy',
+                          style: Theme.of(context).textTheme.headline4)),
+                ))
               ],
             ),
           ),

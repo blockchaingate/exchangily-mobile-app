@@ -6,6 +6,7 @@ class TransactionInfo {
   String _dateCreated;
   String _txid;
   String _status;
+  double _quantity;
 
   TransactionInfo(
       {String id,
@@ -14,7 +15,8 @@ class TransactionInfo {
       int amount,
       String dateCreated,
       String txid,
-      String status}) {
+      String status,
+      double quantity}) {
     this._id = id;
     this._tickerName = tickerName ?? '';
     this._address = address ?? '';
@@ -22,6 +24,7 @@ class TransactionInfo {
     this._dateCreated = dateCreated ?? '';
     this._txid = txid ?? '';
     this._status = status ?? 0;
+    this._quantity = quantity ?? 0.0;
   }
 
   Map<String, dynamic> toJson() {
@@ -33,6 +36,7 @@ class TransactionInfo {
     data['dateCreated'] = this._dateCreated;
     data['txid'] = this._txid;
     data['status'] = this._status;
+    data['quantity'] = this._quantity;
     return data;
   }
 
@@ -44,7 +48,8 @@ class TransactionInfo {
         amount: json['amount'],
         dateCreated: json['dateCreated'] as String,
         txid: json['txid'],
-        status: json['status']);
+        status: json['status'],
+        quantity: json['quantity']);
   }
 
   String get id => _id;
@@ -86,6 +91,11 @@ class TransactionInfo {
   String get status => _status;
   set status(String status) {
     this._status = status;
+  }
+
+  double get quantity => _quantity;
+  set quantity(double quantity) {
+    this._quantity = quantity;
   }
 }
 
