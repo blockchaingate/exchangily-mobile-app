@@ -1,5 +1,4 @@
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
-import 'package:exchangilymobileapp/packages/bip32/utils/ecurve.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -18,14 +17,16 @@ class CampaignDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScreen<CampaignDashboardScreenState>(
       onModelReady: (model) async {
+        model.context = context;
         // if (userData == null) {
         //   await model.initState();
         // }
-        await model.myReferralsById(userData);
+        await model.myRewardsByToken();
         await model.getCampaignName();
-        await model.myRewardById(userData);
+        await model.myRewardsById(userData);
       },
       builder: (context, model, child) => Scaffold(
+          resizeToAvoidBottomInset: false,
           key: _scaffoldKey,
 /*-------------------------------------------------------------------------------------
                                   App Drawer
@@ -223,33 +224,33 @@ class CampaignDashboardScreen extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       ListTile(
-                          dense: false,
-                          leading: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Icon(
-                              Icons.confirmation_number,
-                              color: globals.exgLogoColor,
-                              size: 22,
-                            ),
+                        dense: false,
+                        leading: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Icon(
+                            Icons.confirmation_number,
+                            color: globals.exgLogoColor,
+                            size: 22,
                           ),
-                          title: Text('Total Investment Quantity'),
-                          subtitle: model.busy
-                              ? Shimmer.fromColors(
-                                  baseColor: globals.primaryColor,
-                                  highlightColor: globals.grey,
-                                  child: Text(
-                                    ('0.000'),
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ))
-                              : Text(
-                                  model.myTotalInvestmentQuantity
-                                      .toStringAsFixed(4),
-                                  style: Theme.of(context).textTheme.headline5),
-                          trailing: Icon(
-                            Icons.navigate_next,
-                            color: globals.white54,
-                          ))
+                        ),
+                        title: Text('Total Investment Quantity'),
+                        subtitle: model.busy
+                            ? Shimmer.fromColors(
+                                baseColor: globals.primaryColor,
+                                highlightColor: globals.grey,
+                                child: Text(
+                                  ('0.000'),
+                                  style: Theme.of(context).textTheme.headline5,
+                                ))
+                            : Text(
+                                model.myTotalInvestmentQuantity
+                                    .toStringAsFixed(4),
+                                style: Theme.of(context).textTheme.headline5),
+                        // trailing: Icon(
+                        //   Icons.navigate_next,
+                        //   color: globals.white54,
+                        // ),
+                      )
                     ],
                   ),
                 ),
@@ -263,7 +264,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                     children: <Widget>[
                       ListTile(
                           onTap: () {
-                            model.navigateByRouteName('/campaignRewardDetails');
+                            model.navigateByRouteName('/campaignRewardDetails',
+                                model.campaignRewardList);
                           },
                           dense: false,
                           leading: Padding(
@@ -280,7 +282,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   baseColor: globals.primaryColor,
                                   highlightColor: globals.grey,
                                   child: Text(
-                                    ('0.000'),
+                                    model.errorMessage,
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   ))
@@ -296,41 +298,77 @@ class CampaignDashboardScreen extends StatelessWidget {
                 UIHelper.divider,
 
 /*-------------------------------------------------------------------------------------
+                                Team container with list tiles
+-------------------------------------------------------------------------------------*/
+                Container(
+                  margin: EdgeInsets.only(bottom: 5.0),
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        onTap: () {},
+                        dense: false,
+                        leading: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Icon(
+                            Icons.people_outline,
+                            color: globals.primaryColor,
+                            size: 22,
+                          ),
+                        ),
+                        title: Text('Teams Total Value'),
+                        subtitle: model.busy
+                            ? Shimmer.fromColors(
+                                baseColor: globals.primaryColor,
+                                highlightColor: globals.grey,
+                                child: Text(
+                                  ('0.000'),
+                                  style: Theme.of(context).textTheme.headline5,
+                                ))
+                            : Text(model.myTeamsTotalValue.toString(),
+                                style: Theme.of(context).textTheme.headline5),
+                        // trailing: Icon(
+                        //   Icons.navigate_next,
+                        //   color: globals.white54,
+                        // ),
+                      )
+                    ],
+                  ),
+                ),
+                UIHelper.divider,
+
+/*-------------------------------------------------------------------------------------
                                 My referrals container with list tiles
 -------------------------------------------------------------------------------------*/
                 Container(
                   child: Column(
                     children: <Widget>[
                       ListTile(
-                          onTap: () {
-                            model.navigateByRouteName(
-                                '/campaignRefferalDetails');
-                          },
-                          dense: false,
-                          leading: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Icon(
-                              Icons.people_outline,
-                              color: globals.primaryColor,
-                              size: 22,
-                            ),
+                        onTap: () {},
+                        dense: false,
+                        leading: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Icon(
+                            Icons.share,
+                            color: globals.primaryColor,
+                            size: 22,
                           ),
-                          title: Text('My Referrals'),
-                          subtitle: model.busy
-                              ? Shimmer.fromColors(
-                                  baseColor: globals.primaryColor,
-                                  highlightColor: globals.grey,
-                                  child: Text(
-                                    ('0.000'),
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ))
-                              : Text(model.myReferrals.toString(),
-                                  style: Theme.of(context).textTheme.headline5),
-                          trailing: Icon(
-                            Icons.navigate_next,
-                            color: globals.white54,
-                          ))
+                        ),
+                        title: Text('My Referrals'),
+                        subtitle: model.busy
+                            ? Shimmer.fromColors(
+                                baseColor: globals.primaryColor,
+                                highlightColor: globals.grey,
+                                child: Text(
+                                  ('0.000'),
+                                  style: Theme.of(context).textTheme.headline5,
+                                ))
+                            : Text(model.myTotalReferrals.toString(),
+                                style: Theme.of(context).textTheme.headline5),
+                        // trailing: Icon(
+                        //   Icons.navigate_next,
+                        //   color: globals.white54,
+                        // ),
+                      )
                     ],
                   ),
                 ),

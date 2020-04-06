@@ -27,14 +27,16 @@ class CampaignInstructionsScreenState extends BaseState {
   initState() async {
     // circular indicator is still not working when page first loads
     setBusy(true);
+    setErrorMessage('Fetching Instructions...');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
     if (loginToken != '' && loginToken != null) {
       log.w(loginToken);
       setBusy(false);
+      setErrorMessage('');
       navigationService.navigateTo('/campaignLogin');
     } else {
-      Timer(Duration(seconds: 1), () {
+      Timer(Duration(seconds: 2), () {
         for (String assetName in campaignAssetNames) {
           _tierListSvg.add(SvgPicture.asset(
             assetName,
@@ -43,9 +45,11 @@ class CampaignInstructionsScreenState extends BaseState {
           ));
         }
         setBusy(false);
+        setErrorMessage('');
       });
     }
     setBusy(false);
+    setErrorMessage('');
   }
 
   checkLoginUSer() {

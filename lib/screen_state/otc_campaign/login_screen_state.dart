@@ -26,6 +26,7 @@ class CampaignLoginScreenState extends BaseState {
   CampaignUserData userData;
   bool isPasswordTextVisible = false;
   bool isLoggedIn = false;
+  bool isLogging = false;
 
   // To check if user already logged in
   init() async {
@@ -100,6 +101,7 @@ class CampaignLoginScreenState extends BaseState {
 // Check fields before calling the api
   checkCredentials() {
     setBusy(true);
+    isLogging = true;
     setErrorMessage('Checking credentials');
     if (emailTextController.text.isEmpty) {
       setErrorMessage('Please enter your login email address');
@@ -112,6 +114,7 @@ class CampaignLoginScreenState extends BaseState {
       login(user);
     }
     setBusy(false);
+    isLogging = false;
   }
 
 // Save user data locally

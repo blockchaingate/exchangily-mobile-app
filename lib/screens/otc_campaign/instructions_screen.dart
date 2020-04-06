@@ -27,16 +27,18 @@ class CampaignInstructionScreen extends StatelessWidget {
           body: Column(
             children: <Widget>[
               // List of instruction SVG images
-              model.busy
+              model.hasErrorMessage
                   ? Shimmer.fromColors(
                       baseColor: globals.primaryColor,
                       highlightColor: globals.white,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           UIHelper.verticalSpaceLarge,
                           UIHelper.verticalSpaceLarge,
                           UIHelper.verticalSpaceLarge,
-                          Text('Loading...'),
+                          UIHelper.verticalSpaceLarge,
+                          Text(model.errorMessage),
                         ],
                       ))
                   : Expanded(
@@ -67,7 +69,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                         },
                       ),
                     ),
-              UIHelper.horizontalSpaceSmall,
+              UIHelper.verticalSpaceSmall,
             ],
           ),
         ),

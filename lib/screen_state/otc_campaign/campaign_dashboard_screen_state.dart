@@ -1,10 +1,12 @@
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignDashboardScreenState extends BaseState {
@@ -23,8 +25,12 @@ class CampaignDashboardScreenState extends BaseState {
   double myTotalInvestmentValue = 0;
   double myTotalInvestmentQuantity = 0;
   double myTotalReward = 0;
-  int myReferrals = 0;
+  int myTotalReferrals = 0;
+  double myTeamsTotalRewards = 0;
+  double myTeamsTotalValue = 0;
+  BuildContext context;
 
+  List<CampaignReward> campaignRewardList = [];
   initState() async {
     log.w(' In init');
   }
@@ -67,7 +73,7 @@ class CampaignDashboardScreenState extends BaseState {
       log.w(res);
       if (res != null) {
         var list = res as List;
-        myReferrals = list.length;
+        myTotalReferrals = list.length;
         log.e(list.length);
         // navigationService.navigateTo('/campaignRefferalDetails');
       } else {
@@ -85,8 +91,11 @@ class CampaignDashboardScreenState extends BaseState {
                                   Get Member Reward By MemberID
 -------------------------------------------------------------------------------------*/
 
-  myRewardById(CampaignUserData userData) async {
+  myRewardsById(CampaignUserData userData) async {
+    if (userData == null) return false;
+    log.e(userData.id);
     setBusy(true);
+    setErrorMessage('fetching your rewards');
     await campaignService.getRewardById(userData).then((res) {
       if (res != null) {
         int level = res['_body']['myLevel'];
@@ -112,6 +121,68 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(false);
   }
 
+  /*-------------------------------------------------------------------------------------
+                                  Get Member Reward By Token
+-------------------------------------------------------------------------------------*/
+
+  myRewardsByToken() async {
+    setBusy(true);
+    setErrorMessage('fetching your rewards');
+    String token = await campaignService.getSavedLoginToken();
+    await campaignService.getMemberRewardByToken(token).then((response) async {
+      if (response != null) {
+        log.e(response);
+        myTotalInvestmentValue = 0;
+        myTotalInvestmentQuantity = 0;
+        myTotalReferrals = 0;
+        myTotalReward = 0;
+        var res = response['personal'] as List;
+        for (int i = 0; i < res.length; i++) {
+          var totalInvestmentValue = res[i]['totalValue'];
+          var totalQuantity = res[i]['totalQuantities'];
+          var totalReferrals = res[i]['totalAccounts'];
+          var totalRewards = res[i]['totalRewardQuantities'];
+          CampaignReward campaignReward = new CampaignReward(
+              level: res[i]['level'],
+              totalValue: totalInvestmentValue,
+              totalQuantities: totalQuantity,
+              totalRewardQuantities: totalRewards,
+              totalAccounts: totalReferrals,
+              totalRewardNextQuantities: res[i]['totalRewardNextQuantities']);
+          campaignRewardList.add(campaignReward);
+          myTotalInvestmentValue =
+              myTotalInvestmentValue + totalInvestmentValue;
+          myTotalInvestmentQuantity = myTotalInvestmentQuantity + totalQuantity;
+          myTotalReferrals = myTotalReferrals + totalReferrals;
+          myTotalReward = myTotalReward + totalRewards;
+
+          log.w(campaignReward.toJson());
+        }
+        log.w('Length ${campaignRewardList.length}');
+        var ttv = response['teamsTotalValue'];
+        myTeamsTotalValue = ttv;
+        var ttr = response['teamsRewards'];
+        log.w(ttr);
+        myTeamsTotalRewards = 600.0;
+        log.w(myTeamsTotalRewards);
+
+        // Error below: type 'int' is not a subtype of type 'double'
+        myTeamsTotalRewards = ttr;
+        log.e(myTeamsTotalRewards);
+
+        log.w('route not working');
+        //  calculateMyTotalReward();
+      } else {
+        log.w('In myReward else, res is null from api');
+        setBusy(false);
+      }
+    }).catchError((err) {
+      log.e(err);
+      setBusy(false);
+    });
+    setBusy(false);
+  }
+
   // Calculate my total reward
   calculateMyTotalReward() {
     var price = 2;
@@ -119,8 +190,15 @@ class CampaignDashboardScreenState extends BaseState {
     return myTotalReward;
   }
 
+  // Calculate my total value
+  calcMyTotalInvestmentValue() {
+    campaignRewardList.map((reward) {
+//reward.level.
+    });
+  }
+
   // Generic Navigate
-  navigateByRouteName(String routeName) {
-    navigationService.navigateTo(routeName);
+  navigateByRouteName(String routeName, args) async {
+    await navigationService.navigateTo(routeName, arguments: args);
   }
 }

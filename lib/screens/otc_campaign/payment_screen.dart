@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 class CampaignPaymentScreen extends StatelessWidget {
   const CampaignPaymentScreen({Key key}) : super(key: key);
@@ -51,7 +52,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                           flex: 3,
                           child: SizedBox(
                             //  width: 50,
-                            height: 35,
+                            height: 40,
                             child: TextField(
                               style: model.checkSendAmount
                                   // && model.amountDouble <= bal
@@ -266,11 +267,9 @@ class CampaignPaymentScreen extends StatelessWidget {
 
                     UIHelper.verticalSpaceSmall,
                     Visibility(
-                        visible: model.errorMessage != '',
-                        child: model.busy == true
-                            ? Text('Loading...')
-                            : Text(model.errorMessage,
-                                style: Theme.of(context).textTheme.bodyText2)),
+                        visible: model.hasErrorMessage,
+                        child: Text(model.errorMessage,
+                            style: Theme.of(context).textTheme.bodyText2)),
                     UIHelper.verticalSpaceSmall,
                     // Button row container
                     Container(
@@ -311,18 +310,19 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline5),
                                 onPressed: () {
-                                  //  model.checkFields(context);
+                                  //  model.getCampaignOrdeList();
+                                  model.checkFields(context);
                                   // model.createCampaignOrder(
                                   //     '0x41d9b291469c7d9046e8154b04b3d6e1e76c910bba9fce6acf73298d79984cfd',
                                   //     15511);
-                                  if (model.exgWalletAddress != null &&
-                                      model.exgWalletAddress != '') {
-                                    model.getCampaignOrdeList();
-                                  } else {
-                                    model.getExgWalletAddr();
-                                    print(
-                                        'Exg wallet address was missing, so getting it now');
-                                  }
+                                  // if (model.exgWalletAddress != null &&
+                                  //     model.exgWalletAddress != '') {
+                                  //   model.getCampaignOrdeList();
+                                  // } else {
+                                  //   model.getExgWalletAddr();
+                                  //   print(
+                                  //       'Exg wallet address was missing, so getting it now');
+                                  // }
                                 },
                               ),
                             )
@@ -334,7 +334,7 @@ class CampaignPaymentScreen extends StatelessWidget {
               UIHelper.verticalSpaceSmall,
               // 2nd contianer row Order info
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.0),
+                margin: EdgeInsets.symmetric(horizontal: 5.0),
                 decoration: BoxDecoration(
                     color: globals.walletCardColor,
                     borderRadius: BorderRadius.all(Radius.circular(5.0))),
@@ -349,12 +349,21 @@ class CampaignPaymentScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
-                        Text('Time Stamp',
-                            style: Theme.of(context).textTheme.bodyText1),
-                        Text('Amount',
-                            style: Theme.of(context).textTheme.bodyText1),
-                        Text('Status',
-                            style: Theme.of(context).textTheme.bodyText1)
+                        Expanded(
+                          flex: 3,
+                          child: Text('Time',
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodyText1),
+                        ),
+                        Expanded(
+                            flex: 2,
+                            child: Text('Quantiy',
+                                style: Theme.of(context).textTheme.bodyText1)),
+                        Expanded(
+                          flex: 1,
+                          child: Text('Status',
+                              style: Theme.of(context).textTheme.bodyText1),
+                        )
                       ],
                     ),
                     UIHelper.verticalSpaceSmall,
@@ -407,7 +416,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                       .textTheme
                                                       .bodyText1),
                                             ),
-                                            //  UiHelper.
+                                            UIHelper.horizontalSpaceSmall,
                                             Expanded(
                                               flex: 2,
                                               child: Text(
@@ -421,8 +430,9 @@ class CampaignPaymentScreen extends StatelessWidget {
                                             Expanded(
                                               flex: 1,
                                               child: Text(
-                                                  model.orderInfoList[index]
-                                                      .status,
+                                                  model
+                                                      .uiOrderStatusList[index],
+                                                  textAlign: TextAlign.start,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyText1),

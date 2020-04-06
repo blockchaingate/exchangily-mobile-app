@@ -3,14 +3,14 @@ class OrderInfo {
   String _dateCreated;
   String _txid;
   String _status;
-  double _quantity;
+  var _quantity;
 
   OrderInfo(
       {String id,
       String dateCreated,
       String txid,
       String status,
-      double quantity}) {
+      var quantity}) {
     this._id = id;
     this._dateCreated = dateCreated ?? '';
     this._txid = txid ?? '';
@@ -60,8 +60,8 @@ class OrderInfo {
     this._status = status;
   }
 
-  double get quantity => _quantity;
-  set quantity(double quantity) {
+  get quantity => _quantity;
+  set quantity(var quantity) {
     this._quantity = quantity;
   }
 }

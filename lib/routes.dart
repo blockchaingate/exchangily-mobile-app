@@ -145,7 +145,9 @@ class RouteGenerator {
                 ));
 
       case '/campaignRewardDetails':
-        return MaterialPageRoute(builder: (_) => CampaignRewardDetailsScreen());
+        return MaterialPageRoute(
+            builder: (_) =>
+                CampaignRewardDetailsScreen(campaignRewardList: args));
 
       case '/campaignRefferalDetails':
         return MaterialPageRoute(

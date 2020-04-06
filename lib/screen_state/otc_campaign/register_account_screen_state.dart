@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class CampaignRegisterAccountScreenState extends BaseState {
   final log = getLogger('RegisterScreenState');
@@ -19,6 +20,7 @@ class CampaignRegisterAccountScreenState extends BaseState {
   final passwordTextController = TextEditingController();
   final confirmPasswordTextController = TextEditingController();
   final referralCodeTextController = TextEditingController();
+  final exgWalletAddressTextController = TextEditingController();
   User user;
   bool isPasswordTextVisible = false;
   CampaignUserData userData;
@@ -26,7 +28,8 @@ class CampaignRegisterAccountScreenState extends BaseState {
   Future<CampaignUserData> register(User user) async {
     setBusy(true);
     await campaignService
-        .registerAccount(user, referralCodeTextController.text)
+        .registerAccount(user, referralCodeTextController.text,
+            exgWalletAddressTextController.text)
         .then((res) async {
       // String loginToken = res['token'];
       String error = res['message'];
@@ -59,6 +62,8 @@ class CampaignRegisterAccountScreenState extends BaseState {
       setErrorMessage('Please fill your password');
     } else if (confirmPasswordTextController.text.isEmpty) {
       setErrorMessage('Confirm password field is empty');
+    } else if (exgWalletAddressTextController.text.isEmpty) {
+      setErrorMessage('Exg wallet address is required');
     } else if (!passwordMatch) {
       setErrorMessage('Both passwords should match');
     } else {
@@ -81,5 +86,13 @@ class CampaignRegisterAccountScreenState extends BaseState {
     setBusy(true);
     isPasswordTextVisible = value;
     setBusy(false);
+  }
+
+  // Paste exg address
+
+  pasteClipboardText() async {
+    ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
+
+    exgWalletAddressTextController.text = data.text;
   }
 }

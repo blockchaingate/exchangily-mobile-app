@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
+import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/models/transaction_info.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
@@ -18,14 +19,14 @@ class CampaignService {
 
   final String appName = 'eXchangily';
   final String appId = '5b6a8688905612106e976a69';
-  final String campaignId = '5e7e68682212d41ad0a5cf07';
+  final String campaignId = '1';
   Campaign campaign;
 
   static const BASE_URL = 'https://test.blockchaingate.com/v2/';
-  static const registerAccountUrl = BASE_URL + 'members/create';
+  static const registerUrl = BASE_URL + 'members/create';
   static const loginUrl = BASE_URL + 'members/login';
   static const kycWithTokenUrl = BASE_URL + 'kyc/create';
-  static const createCampaignOrderUrl = BASE_URL + 'campaign-order/create';
+  static const createOrderUrl = BASE_URL + 'campaign-order/create';
   static const listOrdersByWalletAddressUrl =
       BASE_URL + 'campaign-order/wallet-orders/';
   static const listOrdersByMemberIdUrl =
@@ -35,6 +36,7 @@ class CampaignService {
   static const campaignNameUrl = BASE_URL + 'campaign/1';
   static const memberReferralsUrl = BASE_URL + 'campaign-referral/referrals/';
   static const memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
+  static const rewardsUrl = BASE_URL + 'campaign-order/rewards';
   CampaignUserData userData;
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
@@ -62,18 +64,20 @@ class CampaignService {
                           Register
 -------------------------------------------------------------------------------------*/
 
-  Future registerAccount(User user, String referralCode) async {
+  Future registerAccount(
+      User user, String referralCode, String exgWalletAddress) async {
     Map<String, dynamic> body =
         user.toJson(); // Assign user data to Map type json variable
     body.addAll({
       "app": appName,
       "appId": appId,
       "referralCode": referralCode,
-      "campaignId": "1"
+      "campaignId": "1",
+      "walletExgAddress": exgWalletAddress
     }); // Add another key/pair value
     log.w(body);
     try {
-      var response = await client.post(registerAccountUrl, body: body);
+      var response = await client.post(registerUrl, body: body);
       log.w(json.decode(response.body));
       return json.decode(response.body);
     } catch (err) {
@@ -112,19 +116,19 @@ class CampaignService {
     String loginToken = prefs.getString('loginToken');
 //campaignOrder.toJson();
     Map<String, dynamic> body = {
-      "campaignId": campaignId,
-      "memberId": campaignOrder.memberId,
+      "campaignId": "1",
+      "price": "0.24",
       "walletAdd": campaignOrder.walletAdd,
       "txId": campaignOrder.txId,
       "quantity": campaignOrder.quantity.toString(),
       "paymentType": campaignOrder.paymentType
     };
-    body.addAll({'campaignId': campaignId});
+    // body.addAll({'campaignId': campaignId});
     log.w(body);
     Map<String, String> headers = {'x-access-token': loginToken};
     try {
-      var response = await client.post(createCampaignOrderUrl,
-          body: body, headers: headers);
+      var response =
+          await client.post(createOrderUrl, body: body, headers: headers);
       log.w('createCampaignOrder try response ${response.body}');
       var json = jsonDecode(response.body);
       return json;
@@ -137,37 +141,15 @@ class CampaignService {
                                   Get orders by member id
 -------------------------------------------------------------------------------------*/
 
-  Future<List<OrderInfo>> getOrderById(String memberId) async {
-    String url = listOrdersByMemberIdUrl + memberId;
-    OrderInfo orderInfo;
-    List<OrderInfo> orderInfoList = [];
-    log.w(url);
+  Future<List<OrderInfo>> getOrdersById(String memberId) async {
+    log.e(memberId);
     try {
       var response = await client.get(listOrdersByMemberIdUrl + memberId);
-      var json = jsonDecode(response.body);
-      var jsonList = json['_body'] as List;
+      var jsonList = jsonDecode(response.body) as List;
       log.w(jsonList);
-      log.e(jsonList.length);
-      for (int i = 0; i <= jsonList.length; i++) {
-        String quantity = jsonList[i]['quantity'].toString();
-        double castedQuantity = double.parse(quantity);
-        orderInfo = new OrderInfo(
-            id: jsonList[i]['_id'],
-            dateCreated: jsonList[i]['dateCreated'],
-            txid: jsonList[i]['txId'],
-            status: jsonList[i]['status'],
-            quantity: castedQuantity);
-        log.w(orderInfoList.length);
-        orderInfoList.add(orderInfo);
-        log.w(orderInfo.toJson());
-      }
-      return orderInfoList;
-      // OrderInfoList orderInfoList = OrderInfoList.fromJson(jsonList);
-      //TransactionInfoList orderList = TransactionInfoList.fromJson(json);
-      // List<TransactionInfo> orderList =
-      //     json.map((e) => TransactionInfo.fromJson(e)).toList();
-
-      // return orderList.transactions;
+      OrderInfoList orderInfoList = OrderInfoList.fromJson(jsonList);
+      log.e(orderInfoList.orders[10].dateCreated);
+      return orderInfoList.orders;
     } catch (err) {
       log.e('In getOrderById catch $err');
       return null;
@@ -184,10 +166,10 @@ class CampaignService {
       var response =
           await client.get(listOrdersByWalletAddressUrl + exgWalletAddress);
 
-      var json = jsonDecode(response.body)
+      var jsonList = jsonDecode(response.body)
           as List; // making this a list what i was missing earlier
-      log.w(json);
-      TransactionInfoList orderList = TransactionInfoList.fromJson(json);
+      log.w(jsonList);
+      TransactionInfoList orderList = TransactionInfoList.fromJson(jsonList);
       // List<TransactionInfo> orderList =
       //     json.map((e) => TransactionInfo.fromJson(e)).toList();
       log.w(orderList.transactions[5].dateCreated);
@@ -209,6 +191,16 @@ class CampaignService {
     await campaignUserDatabaseService
         .getUserDataByToken(userData.token)
         .then((value) => log.w(value));
+  }
+
+  /*-------------------------------------------------------------------------------------
+                          Get saved login token
+-------------------------------------------------------------------------------------*/
+
+  Future<String> getSavedLoginToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String loginToken = prefs.getString('loginToken');
+    return loginToken;
   }
 
   /*-------------------------------------------------------------------------------------
@@ -250,17 +242,78 @@ class CampaignService {
 -------------------------------------------------------------------------------------*/
 
   Future getRewardById(CampaignUserData userData) async {
-    String memberId = userData.id;
     Map<String, String> headers = {'x-access-token': userData.token};
     try {
-      var response =
-          await client.get(memberRewardUrl + memberId, headers: headers);
+      var response = await client.get(rewardsUrl, headers: headers);
       var json = jsonDecode(response.body);
       log.w(' getRewardById $json');
 
       return json;
     } catch (err) {
       log.e('In getRewardById catch $err');
+    }
+  }
+
+  /*-------------------------------------------------------------------------------------
+                                  Get Member Reward By Token
+-------------------------------------------------------------------------------------*/
+
+  Future getMemberRewardByToken(String token) async {
+    List<CampaignReward> campaignRewardList = [];
+    Map<String, String> headers = {'x-access-token': token};
+    try {
+      var response = await client.get(rewardsUrl, headers: headers);
+      log.e('${jsonDecode(response.body)['_body']}');
+      var rewardList = jsonDecode(response.body)['_body'];
+      return rewardList;
+
+      // catch type 'int' is not a subtype of type 'double' if i map it like below so for now i am going to do i manually until i find the solution
+      // CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
+      // log.e(campaignRewardList.rewards.length);
+    } catch (err) {
+      log.e('In getRewardByToken catch $err');
+    }
+  }
+
+  /*-------------------------------------------------------------------------------------
+                                  Get Teams Reward By Token
+-------------------------------------------------------------------------------------*/
+
+  Future getTeamsRewardByToken(String token) async {
+    List<CampaignReward> campaignRewardList = [];
+    Map<String, String> headers = {'x-access-token': token};
+    try {
+      var response = await client.get(rewardsUrl, headers: headers);
+      log.e('${jsonDecode(response.body)['_body']}');
+
+      var teamsRewardList = jsonDecode(response.body)['_body']['team'] as List;
+
+      // if (jsonList != null || jsonList != []) {
+      //   for (int i = 0; i <= jsonList.length; i++) {
+      //     CampaignReward campaignReward = new CampaignReward(
+      //         level: jsonList[i]['level'],
+      //         totalValue: jsonList[i]['totalValue'],
+      //         totalQuantities: jsonList[i]['totalQuantities'],
+      //         totalRewardQuantities: jsonList[i]['totalRewardQuantities'],
+      //         totalAccounts: jsonList[i]['totalAccounts'],
+      //         totalRewardNextQuantities: jsonList[i]
+      //             ['totalRewardNextQuantities']);
+
+      //     log.w(campaignReward.toJson());
+      //     log.w(campaignRewardList.length);
+      //     campaignRewardList.add(campaignReward);
+      //   }
+      //   return campaignRewardList;
+      // } else {
+      //   return campaignRewardList = [];
+      // }
+      return teamsRewardList;
+
+      // catch type 'int' is not a subtype of type 'double' if i map it like below so for now i am going to do i manually until i find the solution
+      // CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
+      // log.e(campaignRewardList.rewards.length);
+    } catch (err) {
+      log.e('In getRewardByToken catch $err');
     }
   }
 }

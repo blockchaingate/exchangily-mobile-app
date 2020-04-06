@@ -153,17 +153,17 @@ class SendScreenState extends BaseState {
           sendAmountTextController.text = '';
           String date = DateTime.now().toString();
           // Build transaction history object
-          TransactionInfo transactionHistory = new TransactionInfo(
-              tickerName: tickerName,
-              address: toWalletAddress,
-              amount: amount,
-              dateCreated: date);
+          // TransactionInfo transactionHistory = new TransactionInfo(
+          //     tickerName: tickerName,
+          //     address: toWalletAddress,
+          //     amount: amount,
+          //     dateCreated: date);
           // Add transaction history object in database
-          await transactionHistoryDatabaseService
-              .insert(transactionHistory)
-              .then((data) => log.w('Saved in transaction history database'))
-              .catchError(
-                  (onError) => log.e('Could not save in database $onError'));
+          // await transactionHistoryDatabaseService
+          //     .insert(transactionHistory)
+          //     .then((data) => log.w('Saved in transaction history database'))
+          //     .catchError(
+          //         (onError) => log.e('Could not save in database $onError'));
           // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
           //   checkTxStatus(tickerName, txHash);
           // });
@@ -172,17 +172,20 @@ class SendScreenState extends BaseState {
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}');
 
           setState(ViewState.Idle);
-        } else if (errorMessage.isNotEmpty) {
-          log.e('Error Message: $errorMessage');
-          sharedService.alertResponse(AppLocalizations.of(context).genericError,
-              '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
-          setState(ViewState.Idle);
-        } else if (txHash == '' && errorMessage == '') {
+        }
+        // else if (errorMessage.isNotEmpty) {
+        //   log.e('Error Message: $errorMessage');
+        //   sharedService.alertResponse(AppLocalizations.of(context).genericError,
+        //       '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
+        //   setState(ViewState.Idle);
+        // }
+        else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
           sharedService.alertResponse(AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
           setState(ViewState.Idle);
         }
+        setState(ViewState.Idle);
         return txHash;
       }).timeout(Duration(seconds: 25), onTimeout: () {
         log.e('In time out');

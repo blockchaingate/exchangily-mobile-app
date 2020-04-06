@@ -160,6 +160,34 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                 onChanged: (value) {
                                   print(value);
                                 },
+                                controller:
+                                    model.exgWalletAddressTextController,
+                                style: TextStyle(
+                                  color: globals.white54,
+                                ),
+                                decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                      icon: Icon(Icons.account_balance_wallet),
+                                      iconSize: 16,
+                                      onPressed: () {
+                                        model.pasteClipboardText();
+                                      },
+                                    ),
+                                    labelText: 'Exg Wallet Address',
+                                    labelStyle:
+                                        Theme.of(context).textTheme.headline6),
+                              ))
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Expanded(
+                              flex: 2,
+                              child: TextField(
+                                onChanged: (value) {
+                                  print(value);
+                                },
                                 controller: model.referralCodeTextController,
                                 style: TextStyle(
                                   color: globals.white54,

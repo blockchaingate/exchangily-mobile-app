@@ -50,6 +50,7 @@ class WalletSetupScreen extends StatelessWidget {
             children: <Widget>[
               // Logo Container
               UIHelper.verticalSpaceLarge,
+              UIHelper.verticalSpaceLarge,
               Container(
                 height: 50,
                 child: Image.asset('assets/images/start-page/logo.png'),

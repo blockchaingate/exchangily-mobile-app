@@ -48,20 +48,18 @@ class CampaignPaymentScreenState extends BaseState {
   WalletInfo walletInfo;
   String exgWalletAddress = '';
   CampaignUserData userData;
-  String errorMessage = '';
   CampaignOrder campaignOrder;
   List<OrderInfo> orderInfoList = [];
   Color containerListColor;
   int orderInfoContainerHeight = 430;
-  final List<String> orderStatusNameList = [
+  final List<String> orderStatusList = [
     'Waiting',
     'Paid',
     'Payment Received',
     'Failed',
     'Order Cancelled'
   ];
-  String orderStatus = '';
-  List<int> orderStatusNumberList = [];
+  List<String> uiOrderStatusList = [];
 
   // Initial logic
   initState() async {
@@ -121,7 +119,7 @@ class CampaignPaymentScreenState extends BaseState {
           .then((res) async {
         log.w('Result $res');
         String txHash = res["txHash"];
-        errorMessage = res["errMsg"];
+        setErrorMessage(res["errMsg"]);
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           sendAmountTextController.text = '';
@@ -194,10 +192,14 @@ class CampaignPaymentScreenState extends BaseState {
     // calling api and passing the campaign order object
     await campaignService.createCampaignOrder(campaignOrder).then((res) async {
       log.w(res);
-      if (res != null) {
-        await getCampaignOrdeList();
+      if (res == null) {
+        setErrorMessage('Server error, Please try again later.');
+        return false;
+      } else if (res['message'] != null) {
+        setErrorMessage('Create order failed');
       } else {
-        log.e('Create order failed');
+        await getCampaignOrdeList();
+        sharedService.alertResponse('Success', 'Your order has been created');
       }
     }).catchError((err) => log.e('Campaign service buying coin catch $err'));
     setBusy(false);
@@ -213,26 +215,32 @@ class CampaignPaymentScreenState extends BaseState {
         .getUserDataFromDatabase()
         .then((res) => userData = res);
     if (userData == null) return false;
-    await campaignService.getOrderById(userData.id).then((orderListFromApi) {
+    await campaignService.getOrdersById(userData.id).then((orderListFromApi) {
       if (orderListFromApi != null) {
         log.w(orderListFromApi.length);
         orderInfoList = orderListFromApi;
 
-        for (int i = 0; i <= orderInfoList.length; i++) {
-          int status = int.parse(orderInfoList[i].status);
-          if (status.isNaN || status == null) {
-            log.e('status code null');
+        for (int i = 0; i < orderInfoList.length; i++) {
+          var status = orderInfoList[i].status;
 
-            orderStatusNumberList.add(1);
+          if (status == "1") {
+            uiOrderStatusList.add(orderStatusList[0]);
+          } else if (status == "2") {
+            uiOrderStatusList.add(orderStatusList[1]);
+          } else if (status == "3") {
+            uiOrderStatusList.add(orderStatusList[2]);
+          } else if (status == "4") {
+            uiOrderStatusList.add(orderStatusList[3]);
           } else {
-            orderStatusNumberList.add(status);
-            log.i(orderInfoList[i].status);
-            log.e(orderStatusNumberList.length);
+            uiOrderStatusList.add(orderStatusList[5]);
           }
+          log.i(orderInfoList[i].status);
+          log.e(uiOrderStatusList.length);
         }
         setBusy(false);
       } else {
         log.e('Api result null');
+        setErrorMessage('Could not load orders, Please try again later');
         setBusy(false);
       }
     }).catchError((err) {
@@ -244,13 +252,11 @@ class CampaignPaymentScreenState extends BaseState {
   // Check input fields
   checkFields(context) async {
     log.i('checking fields');
-    setBusy(true);
     if (sendAmountTextController.text == '' || _groupValue == null) {
-      log.i('1');
       setErrorMessage('Please fill all the fields');
-      setBusy(false);
       return;
     }
+    setErrorMessage('');
     double amount = double.parse(sendAmountTextController.text);
     if (amount == null ||
         !checkSendAmount ||

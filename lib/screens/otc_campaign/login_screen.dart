@@ -163,10 +163,14 @@ class CampaignLoginScreen extends StatelessWidget {
                           UIHelper.verticalSpaceMedium,
                           // Error goes here
                           Visibility(
-                              visible: model.errorMessage != '',
+                              visible: model.hasErrorMessage,
                               child: Text(model.errorMessage,
-                                  style:
-                                      Theme.of(context).textTheme.bodyText2)),
+                                  style: model.isLogging && model.busy
+                                      ? Theme.of(context).textTheme.bodyText2
+                                      : Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(color: Colors.yellow))),
                           UIHelper.verticalSpaceSmall,
                           // Button row
                           Row(
