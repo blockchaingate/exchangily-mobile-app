@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -31,7 +32,7 @@ class CampaignLoginScreenState extends BaseState {
   // To check if user already logged in
   init() async {
     setBusy(true);
-    setErrorMessage('Checking account details');
+    setErrorMessage(AppLocalizations.of(context).checkingAccountDetails);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
     log.w('login token $loginToken');
@@ -81,8 +82,8 @@ class CampaignLoginScreenState extends BaseState {
       if (res != null && (error == null || error == '')) {
         userData = CampaignUserData.fromJson(res);
         log.i('Test user data object ${userData.toJson()}');
-        await campaignService.saveCampaignUserDataLocally(userData);
         navigationService.navigateTo('/campaignDashboard', arguments: userData);
+        await campaignService.saveCampaignUserDataLocally(userData);
         setBusy(false);
         return '';
       } else {

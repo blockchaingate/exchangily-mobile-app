@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -16,7 +17,7 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('My Reward Details',
+        title: Text(AppLocalizations.of(context).myRewardDetails,
             style: Theme.of(context).textTheme.headline3),
       ),
       body: Container(
@@ -29,22 +30,22 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
                   Expanded(
                       flex: 1,
                       child: Center(
-                          child: Text('Level',
+                          child: Text(AppLocalizations.of(context).level,
                               style: Theme.of(context).textTheme.headline5))),
                   Expanded(
                       flex: 2,
                       child: Center(
-                          child: Text('Refferals',
+                          child: Text(AppLocalizations.of(context).referrals,
                               style: Theme.of(context).textTheme.headline5))),
                   Expanded(
                       flex: 2,
                       child: Center(
-                          child: Text('Total Amount',
+                          child: Text(AppLocalizations.of(context).totalAmount,
                               style: Theme.of(context).textTheme.headline5))),
                   Expanded(
                       flex: 2,
                       child: Center(
-                          child: Text('Reward',
+                          child: Text(AppLocalizations.of(context).rewards,
                               style: Theme.of(context).textTheme.headline5)))
                 ],
               ),

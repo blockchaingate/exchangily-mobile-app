@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flushbar/flushbar.dart';
@@ -15,6 +16,7 @@ class CampaignLoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScreen<CampaignLoginScreenState>(
       onModelReady: (model) async {
+        model.context = context;
         await model.init();
       },
       builder: (context, model, child) => WillPopScope(
@@ -24,7 +26,8 @@ class CampaignLoginScreen extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Login', style: Theme.of(context).textTheme.headline3),
+            title: Text(AppLocalizations.of(context).login,
+                style: Theme.of(context).textTheme.headline3),
             centerTitle: true,
           ),
           body: model.isLoggedIn
@@ -70,7 +73,7 @@ class CampaignLoginScreen extends StatelessWidget {
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 7.0),
                                     child: Text(
-                                      'Email',
+                                      AppLocalizations.of(context).email,
                                       style:
                                           Theme.of(context).textTheme.headline5,
                                       //  textAlign: TextAlign.center,
@@ -102,7 +105,7 @@ class CampaignLoginScreen extends StatelessWidget {
                                   child: Padding(
                                     padding: const EdgeInsets.only(top: 7.0),
                                     child: Text(
-                                      'Password',
+                                      AppLocalizations.of(context).password,
                                       style:
                                           Theme.of(context).textTheme.headline5,
                                     ),
@@ -117,7 +120,8 @@ class CampaignLoginScreen extends StatelessWidget {
                                             suffixIcon: IconButton(
                                                 iconSize: 18,
                                                 tooltip:
-                                                    'Click to see the password',
+                                                    AppLocalizations.of(context)
+                                                        .clickToSeeThePassword,
                                                 onPressed: () {
                                                   model.setBusy(true);
                                                   model.isPasswordTextVisible =
@@ -141,7 +145,8 @@ class CampaignLoginScreen extends StatelessWidget {
                                             suffixIcon: IconButton(
                                                 iconSize: 18,
                                                 tooltip:
-                                                    'Click to see the password',
+                                                    AppLocalizations.of(context)
+                                                        .clickToSeeThePassword,
                                                 onPressed: () {
                                                   model.setBusy(true);
                                                   model.isPasswordTextVisible =
@@ -199,7 +204,8 @@ class CampaignLoginScreen extends StatelessWidget {
                                     padding: EdgeInsets.all(2.0),
                                     elevation: 5,
                                     focusElevation: 5,
-                                    child: Text('Register',
+                                    child: Text(
+                                        AppLocalizations.of(context).register,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline4),
@@ -224,13 +230,14 @@ class CampaignLoginScreen extends StatelessWidget {
                                           baseColor: globals.primaryColor,
                                           highlightColor: globals.grey,
                                           child: Text(
-                                            ('Login'),
+                                            (AppLocalizations.of(context)
+                                                .login),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline4,
                                           ))
                                       : Text(
-                                          ('Login'),
+                                          (AppLocalizations.of(context).login),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline4,

@@ -1,9 +1,11 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,6 +16,8 @@ class CampaignRegisterAccountScreenState extends BaseState {
   CampaignService campaignService = locator<CampaignService>();
   NavigationService navigationService = locator<NavigationService>();
   SharedService sharedService = locator<SharedService>();
+  WalletDataBaseService walletDataBaseService =
+      locator<WalletDataBaseService>();
   BuildContext context;
   bool passwordMatch;
   final emailTextController = TextEditingController();
@@ -25,6 +29,18 @@ class CampaignRegisterAccountScreenState extends BaseState {
   bool isPasswordTextVisible = false;
   CampaignUserData userData;
 
+  init() async {
+    await getExgWalletAddr();
+  }
+
+  // Get exg wallet address
+  getExgWalletAddr() async {
+    await walletDataBaseService.getBytickerName('EXG').then((res) {
+      exgWalletAddressTextController.text = res.address;
+      log.w('Exg wallet address ${exgWalletAddressTextController.text}');
+    });
+  }
+
   Future<CampaignUserData> register(User user) async {
     setBusy(true);
     await campaignService
@@ -35,8 +51,9 @@ class CampaignRegisterAccountScreenState extends BaseState {
       String error = res['message'];
       if (res != null && (error == null || error == '')) {
         sharedService.alertResponseWithPath(
-            'Registration Successful',
-            'Please check your email to activate your account',
+            AppLocalizations.of(context).registrationSuccessful,
+            AppLocalizations.of(context)
+                .pleaseCheckYourEmailToActivateYourAccount,
             '/campaignLogin');
         // await campaignService.saveCampaignUserDataLocally(loginToken, userData);
         // navigationService.navigateTo('/campaignDashboard', arguments: userData);
@@ -57,15 +74,16 @@ class CampaignRegisterAccountScreenState extends BaseState {
     setBusy(true);
     matchPassword();
     if (emailTextController.text.isEmpty) {
-      setErrorMessage('Please enter your email address');
+      setErrorMessage(AppLocalizations.of(context).pleaseEnterYourEmailAddress);
     } else if (passwordTextController.text.isEmpty) {
-      setErrorMessage('Please fill your password');
+      setErrorMessage(AppLocalizations.of(context).pleaseFillYourPassword);
     } else if (confirmPasswordTextController.text.isEmpty) {
-      setErrorMessage('Confirm password field is empty');
+      setErrorMessage(AppLocalizations.of(context).confirmPasswordFieldIsEmpty);
     } else if (exgWalletAddressTextController.text.isEmpty) {
-      setErrorMessage('Exg wallet address is required');
+      setErrorMessage(AppLocalizations.of(context).exgWalletAddressIsRequired);
     } else if (!passwordMatch) {
-      setErrorMessage('Both passwords should match');
+      setErrorMessage(
+          AppLocalizations.of(context).bothPasswordFieldsShouldMatch);
     } else {
       setErrorMessage('');
       user = new User(

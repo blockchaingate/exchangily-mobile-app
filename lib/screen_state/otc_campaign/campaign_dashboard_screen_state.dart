@@ -18,10 +18,10 @@ class CampaignDashboardScreenState extends BaseState {
       locator<CampaignUserDatabaseService>();
   CampaignUserData userData;
   String campaignName = '';
-  final List<String> campaignLevelsList = ['Bronze', 'Gold', 'Diamond'];
-  final List<int> campaignLevelsColor = [0xff696969, 0xffE6BE8A, 0xffffffff];
+
+  final List<int> memberLevelsColorList = [0xff696969, 0xffE6BE8A, 0xffffffff];
   String memberLevel = '';
-  int levelTextColor = 0xff696969;
+  int memberLevelTextColor = 0xff696969;
   double myTotalInvestmentValue = 0;
   double myTotalInvestmentQuantity = 0;
   double myTotalReward = 0;
@@ -63,6 +63,38 @@ class CampaignDashboardScreenState extends BaseState {
     navigationService.navigateTo('/campaignLogin');
   }
 
+  /*-------------------------------------------------------------------------------------
+                                  Get Member Profile By Token
+-------------------------------------------------------------------------------------*/
+
+  myProfile(CampaignUserData userData) async {
+    setBusy(true);
+    await campaignService.getMemberProfile(userData).then((res) {
+      if (res != null) {
+        log.w(res);
+        memberLevel = res['membership'];
+        assignColorAccordingToMemberLevel(memberLevel);
+      } else {
+        log.w(' In myProfile else');
+        setBusy(false);
+      }
+    }).catchError((err) {
+      log.e(err);
+      setBusy(false);
+    });
+    setBusy(false);
+  }
+
+  assignColorAccordingToMemberLevel(memberLevel) {
+    if (memberLevel == 'gold') {
+      memberLevelTextColor = 0xffE6BE8A;
+    } else if (memberLevel == 'diamond') {
+      memberLevelTextColor = 0xffffffff;
+    } else {
+      memberLevelTextColor = 0xff696969;
+    }
+  }
+
 /*-------------------------------------------------------------------------------------
                                   Get Member Referrals By MemberID
 -------------------------------------------------------------------------------------*/
@@ -98,11 +130,6 @@ class CampaignDashboardScreenState extends BaseState {
     setErrorMessage('fetching your rewards');
     await campaignService.getRewardById(userData).then((res) {
       if (res != null) {
-        int level = res['_body']['myLevel'];
-        memberLevel = campaignLevelsList[level];
-        levelTextColor = campaignLevelsColor[level];
-        log.e(memberLevel);
-        log.e(levelTextColor.toString());
         // if i convert and assign the value directly to double variable then i get cast error so this is the solution
         var x = res['_body']['myselfValue'];
         myTotalInvestmentValue = x.toDouble();

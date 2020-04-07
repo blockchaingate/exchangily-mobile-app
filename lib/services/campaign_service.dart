@@ -37,6 +37,8 @@ class CampaignService {
   static const memberReferralsUrl = BASE_URL + 'campaign-referral/referrals/';
   static const memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
   static const rewardsUrl = BASE_URL + 'campaign-order/rewards';
+  static const memberProfileUrl = BASE_URL + 'campaign-order/profile';
+
   CampaignUserData userData;
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
@@ -251,6 +253,23 @@ class CampaignService {
       return json;
     } catch (err) {
       log.e('In getRewardById catch $err');
+    }
+  }
+
+/*-------------------------------------------------------------------------------------
+                                Get Member Profile By Token
+-------------------------------------------------------------------------------------*/
+
+  Future getMemberProfile(CampaignUserData userData) async {
+    Map<String, String> headers = {'x-access-token': userData.token};
+    try {
+      var response = await client.get(memberProfileUrl, headers: headers);
+      var json = jsonDecode(response.body);
+      log.w('getMemberProfile $json');
+
+      return json['_body'];
+    } catch (err) {
+      log.e('In getMemberProfile catch $err');
     }
   }
 

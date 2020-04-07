@@ -193,13 +193,14 @@ class CampaignPaymentScreenState extends BaseState {
     await campaignService.createCampaignOrder(campaignOrder).then((res) async {
       log.w(res);
       if (res == null) {
-        setErrorMessage('Server error, Please try again later.');
+        setErrorMessage(AppLocalizations.of(context).serverError);
         return false;
       } else if (res['message'] != null) {
-        setErrorMessage('Create order failed');
+        setErrorMessage(AppLocalizations.of(context).createOrderFailed);
       } else {
         await getCampaignOrdeList();
-        sharedService.alertResponse('Success', 'Your order has been created');
+        sharedService.alertResponse(AppLocalizations.of(context).success,
+            AppLocalizations.of(context).yourOrderHasBeenCreated);
       }
     }).catchError((err) => log.e('Campaign service buying coin catch $err'));
     setBusy(false);
@@ -240,7 +241,7 @@ class CampaignPaymentScreenState extends BaseState {
         setBusy(false);
       } else {
         log.e('Api result null');
-        setErrorMessage('Could not load orders, Please try again later');
+        setErrorMessage(AppLocalizations.of(context).loadOrdersFailed);
         setBusy(false);
       }
     }).catchError((err) {
@@ -253,7 +254,7 @@ class CampaignPaymentScreenState extends BaseState {
   checkFields(context) async {
     log.i('checking fields');
     if (sendAmountTextController.text == '' || _groupValue == null) {
-      setErrorMessage('Please fill all the fields');
+      setErrorMessage(AppLocalizations.of(context).pleaseFillAllTheFields);
       return;
     }
     setErrorMessage('');
@@ -263,7 +264,7 @@ class CampaignPaymentScreenState extends BaseState {
         amount > walletInfo.availableBalance) {
       setErrorMessage(AppLocalizations.of(context).pleaseEnterValidNumber);
       sharedService.alertResponse(AppLocalizations.of(context).invalidAmount,
-          'Please enter the amount equals or less than your available wallet balance');
+          AppLocalizations.of(context).pleaseEnterAmountLessThanYourWallet);
     } else {
       FocusScope.of(context).requestFocus(FocusNode());
       await verifyWalletPassword(amount);
@@ -299,7 +300,7 @@ class CampaignPaymentScreenState extends BaseState {
     checkSendAmount = res;
     log.w('check send amount $checkSendAmount');
     !checkSendAmount
-        ? setErrorMessage('Please enter the valid amount')
+        ? setErrorMessage(AppLocalizations.of(context).invalidAmount)
         : setErrorMessage('');
     setState(ViewState.Idle);
   }

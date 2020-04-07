@@ -24,8 +24,8 @@ class CampaignPaymentScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             centerTitle: true,
-            title:
-                Text('Payment', style: Theme.of(context).textTheme.headline3)),
+            title: Text(AppLocalizations.of(context).payment,
+                style: Theme.of(context).textTheme.headline3)),
         // Scaffold body container
         body: Column(
             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -45,7 +45,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                         Expanded(
                             flex: 2,
                             child: Text(
-                              'Amount',
+                              AppLocalizations.of(context).amount,
                               style: Theme.of(context).textTheme.headline5,
                             )),
                         Expanded(
@@ -69,7 +69,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                   filled: true,
                                   fillColor: globals.walletCardColor,
                                   isDense: true,
-                                  hintText: 'Enter the amount',
+                                  hintText:
+                                      AppLocalizations.of(context).enterAmount,
                                   hintStyle: Theme.of(context)
                                       .textTheme
                                       .headline6
@@ -91,7 +92,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            'Payment Type',
+                            AppLocalizations.of(context).amount,
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.start,
                           ),
@@ -161,7 +162,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    'Bank Details',
+                                    AppLocalizations.of(context).bankDetails,
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   ),
@@ -172,7 +173,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                    'Bank Name',
+                                    AppLocalizations.of(context).bankName,
                                     textAlign: TextAlign.start,
                                   ),
                                   Text('Key Bank')
@@ -182,7 +183,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text('Routing Number'),
+                                  Text(
+                                      AppLocalizations.of(context).bankDetails),
                                   Text('041001039')
                                 ],
                               ),
@@ -213,7 +215,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               Text(
-                                'USDT Recieve Address',
+                                'USDT' +
+                                    AppLocalizations.of(context).recieveAddress,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5
@@ -240,7 +243,13 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                 flex: 6,
                                                 child: Center(
                                                   child: Text(
-                                                    'Available ${model.walletInfo.tickerName} Balance',
+                                                    AppLocalizations.of(context)
+                                                            .available +
+                                                        model.walletInfo
+                                                            .tickerName +
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .balance,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodyText1,
@@ -343,7 +352,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Center(
-                        child: Text('Order Information',
+                        child: Text(
+                            AppLocalizations.of(context).orderInformation,
                             style: Theme.of(context).textTheme.headline4)),
                     UIHelper.verticalSpaceSmall,
                     Row(
@@ -351,17 +361,17 @@ class CampaignPaymentScreen extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           flex: 3,
-                          child: Text('Time',
+                          child: Text(AppLocalizations.of(context).date,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.bodyText1),
                         ),
                         Expanded(
                             flex: 2,
-                            child: Text('Quantiy',
+                            child: Text(AppLocalizations.of(context).quantity,
                                 style: Theme.of(context).textTheme.bodyText1)),
                         Expanded(
                           flex: 1,
-                          child: Text('Status',
+                          child: Text(AppLocalizations.of(context).status,
                               style: Theme.of(context).textTheme.bodyText1),
                         )
                       ],

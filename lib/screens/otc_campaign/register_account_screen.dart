@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/register_account_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -12,11 +13,13 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScreen<CampaignRegisterAccountScreenState>(
-      onModelReady: (model) {},
+      onModelReady: (model) async {
+        await model.init();
+      },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           title: Text(
-            'Register',
+            AppLocalizations.of(context).register,
             style: Theme.of(context).textTheme.headline3,
           ),
           centerTitle: true,
@@ -50,9 +53,12 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                     suffixIcon: Icon(
                                       Icons.email,
                                       size: 16,
-                                      semanticLabel: 'enter your email',
+                                      semanticLabel:
+                                          AppLocalizations.of(context)
+                                              .enterYourEmail,
                                     ),
-                                    labelText: 'Enter your email',
+                                    labelText: AppLocalizations.of(context)
+                                        .enterYourEmail,
                                     labelStyle:
                                         Theme.of(context).textTheme.headline6),
                                 keyboardType: TextInputType.emailAddress,
@@ -75,12 +81,14 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                         suffixIcon: IconButton(
                                           icon: Icon(Icons.enhanced_encryption),
                                           iconSize: 16,
-                                          tooltip: 'Click to see the password',
+                                          tooltip: AppLocalizations.of(context)
+                                              .showPassword,
                                           onPressed: () {
                                             model.showPasswordText(false);
                                           },
                                         ),
-                                        labelText: 'Enter password',
+                                        labelText: AppLocalizations.of(context)
+                                            .enterPassword,
                                         labelStyle: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -98,12 +106,14 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                         suffixIcon: IconButton(
                                           icon: Icon(Icons.remove_red_eye),
                                           iconSize: 16,
-                                          tooltip: 'Click to see the password',
+                                          tooltip: AppLocalizations.of(context)
+                                              .showPassword,
                                           onPressed: () {
                                             model.showPasswordText(true);
                                           },
                                         ),
-                                        labelText: 'Enter password',
+                                        labelText: AppLocalizations.of(context)
+                                            .enterPassword,
                                         labelStyle: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -126,7 +136,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
-                                        labelText: 'Confirm your password',
+                                        labelText: AppLocalizations.of(context)
+                                            .confirmPassword,
                                         labelStyle: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -142,7 +153,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       color: globals.white54,
                                     ),
                                     decoration: InputDecoration(
-                                        labelText: 'Confirm your password',
+                                        labelText: AppLocalizations.of(context)
+                                            .confirmPassword,
                                         labelStyle: Theme.of(context)
                                             .textTheme
                                             .headline6),
@@ -173,7 +185,8 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                         model.pasteClipboardText();
                                       },
                                     ),
-                                    labelText: 'Exg Wallet Address',
+                                    labelText: AppLocalizations.of(context)
+                                        .pasteExgAddress,
                                     labelStyle:
                                         Theme.of(context).textTheme.headline6),
                               ))
@@ -196,9 +209,12 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                     suffixIcon: Icon(
                                       Icons.device_hub,
                                       size: 16,
-                                      semanticLabel: 'referral code',
+                                      semanticLabel:
+                                          AppLocalizations.of(context)
+                                              .referralCode,
                                     ),
-                                    labelText: 'Referral code',
+                                    labelText: AppLocalizations.of(context)
+                                        .referralCode,
                                     labelStyle:
                                         Theme.of(context).textTheme.headline6),
                               ))
@@ -235,7 +251,10 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                 padding: EdgeInsets.all(2.0),
                                 elevation: 5,
                                 focusElevation: 5,
-                                child: Text('Already have an account?',
+                                child: Text(
+                                    AppLocalizations.of(context)
+                                            .alreadyHaveAnAccount +
+                                        '?',
                                     textAlign: TextAlign.center,
                                     style:
                                         Theme.of(context).textTheme.headline4),
@@ -260,13 +279,13 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
                                       baseColor: globals.primaryColor,
                                       highlightColor: globals.grey,
                                       child: Text(
-                                        ('Signup'),
+                                        (AppLocalizations.of(context).signUp),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline4,
                                       ))
                                   : Text(
-                                      ('Signup'),
+                                      (AppLocalizations.of(context).signUp),
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
