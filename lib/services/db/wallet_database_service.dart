@@ -87,11 +87,23 @@ class WalletDataBaseService {
   }
 
   // Get Single Wallet By Name
-  Future getByName(String name) async {
+  Future<WalletInfo> getByName(String name) async {
     final Database db = await _database;
     List<Map> res =
         await db.query(tableName, where: 'name= ?', whereArgs: [name]);
     log.w('ID - $name --- $res');
+    if (res.length > 0) {
+      return WalletInfo.fromJson((res.first));
+    }
+    return null;
+  }
+
+  // Get Single Wallet By tickerName
+  Future<WalletInfo> getBytickerName(String tickerName) async {
+    final Database db = await _database;
+    List<Map> res = await db
+        .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
+    log.w('ID - $tickerName --- $res');
     if (res.length > 0) {
       return WalletInfo.fromJson((res.first));
     }

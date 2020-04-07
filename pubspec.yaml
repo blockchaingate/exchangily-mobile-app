@@ -1,10 +1,10 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.0.12+19
+version: 1.0.13+20
 
 environment:
-  sdk: ">=2.3.2 <3.0.0"
+  sdk: '>=2.3.2 <3.0.0'
 
 dependencies:
   flutter:
@@ -70,7 +70,11 @@ dependencies:
   barcode_scan: 1.0.0
 
   # Flushbar instead of Snackbar for notifications
-  flushbar: ^1.9.1
+  flushbar: ^1.9.0
+  # flushbar:
+  #   git:
+  #     url: git://github.com/valterh4ck3r/flushbar
+  #     ref: master
   decimal: ^0.3.5
 
   # Dependency injection
@@ -101,6 +105,9 @@ dependencies:
   # Pull to refresh
   pull_to_refresh: ^1.5.7
 
+  # Flutter SVG
+  flutter_svg: ^0.17.3+1
+
   # Share files
   share:
     git:
@@ -109,8 +116,8 @@ dependencies:
       ref: master
 
 dev_dependencies:
-  intl_translation: "^0.17.0"
-  flutter_launcher_icons: "^0.7.3"
+  intl_translation: '^0.17.0'
+  flutter_launcher_icons: '^0.7.3'
 
   flutter_test:
     sdk: flutter
@@ -126,9 +133,10 @@ flutter:
     - assets/images/start-page/
     - assets/images/wallet-page/
     - assets/images/otc/
+    - assets/images/otc-campaign/
 
 flutter_icons:
-  image_path: "assets/images/launcher/mobile-icon.png"
+  image_path: 'assets/images/launcher/mobile-icon.png'
   android: true
   ios: true
 

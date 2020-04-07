@@ -13,23 +13,22 @@
 
 import 'dart:async';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/transaction_info.dart';
+import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class TransactionHistoryDatabaseService {
-  final log = getLogger('TransactionHistoryDatabaseService');
+class CampaignUserDatabaseService {
+  final log = getLogger('CampaignUserDatabaseService');
 
-  static final _databaseName = 'transaction_history_database.db';
-  final String tableName = 'transaction_history';
+  static final _databaseName = 'campaign_user_database.db';
+  final String tableName = 'campaign_user_data';
   // database table and column names
   final String columnId = 'id';
-  final String columnTickerName = 'tickerName';
-  final String columnAddress = 'address';
-  final String columnAmount = 'amount';
-  final String columnDate = 'date';
+  final String columnEmail = 'email';
+  final String columnToken = 'token';
+  final String columnReferralCode = 'referralCode';
 
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 6;
   static Future<Database> _database;
   String path = '';
 
@@ -47,16 +46,17 @@ class TransactionHistoryDatabaseService {
     log.e('in on create $db');
     await db.execute(''' CREATE TABLE $tableName
         (
-        $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-        $columnTickerName TEXT,    
-        $columnAddress TEXT,
-        $columnAmount REAL,
-        $columnDate TEXT) ''');
+        $columnId TEXT PRIMARY KEY,
+        $columnEmail TEXT,
+        $columnToken TEXT,
+        $columnReferralCode INT
+        )    
+        ''');
   }
 
   // Get All Records From The Database
 
-  Future<List<TransactionInfo>> getAll() async {
+  Future<List<CampaignUserData>> getAll() async {
     await initDb();
     final Database db = await _database;
     log.w('getall $db');
@@ -64,61 +64,73 @@ class TransactionHistoryDatabaseService {
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
     log.w('res $res');
-    List<TransactionInfo> list = res.isNotEmpty
-        ? res.map((f) => TransactionInfo.fromJson(f)).toList()
+    List<CampaignUserData> list = res.isNotEmpty
+        ? res.map((f) => CampaignUserData.fromJson(f)).toList()
         : [];
     return list;
   }
 
 // Insert Data In The Database
-  Future insert(TransactionInfo transactionHistory) async {
+  Future insert(CampaignUserData campaignUserData) async {
     await initDb();
     final Database db = await _database;
-    int id = await db.insert(tableName, transactionHistory.toJson(),
+    int id = await db.insert(tableName, campaignUserData.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
     return id;
   }
 
-  // Get Single Wallet By Name
-  Future<List<TransactionInfo>> getByName(String name) async {
-    await initDb();
+  // Get User By Id
+  Future getByMemberId(String id) async {
     final Database db = await _database;
     List<Map> res =
-        await db.query(tableName, where: 'tickerName= ?', whereArgs: [name]);
-    log.w('Name - $name --- $res');
-
-    List<TransactionInfo> list = res.isNotEmpty
-        ? res.map((f) => TransactionInfo.fromJson(f)).toList()
-        : [];
-    return list;
-    // return TransactionHistory.fromJson((res.first));
-  }
-
-  // Get Single Wallet By Id
-  Future getById(int id) async {
-    final Database db = await _database;
-    List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
+        await db.query(tableName, where: 'email= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.length > 0) {
-      return TransactionInfo.fromJson((res.first));
+      return CampaignUserData.fromJson((res.first));
     }
     return null;
   }
 
-  // Delete Single Object From Database By Id
-  Future<void> deleteWallet(int id) async {
+// Get User By Email
+  Future getByEmail(String email) async {
+    final Database db = await _database;
+    List<Map> res =
+        await db.query(tableName, where: 'email= ?', whereArgs: [email]);
+    log.w('ID - $email --- $res');
+    if (res.length > 0) {
+      return CampaignUserData.fromJson((res.first));
+    }
+    return null;
+  }
+
+  // Get User By Token
+  Future<CampaignUserData> getUserDataByToken(String token) async {
+    await initDb();
+    final Database db = await _database;
+    log.w('db $db');
+    List<Map> res =
+        await db.query(tableName, where: 'token= ?', whereArgs: [token]);
+    log.w('Login token - $token --- $res');
+    if (res.length > 0) {
+      return CampaignUserData.fromJson((res.first));
+    }
+    return null;
+  }
+
+  // Delete Single Object From Database By email
+  Future<void> deleteUserData(String email) async {
     final db = await _database;
-    await db.delete(tableName, where: "id = ?", whereArgs: [id]);
+    await db.delete(tableName, where: "email = ?", whereArgs: [email]);
   }
 
   // Update database
-  Future<void> update(TransactionInfo transactionHistory) async {
+  Future<void> update(CampaignUserData campaignUserData) async {
     final Database db = await _database;
     await db.update(
       tableName,
-      transactionHistory.toJson(),
-      where: "id = ?",
-      whereArgs: [transactionHistory.id],
+      campaignUserData.toJson(),
+      where: "email = ?",
+      whereArgs: [campaignUserData.email],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
@@ -135,12 +147,4 @@ class TransactionHistoryDatabaseService {
     await deleteDatabase(path);
     _database = null;
   }
-
-  // Storing TxID
-  // Future insertTxId(String txId) async{
-  //   final Database db = await _database;
-  //   int id = await db.insert('transaction', txid,
-  //       conflictAlgorithm: ConflictAlgorithm.replace);
-  //   return id;
-  // }
 }

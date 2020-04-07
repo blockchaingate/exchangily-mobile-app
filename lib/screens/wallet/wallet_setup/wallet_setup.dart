@@ -49,7 +49,8 @@ class WalletSetupScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               // Logo Container
-              UIHelper.horizontalSpaceLarge,
+              UIHelper.verticalSpaceLarge,
+              UIHelper.verticalSpaceLarge,
               Container(
                 height: 50,
                 child: Image.asset('assets/images/start-page/logo.png'),
@@ -63,14 +64,14 @@ class WalletSetupScreen extends StatelessWidget {
                         .headline5
                         .copyWith(fontWeight: FontWeight.normal),
                   )),
-              UIHelper.horizontalSpaceLarge,
+              UIHelper.verticalSpaceLarge,
               // Middle Graphics Container
               Container(
                 padding: EdgeInsets.all(25),
                 child:
                     Image.asset('assets/images/start-page/middle-design.png'),
               ),
-              UIHelper.horizontalSpaceLarge,
+              UIHelper.verticalSpaceLarge,
 
               // Button Container
               model.state == ViewState.Busy
