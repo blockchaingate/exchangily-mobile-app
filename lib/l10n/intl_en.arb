@@ -917,5 +917,365 @@
     "description": "wallet_features_transaction_history",
     "type": "text",
     "placeholders": {}
+  },
+  "placeOrderTransactionFailed": "Place order transaction failed",
+  "@placeOrderTransactionFailed": {
+    "description": "place_order_transaction_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notice": "Notice",
+  "@notice": {
+    "description": "notice",
+    "type": "text",
+    "placeholders": {}
+  },
+  "testVersion": "You are using the test version",
+  "@testVersion": {
+    "description": "test_version",
+    "type": "text",
+    "placeholders": {}
+  },
+  "campaignInstructions": "Campaign Instructions",
+  "@campaignInstructions": {
+    "description": "campaign_instructions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tapHereToEnterInCampaign": "Tap here to enter in campaign",
+  "@tapHereToEnterInCampaign": {
+    "description": "campaign_enter",
+    "type": "text",
+    "placeholders": {}
+  },
+  "login": "Login",
+  "@login": {
+    "description": "campaign_login",
+    "type": "text",
+    "placeholders": {}
+  },
+  "email": "Email",
+  "@email": {
+    "description": "campaign_email",
+    "type": "text",
+    "placeholders": {}
+  },
+  "password": "Password",
+  "@password": {
+    "description": "campaign_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "register": "Register",
+  "@register": {
+    "description": "campaign_register",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clickToSeeThePassword": "Click to see the password",
+  "@clickToSeeThePassword": {
+    "description": "campaign_click_to_see_the_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterYourEmail": "Enter your email",
+  "@enterYourEmail": {
+    "description": "campaign_register_email",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pasteExgAddress": "Tap on wallet icon to paste Exg Wallet Address",
+  "@pasteExgAddress": {
+    "description": "campaign_register_paste_exg_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "referralCode": "Referral Code",
+  "@referralCode": {
+    "description": "campaign_register_referral_code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alreadyHaveAnAccount": "Already have an account",
+  "@alreadyHaveAnAccount": {
+    "description": "campaign_register_already_have_an_account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "signUp": "Sign Up",
+  "@signUp": {
+    "description": "campaign_register_sign_up",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showPassword": "Show password",
+  "@showPassword": {
+    "description": "campaign_register_show_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "registrationSuccessful": "Registration Successful",
+  "@registrationSuccessful": {
+    "description": "campaign_register_registration_successful",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseCheckYourEmailToActivateYourAccount": "Please check your email to activate your account",
+  "@pleaseCheckYourEmailToActivateYourAccount": {
+    "description": "campaign_register_check_email_to_activate_account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterYourEmailAddress": "Please enter your email address",
+  "@pleaseEnterYourEmailAddress": {
+    "description": "campaign_register_please_enter_your_email_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseFillYourPassword": "Please fill your password",
+  "@pleaseFillYourPassword": {
+    "description": "campaign_register_please_enter_your_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPasswordFieldIsEmpty": "Confirm password field is empty",
+  "@confirmPasswordFieldIsEmpty": {
+    "description": "campaign_register_Confirm_password_field_is_empty",
+    "type": "text",
+    "placeholders": {}
+  },
+  "exgWalletAddressIsRequired": "Exg wallet address is required",
+  "@exgWalletAddressIsRequired": {
+    "description": "campaign_register_exg_wallet_address_is_required",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bothPasswordFieldsShouldMatch": "Both password fields should match",
+  "@bothPasswordFieldsShouldMatch": {
+    "description": "campaign_register_both_password_fields_should_match",
+    "type": "text",
+    "placeholders": {}
+  },
+  "checkingAccountDetails": "Checking account details",
+  "@checkingAccountDetails": {
+    "description": "campaign_login_checking_login_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "campaign_dashboard_welcome",
+    "type": "text",
+    "placeholders": {}
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "campaign_dashboard_logout",
+    "type": "text",
+    "placeholders": {}
+  },
+  "event": "Event",
+  "@event": {
+    "description": "campaign_event",
+    "type": "text",
+    "placeholders": {}
+  },
+  "readCampaignInstructions": "Read Campaign Instructions",
+  "@readCampaignInstructions": {
+    "description": "campaign_read_campaign_instructions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myReferralCode": "My Referral Code",
+  "@myReferralCode": {
+    "description": "campaign_my_referral_code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "level": "Level",
+  "@level": {
+    "description": "campaign_dashboard_level",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myTotalInvestment": "My Total Investment",
+  "@myTotalInvestment": {
+    "description": "campaign_dashboard_my_total_investment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalInvestmentQuantity": "Total Investment Quantity",
+  "@totalInvestmentQuantity": {
+    "description": "campaign_dashboard_total_investment_quantity",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myTotalReward": "My Total Reward",
+  "@myTotalReward": {
+    "description": "campaign_dashboard_my_total_reward",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamsTotalValue": "Teams Total Value",
+  "@teamsTotalValue": {
+    "description": "campaign_dashboard_teams_total_value",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myReferrals": "My Referrals",
+  "@myReferrals": {
+    "description": "campaign_dashboard_my_referrals",
+    "type": "text",
+    "placeholders": {}
+  },
+  "payment": "Payment",
+  "@payment": {
+    "description": "campaign_payment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentType": "Payment Type",
+  "@paymentType": {
+    "description": "campaign_payment_type",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bankDetails": "Bank Details",
+  "@bankDetails": {
+    "description": "campaign_bank_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bankName": "Bank Name",
+  "@bankName": {
+    "description": "campaign_bank_name",
+    "type": "text",
+    "placeholders": {}
+  },
+  "routingNumber": "Routing Number",
+  "@routingNumber": {
+    "description": "campaign_routing_number",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bankAccount": "Bank Account",
+  "@bankAccount": {
+    "description": "campaign_bank_account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "recieveAddress": "Recieve Address",
+  "@recieveAddress": {
+    "description": "campaign_recieve_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "balance": "Balance",
+  "@balance": {
+    "description": "campaign_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderInformation": "Order Information",
+  "@orderInformation": {
+    "description": "campaign_order_information",
+    "type": "text",
+    "placeholders": {}
+  },
+  "status": "Status",
+  "@status": {
+    "description": "campaign_status",
+    "type": "text",
+    "placeholders": {}
+  },
+  "waiting": "Waiting",
+  "@waiting": {
+    "description": "campaign_waiting",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paid": "Paid",
+  "@paid": {
+    "description": "campaign_paid",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentReceived": "Payment Received",
+  "@paymentReceived": {
+    "description": "campaign_payment_received",
+    "type": "text",
+    "placeholders": {}
+  },
+  "failed": "Failed",
+  "@failed": {
+    "description": "campaign_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCancelled": "Order Cancelled",
+  "@orderCancelled": {
+    "description": "campaign_order_cancelled",
+    "type": "text",
+    "placeholders": {}
+  },
+  "createOrderFailed": "Create order failed",
+  "@createOrderFailed": {
+    "description": "campaign_create_order_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "success": "Success",
+  "@success": {
+    "description": "campaign_success",
+    "type": "text",
+    "placeholders": {}
+  },
+  "yourOrderHasBeenCreated": "Your order has been created",
+  "@yourOrderHasBeenCreated": {
+    "description": "campaign_your_order_has_been_created",
+    "type": "text",
+    "placeholders": {}
+  },
+  "loadOrdersFailed": "Could not load orders, Please try again later",
+  "@loadOrdersFailed": {
+    "description": "campaign_load_orders_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseFillAllTheFields": "Please fill all the fields",
+  "@pleaseFillAllTheFields": {
+    "description": "campaign_please_fill_all_the_fields",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterAmountLessThanYourWallet": "Please enter the amount equals or less than your available wallet balance",
+  "@pleaseEnterAmountLessThanYourWallet": {
+    "description": "campaign_please_enter_amount_less_than_your_wallet_bal",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myRewardDetails": "My Reward Details",
+  "@myRewardDetails": {
+    "description": "campaign_my_reward_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "referrals": "Referrals",
+  "@referrals": {
+    "description": "campaign_referrals",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalAmount": "Total Amount",
+  "@totalAmount": {
+    "description": "campaign_total_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rewards": "Rewards",
+  "@rewards": {
+    "description": "campaign_rewards",
+    "type": "text",
+    "placeholders": {}
   }
 }
