@@ -880,5 +880,194 @@
         "description": "wallet_features_transaction_history",
         "type": "text",
         "placeholders": {}
-    }
+    },
+"placeOrderTransactionFailed": "下單失敗",
+  "@placeOrderTransactionFailed": {
+    "description": "place_order_transaction_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "notice": "備註",
+  "@notice": {
+    "description": "notice",
+    "type": "text",
+    "placeholders": {}
+  },
+  "testVersion": "您現在用的是測試版",
+  "@testVersion": {
+    "description": "test_version",
+    "type": "text",
+    "placeholders": {}
+  },
+  "campaignInstructions": "推廣獎勵指南",
+  "@campaignInstructions": {
+    "description": "campaign_instructions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tapHereToEnterInCampaign": "點擊這裡參與推廣活動",
+  "@tapHereToEnterInCampaign": {
+    "description": "campaign_enter",
+    "type": "text",
+    "placeholders": {}
+  },
+  "login": "登錄",
+  "@login": {
+    "description": "campaign_login",
+    "type": "text",
+    "placeholders": {}
+  },
+  "email": "Email",
+  "@email": {
+    "description": "campaign_email",
+    "type": "text",
+    "placeholders": {}
+  },
+  "password": "密碼",
+  "@password": {
+    "description": "campaign_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "register": "註冊",
+  "@register": {
+    "description": "campaign_register",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clickToSeeThePassword": "點擊顯示密碼",
+  "@clickToSeeThePassword": {
+    "description": "campaign_click_to_see_the_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enterYourEmail": "輸入您的email",
+  "@enterYourEmail": {
+    "description": "campaign_register_email",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pasteExgAddress": "點擊錢包圖標粘貼EXG地址",
+  "@pasteExgAddress": {
+    "description": "campaign_register_paste_exg_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "referralCode": "推廣碼",
+  "@referralCode": {
+    "description": "campaign_register_referral_code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "alreadyHaveAnAccount": "賬戶已存在",
+  "@alreadyHaveAnAccount": {
+    "description": "campaign_register_already_have_an_account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "signUp": "註冊",
+  "@signUp": {
+    "description": "campaign_register_sign_up",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showPassword": "顯示密碼",
+  "@showPassword": {
+    "description": "campaign_register_show_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "registrationSuccessful": "註冊成功",
+  "@registrationSuccessful": {
+    "description": "campaign_register_registration_successful",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseCheckYourEmailToActivateYourAccount": "請查看Email確認郵箱地址",
+  "@pleaseCheckYourEmailToActivateYourAccount": {
+    "description": "campaign_register_check_email_to_activate_account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterYourEmailAddress": "輸入Email地址",
+  "@pleaseEnterYourEmailAddress": {
+    "description": "campaign_register_please_enter_your_email_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseFillYourPassword": "輸入密碼",
+  "@pleaseFillYourPassword": {
+    "description": "campaign_register_please_enter_your_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPasswordFieldIsEmpty": "確認密碼為空",
+  "@confirmPasswordFieldIsEmpty": {
+    "description": "campaign_register_Confirm_password_field_is_empty",
+    "type": "text",
+    "placeholders": {}
+  },
+  "exgWalletAddressIsRequired": "需要填入錢包EXG地址",
+  "@exgWalletAddressIsRequired": {
+    "description": "campaign_register_exg_wallet_address_is_required",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bothPasswordFieldsShouldMatch": "密碼不匹配",
+  "@bothPasswordFieldsShouldMatch": {
+    "description": "campaign_register_both_password_fields_should_match",
+    "type": "text",
+    "placeholders": {}
+  },
+  "checkingAccountDetails": "檢查帳戶詳情",
+  "@checkingAccountDetails": {
+    "description": "campaign_login_checking_login_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "welcome": "歡迎",
+  "@welcome": {
+    "description": "campaign_dashboard_welcome",
+    "type": "text",
+    "placeholders": {}
+  },
+  "logout": "退出登錄",
+  "@logout": {
+    "description": "campaign_dashboard_logout",
+    "type": "text",
+    "placeholders": {}
+  },
+  "event": "活動",
+  "@event": {
+    "description": "campaign_event",
+    "type": "text",
+    "placeholders": {}
+  },
+  "readCampaignInstructions": "閱讀推薦活動指南",
+  "@readCampaignInstructions": {
+    "description": "campaign_read_campaign_instructions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myReferralCode": "我的推薦碼",
+  "@myReferralCode": {
+    "description": "campaign_my_referral_code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "level": "級別",
+  "@level": {
+    "description": "campaign_dashboard_level",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myTotalInvestment": "我的總投資",
+  "@myTotalInvestment": {
+    "description": "campaign_dashboard_my_total_investment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalInvestmentQuantity": "我的購幣總量",
+  "@totalInvestmentQuantity": {
+    "description": "campaign_das
 }
