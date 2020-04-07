@@ -1070,4 +1070,17 @@
   "totalInvestmentQuantity": "我的購幣總量",
   "@totalInvestmentQuantity": {
     "description": "campaign_das
+},
+"myInvestmentWithoutRewards": "我的投資",
+  "@myInvestmentWithoutRewards": {
+    "description": "campaign_dashboard_my_investment_without_rewards",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bankWireDetails": "銀行電匯信息",
+  "@bankWireDetails": {
+    "description": "campaign_bank__wire_details",
+    "type": "text",
+    "placeholders": {}
+  }
 }

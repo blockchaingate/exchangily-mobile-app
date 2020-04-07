@@ -1270,6 +1270,18 @@
     "description": "campaign_rewards",
     "type": "text",
     "placeholders": {}
+  },
+  "myInvestmentWithoutRewards": "我的投资",
+  "@myInvestmentWithoutRewards": {
+    "description": "campaign_dashboard_my_investment_without_rewards",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bankWireDetails": "银行电汇信息",
+  "@bankWireDetails": {
+    "description": "campaign_bank__wire_details",
+    "type": "text",
+    "placeholders": {}
   }
 
 
