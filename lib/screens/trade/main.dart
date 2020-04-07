@@ -258,7 +258,7 @@ class _TradeState extends State<Trade> with TradeService {
                           ? CupertinoActivityIndicator()
                           : CircularProgressIndicator())))
         ]),
-        bottomNavigationBar: AppBottomNav(count: 2));
+        bottomNavigationBar: BottomNavBar(count: 2));
   }
 
   @override

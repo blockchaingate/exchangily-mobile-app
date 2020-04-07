@@ -78,7 +78,7 @@ class DepositScreenState extends BaseState {
     var amount = double.tryParse(myController.text);
     log.i(amount);
     if (amount == null || amount > walletInfo.availableBalance || amount == 0) {
-      sharedService.alertError(AppLocalizations.of(context).invalidAmount,
+      sharedService.alertResponse(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber);
       setState(ViewState.Idle);
       return;

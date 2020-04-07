@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -19,13 +21,14 @@ import '../shared/globals.dart' as globals;
 
 class SharedService {
   BuildContext context;
+  NavigationService navigationService = locator<NavigationService>();
 
   Future<bool> closeApp() async {
     return showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
-                elevation: 5,
+                elevation: 10,
                 backgroundColor: globals.walletCardColor.withOpacity(0.85),
                 titleTextStyle: Theme.of(context)
                     .textTheme
@@ -61,20 +64,23 @@ class SharedService {
         false;
   }
 
-  Future<bool> alertError(String title, String message) async {
+  Future<bool> alertResponse(String title, String message) async {
     return showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
-                elevation: 5,
+                elevation: 10,
                 backgroundColor: globals.walletCardColor.withOpacity(0.95),
                 title: Text(title),
                 titleTextStyle: Theme.of(context).textTheme.headline4,
                 contentTextStyle: TextStyle(color: globals.grey),
-                content: Text(
-                  // add here cupertino widget to check in these small widgets first then the entire app
-                  message,
-                  style: Theme.of(context).textTheme.headline5,
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    // add here cupertino widget to check in these small widgets first then the entire app
+                    message,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
                 ),
                 actions: <Widget>[
                   Center(
@@ -86,6 +92,47 @@ class SharedService {
                       ),
                       onPressed: () {
                         Navigator.of(context).pop(false);
+                      },
+                    ),
+                  ),
+                ],
+              );
+            }) ??
+        false;
+  }
+
+  // Alert response with path
+  Future<bool> alertResponseWithPath(
+      String title, String message, String path) async {
+    return showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                elevation: 10,
+                backgroundColor: globals.walletCardColor.withOpacity(0.95),
+                title: Text(title),
+                titleTextStyle: Theme.of(context).textTheme.headline4,
+                contentTextStyle: TextStyle(color: globals.grey),
+                content: Padding(
+                  padding: const EdgeInsets.only(top: 15.0),
+                  child: Text(
+                    // add here cupertino widget to check in these small widgets first then the entire app
+                    message,
+                    style: Theme.of(context).textTheme.headline5,
+                  ),
+                ),
+                actions: <Widget>[
+                  Center(
+                    child: FlatButton(
+                      padding: EdgeInsets.all(0),
+                      child: Text(
+                        AppLocalizations.of(context).close,
+                        style: TextStyle(color: globals.grey, fontSize: 14),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pop(false);
+                        await navigationService.navigateTo(path);
+                        print('test');
                       },
                     ),
                   ),

@@ -119,13 +119,14 @@ class WalletDashboardScreenState extends BaseState {
         walletLockedBal = balance['lockbalance'];
       }).timeout(Duration(seconds: 25), onTimeout: () async {
         setState(ViewState.Idle);
-        sharedService.alertError(
+        sharedService.alertResponse(
             '', AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
         await retrieveWallets();
         log.e('Timeout');
       }).catchError((error) async {
         setState(ViewState.Idle);
-        sharedService.alertError('', AppLocalizations.of(context).genericError);
+        sharedService.alertResponse(
+            '', AppLocalizations.of(context).genericError);
         await retrieveWallets();
         log.e('Something went wrong  - $error');
       });
@@ -162,7 +163,7 @@ class WalletDashboardScreenState extends BaseState {
 
 // test version pop up
   debugVersionPopup() {
-    sharedService.alertError(AppLocalizations.of(context).notice,
+    sharedService.alertResponse(AppLocalizations.of(context).notice,
         AppLocalizations.of(context).testVersion);
   }
   // Get Exchange Assets

@@ -17,17 +17,16 @@ import 'package:exchangilymobileapp/models/transaction_info.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-class TransactionHistoryDatabaseService {
+class CampaignOrderDatabaseService {
   final log = getLogger('TransactionHistoryDatabaseService');
 
-  static final _databaseName = 'transaction_history_database.db';
-  final String tableName = 'transaction_history';
+  static final _databaseName = 'campaign_order_database.db';
+  final String tableName = 'campaign_order';
   // database table and column names
   final String columnId = 'id';
-  final String columnTickerName = 'tickerName';
-  final String columnAddress = 'address';
-  final String columnAmount = 'amount';
   final String columnDate = 'date';
+  final String columnAmount = 'amount';
+  final String columnStatus = 'status';
 
   static final _databaseVersion = 1;
   static Future<Database> _database;
@@ -48,10 +47,10 @@ class TransactionHistoryDatabaseService {
     await db.execute(''' CREATE TABLE $tableName
         (
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
-        $columnTickerName TEXT,    
-        $columnAddress TEXT,
+        $columnDate TEXT
         $columnAmount REAL,
-        $columnDate TEXT) ''');
+        $columnStatus REAL,
+        ) ''');
   }
 
   // Get All Records From The Database
@@ -79,7 +78,7 @@ class TransactionHistoryDatabaseService {
     return id;
   }
 
-  // Get Single Wallet By Name
+  // Get Single transaction By Name
   Future<List<TransactionInfo>> getByName(String name) async {
     await initDb();
     final Database db = await _database;
@@ -94,7 +93,7 @@ class TransactionHistoryDatabaseService {
     // return TransactionHistory.fromJson((res.first));
   }
 
-  // Get Single Wallet By Id
+  // Get Single transaction By Id
   Future getById(int id) async {
     final Database db = await _database;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
@@ -135,12 +134,4 @@ class TransactionHistoryDatabaseService {
     await deleteDatabase(path);
     _database = null;
   }
-
-  // Storing TxID
-  // Future insertTxId(String txId) async{
-  //   final Database db = await _database;
-  //   int id = await db.insert('transaction', txid,
-  //       conflictAlgorithm: ConflictAlgorithm.replace);
-  //   return id;
-  // }
 }

@@ -65,7 +65,7 @@ class TransactionHistory extends StatelessWidget {
                                             color: globals.primaryColor),
                                       ),
                                       Text(
-                                        transaction.date,
+                                        transaction.dateCreated,
                                         style: TextStyle(
                                             fontSize: 14, color: globals.white),
                                       ),

@@ -12,6 +12,11 @@
 */
 
 import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/otc_campaign/instructions_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/otc_campaign/register_account_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/trade/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_screen_state.dart';
@@ -21,23 +26,27 @@ import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_screen_state.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/deposit_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 GetIt locator = GetIt();
 
-void serviceLocator() {
+Future serviceLocator() async {
   // singleton returns the old instance
   locator.registerLazySingleton(() => WalletService());
   locator.registerLazySingleton(() => VaultService());
@@ -47,6 +56,13 @@ void serviceLocator() {
   locator.registerLazySingleton(() => SharedService());
   locator.registerLazySingleton(() => TradeService());
   locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
+  locator.registerLazySingleton(() => NavigationService());
+  locator.registerLazySingleton(() => CampaignService());
+  locator.registerLazySingleton(() => CampaignUserDatabaseService());
+
+  // Singelton
+  var instance = await LocalStorageService.getInstance();
+  locator.registerSingleton<LocalStorageService>(instance);
 
 // factory returns the new instance
   locator.registerFactory(() => ConfirmMnemonicScreenState());
@@ -63,4 +79,9 @@ void serviceLocator() {
   locator.registerFactory(() => OtcDetailsScreenState());
   locator.registerFactory(() => OrderListScreenState());
   locator.registerFactory(() => DepositScreenState());
+  locator.registerFactory(() => CampaignInstructionsScreenState());
+  locator.registerFactory(() => CampaignPaymentScreenState());
+  locator.registerFactory(() => CampaignDashboardScreenState());
+  locator.registerFactory(() => CampaignLoginScreenState());
+  locator.registerFactory(() => CampaignRegisterAccountScreenState());
 }

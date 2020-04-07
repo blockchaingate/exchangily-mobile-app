@@ -274,8 +274,11 @@ class WalletDashboardScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: globals.primaryColor,
                           borderRadius: BorderRadius.circular(50)),
-                      child: Icon(
-                        Icons.add,
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/campaignInstructions');
+                        },
+                        icon: Icon(Icons.add),
                         color: globals.white,
                       ),
                     )
@@ -374,7 +377,7 @@ class WalletDashboardScreen extends StatelessWidget {
                         ))
             ],
           ),
-          bottomNavigationBar: AppBottomNav(count: 0),
+          bottomNavigationBar: BottomNavBar(count: 0),
         ),
       ),
     );
