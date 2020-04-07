@@ -229,7 +229,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                             //  });
                           },
                           keyboardType:
-                              TextInputType.number, // numnber keyboard
+                              TextInputType.numberWithOptions(decimal: true), // numnber keyboard
                           decoration: InputDecoration(
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
@@ -351,8 +351,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                                 onChanged: (String amount) {
                                                   model.updateTransFee();
                                                 },
-                                                keyboardType: TextInputType
-                                                    .number, // numnber keyboard
+                                                keyboardType:  TextInputType.numberWithOptions(decimal: true),
                                                 decoration: InputDecoration(
                                                     focusedBorder:
                                                         UnderlineInputBorder(
@@ -396,8 +395,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                                 onChanged: (String amount) {
                                                   model.updateTransFee();
                                                 },
-                                                keyboardType: TextInputType
-                                                    .number, // numnber keyboard
+                                                keyboardType:  TextInputType.numberWithOptions(decimal: true),
                                                 decoration: InputDecoration(
                                                     focusedBorder:
                                                         UnderlineInputBorder(
@@ -445,8 +443,7 @@ class _SendWalletScreenState extends State<SendWalletScreen> {
                                                 onChanged: (String amount) {
                                                   model.updateTransFee();
                                                 },
-                                                keyboardType: TextInputType
-                                                    .number, // numnber keyboard
+                                                keyboardType:  TextInputType.numberWithOptions(decimal: true),
                                                 decoration: InputDecoration(
                                                     focusedBorder:
                                                         UnderlineInputBorder(

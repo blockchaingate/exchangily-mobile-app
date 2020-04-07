@@ -109,26 +109,26 @@ class SettingsScreen extends StatelessWidget {
                     height: 100,
                     child: Theme.of(context).platform == TargetPlatform.iOS
                         ? CupertinoPicker(
-                          scrollController: FixedExtentScrollController(initialItem: model.initialLanguageValue),
-                        magnification: 1.25,
+                            scrollController: FixedExtentScrollController(
+                                initialItem: model.initialLanguageValue),
+                            magnification: 1.25,
                             itemExtent: 25,
                             onSelectedItemChanged: (newValue) {
-                          // if(newValue == 0)
-                              model.changeWalletLanguage(model.languages[newValue]);
-                           //   else if(newValue == 1)
-                           //   model.changeWalletLanguage('zh');
-                              print(newValue);
+                              model.changeWalletLanguage(
+                                  model.languages[newValue]);
                             },
                             children: <Widget>[
-                              for(int i=0; i<model.languages.length;i++)
-                              Center(child: Text('${model.languages[i]}', style: Theme.of(context).textTheme.subtitle2,)),
-                              
+                              for (int i = 0; i < model.languages.length; i++)
+                                Center(
+                                    child: Text(
+                                  '${model.languages[i]}',
+                                  style: Theme.of(context).textTheme.subtitle2,
+                                )),
                             ],
                           )
                         : DropdownButton(
                             hint: Text(
-                              AppLocalizations.of(context)
-                                  .changeWalletLanguage,
+                              AppLocalizations.of(context).changeWalletLanguage,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline4,
                             ),
