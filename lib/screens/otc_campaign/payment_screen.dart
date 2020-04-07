@@ -104,6 +104,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
+                                  UIHelper.horizontalSpaceSmall,
                                   // USD radio button row
                                   Row(
                                     children: <Widget>[

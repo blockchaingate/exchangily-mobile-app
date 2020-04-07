@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-07T14:28:51.201025",
+  "@@last_modified": "2020-04-07T16:25:13.599954",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1140,12 +1140,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "bankDetails": "Bank Details",
-  "@bankDetails": {
-    "description": "campaign_bank_details",
-    "type": "text",
-    "placeholders": {}
-  },
   "bankName": "Bank Name",
   "@bankName": {
     "description": "campaign_bank_name",
@@ -1275,6 +1269,18 @@
   "rewards": "Rewards",
   "@rewards": {
     "description": "campaign_rewards",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myInvestmentWithoutRewards": "My Investment",
+  "@myInvestmentWithoutRewards": {
+    "description": "campaign_dashboard_my_investment_without_rewards",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bankWireDetails": "Bank Wire Details",
+  "@bankWireDetails": {
+    "description": "campaign_bank__wire_details",
     "type": "text",
     "placeholders": {}
   }
