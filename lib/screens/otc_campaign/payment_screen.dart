@@ -92,7 +92,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                       child: Row(
                         children: <Widget>[
                           Text(
-                            AppLocalizations.of(context).amount,
+                            AppLocalizations.of(context).paymentType,
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.start,
                           ),
@@ -162,7 +162,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    AppLocalizations.of(context).bankDetails,
+                                    AppLocalizations.of(context)
+                                        .bankWireDetails,
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   ),
@@ -183,8 +184,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text(
-                                      AppLocalizations.of(context).bankDetails),
+                                  Text(AppLocalizations.of(context)
+                                      .routingNumber),
                                   Text('041001039')
                                 ],
                               ),
@@ -215,7 +216,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               Text(
-                                'USDT' +
+                                'USDT ' +
                                     AppLocalizations.of(context).recieveAddress,
                                 style: Theme.of(context)
                                     .textTheme

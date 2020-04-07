@@ -29,6 +29,7 @@ class CampaignDashboardScreenState extends BaseState {
   double myTeamsTotalRewards = 0;
   double myTeamsTotalValue = 0;
   BuildContext context;
+  double myInvestmentWithoutRewards = 0;
 
   List<CampaignReward> campaignRewardList = [];
   initState() async {
@@ -73,6 +74,7 @@ class CampaignDashboardScreenState extends BaseState {
       if (res != null) {
         log.w(res);
         memberLevel = res['membership'];
+        myInvestmentWithoutRewards = res['totalValue'];
         assignColorAccordingToMemberLevel(memberLevel);
       } else {
         log.w(' In myProfile else');

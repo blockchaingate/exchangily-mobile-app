@@ -344,6 +344,45 @@ class CampaignDashboardScreen extends StatelessWidget {
                 UIHelper.divider,
 
 /*-------------------------------------------------------------------------------------
+                                Team container with list tiles
+-------------------------------------------------------------------------------------*/
+                Container(
+                  margin: EdgeInsets.only(bottom: 5.0),
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        onTap: () {},
+                        dense: false,
+                        leading: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Icon(
+                            Icons.verified_user,
+                            color: globals.primaryColor,
+                            size: 22,
+                          ),
+                        ),
+                        title: Text(AppLocalizations.of(context)
+                            .myInvestmentWithoutRewards),
+                        subtitle: model.busy
+                            ? Shimmer.fromColors(
+                                baseColor: globals.primaryColor,
+                                highlightColor: globals.grey,
+                                child: Text(
+                                  ('0.000'),
+                                  style: Theme.of(context).textTheme.headline5,
+                                ))
+                            : Text(model.myInvestmentWithoutRewards.toString(),
+                                style: Theme.of(context).textTheme.headline5),
+                        // trailing: Icon(
+                        //   Icons.navigate_next,
+                        //   color: globals.white54,
+                        // ),
+                      )
+                    ],
+                  ),
+                ),
+                UIHelper.divider,
+/*-------------------------------------------------------------------------------------
                                 My referrals container with list tiles
 -------------------------------------------------------------------------------------*/
                 Container(

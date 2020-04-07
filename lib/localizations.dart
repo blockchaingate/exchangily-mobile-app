@@ -982,11 +982,6 @@ class AppLocalizations {
         name: 'paymentType', desc: 'campaign_payment_type');
   }
 
-  String get bankDetails {
-    return Intl.message('Bank Details',
-        name: 'bankDetails', desc: 'campaign_bank_details');
-  }
-
   String get bankName {
     return Intl.message('Bank Name',
         name: 'bankName', desc: 'campaign_bank_name');
@@ -1092,6 +1087,17 @@ class AppLocalizations {
 
   String get rewards {
     return Intl.message('Rewards', name: 'rewards', desc: 'campaign_rewards');
+  }
+
+  String get myInvestmentWithoutRewards {
+    return Intl.message('My Investment',
+        name: 'myInvestmentWithoutRewards',
+        desc: 'campaign_dashboard_my_investment_without_rewards');
+  }
+
+  String get bankWireDetails {
+    return Intl.message('Bank Wire Details',
+        name: 'bankWireDetails', desc: 'campaign_bank__wire_details');
   }
 }
 
