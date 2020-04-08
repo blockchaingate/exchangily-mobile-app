@@ -1294,5 +1294,16 @@
     "description": "campaign_rewards_token",
     "type": "text",
     "placeholders": {}
-  }
+  },
+  "teamReward": "Team Reward",
+  "@teamReward": {
+    "description": "campaign_dashboard_team_reward",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myTokens": "My Tokens",
+  "@myTokens": {
+    "description": "campaign_dashboard_my_tokens",
+    "type": "text",
+    "place
 }
