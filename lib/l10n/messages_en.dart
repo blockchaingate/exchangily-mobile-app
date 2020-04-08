@@ -117,7 +117,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "mnemonic" : MessageLookupByLibrary.simpleMessage("Mnemonic"),
     "move" : MessageLookupByLibrary.simpleMessage("Move"),
     "moveAndTrade" : MessageLookupByLibrary.simpleMessage("Move to Exchange"),
-    "myInvestmentWithoutRewards" : MessageLookupByLibrary.simpleMessage("My Investment"),
+    "myInvestment" : MessageLookupByLibrary.simpleMessage("My Investment"),
     "myReferralCode" : MessageLookupByLibrary.simpleMessage("My Referral Code"),
     "myReferrals" : MessageLookupByLibrary.simpleMessage("My Referrals"),
     "myRewardDetails" : MessageLookupByLibrary.simpleMessage("My Reward Details"),
