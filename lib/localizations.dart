@@ -1104,6 +1104,16 @@ class AppLocalizations {
         name: 'myInvestment',
         desc: 'campaign_dashboard_my_investment_without_rewards');
   }
+
+  String get teamReward {
+    return Intl.message('Team Reward',
+        name: 'teamReward', desc: 'campaign_dashboard_team_reward');
+  }
+
+  String get myTokens {
+    return Intl.message('My Tokens',
+        name: 'myTokens', desc: 'campaign_dashboard_my_tokens');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

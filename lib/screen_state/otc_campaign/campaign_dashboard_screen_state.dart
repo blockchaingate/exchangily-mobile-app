@@ -77,7 +77,7 @@ class CampaignDashboardScreenState extends BaseState {
         log.w(res);
         memberLevel = res['membership'];
         myInvestmentWithoutRewards = res['totalValue'];
-        //myTokensWithoutRewards = res['totalQuantity'];
+        myTokensWithoutRewards = res['totalQuantities'];
         assignColorAccordingToMemberLevel(memberLevel);
       } else {
         log.w(' In myProfile else');
@@ -198,8 +198,8 @@ class CampaignDashboardScreenState extends BaseState {
         myTeamsTotalValue = ttv;
         var ttr = response['teamsRewards'];
         log.w(ttr);
-        myTeamsTotalRewards = ttr;
-        log.w(myTeamsTotalRewards);
+
+        await calcMyTotalAsssetValue();
       } else {
         log.w('In myReward else, res is null from api');
         setBusy(false);
@@ -211,15 +211,30 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(false);
   }
 
-  // Calculate my total value
-  calcMyTotalInvestmentValue() {
-    campaignRewardList.map((reward) {
-//reward.level.
-    });
+  // Calculate my total Asset value
+  calcMyTotalAsssetValue() async {
+    double exgPrice = await getUsdValue();
+    myTotalAssetValue = myTotalAssetQuantity * exgPrice;
   }
 
   // Generic Navigate
   navigateByRouteName(String routeName, args) async {
     await navigationService.navigateTo(routeName, arguments: args);
+  }
+/*-------------------------------------------------------------------------------------
+      Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
+-------------------------------------------------------------------------------------*/
+
+  Future<double> getUsdValue() async {
+    setBusy(true);
+    double usdValue = 0;
+    await campaignService.getUsdPrices().then((res) {
+      if (res != null) {
+        log.w(res['data']['EXG']['USD']);
+        usdValue = res['data']['EXG']['USD'];
+      }
+    });
+    setBusy(false);
+    return usdValue;
   }
 }

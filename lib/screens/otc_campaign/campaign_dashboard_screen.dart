@@ -230,8 +230,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 2.0),
                               child: Text(
-                                  AppLocalizations.of(context)
-                                      .myInvestmentWithoutRewards,
+                                  AppLocalizations.of(context).myInvestment,
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline5
@@ -364,10 +363,41 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 ))
                             : Text(model.myTotalTokenHolding.toStringAsFixed(4),
                                 style: Theme.of(context).textTheme.headline5),
-                        // trailing: Icon(
-                        //   Icons.navigate_next,
-                        //   color: globals.white54,
-                        // ),
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 3.0),
+                              child: Text(
+                                AppLocalizations.of(context).myTokens,
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                            ),
+                            model.busy
+                                ? Container(
+                                    color: globals.grey,
+                                    child: Shimmer.fromColors(
+                                        baseColor: globals.primaryColor,
+                                        highlightColor: globals.grey,
+                                        child: Text(
+                                          ('00.00'),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        )),
+                                  )
+                                : Text(
+                                    model.myTokensWithoutRewards
+                                        .toStringAsFixed(2),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(
+                                                model.memberLevelTextColor)))
+                          ],
+                        ),
                       )
                     ],
                   ),
@@ -452,8 +482,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 3.0),
                               child: Text(
-                                'Team Rewards',
-                                //  AppLocalizations.of(context).level,
+                                AppLocalizations.of(context).teamReward,
                                 style: Theme.of(context).textTheme.headline5,
                               ),
                             ),

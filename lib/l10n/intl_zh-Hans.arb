@@ -1307,7 +1307,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "myInvestment": "我的投资",
+    "totalTokenHolding": "总持币数",
+  "@totalTokenHolding": {
+    "description": "campaign_dashboard_total_token__holding",
+    "type": "text",
+    "placeholders": {}
+  }，
+    "myInvestment": "我的投资",
   "@myInvestment": {
     "description": "campaign_dashboard_my_investment_without_rewards",
     "type": "text",
