@@ -22,14 +22,15 @@ class CampaignDashboardScreenState extends BaseState {
   final List<int> memberLevelsColorList = [0xff696969, 0xffE6BE8A, 0xffffffff];
   String memberLevel = '';
   int memberLevelTextColor = 0xff696969;
-  double myTotalInvestmentValue = 0;
-  double myTotalInvestmentQuantity = 0;
+  double myTotalAssetValue = 0;
+  double myTotalTokenHolding = 0;
   double myTotalReward = 0;
   int myTotalReferrals = 0;
   double myTeamsTotalRewards = 0;
   double myTeamsTotalValue = 0;
   BuildContext context;
   double myInvestmentWithoutRewards = 0;
+  double myTokensWithoutRewards = 0;
 
   List<CampaignReward> campaignRewardList = [];
   initState() async {
@@ -75,6 +76,7 @@ class CampaignDashboardScreenState extends BaseState {
         log.w(res);
         memberLevel = res['membership'];
         myInvestmentWithoutRewards = res['totalValue'];
+        //myTokensWithoutRewards = res['totalQuantity'];
         assignColorAccordingToMemberLevel(memberLevel);
       } else {
         log.w(' In myProfile else');
@@ -125,30 +127,30 @@ class CampaignDashboardScreenState extends BaseState {
                                   Get Member Reward By MemberID
 -------------------------------------------------------------------------------------*/
 
-  myRewardsById(CampaignUserData userData) async {
-    if (userData == null) return false;
-    log.e(userData.id);
-    setBusy(true);
-    setErrorMessage('fetching your rewards');
-    await campaignService.getRewardById(userData).then((res) {
-      if (res != null) {
-        // if i convert and assign the value directly to double variable then i get cast error so this is the solution
-        var x = res['_body']['myselfValue'];
-        myTotalInvestmentValue = x.toDouble();
-        var y = res['_body']['myselfQuantity'];
-        myTotalInvestmentQuantity = y.toDouble();
-        // navigationService.navigateTo('/campaignRewardDetails');
-        //calculateMyTotalReward();
-      } else {
-        log.w('In myReward else, res is null from api');
-        setBusy(false);
-      }
-    }).catchError((err) {
-      log.e(err);
-      setBusy(false);
-    });
-    setBusy(false);
-  }
+  // myRewardsById(CampaignUserData userData) async {
+  //   if (userData == null) return false;
+  //   log.e(userData.id);
+  //   setBusy(true);
+  //   setErrorMessage('fetching your rewards');
+  //   await campaignService.getRewardById(userData).then((res) {
+  //     if (res != null) {
+  //       // if i convert and assign the value directly to double variable then i get cast error so this is the solution
+  //       var x = res['_body']['myselfValue'];
+  //       myTotalAssetValue = x.toDouble();
+  //       var y = res['_body']['myselfQuantity'];
+  //       myTotalTokenHolding = y.toDouble();
+  //       // navigationService.navigateTo('/campaignRewardDetails');
+  //       //calculateMyTotalReward();
+  //     } else {
+  //       log.w('In myReward else, res is null from api');
+  //       setBusy(false);
+  //     }
+  //   }).catchError((err) {
+  //     log.e(err);
+  //     setBusy(false);
+  //   });
+  //   setBusy(false);
+  // }
 
 /*-------------------------------------------------------------------------------------
                                   Get Member Reward By Token
@@ -160,49 +162,42 @@ class CampaignDashboardScreenState extends BaseState {
     String token = await campaignService.getSavedLoginToken();
     await campaignService.getMemberRewardByToken(token).then((response) async {
       if (response != null) {
-        log.e(response);
-        myTotalInvestmentValue = 0;
-        myTotalInvestmentQuantity = 0;
+        myTotalAssetValue = 0;
+        myTotalTokenHolding = 0;
         myTotalReferrals = 0;
         myTotalReward = 0;
         var res = response['personal'] as List;
         for (int i = 0; i < res.length; i++) {
-          var totalInvestmentValue = res[i]['totalValue'];
-          var totalQuantity = res[i]['totalQuantities'];
-          var totalReferrals = res[i]['totalAccounts'];
-          var totalRewards = res[i]['totalRewardQuantities'];
+          var totalRewardValueByLevel = res[i]['totalValue'];
+          var totalTokenQuantityByLevel = res[i]['totalQuantities'];
+          var totalReferralsByLevel = res[i]['totalAccounts'];
+          var totalRewardQuantityByLevel = res[i]['totalRewardQuantities'];
           CampaignReward campaignReward = new CampaignReward(
               level: res[i]['level'],
-              totalValue: totalInvestmentValue,
-              totalQuantities: totalQuantity,
-              totalRewardQuantities: totalRewards,
-              totalAccounts: totalReferrals,
+              totalValue: totalRewardValueByLevel,
+              totalQuantities: totalTokenQuantityByLevel,
+              totalRewardQuantities: totalRewardQuantityByLevel,
+              totalAccounts: totalReferralsByLevel,
               totalRewardNextQuantities: res[i]['totalRewardNextQuantities']);
           campaignRewardList.add(campaignReward);
-          myTotalInvestmentValue =
-              myTotalInvestmentValue + totalInvestmentValue;
-          myTotalInvestmentQuantity = myTotalInvestmentQuantity + totalQuantity;
-          myTotalReferrals = myTotalReferrals + totalReferrals;
-          myTotalReward = myTotalReward + totalRewards;
-
+          // calculating total asset value
+          myTotalAssetValue = myTotalAssetValue + totalRewardValueByLevel;
+          myTotalTokenHolding = myTotalTokenHolding +
+              totalTokenQuantityByLevel +
+              totalRewardQuantityByLevel;
+          log.e(myTotalTokenHolding);
+          myTotalReferrals = myTotalReferrals + totalReferralsByLevel;
+          myTotalReward = myTotalReward + totalRewardQuantityByLevel;
           log.w(campaignReward.toJson());
         }
-        myTotalInvestmentValue =
-            myTotalInvestmentValue + myInvestmentWithoutRewards;
+        myTotalAssetValue = myTotalAssetValue + myInvestmentWithoutRewards;
         log.w('Length ${campaignRewardList.length}');
         var ttv = response['teamsTotalValue'];
         myTeamsTotalValue = ttv;
         var ttr = response['teamsRewards'];
         log.w(ttr);
-        myTeamsTotalRewards = 600.0;
-        log.w(myTeamsTotalRewards);
-
-        // Error below: type 'int' is not a subtype of type 'double'
         myTeamsTotalRewards = ttr;
-        log.e(myTeamsTotalRewards);
-
-        log.w('route not working');
-        //  calculateMyTotalReward();
+        log.w(myTeamsTotalRewards);
       } else {
         log.w('In myReward else, res is null from api');
         setBusy(false);

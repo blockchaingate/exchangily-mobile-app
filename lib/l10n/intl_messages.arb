@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-07T21:46:39.475679",
+  "@@last_modified": "2020-04-08T16:23:10.989864",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1098,18 +1098,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "myTotalInvestment": "My Total Investment",
-  "@myTotalInvestment": {
-    "description": "campaign_dashboard_my_total_investment",
-    "type": "text",
-    "placeholders": {}
-  },
-  "totalInvestmentQuantity": "Total Investment Quantity",
-  "@totalInvestmentQuantity": {
-    "description": "campaign_dashboard_total_investment_quantity",
-    "type": "text",
-    "placeholders": {}
-  },
   "myTotalReward": "My Total Reward",
   "@myTotalReward": {
     "description": "campaign_dashboard_my_total_reward",
@@ -1260,18 +1248,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "totalAmount": "Total Amount",
-  "@totalAmount": {
-    "description": "campaign_total_amount",
-    "type": "text",
-    "placeholders": {}
-  },
-  "rewards": "Rewards",
-  "@rewards": {
-    "description": "campaign_rewards",
-    "type": "text",
-    "placeholders": {}
-  },
   "myInvestmentWithoutRewards": "My Investment",
   "@myInvestmentWithoutRewards": {
     "description": "campaign_dashboard_my_investment_without_rewards",
@@ -1281,6 +1257,36 @@
   "bankWireDetails": "Bank Wire Details",
   "@bankWireDetails": {
     "description": "campaign_bank__wire_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myTotalAssets": "My Total Assets",
+  "@myTotalAssets": {
+    "description": "campaign_dashboard_my_total_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalTokenHolding": "Total Token Holding",
+  "@totalTokenHolding": {
+    "description": "campaign_dashboard_total_token__holding",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tokenDetails": "Token Details",
+  "@tokenDetails": {
+    "description": "campaign_dashboard_token_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalTokenAmount": "Total Token Amount",
+  "@totalTokenAmount": {
+    "description": "campaign_total__token_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rewardsToken": "Rewards Token",
+  "@rewardsToken": {
+    "description": "campaign_rewards_token",
     "type": "text",
     "placeholders": {}
   }

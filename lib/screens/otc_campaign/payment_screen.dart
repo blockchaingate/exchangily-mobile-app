@@ -42,18 +42,21 @@ class CampaignPaymentScreen extends StatelessWidget {
                     Container(
                       width: MediaQuery.of(context).size.width - 100,
                       child: Row(children: <Widget>[
+                        // Expanded(
+                        //     flex: 2,
+                        //     child: Text(
+                        //       AppLocalizations.of(context).amount,
+                        //       style: Theme.of(context).textTheme.headline5,
+                        //     )),
                         Expanded(
-                            flex: 2,
-                            child: Text(
-                              AppLocalizations.of(context).amount,
-                              style: Theme.of(context).textTheme.headline5,
-                            )),
-                        Expanded(
-                          flex: 3,
+                          flex: 5,
                           child: SizedBox(
-                            //  width: 50,
-                            height: 40,
+                            height: 50,
                             child: TextField(
+                              maxLines: 2,
+                              textAlignVertical: TextAlignVertical.center,
+                              textAlign: TextAlign.center,
+                              textDirection: TextDirection.ltr,
                               style: model.checkSendAmount
                                   // && model.amountDouble <= bal
                                   ? Theme.of(context).textTheme.headline5
@@ -66,9 +69,43 @@ class CampaignPaymentScreen extends StatelessWidget {
                               },
                               controller: model.sendAmountTextController,
                               decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(
+                                      top: 35.0,
+                                      bottom: 1.0,
+                                      left: 15.0,
+                                      right: 14.0),
+                                  isDense: true,
+                                  prefix: Padding(
+                                    padding: const EdgeInsets.only(top: 18.0),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                        isDense: true,
+                                        value: model.selectedCurrency,
+                                        items: model.currencies.map((currency) {
+                                          return DropdownMenuItem(
+                                              value: currency,
+                                              child: Center(
+                                                child: Text(currency),
+                                              ));
+                                        }).toList(),
+                                        onChanged: (newValue) async {
+                                          model.selectedCurrency = newValue;
+                                          await model.checkAmount(model
+                                              .sendAmountTextController.text);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  suffix: Column(children: [
+                                    Text('Token Quantity'),
+                                    Text(model.tokenPurchaseAmount
+                                        .toStringAsFixed(3))
+                                  ]),
                                   filled: true,
                                   fillColor: globals.walletCardColor,
-                                  isDense: true,
                                   hintText:
                                       AppLocalizations.of(context).enterAmount,
                                   hintStyle: Theme.of(context)
@@ -79,7 +116,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       gapPadding: 1,
                                       borderSide:
                                           BorderSide(color: globals.white))),
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  decimal: true),
                               cursorColor: globals.primaryColor,
                             ),
                           ),
@@ -343,7 +381,9 @@ class CampaignPaymentScreen extends StatelessWidget {
                 ),
               ),
               UIHelper.verticalSpaceSmall,
+
               // 2nd contianer row Order info
+
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 5.0),
                 decoration: BoxDecoration(

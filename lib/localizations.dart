@@ -946,18 +946,6 @@ class AppLocalizations {
         name: 'level', desc: 'campaign_dashboard_level');
   }
 
-  String get myTotalInvestment {
-    return Intl.message('My Total Investment',
-        name: 'myTotalInvestment',
-        desc: 'campaign_dashboard_my_total_investment');
-  }
-
-  String get totalInvestmentQuantity {
-    return Intl.message('Total Investment Quantity',
-        name: 'totalInvestmentQuantity',
-        desc: 'campaign_dashboard_total_investment_quantity');
-  }
-
   String get myTotalReward {
     return Intl.message('My Total Reward',
         name: 'myTotalReward', desc: 'campaign_dashboard_my_total_reward');
@@ -1080,15 +1068,6 @@ class AppLocalizations {
         name: 'referrals', desc: 'campaign_referrals');
   }
 
-  String get totalAmount {
-    return Intl.message('Total Amount',
-        name: 'totalAmount', desc: 'campaign_total_amount');
-  }
-
-  String get rewards {
-    return Intl.message('Rewards', name: 'rewards', desc: 'campaign_rewards');
-  }
-
   String get myInvestmentWithoutRewards {
     return Intl.message('My Investment',
         name: 'myInvestmentWithoutRewards',
@@ -1098,6 +1077,32 @@ class AppLocalizations {
   String get bankWireDetails {
     return Intl.message('Bank Wire Details',
         name: 'bankWireDetails', desc: 'campaign_bank__wire_details');
+  }
+
+  String get myTotalAssets {
+    return Intl.message('My Total Assets',
+        name: 'myTotalAssets', desc: 'campaign_dashboard_my_total_assets');
+  }
+
+  String get totalTokenHolding {
+    return Intl.message('Total Token Holding',
+        name: 'totalTokenHolding',
+        desc: 'campaign_dashboard_total_token__holding');
+  }
+
+  String get tokenDetails {
+    return Intl.message('Token Details',
+        name: 'tokenDetails', desc: 'campaign_dashboard_token_details');
+  }
+
+  String get totalTokenAmount {
+    return Intl.message('Total Token Amount',
+        name: 'totalTokenAmount', desc: 'campaign_total__token_amount');
+  }
+
+  String get rewardsToken {
+    return Intl.message('Rewards Token',
+        name: 'rewardsToken', desc: 'campaign_rewards_token');
   }
 }
 

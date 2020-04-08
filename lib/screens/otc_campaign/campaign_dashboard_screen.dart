@@ -25,7 +25,7 @@ class CampaignDashboardScreen extends StatelessWidget {
         await model.myProfile(userData);
         await model.myRewardsByToken();
         await model.getCampaignName();
-        await model.myRewardsById(userData);
+        //await model.myRewardsById(userData);
       },
       builder: (context, model, child) => Scaffold(
           resizeToAvoidBottomInset: false,
@@ -151,7 +151,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                 UIHelper.verticalSpaceSmall,
 
 /*-------------------------------------------------------------------------------------
-                                My total investment container with list tiles
+                                My total Asset container with list tiles
 -------------------------------------------------------------------------------------*/
                 Container(
                   color: globals.walletCardColor,
@@ -159,75 +159,152 @@ class CampaignDashboardScreen extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       ListTile(
-                          dense: false,
-                          leading: Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Icon(
-                              Icons.monetization_on,
-                              color: globals.buyPrice,
-                              size: 24,
-                            ),
+                        dense: false,
+                        leading: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Icon(
+                            Icons.monetization_on,
+                            color: globals.buyPrice,
+                            size: 24,
                           ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 3.0),
+                        ),
+                        title: Text(
+                          AppLocalizations.of(context).myTotalAssets,
+                          style: TextStyle(letterSpacing: 1.1),
+                        ),
+                        subtitle: model.busy
+                            ? Shimmer.fromColors(
+                                baseColor: globals.primaryColor,
+                                highlightColor: globals.grey,
                                 child: Text(
-                                  AppLocalizations.of(context).level,
+                                  ('0.000'),
                                   style: Theme.of(context).textTheme.headline5,
-                                ),
-                              ),
-                              model.busy
-                                  ? Container(
-                                      color: globals.grey,
-                                      child: Shimmer.fromColors(
-                                          baseColor: globals.primaryColor,
-                                          highlightColor: globals.grey,
-                                          child: Text(
-                                            (''),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5,
-                                          )),
-                                    )
-                                  : Text(model.memberLevel.toUpperCase(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5
-                                          .copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color: Color(
-                                                  model.memberLevelTextColor)))
-                            ],
-                          ),
-                          title: Text(
-                            AppLocalizations.of(context).myTotalInvestment,
-                            style: TextStyle(letterSpacing: 1.25),
-                          ),
-                          subtitle: model.busy
-                              ? Shimmer.fromColors(
-                                  baseColor: globals.primaryColor,
-                                  highlightColor: globals.grey,
+                                ))
+                            : Text(model.myTotalAssetValue.toStringAsFixed(2),
+                                style: Theme.of(context).textTheme.headline5),
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 2.0),
+                              child: Text(
+                                  AppLocalizations.of(context)
+                                      .myInvestmentWithoutRewards,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .copyWith(color: globals.buyPrice)),
+                            ),
+                            model.busy
+                                ? Shimmer.fromColors(
+                                    baseColor: globals.primaryColor,
+                                    highlightColor: globals.grey,
+                                    child: Text(
+                                      ('0.000'),
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
+                                    ))
+                                : Text(
+                                    model.myInvestmentWithoutRewards.toString(),
+                                    style:
+                                        Theme.of(context).textTheme.headline5),
+                          ],
+                        ),
+                      ),
+
+                      // Level and referral count Row
+
+                      Container(
+                        color: globals.primaryColor.withAlpha(175),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 18.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 3.0),
                                   child: Text(
-                                    ('0.000'),
+                                    AppLocalizations.of(context).level,
                                     style:
                                         Theme.of(context).textTheme.headline5,
-                                  ))
-                              : Text(
-                                  model.myTotalInvestmentValue
-                                      .toStringAsFixed(2),
-                                  style: Theme.of(context).textTheme.headline5))
+                                  ),
+                                ),
+                                UIHelper.horizontalSpaceSmall,
+                                model.busy
+                                    ? Container(
+                                        color: globals.grey,
+                                        child: Shimmer.fromColors(
+                                            baseColor: globals.primaryColor,
+                                            highlightColor: globals.grey,
+                                            child: Text(
+                                              (''),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5,
+                                            )),
+                                      )
+                                    : Text(model.memberLevel.toUpperCase(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                                fontWeight: FontWeight.w600,
+                                                color: Color(model
+                                                    .memberLevelTextColor)))
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.share,
+                                  size: 20,
+                                  color: globals.primaryColor,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 5.0),
+                                  child: Text(
+                                    'Referral Count ',
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                ),
+                                model.busy
+                                    ? Shimmer.fromColors(
+                                        baseColor: globals.primaryColor,
+                                        highlightColor: globals.grey,
+                                        child: Text(
+                                          ('0.000'),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ))
+                                    : Text(model.myTotalReferrals.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
 /*-------------------------------------------------------------------------------------
-                                Investment quantity container with list tiles
+                          Total Token quantity container with list tiles
 -------------------------------------------------------------------------------------*/
                 Container(
                   child: Column(
                     children: <Widget>[
                       ListTile(
+                        onTap: () {
+                          // model.navigateByRouteName('/campaignTokenDetails',
+                          //     model.campaignRewardList);
+                        },
                         dense: false,
                         leading: Padding(
                           padding: const EdgeInsets.only(top: 5.0),
@@ -237,8 +314,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                             size: 22,
                           ),
                         ),
-                        title: Text(AppLocalizations.of(context)
-                            .totalInvestmentQuantity),
+                        title: Text(
+                            AppLocalizations.of(context).totalTokenHolding),
                         subtitle: model.busy
                             ? Shimmer.fromColors(
                                 baseColor: globals.primaryColor,
@@ -247,9 +324,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   ('0.000'),
                                   style: Theme.of(context).textTheme.headline5,
                                 ))
-                            : Text(
-                                model.myTotalInvestmentQuantity
-                                    .toStringAsFixed(4),
+                            : Text(model.myTotalTokenHolding.toStringAsFixed(4),
                                 style: Theme.of(context).textTheme.headline5),
                         // trailing: Icon(
                         //   Icons.navigate_next,
@@ -333,109 +408,151 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 ))
                             : Text(model.myTeamsTotalValue.toString(),
                                 style: Theme.of(context).textTheme.headline5),
-                        // trailing: Icon(
-                        //   Icons.navigate_next,
-                        //   color: globals.white54,
-                        // ),
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 3.0),
+                              child: Text(
+                                'Team Rewards',
+                                //  AppLocalizations.of(context).level,
+                                style: Theme.of(context).textTheme.headline5,
+                              ),
+                            ),
+                            model.busy
+                                ? Container(
+                                    color: globals.grey,
+                                    child: Shimmer.fromColors(
+                                        baseColor: globals.primaryColor,
+                                        highlightColor: globals.grey,
+                                        child: Text(
+                                          ('00.00'),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        )),
+                                  )
+                                : Text(
+                                    model.myTeamsTotalRewards
+                                        .toStringAsFixed(2),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(
+                                            fontWeight: FontWeight.w600,
+                                            color: Color(
+                                                model.memberLevelTextColor)))
+                          ],
+                        ),
                       )
                     ],
                   ),
                 ),
-                UIHelper.divider,
+                //   UIHelper.divider,
 
 /*-------------------------------------------------------------------------------------
-                                Team container with list tiles
+                                My Investment container with list tiles
 -------------------------------------------------------------------------------------*/
-                Container(
-                  margin: EdgeInsets.only(bottom: 5.0),
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        onTap: () {},
-                        dense: false,
-                        leading: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Icon(
-                            Icons.verified_user,
-                            color: globals.primaryColor,
-                            size: 22,
-                          ),
-                        ),
-                        title: Text(AppLocalizations.of(context)
-                            .myInvestmentWithoutRewards),
-                        subtitle: model.busy
-                            ? Shimmer.fromColors(
-                                baseColor: globals.primaryColor,
-                                highlightColor: globals.grey,
-                                child: Text(
-                                  ('0.000'),
-                                  style: Theme.of(context).textTheme.headline5,
-                                ))
-                            : Text(model.myInvestmentWithoutRewards.toString(),
-                                style: Theme.of(context).textTheme.headline5),
-                        // trailing: Icon(
-                        //   Icons.navigate_next,
-                        //   color: globals.white54,
-                        // ),
-                      )
-                    ],
-                  ),
-                ),
-                UIHelper.divider,
+                // Container(
+                //   margin: EdgeInsets.only(bottom: 5.0),
+                //   child: Column(
+                //     children: <Widget>[
+                //       ListTile(
+                //         onTap: () {},
+                //         dense: false,
+                //         leading: Padding(
+                //           padding: const EdgeInsets.only(top: 5.0),
+                //           child: Icon(
+                //             Icons.verified_user,
+                //             color: globals.primaryColor,
+                //             size: 22,
+                //           ),
+                //         ),
+                //         title: Text(AppLocalizations.of(context)
+                //             .myInvestmentWithoutRewards),
+                //         subtitle: model.busy
+                //             ? Shimmer.fromColors(
+                //                 baseColor: globals.primaryColor,
+                //                 highlightColor: globals.grey,
+                //                 child: Text(
+                //                   ('0.000'),
+                //                   style: Theme.of(context).textTheme.headline5,
+                //                 ))
+                //             : Text(model.myInvestmentWithoutRewards.toString(),
+                //                 style: Theme.of(context).textTheme.headline5),
+                //         // trailing: Icon(
+                //         //   Icons.navigate_next,
+                //         //   color: globals.white54,
+                //         // ),
+                //       )
+                //     ],
+                //   ),
+                // ),
+                // UIHelper.divider,
 /*-------------------------------------------------------------------------------------
                                 My referrals container with list tiles
 -------------------------------------------------------------------------------------*/
-                Container(
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        onTap: () {},
-                        dense: false,
-                        leading: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Icon(
-                            Icons.share,
-                            color: globals.primaryColor,
-                            size: 22,
-                          ),
-                        ),
-                        title: Text(AppLocalizations.of(context).myReferrals),
-                        subtitle: model.busy
-                            ? Shimmer.fromColors(
-                                baseColor: globals.primaryColor,
-                                highlightColor: globals.grey,
-                                child: Text(
-                                  ('0.000'),
-                                  style: Theme.of(context).textTheme.headline5,
-                                ))
-                            : Text(model.myTotalReferrals.toString(),
-                                style: Theme.of(context).textTheme.headline5),
-                        // trailing: Icon(
-                        //   Icons.navigate_next,
-                        //   color: globals.white54,
-                        // ),
-                      )
-                    ],
-                  ),
-                ),
-                UIHelper.verticalSpaceLarge,
+                // Container(
+                //   child: Column(
+                //     children: <Widget>[
+                //       ListTile(
+                //         onTap: () {},
+                //         dense: false,
+                //         leading: Padding(
+                //           padding: const EdgeInsets.only(top: 5.0),
+                //           child: Icon(
+                //             Icons.share,
+                //             color: globals.primaryColor,
+                //             size: 22,
+                //           ),
+                //         ),
+                //         title: Text(AppLocalizations.of(context).myReferrals),
+                //         subtitle: model.busy
+                //             ? Shimmer.fromColors(
+                //                 baseColor: globals.primaryColor,
+                //                 highlightColor: globals.grey,
+                //                 child: Text(
+                //                   ('0.000'),
+                //                   style: Theme.of(context).textTheme.headline5,
+                //                 ))
+                //             : Text(model.myTotalReferrals.toString(),
+                //                 style: Theme.of(context).textTheme.headline5),
+                //         // trailing: Icon(
+                //         //   Icons.navigate_next,
+                //         //   color: globals.white54,
+                //         // ),
+                //       )
+                //     ],
+                //   ),
+                // ),
+                // UIHelper.verticalSpaceLarge,
 /*-------------------------------------------------------------------------------------
                         Button Container
 -------------------------------------------------------------------------------------*/
-                Container(
-                    child: SizedBox(
-                  width: 150,
-                  child: RaisedButton(
-                      padding: EdgeInsets.all(0),
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/campaignPayment');
-                      },
-                      child: Text(AppLocalizations.of(context).buy,
-                          style: Theme.of(context).textTheme.headline4)),
-                ))
+                // Container(
+                //     child: SizedBox(
+                //   width: 150,
+                //   child: RaisedButton(
+                //       padding: EdgeInsets.all(0),
+                //       onPressed: () {
+                //         Navigator.pushNamed(context, '/campaignPayment');
+                //       },
+                //       child: Text(AppLocalizations.of(context).buy,
+                //           style: Theme.of(context).textTheme.headline4)),
+                // ))
               ],
             ),
           ),
+          floatingActionButton: Container(
+              margin: EdgeInsets.only(right: 10.0),
+              width: MediaQuery.of(context).size.width - 50,
+              child: RaisedButton(
+                  padding: EdgeInsets.all(0),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/campaignPayment');
+                  },
+                  child: Text(AppLocalizations.of(context).buy,
+                      style: Theme.of(context).textTheme.headline4))),
           bottomNavigationBar: BottomNavBar(count: 2)),
     );
   }

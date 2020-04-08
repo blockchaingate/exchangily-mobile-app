@@ -38,14 +38,15 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
                           child: Text(AppLocalizations.of(context).referrals,
                               style: Theme.of(context).textTheme.headline5))),
                   Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: Center(
-                          child: Text(AppLocalizations.of(context).totalAmount,
+                          child: Text(
+                              AppLocalizations.of(context).totalTokenAmount,
                               style: Theme.of(context).textTheme.headline5))),
                   Expanded(
                       flex: 2,
                       child: Center(
-                          child: Text(AppLocalizations.of(context).rewards,
+                          child: Text(AppLocalizations.of(context).rewardsToken,
                               style: Theme.of(context).textTheme.headline5)))
                 ],
               ),
@@ -94,7 +95,7 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
                                                 .textTheme
                                                 .headline5))),
                                 Expanded(
-                                    flex: 2,
+                                    flex: 3,
                                     child: Center(
                                         child: Text(
                                             campaignRewardList[index]

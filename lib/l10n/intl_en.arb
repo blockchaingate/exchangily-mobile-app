@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-21T20:24:17.384985",
+  "@@last_modified": "2020-04-08T16:23:10.989864",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -216,7 +216,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "totalBalance": "Available Balance",
+  "totalBalance": "Total Balance",
   "@totalBalance": {
     "description": "total_balance",
     "type": "text",
@@ -582,7 +582,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "filledAmount": "Filled",
+  "filledAmount": "Filled Amount",
   "@filledAmount": {
     "description": "filled_amount_text",
     "type": "text",
@@ -1098,18 +1098,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "myTotalInvestment": "My Total Investment",
-  "@myTotalInvestment": {
-    "description": "campaign_dashboard_my_total_investment",
-    "type": "text",
-    "placeholders": {}
-  },
-  "totalInvestmentQuantity": "Total Investment Quantity",
-  "@totalInvestmentQuantity": {
-    "description": "campaign_dashboard_total_investment_quantity",
-    "type": "text",
-    "placeholders": {}
-  },
   "myTotalReward": "My Total Reward",
   "@myTotalReward": {
     "description": "campaign_dashboard_my_total_reward",
@@ -1137,12 +1125,6 @@
   "paymentType": "Payment Type",
   "@paymentType": {
     "description": "campaign_payment_type",
-    "type": "text",
-    "placeholders": {}
-  },
-  "bankDetails": "Bank Details",
-  "@bankDetails": {
-    "description": "campaign_bank_details",
     "type": "text",
     "placeholders": {}
   },
@@ -1266,27 +1248,45 @@
     "type": "text",
     "placeholders": {}
   },
-  "totalAmount": "Total Amount",
-  "@totalAmount": {
-    "description": "campaign_total_amount",
-    "type": "text",
-    "placeholders": {}
-  },
-  "rewards": "Rewards",
-  "@rewards": {
-    "description": "campaign_rewards",
-    "type": "text",
-    "placeholders": {}
-  },
-  "myInvestmentWithoutRewards": "My Investments",
+  "myInvestmentWithoutRewards": "My Investment",
   "@myInvestmentWithoutRewards": {
     "description": "campaign_dashboard_my_investment_without_rewards",
     "type": "text",
     "placeholders": {}
   },
-  "bankWireDetails": "银行电汇信息",
+  "bankWireDetails": "Bank Wire Details",
   "@bankWireDetails": {
     "description": "campaign_bank__wire_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myTotalAssets": "My Total Assets",
+  "@myTotalAssets": {
+    "description": "campaign_dashboard_my_total_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalTokenHolding": "Total Token Holding",
+  "@totalTokenHolding": {
+    "description": "campaign_dashboard_total_token__holding",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tokenDetails": "Token Details",
+  "@tokenDetails": {
+    "description": "campaign_dashboard_token_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalTokenAmount": "Total Token Amount",
+  "@totalTokenAmount": {
+    "description": "campaign_total__token_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rewardsToken": "Rewards Token",
+  "@rewardsToken": {
+    "description": "campaign_rewards_token",
     "type": "text",
     "placeholders": {}
   }
