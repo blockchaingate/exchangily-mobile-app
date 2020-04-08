@@ -1271,6 +1271,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "myTotalAssets": "我的总资产",
+  "@myTotalAssets": {
+    "description": "campaign_dashboard_my_total_assets",
+    "type": "text",
+    "placeholders": {}
+  },
   "bankWireDetails": "银行电汇信息",
   "@bankWireDetails": {
     "description": "campaign_bank__wire_details",
@@ -1283,7 +1289,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "totalTokenAmount": "总币量",
+  "totalTokenAmount": "总币数",
   "@totalTokenAmount": {
     "description": "campaign_total__token_amount",
     "type": "text",
@@ -1292,6 +1298,12 @@
   "rewardsToken": "奖励币数量",
   "@rewardsToken": {
     "description": "campaign_rewards_token",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myInvestment": "我的投资",
+  "@myInvestment": {
+    "description": "campaign_dashboard_my_investment_without_rewards",
     "type": "text",
     "placeholders": {}
   }

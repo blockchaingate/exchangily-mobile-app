@@ -1271,6 +1271,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "myTotalAssets": "我的总资产",
+  "@myTotalAssets": {
+    "description": "campaign_dashboard_my_total_assets",
+    "type": "text",
+    "placeholders": {}
+  },
   "myInvestmentWithoutRewards": "我的投资",
   "@myInvestmentWithoutRewards": {
     "description": "campaign_dashboard_my_investment_without_rewards",
@@ -1298,6 +1304,12 @@
   "rewardsToken": "奖励币数量",
   "@rewardsToken": {
     "description": "campaign_rewards_token",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myInvestment": "我的投资",
+  "@myInvestment": {
+    "description": "campaign_dashboard_my_investment_without_rewards",
     "type": "text",
     "placeholders": {}
   }

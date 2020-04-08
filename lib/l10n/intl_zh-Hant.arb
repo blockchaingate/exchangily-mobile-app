@@ -1071,7 +1071,12 @@
   "@totalInvestmentQuantity": {
     "description": "campaign_das
 },
-"myInvestmentWithoutRewards": "我的投資",
+"myTotalAssets": "我的總資產",
+"@myTotalAssets": {
+    "description": "campaign_dashboard_my_total_assets",
+    "type": "text",
+    "placeholders": {}
+  },"myInvestmentWithoutRewards": "我的投資",
   "@myInvestmentWithoutRewards": {
     "description": "campaign_dashboard_my_investment_without_rewards",
     "type": "text",
@@ -1100,5 +1105,11 @@
     "description": "campaign_rewards_token",
     "type": "text",
     "placeholders": {}
-  }
+  },
+  "myInvestment": "我的投资",
+  "@myInvestment": {
+    "description": "campaign_dashboard_my_investment_without_rewards",
+    "type": "text",
+    "placeholders": {}
+  }
 }
