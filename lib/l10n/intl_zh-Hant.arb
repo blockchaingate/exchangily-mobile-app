@@ -1076,7 +1076,8 @@
     "description": "campaign_dashboard_my_total_assets",
     "type": "text",
     "placeholders": {}
-  },"myInvestmentWithoutRewards": "我的投資",
+  },
+"myInvestmentWithoutRewards": "我的投資",
   "@myInvestmentWithoutRewards": {
     "description": "campaign_dashboard_my_investment_without_rewards",
     "type": "text",
@@ -1111,7 +1112,7 @@
     "description": "campaign_dashboard_total_token__holding",
     "type": "text",
     "placeholders": {}
-  }，
+  },
   "myInvestment": "我的投资",
   "@myInvestment": {
     "description": "campaign_dashboard_my_investment_without_rewards",

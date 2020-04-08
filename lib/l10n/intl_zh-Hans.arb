@@ -1312,7 +1312,7 @@
     "description": "campaign_dashboard_total_token__holding",
     "type": "text",
     "placeholders": {}
-  }，
+  },
     "myInvestment": "我的投资",
   "@myInvestment": {
     "description": "campaign_dashboard_my_investment_without_rewards",
