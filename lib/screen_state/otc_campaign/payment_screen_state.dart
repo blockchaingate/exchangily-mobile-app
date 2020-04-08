@@ -51,7 +51,7 @@ class CampaignPaymentScreenState extends BaseState {
   CampaignOrder campaignOrder;
   List<OrderInfo> orderInfoList = [];
   Color containerListColor;
-  int orderInfoContainerHeight = 430;
+  int orderInfoContainerHeight = 455;
   final List<String> orderStatusList = [
     'Waiting',
     'Paid',

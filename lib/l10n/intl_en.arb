@@ -1278,7 +1278,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "myInvestmentWithoutRewards": "我的投资",
+  "myInvestmentWithoutRewards": "My Investments",
   "@myInvestmentWithoutRewards": {
     "description": "campaign_dashboard_my_investment_without_rewards",
     "type": "text",

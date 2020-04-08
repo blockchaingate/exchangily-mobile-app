@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "detail-pair.dart";
 import '../../../models/price.dart';
+import '../../../shared/globals.dart' as globals;
 
 class MarketDetail extends StatefulWidget {
   final List<Price> data;
@@ -59,7 +60,7 @@ class MarketDetailState extends State<MarketDetail>
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(bottom: 5.0),
+      margin: EdgeInsets.only(bottom: 7.0),
       child: Column(
         children: <Widget>[
           TabBar(
@@ -83,7 +84,7 @@ class MarketDetailState extends State<MarketDetail>
           Container(
               margin: EdgeInsets.only(top: 5.0),
               padding: EdgeInsets.all(5.0),
-              color: Colors.grey.withAlpha(75),
+              color: globals.walletCardColor.withAlpha(75),
               child: Row(
                 children: <Widget>[
                   Expanded(

@@ -138,7 +138,7 @@ class CampaignDashboardScreenState extends BaseState {
         var y = res['_body']['myselfQuantity'];
         myTotalInvestmentQuantity = y.toDouble();
         // navigationService.navigateTo('/campaignRewardDetails');
-        calculateMyTotalReward();
+        //calculateMyTotalReward();
       } else {
         log.w('In myReward else, res is null from api');
         setBusy(false);
@@ -150,7 +150,7 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(false);
   }
 
-  /*-------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------
                                   Get Member Reward By Token
 -------------------------------------------------------------------------------------*/
 
@@ -187,6 +187,8 @@ class CampaignDashboardScreenState extends BaseState {
 
           log.w(campaignReward.toJson());
         }
+        myTotalInvestmentValue =
+            myTotalInvestmentValue + myInvestmentWithoutRewards;
         log.w('Length ${campaignRewardList.length}');
         var ttv = response['teamsTotalValue'];
         myTeamsTotalValue = ttv;
@@ -210,13 +212,6 @@ class CampaignDashboardScreenState extends BaseState {
       setBusy(false);
     });
     setBusy(false);
-  }
-
-  // Calculate my total reward
-  calculateMyTotalReward() {
-    var price = 2;
-    myTotalReward = myTotalInvestmentQuantity * price;
-    return myTotalReward;
   }
 
   // Calculate my total value

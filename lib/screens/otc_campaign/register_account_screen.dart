@@ -14,6 +14,7 @@ class CampaignRegisterAccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseScreen<CampaignRegisterAccountScreenState>(
       onModelReady: (model) async {
+        model.context = context;
         await model.init();
       },
       builder: (context, model, child) => Scaffold(
