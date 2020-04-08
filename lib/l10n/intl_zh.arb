@@ -1223,7 +1223,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "loadOrdersFailed": "无8法加载订单，请稍候再试",
+  "loadOrdersFailed": "无法加载订单，请稍候再试",
   "@loadOrdersFailed": {
     "description": "campaign_load_orders_failed",
     "type": "text",
@@ -1241,7 +1241,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "myRewardDetails": "我的激励详情",
+  "myRewardDetails": "我的奖励详情",
   "@myRewardDetails": {
     "description": "campaign_my_reward_details",
     "type": "text",
