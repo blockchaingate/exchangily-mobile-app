@@ -1068,12 +1068,6 @@ class AppLocalizations {
         name: 'referrals', desc: 'campaign_referrals');
   }
 
-  String get myInvestmentWithoutRewards {
-    return Intl.message('My Investment',
-        name: 'myInvestmentWithoutRewards',
-        desc: 'campaign_dashboard_my_investment_without_rewards');
-  }
-
   String get bankWireDetails {
     return Intl.message('Bank Wire Details',
         name: 'bankWireDetails', desc: 'campaign_bank__wire_details');
@@ -1103,6 +1097,12 @@ class AppLocalizations {
   String get rewardsToken {
     return Intl.message('Rewards Token',
         name: 'rewardsToken', desc: 'campaign_rewards_token');
+  }
+
+  String get myInvestment {
+    return Intl.message('My Investment',
+        name: 'myInvestment',
+        desc: 'campaign_dashboard_my_investment_without_rewards');
   }
 }
 

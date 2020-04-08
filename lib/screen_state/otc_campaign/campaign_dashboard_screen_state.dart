@@ -22,6 +22,7 @@ class CampaignDashboardScreenState extends BaseState {
   final List<int> memberLevelsColorList = [0xff696969, 0xffE6BE8A, 0xffffffff];
   String memberLevel = '';
   int memberLevelTextColor = 0xff696969;
+  double myTotalAssetQuantity = 0;
   double myTotalAssetValue = 0;
   double myTotalTokenHolding = 0;
   double myTotalReward = 0;
@@ -162,7 +163,7 @@ class CampaignDashboardScreenState extends BaseState {
     String token = await campaignService.getSavedLoginToken();
     await campaignService.getMemberRewardByToken(token).then((response) async {
       if (response != null) {
-        myTotalAssetValue = 0;
+        myTotalAssetQuantity = 0;
         myTotalTokenHolding = 0;
         myTotalReferrals = 0;
         myTotalReward = 0;
@@ -181,7 +182,7 @@ class CampaignDashboardScreenState extends BaseState {
               totalRewardNextQuantities: res[i]['totalRewardNextQuantities']);
           campaignRewardList.add(campaignReward);
           // calculating total asset value
-          myTotalAssetValue = myTotalAssetValue + totalRewardValueByLevel;
+          myTotalAssetQuantity = myTotalAssetQuantity + totalRewardValueByLevel;
           myTotalTokenHolding = myTotalTokenHolding +
               totalTokenQuantityByLevel +
               totalRewardQuantityByLevel;
@@ -190,7 +191,8 @@ class CampaignDashboardScreenState extends BaseState {
           myTotalReward = myTotalReward + totalRewardQuantityByLevel;
           log.w(campaignReward.toJson());
         }
-        myTotalAssetValue = myTotalAssetValue + myInvestmentWithoutRewards;
+        myTotalAssetQuantity =
+            myTotalAssetQuantity + myInvestmentWithoutRewards;
         log.w('Length ${campaignRewardList.length}');
         var ttv = response['teamsTotalValue'];
         myTeamsTotalValue = ttv;

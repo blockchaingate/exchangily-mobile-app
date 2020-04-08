@@ -172,16 +172,58 @@ class CampaignDashboardScreen extends StatelessWidget {
                           AppLocalizations.of(context).myTotalAssets,
                           style: TextStyle(letterSpacing: 1.1),
                         ),
-                        subtitle: model.busy
-                            ? Shimmer.fromColors(
-                                baseColor: globals.primaryColor,
-                                highlightColor: globals.grey,
-                                child: Text(
-                                  ('0.000'),
-                                  style: Theme.of(context).textTheme.headline5,
-                                ))
-                            : Text(model.myTotalAssetValue.toStringAsFixed(2),
-                                style: Theme.of(context).textTheme.headline5),
+                        subtitle: Column(
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Text(AppLocalizations.of(context).quantity,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1),
+                                UIHelper.horizontalSpaceSmall,
+                                model.busy
+                                    ? Shimmer.fromColors(
+                                        baseColor: globals.primaryColor,
+                                        highlightColor: globals.grey,
+                                        child: Text(
+                                          ('0.000'),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ))
+                                    : Text(
+                                        model.myTotalAssetQuantity
+                                            .toStringAsFixed(2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Text(AppLocalizations.of(context).value,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1),
+                                UIHelper.horizontalSpaceSmall,
+                                model.busy
+                                    ? Shimmer.fromColors(
+                                        baseColor: globals.primaryColor,
+                                        highlightColor: globals.grey,
+                                        child: Text(
+                                          ('0.000'),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ))
+                                    : Text(
+                                        model.myTotalAssetValue
+                                            .toStringAsFixed(2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1),
+                              ],
+                            )
+                          ],
+                        ),
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -215,7 +257,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                       // Level and referral count Row
 
                       Container(
-                        color: globals.primaryColor.withAlpha(175),
+                        color: globals.primaryColor.withAlpha(155),
                         padding: EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 18.0),
                         child: Row(
@@ -223,13 +265,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                           children: <Widget>[
                             Row(
                               children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 3.0),
-                                  child: Text(
-                                    AppLocalizations.of(context).level,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
+                                Text(
+                                  AppLocalizations.of(context).level,
+                                  style: Theme.of(context).textTheme.headline5,
                                 ),
                                 UIHelper.horizontalSpaceSmall,
                                 model.busy
@@ -261,7 +299,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 Icon(
                                   Icons.share,
                                   size: 20,
-                                  color: globals.primaryColor,
+                                  color: globals.exgLogoColor,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
