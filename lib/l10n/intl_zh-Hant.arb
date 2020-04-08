@@ -1082,5 +1082,23 @@
     "description": "campaign_bank__wire_details",
     "type": "text",
     "placeholders": {}
+  },
+"tokenDetails": "幣詳情",
+  "@tokenDetails": {
+    "description": "campaign_dashboard_token_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalTokenAmount": "總幣量",
+  "@totalTokenAmount": {
+    "description": "campaign_total__token_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rewardsToken": "獎勵幣數量",
+  "@rewardsToken": {
+    "description": "campaign_rewards_token",
+    "type": "text",
+    "placeholders": {}
   }
 }

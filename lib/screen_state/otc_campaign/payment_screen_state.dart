@@ -51,7 +51,7 @@ class CampaignPaymentScreenState extends BaseState {
   CampaignOrder campaignOrder;
   List<OrderInfo> orderInfoList = [];
   Color containerListColor;
-  int orderInfoContainerHeight = 430;
+  int orderInfoContainerHeight = 455;
   final List<String> orderStatusList = [
     'Waiting',
     'Paid',
@@ -60,11 +60,17 @@ class CampaignPaymentScreenState extends BaseState {
     'Order Cancelled'
   ];
   List<String> uiOrderStatusList = [];
+  double tokenPurchaseAmount = 0;
+  List<String> currencies = ['USD', 'CAD'];
+  String selectedCurrency;
 
   // Initial logic
   initState() async {
+    setBusy(true);
     print('in payment screen');
     await getCampaignOrdeList();
+    selectedCurrency = currencies[0];
+    setBusy(false);
   }
 
   // Radio button selection
@@ -292,17 +298,19 @@ class CampaignPaymentScreenState extends BaseState {
   }
 
   // Check Send Amount
-  checkAmount(amount) {
-    setState(ViewState.Busy);
+  checkAmount(amount) async {
+    setBusy(true);
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
-    log.e(amount);
     var res = RegexValidator(pattern).isValid(amount);
     checkSendAmount = res;
-    log.w('check send amount $checkSendAmount');
-    !checkSendAmount
-        ? setErrorMessage(AppLocalizations.of(context).invalidAmount)
-        : setErrorMessage('');
-    setState(ViewState.Idle);
+    if (!checkSendAmount) {
+      setErrorMessage(AppLocalizations.of(context).invalidAmount);
+    } else {
+      setErrorMessage('');
+      double castedAmount = double.parse(amount);
+      await calcTokenPurchaseAmount(castedAmount);
+    }
+    setBusy(false);
   }
 
   // Order list container color according to even/odd index input from the UI list builder
@@ -311,5 +319,37 @@ class CampaignPaymentScreenState extends BaseState {
         ? containerListColor = globals.walletCardColor
         : containerListColor = globals.grey.withAlpha(20);
     return containerListColor;
+  }
+
+// Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
+  Future<double> getUsdValue() async {
+    setBusy(true);
+    double usdValue = 0;
+    await campaignService.getUsdPrices().then((res) {
+      if (res != null) {
+        log.w(res['data']['EXG']['USD']);
+        log.e(selectedCurrency);
+        if (selectedCurrency == 'CAD') {
+          double cadUsdValue = res['data']['CAD']['USD'];
+          double exgUsdValue = res['data']['EXG']['USD'];
+          usdValue = cadUsdValue * exgUsdValue;
+          log.i('in if $usdValue');
+        } else {
+          usdValue = res['data']['EXG']['USD'];
+          log.w('in else $usdValue');
+        }
+      }
+    });
+    setBusy(false);
+    return usdValue;
+  }
+
+  // Calculate purchased token amount
+  calcTokenPurchaseAmount(amount) async {
+    setBusy(true);
+    double price = await getUsdValue();
+    tokenPurchaseAmount = amount / price;
+    setBusy(false);
+    return tokenPurchaseAmount;
   }
 }

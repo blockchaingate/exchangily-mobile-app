@@ -63,7 +63,7 @@ class MarketOverviewState extends State<MarketOverview> {
       color: globals.walletCardColor,
       child: Container(
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[

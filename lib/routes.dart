@@ -44,6 +44,8 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/withdraw.dart
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings.dart';
 
+import 'screens/otc_campaign/token_details_screen.dart';
+
 final log = getLogger('Routes');
 
 class RouteGenerator {
@@ -144,6 +146,10 @@ class RouteGenerator {
                   userData: args,
                 ));
 
+      case '/campaignTokenDetails':
+        return MaterialPageRoute(
+            builder: (_) =>
+                CampaignTokenDetailsScreen(campaignRewardList: args));
       case '/campaignRewardDetails':
         return MaterialPageRoute(
             builder: (_) =>

@@ -38,6 +38,7 @@ class CampaignService {
   static const memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
   static const rewardsUrl = BASE_URL + 'campaign-order/rewards';
   static const memberProfileUrl = BASE_URL + 'campaign-order/profile';
+  static const usdPricesUrl = 'https://kanbanprod.fabcoinapi.com/USDvalues';
 
   CampaignUserData userData;
   CampaignUserDatabaseService campaignUserDatabaseService =
@@ -205,7 +206,22 @@ class CampaignService {
     return loginToken;
   }
 
-  /*-------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------
+                                  Get Usd Prices
+-------------------------------------------------------------------------------------*/
+
+  Future getUsdPrices() async {
+    try {
+      var response = await client.get(usdPricesUrl);
+      var json = jsonDecode(response.body);
+      log.w(json);
+      return json;
+    } catch (err) {
+      log.e('In getUsdPrices catch $err');
+    }
+  }
+
+/*-------------------------------------------------------------------------------------
                                   Get Campaign Name
 -------------------------------------------------------------------------------------*/
 
@@ -248,7 +264,7 @@ class CampaignService {
     try {
       var response = await client.get(rewardsUrl, headers: headers);
       var json = jsonDecode(response.body);
-      log.w(' getRewardById $json');
+      log.w('getRewardById $json');
 
       return json;
     } catch (err) {
