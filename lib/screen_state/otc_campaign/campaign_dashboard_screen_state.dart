@@ -32,6 +32,7 @@ class CampaignDashboardScreenState extends BaseState {
   BuildContext context;
   double myInvestmentWithoutRewards = 0;
   double myTokensWithoutRewards = 0;
+  var myTokens;
 
   List<CampaignReward> campaignRewardList = [];
   initState() async {
@@ -77,8 +78,10 @@ class CampaignDashboardScreenState extends BaseState {
         log.w(res);
         memberLevel = res['membership'];
         myInvestmentWithoutRewards = res['totalValue'];
-        myTokensWithoutRewards = res['totalQuantities'];
+        myTokens = res['totalQuantities'];
+        //  myTokensWithoutRewards = myTokens;
         assignColorAccordingToMemberLevel(memberLevel);
+        //   log.w('mytokens $myTokensWithoutRewards ${res['totalQuantities']}');
       } else {
         log.w(' In myProfile else');
         setBusy(false);

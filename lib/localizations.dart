@@ -1114,6 +1114,17 @@ class AppLocalizations {
     return Intl.message('My Tokens',
         name: 'myTokens', desc: 'campaign_dashboard_my_tokens');
   }
+
+  String get tokenQuantity {
+    return Intl.message('Token Quantity',
+        name: 'tokenQuantity',
+        desc: 'campaign_dashboard_payment_token_quantity');
+  }
+
+  String get referralCount {
+    return Intl.message('Referral Count',
+        name: 'referralCount', desc: 'campaign_dashboard_referral_count');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

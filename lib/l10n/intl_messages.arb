@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-08T17:05:02.370864",
+  "@@last_modified": "2020-04-08T19:33:51.224573",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1299,6 +1299,18 @@
   "myTokens": "My Tokens",
   "@myTokens": {
     "description": "campaign_dashboard_my_tokens",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tokenQuantity": "Token Quantity",
+  "@tokenQuantity": {
+    "description": "campaign_dashboard_payment_token_quantity",
+    "type": "text",
+    "placeholders": {}
+  },
+  "referralCount": "Referral Count",
+  "@referralCount": {
+    "description": "campaign_dashboard_referral_count",
     "type": "text",
     "placeholders": {}
   }

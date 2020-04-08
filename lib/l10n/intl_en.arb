@@ -1290,4 +1290,29 @@
     "type": "text",
     "placeholders": {}
   }
+  ,
+  "teamReward": "Team Reward",
+  "@teamReward": {
+    "description": "campaign_dashboard_team_reward",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myTokens": "My Tokens",
+  "@myTokens": {
+    "description": "campaign_dashboard_my_tokens",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tokenQuantity": "Token Quantity",
+  "@tokenQuantity": {
+    "description": "campaign_dashboard_payment_token_quantity",
+    "type": "text",
+    "placeholders": {}
+  },
+  "referralCount": "Referral Count",
+  "@referralCount": {
+    "description": "campaign_dashboard_referral_count",
+    "type": "text",
+    "placeholders": {}
+  }
 }

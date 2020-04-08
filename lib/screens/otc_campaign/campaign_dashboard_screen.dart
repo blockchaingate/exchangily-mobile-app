@@ -386,9 +386,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                               .headline5,
                                         )),
                                   )
-                                : Text(
-                                    model.myTokensWithoutRewards
-                                        .toStringAsFixed(2),
+                                : Text('${model.myTokens}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
