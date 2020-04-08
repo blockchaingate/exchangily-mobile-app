@@ -845,7 +845,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "satoshisPerByte": "锍/字节",
+    "satoshisPerByte": "聪/字节",
     "@satoshisPerByte": {
         "description": "satoshis_per_byte",
         "type": "text",
@@ -1229,7 +1229,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "loadOrdersFailed": "无8法加载订单，请稍候再试",
+  "loadOrdersFailed": "无法加载订单，请稍候再试",
   "@loadOrdersFailed": {
     "description": "campaign_load_orders_failed",
     "type": "text",
