@@ -1318,5 +1318,17 @@
         "description": "campaign_dashboard_my_investment_without_rewards",
         "type": "text",
         "placeholders": {}
+    },
+    "tokenQuantity": "币数量",
+    "@tokenQuantity": {
+        "description": "campaign_dashboard_payment_token_quantity",
+        "type": "text",
+        "placeholders": {}
+    },
+    "referralCount": "推荐数量",
+    "@referralCount": {
+        "description": "campaign_dashboard_referral_count",
+        "type": "text",
+        "placeholders": {}
     }
 }
