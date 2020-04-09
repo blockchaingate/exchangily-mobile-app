@@ -304,7 +304,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 5.0),
                                   child: Text(
-                                    'Referral Count ',
+                                    AppLocalizations.of(context).referralCount +
+                                        ' ',
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   ),

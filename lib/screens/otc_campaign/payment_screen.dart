@@ -235,7 +235,9 @@ class CampaignPaymentScreen extends StatelessWidget {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Text('Bank Account #'),
+                                    Text(AppLocalizations.of(context)
+                                            .bankAccount +
+                                        ' #'),
                                     Text('350211024087')
                                   ],
                                 )

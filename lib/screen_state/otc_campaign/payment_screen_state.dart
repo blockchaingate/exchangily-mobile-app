@@ -52,13 +52,7 @@ class CampaignPaymentScreenState extends BaseState {
   List<OrderInfo> orderInfoList = [];
   Color containerListColor;
   int orderInfoContainerHeight = 455;
-  final List<String> orderStatusList = [
-    'Waiting',
-    'Paid',
-    'Payment Received',
-    'Failed',
-    'Order Cancelled'
-  ];
+  List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
   double tokenPurchaseAmount = 0;
   List<String> currencies = ['USD', 'CAD'];
@@ -226,6 +220,13 @@ class CampaignPaymentScreenState extends BaseState {
       if (orderListFromApi != null) {
         log.w(orderListFromApi.length);
         orderInfoList = orderListFromApi;
+        orderStatusList = [
+          AppLocalizations.of(context).waiting,
+          AppLocalizations.of(context).paid,
+          AppLocalizations.of(context).paymentReceived,
+          AppLocalizations.of(context).failed,
+          AppLocalizations.of(context).orderCancelled,
+        ];
 
         for (int i = 0; i < orderInfoList.length; i++) {
           var status = orderInfoList[i].status;
