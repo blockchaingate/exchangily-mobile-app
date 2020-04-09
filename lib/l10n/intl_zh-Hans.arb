@@ -131,7 +131,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "enterAmount": "输入数量",
+    "enterAmount": "输入数额",
     "@enterAmount": {
         "description": "send_amount_text",
         "type": "text",
@@ -1103,7 +1103,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "myTotalReward": "我的奖励总额",
+    "myTotalReward": "推荐奖励",
     "@myTotalReward": {
         "description": "campaign_dashboard_my_total_reward",
         "type": "text",
@@ -1304,6 +1304,18 @@
     "rewardsToken": "奖励币数量",
     "@rewardsToken": {
         "description": "campaign_rewards_token",
+        "type": "text",
+        "placeholders": {}
+    },
+    "teamReward": "团队奖励",
+    "@teamReward": {
+        "description": "campaign_dashboard_team_reward",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myTokens": "我购买的币数",
+    "@myTokens": {
+        "description": "campaign_dashboard_my_tokens",
         "type": "text",
         "placeholders": {}
     },

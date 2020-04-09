@@ -131,7 +131,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "enterAmount": "輸入數量",
+    "enterAmount": "輸入數額",
     "@enterAmount": {
         "description": "send_amount_text",
         "type": "text",
@@ -1109,13 +1109,25 @@
         "type": "text",
         "placeholders": {}
     },
+    "teamReward": "團隊獎勵",
+    "@teamReward": {
+        "description": "campaign_dashboard_team_reward",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myTokens": "我購買的幣數",
+    "@myTokens": {
+        "description": "campaign_dashboard_my_tokens",
+        "type": "text",
+        "placeholders": {}
+    },
     "totalTokenHolding": "總持幣數",
     "@totalTokenHolding": {
         "description": "campaign_dashboard_total_token__holding",
         "type": "text",
         "placeholders": {}
     },
-    "myInvestment": "我的投资",
+    "myInvestment": "我的投資",
     "@myInvestment": {
         "description": "campaign_dashboard_my_investment_without_rewards",
         "type": "text",
