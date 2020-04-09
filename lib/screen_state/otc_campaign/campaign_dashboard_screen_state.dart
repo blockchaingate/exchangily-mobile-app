@@ -196,13 +196,17 @@ class CampaignDashboardScreenState extends BaseState {
         }
         myTotalAssetQuantity =
             myTotalAssetQuantity + myInvestmentWithoutRewards;
+        await calcMyTotalAsssetValue();
         log.w('Length ${campaignRewardList.length}');
         var ttv = response['teamsTotalValue'];
-        myTeamsTotalValue = ttv;
+        // Have to check if team value or reward is zero otherwise it throws type cast error and doesn't execute any statement after that
+        if (ttv != 0) {
+          myTeamsTotalValue = ttv;
+        }
         var ttr = response['teamsRewards'];
-        log.w(ttr);
-
-        await calcMyTotalAsssetValue();
+        if (ttr != 0) {
+          myTeamsTotalRewards = ttr;
+        }
       } else {
         log.w('In myReward else, res is null from api');
         setBusy(false);
@@ -218,6 +222,8 @@ class CampaignDashboardScreenState extends BaseState {
   calcMyTotalAsssetValue() async {
     double exgPrice = await getUsdValue();
     myTotalAssetValue = myTotalAssetQuantity * exgPrice;
+    log.e('Test $myTotalAssetQuantity, $exgPrice - $myTotalAssetValue');
+    return myTotalAssetValue;
   }
 
   // Generic Navigate

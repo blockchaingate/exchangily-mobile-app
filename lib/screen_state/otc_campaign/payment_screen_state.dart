@@ -333,7 +333,7 @@ class CampaignPaymentScreenState extends BaseState {
         if (selectedCurrency == 'CAD') {
           double cadUsdValue = res['data']['CAD']['USD'];
           double exgUsdValue = res['data']['EXG']['USD'];
-          usdValue = cadUsdValue * exgUsdValue;
+          usdValue = (1 / cadUsdValue) * exgUsdValue;
           log.i('in if $usdValue');
         } else {
           usdValue = res['data']['EXG']['USD'];
