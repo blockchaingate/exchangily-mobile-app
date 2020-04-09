@@ -1098,7 +1098,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "myTotalReward": "My Total Reward",
+  "myTotalReward": "My Referral Reward",
   "@myTotalReward": {
     "description": "campaign_dashboard_my_total_reward",
     "type": "text",
@@ -1297,7 +1297,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "myTokens": "My Tokens",
+  "myTokens": "My Tokens Purchased",
   "@myTokens": {
     "description": "campaign_dashboard_my_tokens",
     "type": "text",
