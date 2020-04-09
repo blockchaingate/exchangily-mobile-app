@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
@@ -15,8 +16,9 @@ class CampaignInstructionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScreen<CampaignInstructionsScreenState>(
-      onModelReady: (model) {
-        model.initState();
+      onModelReady: (model) async {
+        model.context = context;
+        await model.initState();
       },
       builder: (context, model, child) => Container(
         child: Scaffold(
@@ -25,24 +27,36 @@ class CampaignInstructionScreen extends StatelessWidget {
               title: Text(AppLocalizations.of(context).campaignInstructions,
                   style: Theme.of(context).textTheme.headline3)),
           key: key,
-          body: Column(
-            children: <Widget>[
-              // List of instruction SVG images
-              model.hasErrorMessage
-                  ? Shimmer.fromColors(
-                      baseColor: globals.primaryColor,
-                      highlightColor: globals.white,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          UIHelper.verticalSpaceLarge,
-                          UIHelper.verticalSpaceLarge,
-                          UIHelper.verticalSpaceLarge,
-                          UIHelper.verticalSpaceLarge,
-                          Text(model.errorMessage),
-                        ],
-                      ))
-                  : Expanded(
+          body: model.busy
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.center,
+                      // width: 250,
+                      child: Center(
+                        child: Theme.of(context).platform == TargetPlatform.iOS
+                            ? ClassicHeader()
+                            : Shimmer.fromColors(
+                                baseColor: globals.primaryColor,
+                                highlightColor: globals.grey,
+                                child: Text(
+                                    AppLocalizations.of(context)
+                                        .checkingAccountDetails,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(
+                                            color: globals.primaryColor))),
+                      ),
+                    ),
+                  ],
+                )
+              : Column(
+                  children: <Widget>[
+                    // List of instruction SVG images
+                    Expanded(
                       child: SizedBox(
                           height: MediaQuery.of(context).size.height - 100,
                           child: ListView.separated(
@@ -56,10 +70,9 @@ class CampaignInstructionScreen extends StatelessWidget {
                           )),
                     ),
 
-              // Buy container
-              model.busy == true
-                  ? Container()
-                  : Container(
+                    // Enter button container
+
+                    Container(
                       width: 250,
                       child: RaisedButton(
                         padding: EdgeInsets.all(0),
@@ -72,9 +85,9 @@ class CampaignInstructionScreen extends StatelessWidget {
                         },
                       ),
                     ),
-              UIHelper.verticalSpaceSmall,
-            ],
-          ),
+                    UIHelper.verticalSpaceSmall,
+                  ],
+                ),
         ),
       ),
     );

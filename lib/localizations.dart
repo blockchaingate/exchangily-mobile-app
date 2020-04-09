@@ -946,9 +946,10 @@ class AppLocalizations {
         name: 'level', desc: 'campaign_dashboard_level');
   }
 
-  String get myTotalReward {
-    return Intl.message('My Total Reward',
-        name: 'myTotalReward', desc: 'campaign_dashboard_my_total_reward');
+  String get myReferralReward {
+    return Intl.message('My Referral Reward',
+        name: 'myReferralReward',
+        desc: 'campaign_dashboard_my_referral_reward');
   }
 
   String get teamsTotalValue {
