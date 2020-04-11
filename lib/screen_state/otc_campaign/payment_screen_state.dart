@@ -215,8 +215,9 @@ class CampaignPaymentScreenState extends BaseState {
         log.e(res['orderNum']);
         var orderNumber = res['orderNum'];
         if (_groupValue == 'USD') {
-          sharedService.alertResponse('Order Created Successfully',
-              'Please include your order number $orderNumber after hyphen when you make payment');
+          sharedService.alertResponse(
+              AppLocalizations.of(context).orderCreatedSuccessfully,
+              '${AppLocalizations.of(context).orderCreatedSuccessfully} $orderNumber ${AppLocalizations.of(context).afterHyphenWhenYouMakePayment}');
         } else {
           sharedService.alertResponse(AppLocalizations.of(context).success,
               AppLocalizations.of(context).yourOrderHasBeenCreated);

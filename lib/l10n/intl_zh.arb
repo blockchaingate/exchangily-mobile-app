@@ -1367,8 +1367,14 @@
     "type": "text",
     "placeholders": {}
   },
-  "paymentDescription": "确认订单需填写付款說明",
+  "paymentDescription": "付款說明",
   "@paymentDescription": {
+    "description": "campaign_payment_payment_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentDescriptionNote": "确认付款需填写付款說明",
+  "@paymentDescriptionNote": {
     "description": "campaign_payment_payment_description",
     "type": "text",
     "placeholders": {}
@@ -1403,7 +1409,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "pleaseincludeYourOrderNumber": "请在付款时注明订单号",
+  "pleaseIncludeYourOrderNumber": "请在付款时注明订单号",
   "@pleaseincludeYourOrderNumber": {
     "description": "campaign_payment_include_your_order_number",
     "type": "text",
@@ -1415,8 +1421,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "UpdateYourOrderStatus": "更新订单状态",
-  "@UpdateYourOrderStatus": {
+  "updateYourOrderStatus": "更新订单状态",
+  "@updateYourOrderStatus": {
     "description": "Update_Your_Order_Status",
     "type": "text",
     "placeholders": {}
