@@ -917,7 +917,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "email": "Email",
+    "email": "電子郵箱",
     "@email": {
         "description": "campaign_email",
         "type": "text",
@@ -1144,5 +1144,89 @@
         "description": "campaign_dashboard_referral_count",
         "type": "text",
         "placeholders": {}
+    },
+ "myReferralReward": "推薦獎勵",
+  "@myReferralReward": {
+    "description": "campaign_dashboard_my_referral_reward",
+    "type": "text",
+    "placeholders": {}
+  },
+  "descriptionIsRequired": "請填寫付款詳情",
+  "@descriptionIsRequired": {
+    "description": "campaign_payment_update_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "diamond": "鑽石",
+  "@diamond": {
+    "description": "campaign_dashboard_level_diamond",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gold": "黃金",
+  "@gold": {
+    "description": "campaign_dashboard_level_gold",
+    "type": "text",
+    "placeholders": {}
+  },
+  "silver": "白銀",
+  "@silver": {
+    "description": "campaign_dashboard_level_silver",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentDescription": "確認訂單需填寫付款說明",
+  "@paymentDescription": {
+    "description": "campaign_payment_payment_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderId": "訂單號",
+  "@orderId": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPayment": "確認付款",
+  "@confirmPayment": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "checkingCredentials": "校驗憑證",
+  "@checkingCredentials": {
+    "description": "campaign_login_checking_credentials",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancelOrder": "取消訂單",
+  "@cancelOrder": {
+    "description": "campaign_payment_cancel_order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCreatedSuccessfully": "成功創建訂單",
+  "@orderCreatedSuccessfully": {
+    "description": "campaign_payment_order_created_successfully",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseincludeYourOrderNumber": "請在付款時註明訂單號",
+  "@pleaseincludeYourOrderNumber": {
+    "description": "campaign_payment_include_your_order_number",
+    "type": "text",
+    "placeholders": {}
+  },
+  "afterHyphenWhenYouMakePayment": "",
+  "@afterHyphenWhenYouMakePayment": {
+    "description": "campaign_payment_after_hyphen_when_you_make_payment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "UpdateYourOrderStatus": "更新訂單狀態",
+  "@UpdateYourOrderStatus": {
+    "description": "Update_Your_Order_Status",
+    "type": "text",
+    "placeholders": {}
+  }   
     }
-}
