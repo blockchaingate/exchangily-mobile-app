@@ -214,7 +214,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   style: Theme.of(context).textTheme.headline5,
                                 ))
                             : SizedBox(
-                                width: 120,
+                                width: 130,
                                 child: Row(
                                   children: <Widget>[
                                     Padding(

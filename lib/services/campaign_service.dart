@@ -173,7 +173,7 @@ class CampaignService {
       var jsonList = jsonDecode(response.body) as List;
       log.w('In getOrderByMemberId $jsonList');
       OrderInfoList orderInfoList = OrderInfoList.fromJson(jsonList);
-      log.w('In getOrderByMemberId ${orderInfoList.orders[1].id}');
+      // log.w('In getOrderByMemberId ${orderInfoList.orders[1].id}');
       return orderInfoList.orders;
     } catch (err) {
       log.e('In getOrderById catch $err');
