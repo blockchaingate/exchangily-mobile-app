@@ -32,7 +32,7 @@ class CampaignDashboardScreenState extends BaseState {
   BuildContext context;
   double myInvestmentValueWithoutRewards = 0;
   double myTokensWithoutRewards = 0;
-  var myTokens;
+  var myTokens = 0;
 
   List<CampaignReward> campaignRewardList = [];
   initState() async {
