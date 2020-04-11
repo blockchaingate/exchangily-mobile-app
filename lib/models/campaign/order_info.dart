@@ -11,7 +11,7 @@ class OrderInfo {
       String txid,
       String status,
       var quantity}) {
-    this._id = id;
+    this.id = id;
     this._dateCreated = dateCreated ?? '';
     this._txid = txid ?? '';
     this._status = status ?? '';
@@ -20,7 +20,7 @@ class OrderInfo {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this._id;
+    data['_id'] = this._id;
     data['dateCreated'] = this._dateCreated;
     data['txid'] = this._txid;
     data['status'] = this._status;
@@ -30,7 +30,7 @@ class OrderInfo {
 
   factory OrderInfo.fromJson(Map<String, dynamic> json) {
     return OrderInfo(
-        id: json['id'] as String,
+        id: json['_id'] as String,
         dateCreated: json['dateCreated'] as String,
         txid: json['txid'],
         status: json['status'],

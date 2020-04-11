@@ -27,6 +27,7 @@ class CampaignService {
   static const loginUrl = BASE_URL + 'members/login';
   static const kycWithTokenUrl = BASE_URL + 'kyc/create';
   static const createOrderUrl = BASE_URL + 'campaign-order/create';
+  static const updateOrderUrl = BASE_URL + 'campaign-order/update';
   static const listOrdersByWalletAddressUrl =
       BASE_URL + 'campaign-order/wallet-orders/';
   static const listOrdersByMemberIdUrl =
@@ -126,32 +127,53 @@ class CampaignService {
       "quantity": campaignOrder.quantity.toString(),
       "paymentType": campaignOrder.paymentType
     };
-    // body.addAll({'campaignId': campaignId});
-    log.w(body);
     Map<String, String> headers = {'x-access-token': loginToken};
     try {
       var response =
           await client.post(createOrderUrl, body: body, headers: headers);
       log.w('createCampaignOrder try response ${response.body}');
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(response.body)['_body'];
       return json;
     } catch (err) {
       log.e('In createCampaignOrder catch $err');
     }
   }
 
+/*-------------------------------------------------------------------------------------
+                          Buy coin - create order
+-------------------------------------------------------------------------------------*/
+
+  Future updateCampaignOrder(id, desc, status) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String loginToken = prefs.getString('loginToken');
+
+    Map<String, dynamic> body = {
+      "_id": id,
+      "paymentDesc": desc,
+      "status": status
+    };
+    Map<String, String> headers = {'x-access-token': loginToken};
+    try {
+      var response =
+          await client.post(updateOrderUrl, body: body, headers: headers);
+      log.w('updateCampaignOrder try response ${response.body}');
+      var json = jsonDecode(response.body)['_body'];
+      return json;
+    } catch (err) {
+      log.e('In updateCampaignOrder catch $err');
+    }
+  }
   /*-------------------------------------------------------------------------------------
                                   Get orders by member id
 -------------------------------------------------------------------------------------*/
 
   Future<List<OrderInfo>> getOrdersById(String memberId) async {
-    log.e(memberId);
     try {
       var response = await client.get(listOrdersByMemberIdUrl + memberId);
       var jsonList = jsonDecode(response.body) as List;
-      log.w(jsonList);
+      log.w('In getOrderByMemberId $jsonList');
       OrderInfoList orderInfoList = OrderInfoList.fromJson(jsonList);
-      log.e(orderInfoList.orders[10].dateCreated);
+      log.w('In getOrderByMemberId ${orderInfoList.orders[1].id}');
       return orderInfoList.orders;
     } catch (err) {
       log.e('In getOrderById catch $err');

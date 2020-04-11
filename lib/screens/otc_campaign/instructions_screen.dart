@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
@@ -55,6 +56,31 @@ class CampaignInstructionScreen extends StatelessWidget {
                 )
               : Column(
                   children: <Widget>[
+                    Container(
+                        padding: EdgeInsets.all(5.0),
+                        child: Column(
+                          children: <Widget>[
+                            // Container(
+                            //   child: Image.asset(
+                            //       'assets/images/otc-campaign/guide-about-campaign-en-png.png'),
+                            // ),
+
+                            // if (model.pdfViewerService.path != null)
+                            //   Container(
+                            //     height: 300,
+                            //     child: PdfViewer(
+                            //         filePath: model.pdfViewerService.path),
+                            //   )
+                            // else
+                            //   Text('Pdf is not loaded'),
+                            // RaisedButton(
+                            //   child: Text('Load Pdf'),
+                            //   onPressed: () {
+                            //     model.loadPdf();
+                            //   },
+                            // )
+                          ],
+                        )),
                     // List of instruction SVG images
                     Expanded(
                       child: SizedBox(
