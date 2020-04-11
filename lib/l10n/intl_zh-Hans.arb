@@ -1373,7 +1373,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "paymentDescription": "付款说明",
+  "paymentDescription": "确认订单需填写付款說明",
   "@paymentDescription": {
     "description": "campaign_payment_payment_description",
     "type": "text",
@@ -1418,6 +1418,12 @@
   "afterHyphenWhenYouMakePayment": "",
   "@afterHyphenWhenYouMakePayment": {
     "description": "campaign_payment_after_hyphen_when_you_make_payment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "UpdateYourOrderStatus": "更新订单状态",
+  "@UpdateYourOrderStatus": {
+    "description": "Update_Your_Order_Status",
     "type": "text",
     "placeholders": {}
   }
