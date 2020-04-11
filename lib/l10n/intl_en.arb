@@ -1385,5 +1385,11 @@
     "description": "campaign_payment_after_hyphen_when_you_make_payment",
     "type": "text",
     "placeholders": {}
+  },
+  "UpdateYourOrderStatus": "update your order status",
+  "@UpdateYourOrderStatus": {
+    "description": "Update_Your_Order_Status",
+    "type": "text",
+    "placeholders": {}
   }
 }
