@@ -79,13 +79,13 @@ class CampaignService {
       "campaignId": "1",
       "walletExgAddress": exgWalletAddress
     }); // Add another key/pair value
-    log.w(body);
     try {
       var response = await client.post(registerUrl, body: body);
-      log.w(json.decode(response.body));
-      return json.decode(response.body);
+      var json = jsonDecode(response.body);
+      log.w('registerAccount $json');
+      return json;
     } catch (err) {
-      log.e(err);
+      log.e('registerAccount $err');
     }
   }
 
@@ -102,7 +102,7 @@ class CampaignService {
     try {
       var response = await client.post(loginUrl, body: body);
       var json = jsonDecode(response.body);
-      log.w(json);
+      log.w('login $json');
       return json;
     }
     // when i use then here and return the response variable it was showing output in console for service but not in the login state
@@ -131,8 +131,8 @@ class CampaignService {
     try {
       var response =
           await client.post(createOrderUrl, body: body, headers: headers);
-      log.w('createCampaignOrder try response ${response.body}');
       var json = jsonDecode(response.body)['_body'];
+      log.w('createCampaignOrder try response $json');
       return json;
     } catch (err) {
       log.e('In createCampaignOrder catch $err');
@@ -156,8 +156,8 @@ class CampaignService {
     try {
       var response =
           await client.post(updateOrderUrl, body: body, headers: headers);
-      log.w('updateCampaignOrder try response ${response.body}');
       var json = jsonDecode(response.body)['_body'];
+      log.w('updateCampaignOrder try response $json');
       return json;
     } catch (err) {
       log.e('In updateCampaignOrder catch $err');
@@ -173,7 +173,6 @@ class CampaignService {
       var jsonList = jsonDecode(response.body) as List;
       log.w('In getOrderByMemberId $jsonList');
       OrderInfoList orderInfoList = OrderInfoList.fromJson(jsonList);
-      // log.w('In getOrderByMemberId ${orderInfoList.orders[1].id}');
       return orderInfoList.orders;
     } catch (err) {
       log.e('In getOrderById catch $err');
@@ -193,11 +192,8 @@ class CampaignService {
 
       var jsonList = jsonDecode(response.body)
           as List; // making this a list what i was missing earlier
-      log.w(jsonList);
+      log.w('getOrderByWalletAddress $jsonList');
       TransactionInfoList orderList = TransactionInfoList.fromJson(jsonList);
-      // List<TransactionInfo> orderList =
-      //     json.map((e) => TransactionInfo.fromJson(e)).toList();
-      log.w(orderList.transactions[5].dateCreated);
       return orderList.transactions;
     } catch (err) {
       log.e('In getOrderByWalletAddress catch $err');
@@ -236,7 +232,7 @@ class CampaignService {
     try {
       var response = await client.get(usdPricesUrl);
       var json = jsonDecode(response.body);
-      log.w(json);
+      log.w(' getUsdPrices $json');
       return json;
     } catch (err) {
       log.e('In getUsdPrices catch $err');
@@ -251,7 +247,7 @@ class CampaignService {
     try {
       var response = await client.get(campaignNameUrl);
       var json = jsonDecode(response.body);
-      log.w(json);
+      log.w('getCampaignName $json');
       return json;
     } catch (err) {
       log.e('In getCampaignName catch $err');
@@ -264,7 +260,7 @@ class CampaignService {
 
   Future getReferralsById(CampaignUserData userData) async {
     String memberId = userData.id;
-    log.e(memberId);
+
     Map<String, String> headers = {'x-access-token': userData.token};
     try {
       var response =
@@ -302,10 +298,10 @@ class CampaignService {
     Map<String, String> headers = {'x-access-token': userData.token};
     try {
       var response = await client.get(memberProfileUrl, headers: headers);
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(response.body)['_body'];
       log.w('getMemberProfile $json');
 
-      return json['_body'];
+      return json;
     } catch (err) {
       log.e('In getMemberProfile catch $err');
     }

@@ -126,14 +126,16 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                     width: 10,
                                                     height: 10,
                                                     child:
-                                                        CircularProgressIndicator())
+                                                        CircularProgressIndicator(
+                                                      strokeWidth: 0.5,
+                                                    ))
                                                 : Text(model.tokenPurchaseAmount
                                                     .toStringAsFixed(3))
                                           ]),
                                           filled: true,
                                           fillColor: globals.walletCardColor,
                                           hintText: AppLocalizations.of(context)
-                                              .enterAmount,
+                                              .quantity,
                                           hintStyle: Theme.of(context)
                                               .textTheme
                                               .headline6

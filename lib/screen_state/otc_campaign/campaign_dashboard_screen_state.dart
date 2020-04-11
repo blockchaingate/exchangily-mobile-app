@@ -23,16 +23,16 @@ class CampaignDashboardScreenState extends BaseState {
   final List<int> memberLevelsColorList = [0xff696969, 0xffE6BE8A, 0xffffffff];
   String memberLevel = '';
   int memberLevelTextColor = 0xff696969;
-  double myTotalAssetQuantity = 0;
-  double myTotalAssetValue = 0;
-  double myReferralReward = 0;
+  double myTotalAssetQuantity = 0.0;
+  double myTotalAssetValue = 0.0;
+  double myReferralReward = 0.0;
   int myTotalReferrals = 0;
-  double myTeamsTotalRewards = 0;
-  double myTeamsTotalValue = 0;
+  double myTeamsTotalRewards = 0.0;
+  double myTeamsTotalValue = 0.0;
   BuildContext context;
-  double myInvestmentValueWithoutRewards = 0;
-  double myTokensWithoutRewards = 0;
-  var myTokens = 0;
+  double myInvestmentValueWithoutRewards = 0.0;
+  double myTokensWithoutRewards = 0.0;
+  var myTokens;
 
   List<CampaignReward> campaignRewardList = [];
   initState() async {
@@ -75,25 +75,25 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(true);
     await campaignService.getMemberProfile(userData).then((res) {
       if (res != null) {
-        log.w(res);
+        log.w('myProfile $res');
         memberLevel = res['membership'];
-        myInvestmentValueWithoutRewards = res['totalValue'];
-        myTokens = res['totalQuantities'];
-        //  myTokensWithoutRewards = myTokens;
         assignColorAccordingToMemberLevel(memberLevel);
-        //   log.w('mytokens $myTokensWithoutRewards ${res['totalQuantities']}');
+        myInvestmentValueWithoutRewards = res['totalValue'];
+        myTokensWithoutRewards = res['totalQuantities'].toDouble();
+        log.w('myTokensWithoutRewards $myTokensWithoutRewards');
       } else {
         log.w(' In myProfile else');
         setBusy(false);
       }
     }).catchError((err) {
-      log.e(err);
+      log.e('myProfile $err');
       setBusy(false);
     });
     setBusy(false);
   }
 
   assignColorAccordingToMemberLevel(memberLevel) {
+    log.w('Entry assignColorAccordingToMemberLevel $memberLevel');
     setBusy(true);
     if (memberLevel == 'gold') {
       memberLevelTextColor = 0xffE6BE8A;
@@ -107,6 +107,7 @@ class CampaignDashboardScreenState extends BaseState {
       memberLevel = AppLocalizations.of(context).silver;
     }
     setBusy(false);
+    log.w('Exit assignColorAccordingToMemberLevel $memberLevel');
   }
 
 /*-------------------------------------------------------------------------------------
@@ -176,13 +177,15 @@ class CampaignDashboardScreenState extends BaseState {
         myTotalReferrals = 0;
         myReferralReward = 0;
         var res = response['personal'] as List;
+        log.w('res in my rewards by token $res');
         for (int i = 0; i < res.length; i++) {
           var totalValueByLevel = res[i]['totalValue'];
           var totalTokenQuantityByLevel = res[i]['totalQuantities'];
           var totalReferralsByLevel = res[i]['totalAccounts'];
           var totalRewardQuantityByLevel = res[i]['totalRewardQuantities'];
+          var level = res[i]['level'];
           CampaignReward campaignReward = new CampaignReward(
-              level: res[i]['level'],
+              level: level,
               totalValue: totalValueByLevel,
               totalQuantities: totalTokenQuantityByLevel,
               totalRewardQuantities: totalRewardQuantityByLevel,
@@ -197,9 +200,9 @@ class CampaignDashboardScreenState extends BaseState {
           myTotalReferrals = myTotalReferrals + totalReferralsByLevel;
           // calculating total reward
           myReferralReward = myReferralReward + totalRewardQuantityByLevel;
-          log.w(campaignReward.toJson());
+          log.w('myRewardsByToken ${campaignReward.toJson()}');
         }
-        log.w('Length ${campaignRewardList.length}');
+
         var ttv = response['teamsTotalValue'];
         // Have to check if team value or reward is zero otherwise it throws type cast error and doesn't execute any statement after that
         if (ttv != 0) {
@@ -211,7 +214,7 @@ class CampaignDashboardScreenState extends BaseState {
         }
         // Final calculation total asset quantity
         myTotalAssetQuantity =
-            myTotalAssetQuantity + myTokens + myTeamsTotalRewards;
+            myTotalAssetQuantity + myTokensWithoutRewards + myTeamsTotalRewards;
         await calcMyTotalAsssetValue();
       } else {
         log.w('In myReward else, res is null from api');
