@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-11T00:05:56.073636",
+  "@@last_modified": "2020-04-11T00:33:49.762673",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1344,6 +1344,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "paymentDescriptionNote": "Please fill this field to confirm the order",
+  "@paymentDescriptionNote": {
+    "description": "campaign_payment_payment_description_note",
+    "type": "text",
+    "placeholders": {}
+  },
   "orderId": "Order Id",
   "@orderId": {
     "description": "campaign_payment_order_id",
@@ -1383,6 +1389,12 @@
   "afterHyphenWhenYouMakePayment": "after hyphen when you make payment",
   "@afterHyphenWhenYouMakePayment": {
     "description": "campaign_payment_after_hyphen_when_you_make_payment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "updateYourOrderStatus": "Update your order status",
+  "@updateYourOrderStatus": {
+    "description": "campaign_payment_update_your_order_status",
     "type": "text",
     "placeholders": {}
   }

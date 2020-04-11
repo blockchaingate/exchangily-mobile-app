@@ -301,14 +301,13 @@ class CampaignPaymentScreenState extends BaseState {
                   .headline4
                   .copyWith(decoration: TextDecoration.underline)),
           context: context,
-          title: 'Update your order status',
+          title: AppLocalizations.of(context).updateYourOrderStatus,
           closeFunction: () {
             Navigator.of(context, rootNavigator: true).pop();
             FocusScope.of(context).requestFocus(FocusNode());
           },
           content: Column(
             children: <Widget>[
-              UIHelper.verticalSpaceMedium,
               TextField(
                 minLines: 1,
                 maxLength: 100,
@@ -317,17 +316,20 @@ class CampaignPaymentScreenState extends BaseState {
                 controller: updateOrderDescriptionController,
                 obscureText: false,
                 decoration: InputDecoration(
-                  labelStyle: Theme.of(context).textTheme.headline5,
+                  hintText: AppLocalizations.of(context).paymentDescription,
+                  hintStyle: Theme.of(context).textTheme.bodyText1,
+                  labelStyle: Theme.of(context).textTheme.headline6,
                   icon: Icon(
                     Icons.event_note,
                     color: globals.primaryColor,
                   ),
-                  labelText: AppLocalizations.of(context).paymentDescription,
+                  labelText:
+                      AppLocalizations.of(context).paymentDescriptionNote,
                 ),
               ),
-              isDescription
-                  ? Text(AppLocalizations.of(context).descriptionIsRequired)
-                  : Text('')
+              // isDescription
+              //     ? Text(AppLocalizations.of(context).descriptionIsRequired)
+              //     : Text('')
             ],
           ),
           buttons: [

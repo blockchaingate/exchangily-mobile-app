@@ -1154,6 +1154,12 @@ class AppLocalizations {
         desc: 'campaign_payment_payment_description');
   }
 
+  String get paymentDescriptionNote {
+    return Intl.message('Please fill this field to confirm the order',
+        name: 'paymentDescriptionNote',
+        desc: 'campaign_payment_payment_description_note');
+  }
+
   String get orderId {
     return Intl.message('Order Id',
         name: 'orderId', desc: 'campaign_payment_order_id');
@@ -1191,6 +1197,12 @@ class AppLocalizations {
     return Intl.message('after hyphen when you make payment',
         name: 'afterHyphenWhenYouMakePayment',
         desc: 'campaign_payment_after_hyphen_when_you_make_payment');
+  }
+
+  String get updateYourOrderStatus {
+    return Intl.message('Update your order status',
+        name: 'updateYourOrderStatus',
+        desc: 'campaign_payment_update_your_order_status');
   }
 }
 
