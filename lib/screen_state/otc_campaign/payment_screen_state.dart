@@ -17,8 +17,11 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
 
@@ -52,18 +55,15 @@ class CampaignPaymentScreenState extends BaseState {
   List<OrderInfo> orderInfoList = [];
   Color containerListColor;
   int orderInfoContainerHeight = 455;
-  final List<String> orderStatusList = [
-    'Waiting',
-    'Paid',
-    'Payment Received',
-    'Failed',
-    'Order Cancelled'
-  ];
+  List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
   double tokenPurchaseAmount = 0;
   List<String> currencies = ['USD', 'CAD'];
   String selectedCurrency;
-
+  bool isConfirming = false;
+  bool isTokenCalc = false;
+  TextEditingController updateOrderDescriptionController =
+      TextEditingController();
   // Initial logic
   initState() async {
     setBusy(true);
@@ -101,6 +101,7 @@ class CampaignPaymentScreenState extends BaseState {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (dialogResponse.confirmed) {
+      isConfirming = true;
       String mnemonic = dialogResponse.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
 
@@ -143,11 +144,13 @@ class CampaignPaymentScreenState extends BaseState {
           sharedService.alertResponse(AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
           setBusy(false);
+          isConfirming = false;
         }
         return txHash;
       }).timeout(Duration(seconds: 25), onTimeout: () {
         log.e('In time out');
-        setState(ViewState.Idle);
+        setBusy(false);
+        isConfirming = false;
 
         setErrorMessage(
             AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
@@ -156,19 +159,22 @@ class CampaignPaymentScreenState extends BaseState {
         log.e('In Catch error - $error');
         sharedService.alertResponse(AppLocalizations.of(context).genericError,
             '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
-        //errorMessage = AppLocalizations.of(context).transanctionFailed;
-        setState(ViewState.Idle);
+        setBusy(false);
+        isConfirming = false;
       });
     } else if (dialogResponse.returnedText != 'Closed') {
       setState(ViewState.Idle);
       setErrorMessage(
           AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
     } else {
-      setState(ViewState.Idle);
+      setBusy(false);
+      isConfirming = false;
     }
   }
 
-  // Create campaign order after payment
+/*----------------------------------------------------------------------
+                Create campaign order after payment
+----------------------------------------------------------------------*/
 
   createCampaignOrder(String txHash, double quantity) async {
     setBusy(true);
@@ -202,19 +208,33 @@ class CampaignPaymentScreenState extends BaseState {
         setErrorMessage(AppLocalizations.of(context).serverError);
         return false;
       } else if (res['message'] != null) {
+        setBusy(false);
+        isConfirming = false;
         setErrorMessage(AppLocalizations.of(context).createOrderFailed);
       } else {
+        log.e(res['orderNum']);
+        var orderNumber = res['orderNum'];
+        if (_groupValue == 'USD') {
+          sharedService.alertResponse('Order Created Successfully',
+              'Please include your order number $orderNumber after hyphen when you make payment');
+        } else {
+          sharedService.alertResponse(AppLocalizations.of(context).success,
+              AppLocalizations.of(context).yourOrderHasBeenCreated);
+        }
         await getCampaignOrdeList();
-        sharedService.alertResponse(AppLocalizations.of(context).success,
-            AppLocalizations.of(context).yourOrderHasBeenCreated);
       }
-    }).catchError((err) => log.e('Campaign service buying coin catch $err'));
+    }).catchError((err) {
+      log.e('Campaign service buying coin catch $err');
+      setBusy(false);
+      isConfirming = false;
+    });
     setBusy(false);
+    isConfirming = false;
   }
 
-  //------------------------------------------
-  //        Get Campaign Order List
-  //------------------------------------------
+/*----------------------------------------------------------------------
+                Get Campaign Order List
+----------------------------------------------------------------------*/
   getCampaignOrdeList() async {
     setBusy(true);
     // await getExgWalletAddr();
@@ -224,8 +244,15 @@ class CampaignPaymentScreenState extends BaseState {
     if (userData == null) return false;
     await campaignService.getOrdersById(userData.id).then((orderListFromApi) {
       if (orderListFromApi != null) {
-        log.w(orderListFromApi.length);
         orderInfoList = orderListFromApi;
+        log.w(orderInfoList.length);
+        orderStatusList = [
+          AppLocalizations.of(context).waiting,
+          AppLocalizations.of(context).paid,
+          AppLocalizations.of(context).paymentReceived,
+          AppLocalizations.of(context).failed,
+          AppLocalizations.of(context).orderCancelled,
+        ];
 
         for (int i = 0; i < orderInfoList.length; i++) {
           var status = orderInfoList[i].status;
@@ -239,12 +266,9 @@ class CampaignPaymentScreenState extends BaseState {
           } else if (status == "4") {
             uiOrderStatusList.add(orderStatusList[3]);
           } else {
-            uiOrderStatusList.add(orderStatusList[5]);
+            uiOrderStatusList.add(orderStatusList[4]);
           }
-          log.i(orderInfoList[i].status);
-          log.e(uiOrderStatusList.length);
         }
-        setBusy(false);
       } else {
         log.e('Api result null');
         setErrorMessage(AppLocalizations.of(context).loadOrdersFailed);
@@ -254,9 +278,119 @@ class CampaignPaymentScreenState extends BaseState {
       log.e('getCampaignOrdeList $err');
       setBusy(false);
     });
+    setBusy(false);
   }
 
-  // Check input fields
+/*----------------------------------------------------------------------
+                    Status popup to Update order
+----------------------------------------------------------------------*/
+
+  updateOrder(id, status) {
+    bool isDescription = false;
+    log.w('$id, ${orderInfoList[status].status}');
+    var statusCode = orderInfoList[status].status;
+    if (statusCode == '1' || statusCode == '2') {
+      Alert(
+          style: AlertStyle(
+              animationType: AnimationType.grow,
+              isOverlayTapDismiss: true,
+              backgroundColor: globals.walletCardColor,
+              descStyle: Theme.of(context).textTheme.bodyText1,
+              titleStyle: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  .copyWith(decoration: TextDecoration.underline)),
+          context: context,
+          title: 'Update your order status',
+          closeFunction: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          content: Column(
+            children: <Widget>[
+              UIHelper.verticalSpaceMedium,
+              TextField(
+                minLines: 1,
+                maxLength: 100,
+                maxLengthEnforced: true,
+                style: TextStyle(color: globals.white),
+                controller: updateOrderDescriptionController,
+                obscureText: false,
+                decoration: InputDecoration(
+                  labelStyle: Theme.of(context).textTheme.headline5,
+                  icon: Icon(
+                    Icons.event_note,
+                    color: globals.primaryColor,
+                  ),
+                  labelText: AppLocalizations.of(context).paymentDescription,
+                ),
+              ),
+              isDescription
+                  ? Text(AppLocalizations.of(context).descriptionIsRequired)
+                  : Text('')
+            ],
+          ),
+          buttons: [
+            // Confirm button
+            DialogButton(
+              color: globals.primaryColor,
+              onPressed: () async {
+                if (updateOrderDescriptionController.text.length < 10) {
+                  bool test = updateOrderDescriptionController.text.length < 10;
+                  log.w(test);
+                  setBusy(true);
+                  isDescription = true;
+                  setBusy(false);
+                } else {
+                  setBusy(true);
+                  await campaignService
+                      .updateCampaignOrder(
+                          id, updateOrderDescriptionController.text, "2")
+                      .then((value) async => await getCampaignOrdeList());
+                  Navigator.of(context, rootNavigator: true).pop();
+                  updateOrderDescriptionController.text = '';
+                  isDescription = false;
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  setBusy(false);
+                }
+              },
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7),
+                // model.busy is not working here and same reason that it does not show the error when desc field is empty
+                child: busy
+                    ? Text(AppLocalizations.of(context).loading)
+                    : Text(
+                        AppLocalizations.of(context).confirmPayment,
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+              ),
+            ),
+
+            // Cancel button
+            DialogButton(
+              color: globals.primaryColor,
+              onPressed: () async {
+                await campaignService
+                    .updateCampaignOrder(
+                        id, updateOrderDescriptionController.text, "5")
+                    .then((value) => getCampaignOrdeList());
+                Navigator.pop(context);
+                FocusScope.of(context).requestFocus(FocusNode());
+              },
+              child: Text(
+                AppLocalizations.of(context).cancelOrder,
+                style: Theme.of(context).textTheme.headline4,
+              ),
+            ),
+          ]).show();
+    }
+  }
+
+/*----------------------------------------------------------------------
+                    Check input fields
+----------------------------------------------------------------------*/
+
   checkFields(context) async {
     log.i('checking fields');
     if (sendAmountTextController.text == '' || _groupValue == null) {
@@ -265,20 +399,31 @@ class CampaignPaymentScreenState extends BaseState {
     }
     setErrorMessage('');
     double amount = double.parse(sendAmountTextController.text);
-    if (amount == null ||
-        !checkSendAmount ||
-        amount > walletInfo.availableBalance) {
-      setErrorMessage(AppLocalizations.of(context).pleaseEnterValidNumber);
-      sharedService.alertResponse(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterAmountLessThanYourWallet);
-    } else {
+    // USD Select
+    if (_groupValue == 'USD') {
+      isConfirming = true;
+      await createCampaignOrder("", amount);
+
       FocusScope.of(context).requestFocus(FocusNode());
-      await verifyWalletPassword(amount);
+    } else {
+      if (amount == null ||
+          !checkSendAmount ||
+          amount > walletInfo.availableBalance) {
+        setErrorMessage(AppLocalizations.of(context).pleaseEnterValidNumber);
+        sharedService.alertResponse(AppLocalizations.of(context).invalidAmount,
+            AppLocalizations.of(context).pleaseEnterAmountLessThanYourWallet);
+      } else {
+        FocusScope.of(context).requestFocus(FocusNode());
+        await verifyWalletPassword(amount);
+      }
     }
     setBusy(false);
   }
 
-// Get wallet info by using which user is making the payment
+/*----------------------------------------------------------------------
+        Get wallet info by using which user is making the payment
+----------------------------------------------------------------------*/
+
   getWallet() async {
     // Get coin details which we are making transaction through like USDT
     await walletDataBaseService.getBytickerName(_groupValue).then((res) {
@@ -288,7 +433,10 @@ class CampaignPaymentScreenState extends BaseState {
     });
   }
 
-// Get exg wallet address
+/*----------------------------------------------------------------------
+                    Get exg wallet address
+----------------------------------------------------------------------*/
+
   getExgWalletAddr() async {
     // Get coin details which we are making transaction through like USDT
     await walletDataBaseService.getBytickerName('EXG').then((res) {
@@ -297,7 +445,10 @@ class CampaignPaymentScreenState extends BaseState {
     });
   }
 
-  // Check Send Amount
+/*----------------------------------------------------------------------
+                    Check Send Amount
+----------------------------------------------------------------------*/
+
   checkAmount(amount) async {
     setBusy(true);
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
@@ -313,6 +464,9 @@ class CampaignPaymentScreenState extends BaseState {
     setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                    Order List color
+----------------------------------------------------------------------*/
   // Order list container color according to even/odd index input from the UI list builder
   Color evenOrOddColor(int index) {
     index.isOdd
@@ -321,7 +475,10 @@ class CampaignPaymentScreenState extends BaseState {
     return containerListColor;
   }
 
-// Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
+/*----------------------------------------------------------------------
+    Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
+----------------------------------------------------------------------*/
+
   Future<double> getUsdValue() async {
     setBusy(true);
     double usdValue = 0;
@@ -332,7 +489,7 @@ class CampaignPaymentScreenState extends BaseState {
         if (selectedCurrency == 'CAD') {
           double cadUsdValue = res['data']['CAD']['USD'];
           double exgUsdValue = res['data']['EXG']['USD'];
-          usdValue = cadUsdValue * exgUsdValue;
+          usdValue = (1 / cadUsdValue) * exgUsdValue;
           log.i('in if $usdValue');
         } else {
           usdValue = res['data']['EXG']['USD'];
@@ -344,12 +501,17 @@ class CampaignPaymentScreenState extends BaseState {
     return usdValue;
   }
 
-  // Calculate purchased token amount
+/*----------------------------------------------------------------------
+                    Calculate purchased token amount
+----------------------------------------------------------------------*/
+
   calcTokenPurchaseAmount(amount) async {
     setBusy(true);
+    isTokenCalc = true;
     double price = await getUsdValue();
     tokenPurchaseAmount = amount / price;
     setBusy(false);
+    isTokenCalc = false;
     return tokenPurchaseAmount;
   }
 }

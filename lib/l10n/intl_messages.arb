@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-08T19:33:51.224573",
+  "@@last_modified": "2020-04-11T00:05:56.073636",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1098,12 +1098,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "myTotalReward": "My Total Reward",
-  "@myTotalReward": {
-    "description": "campaign_dashboard_my_total_reward",
-    "type": "text",
-    "placeholders": {}
-  },
   "teamsTotalValue": "Teams Total Value",
   "@teamsTotalValue": {
     "description": "campaign_dashboard_teams_total_value",
@@ -1311,6 +1305,84 @@
   "referralCount": "Referral Count",
   "@referralCount": {
     "description": "campaign_dashboard_referral_count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myReferralReward": "My Referral Reward",
+  "@myReferralReward": {
+    "description": "campaign_dashboard_my_referral_reward",
+    "type": "text",
+    "placeholders": {}
+  },
+  "descriptionIsRequired": "Please fill the description field",
+  "@descriptionIsRequired": {
+    "description": "campaign_payment_update_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "diamond": "Diamond",
+  "@diamond": {
+    "description": "campaign_dashboard_level_diamond",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gold": "Gold",
+  "@gold": {
+    "description": "campaign_dashboard_level_gold",
+    "type": "text",
+    "placeholders": {}
+  },
+  "silver": "silver",
+  "@silver": {
+    "description": "campaign_dashboard_level_silver",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentDescription": "Payment Description",
+  "@paymentDescription": {
+    "description": "campaign_payment_payment_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderId": "Order Id",
+  "@orderId": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPayment": "Confirm Payment",
+  "@confirmPayment": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "checkingCredentials": "Checking Credentials",
+  "@checkingCredentials": {
+    "description": "campaign_login_checking_credentials",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancelOrder": "Cancel Order",
+  "@cancelOrder": {
+    "description": "campaign_payment_cancel_order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCreatedSuccessfully": "Order Created Successfully",
+  "@orderCreatedSuccessfully": {
+    "description": "campaign_payment_order_created_successfully",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseincludeYourOrderNumber": "Please include your order number",
+  "@pleaseincludeYourOrderNumber": {
+    "description": "campaign_payment_include_your_order_number",
+    "type": "text",
+    "placeholders": {}
+  },
+  "afterHyphenWhenYouMakePayment": "after hyphen when you make payment",
+  "@afterHyphenWhenYouMakePayment": {
+    "description": "campaign_payment_after_hyphen_when_you_make_payment",
     "type": "text",
     "placeholders": {}
   }

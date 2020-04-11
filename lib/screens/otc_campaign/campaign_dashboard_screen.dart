@@ -163,8 +163,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                         leading: Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Icon(
-                            Icons.monetization_on,
-                            color: globals.buyPrice,
+                            Icons.verified_user,
+                            color: globals.primaryColor,
                             size: 24,
                           ),
                         ),
@@ -174,83 +174,64 @@ class CampaignDashboardScreen extends StatelessWidget {
                         ),
                         subtitle: Column(
                           children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Text(AppLocalizations.of(context).quantity,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1),
-                                UIHelper.horizontalSpaceSmall,
-                                model.busy
-                                    ? Shimmer.fromColors(
-                                        baseColor: globals.primaryColor,
-                                        highlightColor: globals.grey,
-                                        child: Text(
-                                          ('0.000'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 3.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(AppLocalizations.of(context).quantity,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1),
+                                  UIHelper.horizontalSpaceSmall,
+                                  model.busy
+                                      ? Shimmer.fromColors(
+                                          baseColor: globals.primaryColor,
+                                          highlightColor: globals.grey,
+                                          child: Text(
+                                            ('0.000'),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          ))
+                                      : Text(
+                                          model.myTotalAssetQuantity
+                                              .toStringAsFixed(2),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline5,
-                                        ))
-                                    : Text(
-                                        model.myTotalAssetQuantity
-                                            .toStringAsFixed(2),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1),
-                              ],
+                                              .bodyText1),
+                                ],
+                              ),
                             ),
-                            Row(
-                              children: <Widget>[
-                                Text(AppLocalizations.of(context).value,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1),
-                                UIHelper.horizontalSpaceSmall,
-                                model.busy
-                                    ? Shimmer.fromColors(
-                                        baseColor: globals.primaryColor,
-                                        highlightColor: globals.grey,
-                                        child: Text(
-                                          ('0.000'),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5,
-                                        ))
-                                    : Text(
+                          ],
+                        ),
+                        trailing: model.busy
+                            ? Shimmer.fromColors(
+                                baseColor: globals.primaryColor,
+                                highlightColor: globals.grey,
+                                child: Text(
+                                  ('0.000'),
+                                  style: Theme.of(context).textTheme.headline5,
+                                ))
+                            : SizedBox(
+                                width: 120,
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 3.0),
+                                      child: Icon(Icons.monetization_on,
+                                          color: globals.buyPrice),
+                                    ),
+                                    Text(
                                         model.myTotalAssetValue
                                             .toStringAsFixed(2),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText1),
-                              ],
-                            )
-                          ],
-                        ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 2.0),
-                              child: Text(
-                                  AppLocalizations.of(context).myInvestment,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(color: globals.buyPrice)),
-                            ),
-                            model.busy
-                                ? Shimmer.fromColors(
-                                    baseColor: globals.primaryColor,
-                                    highlightColor: globals.grey,
-                                    child: Text(
-                                      ('0.000'),
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ))
-                                : Text(
-                                    model.myInvestmentWithoutRewards.toString(),
-                                    style:
-                                        Theme.of(context).textTheme.headline5),
-                          ],
-                        ),
+                                            .headline2),
+                                  ],
+                                ),
+                              ),
                       ),
 
                       // Level and referral count Row
@@ -304,7 +285,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 5.0),
                                   child: Text(
-                                    'Referral Count ',
+                                    AppLocalizations.of(context).referralCount +
+                                        ' ',
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   ),
@@ -332,7 +314,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                   ),
                 ),
 /*-------------------------------------------------------------------------------------
-                          Total Token quantity container with list tiles
+                          My investment and tokens container with list tiles
 -------------------------------------------------------------------------------------*/
                 Container(
                   child: Column(
@@ -351,8 +333,11 @@ class CampaignDashboardScreen extends StatelessWidget {
                             size: 22,
                           ),
                         ),
-                        title: Text(
-                            AppLocalizations.of(context).totalTokenHolding),
+                        title: Text(AppLocalizations.of(context).myInvestment,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(color: globals.buyPrice)),
                         subtitle: model.busy
                             ? Shimmer.fromColors(
                                 baseColor: globals.primaryColor,
@@ -361,7 +346,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   ('0.000'),
                                   style: Theme.of(context).textTheme.headline5,
                                 ))
-                            : Text(model.myTotalTokenHolding.toStringAsFixed(4),
+                            : Text(
+                                model.myInvestmentValueWithoutRewards
+                                    .toString(),
                                 style: Theme.of(context).textTheme.headline5),
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -422,8 +409,8 @@ class CampaignDashboardScreen extends StatelessWidget {
                               size: 22,
                             ),
                           ),
-                          title:
-                              Text(AppLocalizations.of(context).myTotalReward),
+                          title: Text(
+                              AppLocalizations.of(context).myReferralReward),
                           subtitle: model.busy
                               ? Shimmer.fromColors(
                                   baseColor: globals.primaryColor,
@@ -433,7 +420,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   ))
-                              : Text(model.myTotalReward.toStringAsFixed(4),
+                              : Text(model.myReferralReward.toStringAsFixed(4),
                                   style: Theme.of(context).textTheme.headline5),
                           trailing: Icon(
                             Icons.navigate_next,
@@ -472,7 +459,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   ('0.000'),
                                   style: Theme.of(context).textTheme.headline5,
                                 ))
-                            : Text(model.myTeamsTotalValue.toString(),
+                            : Text(model.myTeamsTotalValue.toStringAsFixed(4),
                                 style: Theme.of(context).textTheme.headline5),
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

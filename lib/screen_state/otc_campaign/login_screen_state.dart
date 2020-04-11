@@ -53,7 +53,6 @@ class CampaignLoginScreenState extends BaseState {
         } else {
           setBusy(false);
           setErrorMessage('');
-          setErrorMessage('Entry does not found in database');
         }
       }).catchError((err) {
         setErrorMessage('');
@@ -75,7 +74,7 @@ class CampaignLoginScreenState extends BaseState {
     await campaignService.login(user).then((res) async {
       // json deconde in campaign api let us see the response then its properties
       if (res == null) {
-        setErrorMessage('Server error, Please try again later.');
+        setErrorMessage(AppLocalizations.of(context).serverError);
         return false;
       }
       String error = res['message'];
@@ -103,11 +102,11 @@ class CampaignLoginScreenState extends BaseState {
   checkCredentials() {
     setBusy(true);
     isLogging = true;
-    setErrorMessage('Checking credentials');
+    setErrorMessage(AppLocalizations.of(context).checkingCredentials);
     if (emailTextController.text.isEmpty) {
-      setErrorMessage('Please enter your login email address');
+      setErrorMessage(AppLocalizations.of(context).pleaseEnterYourEmailAddress);
     } else if (passwordTextController.text.isEmpty) {
-      setErrorMessage('Please enter your password');
+      setErrorMessage(AppLocalizations.of(context).pleaseFillYourPassword);
     } else {
       user = new User(
           email: emailTextController.text,

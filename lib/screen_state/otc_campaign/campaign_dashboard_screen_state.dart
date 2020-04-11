@@ -24,13 +24,12 @@ class CampaignDashboardScreenState extends BaseState {
   int memberLevelTextColor = 0xff696969;
   double myTotalAssetQuantity = 0;
   double myTotalAssetValue = 0;
-  double myTotalTokenHolding = 0;
-  double myTotalReward = 0;
+  double myReferralReward = 0;
   int myTotalReferrals = 0;
   double myTeamsTotalRewards = 0;
   double myTeamsTotalValue = 0;
   BuildContext context;
-  double myInvestmentWithoutRewards = 0;
+  double myInvestmentValueWithoutRewards = 0;
   double myTokensWithoutRewards = 0;
   var myTokens;
 
@@ -77,7 +76,7 @@ class CampaignDashboardScreenState extends BaseState {
       if (res != null) {
         log.w(res);
         memberLevel = res['membership'];
-        myInvestmentWithoutRewards = res['totalValue'];
+        myInvestmentValueWithoutRewards = res['totalValue'];
         myTokens = res['totalQuantities'];
         //  myTokensWithoutRewards = myTokens;
         assignColorAccordingToMemberLevel(memberLevel);
@@ -167,41 +166,45 @@ class CampaignDashboardScreenState extends BaseState {
     await campaignService.getMemberRewardByToken(token).then((response) async {
       if (response != null) {
         myTotalAssetQuantity = 0;
-        myTotalTokenHolding = 0;
         myTotalReferrals = 0;
-        myTotalReward = 0;
+        myReferralReward = 0;
         var res = response['personal'] as List;
         for (int i = 0; i < res.length; i++) {
-          var totalRewardValueByLevel = res[i]['totalValue'];
+          var totalValueByLevel = res[i]['totalValue'];
           var totalTokenQuantityByLevel = res[i]['totalQuantities'];
           var totalReferralsByLevel = res[i]['totalAccounts'];
           var totalRewardQuantityByLevel = res[i]['totalRewardQuantities'];
           CampaignReward campaignReward = new CampaignReward(
               level: res[i]['level'],
-              totalValue: totalRewardValueByLevel,
+              totalValue: totalValueByLevel,
               totalQuantities: totalTokenQuantityByLevel,
               totalRewardQuantities: totalRewardQuantityByLevel,
               totalAccounts: totalReferralsByLevel,
               totalRewardNextQuantities: res[i]['totalRewardNextQuantities']);
           campaignRewardList.add(campaignReward);
-          // calculating total asset value
-          myTotalAssetQuantity = myTotalAssetQuantity + totalRewardValueByLevel;
-          myTotalTokenHolding = myTotalTokenHolding +
-              totalTokenQuantityByLevel +
-              totalRewardQuantityByLevel;
-          log.e(myTotalTokenHolding);
+          // calculating total asset quantity
+          myTotalAssetQuantity =
+              myTotalAssetQuantity + totalRewardQuantityByLevel;
+
+          // calculating total referrals
           myTotalReferrals = myTotalReferrals + totalReferralsByLevel;
-          myTotalReward = myTotalReward + totalRewardQuantityByLevel;
+          // calculating total reward
+          myReferralReward = myReferralReward + totalRewardQuantityByLevel;
           log.w(campaignReward.toJson());
         }
-        myTotalAssetQuantity =
-            myTotalAssetQuantity + myInvestmentWithoutRewards;
         log.w('Length ${campaignRewardList.length}');
         var ttv = response['teamsTotalValue'];
-        myTeamsTotalValue = ttv;
+        // Have to check if team value or reward is zero otherwise it throws type cast error and doesn't execute any statement after that
+        if (ttv != 0) {
+          myTeamsTotalValue = ttv;
+        }
         var ttr = response['teamsRewards'];
-        log.w(ttr);
-
+        if (ttr != 0) {
+          myTeamsTotalRewards = ttr;
+        }
+        // Final calculation total asset quantity
+        myTotalAssetQuantity =
+            myTotalAssetQuantity + myTokens + myTeamsTotalRewards;
         await calcMyTotalAsssetValue();
       } else {
         log.w('In myReward else, res is null from api');
@@ -218,6 +221,8 @@ class CampaignDashboardScreenState extends BaseState {
   calcMyTotalAsssetValue() async {
     double exgPrice = await getUsdValue();
     myTotalAssetValue = myTotalAssetQuantity * exgPrice;
+    log.e('Test $myTotalAssetQuantity, $exgPrice - $myTotalAssetValue');
+    return myTotalAssetValue;
   }
 
   // Generic Navigate
