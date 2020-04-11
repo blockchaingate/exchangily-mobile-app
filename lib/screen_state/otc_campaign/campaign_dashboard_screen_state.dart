@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
@@ -95,10 +96,13 @@ class CampaignDashboardScreenState extends BaseState {
   assignColorAccordingToMemberLevel(memberLevel) {
     if (memberLevel == 'gold') {
       memberLevelTextColor = 0xffE6BE8A;
+      memberLevel = AppLocalizations.of(context).gold;
     } else if (memberLevel == 'diamond') {
       memberLevelTextColor = 0xffffffff;
+      memberLevel = AppLocalizations.of(context).diamond;
     } else {
       memberLevelTextColor = 0xff696969;
+      memberLevel = AppLocalizations.of(context).silver;
     }
   }
 
