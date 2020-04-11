@@ -917,7 +917,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "email": "Email",
+    "email": "電子郵箱",
     "@email": {
         "description": "campaign_email",
         "type": "text",
@@ -1144,5 +1144,83 @@
         "description": "campaign_dashboard_referral_count",
         "type": "text",
         "placeholders": {}
-    }
+    },
+“ myReferralReward”：“推薦獎勵”，
+  “ @myReferralReward”：{
+    “ description”：“ campaign_dashboard_my_referral_reward”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ descriptionIsRequired”：“請填寫付款詳情”，
+  “ @descriptionIsRequired”：{
+    “ description”：“ campaign_payment_update_description”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ diamond”：“鑽石”，
+  “ @鑽石”：{
+    “ description”：“ campaign_dashboard_level_diamond”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ gold”：“黃金”，
+  “ @gold”：{
+    “ description”：“ campaign_dashboard_level_gold”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ silver”：“白銀”，
+  “ @silver”：{
+    “ description”：“ campaign_dashboard_level_silver”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ paymentDescription”：“付款說明”，
+  “ @paymentDescription”：{
+    “ description”：“ campaign_payment_payment_description”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ orderId”：“訂單號”，
+  “ @orderId”：{
+    “ description”：“ campaign_payment_order_id”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ confirmPayment”：“確認付款”，
+  “ @confirmPayment”：{
+    “ description”：“ campaign_payment_order_id”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ checkingCredentials”：“驗證憑證”，
+  “ @checkingCredentials”：{
+    “ description”：“ campaign_login_checking_credentials”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ cancelOrder”：“取消訂單”，
+  “@取消訂單”： {
+    “ description”：“ campaign_payment_cancel_order”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ orderCreatedSuccessfully”：“成功創建訂單”，
+  “ @orderCreatedSuccessfully”：{
+    “ description”：“ campaign_payment_order_created_successful”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ pleaseincludeYourOrderNumber”：“請在付款時註明訂單號”，
+  “ @pleaseincludeYourOrderNumber”：{
+    “ description”：“ campaign_payment_include_your_order_number”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }，
+  “ afterHyphenWhenYouMakePayment”：“”，
+  “ @afterHyphenWhenYouMakePayment”：{
+    “ description”：“ campaign_payment_after_hyphen_when_you_make_payment”，
+    “ type”：“文字”，
+    “佔位符”：{}
+  }
 }

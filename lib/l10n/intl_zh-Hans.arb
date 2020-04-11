@@ -947,7 +947,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "email": "Email",
+    "email": "电子邮箱",
     "@email": {
         "description": "campaign_email",
         "type": "text",
@@ -1342,5 +1342,83 @@
         "description": "campaign_dashboard_referral_count",
         "type": "text",
         "placeholders": {}
-    }
+    },
+  "myReferralReward": "推荐奖励",
+  "@myReferralReward": {
+    "description": "campaign_dashboard_my_referral_reward",
+    "type": "text",
+    "placeholders": {}
+  },
+  "descriptionIsRequired": "请填写付款详情",
+  "@descriptionIsRequired": {
+    "description": "campaign_payment_update_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "diamond": "钻石",
+  "@diamond": {
+    "description": "campaign_dashboard_level_diamond",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gold": "黄金",
+  "@gold": {
+    "description": "campaign_dashboard_level_gold",
+    "type": "text",
+    "placeholders": {}
+  },
+  "silver": "白银",
+  "@silver": {
+    "description": "campaign_dashboard_level_silver",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentDescription": "付款说明",
+  "@paymentDescription": {
+    "description": "campaign_payment_payment_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderId": "订单号",
+  "@orderId": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPayment": "确认付款",
+  "@confirmPayment": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "checkingCredentials": "校验凭证",
+  "@checkingCredentials": {
+    "description": "campaign_login_checking_credentials",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancelOrder": "取消订单",
+  "@cancelOrder": {
+    "description": "campaign_payment_cancel_order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCreatedSuccessfully": "成功创建订单",
+  "@orderCreatedSuccessfully": {
+    "description": "campaign_payment_order_created_successfully",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseincludeYourOrderNumber": "请在付款时注明订单号",
+  "@pleaseincludeYourOrderNumber": {
+    "description": "campaign_payment_include_your_order_number",
+    "type": "text",
+    "placeholders": {}
+  },
+  "afterHyphenWhenYouMakePayment": "",
+  "@afterHyphenWhenYouMakePayment": {
+    "description": "campaign_payment_after_hyphen_when_you_make_payment",
+    "type": "text",
+    "placeholders": {}
+  }
 }
