@@ -57,13 +57,14 @@ class CampaignPaymentScreenState extends BaseState {
   int orderInfoContainerHeight = 455;
   List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
-  double tokenPurchaseAmount = 0;
+  double tokenPurchaseQuantity = 0;
   List<String> currencies = ['USD', 'CAD'];
   String selectedCurrency;
   bool isConfirming = false;
   bool isTokenCalc = false;
   TextEditingController updateOrderDescriptionController =
       TextEditingController();
+
   // Initial logic
   initState() async {
     setBusy(true);
@@ -130,7 +131,7 @@ class CampaignPaymentScreenState extends BaseState {
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           sendAmountTextController.text = '';
-          await createCampaignOrder(txHash, amount);
+          await createCampaignOrder(txHash, tokenPurchaseQuantity);
           sharedService.alertResponse(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}');
@@ -405,7 +406,7 @@ class CampaignPaymentScreenState extends BaseState {
     // USD Select
     if (_groupValue == 'USD') {
       isConfirming = true;
-      await createCampaignOrder("", amount);
+      await createCampaignOrder("", tokenPurchaseQuantity);
 
       FocusScope.of(context).requestFocus(FocusNode());
     } else {
@@ -512,9 +513,9 @@ class CampaignPaymentScreenState extends BaseState {
     setBusy(true);
     isTokenCalc = true;
     double price = await getUsdValue();
-    tokenPurchaseAmount = amount / price;
+    tokenPurchaseQuantity = amount / price;
     setBusy(false);
     isTokenCalc = false;
-    return tokenPurchaseAmount;
+    return tokenPurchaseQuantity;
   }
 }

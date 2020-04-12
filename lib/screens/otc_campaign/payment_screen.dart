@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
@@ -129,7 +130,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                         CircularProgressIndicator(
                                                       strokeWidth: 0.5,
                                                     ))
-                                                : Text(model.tokenPurchaseAmount
+                                                : Text(model
+                                                    .tokenPurchaseQuantity
                                                     .toStringAsFixed(3))
                                           ]),
                                           filled: true,
@@ -406,39 +408,43 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       ),
                                     ),
                                     // Confirm button
+
                                     Expanded(
                                       flex: 4,
-                                      child: RaisedButton(
-                                        padding: EdgeInsets.all(0),
-                                        child: model.busy
-                                            ? Text(
-                                                AppLocalizations.of(context)
-                                                    .loading,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5)
-                                            : Text(
-                                                AppLocalizations.of(context)
-                                                    .confirm,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5),
-                                        onPressed: () {
-                                          //  model.getCampaignOrdeList();
-                                          model.checkFields(context);
-                                          // model.createCampaignOrder(
-                                          //     '0x41d9b291469c7d9046e8154b04b3d6e1e76c910bba9fce6acf73298d79984cfd',
-                                          //     15511);
-                                          // if (model.exgWalletAddress != null &&
-                                          //     model.exgWalletAddress != '') {
-                                          //   model.getCampaignOrdeList();
-                                          // } else {
-                                          //   model.getExgWalletAddr();
-                                          //   print(
-                                          //       'Exg wallet address was missing, so getting it now');
-                                          // }
-                                        },
-                                      ),
+                                      child: model.busy
+                                          ? RaisedButton(
+                                              padding: EdgeInsets.all(0),
+                                              child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .confirm,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5),
+                                              onPressed: () {})
+                                          : RaisedButton(
+                                              padding: EdgeInsets.all(0),
+                                              child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .confirm,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5),
+                                              onPressed: () {
+                                                //  model.getCampaignOrdeList();
+                                                model.checkFields(context);
+                                                // model.createCampaignOrder(
+                                                //     '0x41d9b291469c7d9046e8154b04b3d6e1e76c910bba9fce6acf73298d79984cfd',
+                                                //     15511);
+                                                // if (model.exgWalletAddress != null &&
+                                                //     model.exgWalletAddress != '') {
+                                                //   model.getCampaignOrdeList();
+                                                // } else {
+                                                //   model.getExgWalletAddr();
+                                                //   print(
+                                                //       'Exg wallet address was missing, so getting it now');
+                                                // }
+                                              },
+                                            ),
                                     )
                                   ]),
                             )
@@ -485,94 +491,74 @@ class CampaignPaymentScreen extends StatelessWidget {
                         ],
                       ),
                       UIHelper.verticalSpaceSmall,
-                      model.busy == true
-                          ? SizedBox(
-                              height: 220,
-                              child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                itemCount: 8,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    color: model.evenOrOddColor(index),
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        Shimmer.fromColors(
-                                            baseColor: globals.red,
-                                            highlightColor: globals.white,
-                                            child: Text(''))
-                                      ],
-                                    ),
-                                  );
-                                },
+                      model.busy
+                          ? Shimmer.fromColors(
+                              baseColor: globals.primaryColor,
+                              highlightColor: globals.white,
+                              child: Text(
+                                AppLocalizations.of(context).loading,
+                                style: Theme.of(context).textTheme.bodyText2,
                               ))
-                          : SizedBox(
-                              height: MediaQuery.of(context).size.height -
-                                  model.orderInfoContainerHeight,
-                              child: model.orderInfoList != null
-                                  ? ListView.builder(
-                                      scrollDirection: Axis.vertical,
-                                      itemCount: model.orderInfoList.length,
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return Container(
-                                          padding: EdgeInsets.all(8.0),
-                                          color: model.evenOrOddColor(index),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: <Widget>[
-                                              Expanded(
-                                                flex: 3,
+                          : model.orderInfoList != null
+                              ? Container(
+                                  height: 200,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: model.orderInfoList.length,
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        padding: EdgeInsets.all(8.0),
+                                        color: model.evenOrOddColor(index),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: <Widget>[
+                                            Expanded(
+                                              flex: 3,
+                                              child: Text(
+                                                  model.orderInfoList[index]
+                                                      .dateCreated,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1),
+                                            ),
+                                            UIHelper.horizontalSpaceSmall,
+                                            Expanded(
+                                              flex: 2,
+                                              child: Text(
+                                                  model.orderInfoList[index]
+                                                      .quantity
+                                                      .toString(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: InkWell(
+                                                onTap: () {
+                                                  model.updateOrder(
+                                                      model.orderInfoList[index]
+                                                          .id,
+                                                      index);
+                                                },
                                                 child: Text(
-                                                    model.orderInfoList[index]
-                                                        .dateCreated,
+                                                    model.uiOrderStatusList[
+                                                        index],
+                                                    textAlign: TextAlign.start,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .bodyText1),
                                               ),
-                                              UIHelper.horizontalSpaceSmall,
-                                              Expanded(
-                                                flex: 2,
-                                                child: Text(
-                                                    model.orderInfoList[index]
-                                                        .quantity
-                                                        .toString(),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyText1),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    model.updateOrder(
-                                                        model
-                                                            .orderInfoList[
-                                                                index]
-                                                            .id,
-                                                        index);
-                                                  },
-                                                  child: Text(
-                                                      model.uiOrderStatusList[
-                                                          index],
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyText1),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    )
-                                  : Container(),
-                            ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Container(),
                       Divider(color: globals.grey)
                     ],
                   ),
