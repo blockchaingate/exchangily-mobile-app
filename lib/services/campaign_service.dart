@@ -121,7 +121,7 @@ class CampaignService {
 //campaignOrder.toJson();
     Map<String, dynamic> body = {
       "campaignId": "1",
-      "price": "0.24",
+      "price": campaignOrder.price.toString(),
       "walletAdd": campaignOrder.walletAdd,
       "txId": campaignOrder.txId,
       "quantity": campaignOrder.quantity.toString(),
