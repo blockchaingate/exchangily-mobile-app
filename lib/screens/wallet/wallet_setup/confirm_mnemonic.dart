@@ -53,29 +53,32 @@ class _ConfirmMnemonictWalletScreenState
               style: Theme.of(context).textTheme.headline3,
             ),
             backgroundColor: globals.secondaryColor),
-        body: Container(
-          padding: EdgeInsets.all(10),
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            children: <Widget>[
-              UIHelper.verticalSpaceSmall,
-              VerifyMnemonicWalletScreen(
-                mnemonicTextController: controller,
-                count: count,
-              ),
-              Container(
-                padding: EdgeInsets.all(15),
-                child: RaisedButton(
-                  child: Text(
-                    AppLocalizations.of(context).finishWalletBackup,
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                  onPressed: () {
-                    model.verifyMnemonic(controller, context, count, 'create');
-                  },
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              children: <Widget>[
+                UIHelper.verticalSpaceSmall,
+                VerifyMnemonicWalletScreen(
+                  mnemonicTextController: controller,
+                  count: count,
                 ),
-              )
-            ],
+                Container(
+                  padding: EdgeInsets.all(15),
+                  child: RaisedButton(
+                    child: Text(
+                      AppLocalizations.of(context).finishWalletBackup,
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                    onPressed: () {
+                      model.verifyMnemonic(
+                          controller, context, count, 'create');
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

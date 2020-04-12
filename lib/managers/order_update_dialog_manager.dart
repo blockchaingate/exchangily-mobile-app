@@ -16,7 +16,6 @@ import 'package:exchangilymobileapp/models/alert/alert_request.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../shared/globals.dart' as globals;
@@ -37,8 +36,9 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
 
   @override
   void initState() {
+    log.w(widget.child);
     super.initState();
-    _dialogService.registerOrderUpdateDialogListener(_showdDialog);
+    _dialogService.registerDialogListener(_showdOrderUpdateDialog);
     controller.text = '';
   }
 
@@ -47,12 +47,12 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
     return widget.child;
   }
 
-  void _showdDialog(AlertRequest request) {
+  void _showdOrderUpdateDialog(AlertRequest request) {
     Alert(
         style: AlertStyle(
             animationType: AnimationType.grow,
             isOverlayTapDismiss: true,
-            backgroundColor: globals.walletCardColor,
+            backgroundColor: globals.priceColor,
             descStyle: Theme.of(context).textTheme.bodyText1,
             titleStyle: Theme.of(context)
                 .textTheme
@@ -63,8 +63,8 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
         desc: request.description,
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
-          _dialogService.dialogComplete(
-              AlertResponse(returnedText: 'Closed', confirmed: false));
+          _dialogService.dialogComplete(AlertResponse(
+              returnedText: 'Closed Order Update Popup', confirmed: false));
         },
         content: Column(
           children: <Widget>[
@@ -94,6 +94,16 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
             },
             child: Text(
               request.buttonTitle,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ),
+          DialogButton(
+            color: globals.primaryColor,
+            onPressed: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: Text(
+              request.cancelButton,
               style: Theme.of(context).textTheme.headline4,
             ),
           )

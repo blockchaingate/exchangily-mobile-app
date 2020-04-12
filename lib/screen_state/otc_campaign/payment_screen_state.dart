@@ -54,7 +54,7 @@ class CampaignPaymentScreenState extends BaseState {
   CampaignOrder campaignOrder;
   List<OrderInfo> orderInfoList = [];
   Color containerListColor;
-  int orderInfoContainerHeight = 455;
+  double orderInfoContainerHeight = 5;
   List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
   double tokenPurchaseQuantity = 0;
@@ -71,6 +71,13 @@ class CampaignPaymentScreenState extends BaseState {
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];
     setBusy(false);
+  }
+
+  calcOrderListSizedBoxHeight() {
+    orderInfoContainerHeight = orderInfoList.length * 25.toDouble();
+    double test = orderInfoList.length * 5.toDouble();
+    log.w(
+        'calcOrderListSizedBoxHeight ${orderInfoList.length}, $test, $orderInfoContainerHeight');
   }
 
   // Radio button selection
@@ -246,6 +253,7 @@ class CampaignPaymentScreenState extends BaseState {
     await campaignService.getOrdersById(userData.id).then((orderListFromApi) {
       if (orderListFromApi != null) {
         orderInfoList = orderListFromApi;
+        calcOrderListSizedBoxHeight();
         log.w(orderInfoList.length);
         orderStatusList = [
           AppLocalizations.of(context).waiting,
