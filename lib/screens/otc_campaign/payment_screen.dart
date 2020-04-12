@@ -129,13 +129,14 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                         CircularProgressIndicator(
                                                       strokeWidth: 0.5,
                                                     ))
-                                                : Text(model.tokenPurchaseAmount
+                                                : Text(model
+                                                    .tokenPurchaseQuantity
                                                     .toStringAsFixed(3))
                                           ]),
                                           filled: true,
                                           fillColor: globals.walletCardColor,
                                           hintText: AppLocalizations.of(context)
-                                              .quantity,
+                                              .amount,
                                           hintStyle: Theme.of(context)
                                               .textTheme
                                               .headline6
@@ -408,37 +409,41 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     // Confirm button
                                     Expanded(
                                       flex: 4,
-                                      child: RaisedButton(
-                                        padding: EdgeInsets.all(0),
-                                        child: model.busy
-                                            ? Text(
-                                                AppLocalizations.of(context)
-                                                    .loading,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5)
-                                            : Text(
-                                                AppLocalizations.of(context)
-                                                    .confirm,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5),
-                                        onPressed: () {
-                                          //  model.getCampaignOrdeList();
-                                          model.checkFields(context);
-                                          // model.createCampaignOrder(
-                                          //     '0x41d9b291469c7d9046e8154b04b3d6e1e76c910bba9fce6acf73298d79984cfd',
-                                          //     15511);
-                                          // if (model.exgWalletAddress != null &&
-                                          //     model.exgWalletAddress != '') {
-                                          //   model.getCampaignOrdeList();
-                                          // } else {
-                                          //   model.getExgWalletAddr();
-                                          //   print(
-                                          //       'Exg wallet address was missing, so getting it now');
-                                          // }
-                                        },
-                                      ),
+                                      child: model.busy
+                                          ? RaisedButton(
+                                              padding: EdgeInsets.all(0),
+                                              child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .loading,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5),
+                                              onPressed: () {},
+                                            )
+                                          : RaisedButton(
+                                              padding: EdgeInsets.all(0),
+                                              child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .confirm,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5),
+                                              onPressed: () {
+                                                //  model.getCampaignOrdeList();
+                                                model.checkFields(context);
+                                                // model.createCampaignOrder(
+                                                //     '0x41d9b291469c7d9046e8154b04b3d6e1e76c910bba9fce6acf73298d79984cfd',
+                                                //     15511);
+                                                // if (model.exgWalletAddress != null &&
+                                                //     model.exgWalletAddress != '') {
+                                                //   model.getCampaignOrdeList();
+                                                // } else {
+                                                //   model.getExgWalletAddr();
+                                                //   print(
+                                                //       'Exg wallet address was missing, so getting it now');
+                                                // }
+                                              },
+                                            ),
                                     )
                                   ]),
                             )

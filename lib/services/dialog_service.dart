@@ -18,11 +18,17 @@ import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 
 class DialogService {
   Function(AlertRequest) _showDialogListener;
+  Function(AlertRequest) _showOrerUpdateDialogListener;
   Completer<AlertResponse> _dialogCompleter;
   final log = getLogger('DialogService');
   // Registers a callback function, typically to show the dialog box
   void registerDialogListener(Function(AlertRequest) showDialogListener) {
     _showDialogListener = showDialogListener;
+  }
+
+  void registerOrderUpdateDialogListener(
+      Function(AlertRequest) showOrerUpdateDialogListener) {
+    _showOrerUpdateDialogListener = showOrerUpdateDialogListener;
   }
 
   // Calls the dialog listener and returns a future that will wait for the dialog to complete
@@ -32,6 +38,22 @@ class DialogService {
     _dialogCompleter = Completer<AlertResponse>();
     _showDialogListener(AlertRequest(
         title: title, description: description, buttonTitle: buttonTitle));
+    return _dialogCompleter.future;
+  }
+
+  // Calls the dialog listener and returns a future that will wait for the dialog to complete
+  Future<AlertResponse> showOrderUpdateDialog(
+      {String title,
+      String description,
+      String confirmOrder,
+      String cancelOrder}) {
+    log.w('showOrerUpdateDialog');
+    _dialogCompleter = Completer<AlertResponse>();
+    _showOrerUpdateDialogListener(AlertRequest(
+        title: title,
+        description: description,
+        buttonTitle: confirmOrder,
+        cancelButton: cancelOrder));
     return _dialogCompleter.future;
   }
 
