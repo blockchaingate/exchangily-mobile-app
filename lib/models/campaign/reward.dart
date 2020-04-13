@@ -1,50 +1,34 @@
-// class CampaignReward {
-//   List<Personal> personal;
-
-//   CampaignReward({
-//     this.personal,
-//   });
-
-//   factory CampaignReward.fromJson(Map<String, dynamic> json) => CampaignReward(
-//         personal: List<Personal>.from(
-//             json["personal"].map((x) => Personal.fromJson(x))),
-//       );
-
-//   Map<String, dynamic> toJson() => {
-//         "personal": List<dynamic>.from(personal.map((x) => x.toJson())),
-//       };
-// }
-
 class CampaignReward {
   int _level;
-  var _totalValue; // my investment value
-  var _totalQuantities; // my total tokens bought
-  var _totalRewardQuantities;
+  double _totalValue; // my investment value
+  double _totalQuantities; // my total tokens bought
+  double _totalRewardQuantities;
   int _totalAccounts; // number of childrens
-  var _totalRewardNextQuantities; // suggest user to buy more token to get more rewards
+  double
+      _totalRewardNextQuantities; // suggest user to buy more token to get more rewards
 
   CampaignReward(
       {int level,
-      var totalValue,
-      var totalQuantities,
-      var totalRewardQuantities,
+      double totalValue,
+      double totalQuantities,
+      double totalRewardQuantities,
       int totalAccounts,
-      var totalRewardNextQuantities}) {
-    this._level = level;
-    this._totalValue = totalValue;
-    this._totalQuantities = totalQuantities;
-    this._totalRewardQuantities = totalRewardQuantities;
-    this._totalAccounts = totalAccounts;
-    this._totalRewardNextQuantities = totalRewardNextQuantities;
+      double totalRewardNextQuantities}) {
+    this._level = level ?? 0;
+    this._totalValue = totalValue ?? 0.0;
+    this._totalQuantities = totalQuantities ?? 0.0;
+    this._totalRewardQuantities = totalRewardQuantities ?? 0.0;
+    this._totalAccounts = totalAccounts ?? 0;
+    this._totalRewardNextQuantities = totalRewardNextQuantities ?? 0.0;
   }
 
   factory CampaignReward.fromJson(Map<String, dynamic> json) => CampaignReward(
         level: json["level"] as int,
-        totalValue: json["totalValue"],
-        totalQuantities: json["totalQuantities"],
-        totalRewardQuantities: json["totalRewardQuantities"],
-        totalAccounts: json["totalAccounts"],
-        totalRewardNextQuantities: json["totalRewardNextQuantities"],
+        totalValue: json["totalValue"].toDouble(),
+        totalQuantities: json["totalQuantities"].toDouble(),
+        totalRewardQuantities: json["totalRewardQuantities"].toDouble(),
+        totalAccounts: json["totalAccounts"] as int,
+        totalRewardNextQuantities: json["totalRewardNextQuantities"].toDouble(),
       );
 
   Map<String, dynamic> toJson() => {
@@ -56,23 +40,23 @@ class CampaignReward {
         "totalRewardNextQuantities": this._totalRewardNextQuantities,
       };
 
-  get totalValue => _totalValue;
-  set totalValue(var totalValue) {
+  double get totalValue => _totalValue;
+  set totalValue(double totalValue) {
     this._totalValue = totalValue;
   }
 
-  get totalQuantities => _totalQuantities;
-  set totalQuantities(var totalQuantities) {
+  double get totalQuantities => _totalQuantities;
+  set totalQuantities(double totalQuantities) {
     this._totalQuantities = totalQuantities;
   }
 
-  get totalRewardQuantities => _totalRewardQuantities;
-  set totalRewardQuantities(var totalRewardQuantities) {
+  double get totalRewardQuantities => _totalRewardQuantities;
+  set totalRewardQuantities(double totalRewardQuantities) {
     this._totalRewardQuantities = totalRewardQuantities;
   }
 
-  get totalRewardNextQuantities => _totalRewardNextQuantities;
-  set totalRewardNextQuantities(var totalRewardNextQuantities) {
+  double get totalRewardNextQuantities => _totalRewardNextQuantities;
+  set totalRewardNextQuantities(double totalRewardNextQuantities) {
     this._totalRewardNextQuantities = totalRewardNextQuantities;
   }
 

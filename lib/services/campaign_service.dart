@@ -311,62 +311,41 @@ class CampaignService {
                                   Get Member Reward By Token
 -------------------------------------------------------------------------------------*/
 
-  Future getMemberRewardByToken(String token) async {
-    List<CampaignReward> campaignRewardList = [];
+  Future<List<CampaignReward>> getMemberRewardByToken(String token) async {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
-      log.e('${jsonDecode(response.body)['_body']}');
-      var rewardList = jsonDecode(response.body)['_body'];
-      return rewardList;
-
+      log.w('getMemberRewardByToken ${jsonDecode(response.body)['_body']}');
+      var json = jsonDecode(response.body)['_body']['personal'];
+      //  var teamsRewardList = jsonDecode(response.body)['_body']['team'] as List;
       // catch type 'int' is not a subtype of type 'double' if i map it like below so for now i am going to do i manually until i find the solution
-      // CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
-      // log.e(campaignRewardList.rewards.length);
+      CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
+      log.e('getMemberRewardByToken ${campaignRewardList.rewards.length}');
+      return campaignRewardList.rewards;
     } catch (err) {
       log.e('In getRewardByToken catch $err');
+      return null;
     }
   }
 
-  /*-------------------------------------------------------------------------------------
-                                  Get Teams Reward By Token
+/*-------------------------------------------------------------------------------------
+                                  Get Total Teams Reward By Token
 -------------------------------------------------------------------------------------*/
 
-  Future getTeamsRewardByToken(String token) async {
-    List<CampaignReward> campaignRewardList = [];
+  Future getTotalTeamsRewardByToken(String token) async {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
-      log.e('${jsonDecode(response.body)['_body']}');
+      log.e('getTotalTeamsRewardByToken ${jsonDecode(response.body)['_body']}');
 
-      var teamsRewardList = jsonDecode(response.body)['_body']['team'] as List;
-
-      // if (jsonList != null || jsonList != []) {
-      //   for (int i = 0; i <= jsonList.length; i++) {
-      //     CampaignReward campaignReward = new CampaignReward(
-      //         level: jsonList[i]['level'],
-      //         totalValue: jsonList[i]['totalValue'],
-      //         totalQuantities: jsonList[i]['totalQuantities'],
-      //         totalRewardQuantities: jsonList[i]['totalRewardQuantities'],
-      //         totalAccounts: jsonList[i]['totalAccounts'],
-      //         totalRewardNextQuantities: jsonList[i]
-      //             ['totalRewardNextQuantities']);
-
-      //     log.w(campaignReward.toJson());
-      //     log.w(campaignRewardList.length);
-      //     campaignRewardList.add(campaignReward);
-      //   }
-      //   return campaignRewardList;
-      // } else {
-      //   return campaignRewardList = [];
-      // }
+      var teamsRewardList = jsonDecode(response.body)['_body'];
       return teamsRewardList;
 
       // catch type 'int' is not a subtype of type 'double' if i map it like below so for now i am going to do i manually until i find the solution
       // CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
       // log.e(campaignRewardList.rewards.length);
     } catch (err) {
-      log.e('In getRewardByToken catch $err');
+      log.e('In getTotalTeamsRewardByToken catch $err');
     }
   }
 }

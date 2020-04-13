@@ -90,7 +90,7 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
                                         child: Text(
                                             campaignRewardList[index]
                                                 .totalQuantities
-                                                .toString(),
+                                                .toStringAsFixed(3),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5))),
@@ -100,7 +100,7 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
                                         child: Text(
                                             campaignRewardList[index]
                                                 .totalRewardQuantities
-                                                .toString(),
+                                                .toStringAsFixed(3),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5)))

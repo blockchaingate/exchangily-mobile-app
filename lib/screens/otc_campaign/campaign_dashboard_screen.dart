@@ -223,12 +223,14 @@ class CampaignDashboardScreen extends StatelessWidget {
                                       child: Icon(Icons.monetization_on,
                                           color: globals.buyPrice),
                                     ),
-                                    Text(
-                                        model.myTotalAssetValue
-                                            .toStringAsFixed(2),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline2),
+                                    Flexible(
+                                      child: Text(
+                                          model.myTotalAssetValue
+                                              .toStringAsFixed(2),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline2),
+                                    ),
                                   ],
                                 ),
                               ),
