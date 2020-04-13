@@ -491,33 +491,6 @@ class CampaignPaymentScreen extends StatelessWidget {
                         ],
                       ),
                       UIHelper.verticalSpaceSmall,
-                      // model.busy == true
-                      //     ? SizedBox(
-                      //         height: 220,
-                      //         child: ListView.builder(
-                      //           scrollDirection: Axis.vertical,
-                      //           itemCount: 8,
-                      //           shrinkWrap: true,
-                      //           itemBuilder: (context, index) {
-                      //             return Container(
-                      //               color: model.evenOrOddColor(index),
-                      //               padding: EdgeInsets.all(5.0),
-                      //               child: Row(
-                      //                 mainAxisAlignment:
-                      //                     MainAxisAlignment.spaceAround,
-                      //                 children: <Widget>[
-                      //                   Shimmer.fromColors(
-                      //                       baseColor: globals.red,
-                      //                       highlightColor: globals.white,
-                      //                       child: Text(
-                      //                           AppLocalizations.of(context)
-                      //                               .loading))
-                      //                 ],
-                      //               ),
-                      //             );
-                      //           },
-                      //         ))
-                      //   :
                       model.busy
                           ? Shimmer.fromColors(
                               baseColor: globals.primaryColor,

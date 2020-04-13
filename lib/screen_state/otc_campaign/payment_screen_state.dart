@@ -64,6 +64,8 @@ class CampaignPaymentScreenState extends BaseState {
   bool isTokenCalc = false;
   TextEditingController updateOrderDescriptionController =
       TextEditingController();
+  double price = 0;
+
   // Initial logic
   initState() async {
     setBusy(true);
@@ -137,7 +139,7 @@ class CampaignPaymentScreenState extends BaseState {
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           sendAmountTextController.text = '';
-          await createCampaignOrder(txHash, amount);
+          await createCampaignOrder(txHash, tokenPurchaseQuantity);
           sharedService.alertResponse(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}');
@@ -205,7 +207,8 @@ class CampaignPaymentScreenState extends BaseState {
           walletAdd: exgWalletAddress,
           paymentType: _groupValue,
           txId: txHash,
-          quantity: quantity);
+          quantity: quantity,
+          price: price);
     }).catchError((err) => log.e('Campaign database service catch $err'));
 
     // calling api and passing the campaign order object
@@ -213,7 +216,7 @@ class CampaignPaymentScreenState extends BaseState {
       log.w(res);
       if (res == null) {
         setErrorMessage(AppLocalizations.of(context).serverError);
-        return false;
+        return;
       } else if (res['message'] != null) {
         setBusy(false);
         isConfirming = false;
@@ -534,24 +537,24 @@ class CampaignPaymentScreenState extends BaseState {
 
   Future<double> getUsdValue() async {
     setBusy(true);
-    double usdValue = 0;
+    double usdPrice = 0;
     await campaignService.getUsdPrices().then((res) {
       if (res != null) {
         log.w(res['data']['EXG']['USD']);
         log.e(selectedCurrency);
+        double exgUsdValue = res['data']['EXG']['USD'];
         if (selectedCurrency == 'CAD') {
           double cadUsdValue = res['data']['CAD']['USD'];
-          double exgUsdValue = res['data']['EXG']['USD'];
-          usdValue = (1 / cadUsdValue) * exgUsdValue;
-          log.i('in if $usdValue');
+          usdPrice = (1 / cadUsdValue) * exgUsdValue;
+          log.i('in if $usdPrice');
         } else {
-          usdValue = res['data']['EXG']['USD'];
-          log.w('in else $usdValue');
+          usdPrice = exgUsdValue;
+          log.w('in else $usdPrice');
         }
       }
     });
     setBusy(false);
-    return usdValue;
+    return usdPrice;
   }
 
 /*----------------------------------------------------------------------
@@ -561,7 +564,8 @@ class CampaignPaymentScreenState extends BaseState {
   calcTokenPurchaseAmount(amount) async {
     setBusy(true);
     isTokenCalc = true;
-    double price = await getUsdValue();
+    price = await getUsdValue();
+    log.w('price $price');
     tokenPurchaseQuantity = amount / price;
     setBusy(false);
     isTokenCalc = false;

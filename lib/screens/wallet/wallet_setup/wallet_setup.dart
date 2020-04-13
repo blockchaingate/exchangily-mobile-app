@@ -40,6 +40,7 @@ class WalletSetupScreen extends StatelessWidget {
         },
         child: SingleChildScrollView(
           child: Container(
+            height: MediaQuery.of(context).size.height * 1,
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
             alignment: Alignment.center,
             color: globals.walletCardColor,

@@ -76,9 +76,19 @@ class CampaignDashboardScreenState extends BaseState {
     await campaignService.getMemberProfile(userData).then((res) {
       if (res != null) {
         log.w('myProfile $res');
-        memberLevel = res['membership'];
-        assignColorAccordingToMemberLevel(memberLevel);
-        myInvestmentValueWithoutRewards = res['totalValue'];
+        String level = res['membership'].toString();
+        if (level == 'gold') {
+          memberLevelTextColor = 0xffE6BE8A;
+          memberLevel = AppLocalizations.of(context).gold;
+        } else if (level == 'diamond') {
+          memberLevelTextColor = 0xffffffff;
+          memberLevel = AppLocalizations.of(context).diamond;
+        } else {
+          memberLevelTextColor = 0xff696969;
+          memberLevel = AppLocalizations.of(context).silver;
+        }
+        //assignColorAccordingToMemberLevel(level);
+        myInvestmentValueWithoutRewards = res['totalValue'].toDouble();
         myTokensWithoutRewards = res['totalQuantities'].toDouble();
         log.w('myTokensWithoutRewards $myTokensWithoutRewards');
       } else {
@@ -94,20 +104,17 @@ class CampaignDashboardScreenState extends BaseState {
 
   assignColorAccordingToMemberLevel(memberLevel) {
     log.w('Entry assignColorAccordingToMemberLevel $memberLevel');
-    setBusy(true);
     if (memberLevel == 'gold') {
       memberLevelTextColor = 0xffE6BE8A;
       memberLevel = AppLocalizations.of(context).gold;
     } else if (memberLevel == 'diamond') {
       memberLevelTextColor = 0xffffffff;
       memberLevel = AppLocalizations.of(context).diamond;
-      log.e(memberLevel);
     } else {
       memberLevelTextColor = 0xff696969;
       memberLevel = AppLocalizations.of(context).silver;
     }
-    setBusy(false);
-    log.w('Exit assignColorAccordingToMemberLevel $memberLevel');
+    log.e('Exit assignColorAccordingToMemberLevel $memberLevel');
   }
 
 /*-------------------------------------------------------------------------------------
@@ -171,48 +178,31 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(true);
     setErrorMessage('fetching your rewards');
     String token = await campaignService.getSavedLoginToken();
-    await campaignService.getMemberRewardByToken(token).then((response) async {
-      if (response != null) {
-        myTotalAssetQuantity = 0;
-        myTotalReferrals = 0;
-        myReferralReward = 0;
-        var res = response['personal'] as List;
-        log.w('res in my rewards by token $res');
+    await campaignService.getMemberRewardByToken(token).then((res) async {
+      if (res != null) {
+        campaignRewardList = res;
+        // var res = response['personal'] as List;
+        log.w('res in my rewards by token ${campaignRewardList}');
         for (int i = 0; i < res.length; i++) {
-          var totalValueByLevel = res[i]['totalValue'];
-          var totalTokenQuantityByLevel = res[i]['totalQuantities'];
-          var totalReferralsByLevel = res[i]['totalAccounts'];
-          var totalRewardQuantityByLevel = res[i]['totalRewardQuantities'];
-          var level = res[i]['level'];
-          CampaignReward campaignReward = new CampaignReward(
-              level: level,
-              totalValue: totalValueByLevel,
-              totalQuantities: totalTokenQuantityByLevel,
-              totalRewardQuantities: totalRewardQuantityByLevel,
-              totalAccounts: totalReferralsByLevel,
-              totalRewardNextQuantities: res[i]['totalRewardNextQuantities']);
-          campaignRewardList.add(campaignReward);
-          // calculating total asset quantity
+          // double totalValueByLevel = campaignRewardList[i].totalValue;
+          // double totalTokenQuantityByLevel =
+          //     campaignRewardList[i].totalQuantities;
+          int totalReferralsByLevel = campaignRewardList[i].totalAccounts;
+          double totalRewardQuantityByLevel =
+              campaignRewardList[i].totalRewardQuantities;
+          // int level = campaignRewardList[i].level;
+          // // calculating total asset quantity
           myTotalAssetQuantity =
               myTotalAssetQuantity + totalRewardQuantityByLevel;
 
-          // calculating total referrals
+          // // calculating total referrals
           myTotalReferrals = myTotalReferrals + totalReferralsByLevel;
+
+          // Calling team reward
+          await getTotalTeamReward(token);
           // calculating total reward
           myReferralReward = myReferralReward + totalRewardQuantityByLevel;
-          log.w('myRewardsByToken ${campaignReward.toJson()}');
         }
-
-        var ttv = response['teamsTotalValue'];
-        // Have to check if team value or reward is zero otherwise it throws type cast error and doesn't execute any statement after that
-        if (ttv != 0) {
-          myTeamsTotalValue = ttv;
-        }
-        var ttr = response['teamsRewards'];
-        if (ttr != 0) {
-          myTeamsTotalRewards = ttr;
-        }
-        // Final calculation total asset quantity
         myTotalAssetQuantity =
             myTotalAssetQuantity + myTokensWithoutRewards + myTeamsTotalRewards;
         await calcMyTotalAsssetValue();
@@ -221,17 +211,27 @@ class CampaignDashboardScreenState extends BaseState {
         setBusy(false);
       }
     }).catchError((err) {
-      log.e(err);
+      log.e('myRewardsByToken catch $err');
       setBusy(false);
     });
     setBusy(false);
   }
 
+// get total team value and reward
+  getTotalTeamReward(token) async {
+    await campaignService.getTotalTeamsRewardByToken(token).then((res) {
+      myTeamsTotalValue = res['teamsTotalValue'].toDouble();
+      myTeamsTotalRewards = res['teamsRewards'].toDouble();
+    });
+  }
+
   // Calculate my total Asset value
   calcMyTotalAsssetValue() async {
+    log.e('calcMyTotalAsssetValue');
     double exgPrice = await getUsdValue();
     myTotalAssetValue = myTotalAssetQuantity * exgPrice;
-    log.e('Test $myTotalAssetQuantity, $exgPrice - $myTotalAssetValue');
+    log.e(
+        'calcMyTotalAsssetValue $myTotalAssetQuantity, $exgPrice - $myTotalAssetValue');
     return myTotalAssetValue;
   }
 

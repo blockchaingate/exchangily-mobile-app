@@ -49,6 +49,7 @@ class _BackupMnemonicWalletScreenState
           backgroundColor: globals.secondaryColor),
       body: SingleChildScrollView(
         child: Container(
+          height: MediaQuery.of(context).size.height - 100,
           padding: EdgeInsets.all(10),
           child: ListView(
             children: <Widget>[
