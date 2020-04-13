@@ -221,7 +221,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                       padding:
                                           const EdgeInsets.only(right: 3.0),
                                       child: Icon(Icons.monetization_on,
-                                          color: globals.buyPrice),
+                                          color: globals.buyPrice, size: 20),
                                     ),
                                     Flexible(
                                       child: Text(
@@ -348,10 +348,21 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   ('0.000'),
                                   style: Theme.of(context).textTheme.headline5,
                                 ))
-                            : Text(
-                                model.myInvestmentValueWithoutRewards
-                                    .toStringAsFixed(4),
-                                style: Theme.of(context).textTheme.headline5),
+                            : Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.attach_money,
+                                    color: globals.white,
+                                    size: 17,
+                                  ),
+                                  Text(
+                                      model.myInvestmentValueWithoutRewards
+                                          .toStringAsFixed(2),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                ],
+                              ),
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -363,20 +374,16 @@ class CampaignDashboardScreen extends StatelessWidget {
                               ),
                             ),
                             model.busy
-                                ? Container(
-                                    color: globals.grey,
-                                    child: Shimmer.fromColors(
-                                        baseColor: globals.primaryColor,
-                                        highlightColor: globals.grey,
-                                        child: Text(
-                                          ('00.00'),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5,
-                                        )),
-                                  )
+                                ? Shimmer.fromColors(
+                                    baseColor: globals.primaryColor,
+                                    highlightColor: globals.grey,
+                                    child: Text(
+                                      ('00.00'),
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
+                                    ))
                                 : Text(
-                                    '${model.myTokensWithoutRewards.toStringAsFixed(3)}',
+                                    '${model.myTokensWithoutRewards.toStringAsFixed(2)}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
@@ -423,7 +430,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline5,
                                   ))
-                              : Text(model.myReferralReward.toStringAsFixed(4),
+                              : Text(model.myReferralReward.toStringAsFixed(2),
                                   style: Theme.of(context).textTheme.headline5),
                           trailing: Icon(
                             Icons.navigate_next,
@@ -462,7 +469,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   ('0.000'),
                                   style: Theme.of(context).textTheme.headline5,
                                 ))
-                            : Text(model.myTeamsTotalValue.toStringAsFixed(4),
+                            : Text(model.myTeamsTotalValue.toStringAsFixed(2),
                                 style: Theme.of(context).textTheme.headline5),
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -475,18 +482,14 @@ class CampaignDashboardScreen extends StatelessWidget {
                               ),
                             ),
                             model.busy
-                                ? Container(
-                                    color: globals.grey,
-                                    child: Shimmer.fromColors(
-                                        baseColor: globals.primaryColor,
-                                        highlightColor: globals.grey,
-                                        child: Text(
-                                          ('00.00'),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5,
-                                        )),
-                                  )
+                                ? Shimmer.fromColors(
+                                    baseColor: globals.primaryColor,
+                                    highlightColor: globals.grey,
+                                    child: Text(
+                                      ('00.00'),
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
+                                    ))
                                 : Text(
                                     model.myTeamsTotalRewards
                                         .toStringAsFixed(2),
