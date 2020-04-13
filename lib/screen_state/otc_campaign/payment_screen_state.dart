@@ -487,7 +487,7 @@ class CampaignPaymentScreenState extends BaseState {
 
   Future<double> getUsdValue() async {
     setBusy(true);
-    double usdValue = 0;
+    double usdPrice = 0;
     await campaignService.getUsdPrices().then((res) {
       if (res != null) {
         log.w(res['data']['EXG']['USD']);
@@ -495,16 +495,16 @@ class CampaignPaymentScreenState extends BaseState {
         double exgUsdValue = res['data']['EXG']['USD'];
         if (selectedCurrency == 'CAD') {
           double cadUsdValue = res['data']['CAD']['USD'];
-          usdValue = (1 / cadUsdValue) * exgUsdValue;
-          log.i('in if $usdValue');
+          usdPrice = (1 / cadUsdValue) * exgUsdValue;
+          log.i('in if $usdPrice');
         } else {
-          usdValue = exgUsdValue;
-          log.w('in else $usdValue');
+          usdPrice = exgUsdValue;
+          log.w('in else $usdPrice');
         }
       }
     });
     setBusy(false);
-    return usdValue;
+    return usdPrice;
   }
 
 /*----------------------------------------------------------------------

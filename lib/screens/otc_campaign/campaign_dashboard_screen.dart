@@ -214,7 +214,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                   style: Theme.of(context).textTheme.headline5,
                                 ))
                             : SizedBox(
-                                width: 130,
+                                width: 120,
                                 child: Row(
                                   children: <Widget>[
                                     Padding(
@@ -348,7 +348,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                 ))
                             : Text(
                                 model.myInvestmentValueWithoutRewards
-                                    .toString(),
+                                    .toStringAsFixed(4),
                                 style: Theme.of(context).textTheme.headline5),
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,

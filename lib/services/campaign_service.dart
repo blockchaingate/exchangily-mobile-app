@@ -118,7 +118,7 @@ class CampaignService {
   Future createCampaignOrder(CampaignOrder campaignOrder) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String loginToken = prefs.getString('loginToken');
-//campaignOrder.toJson();
+    campaignOrder.toJson();
     Map<String, dynamic> body = {
       "campaignId": "1",
       "price": campaignOrder.price.toString(),
