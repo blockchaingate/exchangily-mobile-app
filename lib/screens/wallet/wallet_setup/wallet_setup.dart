@@ -46,7 +46,7 @@ class WalletSetupScreen extends StatelessWidget {
             color: globals.walletCardColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
-              //  crossAxisAlignment: CrossAxisAlignment.stretch,
+              //  crossAxisAlignment: CrossAxpisAlignment.stretch,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 // Logo Container
