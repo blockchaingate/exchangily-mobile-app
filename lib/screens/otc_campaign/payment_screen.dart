@@ -529,7 +529,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               child: Text(
                                                   model.orderInfoList[index]
                                                       .quantity
-                                                      .toString(),
+                                                      .toStringAsFixed(3),
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyText1),
