@@ -4,6 +4,7 @@ import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignTeamRewardDetailsScreen extends StatelessWidget {
@@ -60,70 +61,82 @@ class CampaignTeamRewardDetailsScreen extends StatelessWidget {
                 ),
                 UIHelper.verticalSpaceSmall,
 // Reward list builder
-                Expanded(
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: model.campaignTeamRewardList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          int i = index + 1;
-                          return Card(
-                            elevation: 5,
-                            color: globals.walletCardColor,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 15.0),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                      flex: 1,
-                                      child: Center(
-                                          child: Text(
-                                        i.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ))),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Center(
-                                          child: Text(
-                                              model
-                                                  .campaignTeamRewardList[index]
-                                                  .members
-                                                  .length
-                                                  .toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5))),
-                                  Expanded(
-                                      flex: 3,
-                                      child: Center(
-                                          child: Text(
-                                              model
-                                                  .campaignTeamRewardList[index]
-                                                  .totalQuantities
-                                                  .toStringAsFixed(3),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5))),
-                                  Expanded(
-                                      flex: 2,
-                                      child: Center(
-                                          child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 3.0),
-                                        child: Text(
-                                            model.campaignTeamRewardList[index]
-                                                .totalQuantities
-                                                .toStringAsFixed(3),
+                model.busy
+                    ? Shimmer.fromColors(
+                        baseColor: globals.primaryColor,
+                        highlightColor: globals.grey,
+                        child: Text(
+                          (AppLocalizations.of(context).loading),
+                          style: Theme.of(context).textTheme.headline5,
+                        ))
+                    : Expanded(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: model.campaignTeamRewardList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              int i = index + 1;
+                              return Card(
+                                elevation: 5,
+                                color: globals.walletCardColor,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(vertical: 15.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                          flex: 1,
+                                          child: Center(
+                                              child: Text(
+                                            i.toString(),
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline5),
-                                      )))
-                                ],
-                              ),
-                            ),
-                          );
-                        }))
+                                                .headline5,
+                                          ))),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Center(
+                                              child: Text(
+                                                  model
+                                                      .campaignTeamRewardList[
+                                                          index]
+                                                      .members
+                                                      .length
+                                                      .toString(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5))),
+                                      Expanded(
+                                          flex: 3,
+                                          child: Center(
+                                              child: Text(
+                                                  model
+                                                      .campaignTeamRewardList[
+                                                          index]
+                                                      .totalQuantities
+                                                      .toStringAsFixed(3),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5))),
+                                      Expanded(
+                                          flex: 2,
+                                          child: Center(
+                                              child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 3.0),
+                                            child: Text(
+                                                model
+                                                    .campaignTeamRewardList[
+                                                        index]
+                                                    .totalQuantities
+                                                    .toStringAsFixed(3),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5),
+                                          )))
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }))
               ],
             )),
       ),
