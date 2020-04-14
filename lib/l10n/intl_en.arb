@@ -1397,5 +1397,29 @@
     "description": "campaign_payment_update_your_order_status",
     "type": "text",
     "placeholders": {}
+  },
+  "team": "Team",
+  "@team": {
+    "description": "campaign_dashboard_team_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "members": "Members",
+  "@members": {
+    "description": "campaign_dashboard_team_details_members",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalValue": "Total Value",
+  "@totalValue": {
+    "description": "campaign_dashboard_team_details_total_value",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalQuantity": "Total Quantity",
+  "@totalQuantity": {
+    "description": "campaign_dashboard_team_details_total_quantity",
+    "type": "text",
+    "placeholders": {}
   }
 }

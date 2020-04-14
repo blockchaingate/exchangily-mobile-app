@@ -1204,6 +1204,28 @@ class AppLocalizations {
         name: 'updateYourOrderStatus',
         desc: 'campaign_payment_update_your_order_status');
   }
+
+  String get team {
+    return Intl.message('Team',
+        name: 'team', desc: 'campaign_dashboard_team_details');
+  }
+
+  String get members {
+    return Intl.message('Members',
+        name: 'members', desc: 'campaign_dashboard_team_details_members');
+  }
+
+  String get totalValue {
+    return Intl.message('Total Value',
+        name: 'totalValue',
+        desc: 'campaign_dashboard_team_details_total_value');
+  }
+
+  String get totalQuantity {
+    return Intl.message('Total Quantity',
+        name: 'totalQuantity',
+        desc: 'campaign_dashboard_team_details_total_quantity');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
