@@ -66,7 +66,7 @@ class _BackupMnemonicWalletScreenState
                   Expanded(
                       child: Text(
                     AppLocalizations.of(context).warningBackupMnemonic,
-                    style: Theme.of(context).textTheme.headline,
+                    style: Theme.of(context).textTheme.headline5,
                   )),
                 ],
               ),

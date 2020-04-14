@@ -33,6 +33,7 @@ class CampaignDashboardScreenState extends BaseState {
   double myInvestmentValueWithoutRewards = 0.0;
   double myTokensWithoutRewards = 0.0;
   var myTokens;
+  Map<String, dynamic> teamValueAndRewardWithLoginToken = {};
 
   List<CampaignReward> campaignRewardList = [];
   initState() async {
@@ -222,6 +223,11 @@ class CampaignDashboardScreenState extends BaseState {
     await campaignService.getTotalTeamsRewardByToken(token).then((res) {
       myTeamsTotalValue = res['teamsTotalValue'].toDouble();
       myTeamsTotalRewards = res['teamsRewards'].toDouble();
+      teamValueAndRewardWithLoginToken = {
+        "totalValue": myTeamsTotalValue,
+        "totalReward": myTeamsTotalRewards,
+        "token": token
+      };
     });
   }
 

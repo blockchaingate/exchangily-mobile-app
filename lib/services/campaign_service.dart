@@ -4,6 +4,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
+import 'package:exchangilymobileapp/models/campaign/team_reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/models/transaction_info.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
@@ -317,8 +318,6 @@ class CampaignService {
       var response = await client.get(rewardsUrl, headers: headers);
       log.w('getMemberRewardByToken ${jsonDecode(response.body)['_body']}');
       var json = jsonDecode(response.body)['_body']['personal'];
-      //  var teamsRewardList = jsonDecode(response.body)['_body']['team'] as List;
-      // catch type 'int' is not a subtype of type 'double' if i map it like below so for now i am going to do i manually until i find the solution
       CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
       log.e('getMemberRewardByToken ${campaignRewardList.rewards.length}');
       return campaignRewardList.rewards;
@@ -337,15 +336,33 @@ class CampaignService {
     try {
       var response = await client.get(rewardsUrl, headers: headers);
       log.e('getTotalTeamsRewardByToken ${jsonDecode(response.body)['_body']}');
-
       var teamsRewardList = jsonDecode(response.body)['_body'];
       return teamsRewardList;
-
-      // catch type 'int' is not a subtype of type 'double' if i map it like below so for now i am going to do i manually until i find the solution
-      // CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
-      // log.e(campaignRewardList.rewards.length);
     } catch (err) {
       log.e('In getTotalTeamsRewardByToken catch $err');
+    }
+  }
+
+/*-------------------------------------------------------------------------------------
+                                  Get Teams Details Reward By Token
+-------------------------------------------------------------------------------------*/
+
+  Future<List<CampaignTeamReward>> getTeamsRewardDetailsByToken(
+      String token) async {
+    Map<String, String> headers = {'x-access-token': token};
+    try {
+      var response = await client.get(rewardsUrl, headers: headers);
+      log.e(
+          'getTeamsRewardDetailsByToken ${jsonDecode(response.body)['_body']['team']}');
+      var json = jsonDecode(response.body)['_body']['team'];
+      CampaignTeamRewardList campaignTeamRewardList =
+          CampaignTeamRewardList.fromJson(json);
+      log.w(
+          'getTeamsRewardDetailsByToken ${campaignTeamRewardList.rewards.length}');
+      return campaignTeamRewardList.rewards;
+    } catch (err) {
+      log.e('In getTeamsRewardDetailsByToken catch $err');
+      return null;
     }
   }
 }

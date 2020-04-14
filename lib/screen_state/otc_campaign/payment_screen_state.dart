@@ -54,7 +54,7 @@ class CampaignPaymentScreenState extends BaseState {
   CampaignOrder campaignOrder;
   List<OrderInfo> orderInfoList = [];
   Color containerListColor;
-  int orderInfoContainerHeight = 455;
+  double orderInfoContainerHeight = 5;
   List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
   double tokenPurchaseQuantity = 0;
@@ -73,6 +73,13 @@ class CampaignPaymentScreenState extends BaseState {
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];
     setBusy(false);
+  }
+
+  calcOrderListSizedBoxHeight() {
+    orderInfoContainerHeight = orderInfoList.length * 25.toDouble();
+    double test = orderInfoList.length * 5.toDouble();
+    log.w(
+        'calcOrderListSizedBoxHeight ${orderInfoList.length}, $test, $orderInfoContainerHeight');
   }
 
   // Radio button selection
@@ -249,6 +256,7 @@ class CampaignPaymentScreenState extends BaseState {
     await campaignService.getOrdersById(userData.id).then((orderListFromApi) {
       if (orderListFromApi != null) {
         orderInfoList = orderListFromApi;
+        calcOrderListSizedBoxHeight();
         log.w(orderInfoList.length);
         orderStatusList = [
           AppLocalizations.of(context).waiting,
@@ -289,110 +297,152 @@ class CampaignPaymentScreenState extends BaseState {
                     Status popup to Update order
 ----------------------------------------------------------------------*/
 
-  updateOrder(id, status) {
-    bool isDescription = false;
+  updateOrder(id, status) async {
     log.w('$id, ${orderInfoList[status].status}');
     var statusCode = orderInfoList[status].status;
     if (statusCode == '1' || statusCode == '2') {
-      Alert(
-          style: AlertStyle(
-              animationType: AnimationType.grow,
-              isOverlayTapDismiss: true,
-              backgroundColor: globals.walletCardColor,
-              descStyle: Theme.of(context).textTheme.bodyText1,
-              titleStyle: Theme.of(context)
-                  .textTheme
-                  .headline4
-                  .copyWith(decoration: TextDecoration.underline)),
-          context: context,
+      var dialogResponse = await dialogService.showOrderUpdateDialog(
           title: AppLocalizations.of(context).updateYourOrderStatus,
-          closeFunction: () {
-            Navigator.of(context, rootNavigator: true).pop();
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          content: Column(
-            children: <Widget>[
-              TextField(
-                minLines: 1,
-                maxLength: 100,
-                maxLengthEnforced: true,
-                style: TextStyle(color: globals.white),
-                controller: updateOrderDescriptionController,
-                obscureText: false,
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).paymentDescription,
-                  hintStyle: Theme.of(context).textTheme.bodyText1,
-                  labelStyle: Theme.of(context).textTheme.headline6,
-                  icon: Icon(
-                    Icons.event_note,
-                    color: globals.primaryColor,
-                  ),
-                  labelText:
-                      AppLocalizations.of(context).paymentDescriptionNote,
-                ),
-              ),
-              // isDescription
-              //     ? Text(AppLocalizations.of(context).descriptionIsRequired)
-              //     : Text('')
-            ],
-          ),
-          buttons: [
-            // Confirm button
-            DialogButton(
-              color: globals.primaryColor,
-              onPressed: () async {
-                if (updateOrderDescriptionController.text.length < 10) {
-                  bool test = updateOrderDescriptionController.text.length < 10;
-                  log.w(test);
-                  setBusy(true);
-                  isDescription = true;
-                  setBusy(false);
-                } else {
-                  setBusy(true);
-                  await campaignService
-                      .updateCampaignOrder(
-                          id, updateOrderDescriptionController.text, "2")
-                      .then((value) async => await getCampaignOrdeList());
-                  Navigator.of(context, rootNavigator: true).pop();
-                  updateOrderDescriptionController.text = '';
-                  isDescription = false;
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  setBusy(false);
-                }
-              },
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7),
-                // model.busy is not working here and same reason that it does not show the error when desc field is empty
-                child: busy
-                    ? Text(AppLocalizations.of(context).loading)
-                    : Text(
-                        AppLocalizations.of(context).confirmPayment,
-                        style: Theme.of(context).textTheme.headline4,
-                      ),
-              ),
-            ),
+          description: AppLocalizations.of(context).paymentDescriptionNote,
+          confirmOrder: AppLocalizations.of(context).confirmPayment,
+          cancelOrder: AppLocalizations.of(context).cancelOrder);
+      //   showDialog(
+      //       context: context,
+      //       builder: (context) {
+      //         bool isDescription = false;
 
-            // Cancel button
-            DialogButton(
-              color: globals.primaryColor,
-              onPressed: () async {
-                await campaignService
-                    .updateCampaignOrder(
-                        id, updateOrderDescriptionController.text, "5")
-                    .then((value) => getCampaignOrdeList());
-                Navigator.pop(context);
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
-              child: Text(
-                AppLocalizations.of(context).cancelOrder,
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
-          ]).show();
+      //          Alert(
+      //          //   contentPadding: EdgeInsets.all(0.0),
+      //         //    backgroundColor: globals.walletCardColor,
+      //          //   scrollable: false,
+      //             // style: AlertStyle(
+      //             //     animationType: AnimationType.grow,
+      //             //     isOverlayTapDismiss: true,
+      //             //     backgroundColor: globals.walletCardColor,
+      //             //     descStyle: Theme.of(context).textTheme.bodyText1,
+      //             //     titleStyle: Theme.of(context)
+      //             //         .textTheme
+      //             //         .headline4
+      //             //         .copyWith(decoration: TextDecoration.underline)),
+      //              context: context,
+      //             title: AppLocalizations.of(context).updateYourOrderStatus,
+      //             // closeFunction: () {
+      //             //   Navigator.of(context, rootNavigator: true).pop();
+      //             //   FocusScope.of(context).requestFocus(FocusNode());
+      //             // },
+      //             content: StatefulBuilder(
+      //                 builder: (BuildContext context, StateSetter localState) {
+      //               return Column(
+      //                 children: <Widget>[
+      //                   TextField(
+      //                     minLines: 1,
+      //                     maxLength: 100,
+      //                     maxLengthEnforced: true,
+      //                     style: TextStyle(color: globals.white),
+      //                     controller: updateOrderDescriptionController,
+      //                     obscureText: false,
+      //                     decoration: InputDecoration(
+      //                       hintText:
+      //                           AppLocalizations.of(context).paymentDescription,
+      //                       hintStyle: Theme.of(context).textTheme.bodyText1,
+      //                       labelStyle: Theme.of(context).textTheme.headline6,
+      //                       icon: Icon(
+      //                         Icons.event_note,
+      //                         color: globals.primaryColor,
+      //                       ),
+      //                       labelText: AppLocalizations.of(context)
+      //                           .paymentDescriptionNote,
+      //                     ),
+      //                   ),
+      //                   isDescription
+      //                       ? Text(
+      //                           AppLocalizations.of(context)
+      //                               .descriptionIsRequired,
+      //                           style: TextStyle(color: Colors.red),
+      //                         )
+      //                       : Text(''),
+
+      //                   // Confirm button
+
+      //                   isDescription
+      //                       ? DialogButton(
+      //                           color: globals.primaryColor,
+      //                           onPressed: () async {},
+      //                           child: Padding(
+      //                               padding: const EdgeInsets.symmetric(
+      //                                   vertical: 2.0, horizontal: 7),
+      //                               // model.busy is not working here and same reason that it does not show the error when desc field is empty
+      //                               child: Text(
+      //                                   AppLocalizations.of(context).loading)),
+      //                         )
+      //                       : DialogButton(
+      //                           color: globals.primaryColor,
+      //                           onPressed: () async {
+      //                             if (updateOrderDescriptionController
+      //                                     .text.length <
+      //                                 10) {
+      //                               bool test = updateOrderDescriptionController
+      //                                       .text.length <
+      //                                   10;
+      //                               log.w(test);
+      //                               localState(() => isDescription = true);
+      //                             } else {
+      //                               await campaignService
+      //                                   .updateCampaignOrder(
+      //                                       id,
+      //                                       updateOrderDescriptionController.text,
+      //                                       "2")
+      //                                   .then((value) async =>
+      //                                       await getCampaignOrdeList());
+      //                               Navigator.of(context, rootNavigator: true)
+      //                                   .pop();
+      //                               updateOrderDescriptionController.text = '';
+      //                               localState(() => isDescription = false);
+      //                               FocusScope.of(context)
+      //                                   .requestFocus(FocusNode());
+      //                             }
+      //                           },
+      //                           child: Padding(
+      //                             padding: const EdgeInsets.symmetric(
+      //                                 vertical: 2.0, horizontal: 7),
+      //                             // model.busy is not working here and same reason that it does not show the error when desc field is empty
+      //                             child: busy
+      //                                 ? Text(AppLocalizations.of(context).loading)
+      //                                 : Text(
+      //                                     AppLocalizations.of(context)
+      //                                         .confirmPayment,
+      //                                     style: Theme.of(context)
+      //                                         .textTheme
+      //                                         .headline4,
+      //                                   ),
+      //                           ),
+      //                         ),
+      //                   UIHelper.verticalSpaceSmall,
+      //                   // Cancel button
+      //                   DialogButton(
+      //                     color: globals.primaryColor,
+      //                     onPressed: () async {
+      //                       await campaignService
+      //                           .updateCampaignOrder(id,
+      //                               updateOrderDescriptionController.text, "5")
+      //                           .then((value) => getCampaignOrdeList());
+      //                       Navigator.pop(context);
+      //                       FocusScope.of(context).requestFocus(FocusNode());
+      //                     },
+      //                     child: Text(
+      //                       AppLocalizations.of(context).cancelOrder,
+      //                       style: Theme.of(context).textTheme.headline4,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               );
+      //             }),
+      //            // actions: []);
+      //         //.show();
+      //       });
+      // }
     }
   }
-
 /*----------------------------------------------------------------------
                     Check input fields
 ----------------------------------------------------------------------*/

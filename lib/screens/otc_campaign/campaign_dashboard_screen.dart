@@ -449,60 +449,111 @@ class CampaignDashboardScreen extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       ListTile(
-                        onTap: () {},
-                        dense: false,
-                        leading: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Icon(
-                            Icons.people_outline,
-                            color: globals.primaryColor,
-                            size: 22,
+                          onTap: () {
+                            model.navigateByRouteName(
+                                '/campaignTeamRewardDetails',
+                                model.teamValueAndRewardWithLoginToken);
+                          },
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Icon(
+                              Icons.people_outline,
+                              color: globals.primaryColor,
+                              size: 22,
+                            ),
                           ),
-                        ),
-                        title:
-                            Text(AppLocalizations.of(context).teamsTotalValue),
-                        subtitle: model.busy
-                            ? Shimmer.fromColors(
-                                baseColor: globals.primaryColor,
-                                highlightColor: globals.grey,
-                                child: Text(
-                                  ('0.000'),
-                                  style: Theme.of(context).textTheme.headline5,
-                                ))
-                            : Text(model.myTeamsTotalValue.toStringAsFixed(2),
-                                style: Theme.of(context).textTheme.headline5),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 3.0),
-                              child: Text(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                  AppLocalizations.of(context).teamsTotalValue),
+                              Text(
                                 AppLocalizations.of(context).teamReward,
                                 style: Theme.of(context).textTheme.headline5,
-                              ),
-                            ),
-                            model.busy
-                                ? Shimmer.fromColors(
-                                    baseColor: globals.primaryColor,
-                                    highlightColor: globals.grey,
-                                    child: Text(
-                                      ('00.00'),
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ))
-                                : Text(
-                                    model.myTeamsTotalRewards
-                                        .toStringAsFixed(2),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(
-                                                model.memberLevelTextColor)))
-                          ],
-                        ),
-                      )
+                              )
+                            ],
+                          ),
+                          subtitle: model.busy
+                              ? Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.grey,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        ('0.000'),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                      ),
+                                      Text(
+                                        ('0.000'),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                      )
+                                    ],
+                                  ))
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                        model.myTeamsTotalValue
+                                            .toStringAsFixed(2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5),
+                                    Text(
+                                        model.myTeamsTotalRewards
+                                            .toStringAsFixed(2),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                                fontWeight: FontWeight.w600,
+                                                color: Color(model
+                                                    .memberLevelTextColor)))
+                                  ],
+                                ),
+                          trailing:
+                              // Column(
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   children: <Widget>[
+                              //     Padding(
+                              //       padding: const EdgeInsets.only(bottom: 3.0),
+                              //       child: Text(
+                              //         AppLocalizations.of(context).teamReward,
+                              //         style: Theme.of(context).textTheme.headline5,
+                              //       ),
+                              //     ),
+                              //     model.busy
+                              //         ? Shimmer.fromColors(
+                              //             baseColor: globals.primaryColor,
+                              //             highlightColor: globals.grey,
+                              //             child: Text(
+                              //               ('00.00'),
+                              //               style:
+                              //                   Theme.of(context).textTheme.headline5,
+                              //             ))
+                              //         : Text(
+                              //             model.myTeamsTotalRewards
+                              //                 .toStringAsFixed(2),
+                              //             style: Theme.of(context)
+                              //                 .textTheme
+                              //                 .headline5
+                              //                 .copyWith(
+                              //                     fontWeight: FontWeight.w600,
+                              //                     color: Color(
+                              //                         model.memberLevelTextColor))),
+                              //   ],
+                              // ),
+                              Icon(
+                            Icons.navigate_next,
+                            color: globals.white54,
+                          )),
                     ],
                   ),
                 ),
