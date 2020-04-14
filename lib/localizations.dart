@@ -1226,6 +1226,11 @@ class AppLocalizations {
         name: 'totalQuantity',
         desc: 'campaign_dashboard_team_details_total_quantity');
   }
+
+  String get teamDetails {
+    return Intl.message('Team Details',
+        name: 'teamDetails', desc: 'campaign_dashboard_team_details_heading');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

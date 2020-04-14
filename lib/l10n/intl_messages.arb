@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-14T14:08:13.581805",
+  "@@last_modified": "2020-04-14T14:27:30.424800",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1419,6 +1419,12 @@
   "totalQuantity": "Total Quantity",
   "@totalQuantity": {
     "description": "campaign_dashboard_team_details_total_quantity",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamDetails": "Team Details",
+  "@teamDetails": {
+    "description": "campaign_dashboard_team_details_heading",
     "type": "text",
     "placeholders": {}
   }

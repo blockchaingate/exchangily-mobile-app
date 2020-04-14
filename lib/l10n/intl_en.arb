@@ -1421,5 +1421,11 @@
     "description": "campaign_dashboard_team_details_total_quantity",
     "type": "text",
     "placeholders": {}
+  },
+  "teamDetails": "Team Details",
+  "@teamDetails": {
+    "description": "campaign_dashboard_team_details_heading",
+    "type": "text",
+    "placeholders": {}
   }
 }
