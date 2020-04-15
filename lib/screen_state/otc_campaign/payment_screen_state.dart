@@ -18,12 +18,14 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
+import 'package:intl/intl.dart';
 
 class CampaignPaymentScreenState extends BaseState {
   final log = getLogger('PaymentScreenState');
@@ -53,9 +55,10 @@ class CampaignPaymentScreenState extends BaseState {
   CampaignUserData userData;
   CampaignOrder campaignOrder;
   List<OrderInfo> orderInfoList = [];
+  List<OrderInfo> orderListFromApi = [];
+  List<String> orderStatusList = [];
   Color containerListColor;
   double orderInfoContainerHeight = 5;
-  List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
   double tokenPurchaseQuantity = 0;
   List<String> currencies = ['USD', 'CAD'];
@@ -65,8 +68,11 @@ class CampaignPaymentScreenState extends BaseState {
   TextEditingController updateOrderDescriptionController =
       TextEditingController();
   double price = 0;
+  Map<String, dynamic> passOrderList;
 
-  // Initial logic
+/*----------------------------------------------------------------------
+                Initial logic
+----------------------------------------------------------------------*/
   initState() async {
     setBusy(true);
     print('in payment screen');
@@ -76,13 +82,15 @@ class CampaignPaymentScreenState extends BaseState {
   }
 
   calcOrderListSizedBoxHeight() {
-    orderInfoContainerHeight = orderInfoList.length * 25.toDouble();
-    double test = orderInfoList.length * 5.toDouble();
+    orderInfoContainerHeight = orderListFromApi.length * 20.toDouble();
+
     log.w(
-        'calcOrderListSizedBoxHeight ${orderInfoList.length}, $test, $orderInfoContainerHeight');
+        'calcOrderListSizedBoxHeight ${orderInfoList.length}, $orderInfoContainerHeight');
   }
 
-  // Radio button selection
+/*----------------------------------------------------------------------
+                Radio button selection
+----------------------------------------------------------------------*/
 
   radioButtonSelection(value) async {
     setState(ViewState.Busy);
@@ -100,7 +108,10 @@ class CampaignPaymentScreenState extends BaseState {
     _navigationService.navigateTo('/campaignDashboard');
   }
 
-// Verify wallet password in pop up dialog
+/*----------------------------------------------------------------------
+                Verify wallet password in pop up dialog
+----------------------------------------------------------------------*/
+
   verifyWalletPassword(double amount) async {
     setBusy(true);
     log.w(('Sending payment amount $amount'));
@@ -246,19 +257,22 @@ class CampaignPaymentScreenState extends BaseState {
 /*----------------------------------------------------------------------
                 Get Campaign Order List
 ----------------------------------------------------------------------*/
+
   getCampaignOrdeList() async {
     setBusy(true);
-    // await getExgWalletAddr();
+    orderListFromApi = [];
+    orderInfoList = [];
+    uiOrderStatusList = [];
     await campaignService
         .getUserDataFromDatabase()
         .then((res) => userData = res);
     if (userData == null) return false;
-    await campaignService.getOrdersById(userData.id).then((orderListFromApi) {
-      if (orderListFromApi != null) {
-        orderInfoList = orderListFromApi;
-        calcOrderListSizedBoxHeight();
-        log.w(orderInfoList.length);
+    await campaignService.getOrdersById(userData.id).then((orderList) {
+      if (orderInfoList != null) {
+        orderListFromApi = orderList;
+        log.w(orderListFromApi.length);
         orderStatusList = [
+          "",
           AppLocalizations.of(context).waiting,
           AppLocalizations.of(context).paid,
           AppLocalizations.of(context).paymentReceived,
@@ -266,21 +280,17 @@ class CampaignPaymentScreenState extends BaseState {
           AppLocalizations.of(context).orderCancelled,
         ];
 
-        for (int i = 0; i < orderInfoList.length; i++) {
-          var status = orderInfoList[i].status;
-
+        for (int i = 0; i < orderListFromApi.length; i++) {
+          var status = orderListFromApi[i].status;
           if (status == "1") {
-            uiOrderStatusList.add(orderStatusList[0]);
+            addOrderInTheList(i, int.parse(status));
           } else if (status == "2") {
-            uiOrderStatusList.add(orderStatusList[1]);
-          } else if (status == "3") {
-            uiOrderStatusList.add(orderStatusList[2]);
-          } else if (status == "4") {
-            uiOrderStatusList.add(orderStatusList[3]);
-          } else {
-            uiOrderStatusList.add(orderStatusList[4]);
+            addOrderInTheList(i, int.parse(status));
           }
         }
+        // Gives height to order list container
+        calcOrderListSizedBoxHeight();
+        log.w('${orderInfoList.length} - ${uiOrderStatusList.length}');
       } else {
         log.e('Api result null');
         setErrorMessage(AppLocalizations.of(context).loadOrdersFailed);
@@ -293,112 +303,114 @@ class CampaignPaymentScreenState extends BaseState {
     setBusy(false);
   }
 
+  // Add order in the order list
+  addOrderInTheList(int i, int status) {
+    String formattedDate = formatStringDate(orderListFromApi[i].dateCreated);
+    // needed to declare orderListFromApi globally due to this funtion to keep the code DRY
+    orderListFromApi[i].dateCreated = formattedDate;
+    uiOrderStatusList.add(orderStatusList[status]);
+    orderInfoList.add(orderListFromApi[i]);
+  }
+
 /*----------------------------------------------------------------------
                     Status popup to Update order
 ----------------------------------------------------------------------*/
 
-  updateOrder(id, status) {
-    bool isDescription = false;
-    log.w('$id, ${orderInfoList[status].status}');
-    var statusCode = orderInfoList[status].status;
-    if (statusCode == '1' || statusCode == '2') {
-      Alert(
-          style: AlertStyle(
-              animationType: AnimationType.grow,
-              isOverlayTapDismiss: true,
-              backgroundColor: globals.walletCardColor,
-              descStyle: Theme.of(context).textTheme.bodyText1,
-              titleStyle: Theme.of(context)
-                  .textTheme
-                  .headline4
-                  .copyWith(decoration: TextDecoration.underline)),
-          context: context,
-          title: AppLocalizations.of(context).updateYourOrderStatus,
-          closeFunction: () {
-            Navigator.of(context, rootNavigator: true).pop();
-            FocusScope.of(context).requestFocus(FocusNode());
-          },
-          content: Column(
-            children: <Widget>[
-              TextField(
-                minLines: 1,
-                maxLength: 100,
-                maxLengthEnforced: true,
-                style: TextStyle(color: globals.white),
-                controller: updateOrderDescriptionController,
-                obscureText: false,
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).paymentDescription,
-                  hintStyle: Theme.of(context).textTheme.bodyText1,
-                  labelStyle: Theme.of(context).textTheme.headline6,
-                  icon: Icon(
-                    Icons.event_note,
-                    color: globals.primaryColor,
-                  ),
-                  labelText:
-                      AppLocalizations.of(context).paymentDescriptionNote,
+  updateOrder(id) {
+    Alert(
+        style: AlertStyle(
+            animationType: AnimationType.grow,
+            isOverlayTapDismiss: true,
+            backgroundColor: globals.walletCardColor,
+            descStyle: Theme.of(context).textTheme.bodyText1,
+            titleStyle: Theme.of(context)
+                .textTheme
+                .headline4
+                .copyWith(decoration: TextDecoration.underline)),
+        context: context,
+        title: AppLocalizations.of(context).updateYourOrderStatus,
+        closeFunction: () {
+          Navigator.of(context, rootNavigator: true).pop();
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        content: Column(
+          children: <Widget>[
+            TextField(
+              minLines: 1,
+              maxLength: 100,
+              maxLengthEnforced: true,
+              style: TextStyle(color: globals.white),
+              controller: updateOrderDescriptionController,
+              obscureText: false,
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context).paymentDescription,
+                hintStyle: Theme.of(context).textTheme.bodyText1,
+                labelStyle: Theme.of(context).textTheme.headline6,
+                icon: Icon(
+                  Icons.event_note,
+                  color: globals.primaryColor,
                 ),
-              ),
-              // isDescription
-              //     ? Text(AppLocalizations.of(context).descriptionIsRequired)
-              //     : Text('')
-            ],
-          ),
-          buttons: [
-            // Confirm button
-            DialogButton(
-              color: globals.primaryColor,
-              onPressed: () async {
-                if (updateOrderDescriptionController.text.length < 10) {
-                  bool test = updateOrderDescriptionController.text.length < 10;
-                  log.w(test);
-                  setBusy(true);
-                  isDescription = true;
-                  setBusy(false);
-                } else {
-                  setBusy(true);
-                  await campaignService
-                      .updateCampaignOrder(
-                          id, updateOrderDescriptionController.text, "2")
-                      .then((value) async => await getCampaignOrdeList());
-                  Navigator.of(context, rootNavigator: true).pop();
-                  updateOrderDescriptionController.text = '';
-                  isDescription = false;
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  setBusy(false);
-                }
-              },
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7),
-                // model.busy is not working here and same reason that it does not show the error when desc field is empty
-                child: busy
-                    ? Text(AppLocalizations.of(context).loading)
-                    : Text(
-                        AppLocalizations.of(context).confirmPayment,
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
+                labelText: AppLocalizations.of(context).paymentDescriptionNote,
               ),
             ),
+            // isDescription
+            //     ? Text(AppLocalizations.of(context).descriptionIsRequired)
+            //     : Text('')
+          ],
+        ),
+        buttons: [
+          // Confirm button
+          DialogButton(
+            color: globals.primaryColor,
+            onPressed: () async {
+              if (updateOrderDescriptionController.text.length < 10) {
+                bool test = updateOrderDescriptionController.text.length < 10;
+                log.w(test);
+                setBusy(true);
 
-            // Cancel button
-            DialogButton(
-              color: globals.primaryColor,
-              onPressed: () async {
+                setBusy(false);
+              } else {
+                setBusy(true);
                 await campaignService
                     .updateCampaignOrder(
-                        id, updateOrderDescriptionController.text, "5")
-                    .then((value) => getCampaignOrdeList());
-                Navigator.pop(context);
+                        id, updateOrderDescriptionController.text, "2")
+                    .then((value) async => await getCampaignOrdeList());
+                Navigator.of(context, rootNavigator: true).pop();
+                updateOrderDescriptionController.text = '';
+
                 FocusScope.of(context).requestFocus(FocusNode());
-              },
-              child: Text(
-                AppLocalizations.of(context).cancelOrder,
-                style: Theme.of(context).textTheme.headline5,
-              ),
+                setBusy(false);
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7),
+              // model.busy is not working here and same reason that it does not show the error when desc field is empty
+              child: busy
+                  ? Text(AppLocalizations.of(context).loading)
+                  : Text(
+                      AppLocalizations.of(context).confirmPayment,
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
             ),
-          ]).show();
-    }
+          ),
+
+          // Cancel button
+          DialogButton(
+            color: globals.primaryColor,
+            onPressed: () async {
+              await campaignService
+                  .updateCampaignOrder(
+                      id, updateOrderDescriptionController.text, "5")
+                  .then((value) => getCampaignOrdeList());
+              Navigator.pop(context);
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: Text(
+              AppLocalizations.of(context).cancelOrder,
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ),
+        ]).show();
   }
 /*----------------------------------------------------------------------
                     Check input fields

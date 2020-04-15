@@ -469,26 +469,33 @@ class CampaignPaymentScreen extends StatelessWidget {
                               AppLocalizations.of(context).orderInformation,
                               style: Theme.of(context).textTheme.headline4)),
                       UIHelper.verticalSpaceSmall,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 3,
-                            child: Text(AppLocalizations.of(context).date,
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.bodyText1),
-                          ),
-                          Expanded(
+                      Container(
+                        //  padding: EdgeInsets.all(5.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            UIHelper.horizontalSpaceSmall,
+                            Expanded(
                               flex: 2,
-                              child: Text(AppLocalizations.of(context).quantity,
-                                  style:
-                                      Theme.of(context).textTheme.bodyText1)),
-                          Expanded(
-                            flex: 1,
-                            child: Text(AppLocalizations.of(context).status,
-                                style: Theme.of(context).textTheme.bodyText1),
-                          )
-                        ],
+                              child: Text(AppLocalizations.of(context).date,
+                                  textAlign: TextAlign.start,
+                                  style: Theme.of(context).textTheme.bodyText1),
+                            ),
+                            Expanded(
+                                flex: 2,
+                                child: Text(
+                                    AppLocalizations.of(context).quantity,
+                                    textAlign: TextAlign.start,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1)),
+                            Expanded(
+                              flex: 1,
+                              child: Text(AppLocalizations.of(context).status,
+                                  textAlign: TextAlign.start,
+                                  style: Theme.of(context).textTheme.bodyText1),
+                            )
+                          ],
+                        ),
                       ),
                       UIHelper.verticalSpaceSmall,
                       model.busy
@@ -501,7 +508,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                               ))
                           : model.orderInfoList != null
                               ? Container(
-                                  height: 200,
+                                  height: model.orderInfoContainerHeight,
                                   child: ListView.builder(
                                     scrollDirection: Axis.vertical,
                                     itemCount: model.orderInfoList.length,
@@ -515,7 +522,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               MainAxisAlignment.spaceAround,
                                           children: <Widget>[
                                             Expanded(
-                                              flex: 3,
+                                              flex: 2,
                                               child: Text(
                                                   model.orderInfoList[index]
                                                       .dateCreated,
@@ -530,18 +537,18 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                   model.orderInfoList[index]
                                                       .quantity
                                                       .toStringAsFixed(3),
+                                                  textAlign: TextAlign.start,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .bodyText1),
                                             ),
+                                            UIHelper.horizontalSpaceSmall,
                                             Expanded(
                                               flex: 1,
                                               child: InkWell(
                                                 onTap: () {
-                                                  model.updateOrder(
-                                                      model.orderInfoList[index]
-                                                          .id,
-                                                      index);
+                                                  model.updateOrder(model
+                                                      .orderInfoList[index]);
                                                 },
                                                 child: Text(
                                                     model.uiOrderStatusList[
@@ -558,8 +565,9 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     },
                                   ),
                                 )
-                              : Container(),
-                      Divider(color: globals.grey)
+                              : Container(
+                                  child: Text(AppLocalizations.of(context)
+                                      .serverError)),
                     ],
                   ),
                 )

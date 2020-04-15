@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -7,6 +8,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,11 +36,18 @@ class CampaignDashboardScreenState extends BaseState {
   double myTokensWithoutRewards = 0.0;
   var myTokens;
   Map<String, dynamic> teamValueAndRewardWithLoginToken = {};
-
+  List<OrderInfo> orderInfoList = [];
+  List<OrderInfo> orderListFromApi = [];
+  List<String> orderStatusList = [];
+  List<String> uiOrderStatusList = [];
   List<CampaignReward> campaignRewardList = [];
   initState() async {
     log.w(' In init');
   }
+
+/*----------------------------------------------------------------------
+                Get campaign name
+----------------------------------------------------------------------*/
 
   getCampaignName() async {
     setBusy(true);
@@ -54,6 +63,10 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                        Logout
+----------------------------------------------------------------------*/
+
   logout() async {
     await initState();
     if (userData != null) {
@@ -68,7 +81,7 @@ class CampaignDashboardScreenState extends BaseState {
     navigationService.navigateTo('/campaignLogin');
   }
 
-  /*-------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------
                                   Get Member Profile By Token
 -------------------------------------------------------------------------------------*/
 
@@ -103,6 +116,10 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                Assign Color According To Member Level
+----------------------------------------------------------------------*/
+
   assignColorAccordingToMemberLevel(memberLevel) {
     log.w('Entry assignColorAccordingToMemberLevel $memberLevel');
     if (memberLevel == 'gold') {
@@ -116,6 +133,63 @@ class CampaignDashboardScreenState extends BaseState {
       memberLevel = AppLocalizations.of(context).silver;
     }
     log.e('Exit assignColorAccordingToMemberLevel $memberLevel');
+  }
+
+/*----------------------------------------------------------------------
+                Get Campaign Order List
+----------------------------------------------------------------------*/
+  getCampaignOrdeList() async {
+    setBusy(true);
+    // await getExgWalletAddr();
+    await campaignService
+        .getUserDataFromDatabase()
+        .then((res) => userData = res);
+    if (userData == null) return false;
+    await campaignService.getOrdersById(userData.id).then((orderList) {
+      if (orderList != null) {
+        orderListFromApi = orderList;
+
+        log.w(orderListFromApi.length);
+        orderStatusList = [
+          "",
+          AppLocalizations.of(context).waiting,
+          AppLocalizations.of(context).paid,
+          AppLocalizations.of(context).paymentReceived,
+          AppLocalizations.of(context).failed,
+          AppLocalizations.of(context).orderCancelled,
+        ];
+
+        for (int i = 0; i < orderListFromApi.length; i++) {
+          var status = orderListFromApi[i].status;
+
+          if (status == "3") {
+            addOrderInTheList(i, int.parse(status));
+          } else if (status == "4") {
+            addOrderInTheList(i, int.parse(status));
+          } else if (status == "5") {
+            addOrderInTheList(i, int.parse(status));
+          }
+        }
+        navigateByRouteName('/campaignOrderDetails', orderInfoList);
+      } else {
+        log.e('Api result null');
+        setErrorMessage(AppLocalizations.of(context).loadOrdersFailed);
+        setBusy(false);
+      }
+    }).catchError((err) {
+      log.e('getCampaignOrdeList $err');
+      setBusy(false);
+    });
+    setBusy(false);
+  }
+
+  // Add order in the order list
+  addOrderInTheList(int i, int status) {
+    String formattedDate = formatStringDate(orderListFromApi[i].dateCreated);
+    // needed to declare orderListFromApi globally due to this funtion to keep the code DRY
+    orderListFromApi[i].dateCreated = formattedDate;
+    orderListFromApi[i].status = orderStatusList[status];
+    orderInfoList.add(orderListFromApi[i]);
   }
 
 /*-------------------------------------------------------------------------------------
@@ -192,6 +266,7 @@ class CampaignDashboardScreenState extends BaseState {
           double totalRewardQuantityByLevel =
               campaignRewardList[i].totalRewardQuantities;
           // int level = campaignRewardList[i].level;
+
           // // calculating total asset quantity
           myTotalAssetQuantity =
               myTotalAssetQuantity + totalRewardQuantityByLevel;
@@ -218,7 +293,10 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(false);
   }
 
-// get total team value and reward
+/*----------------------------------------------------------------------
+                Get total team value and reward
+----------------------------------------------------------------------*/
+
   getTotalTeamReward(token) async {
     await campaignService.getTotalTeamsRewardByToken(token).then((res) {
       myTeamsTotalValue = res['teamsTotalValue'].toDouble();
@@ -231,7 +309,10 @@ class CampaignDashboardScreenState extends BaseState {
     });
   }
 
-  // Calculate my total Asset value
+/*----------------------------------------------------------------------
+                Calculate my total Asset value
+----------------------------------------------------------------------*/
+
   calcMyTotalAsssetValue() async {
     log.e('calcMyTotalAsssetValue');
     double exgPrice = await getUsdValue();

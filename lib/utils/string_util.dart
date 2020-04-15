@@ -7,7 +7,7 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Author: ken.qiu@exchangily.com
+* Author: ken.qiu@exchangily.com & barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
 
@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:hex/hex.dart';
 import 'package:decimal/decimal.dart';
+import 'package:intl/intl.dart';
 
 hex2Buffer(hexString) {
   var buffer = new List<int>();
@@ -116,4 +117,16 @@ bigNum2Double(bigNum) {
   return d;
   //double d = (BigInt.parse(bigNum.toString()) / BigInt.parse('1000000000000')).round() / 1000000;
   //return d;
+}
+
+/*----------------------------------------------------------------------
+                Format Date and time string
+----------------------------------------------------------------------*/
+String formatStringDate(String date) {
+  String wholeDate = date;
+  var dateToFormat = DateTime.parse(wholeDate);
+  String formattedDate = DateFormat('yyyy/MM/dd').format(dateToFormat);
+  String formattedTime = DateFormat('kk:mm:ss').format(dateToFormat);
+  formattedDate = '$formattedDate\n' '$formattedTime';
+  return formattedDate;
 }

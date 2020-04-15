@@ -42,7 +42,7 @@ dependencies:
   rxdart: ^0.22.0
 
   # Font Awesome
-  font_awesome_flutter: 8.4.0
+  font_awesome_flutter: 8.8.0
 
   # Provider
   provider: 3.1.0+1
@@ -117,6 +117,7 @@ dependencies:
 
 dev_dependencies:
   intl_translation: '^0.17.0'
+  intl: ^0.16.1
   flutter_launcher_icons: '^0.7.3'
 
   flutter_test:

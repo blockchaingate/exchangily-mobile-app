@@ -21,6 +21,8 @@ import 'package:exchangilymobileapp/screens/otc_campaign/register_account_screen
 import 'package:exchangilymobileapp/screens/otc_campaign/payment_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/refferal_deatils_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/reward_details_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/order_details_screen.dart';
+
 import 'package:exchangilymobileapp/screens/otc_campaign/team_reward_details_screen.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
@@ -151,10 +153,15 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) =>
                 CampaignTokenDetailsScreen(campaignRewardList: args));
+
       case '/campaignRewardDetails':
         return MaterialPageRoute(
             builder: (_) =>
                 CampaignRewardDetailsScreen(campaignRewardList: args));
+
+      case '/campaignOrderDetails':
+        return MaterialPageRoute(
+            builder: (_) => CampaignOrderDetailsScreen(orderInfoList: args));
 
       case '/campaignRefferalDetails':
         return MaterialPageRoute(

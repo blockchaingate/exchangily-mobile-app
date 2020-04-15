@@ -322,78 +322,89 @@ class CampaignDashboardScreen extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       ListTile(
-                        onTap: () {
-                          // model.navigateByRouteName('/campaignTokenDetails',
-                          //     model.campaignRewardList);
-                        },
-                        dense: false,
-                        leading: Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Icon(
-                            Icons.confirmation_number,
-                            color: globals.exgLogoColor,
-                            size: 22,
+                          onTap: () {
+                            model.getCampaignOrdeList();
+                          },
+                          dense: false,
+                          leading: Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: Icon(
+                              Icons.confirmation_number,
+                              color: globals.exgLogoColor,
+                              size: 22,
+                            ),
                           ),
-                        ),
-                        title: Text(AppLocalizations.of(context).myInvestment,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(color: globals.buyPrice)),
-                        subtitle: model.busy
-                            ? Shimmer.fromColors(
-                                baseColor: globals.primaryColor,
-                                highlightColor: globals.grey,
-                                child: Text(
-                                  ('0.000'),
-                                  style: Theme.of(context).textTheme.headline5,
-                                ))
-                            : Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.attach_money,
-                                    color: globals.white,
-                                    size: 17,
-                                  ),
-                                  Text(
-                                      model.myInvestmentValueWithoutRewards
-                                          .toStringAsFixed(2),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                ],
-                              ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 3.0),
-                              child: Text(
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(AppLocalizations.of(context).myInvestment,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .copyWith(color: globals.buyPrice)),
+                              Text(
                                 AppLocalizations.of(context).myTokens,
                                 style: Theme.of(context).textTheme.headline5,
                               ),
-                            ),
-                            model.busy
-                                ? Shimmer.fromColors(
-                                    baseColor: globals.primaryColor,
-                                    highlightColor: globals.grey,
-                                    child: Text(
-                                      ('00.00'),
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ))
-                                : Text(
-                                    '${model.myTokensWithoutRewards.toStringAsFixed(2)}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(
-                                                model.memberLevelTextColor)))
-                          ],
-                        ),
-                      )
+                            ],
+                          ),
+                          subtitle: model.busy
+                              ? Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.grey,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        ('0.000'),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                      ),
+                                      Text(
+                                        ('0.000'),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                      )
+                                    ],
+                                  ))
+                              : Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.attach_money,
+                                          color: globals.white,
+                                          size: 17,
+                                        ),
+                                        Text(
+                                            model
+                                                .myInvestmentValueWithoutRewards
+                                                .toStringAsFixed(2),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
+                                      ],
+                                    ),
+                                    Text(
+                                        '${model.myTokensWithoutRewards.toStringAsFixed(2)}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                                fontWeight: FontWeight.w600,
+                                                color: Color(model
+                                                    .memberLevelTextColor)))
+                                  ],
+                                ),
+                          trailing: Icon(
+                            Icons.navigate_next,
+                            color: globals.white54,
+                          ))
                     ],
                   ),
                 ),
