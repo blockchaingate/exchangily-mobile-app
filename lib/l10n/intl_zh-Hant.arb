@@ -1228,5 +1228,35 @@
     "description": "Update_Your_Order_Status",
     "type": "text",
     "placeholders": {}
-  }   
-    }
+  },
+"team": "團隊",
+  "@team": {
+    "description": "campaign_dashboard_team_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "members": "成員",
+  "@members": {
+    "description": "campaign_dashboard_team_details_members",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalValue": "總額",
+  "@totalValue": {
+    "description": "campaign_dashboard_team_details_total_value",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalQuantity": "總數量",
+  "@totalQuantity": {
+    "description": "campaign_dashboard_team_details_total_quantity",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamDetails": "團隊詳情",
+  "@teamDetails": {
+    "description": "campaign_dashboard_team_details_heading",
+    "type": "text",
+    "placeholders": {}
+  }    
+}

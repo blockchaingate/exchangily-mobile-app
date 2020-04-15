@@ -1426,6 +1426,36 @@
     "description": "Update_Your_Order_Status",
     "type": "text",
     "placeholders": {}
+  },
+  "team": "团队",
+  "@team": {
+    "description": "campaign_dashboard_team_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "members": "成员",
+  "@members": {
+    "description": "campaign_dashboard_team_details_members",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalValue": "总额",
+  "@totalValue": {
+    "description": "campaign_dashboard_team_details_total_value",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalQuantity": "总数量",
+  "@totalQuantity": {
+    "description": "campaign_dashboard_team_details_total_quantity",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamDetails": "团队详情",
+  "@teamDetails": {
+    "description": "campaign_dashboard_team_details_heading",
+    "type": "text",
+    "placeholders": {}
   }
 
 }
