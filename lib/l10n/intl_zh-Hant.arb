@@ -1258,5 +1258,41 @@
     "description": "campaign_dashboard_team_details_heading",
     "type": "text",
     "placeholders": {}
-  }    
+  },
+"orderDetails": "訂單詳情",
+  "@orderDetails": {
+    "description": "campaign_dashboard_order_details_heading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "forgotPassword": "忘記密碼",
+  "@forgotPassword": {
+    "description": "campaign_login_forgot_assword",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordResetError": "重設密碼錯誤",
+  "@passwordResetError": {
+    "description": "campaign_password_reset_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterTheCorrectEmail": "請輸入您的正確電子郵箱",
+  "@pleaseEnterTheCorrectEmail": {
+    "description": "campaign_enter_correct_email",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordReset": "重設密碼",
+  "@passwordReset": {
+    "description": "campaign_password_reset",
+    "type": "text",
+    "placeholders": {}
+  },
+  "resetPasswordEmailInstruction": "請登錄您的郵箱重設密碼",
+  "@resetPasswordEmailInstruction": {
+    "description": "campaign_reset_password_email_instruction",
+    "type": "text",
+    "placeholders": {}
+  }
 }

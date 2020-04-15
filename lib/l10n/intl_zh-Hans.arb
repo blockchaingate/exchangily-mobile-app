@@ -1456,6 +1456,42 @@
     "description": "campaign_dashboard_team_details_heading",
     "type": "text",
     "placeholders": {}
+  },
+  "orderDetails": "订单详情",
+  "@orderDetails": {
+    "description": "campaign_dashboard_order_details_heading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "forgotPassword": "忘记密码",
+  "@forgotPassword": {
+    "description": "campaign_login_forgot_assword",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordResetError": "重设密码错误",
+  "@passwordResetError": {
+    "description": "campaign_password_reset_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterTheCorrectEmail": "请输入您的正确电子邮箱",
+  "@pleaseEnterTheCorrectEmail": {
+    "description": "campaign_enter_correct_email",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordReset": "重设密码",
+  "@passwordReset": {
+    "description": "campaign_password_reset",
+    "type": "text",
+    "placeholders": {}
+  },
+  "resetPasswordEmailInstruction": "请登录您的邮箱重设密码",
+  "@resetPasswordEmailInstruction": {
+    "description": "campaign_reset_password_email_instruction",
+    "type": "text",
+    "placeholders": {}
   }
 
 }
