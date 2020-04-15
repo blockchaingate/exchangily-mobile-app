@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
@@ -19,13 +20,9 @@ class CampaignDashboardScreen extends StatelessWidget {
     return BaseScreen<CampaignDashboardScreenState>(
       onModelReady: (model) async {
         model.context = context;
-        // if (userData == null) {
-        //   await model.initState();
-        // }
         await model.myProfile(userData);
         await model.myRewardsByToken();
         await model.getCampaignName();
-        //await model.myRewardsById(userData);
       },
       builder: (context, model, child) => Scaffold(
           resizeToAvoidBottomInset: false,
@@ -72,15 +69,17 @@ class CampaignDashboardScreen extends StatelessWidget {
                 ),
                 UIHelper.divider,
                 ListTile(
-                  title: Text(AppLocalizations.of(context).myReferralCode),
-                  trailing: userData.referralCode != null
-                      ? Text(userData.referralCode.toString(),
+                  title: userData.referralCode != null
+                      ? Text(
+                          '${AppLocalizations.of(context).myReferralCode} ${userData.referralCode.toString()}',
                           style: Theme.of(context).textTheme.headline5.copyWith(
                               color: globals.primaryColor,
-                              fontWeight: FontWeight.bold))
+                              decoration: TextDecoration.underline))
                       : Text(''),
+                  trailing: Icon(Icons.share, color: globals.white54),
                   onTap: () {
-                    // May call copy to clipboard here
+                    Share.share(
+                        'Here is my referral code ${userData.referralCode.toString()} for campaign ${model.campaignName}');
                   },
                 ),
                 UIHelper.divider,
@@ -279,7 +278,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Icon(
-                                  Icons.share,
+                                  Icons.device_hub,
                                   size: 20,
                                   color: globals.exgLogoColor,
                                 ),
