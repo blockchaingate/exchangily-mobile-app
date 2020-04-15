@@ -114,6 +114,8 @@ class CampaignLoginScreen extends StatelessWidget {
                                   ? Expanded(
                                       flex: 2,
                                       child: TextField(
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
                                         textAlign: TextAlign.center,
                                         decoration: InputDecoration(
                                             isDense: true,
@@ -166,6 +168,15 @@ class CampaignLoginScreen extends StatelessWidget {
                             ],
                           ),
                           UIHelper.verticalSpaceMedium,
+                          InkWell(
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline),
+                            ),
+                            onTap: () => model.resetPassword(),
+                          ),
+                          UIHelper.verticalSpaceSmall,
                           // Error goes here
                           Visibility(
                               visible: model.hasErrorMessage,

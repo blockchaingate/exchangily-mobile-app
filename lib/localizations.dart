@@ -1236,6 +1236,34 @@ class AppLocalizations {
     return Intl.message('Order Details',
         name: 'orderDetails', desc: 'campaign_dashboard_order_details_heading');
   }
+
+  String get forgotPassword {
+    return Intl.message('Forgot Password',
+        name: 'forgotPassword', desc: 'campaign_login_forgot_assword');
+  }
+
+  String get passwordResetError {
+    return Intl.message('Password Reset Error',
+        name: 'passwordResetError', desc: 'campaign_password_reset_error');
+  }
+
+  String get pleaseEnterTheCorrectEmail {
+    return Intl.message('Please enter the correct email',
+        name: 'pleaseEnterTheCorrectEmail',
+        desc: 'campaign_enter_correct_email');
+  }
+
+  String get passwordReset {
+    return Intl.message('Password Reset',
+        name: 'passwordReset', desc: 'campaign_password_reset');
+  }
+
+  String get resetPasswordEmailInstruction {
+    return Intl.message(
+        'Please check your email and follow instructions to reset your account password',
+        name: 'resetPasswordEmailInstruction',
+        desc: 'campaign_reset_password_email_instruction');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -460,9 +460,10 @@ class CampaignDashboardScreen extends StatelessWidget {
                     children: <Widget>[
                       ListTile(
                           onTap: () {
-                            model.navigateByRouteName(
-                                '/campaignTeamRewardDetails',
-                                model.teamValueAndRewardWithLoginToken);
+                            if (!model.busy)
+                              model.navigateByRouteName(
+                                  '/campaignTeamRewardDetails',
+                                  model.teamValueAndRewardWithLoginToken);
                           },
                           dense: false,
                           leading: Padding(

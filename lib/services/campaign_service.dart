@@ -41,6 +41,8 @@ class CampaignService {
   static const rewardsUrl = BASE_URL + 'campaign-order/rewards';
   static const memberProfileUrl = BASE_URL + 'campaign-order/profile';
   static const usdPricesUrl = 'https://kanbanprod.fabcoinapi.com/USDvalues';
+  static const resetPasswordUrl =
+      'https://test.blockchaingate.com/v2/members/requestpwdreset';
 
   CampaignUserData userData;
   CampaignUserDatabaseService campaignUserDatabaseService =
@@ -65,6 +67,22 @@ class CampaignService {
       log.e('Token not found');
     }
     return userData;
+  }
+
+  /*-------------------------------------------------------------------------------------
+                                  Password Reset
+-------------------------------------------------------------------------------------*/
+
+  Future resetPassword(String email) async {
+    Map<String, dynamic> body = {"appId": appId, "email": email};
+    try {
+      var response = await client.post(resetPasswordUrl, body: body);
+      var json = jsonDecode(response.body);
+      log.w('resetPasswordUrl $json');
+      return json;
+    } catch (err) {
+      log.e('resetPasswordUrl $err');
+    }
   }
 
 /*-------------------------------------------------------------------------------------

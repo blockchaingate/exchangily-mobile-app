@@ -22,8 +22,7 @@ class CampaignTeamRewardDetailsScreen extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Team Details',
-              //AppLocalizations.of(context).myRewardDetails,
+          title: Text(AppLocalizations.of(context).teamDetails,
               style: Theme.of(context).textTheme.headline4),
         ),
         body: Container(
@@ -36,26 +35,23 @@ class CampaignTeamRewardDetailsScreen extends StatelessWidget {
                     Expanded(
                         flex: 1,
                         child: Center(
-                            child: Text('Team',
-                                //AppLocalizations.of(context).level,
+                            child: Text(AppLocalizations.of(context).team,
                                 style: Theme.of(context).textTheme.headline6))),
                     Expanded(
                         flex: 2,
                         child: Center(
-                            child: Text('Members',
-                                //AppLocalizations.of(context).referrals,
+                            child: Text(AppLocalizations.of(context).members,
                                 style: Theme.of(context).textTheme.headline6))),
                     Expanded(
                         flex: 3,
                         child: Center(
-                            child: Text('Total Value',
-                                // AppLocalizations.of(context).totalTokenAmount,
+                            child: Text(AppLocalizations.of(context).totalValue,
                                 style: Theme.of(context).textTheme.headline6))),
                     Expanded(
                         flex: 2,
                         child: Center(
-                            child: Text('Total Quantity',
-                                //AppLocalizations.of(context).rewardsToken,
+                            child: Text(
+                                AppLocalizations.of(context).totalQuantity,
                                 style: Theme.of(context).textTheme.headline6)))
                   ],
                 ),
@@ -69,44 +65,61 @@ class CampaignTeamRewardDetailsScreen extends StatelessWidget {
                           (AppLocalizations.of(context).loading),
                           style: Theme.of(context).textTheme.headline5,
                         ))
-                    : Expanded(
-                        child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: model.campaignTeamRewardList.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              int i = index + 1;
-                              return Card(
-                                elevation: 5,
-                                color: globals.walletCardColor,
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 15.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                          flex: 1,
-                                          child: Center(
-                                              child: Text(
-                                            i.toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5,
-                                          ))),
-                                      Expanded(
-                                          flex: 2,
-                                          child: Center(
-                                              child: Text(
-                                                  model
-                                                      .campaignTeamRewardList[
-                                                          index]
-                                                      .members
-                                                      .length
-                                                      .toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline5))),
-                                      Expanded(
-                                          flex: 3,
-                                          child: Center(
+                    : model.campaignTeamRewardList != null
+                        ? Expanded(
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: model.campaignTeamRewardList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                int i = index + 1;
+                                return Card(
+                                  elevation: 5,
+                                  color: globals.walletCardColor,
+                                  child: Container(
+                                    padding:
+                                        EdgeInsets.symmetric(vertical: 15.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                            flex: 1,
+                                            child: Center(
+                                                child: Text(
+                                              i.toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5,
+                                            ))),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Center(
+                                                child: Text(
+                                                    model
+                                                        .campaignTeamRewardList[
+                                                            index]
+                                                        .members
+                                                        .length
+                                                        .toString(),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5))),
+                                        Expanded(
+                                            flex: 3,
+                                            child: Center(
+                                                child: Text(
+                                                    model
+                                                        .campaignTeamRewardList[
+                                                            index]
+                                                        .totalQuantities
+                                                        .toStringAsFixed(3),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline5))),
+                                        Expanded(
+                                            flex: 2,
+                                            child: Center(
+                                                child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 3.0),
                                               child: Text(
                                                   model
                                                       .campaignTeamRewardList[
@@ -115,28 +128,16 @@ class CampaignTeamRewardDetailsScreen extends StatelessWidget {
                                                       .toStringAsFixed(3),
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline5))),
-                                      Expanded(
-                                          flex: 2,
-                                          child: Center(
-                                              child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 3.0),
-                                            child: Text(
-                                                model
-                                                    .campaignTeamRewardList[
-                                                        index]
-                                                    .totalQuantities
-                                                    .toStringAsFixed(3),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headline5),
-                                          )))
-                                    ],
+                                                      .headline5),
+                                            )))
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            }))
+                                );
+                              },
+                            ),
+                          )
+                        : Container()
               ],
             )),
       ),

@@ -1456,6 +1456,11 @@
     "description": "campaign_dashboard_team_details_heading",
     "type": "text",
     "placeholders": {}
+  },
+  "orderDetails": "订单详情",
+  "@orderDetails": {
+    "description": "campaign_dashboard_order_details_heading",
+    "type": "text",
+    "placeholders": {}
   }
-
 }

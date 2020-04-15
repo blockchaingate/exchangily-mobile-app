@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-14T14:27:30.424800",
+  "@@last_modified": "2020-04-15T19:30:09.182705",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1425,6 +1425,42 @@
   "teamDetails": "Team Details",
   "@teamDetails": {
     "description": "campaign_dashboard_team_details_heading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderDetails": "Order Details",
+  "@orderDetails": {
+    "description": "campaign_dashboard_order_details_heading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "forgotPassword": "Forgot Password",
+  "@forgotPassword": {
+    "description": "campaign_login_forgot_assword",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordResetError": "Password Reset Error",
+  "@passwordResetError": {
+    "description": "campaign_password_reset_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterTheCorrectEmail": "Please enter the correct email",
+  "@pleaseEnterTheCorrectEmail": {
+    "description": "campaign_enter_correct_email",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordReset": "Password Reset",
+  "@passwordReset": {
+    "description": "campaign_password_reset",
+    "type": "text",
+    "placeholders": {}
+  },
+  "resetPasswordEmailInstruction": "Please check your email and follow instructions to reset your account password",
+  "@resetPasswordEmailInstruction": {
+    "description": "campaign_reset_password_email_instruction",
     "type": "text",
     "placeholders": {}
   }
