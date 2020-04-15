@@ -54,12 +54,12 @@ class CampaignPaymentScreenState extends BaseState {
   String exgWalletAddress = '';
   CampaignUserData userData;
   CampaignOrder campaignOrder;
+  List<String> orderStatusList = []; // no need to reset this
   List<OrderInfo> orderInfoList = [];
   List<OrderInfo> orderListFromApi = [];
-  List<String> orderStatusList = [];
+  List<String> uiOrderStatusList = [];
   Color containerListColor;
   double orderInfoContainerHeight = 5;
-  List<String> uiOrderStatusList = [];
   double tokenPurchaseQuantity = 0;
   List<String> currencies = ['USD', 'CAD'];
   String selectedCurrency;
@@ -71,18 +71,36 @@ class CampaignPaymentScreenState extends BaseState {
   Map<String, dynamic> passOrderList;
 
 /*----------------------------------------------------------------------
+                Reset lists
+----------------------------------------------------------------------*/
+  resetLists() {
+    orderInfoList = [];
+    orderListFromApi = [];
+    uiOrderStatusList = [];
+  }
+
+/*----------------------------------------------------------------------
                 Initial logic
 ----------------------------------------------------------------------*/
   initState() async {
     setBusy(true);
-    print('in payment screen');
+    resetLists();
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];
     setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                Calculate Order list container height
+----------------------------------------------------------------------*/
+
   calcOrderListSizedBoxHeight() {
-    orderInfoContainerHeight = orderListFromApi.length * 20.toDouble();
+    double height = orderInfoList.length * 45.toDouble();
+    if (height < 400) {
+      orderInfoContainerHeight = height;
+    } else {
+      orderInfoContainerHeight = 400;
+    }
 
     log.w(
         'calcOrderListSizedBoxHeight ${orderInfoList.length}, $orderInfoContainerHeight');
@@ -260,17 +278,15 @@ class CampaignPaymentScreenState extends BaseState {
 
   getCampaignOrdeList() async {
     setBusy(true);
-    orderListFromApi = [];
-    orderInfoList = [];
-    uiOrderStatusList = [];
     await campaignService
         .getUserDataFromDatabase()
         .then((res) => userData = res);
     if (userData == null) return false;
     await campaignService.getOrdersById(userData.id).then((orderList) {
-      if (orderInfoList != null) {
+      if (orderList != null) {
+        resetLists();
         orderListFromApi = orderList;
-        log.w(orderListFromApi.length);
+        log.w('orderListFromApi length ${orderListFromApi.length}');
         orderStatusList = [
           "",
           AppLocalizations.of(context).waiting,
@@ -313,10 +329,10 @@ class CampaignPaymentScreenState extends BaseState {
   }
 
 /*----------------------------------------------------------------------
-                    Status popup to Update order
+                    Update order
 ----------------------------------------------------------------------*/
 
-  updateOrder(id) {
+  updateOrder(String id) {
     Alert(
         style: AlertStyle(
             animationType: AnimationType.grow,
@@ -366,18 +382,16 @@ class CampaignPaymentScreenState extends BaseState {
               if (updateOrderDescriptionController.text.length < 10) {
                 bool test = updateOrderDescriptionController.text.length < 10;
                 log.w(test);
-                setBusy(true);
-
-                setBusy(false);
               } else {
                 setBusy(true);
                 await campaignService
                     .updateCampaignOrder(
                         id, updateOrderDescriptionController.text, "2")
-                    .then((value) async => await getCampaignOrdeList());
+                    .then((value) => log.w('update campaign $value'))
+                    .catchError((err) => log.e('update campaign $err'));
                 Navigator.of(context, rootNavigator: true).pop();
                 updateOrderDescriptionController.text = '';
-
+                await getCampaignOrdeList();
                 FocusScope.of(context).requestFocus(FocusNode());
                 setBusy(false);
               }
@@ -401,8 +415,11 @@ class CampaignPaymentScreenState extends BaseState {
               await campaignService
                   .updateCampaignOrder(
                       id, updateOrderDescriptionController.text, "5")
-                  .then((value) => getCampaignOrdeList());
-              Navigator.pop(context);
+                  .then((value) => log.w('update campaign cancel $value'))
+                  .catchError((err) => log.e('update campaign cancel $err'));
+              Navigator.of(context, rootNavigator: true).pop();
+              updateOrderDescriptionController.text = '';
+              await getCampaignOrdeList();
               FocusScope.of(context).requestFocus(FocusNode());
             },
             child: Text(

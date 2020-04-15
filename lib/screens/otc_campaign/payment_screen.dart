@@ -548,15 +548,23 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               child: InkWell(
                                                 onTap: () {
                                                   model.updateOrder(model
-                                                      .orderInfoList[index]);
+                                                      .orderInfoList[index].id);
                                                 },
-                                                child: Text(
-                                                    model.uiOrderStatusList[
-                                                        index],
-                                                    textAlign: TextAlign.start,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyText1),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Text(
+                                                        model.uiOrderStatusList[
+                                                            index],
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyText1),
+                                                    Icon(Icons.info_outline,
+                                                        size: 8,
+                                                        color: globals.grey),
+                                                  ],
+                                                ),
                                               ),
                                             )
                                           ],

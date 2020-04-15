@@ -46,7 +46,9 @@ class CampaignService {
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
 
-// Get user data from database by token
+/*-------------------------------------------------------------------------------------
+                          Get user data from database by token
+-------------------------------------------------------------------------------------*/
   Future<CampaignUserData> getUserDataFromDatabase() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
@@ -141,10 +143,10 @@ class CampaignService {
   }
 
 /*-------------------------------------------------------------------------------------
-                          Buy coin - create order
+                          Update Order
 -------------------------------------------------------------------------------------*/
 
-  Future updateCampaignOrder(id, desc, status) async {
+  Future updateCampaignOrder(String id, String desc, String status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String loginToken = prefs.getString('loginToken');
 
