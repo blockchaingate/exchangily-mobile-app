@@ -147,6 +147,9 @@ class CampaignDashboardScreenState extends BaseState {
     if (userData == null) return false;
     await campaignService.getOrdersById(userData.id).then((orderList) {
       if (orderList != null) {
+        orderInfoList = [];
+        orderListFromApi = [];
+        orderStatusList = [];
         orderListFromApi = orderList;
 
         log.w(orderListFromApi.length);

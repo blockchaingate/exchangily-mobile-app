@@ -517,39 +517,42 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       return Container(
                                         padding: EdgeInsets.all(8.0),
                                         color: model.evenOrOddColor(index),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: <Widget>[
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                  model.orderInfoList[index]
-                                                      .dateCreated,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText1),
-                                            ),
-                                            UIHelper.horizontalSpaceSmall,
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                  model.orderInfoList[index]
-                                                      .quantity
-                                                      .toStringAsFixed(3),
-                                                  textAlign: TextAlign.start,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyText1),
-                                            ),
-                                            UIHelper.horizontalSpaceSmall,
-                                            Expanded(
-                                              flex: 1,
-                                              child: InkWell(
-                                                onTap: () {
-                                                  model.updateOrder(model
-                                                      .orderInfoList[index].id);
-                                                },
+                                        child: InkWell(
+                                          onTap: () {
+                                            model.updateOrder(
+                                                model.orderInfoList[index].id,
+                                                model.orderInfoList[index]
+                                                    .quantity
+                                                    .toStringAsFixed(3));
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: <Widget>[
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                    model.orderInfoList[index]
+                                                        .dateCreated,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1),
+                                              ),
+                                              UIHelper.horizontalSpaceSmall,
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                    model.orderInfoList[index]
+                                                        .quantity
+                                                        .toStringAsFixed(3),
+                                                    textAlign: TextAlign.start,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1),
+                                              ),
+                                              UIHelper.horizontalSpaceSmall,
+                                              Expanded(
+                                                flex: 1,
                                                 child: Row(
                                                   children: <Widget>[
                                                     Text(
@@ -565,9 +568,9 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                         color: globals.grey),
                                                   ],
                                                 ),
-                                              ),
-                                            )
-                                          ],
+                                              )
+                                            ],
+                                          ),
                                         ),
                                       );
                                     },

@@ -54,7 +54,7 @@ class CampaignPaymentScreenState extends BaseState {
   String exgWalletAddress = '';
   CampaignUserData userData;
   CampaignOrder campaignOrder;
-  List<String> orderStatusList = []; // no need to reset this
+  List<String> orderStatusList = [];
   List<OrderInfo> orderInfoList = [];
   List<OrderInfo> orderListFromApi = [];
   List<String> uiOrderStatusList = [];
@@ -77,6 +77,7 @@ class CampaignPaymentScreenState extends BaseState {
     orderInfoList = [];
     orderListFromApi = [];
     uiOrderStatusList = [];
+    orderStatusList = [];
   }
 
 /*----------------------------------------------------------------------
@@ -332,7 +333,7 @@ class CampaignPaymentScreenState extends BaseState {
                     Update order
 ----------------------------------------------------------------------*/
 
-  updateOrder(String id) {
+  updateOrder(String id, String quantity) {
     Alert(
         style: AlertStyle(
             animationType: AnimationType.grow,
@@ -351,6 +352,20 @@ class CampaignPaymentScreenState extends BaseState {
         },
         content: Column(
           children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  AppLocalizations.of(context).quantity,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+                UIHelper.horizontalSpaceSmall,
+                Text(
+                  quantity,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+              ],
+            ),
             TextField(
               minLines: 1,
               maxLength: 100,
