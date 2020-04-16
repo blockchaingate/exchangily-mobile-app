@@ -170,7 +170,7 @@ class CampaignLoginScreen extends StatelessWidget {
                           UIHelper.verticalSpaceMedium,
                           InkWell(
                             child: Text(
-                              'Forgot Password?',
+                              AppLocalizations.of(context).forgotPassword,
                               style: TextStyle(
                                   decoration: TextDecoration.underline),
                             ),

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
@@ -41,7 +42,8 @@ class CampaignPaymentScreenState extends BaseState {
   final sendAmountTextController = TextEditingController();
   String _groupValue;
   get groupValue => _groupValue;
-  String usdtToWalletAddress = '0xae397cfc8f67c46d533b844bfff25ad5ae89e63a';
+  String prodUsdtWalletAddress =
+      environment['addresses']['campaignAddress']['USDT'];
   BuildContext context;
   String tickerName = '';
   String tokenType = '';
@@ -158,10 +160,14 @@ class CampaignPaymentScreenState extends BaseState {
         'gasLimit': gasLimit,
         'satoshisPerBytes': satoshisPerBytes
       };
-      // }
+      String address = '';
+      isProduction
+          ? address = prodUsdtWalletAddress
+          : address = '0xae397cfc8f67c46d533b844bfff25ad5ae89e63a';
+
       await walletService
-          .sendTransaction(tickerName, seed, [0], [], usdtToWalletAddress,
-              amount, options, true)
+          .sendTransaction(
+              tickerName, seed, [0], [], address, amount, options, true)
           .then((res) async {
         log.w('Result $res');
         String txHash = res["txHash"];

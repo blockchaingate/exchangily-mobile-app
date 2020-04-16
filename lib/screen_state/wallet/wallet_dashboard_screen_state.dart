@@ -170,7 +170,7 @@ class WalletDashboardScreenState extends BaseState {
 
   getExchangeAssets() async {
     setState(ViewState.Busy);
-    log.e(exgAddress);
+    log.e('getExchangeAssets $exgAddress');
     var res = await walletService.assetsBalance(exgAddress);
     log.e(res);
     var length = res.length;

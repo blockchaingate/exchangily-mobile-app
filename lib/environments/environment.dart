@@ -95,8 +95,9 @@ Map productionConfig = {
       {'name': 'FAB', 'address': '1FNEhT8uTmrEMvHGCGohnEFv6Q1z4qRhQu'},
       {'name': 'BTC', 'address': '1CKg6irbGXHxBHuTx7MeqYQUuMZ8aEok8z'},
       {'name': 'ETH', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'},
-      {'name': 'USDT', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'}
-    ]
+      {'name': 'USDT', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'},
+    ],
+    "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },
   "websocket": "wss://kanbanprod.fabcoinapi.com/ws/",
   "minimumWithdraw": {

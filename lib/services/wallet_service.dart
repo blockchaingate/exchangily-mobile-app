@@ -59,8 +59,10 @@ class WalletService {
     'tether',
     'exchangily'
   ];
+/*----------------------------------------------------------------------
+                Get Random Mnemonic
+----------------------------------------------------------------------*/
 
-  // Get Random Mnemonic
   String getRandomMnemonic() {
     String randomMnemonic = '';
     if (isLocal == true) {
@@ -71,8 +73,10 @@ class WalletService {
     randomMnemonic = bip39.generateMnemonic();
     return randomMnemonic;
   }
+/*----------------------------------------------------------------------
+                Save Encrypted Data to Storage
+----------------------------------------------------------------------*/
 
-  // Save Encrypted Data to Storage
   saveEncryptedData(String data) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -84,8 +88,10 @@ class WalletService {
       log.e("Couldn't write encrypted datra to file!! $e");
     }
   }
+/*----------------------------------------------------------------------
+                Delete Encrypted Data
+----------------------------------------------------------------------*/
 
-  // Delete Encrypted Data
   deleteEncryptedData() async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/my_file.byte');
@@ -94,8 +100,10 @@ class WalletService {
         .then((res) => log.w('Previous data in the stored file deleted $res'))
         .catchError((error) => log.e('Previous data deletion failed $error'));
   }
+/*----------------------------------------------------------------------
+                Read Encrypted Data from Storage
+----------------------------------------------------------------------*/
 
-  // Read Encrypted Data from Storage
   Future<String> readEncryptedData(String userPass) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -113,8 +121,9 @@ class WalletService {
       return Future.value('');
     }
   }
-
-  // Generate Seed
+/*----------------------------------------------------------------------
+                Generate Seed
+----------------------------------------------------------------------*/
 
   generateSeed(String mnemonic) {
     Uint8List seed = bip39.mnemonicToSeed(mnemonic);
@@ -133,8 +142,10 @@ class WalletService {
       return addr;
     }
   }
+/*----------------------------------------------------------------------
+                Future Get Coin Balance By Address
+----------------------------------------------------------------------*/
 
-// Future Get Coin Balance By Address
   Future coinBalanceByAddress(
       String name, String address, String tokenType) async {
     log.w('$name $address $tokenType');
@@ -146,8 +157,10 @@ class WalletService {
     }
     return bal;
   }
+/*----------------------------------------------------------------------
+                Get Current Market Price For The Coin By Name
+----------------------------------------------------------------------*/
 
-  // Get Current Market Price For The Coin By Name
   Future<double> getCoinMarketPrice(String name) async {
     double currentUsdValue;
     var usdVal = await _api.getCoinsUsdValue();
@@ -158,8 +171,9 @@ class WalletService {
     log.w('USD VAL of $name - $currentUsdValue');
     return currentUsdValue;
   }
-
-  // Offline Wallet Creation
+/*----------------------------------------------------------------------
+                Offline Wallet Creation
+----------------------------------------------------------------------*/
 
   Future createOfflineWallets(String mnemonic) async {
     List<WalletInfo> _walletInfo = [];
@@ -197,8 +211,10 @@ class WalletService {
       return _walletInfo;
     }
   }
+/*----------------------------------------------------------------------
+                Future GetWalletCoins
+----------------------------------------------------------------------*/
 
-// Future GetWalletCoins
   Future<List<WalletInfo>> getWalletCoins(String mnemonic) async {
     List<WalletInfo> _walletInfo = [];
     List<double> coinUsdMarketPrice = [];
@@ -269,8 +285,10 @@ class WalletService {
       return _walletInfo;
     }
   }
+/*----------------------------------------------------------------------
+                Gas Balance
+----------------------------------------------------------------------*/
 
-  // Gas Balance
   Future<double> gasBalance(String addr) async {
     double gasAmount = 0.0;
     await _api.getGasBalance(addr).then((res) {
@@ -289,14 +307,19 @@ class WalletService {
     });
     return gasAmount;
   }
+/*----------------------------------------------------------------------
+                      Assets Balance
+----------------------------------------------------------------------*/
 
-  // Assets Balance
   assetsBalance(String exgAddress) async {
     List<Map<String, dynamic>> bal = [];
     await _api.getAssetsBalance(exgAddress).then((res) {
+      log.w('assetsBalance $res');
       for (var i = 0; i < res.length; i++) {
+        log.e('assetsBalance single ${res[i]}');
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
+        log.e('unlockedAmount ${tempBal['unlockedAmount']}}');
         var unlockedAmount =
             stringUtils.bigNum2Double(tempBal['unlockedAmount']);
         var lockedAmount = stringUtils.bigNum2Double(tempBal['lockedAmount']);
@@ -308,7 +331,7 @@ class WalletService {
         bal.add(finalBal);
       }
     }).catchError((onError) {
-      log.w('On error assetsBalance $onError');
+      log.e('On error assetsBalance $onError');
       bal = [];
     });
     return bal;
@@ -333,8 +356,10 @@ class WalletService {
       duration: Duration(seconds: 3),
     ).show(context);
   }
+/*----------------------------------------------------------------------
+                Calculate Only Usd Balance For Individual Coin
+----------------------------------------------------------------------*/
 
-  // Calculate Only Usd Balance For Individual Coin
   double calculateCoinUsdBalance(
       double marketPrice, double actualWalletBalance, double lockedBalance) {
     log.w(
@@ -353,8 +378,9 @@ class WalletService {
   Future<int> addGas() async {
     return 0;
   }
-
-// Get Coin Type Id By Name
+/*----------------------------------------------------------------------
+                et Coin Type Id By Name
+----------------------------------------------------------------------*/
 
   getCoinTypeIdByName(String coinName) {
     var coins =
@@ -364,8 +390,9 @@ class WalletService {
     }
     return 0;
   }
-
-// Get Original Message
+/*----------------------------------------------------------------------
+                Get Original Message
+----------------------------------------------------------------------*/
 
   getOriginalMessage(
       int coinType, String txHash, BigInt amount, String address) {
@@ -379,6 +406,9 @@ class WalletService {
     return buf;
   }
 
+/*----------------------------------------------------------------------
+                withdrawDo
+----------------------------------------------------------------------*/
   Future<Map<String, dynamic>> withdrawDo(
       seed,
       String coinName,
@@ -436,8 +466,9 @@ class WalletService {
     }
     return res;
   }
-
-  // Future Deposit Do
+/*----------------------------------------------------------------------
+                Future Deposit Do
+----------------------------------------------------------------------*/
 
   Future<Map<String, dynamic>> depositDo(
       seed, String coinName, String tokenType, double amount, option) async {
@@ -551,8 +582,10 @@ class WalletService {
   Future getEthBalance(String address) async {
     await getFabBalanceByAddress(address);
   }
+/*----------------------------------------------------------------------
+                Future Add Gas Do
+----------------------------------------------------------------------*/
 
-// Future Add Gas Do
   Future<Map<String, dynamic>> addGasDo(seed, double amount) async {
     var satoshisPerBytes = 14;
     var scarContractAddress = await getScarAddress();
@@ -581,6 +614,9 @@ class WalletService {
     return (amount * 1e-8);
   }
 
+/*----------------------------------------------------------------------
+                isFabTransactionLocked
+----------------------------------------------------------------------*/
   isFabTransactionLocked(String txid, int idx) async {
     if (idx != 0) {
       return false;
@@ -598,6 +634,9 @@ class WalletService {
     return false;
   }
 
+/*----------------------------------------------------------------------
+                getFabTransactionHex
+----------------------------------------------------------------------*/
   getFabTransactionHex(
       seed,
       addressIndexList,
@@ -713,8 +752,10 @@ class WalletService {
   Future getErrDeposit(String address) {
     return getKanbanErrDeposit(address);
   }
-  // Send Transaction
 
+/*----------------------------------------------------------------------
+                Send Transaction
+----------------------------------------------------------------------*/
   Future sendTransaction(
       String coin,
       seed,
@@ -1101,6 +1142,9 @@ class WalletService {
     };
   }
 
+/*----------------------------------------------------------------------
+                getFabSmartContract
+----------------------------------------------------------------------*/
   getFabSmartContract(
       String contractAddress, String fxnCallHex, gasLimit, gasPrice) async {
     contractAddress = stringUtils.trimHexPrefix(contractAddress);
