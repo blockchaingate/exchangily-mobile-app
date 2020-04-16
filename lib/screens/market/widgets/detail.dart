@@ -14,6 +14,7 @@ class MarketDetail extends StatefulWidget {
 class MarketDetailState extends State<MarketDetail>
     with SingleTickerProviderStateMixin {
   var usdtWidgets = List<Widget>();
+  var dusdWidgets = List<Widget>();
   var btcWidgets = List<Widget>();
   var ethWidgets = List<Widget>();
   var exgWidgets = List<Widget>();
@@ -22,13 +23,14 @@ class MarketDetailState extends State<MarketDetail>
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     super.initState();
     this.updatePrices(widget.data);
   }
 
   void updatePrices(List<Price> prices) {
     usdtWidgets = [];
+    dusdWidgets = [];
     btcWidgets = [];
     ethWidgets = [];
     exgWidgets = [];
@@ -36,6 +38,9 @@ class MarketDetailState extends State<MarketDetail>
     for (var price in prices) {
       if (price.symbol.endsWith("USDT")) {
         usdtWidgets.add(DetailPair(price.symbol.replaceAll('USDT', '/USDT'),
+            price.volume, price.price, price.change, price.low, price.high));
+      } else if (price.symbol.endsWith("DUSD")) {
+        dusdWidgets.add(DetailPair(price.symbol.replaceAll('DUSD', '/DUSD'),
             price.volume, price.price, price.change, price.low, price.high));
       } else if (price.symbol.endsWith("BTC")) {
         btcWidgets.add(DetailPair(price.symbol.replaceAll('BTC', '/BTC'),
@@ -50,6 +55,7 @@ class MarketDetailState extends State<MarketDetail>
     }
     setState(() => {
           this.usdtWidgets = usdtWidgets,
+          this.dusdWidgets = dusdWidgets,
           this.btcWidgets = btcWidgets,
           this.ethWidgets = ethWidgets,
           this.exgWidgets = exgWidgets
@@ -74,6 +80,7 @@ class MarketDetailState extends State<MarketDetail>
               Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 8.0),
                   child: Text("USDT")),
+              Text("DUSD"),
               Text("BTC"),
               Text("ETH"),
               Text("EXG")
@@ -116,6 +123,7 @@ class MarketDetailState extends State<MarketDetail>
             child: TabBarView(
               children: [
                 Container(child: Column(children: usdtWidgets)),
+                Container(child: Column(children: dusdWidgets)),
                 Container(child: Column(children: btcWidgets)),
                 Container(child: Column(children: ethWidgets)),
                 Container(child: Column(children: exgWidgets)),
