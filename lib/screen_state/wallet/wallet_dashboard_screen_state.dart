@@ -100,43 +100,11 @@ class WalletDashboardScreenState extends BaseState {
   Future refreshBalance() async {
     setState(ViewState.Busy);
 
-    var hasDUSD = false;
-    var exgAddress = '';
-    var exgTokenType = '';
-    for(var i=0;i<walletInfo.length;i++) {
-      String tickerName = walletInfo[i].tickerName;
-      if(tickerName == 'DUSD') {
-        hasDUSD = true;
-      }
-      if(tickerName == 'EXG') {
-        exgAddress = walletInfo[i].address;
-        exgTokenType = walletInfo[i].tokenType;
-      }
-    }
-    if(!hasDUSD) {
-      var dusdWalletInfo = new WalletInfo(
-          tickerName: 'DUSD',
-          tokenType: exgTokenType,
-          address: exgAddress,
-          availableBalance: 0.0,
-          lockedBalance: 0.0,
-          usdValue: 0.0,
-          name: 'dusd',
-          inExchange: 0.0
-      );
-      walletInfo.add(dusdWalletInfo);
-      /*
-      await databaseService.insert(dusdWalletInfo).then((res) {
-      });
-
-       */
-    }
-
     // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
     // also copy wallet keep the previous balance when loading shows shimmers instead of blank screen or zero bal
     walletInfoCopy = walletInfo.map((element) => element).toList();
     int length = walletInfoCopy.length;
-    print('length=' + length.toString());
+    print('refreshBalance walletInfoCopy length=' + length.toString());
     List<String> coinTokenType = walletService.tokenType;
     walletInfo.clear();
     double walletBal = 0.0;
@@ -147,6 +115,7 @@ class WalletDashboardScreenState extends BaseState {
       String tickerName = walletInfoCopy[i].tickerName;
       String address = walletInfoCopy[i].address;
       String name = walletInfoCopy[i].name;
+
       await walletService
           .coinBalanceByAddress(tickerName, address, coinTokenType[i])
           .then((balance) async {
@@ -179,6 +148,34 @@ class WalletDashboardScreenState extends BaseState {
           name: name);
       walletInfo.add(wi);
     } // For loop ends
+
+    var hasDUSD = false;
+    var exgAddress = '';
+    var exgTokenType = '';
+    for (var i = 0; i < walletInfo.length; i++) {
+      String tickerName = walletInfo[i].tickerName;
+      if (tickerName == 'DUSD') {
+        hasDUSD = true;
+      }
+      if (tickerName == 'EXG') {
+        exgAddress = walletInfo[i].address;
+        exgTokenType = walletInfo[i].tokenType;
+      }
+    }
+    if (!hasDUSD) {
+      var dusdWalletInfo = new WalletInfo(
+          tickerName: 'DUSD',
+          tokenType: exgTokenType,
+          address: exgAddress,
+          availableBalance: 0.0,
+          lockedBalance: 0.0,
+          usdValue: 0.0,
+          name: 'dusd',
+          inExchange: 0.0);
+      walletInfo.add(dusdWalletInfo);
+
+      // await databaseService.insert(dusdWalletInfo).then((res) {});
+    }
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();

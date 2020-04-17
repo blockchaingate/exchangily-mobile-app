@@ -193,12 +193,14 @@ class WalletService {
 
     try {
       for (int i = 0; i < coinTickers.length; i++) {
+        int id = i + 1;
         String tickerName = coinTickers[i];
         String name = coinNames[i];
         String token = tokenType[i];
         String addr =
             await getAddressForCoin(root, tickerName, tokenType: token);
         WalletInfo wi = new WalletInfo(
+            id: id,
             tickerName: tickerName,
             tokenType: token,
             address: addr,
@@ -1021,7 +1023,7 @@ class WalletService {
       var transferAbi = 'a9059cbb';
       var amountSentInt = BigInt.from(amount * 1e18);
 
-      if(coin == 'DUSD') {
+      if (coin == 'DUSD') {
         amountSentInt = BigInt.from(amount * 1e6);
       }
       print('amountSentIntamountSentInt=');
