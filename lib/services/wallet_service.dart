@@ -49,15 +49,16 @@ class WalletService {
 
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   double coinUsdBalance;
-  List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
-  List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
+  List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG', 'DUSD'];
+  List<String> tokenType = ['', '', '', 'ETH', 'FAB', 'FAB'];
 
   List<String> coinNames = [
     'bitcoin',
     'ethereum',
     'fabcoin',
     'tether',
-    'exchangily'
+    'exchangily',
+    'dusd'
   ];
 
   // Get Random Mnemonic
@@ -153,6 +154,9 @@ class WalletService {
     var usdVal = await _api.getCoinsUsdValue();
     if (name == 'exchangily') {
       return currentUsdValue = 0.2;
+    }
+    if (name == 'dusd') {
+      return currentUsdValue = 1.0;
     }
     currentUsdValue = usdVal[name]['usd'];
     log.w('USD VAL of $name - $currentUsdValue');
@@ -975,21 +979,27 @@ class WalletService {
       var transferAbi = 'a9059cbb';
       var amountSentInt = BigInt.from(amount * 1e18);
 
+      if(coin == 'DUSD') {
+        amountSentInt = BigInt.from(amount * 1e6);
+      }
+      print('amountSentIntamountSentInt=');
+      print(amountSentInt.toString());
       var amountSentHex = amountSentInt.toRadixString(16);
-
+      print('000');
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(stringUtils.trimHexPrefix(amountSentHex), 64);
-
+      print('001');
       contractAddress = stringUtils.trimHexPrefix(contractAddress);
 
+      print('111');
       var contractInfo = await getFabSmartContract(
           contractAddress, fxnCallHex, gasLimit, gasPrice);
 
       if (addressList != null && addressList.length > 0) {
         addressList[0] = exgToFabAddress(addressList[0]);
       }
-
+      print('222');
       var res1 = await getFabTransactionHex(
           seed,
           addressIndexList,
