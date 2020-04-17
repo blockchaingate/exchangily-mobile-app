@@ -800,7 +800,486 @@ class AppLocalizations {
 
   String get testVersion {
     return Intl.message('You are using the test version',
-        name: 'debugVersion', desc: 'debug_version');
+        name: 'testVersion', desc: 'test_version');
+  }
+
+  String get campaignInstructions {
+    return Intl.message('Campaign Instructions',
+        name: 'campaignInstructions', desc: 'campaign_instructions');
+  }
+
+  String get tapHereToEnterInCampaign {
+    return Intl.message('Tap here to enter in campaign',
+        name: 'tapHereToEnterInCampaign', desc: 'campaign_enter');
+  }
+
+  String get login {
+    return Intl.message('Login', name: 'login', desc: 'campaign_login');
+  }
+
+  String get email {
+    return Intl.message('Email', name: 'email', desc: 'campaign_email');
+  }
+
+  String get password {
+    return Intl.message('Password',
+        name: 'password', desc: 'campaign_password');
+  }
+
+  String get register {
+    return Intl.message('Register',
+        name: 'register', desc: 'campaign_register');
+  }
+
+  String get clickToSeeThePassword {
+    return Intl.message('Click to see the password',
+        name: 'clickToSeeThePassword',
+        desc: 'campaign_click_to_see_the_password');
+  }
+
+  String get enterYourEmail {
+    return Intl.message('Enter your email',
+        name: 'enterYourEmail', desc: 'campaign_register_email');
+  }
+
+  String get pasteExgAddress {
+    return Intl.message('Tap on wallet icon to paste Exg Wallet Address',
+        name: 'pasteExgAddress', desc: 'campaign_register_paste_exg_address');
+  }
+
+  String get referralCode {
+    return Intl.message('Referral Code',
+        name: 'referralCode', desc: 'campaign_register_referral_code');
+  }
+
+  String get alreadyHaveAnAccount {
+    return Intl.message('Already have an account',
+        name: 'alreadyHaveAnAccount',
+        desc: 'campaign_register_already_have_an_account');
+  }
+
+  String get signUp {
+    return Intl.message('Sign Up',
+        name: 'signUp', desc: 'campaign_register_sign_up');
+  }
+
+  String get showPassword {
+    return Intl.message('Show password',
+        name: 'showPassword', desc: 'campaign_register_show_password');
+  }
+
+  String get registrationSuccessful {
+    return Intl.message('Registration Successful',
+        name: 'registrationSuccessful',
+        desc: 'campaign_register_registration_successful');
+  }
+
+  String get pleaseCheckYourEmailToActivateYourAccount {
+    return Intl.message('Please check your email to activate your account',
+        name: 'pleaseCheckYourEmailToActivateYourAccount',
+        desc: 'campaign_register_check_email_to_activate_account');
+  }
+
+  String get pleaseEnterYourEmailAddress {
+    return Intl.message('Please enter your email address',
+        name: 'pleaseEnterYourEmailAddress',
+        desc: 'campaign_register_please_enter_your_email_address');
+  }
+
+  String get pleaseFillYourPassword {
+    return Intl.message('Please fill your password',
+        name: 'pleaseFillYourPassword',
+        desc: 'campaign_register_please_enter_your_password');
+  }
+
+  String get confirmPasswordFieldIsEmpty {
+    return Intl.message('Confirm password field is empty',
+        name: 'confirmPasswordFieldIsEmpty',
+        desc: 'campaign_register_Confirm_password_field_is_empty');
+  }
+
+  String get exgWalletAddressIsRequired {
+    return Intl.message('Exg wallet address is required',
+        name: 'exgWalletAddressIsRequired',
+        desc: 'campaign_register_exg_wallet_address_is_required');
+  }
+
+  String get bothPasswordFieldsShouldMatch {
+    return Intl.message('Both password fields should match',
+        name: 'bothPasswordFieldsShouldMatch',
+        desc: 'campaign_register_both_password_fields_should_match');
+  }
+
+  String get checkingAccountDetails {
+    return Intl.message('Checking account details',
+        name: 'checkingAccountDetails',
+        desc: 'campaign_login_checking_login_details');
+  }
+
+  String get welcome {
+    return Intl.message('Welcome',
+        name: 'welcome', desc: 'campaign_dashboard_welcome');
+  }
+
+  String get logout {
+    return Intl.message('Logout',
+        name: 'logout', desc: 'campaign_dashboard_logout');
+  }
+
+  String get event {
+    return Intl.message('Event', name: 'event', desc: 'campaign_event');
+  }
+
+  String get readCampaignInstructions {
+    return Intl.message('Read Campaign Instructions',
+        name: 'readCampaignInstructions',
+        desc: 'campaign_read_campaign_instructions');
+  }
+
+  String get myReferralCode {
+    return Intl.message('My Referral Code',
+        name: 'myReferralCode', desc: 'campaign_my_referral_code');
+  }
+
+  String get level {
+    return Intl.message('Level',
+        name: 'level', desc: 'campaign_dashboard_level');
+  }
+
+  String get teamsTotalValue {
+    return Intl.message('Teams Total Value',
+        name: 'teamsTotalValue', desc: 'campaign_dashboard_teams_total_value');
+  }
+
+  String get myReferrals {
+    return Intl.message('My Referrals',
+        name: 'myReferrals', desc: 'campaign_dashboard_my_referrals');
+  }
+
+  String get payment {
+    return Intl.message('Payment', name: 'payment', desc: 'campaign_payment');
+  }
+
+  String get paymentType {
+    return Intl.message('Payment Type',
+        name: 'paymentType', desc: 'campaign_payment_type');
+  }
+
+  String get bankName {
+    return Intl.message('Bank Name',
+        name: 'bankName', desc: 'campaign_bank_name');
+  }
+
+  String get routingNumber {
+    return Intl.message('Routing Number',
+        name: 'routingNumber', desc: 'campaign_routing_number');
+  }
+
+  String get bankAccount {
+    return Intl.message('Bank Account',
+        name: 'bankAccount', desc: 'campaign_bank_account');
+  }
+
+  String get recieveAddress {
+    return Intl.message('Recieve Address',
+        name: 'recieveAddress', desc: 'campaign_recieve_address');
+  }
+
+  String get balance {
+    return Intl.message('Balance', name: 'balance', desc: 'campaign_balance');
+  }
+
+  String get orderInformation {
+    return Intl.message('Order Information',
+        name: 'orderInformation', desc: 'campaign_order_information');
+  }
+
+  String get status {
+    return Intl.message('Status', name: 'status', desc: 'campaign_status');
+  }
+
+  String get waiting {
+    return Intl.message('Waiting', name: 'waiting', desc: 'campaign_waiting');
+  }
+
+  String get paid {
+    return Intl.message('Paid', name: 'paid', desc: 'campaign_paid');
+  }
+
+  String get paymentReceived {
+    return Intl.message('Payment Received',
+        name: 'paymentReceived', desc: 'campaign_payment_received');
+  }
+
+  String get failed {
+    return Intl.message('Failed', name: 'failed', desc: 'campaign_failed');
+  }
+
+  String get orderCancelled {
+    return Intl.message('Order Cancelled',
+        name: 'orderCancelled', desc: 'campaign_order_cancelled');
+  }
+
+  String get createOrderFailed {
+    return Intl.message('Create order failed',
+        name: 'createOrderFailed', desc: 'campaign_create_order_failed');
+  }
+
+  String get success {
+    return Intl.message('Success', name: 'success', desc: 'campaign_success');
+  }
+
+  String get yourOrderHasBeenCreated {
+    return Intl.message('Your order has been created',
+        name: 'yourOrderHasBeenCreated',
+        desc: 'campaign_your_order_has_been_created');
+  }
+
+  String get loadOrdersFailed {
+    return Intl.message('Could not load orders, Please try again later',
+        name: 'loadOrdersFailed', desc: 'campaign_load_orders_failed');
+  }
+
+  String get pleaseFillAllTheFields {
+    return Intl.message('Please fill all the fields',
+        name: 'pleaseFillAllTheFields',
+        desc: 'campaign_please_fill_all_the_fields');
+  }
+
+  String get pleaseEnterAmountLessThanYourWallet {
+    return Intl.message(
+        'Please enter the amount equals or less than your available wallet balance',
+        name: 'pleaseEnterAmountLessThanYourWallet',
+        desc: 'campaign_please_enter_amount_less_than_your_wallet_bal');
+  }
+
+  String get myRewardDetails {
+    return Intl.message('My Reward Details',
+        name: 'myRewardDetails', desc: 'campaign_my_reward_details');
+  }
+
+  String get referrals {
+    return Intl.message('Referrals',
+        name: 'referrals', desc: 'campaign_referrals');
+  }
+
+  String get bankWireDetails {
+    return Intl.message('Bank Wire Details',
+        name: 'bankWireDetails', desc: 'campaign_bank__wire_details');
+  }
+
+  String get myTotalAssets {
+    return Intl.message('My Total Assets',
+        name: 'myTotalAssets', desc: 'campaign_dashboard_my_total_assets');
+  }
+
+  String get totalTokenHolding {
+    return Intl.message('Total Token Holding',
+        name: 'totalTokenHolding',
+        desc: 'campaign_dashboard_total_token__holding');
+  }
+
+  String get tokenDetails {
+    return Intl.message('Token Details',
+        name: 'tokenDetails', desc: 'campaign_da\shboard_token_details');
+  }
+
+  String get totalTokenAmount {
+    return Intl.message('Total Token Amount',
+        name: 'totalTokenAmount', desc: 'campaign_total__token_amount');
+  }
+
+  String get rewardsToken {
+    return Intl.message('Rewards Token',
+        name: 'rewardsToken', desc: 'campaign_rewards_token');
+  }
+
+  String get myInvestment {
+    return Intl.message('My Investment',
+        name: 'myInvestment',
+        desc: 'campaign_dashboard_my_investment_without_rewards');
+  }
+
+  String get teamReward {
+    return Intl.message('Team Reward',
+        name: 'teamReward', desc: 'campaign_dashboard_team_reward');
+  }
+
+  String get myTokens {
+    return Intl.message('My Tokens',
+        name: 'myTokens', desc: 'campaign_dashboard_my_tokens');
+  }
+
+  String get tokenQuantity {
+    return Intl.message('Token Quantity',
+        name: 'tokenQuantity',
+        desc: 'campaign_dashboard_payment_token_quantity');
+  }
+
+  String get referralCount {
+    return Intl.message('Referral Count',
+        name: 'referralCount', desc: 'campaign_dashboard_referral_count');
+  }
+
+  String get myReferralReward {
+    return Intl.message('My Referral Reward',
+        name: 'myReferralReward',
+        desc: 'campaign_dashboard_my_referral_reward');
+  }
+
+  String get descriptionIsRequired {
+    return Intl.message('Please fill the description field',
+        name: 'descriptionIsRequired',
+        desc: 'campaign_payment_update_description');
+  }
+
+  String get diamond {
+    return Intl.message('Diamond',
+        name: 'diamond', desc: 'campaign_dashboard_level_diamond');
+  }
+
+  String get gold {
+    return Intl.message('Gold',
+        name: 'gold', desc: 'campaign_dashboard_level_gold');
+  }
+
+  String get silver {
+    return Intl.message('silver',
+        name: 'silver', desc: 'campaign_dashboard_level_silver');
+  }
+
+  String get paymentDescription {
+    return Intl.message('Payment Description',
+        name: 'paymentDescription',
+        desc: 'campaign_payment_payment_description');
+  }
+
+  String get paymentDescriptionNote {
+    return Intl.message('Please fill this field to confirm the order',
+        name: 'paymentDescriptionNote',
+        desc: 'campaign_payment_payment_description_note');
+  }
+
+  String get orderId {
+    return Intl.message('Order Id',
+        name: 'orderId', desc: 'campaign_payment_order_id');
+  }
+
+  String get confirmPayment {
+    return Intl.message('Confirm Payment',
+        name: 'confirmPayment', desc: 'campaign_payment_order_id');
+  }
+
+  String get checkingCredentials {
+    return Intl.message('Checking Credentials',
+        name: 'checkingCredentials',
+        desc: 'campaign_login_checking_credentials');
+  }
+
+  String get cancelOrder {
+    return Intl.message('Cancel Order',
+        name: 'cancelOrder', desc: 'campaign_payment_cancel_order');
+  }
+
+  String get orderCreatedSuccessfully {
+    return Intl.message('Order Created Successfully',
+        name: 'orderCreatedSuccessfully',
+        desc: 'campaign_payment_order_created_successfully');
+  }
+
+  String get pleaseincludeYourOrderNumber {
+    return Intl.message('Please include your order number',
+        name: 'pleaseincludeYourOrderNumber',
+        desc: 'campaign_payment_include_your_order_number');
+  }
+
+  String get afterHyphenWhenYouMakePayment {
+    return Intl.message('after hyphen when you make payment',
+        name: 'afterHyphenWhenYouMakePayment',
+        desc: 'campaign_payment_after_hyphen_when_you_make_payment');
+  }
+
+  String get updateYourOrderStatus {
+    return Intl.message('Update your order status',
+        name: 'updateYourOrderStatus',
+        desc: 'campaign_payment_update_your_order_status');
+  }
+
+  String get team {
+    return Intl.message('Team',
+        name: 'team', desc: 'campaign_dashboard_team_details');
+  }
+
+  String get members {
+    return Intl.message('Members',
+        name: 'members', desc: 'campaign_dashboard_team_details_members');
+  }
+
+  String get totalValue {
+    return Intl.message('Total Value',
+        name: 'totalValue',
+        desc: 'campaign_dashboard_team_details_total_value');
+  }
+
+  String get totalQuantity {
+    return Intl.message('Total Quantity',
+        name: 'totalQuantity',
+        desc: 'campaign_dashboard_team_details_total_quantity');
+  }
+
+  String get teamDetails {
+    return Intl.message('Team Details',
+        name: 'teamDetails', desc: 'campaign_dashboard_team_details_heading');
+  }
+
+  String get orderDetails {
+    return Intl.message('Order Details',
+        name: 'orderDetails', desc: 'campaign_dashboard_order_details_heading');
+  }
+
+  String get forgotPassword {
+    return Intl.message('Forgot Password',
+        name: 'forgotPassword', desc: 'campaign_login_forgot_assword');
+  }
+
+  String get passwordResetError {
+    return Intl.message('Password Reset Error',
+        name: 'passwordResetError', desc: 'campaign_password_reset_error');
+  }
+
+  String get pleaseEnterTheCorrectEmail {
+    return Intl.message('Please enter the correct email',
+        name: 'pleaseEnterTheCorrectEmail',
+        desc: 'campaign_enter_correct_email');
+  }
+
+  String get passwordReset {
+    return Intl.message('Password Reset',
+        name: 'passwordReset', desc: 'campaign_password_reset');
+  }
+
+  String get resetPasswordEmailInstruction {
+    return Intl.message(
+        'Please check your email and follow instructions to reset your account password',
+        name: 'resetPasswordEmailInstruction',
+        desc: 'campaign_reset_password_email_instruction');
+  }
+
+  String get updateStatus {
+    return Intl.message('Update status',
+        name: 'updateStatus', desc: 'campaign_payment_update_status');
+  }
+
+  String get orderCancelledNotification {
+    return Intl.message('Your order has been cancelled successfully',
+        name: 'orderCancelledNotification',
+        desc: 'campaign_payment_order_cancelled_notification');
+  }
+
+  String get orderUpdateNotification {
+    return Intl.message('Your order status has been updated successfully',
+        name: 'orderUpdateNotification',
+        desc: 'campaign_payment_order_updated_notification');
   }
 }
 

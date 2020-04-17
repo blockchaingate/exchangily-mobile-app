@@ -1,3 +1,4 @@
+
 import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
@@ -33,6 +34,7 @@ Map devConfig = {
     "smartContract": {
       "FABLOCK": '0xa7d4a4e23bf7dd7a1e03eda9eb7c28a016fd54aa',
       "EXG": '0x867480ba8e577402fa44f43c33875ce74bdc5df6',
+      "DUSD": '0x78f6bedc7c3d6500e004c6dca19c8d614cfd91ed',
       "USDT": '0x1c35eCBc06ae6061d925A2fC2920779a1896282c',
     },
     'exchangilyOfficial': [
@@ -40,7 +42,8 @@ Map devConfig = {
       {'name': 'FAB', 'address': 'n1eXG5oe6wJ6h43akutyGfphqQsY1UfAUR'},
       {'name': 'BTC', 'address': 'muQDw5hVmFgD1GrrWvUt6kjrzauC4Msaki'},
       {'name': 'ETH', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
-      {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'}
+      {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
+      {'name': 'DUSD', 'address': '0xdcd0f23125f74ef621dfa3310625f8af0dcd971b'}
     ]
   },
   "websocket": "wss://kanbantest.fabcoinapi.com/ws/",
@@ -89,14 +92,17 @@ Map productionConfig = {
       "FABLOCK": '0x04baa04d9550c49831427c6abe16def2c579af4a',
       "EXG": '0xa3e26671a38978e8204b8a37f1c2897042783b00',
       "USDT": '0xdac17f958d2ee523a2206206994597c13d831ec7',
+      "DUSD": '0x46e0021c17d30a2db972ee5719cdc7e829ed9930'
     },
     'exchangilyOfficial': [
       {'name': 'EXG', 'address': '0x9d95ee21e4f1b05bbfd0094daf4ce110deb00931'},
       {'name': 'FAB', 'address': '1FNEhT8uTmrEMvHGCGohnEFv6Q1z4qRhQu'},
       {'name': 'BTC', 'address': '1CKg6irbGXHxBHuTx7MeqYQUuMZ8aEok8z'},
       {'name': 'ETH', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'},
-      {'name': 'USDT', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'}
-    ]
+      {'name': 'USDT', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'},
+      {'name': 'DUSD', 'address': '0x9d95ee21e4f1b05bbfd0094daf4ce110deb00931'}
+    ],
+    "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },
   "websocket": "wss://kanbanprod.fabcoinapi.com/ws/",
   "minimumWithdraw": {

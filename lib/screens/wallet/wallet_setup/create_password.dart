@@ -139,6 +139,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             model.checkPassword(pass);
           });
         },
+        keyboardType: TextInputType.visiblePassword,
         focusNode: passFocus,
         autofocus: true,
         controller: _passTextController,

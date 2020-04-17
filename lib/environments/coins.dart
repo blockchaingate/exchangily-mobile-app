@@ -16,5 +16,8 @@ final coin_list = [
   },
   {
     'id': 5, 'name': 'EXG', 'icon': ''
+  },
+  {
+    'id': 6, 'name': 'DUSD', 'icon': ''
   }
 ];

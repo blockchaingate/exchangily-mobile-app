@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "detail-pair.dart";
 import '../../../models/price.dart';
+import '../../../shared/globals.dart' as globals;
 
 class MarketDetail extends StatefulWidget {
   final List<Price> data;
@@ -13,6 +14,7 @@ class MarketDetail extends StatefulWidget {
 class MarketDetailState extends State<MarketDetail>
     with SingleTickerProviderStateMixin {
   var usdtWidgets = List<Widget>();
+  var dusdWidgets = List<Widget>();
   var btcWidgets = List<Widget>();
   var ethWidgets = List<Widget>();
   var exgWidgets = List<Widget>();
@@ -21,13 +23,14 @@ class MarketDetailState extends State<MarketDetail>
 
   @override
   void initState() {
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     super.initState();
     this.updatePrices(widget.data);
   }
 
   void updatePrices(List<Price> prices) {
     usdtWidgets = [];
+    dusdWidgets = [];
     btcWidgets = [];
     ethWidgets = [];
     exgWidgets = [];
@@ -35,6 +38,9 @@ class MarketDetailState extends State<MarketDetail>
     for (var price in prices) {
       if (price.symbol.endsWith("USDT")) {
         usdtWidgets.add(DetailPair(price.symbol.replaceAll('USDT', '/USDT'),
+            price.volume, price.price, price.change, price.low, price.high));
+      } else if (price.symbol.endsWith("DUSD")) {
+        dusdWidgets.add(DetailPair(price.symbol.replaceAll('DUSD', '/DUSD'),
             price.volume, price.price, price.change, price.low, price.high));
       } else if (price.symbol.endsWith("BTC")) {
         btcWidgets.add(DetailPair(price.symbol.replaceAll('BTC', '/BTC'),
@@ -49,6 +55,7 @@ class MarketDetailState extends State<MarketDetail>
     }
     setState(() => {
           this.usdtWidgets = usdtWidgets,
+          this.dusdWidgets = dusdWidgets,
           this.btcWidgets = btcWidgets,
           this.ethWidgets = ethWidgets,
           this.exgWidgets = exgWidgets
@@ -59,6 +66,7 @@ class MarketDetailState extends State<MarketDetail>
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
+      margin: EdgeInsets.only(bottom: 7.0),
       child: Column(
         children: <Widget>[
           TabBar(
@@ -72,6 +80,7 @@ class MarketDetailState extends State<MarketDetail>
               Padding(
                   padding: const EdgeInsets.only(top: 10.0, bottom: 8.0),
                   child: Text("USDT")),
+              Text("DUSD"),
               Text("BTC"),
               Text("ETH"),
               Text("EXG")
@@ -80,10 +89,41 @@ class MarketDetailState extends State<MarketDetail>
             indicatorColor: Colors.white,
           ),
           Container(
+              margin: EdgeInsets.only(top: 5.0),
+              padding: EdgeInsets.all(5.0),
+              color: globals.walletCardColor.withAlpha(75),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: Text('Ticker'),
+                      )),
+                  Expanded(
+                    flex: 1,
+                    child: Text('Volume', textAlign: TextAlign.end),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text('High', textAlign: TextAlign.end),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text('Low', textAlign: TextAlign.end),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Text('Change', textAlign: TextAlign.end),
+                  ),
+                ],
+              )),
+          Container(
             height: 550,
             child: TabBarView(
               children: [
                 Container(child: Column(children: usdtWidgets)),
+                Container(child: Column(children: dusdWidgets)),
                 Container(child: Column(children: btcWidgets)),
                 Container(child: Column(children: ethWidgets)),
                 Container(child: Column(children: exgWidgets)),

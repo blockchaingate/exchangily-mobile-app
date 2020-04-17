@@ -14,6 +14,16 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
 import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/login_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/register_account_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/payment_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/refferal_deatils_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/reward_details_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/order_details_screen.dart';
+
+import 'package:exchangilymobileapp/screens/otc_campaign/team_reward_details_screen.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
@@ -36,6 +46,8 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit.dar
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/withdraw.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings.dart';
+
+import 'screens/otc_campaign/token_details_screen.dart';
 
 final log = getLogger('Routes');
 
@@ -118,10 +130,54 @@ class RouteGenerator {
             builder: (_) => TransactionHistory(
                   tickerName: args,
                 ));
+
       case '/otc':
         return MaterialPageRoute(builder: (_) => OtcScreen());
+
       case '/otcDetails':
         return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
+
+      case '/campaignInstructions':
+        return MaterialPageRoute(builder: (_) => CampaignInstructionScreen());
+
+      case '/campaignPayment':
+        return MaterialPageRoute(builder: (_) => CampaignPaymentScreen());
+
+      case '/campaignDashboard':
+        return MaterialPageRoute(
+            builder: (_) => CampaignDashboardScreen(
+                  userData: args,
+                ));
+
+      case '/campaignTokenDetails':
+        return MaterialPageRoute(
+            builder: (_) =>
+                CampaignTokenDetailsScreen(campaignRewardList: args));
+
+      case '/campaignRewardDetails':
+        return MaterialPageRoute(
+            builder: (_) =>
+                CampaignRewardDetailsScreen(campaignRewardList: args));
+
+      case '/campaignOrderDetails':
+        return MaterialPageRoute(
+            builder: (_) => CampaignOrderDetailsScreen(orderInfoList: args));
+
+      case '/campaignRefferalDetails':
+        return MaterialPageRoute(
+            builder: (_) => CampaignRefferalDetailsScreen());
+
+      case '/campaignTeamRewardDetails':
+        return MaterialPageRoute(
+            builder: (_) =>
+                CampaignTeamRewardDetailsScreen(teamValueAndReward: args));
+
+      case '/campaignLogin':
+        return MaterialPageRoute(builder: (_) => CampaignLoginScreen());
+
+      case '/campaignRegisterAccount':
+        return MaterialPageRoute(
+            builder: (_) => CampaignRegisterAccountScreen());
 
       default:
         return _errorRoute(settings);

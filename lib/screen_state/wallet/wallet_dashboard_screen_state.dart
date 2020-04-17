@@ -99,19 +99,23 @@ class WalletDashboardScreenState extends BaseState {
 
   Future refreshBalance() async {
     setState(ViewState.Busy);
+
     // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
     // also copy wallet keep the previous balance when loading shows shimmers instead of blank screen or zero bal
     walletInfoCopy = walletInfo.map((element) => element).toList();
     int length = walletInfoCopy.length;
+    print('refreshBalance walletInfoCopy length=' + length.toString());
     List<String> coinTokenType = walletService.tokenType;
     walletInfo.clear();
-    double walletBal = 0;
-    double walletLockedBal = 0;
+    double walletBal = 0.0;
+    double walletLockedBal = 0.0;
     for (var i = 0; i < length; i++) {
       int id = i + 1;
+      print('i=' + i.toString());
       String tickerName = walletInfoCopy[i].tickerName;
       String address = walletInfoCopy[i].address;
       String name = walletInfoCopy[i].name;
+
       await walletService
           .coinBalanceByAddress(tickerName, address, coinTokenType[i])
           .then((balance) async {
@@ -119,13 +123,14 @@ class WalletDashboardScreenState extends BaseState {
         walletLockedBal = balance['lockbalance'];
       }).timeout(Duration(seconds: 25), onTimeout: () async {
         setState(ViewState.Idle);
-        sharedService.alertError(
+        sharedService.alertResponse(
             '', AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
         await retrieveWallets();
         log.e('Timeout');
       }).catchError((error) async {
         setState(ViewState.Idle);
-        sharedService.alertError('', AppLocalizations.of(context).genericError);
+        sharedService.alertResponse(
+            '', AppLocalizations.of(context).genericError);
         await retrieveWallets();
         log.e('Something went wrong  - $error');
       });
@@ -143,6 +148,34 @@ class WalletDashboardScreenState extends BaseState {
           name: name);
       walletInfo.add(wi);
     } // For loop ends
+
+    var hasDUSD = false;
+    var exgAddress = '';
+    var exgTokenType = '';
+    for (var i = 0; i < walletInfo.length; i++) {
+      String tickerName = walletInfo[i].tickerName;
+      if (tickerName == 'DUSD') {
+        hasDUSD = true;
+      }
+      if (tickerName == 'EXG') {
+        exgAddress = walletInfo[i].address;
+        exgTokenType = walletInfo[i].tokenType;
+      }
+    }
+    if (!hasDUSD) {
+      var dusdWalletInfo = new WalletInfo(
+          tickerName: 'DUSD',
+          tokenType: exgTokenType,
+          address: exgAddress,
+          availableBalance: 0.0,
+          lockedBalance: 0.0,
+          usdValue: 0.0,
+          name: 'dusd',
+          inExchange: 0.0);
+      walletInfo.add(dusdWalletInfo);
+
+      // await databaseService.insert(dusdWalletInfo).then((res) {});
+    }
     calcTotalBal(length);
     await getGas();
     await getExchangeAssets();
@@ -162,16 +195,15 @@ class WalletDashboardScreenState extends BaseState {
 
 // test version pop up
   debugVersionPopup() {
-    sharedService.alertError(AppLocalizations.of(context).notice,
+    sharedService.alertResponse(AppLocalizations.of(context).notice,
         AppLocalizations.of(context).testVersion);
   }
-  // Get Exchange Assets
 
+  // Get Exchange Assets
   getExchangeAssets() async {
     setState(ViewState.Busy);
-    log.e(exgAddress);
     var res = await walletService.assetsBalance(exgAddress);
-    log.e(res);
+    log.e('getExchangeAssets from service $res');
     var length = res.length;
     for (var i = 0; i < length; i++) {
       // Get their tickerName to compare with walletInfo tickernName
@@ -180,9 +212,9 @@ class WalletDashboardScreenState extends BaseState {
       // compare it with the same coin tickername from service until the match or loop ends
       for (var j = 0; j < walletInfo.length; j++) {
         if (coin == walletInfo[j].tickerName) {
-          log.e('$coin - $walletInfo[j].tickerName');
+          // log.e('$coin - $walletInfo[j].tickerName');
           walletInfo[j].inExchange = res[i]['amount'];
-          log.w(walletInfo[j].inExchange);
+          log.w('getExchangeAssets ${walletInfo[j].inExchange}');
           break;
         }
       }

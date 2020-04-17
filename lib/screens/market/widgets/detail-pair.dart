@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import "package:flutter/material.dart";
 import "../../trade/main.dart";
 import 'package:exchangilymobileapp/localizations.dart';
@@ -26,68 +27,68 @@ class DetailPair extends StatelessWidget {
         },
         child: Container(
             color: globals.walletCardColor,
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            margin: EdgeInsets.only(top: 5),
-            child: Container(
-              //    padding: EdgeInsets.symmetric(vertical: 5),
-              // margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Container(
-                    width: 100,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(targetCoinName,
-                            style: Theme.of(context).textTheme.headline4),
-                        Text(
-                            AppLocalizations.of(context).volume +
-                                ": " +
-                                volume.toStringAsFixed(2),
-                            style: Theme.of(context).textTheme.bodyText2)
-                      ],
+            padding: EdgeInsets.all(5.0),
+            child: Column(
+              children: <Widget>[
+                UIHelper.divider,
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: EdgeInsets.only(left: 5.0, top: 5.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(targetCoinName,
+                                style: Theme.of(context).textTheme.headline4),
+                            Text(price.toStringAsFixed(2),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(fontWeight: FontWeight.bold))
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  // Price High Low Column
-                  Container(
-                    width: 100,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                            AppLocalizations.of(context).price +
-                                ": " +
-                                price.toString(),
-                            style: Theme.of(context).textTheme.bodyText1),
-                        Text(
-                            AppLocalizations.of(context).high +
-                                ": " +
-                                high.toString(),
-                            style: Theme.of(context).textTheme.bodyText1),
-                        Text(
-                            AppLocalizations.of(context).low +
-                                ": " +
-                                low.toString(),
-                            style: Theme.of(context).textTheme.bodyText1),
-                      ],
+                    // Price High Low Column
+
+                    Expanded(
+                      flex: 1,
+                      child: Text(price.toString(),
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.bodyText1),
                     ),
-                  ),
-                  // Change Container
-                  Container(
-                      width: 70,
+                    Expanded(
+                      flex: 1,
+                      child: Text(high.toString(),
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.bodyText1),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(low.toString(),
+                          textAlign: TextAlign.end,
+                          style: Theme.of(context).textTheme.bodyText1),
+                    ),
+
+                    // Change Container
+                    Expanded(
+                      flex: 1,
                       child: Text(
                           change >= 0
                               ? "+" + change.toStringAsFixed(2) + '%'
                               : change.toStringAsFixed(2) + '%',
-                          textAlign: TextAlign.center,
+                          textAlign: TextAlign.end,
                           style: TextStyle(
                               color:
                                   Color(change >= 0 ? 0XFF0da88b : 0XFFe2103c),
-                              fontSize: 16)))
-                ],
-              ),
+                              fontSize: 14)),
+                    )
+                  ],
+                ),
+              ],
             )));
   }
 }

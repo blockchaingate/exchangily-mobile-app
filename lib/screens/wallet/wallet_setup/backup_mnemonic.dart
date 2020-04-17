@@ -47,50 +47,54 @@ class _BackupMnemonicWalletScreenState
           title: Text(AppLocalizations.of(context).backupMnemonic,
               style: Theme.of(context).textTheme.headline3),
           backgroundColor: globals.secondaryColor),
-      body: Container(
-        padding: EdgeInsets.all(10),
-        child: ListView(
-          children: <Widget>[
-            UIHelper.verticalSpaceMedium,
-            Row(
-              children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Icon(
-                      Icons.note_add,
-                      color: globals.primaryColor,
-                      size: 30,
-                    )),
-                Expanded(
-                    child: Text(
-                  AppLocalizations.of(context).warningBackupMnemonic,
-                  style: Theme.of(context).textTheme.headline,
-                )),
-              ],
-            ),
-            UIHelper.verticalSpaceSmall,
-            Container(
-              margin: EdgeInsets.symmetric(
-                vertical: 10,
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height - 100,
+          padding: EdgeInsets.all(10),
+          child: ListView(
+            children: <Widget>[
+              UIHelper.verticalSpaceMedium,
+              Row(
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Icon(
+                        Icons.note_add,
+                        color: globals.primaryColor,
+                        size: 30,
+                      )),
+                  Expanded(
+                      child: Text(
+                    AppLocalizations.of(context).warningBackupMnemonic,
+                    style: Theme.of(context).textTheme.headline5,
+                  )),
+                ],
               ),
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-              child: _buttonGrid(),
-            ),
-            UIHelper.verticalSpaceSmall,
-            Container(
-              padding: EdgeInsets.all(15),
-              child: RaisedButton(
-                child: Text(
-                  AppLocalizations.of(context).confirm,
-                  style: Theme.of(context).textTheme.headline4,
+              UIHelper.verticalSpaceSmall,
+              Container(
+                margin: EdgeInsets.symmetric(
+                  vertical: 10,
                 ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed('/confirmMnemonic',
-                      arguments: BackupMnemonicWalletScreen.randomMnemonicList);
-                },
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                child: _buttonGrid(),
               ),
-            )
-          ],
+              UIHelper.verticalSpaceSmall,
+              Container(
+                padding: EdgeInsets.all(15),
+                child: RaisedButton(
+                  child: Text(
+                    AppLocalizations.of(context).confirm,
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/confirmMnemonic',
+                        arguments:
+                            BackupMnemonicWalletScreen.randomMnemonicList);
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

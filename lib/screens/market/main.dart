@@ -63,17 +63,12 @@ class _MarketState extends State<Market> with TradeService {
                     MarketDetail(
                         key: _marketDetailState,
                         data: _updatePrice(snapshot.data))
-                    /*
-              MarketOverview(key: _marketOverviewState),
-              MarketDetail(key: _marketDetailState)
-
-               */
                   ],
                 )
               : Center(child: CircularProgressIndicator());
         },
       ),
-      bottomNavigationBar: AppBottomNav(count: 1),
+      bottomNavigationBar: BottomNavBar(count: 1),
     );
   }
 

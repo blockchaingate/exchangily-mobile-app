@@ -18,7 +18,11 @@ class AlertRequest {
   final String title;
   final String description;
   final String buttonTitle;
+  final String cancelButton;
 
   AlertRequest(
-      {@required this.title, this.description, @required this.buttonTitle});
+      {@required this.title,
+      this.description,
+      @required this.buttonTitle,
+      this.cancelButton});
 }

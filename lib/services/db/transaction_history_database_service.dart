@@ -13,7 +13,7 @@
 
 import 'dart:async';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/transaction-history.dart';
+import 'package:exchangilymobileapp/models/transaction_info.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -56,7 +56,7 @@ class TransactionHistoryDatabaseService {
 
   // Get All Records From The Database
 
-  Future<List<TransactionHistory>> getAll() async {
+  Future<List<TransactionInfo>> getAll() async {
     await initDb();
     final Database db = await _database;
     log.w('getall $db');
@@ -64,14 +64,14 @@ class TransactionHistoryDatabaseService {
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
     log.w('res $res');
-    List<TransactionHistory> list = res.isNotEmpty
-        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
+    List<TransactionInfo> list = res.isNotEmpty
+        ? res.map((f) => TransactionInfo.fromJson(f)).toList()
         : [];
     return list;
   }
 
 // Insert Data In The Database
-  Future insert(TransactionHistory transactionHistory) async {
+  Future insert(TransactionInfo transactionHistory) async {
     await initDb();
     final Database db = await _database;
     int id = await db.insert(tableName, transactionHistory.toJson(),
@@ -80,15 +80,15 @@ class TransactionHistoryDatabaseService {
   }
 
   // Get Single Wallet By Name
-  Future<List<TransactionHistory>> getByName(String name) async {
+  Future<List<TransactionInfo>> getByName(String name) async {
     await initDb();
     final Database db = await _database;
     List<Map> res =
         await db.query(tableName, where: 'tickerName= ?', whereArgs: [name]);
     log.w('Name - $name --- $res');
 
-    List<TransactionHistory> list = res.isNotEmpty
-        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
+    List<TransactionInfo> list = res.isNotEmpty
+        ? res.map((f) => TransactionInfo.fromJson(f)).toList()
         : [];
     return list;
     // return TransactionHistory.fromJson((res.first));
@@ -100,7 +100,7 @@ class TransactionHistoryDatabaseService {
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.length > 0) {
-      return TransactionHistory.fromJson((res.first));
+      return TransactionInfo.fromJson((res.first));
     }
     return null;
   }
@@ -112,7 +112,7 @@ class TransactionHistoryDatabaseService {
   }
 
   // Update database
-  Future<void> update(TransactionHistory transactionHistory) async {
+  Future<void> update(TransactionInfo transactionHistory) async {
     final Database db = await _database;
     await db.update(
       tableName,

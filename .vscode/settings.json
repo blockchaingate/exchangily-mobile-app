@@ -2,5 +2,6 @@
     "cSpell.words": [
         "serializable"
     ],
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "editor.minimap.showSlider": "always"
 }
