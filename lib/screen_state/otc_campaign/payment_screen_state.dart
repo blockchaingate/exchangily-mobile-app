@@ -42,8 +42,8 @@ class CampaignPaymentScreenState extends BaseState {
   final sendAmountTextController = TextEditingController();
   String _groupValue;
   get groupValue => _groupValue;
-  String prodUsdtWalletAddress =
-      environment['addresses']['campaignAddress']['USDT'];
+  String prodUsdtWalletAddress = '';
+
   BuildContext context;
   String tickerName = '';
   String tokenType = '';
@@ -90,6 +90,9 @@ class CampaignPaymentScreenState extends BaseState {
     resetLists();
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];
+    if (isProduction)
+      prodUsdtWalletAddress =
+          environment['addresses']['campaignAddress']['USDT'];
     setBusy(false);
   }
 
@@ -413,6 +416,12 @@ class CampaignPaymentScreenState extends BaseState {
                 Navigator.of(context, rootNavigator: true).pop();
                 updateOrderDescriptionController.text = '';
                 await getCampaignOrdeList();
+                sharedService.showInfoFlushbar(
+                    'Update status',
+                    'Your order status has been updated successfully',
+                    Icons.check,
+                    globals.green,
+                    context);
                 FocusScope.of(context).requestFocus(FocusNode());
                 setBusy(false);
               }
@@ -442,6 +451,12 @@ class CampaignPaymentScreenState extends BaseState {
               updateOrderDescriptionController.text = '';
               await getCampaignOrdeList();
               FocusScope.of(context).requestFocus(FocusNode());
+              sharedService.showInfoFlushbar(
+                  'Update status',
+                  'Your order status has been cancelled successfully',
+                  Icons.check,
+                  globals.green,
+                  context);
             },
             child: Text(
               AppLocalizations.of(context).cancelOrder,

@@ -1463,5 +1463,23 @@
     "description": "campaign_reset_password_email_instruction",
     "type": "text",
     "placeholders": {}
+  },
+  "updateStatus": "Update status",
+  "@updateStatus": {
+    "description": "campaign_payment_update_status",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCancelledNotification": "Your order has been cancelled successfully",
+  "@orderCancelledNotification": {
+    "description": "campaign_payment_order_cancelled_notification",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderUpdateNotification": "Your order status has been updated successfully",
+  "@orderUpdateNotification": {
+    "description": "campaign_payment_order_updated_notification",
+    "type": "text",
+    "placeholders": {}
   }
 }
