@@ -1492,5 +1492,24 @@
     "description": "campaign_reset_password_email_instruction",
     "type": "text",
     "placeholders": {}
+  },
+  "updateStatus": "更新状态",
+  "@updateStatus": {
+    "description": "campaign_payment_update_status",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCancelledNotification": "订单已被取消",
+  "@orderCancelledNotification": {
+    "description": "campaign_payment_order_cancelled_notification",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderUpdateNotification": "订单状态已经更新",
+  "@orderUpdateNotification": {
+    "description": "campaign_payment_order_updated_notification",
+    "type": "text",
+    "placeholders": {}
   }
+
 }
