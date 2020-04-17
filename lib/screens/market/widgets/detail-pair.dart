@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import "package:flutter/material.dart";
 import "../../trade/main.dart";
 import 'package:exchangilymobileapp/localizations.dart';
@@ -29,26 +30,20 @@ class DetailPair extends StatelessWidget {
             padding: EdgeInsets.all(5.0),
             child: Column(
               children: <Widget>[
+                UIHelper.divider,
                 Row(
                   children: <Widget>[
                     Expanded(
                       flex: 1,
                       child: Container(
-                        padding: EdgeInsets.only(left: 5.0),
+                        padding: EdgeInsets.only(left: 5.0, top: 5.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(targetCoinName,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline4
-                                    .copyWith(color: globals.primaryColor)),
-                            Text(
-                                //  AppLocalizations.of(context).price +
-                                //  ": " +
-                                price.toStringAsFixed(2),
-                                // textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline4),
+                            Text(price.toStringAsFixed(2),
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText1
@@ -58,6 +53,7 @@ class DetailPair extends StatelessWidget {
                       ),
                     ),
                     // Price High Low Column
+
                     Expanded(
                       flex: 1,
                       child: Text(price.toString(),
@@ -92,7 +88,6 @@ class DetailPair extends StatelessWidget {
                     )
                   ],
                 ),
-                Divider(color: globals.grey, thickness: 1)
               ],
             )));
   }

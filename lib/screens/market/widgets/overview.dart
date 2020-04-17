@@ -5,7 +5,7 @@ import '../../../models/price.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MarketOverview extends StatefulWidget {
-  List<Price> data;
+  final List<Price> data;
   MarketOverview({Key key, this.data}) : super(key: key);
   @override
   MarketOverviewState createState() => MarketOverviewState();

@@ -175,7 +175,7 @@ class _WithdrawState extends State<Withdraw> {
           ),
           middle: Text(
               '${AppLocalizations.of(context).move}  ${widget.walletInfo.tickerName}  ${AppLocalizations.of(context).toWallet}',
-              style: Theme.of(context).textTheme.headline3),
+              style: Theme.of(context).textTheme.headline4),
           backgroundColor: Color(0XFF1f2233),
         ),
         backgroundColor: Color(0xFF1F2233),

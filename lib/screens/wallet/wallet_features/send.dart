@@ -20,90 +20,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;
 
 class SendWalletScreen extends StatelessWidget {
   final WalletInfo walletInfo;
   const SendWalletScreen({Key key, this.walletInfo}) : super(key: key);
-
-  //final scaffoldKey = new GlobalKey<ScaffoldState>();
-  //WalletService walletService = WalletService();
-  // final _receiverWalletAddressTextController = TextEditingController();
-  // final _sendAmountTextController = TextEditingController();
-  // final _gasPriceTextController = TextEditingController();
-  // final _gasLimitTextController = TextEditingController();
-  // final _satoshisPerByteTextController = TextEditingController();
-  //double transFee = 0.0;
-  //bool transFeeAdvance = false;
-  // @override
-  // void dispose() {
-  //   _receiverWalletAddressTextController.dispose();
-  //   _sendAmountTextController.dispose();
-
-  //   super.dispose();
-  // }
-
-  // updateTransFee() async {
-  //   var to = getOfficalAddress(widget.walletInfo.tickerName);
-  //   var amount = double.tryParse(_sendAmountTextController.text);
-  //   var gasPrice = int.tryParse(_gasPriceTextController.text);
-  //   var gasLimit = int.tryParse(_gasLimitTextController.text);
-  //   var satoshisPerBytes = int.tryParse(_satoshisPerByteTextController.text);
-  //   var options = {
-  //     "gasPrice": gasPrice,
-  //     "gasLimit": gasLimit,
-  //     "satoshisPerBytes": satoshisPerBytes,
-  //     "tokenType": widget.walletInfo.tokenType,
-  //     "getTransFeeOnly": true
-  //   };
-  //   print('widget.walletInfo.address=' + widget.walletInfo.address);
-  //   var address = widget.walletInfo.address;
-
-  //   var ret = await walletService.sendTransaction(
-  //       widget.walletInfo.tickerName,
-  //       Uint8List.fromList([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-  //       [0],
-  //       [address],
-  //       to,
-  //       amount,
-  //       options,
-  //       false);
-
-  //   print('ret===');
-  //   print(ret);
-
-  //   if (ret != null && ret['transFee'] != null) {
-  //     setState(() {
-  //       transFee = ret['transFee'];
-  //     });
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   String coinName = widget.walletInfo.tickerName;
-  //   String tokenType = widget.walletInfo.tokenType;
-  //   if (coinName == 'BTC') {
-  //     _satoshisPerByteTextController.text =
-  //         environment["chains"]["BTC"]["satoshisPerBytes"].toString();
-  //   } else if (coinName == 'ETH' || tokenType == 'ETH') {
-  //     _gasPriceTextController.text =
-  //         environment["chains"]["ETH"]["gasPrice"].toString();
-  //     _gasLimitTextController.text =
-  //         environment["chains"]["ETH"]["gasLimit"].toString();
-  //   } else if (coinName == 'FAB') {
-  //     _satoshisPerByteTextController.text =
-  //         environment["chains"]["FAB"]["satoshisPerBytes"].toString();
-  //   } else if (tokenType == 'FAB') {
-  //     _satoshisPerByteTextController.text =
-  //         environment["chains"]["FAB"]["satoshisPerBytes"].toString();
-  //     _gasPriceTextController.text =
-  //         environment["chains"]["FAB"]["gasPrice"].toString();
-  //     _gasLimitTextController.text =
-  //         environment["chains"]["FAB"]["gasLimit"].toString();
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -280,13 +202,24 @@ class SendWalletScreen extends StatelessWidget {
                               padding: EdgeInsets.only(
                                   left:
                                       5), // padding left to keep some space from the text
-                              child: Text(
-                                '${model.transFee}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(fontWeight: FontWeight.w400),
-                              ),
+                              child: model.busy
+                                  ? SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: Theme.of(context).platform ==
+                                              TargetPlatform.iOS
+                                          ? CupertinoActivityIndicator()
+                                          : CircularProgressIndicator(
+                                              strokeWidth: 0.75,
+                                            ))
+                                  : Text(
+                                      '${model.transFee}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5
+                                          .copyWith(
+                                              fontWeight: FontWeight.w400),
+                                    ),
                             )
                           ],
                         ),
