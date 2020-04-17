@@ -49,7 +49,7 @@ class WalletService {
 
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   double coinUsdBalance;
-  List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG'];
+  List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG', 'DUSD'];
   List<String> tokenType = ['', '', '', 'ETH', 'FAB'];
 
   List<String> coinNames = [
@@ -57,7 +57,8 @@ class WalletService {
     'ethereum',
     'fabcoin',
     'tether',
-    'exchangily'
+    'exchangily',
+    'dollarUsd'
   ];
 /*----------------------------------------------------------------------
                 Get Random Mnemonic
@@ -171,6 +172,7 @@ class WalletService {
     log.w('USD VAL of $name - $currentUsdValue');
     return currentUsdValue;
   }
+
 /*----------------------------------------------------------------------
                 Offline Wallet Creation
 ----------------------------------------------------------------------*/
@@ -212,7 +214,7 @@ class WalletService {
     }
   }
 /*----------------------------------------------------------------------
-                Future GetWalletCoins
+                  Get Wallet Coins
 ----------------------------------------------------------------------*/
 
   Future<List<WalletInfo>> getWalletCoins(String mnemonic) async {
@@ -316,10 +318,9 @@ class WalletService {
     await _api.getAssetsBalance(exgAddress).then((res) {
       log.w('assetsBalance $res');
       for (var i = 0; i < res.length; i++) {
-        log.e('assetsBalance single ${res[i]}');
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
-        log.e('unlockedAmount ${tempBal['unlockedAmount']}}');
+
         var unlockedAmount =
             stringUtils.bigNum2Double(tempBal['unlockedAmount']);
         var lockedAmount = stringUtils.bigNum2Double(tempBal['lockedAmount']);

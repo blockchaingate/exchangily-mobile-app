@@ -40,7 +40,7 @@ class CreatePasswordScreenState extends BaseState {
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[`~!@#\$%\^&*\(\)-_\+\=\{\[\}\]]).{8,}$';
 
 /* ---------------------------------------------------
-                    Get All Coins Future
+                    Create Offline Wallets
     -------------------------------------------------- */
 
   Future createOfflineWallets() async {
