@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -9,7 +7,6 @@ import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
@@ -33,7 +30,7 @@ class CampaignLoginScreenState extends BaseState {
   User user;
   CampaignUserData userData;
   bool isPasswordTextVisible = false;
-  bool isLoggedIn = false;
+
   bool isLogging = false;
   bool isPasswordReset = false;
   String passwordResetMessage = '';
@@ -51,7 +48,6 @@ class CampaignLoginScreenState extends BaseState {
         log.w('database response $res');
         if (res != null) {
           userData = res;
-          isLoggedIn = true;
           Timer(Duration(seconds: 1), () {
             navigationService.navigateTo('/campaignDashboard',
                 arguments: userData);

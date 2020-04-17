@@ -1,7 +1,3 @@
-import 'dart:async';
-
-import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -36,11 +32,14 @@ class CampaignInstructionsScreenState extends BaseState {
 
   CampaignUserData userData;
   BuildContext context;
+  bool isGuideReady = false;
+
   // Init state
+
   initState() async {
     // circular indicator is still not working when page first loads
     setBusy(true);
-
+    log.e(busy);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
     if (loginToken != '' && loginToken != null) {
@@ -50,7 +49,7 @@ class CampaignInstructionsScreenState extends BaseState {
         log.w('database response $res');
         if (res != null) {
           userData = res;
-
+          isGuideReady = true;
           navigationService.navigateTo('/campaignDashboard',
               arguments: userData);
         } else {
@@ -82,9 +81,6 @@ class CampaignInstructionsScreenState extends BaseState {
       }
     }
     setBusy(false);
-  }
-
-  loadPdf() {
-    pdfViewerService.loadPdf();
+    log.e(busy);
   }
 }

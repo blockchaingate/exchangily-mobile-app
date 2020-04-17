@@ -417,8 +417,8 @@ class CampaignPaymentScreenState extends BaseState {
                 updateOrderDescriptionController.text = '';
                 await getCampaignOrdeList();
                 sharedService.showInfoFlushbar(
-                    'Update status',
-                    'Your order status has been updated successfully',
+                    AppLocalizations.of(context).updateStatus,
+                    AppLocalizations.of(context).orderUpdateNotification,
                     Icons.check,
                     globals.green,
                     context);
@@ -452,8 +452,8 @@ class CampaignPaymentScreenState extends BaseState {
               await getCampaignOrdeList();
               FocusScope.of(context).requestFocus(FocusNode());
               sharedService.showInfoFlushbar(
-                  'Update status',
-                  'Your order status has been cancelled successfully',
+                  AppLocalizations.of(context).updateStatus,
+                  AppLocalizations.of(context).orderCancelledNotification,
                   Icons.check,
                   globals.green,
                   context);
