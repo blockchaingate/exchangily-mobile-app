@@ -120,8 +120,8 @@ class CampaignLoginScreenState extends BaseState {
                     log.e('reset pass message $message');
 
                     sharedService.showInfoFlushbar(
-                        'Password Reset Error',
-                        'Please enter the correct email',
+                        AppLocalizations.of(context).passwordResetError,
+                        AppLocalizations.of(context).pleaseEnterTheCorrectEmail,
                         Icons.cancel,
                         globals.red,
                         context);
@@ -129,8 +129,9 @@ class CampaignLoginScreenState extends BaseState {
                     log.w('reset password success $res');
 
                     sharedService.showInfoFlushbar(
-                        'Password Reset',
-                        'Please check your email and follow instructions to reset your account password',
+                        AppLocalizations.of(context).passwordReset,
+                        AppLocalizations.of(context)
+                            .resetPasswordEmailInstruction,
                         Icons.check,
                         globals.green,
                         context);

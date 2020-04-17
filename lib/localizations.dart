@@ -1264,6 +1264,23 @@ class AppLocalizations {
         name: 'resetPasswordEmailInstruction',
         desc: 'campaign_reset_password_email_instruction');
   }
+
+  String get updateStatus {
+    return Intl.message('Update status',
+        name: 'updateStatus', desc: 'campaign_payment_update_status');
+  }
+
+  String get orderCancelledNotification {
+    return Intl.message('Your order has been cancelled successfully',
+        name: 'orderCancelledNotification',
+        desc: 'campaign_payment_order_cancelled_notification');
+  }
+
+  String get orderUpdateNotification {
+    return Intl.message('Your order status has been updated successfully',
+        name: 'orderUpdateNotification',
+        desc: 'campaign_payment_order_updated_notification');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

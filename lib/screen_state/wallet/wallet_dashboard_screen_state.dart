@@ -201,13 +201,12 @@ class WalletDashboardScreenState extends BaseState {
     sharedService.alertResponse(AppLocalizations.of(context).notice,
         AppLocalizations.of(context).testVersion);
   }
-  // Get Exchange Assets
 
+  // Get Exchange Assets
   getExchangeAssets() async {
     setState(ViewState.Busy);
-    log.e(exgAddress);
     var res = await walletService.assetsBalance(exgAddress);
-    log.e(res);
+    log.e('getExchangeAssets from service $res');
     var length = res.length;
     for (var i = 0; i < length; i++) {
       // Get their tickerName to compare with walletInfo tickernName
@@ -216,9 +215,9 @@ class WalletDashboardScreenState extends BaseState {
       // compare it with the same coin tickername from service until the match or loop ends
       for (var j = 0; j < walletInfo.length; j++) {
         if (coin == walletInfo[j].tickerName) {
-          log.e('$coin - $walletInfo[j].tickerName');
+          // log.e('$coin - $walletInfo[j].tickerName');
           walletInfo[j].inExchange = res[i]['amount'];
-          log.w(walletInfo[j].inExchange);
+          log.w('getExchangeAssets ${walletInfo[j].inExchange}');
           break;
         }
       }

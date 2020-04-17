@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-15T19:30:09.182705",
+  "@@last_modified": "2020-04-17T14:54:27.898285",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1461,6 +1461,24 @@
   "resetPasswordEmailInstruction": "Please check your email and follow instructions to reset your account password",
   "@resetPasswordEmailInstruction": {
     "description": "campaign_reset_password_email_instruction",
+    "type": "text",
+    "placeholders": {}
+  },
+  "updateStatus": "Update status",
+  "@updateStatus": {
+    "description": "campaign_payment_update_status",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCancelledNotification": "Your order has been cancelled successfully",
+  "@orderCancelledNotification": {
+    "description": "campaign_payment_order_cancelled_notification",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderUpdateNotification": "Your order status has been updated successfully",
+  "@orderUpdateNotification": {
+    "description": "campaign_payment_order_updated_notification",
     "type": "text",
     "placeholders": {}
   }

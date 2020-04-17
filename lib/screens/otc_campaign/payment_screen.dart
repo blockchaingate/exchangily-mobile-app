@@ -1,3 +1,5 @@
+import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
@@ -293,7 +295,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                               child: Visibility(
                                 visible: model.groupValue == 'USDT',
                                 child: Container(
-                                  padding: EdgeInsets.all(10.0),
+                                  padding: EdgeInsets.all(7.0),
                                   child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -309,11 +311,13 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                 fontWeight: FontWeight.bold),
                                       ),
                                       UIHelper.verticalSpaceSmall,
-                                      Text(
-                                          '0xae397cfc8f67c46d533b844bfff25ad5ae89e63a',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText1),
+                                      isProduction
+                                          ? Text(model.prodUsdtWalletAddress)
+                                          : Text(
+                                              '0xae397cfc8f67c46d533b844bfff25ad5ae89e63a',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1),
                                       UIHelper.verticalSpaceSmall,
                                       //Selected Wallet Balance row
                                       model.groupValue != '' &&

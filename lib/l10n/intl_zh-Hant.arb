@@ -1294,5 +1294,23 @@
     "description": "campaign_reset_password_email_instruction",
     "type": "text",
     "placeholders": {}
+  },
+"updateStatus": "更新狀態",
+  "@updateStatus": {
+    "description": "campaign_payment_update_status",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCancelledNotification": "訂單已被取消",
+  "@orderCancelledNotification": {
+    "description": "campaign_payment_order_cancelled_notification",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderUpdateNotification": "訂單狀態已經更新",
+  "@orderUpdateNotification": {
+    "description": "campaign_payment_order_updated_notification",
+    "type": "text",
+    "placeholders": {}
   }
 }
