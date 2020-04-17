@@ -134,7 +134,7 @@ flutter:
     - assets/images/wallet-page/
     - assets/images/otc/
     - assets/images/otc-campaign/
-
+    - assets/pages/index.html
 flutter_icons:
   image_path: 'assets/images/launcher/mobile-icon.png'
   android: true
