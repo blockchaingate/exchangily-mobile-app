@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
@@ -15,7 +17,7 @@ import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignService {
-  final log = getLogger('CampaignApi');
+  final log = getLogger('CampaignService');
   final client = new http.Client();
 
   final String appName = 'eXchangily';
@@ -23,7 +25,9 @@ class CampaignService {
   final String campaignId = '1';
   Campaign campaign;
 
-  static const BASE_URL = 'https://test.blockchaingate.com/v2/';
+  static const BASE_URL = isProduction
+      ? EnvironmentConfig.campaignProd
+      : EnvironmentConfig.campaignTest;
   static const registerUrl = BASE_URL + 'members/create';
   static const loginUrl = BASE_URL + 'members/login';
   static const kycWithTokenUrl = BASE_URL + 'kyc/create';
@@ -41,8 +45,7 @@ class CampaignService {
   static const rewardsUrl = BASE_URL + 'campaign-order/rewards';
   static const memberProfileUrl = BASE_URL + 'campaign-order/profile';
   static const usdPricesUrl = 'https://kanbanprod.fabcoinapi.com/USDvalues';
-  static const resetPasswordUrl =
-      'https://test.blockchaingate.com/v2/members/requestpwdreset';
+  static const resetPasswordUrl = BASE_URL + 'members/requestpwdreset';
 
   CampaignUserData userData;
   CampaignUserDatabaseService campaignUserDatabaseService =
@@ -121,6 +124,7 @@ class CampaignService {
     body.addAll({'appId': appId}); // Add another key/pair value
 
     try {
+      log.e(loginUrl);
       var response = await client.post(loginUrl, body: body);
       var json = jsonDecode(response.body);
       log.w('login $json');
