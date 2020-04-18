@@ -1,4 +1,3 @@
-
 import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
@@ -28,7 +27,8 @@ Map devConfig = {
     'kanban': 'https://kanbantest.fabcoinapi.com/',
     'btc': 'https://btctest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
-    'eth': 'https://ethtest.fabcoinapi.com/'
+    'eth': 'https://ethtest.fabcoinapi.com/',
+    'campaign': 'https://test.blockchaingate.com/v2/'
   },
   "addresses": {
     "smartContract": {
@@ -85,7 +85,8 @@ Map productionConfig = {
     'kanban': 'https://kanbanprod.fabcoinapi.com/',
     'btc': 'https://btcprod.fabcoinapi.com/',
     'fab': 'https://fabprod.fabcoinapi.com/',
-    'eth': 'https://ethprod.fabcoinapi.com/'
+    'eth': 'https://ethprod.fabcoinapi.com/',
+    'campaign': 'https://blockchaingate.com/v2/'
   },
   'addresses': {
     "smartContract": {
@@ -115,3 +116,8 @@ Map productionConfig = {
 };
 
 final environment = isProduction ? productionConfig : devConfig;
+
+class EnvironmentConfig {
+  static const String campaignTest = 'https://test.blockchaingate.com/v2/';
+  static const String campaignProd = 'https://blockchaingate.com/v2/';
+}
