@@ -173,8 +173,6 @@ class WalletDashboardScreenState extends BaseState {
           name: 'dusd',
           inExchange: 0.0);
       walletInfo.add(dusdWalletInfo);
-
-      // await databaseService.insert(dusdWalletInfo).then((res) {});
     }
     calcTotalBal(length);
     await getGas();
