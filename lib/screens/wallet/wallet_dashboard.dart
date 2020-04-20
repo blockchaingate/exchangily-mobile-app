@@ -47,6 +47,7 @@ class WalletDashboardScreen extends StatelessWidget {
         } else {
           log.w('Retrieving wallets from local storage');
           await model.retrieveWallets();
+          await model.refreshBalance();
         }
         await model.getGas();
       },
@@ -265,20 +266,20 @@ class WalletDashboardScreen extends StatelessWidget {
                       ),
                     ),
                     // Plus sign container
-                    Container(
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
-                      decoration: BoxDecoration(
-                          color: globals.primaryColor,
-                          borderRadius: BorderRadius.circular(50)),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/campaignInstructions');
-                        },
-                        icon: Icon(Icons.add),
-                        color: globals.white,
-                      ),
-                    )
+                    // Container(
+                    //   margin:
+                    //       EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+                    //   decoration: BoxDecoration(
+                    //       color: globals.primaryColor,
+                    //       borderRadius: BorderRadius.circular(50)),
+                    //   child: IconButton(
+                    //     onPressed: () {
+                    //       Navigator.pushNamed(context, '/campaignInstructions');
+                    //     },
+                    //     icon: Icon(Icons.add),
+                    //     color: globals.white,
+                    //   ),
+                    // )
                   ],
                 ),
               ),
@@ -292,7 +293,7 @@ class WalletDashboardScreen extends StatelessWidget {
                           child: Gas(gasAmount: model.gasAmount),
                         )
                       : Gas(gasAmount: model.gasAmount)),
-
+              UIHelper.verticalSpaceSmall,
 /*------------------------------------------------------------------------------
                             Build Wallet List Container
 -------------------------------------------------------------------------------*/
