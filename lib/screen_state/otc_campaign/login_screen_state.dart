@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -8,27 +6,34 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
+import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../shared/globals.dart' as globals;
 
 class CampaignLoginScreenState extends BaseState {
   final log = getLogger('LoginScreenState');
   BuildContext context;
   final emailTextController = TextEditingController();
   final passwordTextController = TextEditingController();
+  final passwordResetEmailTextController = TextEditingController();
   CampaignService campaignService = locator<CampaignService>();
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
   NavigationService navigationService = locator<NavigationService>();
+  SharedService sharedService = locator<SharedService>();
   bool error = false;
   User user;
   CampaignUserData userData;
   bool isPasswordTextVisible = false;
-  bool isLoggedIn = false;
-  bool isLogging = false;
 
+  bool isLogging = false;
+  bool isPasswordReset = false;
+  String passwordResetMessage = '';
   // To check if user already logged in
   init() async {
     setBusy(true);
@@ -43,7 +48,6 @@ class CampaignLoginScreenState extends BaseState {
         log.w('database response $res');
         if (res != null) {
           userData = res;
-          isLoggedIn = true;
           Timer(Duration(seconds: 1), () {
             navigationService.navigateTo('/campaignDashboard',
                 arguments: userData);
@@ -53,7 +57,6 @@ class CampaignLoginScreenState extends BaseState {
         } else {
           setBusy(false);
           setErrorMessage('');
-          setErrorMessage('Entry does not found in database');
         }
       }).catchError((err) {
         setErrorMessage('');
@@ -68,14 +71,110 @@ class CampaignLoginScreenState extends BaseState {
     setBusy(false);
   }
 
-// Login
+/*-------------------------------------------------------------------------------------
+                                  Password Reset
+-------------------------------------------------------------------------------------*/
+  resetPassword() async {
+    Alert(
+        style: AlertStyle(
+            animationType: AnimationType.grow,
+            isOverlayTapDismiss: true,
+            backgroundColor: globals.walletCardColor,
+            descStyle: Theme.of(context).textTheme.bodyText1,
+            titleStyle: Theme.of(context).textTheme.headline5),
+        context: context,
+        title: AppLocalizations.of(context).pleaseEnterYourEmailAddress,
+        closeFunction: () {
+          Navigator.of(context, rootNavigator: true).pop();
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        content: TextField(
+          decoration: InputDecoration(
+            icon: Icon(
+              Icons.alternate_email,
+              color: globals.primaryColor,
+            ),
+          ),
+          keyboardType: TextInputType.emailAddress,
+          style: TextStyle(
+            color: globals.white,
+          ),
+          controller: passwordResetEmailTextController,
+          obscureText: false,
+        ),
+        buttons: [
+          // Confirm button
+          DialogButton(
+            color: globals.primaryColor,
+            onPressed: () async {
+              await campaignService
+                  .resetPassword(passwordResetEmailTextController.text)
+                  .then((res) {
+                if (res != null) {
+                  String message = res['message'];
+                  if (message != '' && message != null) {
+                    log.e('reset pass message $message');
 
+                    sharedService.showInfoFlushbar(
+                        AppLocalizations.of(context).passwordResetError,
+                        AppLocalizations.of(context).pleaseEnterTheCorrectEmail,
+                        Icons.cancel,
+                        globals.red,
+                        context);
+                  } else {
+                    log.w('reset password success $res');
+
+                    sharedService.showInfoFlushbar(
+                        AppLocalizations.of(context).passwordReset,
+                        AppLocalizations.of(context)
+                            .resetPasswordEmailInstruction,
+                        Icons.check,
+                        globals.green,
+                        context);
+                  }
+                }
+              }).catchError((err) => log.e('reset password $err'));
+              Navigator.of(context, rootNavigator: true).pop();
+              passwordResetEmailTextController.text = '';
+
+              FocusScope.of(context).requestFocus(FocusNode());
+              setBusy(false);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 7),
+              // model.busy is not working here and same reason that it does not show the error when desc field is empty
+              child: Text(
+                AppLocalizations.of(context).confirm,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+            ),
+          ),
+
+          // Cancel button
+          DialogButton(
+            color: globals.primaryColor,
+            onPressed: () async {
+              Navigator.of(context, rootNavigator: true).pop();
+              passwordResetEmailTextController.text = '';
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: Text(
+              AppLocalizations.of(context).cancel,
+              style: Theme.of(context).textTheme.headline5,
+            ),
+          ),
+        ]).show();
+  }
+
+/*-------------------------------------------------------------------------------------
+                                  Login
+-------------------------------------------------------------------------------------*/
   Future login(User user) async {
     setBusy(true);
     await campaignService.login(user).then((res) async {
       // json deconde in campaign api let us see the response then its properties
       if (res == null) {
-        setErrorMessage('Server error, Please try again later.');
+        setErrorMessage(AppLocalizations.of(context).serverError);
         return false;
       }
       String error = res['message'];
@@ -103,11 +202,11 @@ class CampaignLoginScreenState extends BaseState {
   checkCredentials() {
     setBusy(true);
     isLogging = true;
-    setErrorMessage('Checking credentials');
+    setErrorMessage(AppLocalizations.of(context).checkingCredentials);
     if (emailTextController.text.isEmpty) {
-      setErrorMessage('Please enter your login email address');
+      setErrorMessage(AppLocalizations.of(context).pleaseEnterYourEmailAddress);
     } else if (passwordTextController.text.isEmpty) {
-      setErrorMessage('Please enter your password');
+      setErrorMessage(AppLocalizations.of(context).pleaseFillYourPassword);
     } else {
       user = new User(
           email: emailTextController.text,

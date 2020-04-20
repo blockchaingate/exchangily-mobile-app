@@ -18,7 +18,7 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(AppLocalizations.of(context).myRewardDetails,
-            style: Theme.of(context).textTheme.headline3),
+            style: Theme.of(context).textTheme.headline4),
       ),
       body: Container(
           margin: EdgeInsets.all(10.0),
@@ -31,22 +31,23 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
                       flex: 1,
                       child: Center(
                           child: Text(AppLocalizations.of(context).level,
-                              style: Theme.of(context).textTheme.headline5))),
+                              style: Theme.of(context).textTheme.headline6))),
                   Expanded(
-                      flex: 2,
+                      flex: 1,
                       child: Center(
                           child: Text(AppLocalizations.of(context).referrals,
-                              style: Theme.of(context).textTheme.headline5))),
+                              style: Theme.of(context).textTheme.headline6))),
+                  Expanded(
+                      flex: 3,
+                      child: Center(
+                          child: Text(
+                              AppLocalizations.of(context).totalTokenAmount,
+                              style: Theme.of(context).textTheme.headline6))),
                   Expanded(
                       flex: 2,
                       child: Center(
-                          child: Text(AppLocalizations.of(context).totalAmount,
-                              style: Theme.of(context).textTheme.headline5))),
-                  Expanded(
-                      flex: 2,
-                      child: Center(
-                          child: Text(AppLocalizations.of(context).rewards,
-                              style: Theme.of(context).textTheme.headline5)))
+                          child: Text(AppLocalizations.of(context).rewardsToken,
+                              style: Theme.of(context).textTheme.headline6)))
                 ],
               ),
               UIHelper.verticalSpaceSmall,
@@ -74,7 +75,7 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
                                           Theme.of(context).textTheme.headline5,
                                     ))),
                                 Expanded(
-                                    flex: 2,
+                                    flex: 1,
                                     child: Center(
                                         child: Text(
                                             campaignRewardList[index]
@@ -84,12 +85,12 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
                                                 .textTheme
                                                 .headline5))),
                                 Expanded(
-                                    flex: 2,
+                                    flex: 3,
                                     child: Center(
                                         child: Text(
                                             campaignRewardList[index]
                                                 .totalQuantities
-                                                .toString(),
+                                                .toStringAsFixed(3),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5))),
@@ -99,7 +100,7 @@ class CampaignRewardDetailsScreen extends StatelessWidget {
                                         child: Text(
                                             campaignRewardList[index]
                                                 .totalRewardQuantities
-                                                .toString(),
+                                                .toStringAsFixed(3),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5)))

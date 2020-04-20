@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.0.4+5
+version: 1.1.2+7
 
 environment:
   sdk: '>=2.3.2 <3.0.0'
@@ -42,7 +42,7 @@ dependencies:
   rxdart: ^0.22.0
 
   # Font Awesome
-  font_awesome_flutter: 8.4.0
+  font_awesome_flutter: 8.8.0
 
   # Provider
   provider: 3.1.0+1
@@ -105,7 +105,7 @@ dependencies:
   path: ^1.6.4
 
   # Build version
-  package_info: 0.4.0+12
+  package_info: 0.4.0+16
 
   # Pull to refresh
   pull_to_refresh: ^1.5.7
@@ -122,6 +122,7 @@ dependencies:
 
 dev_dependencies:
   intl_translation: '^0.17.0'
+  intl: ^0.16.1
   flutter_launcher_icons: '^0.7.3'
 
   flutter_test:
@@ -134,12 +135,11 @@ flutter:
   #   androidPackage: my.package
   #   iosBundleIdentifier: my.package
   assets:
-    - assets/pages/
     - assets/images/start-page/
     - assets/images/wallet-page/
     - assets/images/otc/
     - assets/images/otc-campaign/
-
+    - assets/pages/index.html
 flutter_icons:
   image_path: "assets/images/launcher/mobile-icon-ios.png"
   android: true

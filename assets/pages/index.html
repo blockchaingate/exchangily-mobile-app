@@ -5992,7 +5992,6 @@
                 var close = parseFloat(item.close) / 1e18;
                 var volume = parseFloat(item.volume) / 1e18;
                 var time = item.time;
-
                 var candlestickItem = {
                     time: time,
                     open: open,
@@ -6014,7 +6013,7 @@
 
         }
 
-        function showChart(pairLeft, pairRight, interval, locale) {
+        function showChart(pairLeft, pairRight, interval) {
             const chartPrice = LightweightCharts.createChart(document.getElementById('price'), {
                 width: window.innerWidth,
                 height: window.innerHeight,
@@ -6037,12 +6036,9 @@
                         color: 'rgba(42, 46, 57, 0.6)',
                     },
                 },
-                localization: {
-                    locale: locale,
-                },
             });
 
-            var candlestickSeries = chartPrice.addCandlestickSeries({
+            const candlestickSeries = chartPrice.addCandlestickSeries({
                 overlay: true,
             });
 
@@ -6062,39 +6058,12 @@
 
             httpGetAsync('https://kanbantest.fabcoinapi.com/klinedata/' + pairLeft + pairRight + '/' + interval, candlestickSeries, volumeSeries, handleTiker);
             // set data
-            var tickerSocket = new WebSocket("wss://kanbantest.fabcoinapi.com/ws/ticker@" + pairLeft + pairRight + "@" + interval);
-            tickerSocket.onmessage = function (event) {
 
-               var item = JSON.parse(event.data);
-                var high = parseFloat(item.high) / 1e18;
-                var low = parseFloat(item.low) / 1e18;
-                var open = parseFloat(item.open) / 1e18;
-                var close = parseFloat(item.close) / 1e18;
-                var volume = parseFloat(item.volume) / 1e18;
-                var time = item.time;
-                console.log('time in here====', time);
-                var candlestickItem = {
-                    time: time,
-                    open: open,
-                    high: high,
-                    low: low,
-                    close: close
-                };
-                candlestickSeries.update(candlestickItem);
-
-                var volumeItem = {
-                    time: time,
-                    value: volume,
-                    color: open < close ? 'rgba(0, 150, 136, 0.8)' : 'rgba(255,82,82, 0.8)'
-                };
-                volumeSeries.update(volumeItem);
-
-            }
         }
     </script>
 </head>
 
-<body onload="showChart('BTC', 'USDT', '30m', 'en-US')" style="margin:0">
+<body onload="showChart('BTC', 'USDT', '1m')" style="margin:0">
 <div id="price">
 
 </div>

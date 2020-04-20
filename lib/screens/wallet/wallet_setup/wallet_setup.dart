@@ -38,107 +38,112 @@ class WalletSetupScreen extends StatelessWidget {
           model.sharedService.closeApp();
           return new Future(() => false);
         },
-        child: Container(
-          padding: EdgeInsets.all(40),
-          alignment: Alignment.center,
-          color: globals.walletCardColor,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              // Logo Container
-              UIHelper.verticalSpaceLarge,
-              UIHelper.verticalSpaceLarge,
-              Container(
-                height: 40,
-                child: Image.asset('assets/images/start-page/logo.png'),
-              ),
-              Container(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    AppLocalizations.of(context).welcomeText,textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5
-                        .copyWith(fontWeight: FontWeight.normal),
-                  )),
-              UIHelper.verticalSpaceLarge,
-              // Middle Graphics Container
-              Container(
-                padding: EdgeInsets.all(25),
-                child:
-                    Image.asset('assets/images/start-page/middle-design.png'),
-              ),
-              UIHelper.verticalSpaceLarge,
+        child: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height * 1,
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+            alignment: Alignment.center,
+            color: globals.walletCardColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              //  crossAxisAlignment: CrossAxpisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                // Logo Container
+                UIHelper.verticalSpaceLarge,
+                UIHelper.verticalSpaceLarge,
+                Container(
+                  height: 50,
+                  child: Image.asset('assets/images/start-page/logo.png'),
+                ),
+                Container(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      AppLocalizations.of(context).welcomeText,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(fontWeight: FontWeight.normal),
+                    )),
+                UIHelper.verticalSpaceLarge,
+                // Middle Graphics Container
+                Container(
+                  padding: EdgeInsets.all(25),
+                  child:
+                      Image.asset('assets/images/start-page/middle-design.png'),
+                ),
+                UIHelper.verticalSpaceLarge,
 
-              // Button Container
-              model.state == ViewState.Busy
-                  ? Shimmer.fromColors(
-                      baseColor: globals.primaryColor,
-                      highlightColor: globals.white,
-                      child: Center(
-                        child: Text(
-                          '${AppLocalizations.of(context).checkingExistingWallet}...',
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                    )
-                  : model.isWallet
-                      ? Shimmer.fromColors(
-                          baseColor: globals.primaryColor,
-                          highlightColor: globals.white,
-                          child: Center(
-                            child: Text(
-                              '${AppLocalizations.of(context).restoringWallet}...',
-                              style: Theme.of(context).textTheme.bodyText1,
-                            ),
+                // Button Container
+                model.state == ViewState.Busy
+                    ? Shimmer.fromColors(
+                        baseColor: globals.primaryColor,
+                        highlightColor: globals.white,
+                        child: Center(
+                          child: Text(
+                            '${AppLocalizations.of(context).checkingExistingWallet}...',
+                            style: Theme.of(context).textTheme.bodyText1,
                           ),
-                        )
-                      : Container(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(right: 5),
+                        ),
+                      )
+                    : model.isWallet
+                        ? Shimmer.fromColors(
+                            baseColor: globals.primaryColor,
+                            highlightColor: globals.white,
+                            child: Center(
+                              child: Text(
+                                '${AppLocalizations.of(context).restoringWallet}...',
+                                style: Theme.of(context).textTheme.bodyText1,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            child: Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 5),
+                                    child: RaisedButton(
+                                      elevation: 5,
+                                      focusElevation: 5,
+                                      child: Text(
+                                          AppLocalizations.of(context)
+                                              .createWallet,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pushNamed('/backupMnemonic');
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
                                   child: RaisedButton(
                                     elevation: 5,
-                                    focusElevation: 5,
+                                    shape: StadiumBorder(
+                                        side: BorderSide(
+                                            color: globals.primaryColor,
+                                            width: 2)),
+                                    color: globals.secondaryColor,
                                     child: Text(
-                                        AppLocalizations.of(context)
-                                            .createWallet,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline4),
+                                      AppLocalizations.of(context).importWallet,
+                                      style:
+                                          Theme.of(context).textTheme.headline4,
+                                    ),
                                     onPressed: () {
-                                      Navigator.of(context)
-                                          .pushNamed('/backupMnemonic');
+                                      Navigator.of(context).pushNamed(
+                                          '/importWallet',
+                                          arguments: 'import');
                                     },
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: RaisedButton(
-                                  elevation: 5,
-                                  shape: StadiumBorder(
-                                      side: BorderSide(
-                                          color: globals.primaryColor,
-                                          width: 2)),
-                                  color: globals.secondaryColor,
-                                  child: Text(
-                                    AppLocalizations.of(context).importWallet,
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pushNamed(
-                                        '/importWallet',
-                                        arguments: 'import');
-                                  },
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-            ],
+                                )
+                              ],
+                            ),
+                          )
+              ],
+            ),
           ),
         ),
       ),

@@ -131,7 +131,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "enterAmount": "输入数量",
+    "enterAmount": "输入数额",
     "@enterAmount": {
         "description": "send_amount_text",
         "type": "text",
@@ -845,7 +845,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "satoshisPerByte": "锍/字节",
+    "satoshisPerByte": "聪/字节",
     "@satoshisPerByte": {
         "description": "satoshis_per_byte",
         "type": "text",
@@ -917,4 +917,605 @@
       "type": "text",
       "placeholders": {}
     }
+    "placeOrderTransactionFailed": "下单失败",
+    "@placeOrderTransactionFailed": {
+        "description": "place_order_transaction_failed",
+        "type": "text",
+        "placeholders": {}
+    },
+    "notice": "备注",
+    "@notice": {
+        "description": "notice",
+        "type": "text",
+        "placeholders": {}
+    },
+    "testVersion": "您现在用的是测试版",
+    "@testVersion": {
+        "description": "test_version",
+        "type": "text",
+        "placeholders": {}
+    },
+    "campaignInstructions": "推广奖励指南",
+    "@campaignInstructions": {
+        "description": "campaign_instructions",
+        "type": "text",
+        "placeholders": {}
+    },
+    "tapHereToEnterInCampaign": "点击这里参与推广活动",
+    "@tapHereToEnterInCampaign": {
+        "description": "campaign_enter",
+        "type": "text",
+        "placeholders": {}
+    },
+    "login": "登录",
+    "@login": {
+        "description": "campaign_login",
+        "type": "text",
+        "placeholders": {}
+    },
+    "email": "电子邮箱",
+    "@email": {
+        "description": "campaign_email",
+        "type": "text",
+        "placeholders": {}
+    },
+    "password": "密码",
+    "@password": {
+        "description": "campaign_password",
+        "type": "text",
+        "placeholders": {}
+    },
+    "register": "注册",
+    "@register": {
+        "description": "campaign_register",
+        "type": "text",
+        "placeholders": {}
+    },
+    "clickToSeeThePassword": "点击显示密码",
+    "@clickToSeeThePassword": {
+        "description": "campaign_click_to_see_the_password",
+        "type": "text",
+        "placeholders": {}
+    },
+    "enterYourEmail": "输入您的email",
+    "@enterYourEmail": {
+        "description": "campaign_register_email",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pasteExgAddress": "点击钱包图标粘贴EXG地址",
+    "@pasteExgAddress": {
+        "description": "campaign_register_paste_exg_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "referralCode": "推广码",
+    "@referralCode": {
+        "description": "campaign_register_referral_code",
+        "type": "text",
+        "placeholders": {}
+    },
+    "alreadyHaveAnAccount": "账户已存在",
+    "@alreadyHaveAnAccount": {
+        "description": "campaign_register_already_have_an_account",
+        "type": "text",
+        "placeholders": {}
+    },
+    "signUp": "注册",
+    "@signUp": {
+        "description": "campaign_register_sign_up",
+        "type": "text",
+        "placeholders": {}
+    },
+    "showPassword": "显示密码",
+    "@showPassword": {
+        "description": "campaign_register_show_password",
+        "type": "text",
+        "placeholders": {}
+    },
+    "registrationSuccessful": "注册成功",
+    "@registrationSuccessful": {
+        "description": "campaign_register_registration_successful",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseCheckYourEmailToActivateYourAccount": "请查看Email确认邮箱地址",
+    "@pleaseCheckYourEmailToActivateYourAccount": {
+        "description": "campaign_register_check_email_to_activate_account",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseEnterYourEmailAddress": "输入Email地址",
+    "@pleaseEnterYourEmailAddress": {
+        "description": "campaign_register_please_enter_your_email_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseFillYourPassword": "输入密码",
+    "@pleaseFillYourPassword": {
+        "description": "campaign_register_please_enter_your_password",
+        "type": "text",
+        "placeholders": {}
+    },
+    "confirmPasswordFieldIsEmpty": "确认密码为空",
+    "@confirmPasswordFieldIsEmpty": {
+        "description": "campaign_register_Confirm_password_field_is_empty",
+        "type": "text",
+        "placeholders": {}
+    },
+    "exgWalletAddressIsRequired": "需要填入钱包EXG地址",
+    "@exgWalletAddressIsRequired": {
+        "description": "campaign_register_exg_wallet_address_is_required",
+        "type": "text",
+        "placeholders": {}
+    },
+    "bothPasswordFieldsShouldMatch": "密码不匹配",
+    "@bothPasswordFieldsShouldMatch": {
+        "description": "campaign_register_both_password_fields_should_match",
+        "type": "text",
+        "placeholders": {}
+    },
+    "checkingAccountDetails": "检查帐户详情",
+    "@checkingAccountDetails": {
+        "description": "campaign_login_checking_login_details",
+        "type": "text",
+        "placeholders": {}
+    },
+    "welcome": "欢迎",
+    "@welcome": {
+        "description": "campaign_dashboard_welcome",
+        "type": "text",
+        "placeholders": {}
+    },
+    "logout": "退出登录",
+    "@logout": {
+        "description": "campaign_dashboard_logout",
+        "type": "text",
+        "placeholders": {}
+    },
+    "event": "活动",
+    "@event": {
+        "description": "campaign_event",
+        "type": "text",
+        "placeholders": {}
+    },
+    "readCampaignInstructions": "阅读推荐活动指南",
+    "@readCampaignInstructions": {
+        "description": "campaign_read_campaign_instructions",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myReferralCode": "我的推荐码",
+    "@myReferralCode": {
+        "description": "campaign_my_referral_code",
+        "type": "text",
+        "placeholders": {}
+    },
+    "level": "级别",
+    "@level": {
+        "description": "campaign_dashboard_level",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myTotalInvestment": "我的总投资",
+    "@myTotalInvestment": {
+        "description": "campaign_dashboard_my_total_investment",
+        "type": "text",
+        "placeholders": {}
+    },
+    "totalInvestmentQuantity": "我的购币总量",
+    "@totalInvestmentQuantity": {
+        "description": "campaign_dashboard_total_investment_quantity",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myTotalReward": "推荐奖励",
+    "@myTotalReward": {
+        "description": "campaign_dashboard_my_total_reward",
+        "type": "text",
+        "placeholders": {}
+    },
+    "teamsTotalValue": "团队投资总值",
+    "@teamsTotalValue": {
+        "description": "campaign_dashboard_teams_total_value",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myReferrals": "我的直推用户",
+    "@myReferrals": {
+        "description": "campaign_dashboard_my_referrals",
+        "type": "text",
+        "placeholders": {}
+    },
+    "payment": "支付",
+    "@payment": {
+        "description": "campaign_payment",
+        "type": "text",
+        "placeholders": {}
+    },
+    "paymentType": "付款类型",
+    "@paymentType": {
+        "description": "campaign_payment_type",
+        "type": "text",
+        "placeholders": {}
+    },
+    "bankDetails": "银行账户信息",
+    "@bankDetails": {
+        "description": "campaign_bank_details",
+        "type": "text",
+        "placeholders": {}
+    },
+    "bankName": "银行名称",
+    "@bankName": {
+        "description": "campaign_bank_name",
+        "type": "text",
+        "placeholders": {}
+    },
+    "routingNumber": "汇款路径账户",
+    "@routingNumber": {
+        "description": "campaign_routing_number",
+        "type": "text",
+        "placeholders": {}
+    },
+    "bankAccount": "银行账户",
+    "@bankAccount": {
+        "description": "campaign_bank_account",
+        "type": "text",
+        "placeholders": {}
+    },
+    "recieveAddress": "接收地址",
+    "@recieveAddress": {
+        "description": "campaign_recieve_address",
+        "type": "text",
+        "placeholders": {}
+    },
+    "balance": "余额",
+    "@balance": {
+        "description": "campaign_balance",
+        "type": "text",
+        "placeholders": {}
+    },
+    "orderInformation": "订单信息",
+    "@orderInformation": {
+        "description": "campaign_order_information",
+        "type": "text",
+        "placeholders": {}
+    },
+    "status": "状态",
+    "@status": {
+        "description": "campaign_status",
+        "type": "text",
+        "placeholders": {}
+    },
+    "waiting": "等候付款",
+    "@waiting": {
+        "description": "campaign_waiting",
+        "type": "text",
+        "placeholders": {}
+    },
+    "paid": "已付",
+    "@paid": {
+        "description": "campaign_paid",
+        "type": "text",
+        "placeholders": {}
+    },
+    "paymentReceived": "款已收妥",
+    "@paymentReceived": {
+        "description": "campaign_payment_received",
+        "type": "text",
+        "placeholders": {}
+    },
+    "failed": "失败",
+    "@failed": {
+        "description": "campaign_failed",
+        "type": "text",
+        "placeholders": {}
+    },
+    "orderCancelled": "已取消订单",
+    "@orderCancelled": {
+        "description": "campaign_order_cancelled",
+        "type": "text",
+        "placeholders": {}
+    },
+    "createOrderFailed": "下单失败",
+    "@createOrderFailed": {
+        "description": "campaign_create_order_failed",
+        "type": "text",
+        "placeholders": {}
+    },
+    "success": "成功",
+    "@success": {
+        "description": "campaign_success",
+        "type": "text",
+        "placeholders": {}
+    },
+    "yourOrderHasBeenCreated": "订单创建成功",
+    "@yourOrderHasBeenCreated": {
+        "description": "campaign_your_order_has_been_created",
+        "type": "text",
+        "placeholders": {}
+    },
+    "loadOrdersFailed": "无法加载订单，请稍候再试",
+    "@loadOrdersFailed": {
+        "description": "campaign_load_orders_failed",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseFillAllTheFields": "请填写所有区域",
+    "@pleaseFillAllTheFields": {
+        "description": "campaign_please_fill_all_the_fields",
+        "type": "text",
+        "placeholders": {}
+    },
+    "pleaseEnterAmountLessThanYourWallet": "请输入不超过钱包余额的付款金额",
+    "@pleaseEnterAmountLessThanYourWallet": {
+        "description": "campaign_please_enter_amount_less_than_your_wallet_bal",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myRewardDetails": "我的激励详情",
+    "@myRewardDetails": {
+        "description": "campaign_my_reward_details",
+        "type": "text",
+        "placeholders": {}
+    },
+    "referrals": "推荐",
+    "@referrals": {
+        "description": "campaign_referrals",
+        "type": "text",
+        "placeholders": {}
+    },
+    "totalAmount": "总额",
+    "@totalAmount": {
+        "description": "campaign_total_amount",
+        "type": "text",
+        "placeholders": {}
+    },
+    "rewards": "奖励",
+    "@rewards": {
+        "description": "campaign_rewards",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myTotalAssets": "我的总资产",
+    "@myTotalAssets": {
+        "description": "campaign_dashboard_my_total_assets",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myInvestmentWithoutRewards": "我的投资",
+    "@myInvestmentWithoutRewards": {
+        "description": "campaign_dashboard_my_investment_without_rewards",
+        "type": "text",
+        "placeholders": {}
+    },
+    "bankWireDetails": "银行电汇信息",
+    "@bankWireDetails": {
+        "description": "campaign_bank__wire_details",
+        "type": "text",
+        "placeholders": {}
+    },
+    "tokenDetails": "币详情",
+    "@tokenDetails": {
+        "description": "campaign_dashboard_token_details",
+        "type": "text",
+        "placeholders": {}
+    },
+    "totalTokenAmount": "总币量",
+    "@totalTokenAmount": {
+        "description": "campaign_total__token_amount",
+        "type": "text",
+        "placeholders": {}
+    },
+    "rewardsToken": "奖励币数量",
+    "@rewardsToken": {
+        "description": "campaign_rewards_token",
+        "type": "text",
+        "placeholders": {}
+    },
+    "teamReward": "团队奖励",
+    "@teamReward": {
+        "description": "campaign_dashboard_team_reward",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myTokens": "我购买的币数",
+    "@myTokens": {
+        "description": "campaign_dashboard_my_tokens",
+        "type": "text",
+        "placeholders": {}
+    },
+    "totalTokenHolding": "总持币数",
+    "@totalTokenHolding": {
+        "description": "campaign_dashboard_total_token__holding",
+        "type": "text",
+        "placeholders": {}
+    },
+    "myInvestment": "我的投资",
+    "@myInvestment": {
+        "description": "campaign_dashboard_my_investment_without_rewards",
+        "type": "text",
+        "placeholders": {}
+    },
+    "tokenQuantity": "币数量",
+    "@tokenQuantity": {
+        "description": "campaign_dashboard_payment_token_quantity",
+        "type": "text",
+        "placeholders": {}
+    },
+    "referralCount": "推荐数量",
+    "@referralCount": {
+        "description": "campaign_dashboard_referral_count",
+        "type": "text",
+        "placeholders": {}
+    },
+  "myReferralReward": "推荐奖励",
+  "@myReferralReward": {
+    "description": "campaign_dashboard_my_referral_reward",
+    "type": "text",
+    "placeholders": {}
+  },
+  "descriptionIsRequired": "请填写付款详情",
+  "@descriptionIsRequired": {
+    "description": "campaign_payment_update_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "diamond": "钻石",
+  "@diamond": {
+    "description": "campaign_dashboard_level_diamond",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gold": "黄金",
+  "@gold": {
+    "description": "campaign_dashboard_level_gold",
+    "type": "text",
+    "placeholders": {}
+  },
+  "silver": "白银",
+  "@silver": {
+    "description": "campaign_dashboard_level_silver",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentDescription": "确认订单需填写付款說明",
+  "@paymentDescription": {
+    "description": "campaign_payment_payment_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderId": "订单号",
+  "@orderId": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPayment": "确认付款",
+  "@confirmPayment": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "checkingCredentials": "校验凭证",
+  "@checkingCredentials": {
+    "description": "campaign_login_checking_credentials",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancelOrder": "取消订单",
+  "@cancelOrder": {
+    "description": "campaign_payment_cancel_order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCreatedSuccessfully": "成功创建订单",
+  "@orderCreatedSuccessfully": {
+    "description": "campaign_payment_order_created_successfully",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseincludeYourOrderNumber": "请在付款时注明订单号",
+  "@pleaseincludeYourOrderNumber": {
+    "description": "campaign_payment_include_your_order_number",
+    "type": "text",
+    "placeholders": {}
+  },
+  "afterHyphenWhenYouMakePayment": "",
+  "@afterHyphenWhenYouMakePayment": {
+    "description": "campaign_payment_after_hyphen_when_you_make_payment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "UpdateYourOrderStatus": "更新订单状态",
+  "@UpdateYourOrderStatus": {
+    "description": "Update_Your_Order_Status",
+    "type": "text",
+    "placeholders": {}
+  },
+  "team": "团队",
+  "@team": {
+    "description": "campaign_dashboard_team_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "members": "成员",
+  "@members": {
+    "description": "campaign_dashboard_team_details_members",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalValue": "总额",
+  "@totalValue": {
+    "description": "campaign_dashboard_team_details_total_value",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalQuantity": "总数量",
+  "@totalQuantity": {
+    "description": "campaign_dashboard_team_details_total_quantity",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamDetails": "团队详情",
+  "@teamDetails": {
+    "description": "campaign_dashboard_team_details_heading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderDetails": "订单详情",
+  "@orderDetails": {
+    "description": "campaign_dashboard_order_details_heading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "forgotPassword": "忘记密码",
+  "@forgotPassword": {
+    "description": "campaign_login_forgot_assword",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordResetError": "重设密码错误",
+  "@passwordResetError": {
+    "description": "campaign_password_reset_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterTheCorrectEmail": "请输入您的正确电子邮箱",
+  "@pleaseEnterTheCorrectEmail": {
+    "description": "campaign_enter_correct_email",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordReset": "重设密码",
+  "@passwordReset": {
+    "description": "campaign_password_reset",
+    "type": "text",
+    "placeholders": {}
+  },
+  "resetPasswordEmailInstruction": "请登录您的邮箱重设密码",
+  "@resetPasswordEmailInstruction": {
+    "description": "campaign_reset_password_email_instruction",
+    "type": "text",
+    "placeholders": {}
+  },
+  "updateStatus": "更新状态",
+  "@updateStatus": {
+    "description": "campaign_payment_update_status",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCancelledNotification": "订单已被取消",
+  "@orderCancelledNotification": {
+    "description": "campaign_payment_order_cancelled_notification",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderUpdateNotification": "订单状态已经更新",
+  "@orderUpdateNotification": {
+    "description": "campaign_payment_order_updated_notification",
+    "type": "text",
+    "placeholders": {}
+  }
+
 }

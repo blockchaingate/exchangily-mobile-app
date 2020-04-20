@@ -28,7 +28,7 @@ class Gas extends StatelessWidget {
               Navigator.pushNamed(context, '/addGas');
             },
             child: Icon(
-              Icons.add_circle_outline,
+              Icons.add_circle,
               semanticLabel: 'Add gas',
               color: globals.primaryColor,
             )),

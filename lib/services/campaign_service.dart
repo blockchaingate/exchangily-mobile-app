@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
+import 'package:exchangilymobileapp/models/campaign/team_reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/models/transaction_info.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
@@ -14,7 +17,7 @@ import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignService {
-  final log = getLogger('CampaignApi');
+  final log = getLogger('CampaignService');
   final client = new http.Client();
 
   final String appName = 'eXchangily';
@@ -22,11 +25,14 @@ class CampaignService {
   final String campaignId = '1';
   Campaign campaign;
 
-  static const BASE_URL = 'https://test.blockchaingate.com/v2/';
+  static const BASE_URL = isProduction
+      ? EnvironmentConfig.campaignProd
+      : EnvironmentConfig.campaignTest;
   static const registerUrl = BASE_URL + 'members/create';
   static const loginUrl = BASE_URL + 'members/login';
   static const kycWithTokenUrl = BASE_URL + 'kyc/create';
   static const createOrderUrl = BASE_URL + 'campaign-order/create';
+  static const updateOrderUrl = BASE_URL + 'campaign-order/update';
   static const listOrdersByWalletAddressUrl =
       BASE_URL + 'campaign-order/wallet-orders/';
   static const listOrdersByMemberIdUrl =
@@ -38,12 +44,16 @@ class CampaignService {
   static const memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
   static const rewardsUrl = BASE_URL + 'campaign-order/rewards';
   static const memberProfileUrl = BASE_URL + 'campaign-order/profile';
+  static const usdPricesUrl = 'https://kanbanprod.fabcoinapi.com/USDvalues';
+  static const resetPasswordUrl = BASE_URL + 'members/requestpwdreset';
 
   CampaignUserData userData;
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
 
-// Get user data from database by token
+/*-------------------------------------------------------------------------------------
+                          Get user data from database by token
+-------------------------------------------------------------------------------------*/
   Future<CampaignUserData> getUserDataFromDatabase() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var loginToken = prefs.getString('loginToken');
@@ -62,6 +72,22 @@ class CampaignService {
     return userData;
   }
 
+  /*-------------------------------------------------------------------------------------
+                                  Password Reset
+-------------------------------------------------------------------------------------*/
+
+  Future resetPassword(String email) async {
+    Map<String, dynamic> body = {"appId": appId, "email": email};
+    try {
+      var response = await client.post(resetPasswordUrl, body: body);
+      var json = jsonDecode(response.body);
+      log.w('resetPasswordUrl $json');
+      return json;
+    } catch (err) {
+      log.e('resetPasswordUrl $err');
+    }
+  }
+
 /*-------------------------------------------------------------------------------------
                           Register
 -------------------------------------------------------------------------------------*/
@@ -77,13 +103,13 @@ class CampaignService {
       "campaignId": "1",
       "walletExgAddress": exgWalletAddress
     }); // Add another key/pair value
-    log.w(body);
     try {
       var response = await client.post(registerUrl, body: body);
-      log.w(json.decode(response.body));
-      return json.decode(response.body);
+      var json = jsonDecode(response.body);
+      log.w('registerAccount $json');
+      return json;
     } catch (err) {
-      log.e(err);
+      log.e('registerAccount $err');
     }
   }
 
@@ -98,9 +124,10 @@ class CampaignService {
     body.addAll({'appId': appId}); // Add another key/pair value
 
     try {
+      log.e(loginUrl);
       var response = await client.post(loginUrl, body: body);
       var json = jsonDecode(response.body);
-      log.w(json);
+      log.w('login $json');
       return json;
     }
     // when i use then here and return the response variable it was showing output in console for service but not in the login state
@@ -116,41 +143,61 @@ class CampaignService {
   Future createCampaignOrder(CampaignOrder campaignOrder) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String loginToken = prefs.getString('loginToken');
-//campaignOrder.toJson();
+    campaignOrder.toJson();
     Map<String, dynamic> body = {
       "campaignId": "1",
-      "price": "0.24",
+      "price": campaignOrder.price.toString(),
       "walletAdd": campaignOrder.walletAdd,
       "txId": campaignOrder.txId,
       "quantity": campaignOrder.quantity.toString(),
       "paymentType": campaignOrder.paymentType
     };
-    // body.addAll({'campaignId': campaignId});
-    log.w(body);
     Map<String, String> headers = {'x-access-token': loginToken};
     try {
       var response =
           await client.post(createOrderUrl, body: body, headers: headers);
-      log.w('createCampaignOrder try response ${response.body}');
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(response.body)['_body'];
+      log.w('createCampaignOrder try response $json');
       return json;
     } catch (err) {
       log.e('In createCampaignOrder catch $err');
     }
   }
 
+/*-------------------------------------------------------------------------------------
+                          Update Order
+-------------------------------------------------------------------------------------*/
+
+  Future updateCampaignOrder(String id, String desc, String status) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String loginToken = prefs.getString('loginToken');
+
+    Map<String, dynamic> body = {
+      "_id": id,
+      "paymentDesc": desc,
+      "status": status
+    };
+    Map<String, String> headers = {'x-access-token': loginToken};
+    try {
+      var response =
+          await client.post(updateOrderUrl, body: body, headers: headers);
+      var json = jsonDecode(response.body)['_body'];
+      log.w('updateCampaignOrder try response $json');
+      return json;
+    } catch (err) {
+      log.e('In updateCampaignOrder catch $err');
+    }
+  }
   /*-------------------------------------------------------------------------------------
                                   Get orders by member id
 -------------------------------------------------------------------------------------*/
 
   Future<List<OrderInfo>> getOrdersById(String memberId) async {
-    log.e(memberId);
     try {
       var response = await client.get(listOrdersByMemberIdUrl + memberId);
       var jsonList = jsonDecode(response.body) as List;
-      log.w(jsonList);
+      log.w('In getOrderByMemberId $jsonList');
       OrderInfoList orderInfoList = OrderInfoList.fromJson(jsonList);
-      log.e(orderInfoList.orders[10].dateCreated);
       return orderInfoList.orders;
     } catch (err) {
       log.e('In getOrderById catch $err');
@@ -170,11 +217,8 @@ class CampaignService {
 
       var jsonList = jsonDecode(response.body)
           as List; // making this a list what i was missing earlier
-      log.w(jsonList);
+      log.w('getOrderByWalletAddress $jsonList');
       TransactionInfoList orderList = TransactionInfoList.fromJson(jsonList);
-      // List<TransactionInfo> orderList =
-      //     json.map((e) => TransactionInfo.fromJson(e)).toList();
-      log.w(orderList.transactions[5].dateCreated);
       return orderList.transactions;
     } catch (err) {
       log.e('In getOrderByWalletAddress catch $err');
@@ -205,7 +249,22 @@ class CampaignService {
     return loginToken;
   }
 
-  /*-------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------
+                                  Get Usd Prices
+-------------------------------------------------------------------------------------*/
+
+  Future getUsdPrices() async {
+    try {
+      var response = await client.get(usdPricesUrl);
+      var json = jsonDecode(response.body);
+      log.w(' getUsdPrices $json');
+      return json;
+    } catch (err) {
+      log.e('In getUsdPrices catch $err');
+    }
+  }
+
+/*-------------------------------------------------------------------------------------
                                   Get Campaign Name
 -------------------------------------------------------------------------------------*/
 
@@ -213,7 +272,7 @@ class CampaignService {
     try {
       var response = await client.get(campaignNameUrl);
       var json = jsonDecode(response.body);
-      log.w(json);
+      log.w('getCampaignName $json');
       return json;
     } catch (err) {
       log.e('In getCampaignName catch $err');
@@ -226,7 +285,7 @@ class CampaignService {
 
   Future getReferralsById(CampaignUserData userData) async {
     String memberId = userData.id;
-    log.e(memberId);
+
     Map<String, String> headers = {'x-access-token': userData.token};
     try {
       var response =
@@ -248,7 +307,7 @@ class CampaignService {
     try {
       var response = await client.get(rewardsUrl, headers: headers);
       var json = jsonDecode(response.body);
-      log.w(' getRewardById $json');
+      log.w('getRewardById $json');
 
       return json;
     } catch (err) {
@@ -264,10 +323,10 @@ class CampaignService {
     Map<String, String> headers = {'x-access-token': userData.token};
     try {
       var response = await client.get(memberProfileUrl, headers: headers);
-      var json = jsonDecode(response.body);
+      var json = jsonDecode(response.body)['_body'];
       log.w('getMemberProfile $json');
 
-      return json['_body'];
+      return json;
     } catch (err) {
       log.e('In getMemberProfile catch $err');
     }
@@ -277,62 +336,57 @@ class CampaignService {
                                   Get Member Reward By Token
 -------------------------------------------------------------------------------------*/
 
-  Future getMemberRewardByToken(String token) async {
-    List<CampaignReward> campaignRewardList = [];
+  Future<List<CampaignReward>> getMemberRewardByToken(String token) async {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
-      log.e('${jsonDecode(response.body)['_body']}');
-      var rewardList = jsonDecode(response.body)['_body'];
-      return rewardList;
-
-      // catch type 'int' is not a subtype of type 'double' if i map it like below so for now i am going to do i manually until i find the solution
-      // CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
-      // log.e(campaignRewardList.rewards.length);
+      log.w('getMemberRewardByToken ${jsonDecode(response.body)['_body']}');
+      var json = jsonDecode(response.body)['_body']['personal'];
+      CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
+      log.e('getMemberRewardByToken ${campaignRewardList.rewards.length}');
+      return campaignRewardList.rewards;
     } catch (err) {
       log.e('In getRewardByToken catch $err');
+      return null;
     }
   }
 
-  /*-------------------------------------------------------------------------------------
-                                  Get Teams Reward By Token
+/*-------------------------------------------------------------------------------------
+                                  Get Total Teams Reward By Token
 -------------------------------------------------------------------------------------*/
 
-  Future getTeamsRewardByToken(String token) async {
-    List<CampaignReward> campaignRewardList = [];
+  Future getTotalTeamsRewardByToken(String token) async {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
-      log.e('${jsonDecode(response.body)['_body']}');
-
-      var teamsRewardList = jsonDecode(response.body)['_body']['team'] as List;
-
-      // if (jsonList != null || jsonList != []) {
-      //   for (int i = 0; i <= jsonList.length; i++) {
-      //     CampaignReward campaignReward = new CampaignReward(
-      //         level: jsonList[i]['level'],
-      //         totalValue: jsonList[i]['totalValue'],
-      //         totalQuantities: jsonList[i]['totalQuantities'],
-      //         totalRewardQuantities: jsonList[i]['totalRewardQuantities'],
-      //         totalAccounts: jsonList[i]['totalAccounts'],
-      //         totalRewardNextQuantities: jsonList[i]
-      //             ['totalRewardNextQuantities']);
-
-      //     log.w(campaignReward.toJson());
-      //     log.w(campaignRewardList.length);
-      //     campaignRewardList.add(campaignReward);
-      //   }
-      //   return campaignRewardList;
-      // } else {
-      //   return campaignRewardList = [];
-      // }
+      log.e('getTotalTeamsRewardByToken ${jsonDecode(response.body)['_body']}');
+      var teamsRewardList = jsonDecode(response.body)['_body'];
       return teamsRewardList;
-
-      // catch type 'int' is not a subtype of type 'double' if i map it like below so for now i am going to do i manually until i find the solution
-      // CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
-      // log.e(campaignRewardList.rewards.length);
     } catch (err) {
-      log.e('In getRewardByToken catch $err');
+      log.e('In getTotalTeamsRewardByToken catch $err');
+    }
+  }
+
+/*-------------------------------------------------------------------------------------
+                                  Get Teams Details Reward By Token
+-------------------------------------------------------------------------------------*/
+
+  Future<List<CampaignTeamReward>> getTeamsRewardDetailsByToken(
+      String token) async {
+    Map<String, String> headers = {'x-access-token': token};
+    try {
+      var response = await client.get(rewardsUrl, headers: headers);
+      log.e(
+          'getTeamsRewardDetailsByToken ${jsonDecode(response.body)['_body']['team']}');
+      var json = jsonDecode(response.body)['_body']['team'];
+      CampaignTeamRewardList campaignTeamRewardList =
+          CampaignTeamRewardList.fromJson(json);
+      log.w(
+          'getTeamsRewardDetailsByToken ${campaignTeamRewardList.rewards.length}');
+      return campaignTeamRewardList.rewards;
+    } catch (err) {
+      log.e('In getTeamsRewardDetailsByToken catch $err');
+      return null;
     }
   }
 }

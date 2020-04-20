@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-21T20:24:17.384985",
+  "@@last_modified": "2020-04-11T00:33:49.762673",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -216,7 +216,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "totalBalance": "Available Balance",
+  "totalBalance": "Total Balance",
   "@totalBalance": {
     "description": "total_balance",
     "type": "text",
@@ -582,7 +582,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "filledAmount": "Filled",
+  "filledAmount": "Filled Amount",
   "@filledAmount": {
     "description": "filled_amount_text",
     "type": "text",
@@ -1098,24 +1098,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "myTotalInvestment": "My Total Investment",
-  "@myTotalInvestment": {
-    "description": "campaign_dashboard_my_total_investment",
-    "type": "text",
-    "placeholders": {}
-  },
-  "totalInvestmentQuantity": "Total Investment Quantity",
-  "@totalInvestmentQuantity": {
-    "description": "campaign_dashboard_total_investment_quantity",
-    "type": "text",
-    "placeholders": {}
-  },
-  "myTotalReward": "My Total Reward",
-  "@myTotalReward": {
-    "description": "campaign_dashboard_my_total_reward",
-    "type": "text",
-    "placeholders": {}
-  },
   "teamsTotalValue": "Teams Total Value",
   "@teamsTotalValue": {
     "description": "campaign_dashboard_teams_total_value",
@@ -1137,12 +1119,6 @@
   "paymentType": "Payment Type",
   "@paymentType": {
     "description": "campaign_payment_type",
-    "type": "text",
-    "placeholders": {}
-  },
-  "bankDetails": "Bank Details",
-  "@bankDetails": {
-    "description": "campaign_bank_details",
     "type": "text",
     "placeholders": {}
   },
@@ -1266,15 +1242,243 @@
     "type": "text",
     "placeholders": {}
   },
-  "totalAmount": "Total Amount",
-  "@totalAmount": {
-    "description": "campaign_total_amount",
+  "bankWireDetails": "Bank Wire Details",
+  "@bankWireDetails": {
+    "description": "campaign_bank__wire_details",
     "type": "text",
     "placeholders": {}
   },
-  "rewards": "Rewards",
-  "@rewards": {
-    "description": "campaign_rewards",
+  "myTotalAssets": "My Total Assets",
+  "@myTotalAssets": {
+    "description": "campaign_dashboard_my_total_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalTokenHolding": "Total Token Holding",
+  "@totalTokenHolding": {
+    "description": "campaign_dashboard_total_token__holding",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tokenDetails": "Token Details",
+  "@tokenDetails": {
+    "description": "campaign_dashboard_token_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalTokenAmount": "Total Token Amount",
+  "@totalTokenAmount": {
+    "description": "campaign_total__token_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "rewardsToken": "Rewards Token",
+  "@rewardsToken": {
+    "description": "campaign_rewards_token",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myInvestment": "My Investment",
+  "@myInvestment": {
+    "description": "campaign_dashboard_my_investment_without_rewards",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamReward": "Team Reward",
+  "@teamReward": {
+    "description": "campaign_dashboard_team_reward",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myTokens": "My Tokens",
+  "@myTokens": {
+    "description": "campaign_dashboard_my_tokens",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tokenQuantity": "Token Quantity",
+  "@tokenQuantity": {
+    "description": "campaign_dashboard_payment_token_quantity",
+    "type": "text",
+    "placeholders": {}
+  },
+  "referralCount": "Referral Count",
+  "@referralCount": {
+    "description": "campaign_dashboard_referral_count",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myReferralReward": "My Referral Reward",
+  "@myReferralReward": {
+    "description": "campaign_dashboard_my_referral_reward",
+    "type": "text",
+    "placeholders": {}
+  },
+  "descriptionIsRequired": "Please fill the description field",
+  "@descriptionIsRequired": {
+    "description": "campaign_payment_update_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "diamond": "Diamond",
+  "@diamond": {
+    "description": "campaign_dashboard_level_diamond",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gold": "Gold",
+  "@gold": {
+    "description": "campaign_dashboard_level_gold",
+    "type": "text",
+    "placeholders": {}
+  },
+  "silver": "silver",
+  "@silver": {
+    "description": "campaign_dashboard_level_silver",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentDescription": "Payment Description",
+  "@paymentDescription": {
+    "description": "campaign_payment_payment_description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "paymentDescriptionNote": "Please fill this field to confirm the order",
+  "@paymentDescriptionNote": {
+    "description": "campaign_payment_payment_description_note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderId": "Order Id",
+  "@orderId": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "confirmPayment": "Confirm Payment",
+  "@confirmPayment": {
+    "description": "campaign_payment_order_id",
+    "type": "text",
+    "placeholders": {}
+  },
+  "checkingCredentials": "Checking Credentials",
+  "@checkingCredentials": {
+    "description": "campaign_login_checking_credentials",
+    "type": "text",
+    "placeholders": {}
+  },
+  "cancelOrder": "Cancel Order",
+  "@cancelOrder": {
+    "description": "campaign_payment_cancel_order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCreatedSuccessfully": "Order Created Successfully",
+  "@orderCreatedSuccessfully": {
+    "description": "campaign_payment_order_created_successfully",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseincludeYourOrderNumber": "Please include your order number",
+  "@pleaseincludeYourOrderNumber": {
+    "description": "campaign_payment_include_your_order_number",
+    "type": "text",
+    "placeholders": {}
+  },
+  "afterHyphenWhenYouMakePayment": "after hyphen when you make payment",
+  "@afterHyphenWhenYouMakePayment": {
+    "description": "campaign_payment_after_hyphen_when_you_make_payment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "updateYourOrderStatus": "Update your order status",
+  "@updateYourOrderStatus": {
+    "description": "campaign_payment_update_your_order_status",
+    "type": "text",
+    "placeholders": {}
+  },
+  "team": "Team",
+  "@team": {
+    "description": "campaign_dashboard_team_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "members": "Members",
+  "@members": {
+    "description": "campaign_dashboard_team_details_members",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalValue": "Total Value",
+  "@totalValue": {
+    "description": "campaign_dashboard_team_details_total_value",
+    "type": "text",
+    "placeholders": {}
+  },
+  "totalQuantity": "Total Quantity",
+  "@totalQuantity": {
+    "description": "campaign_dashboard_team_details_total_quantity",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamDetails": "Team Details",
+  "@teamDetails": {
+    "description": "campaign_dashboard_team_details_heading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderDetails": "Order Details",
+  "@orderDetails": {
+    "description": "campaign_dashboard_order_details_heading",
+    "type": "text",
+    "placeholders": {}
+  },
+  "forgotPassword": "Forgot Password",
+  "@forgotPassword": {
+    "description": "campaign_login_forgot_assword",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordResetError": "Password Reset Error",
+  "@passwordResetError": {
+    "description": "campaign_password_reset_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseEnterTheCorrectEmail": "Please enter the correct email",
+  "@pleaseEnterTheCorrectEmail": {
+    "description": "campaign_enter_correct_email",
+    "type": "text",
+    "placeholders": {}
+  },
+  "passwordReset": "Password Reset",
+  "@passwordReset": {
+    "description": "campaign_password_reset",
+    "type": "text",
+    "placeholders": {}
+  },
+  "resetPasswordEmailInstruction": "Please check your email and follow instructions to reset your account password",
+  "@resetPasswordEmailInstruction": {
+    "description": "campaign_reset_password_email_instruction",
+    "type": "text",
+    "placeholders": {}
+  },
+  "updateStatus": "Update status",
+  "@updateStatus": {
+    "description": "campaign_payment_update_status",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderCancelledNotification": "Your order has been cancelled successfully",
+  "@orderCancelledNotification": {
+    "description": "campaign_payment_order_cancelled_notification",
+    "type": "text",
+    "placeholders": {}
+  },
+  "orderUpdateNotification": "Your order status has been updated successfully",
+  "@orderUpdateNotification": {
+    "description": "campaign_payment_order_updated_notification",
     "type": "text",
     "placeholders": {}
   }

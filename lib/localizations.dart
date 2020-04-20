@@ -946,23 +946,6 @@ class AppLocalizations {
         name: 'level', desc: 'campaign_dashboard_level');
   }
 
-  String get myTotalInvestment {
-    return Intl.message('My Total Investment',
-        name: 'myTotalInvestment',
-        desc: 'campaign_dashboard_my_total_investment');
-  }
-
-  String get totalInvestmentQuantity {
-    return Intl.message('Total Investment Quantity',
-        name: 'totalInvestmentQuantity',
-        desc: 'campaign_dashboard_total_investment_quantity');
-  }
-
-  String get myTotalReward {
-    return Intl.message('My Total Reward',
-        name: 'myTotalReward', desc: 'campaign_dashboard_my_total_reward');
-  }
-
   String get teamsTotalValue {
     return Intl.message('Teams Total Value',
         name: 'teamsTotalValue', desc: 'campaign_dashboard_teams_total_value');
@@ -980,11 +963,6 @@ class AppLocalizations {
   String get paymentType {
     return Intl.message('Payment Type',
         name: 'paymentType', desc: 'campaign_payment_type');
-  }
-
-  String get bankDetails {
-    return Intl.message('Bank Details',
-        name: 'bankDetails', desc: 'campaign_bank_details');
   }
 
   String get bankName {
@@ -1085,13 +1063,223 @@ class AppLocalizations {
         name: 'referrals', desc: 'campaign_referrals');
   }
 
-  String get totalAmount {
-    return Intl.message('Total Amount',
-        name: 'totalAmount', desc: 'campaign_total_amount');
+  String get bankWireDetails {
+    return Intl.message('Bank Wire Details',
+        name: 'bankWireDetails', desc: 'campaign_bank__wire_details');
   }
 
-  String get rewards {
-    return Intl.message('Rewards', name: 'rewards', desc: 'campaign_rewards');
+  String get myTotalAssets {
+    return Intl.message('My Total Assets',
+        name: 'myTotalAssets', desc: 'campaign_dashboard_my_total_assets');
+  }
+
+  String get totalTokenHolding {
+    return Intl.message('Total Token Holding',
+        name: 'totalTokenHolding',
+        desc: 'campaign_dashboard_total_token__holding');
+  }
+
+  String get tokenDetails {
+    return Intl.message('Token Details',
+        name: 'tokenDetails', desc: 'campaign_da\shboard_token_details');
+  }
+
+  String get totalTokenAmount {
+    return Intl.message('Total Token Amount',
+        name: 'totalTokenAmount', desc: 'campaign_total__token_amount');
+  }
+
+  String get rewardsToken {
+    return Intl.message('Rewards Token',
+        name: 'rewardsToken', desc: 'campaign_rewards_token');
+  }
+
+  String get myInvestment {
+    return Intl.message('My Investment',
+        name: 'myInvestment',
+        desc: 'campaign_dashboard_my_investment_without_rewards');
+  }
+
+  String get teamReward {
+    return Intl.message('Team Reward',
+        name: 'teamReward', desc: 'campaign_dashboard_team_reward');
+  }
+
+  String get myTokens {
+    return Intl.message('My Tokens',
+        name: 'myTokens', desc: 'campaign_dashboard_my_tokens');
+  }
+
+  String get tokenQuantity {
+    return Intl.message('Token Quantity',
+        name: 'tokenQuantity',
+        desc: 'campaign_dashboard_payment_token_quantity');
+  }
+
+  String get referralCount {
+    return Intl.message('Referral Count',
+        name: 'referralCount', desc: 'campaign_dashboard_referral_count');
+  }
+
+  String get myReferralReward {
+    return Intl.message('My Referral Reward',
+        name: 'myReferralReward',
+        desc: 'campaign_dashboard_my_referral_reward');
+  }
+
+  String get descriptionIsRequired {
+    return Intl.message('Please fill the description field',
+        name: 'descriptionIsRequired',
+        desc: 'campaign_payment_update_description');
+  }
+
+  String get diamond {
+    return Intl.message('Diamond',
+        name: 'diamond', desc: 'campaign_dashboard_level_diamond');
+  }
+
+  String get gold {
+    return Intl.message('Gold',
+        name: 'gold', desc: 'campaign_dashboard_level_gold');
+  }
+
+  String get silver {
+    return Intl.message('silver',
+        name: 'silver', desc: 'campaign_dashboard_level_silver');
+  }
+
+  String get paymentDescription {
+    return Intl.message('Payment Description',
+        name: 'paymentDescription',
+        desc: 'campaign_payment_payment_description');
+  }
+
+  String get paymentDescriptionNote {
+    return Intl.message('Please fill this field to confirm the order',
+        name: 'paymentDescriptionNote',
+        desc: 'campaign_payment_payment_description_note');
+  }
+
+  String get orderId {
+    return Intl.message('Order Id',
+        name: 'orderId', desc: 'campaign_payment_order_id');
+  }
+
+  String get confirmPayment {
+    return Intl.message('Confirm Payment',
+        name: 'confirmPayment', desc: 'campaign_payment_order_id');
+  }
+
+  String get checkingCredentials {
+    return Intl.message('Checking Credentials',
+        name: 'checkingCredentials',
+        desc: 'campaign_login_checking_credentials');
+  }
+
+  String get cancelOrder {
+    return Intl.message('Cancel Order',
+        name: 'cancelOrder', desc: 'campaign_payment_cancel_order');
+  }
+
+  String get orderCreatedSuccessfully {
+    return Intl.message('Order Created Successfully',
+        name: 'orderCreatedSuccessfully',
+        desc: 'campaign_payment_order_created_successfully');
+  }
+
+  String get pleaseincludeYourOrderNumber {
+    return Intl.message('Please include your order number',
+        name: 'pleaseincludeYourOrderNumber',
+        desc: 'campaign_payment_include_your_order_number');
+  }
+
+  String get afterHyphenWhenYouMakePayment {
+    return Intl.message('after hyphen when you make payment',
+        name: 'afterHyphenWhenYouMakePayment',
+        desc: 'campaign_payment_after_hyphen_when_you_make_payment');
+  }
+
+  String get updateYourOrderStatus {
+    return Intl.message('Update your order status',
+        name: 'updateYourOrderStatus',
+        desc: 'campaign_payment_update_your_order_status');
+  }
+
+  String get team {
+    return Intl.message('Team',
+        name: 'team', desc: 'campaign_dashboard_team_details');
+  }
+
+  String get members {
+    return Intl.message('Members',
+        name: 'members', desc: 'campaign_dashboard_team_details_members');
+  }
+
+  String get totalValue {
+    return Intl.message('Total Value',
+        name: 'totalValue',
+        desc: 'campaign_dashboard_team_details_total_value');
+  }
+
+  String get totalQuantity {
+    return Intl.message('Total Quantity',
+        name: 'totalQuantity',
+        desc: 'campaign_dashboard_team_details_total_quantity');
+  }
+
+  String get teamDetails {
+    return Intl.message('Team Details',
+        name: 'teamDetails', desc: 'campaign_dashboard_team_details_heading');
+  }
+
+  String get orderDetails {
+    return Intl.message('Order Details',
+        name: 'orderDetails', desc: 'campaign_dashboard_order_details_heading');
+  }
+
+  String get forgotPassword {
+    return Intl.message('Forgot Password',
+        name: 'forgotPassword', desc: 'campaign_login_forgot_assword');
+  }
+
+  String get passwordResetError {
+    return Intl.message('Password Reset Error',
+        name: 'passwordResetError', desc: 'campaign_password_reset_error');
+  }
+
+  String get pleaseEnterTheCorrectEmail {
+    return Intl.message('Please enter the correct email',
+        name: 'pleaseEnterTheCorrectEmail',
+        desc: 'campaign_enter_correct_email');
+  }
+
+  String get passwordReset {
+    return Intl.message('Password Reset',
+        name: 'passwordReset', desc: 'campaign_password_reset');
+  }
+
+  String get resetPasswordEmailInstruction {
+    return Intl.message(
+        'Please check your email and follow instructions to reset your account password',
+        name: 'resetPasswordEmailInstruction',
+        desc: 'campaign_reset_password_email_instruction');
+  }
+
+  String get updateStatus {
+    return Intl.message('Update status',
+        name: 'updateStatus', desc: 'campaign_payment_update_status');
+  }
+
+  String get orderCancelledNotification {
+    return Intl.message('Your order has been cancelled successfully',
+        name: 'orderCancelledNotification',
+        desc: 'campaign_payment_order_cancelled_notification');
+  }
+
+  String get orderUpdateNotification {
+    return Intl.message('Your order status has been updated successfully',
+        name: 'orderUpdateNotification',
+        desc: 'campaign_payment_order_updated_notification');
   }
 }
 

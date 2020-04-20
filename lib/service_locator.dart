@@ -31,6 +31,7 @@ import 'package:exchangilymobileapp/services/db/transaction_history_database_ser
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
@@ -43,6 +44,7 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_
 import 'package:get_it/get_it.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
 
 GetIt locator = GetIt();
 
@@ -59,6 +61,7 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => CampaignService());
   locator.registerLazySingleton(() => CampaignUserDatabaseService());
+  locator.registerLazySingleton(() => PdfViewerService());
 
   // Singelton
   var instance = await LocalStorageService.getInstance();
@@ -84,4 +87,5 @@ Future serviceLocator() async {
   locator.registerFactory(() => CampaignDashboardScreenState());
   locator.registerFactory(() => CampaignLoginScreenState());
   locator.registerFactory(() => CampaignRegisterAccountScreenState());
+  locator.registerFactory(() => TeamRewardDetailsScreenState());
 }

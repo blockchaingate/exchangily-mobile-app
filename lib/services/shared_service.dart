@@ -13,8 +13,10 @@
 
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../localizations.dart';
 import '../shared/globals.dart' as globals;
@@ -140,5 +142,39 @@ class SharedService {
               );
             }) ??
         false;
+  }
+
+  // Language
+  Future checkLanguage() async {
+    String lang = '';
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    lang = prefs.getString('lang');
+    if (lang == null || lang == '') {
+      print('language empty');
+    } else {
+      Navigator.pushNamed(context, '/walletSetup');
+    }
+  }
+
+  /* ---------------------------------------------------
+                Flushbar Notification bar
+    -------------------------------------------------- */
+
+  void showInfoFlushbar(String title, String message, IconData iconData,
+      Color leftBarColor, BuildContext context) {
+    Flushbar(
+      backgroundColor: globals.secondaryColor.withOpacity(0.75),
+      title: title,
+      message: message,
+      icon: Icon(
+        iconData,
+        size: 24,
+        color: globals.primaryColor,
+      ),
+      leftBarIndicatorColor: leftBarColor,
+      duration: Duration(seconds: 5),
+      isDismissible: true,
+    ).show(context);
   }
 }

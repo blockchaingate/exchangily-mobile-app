@@ -297,6 +297,7 @@ class SendScreenState extends BaseState {
   // Update Trans Fee
   updateTransFee() async {
     setState(ViewState.Busy);
+    setBusy(true);
     var to = getOfficalAddress(walletInfo.tickerName.toUpperCase());
     var amount = double.tryParse(sendAmountTextController.text);
     var gasPrice = int.tryParse(gasPriceTextController.text);
@@ -330,11 +331,13 @@ class SendScreenState extends BaseState {
       setState(ViewState.Idle);
     }).catchError((err) {
       setState(ViewState.Idle);
+      setBusy(false);
       log.e(err);
       sharedService.alertResponse(AppLocalizations.of(context).genericError,
           AppLocalizations.of(context).transanctionFailed);
     });
     setState(ViewState.Idle);
+    setBusy(false);
   }
 
   /*--------------------------------------------------------------------------------------------------------------------------------------------------------------

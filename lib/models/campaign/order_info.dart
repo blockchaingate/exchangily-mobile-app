@@ -3,38 +3,38 @@ class OrderInfo {
   String _dateCreated;
   String _txid;
   String _status;
-  var _quantity;
+  double _quantity;
 
   OrderInfo(
       {String id,
       String dateCreated,
       String txid,
       String status,
-      var quantity}) {
-    this._id = id;
+      double quantity}) {
+    this.id = id;
     this._dateCreated = dateCreated ?? '';
     this._txid = txid ?? '';
     this._status = status ?? '';
     this._quantity = quantity;
   }
 
+  factory OrderInfo.fromJson(Map<String, dynamic> json) {
+    return OrderInfo(
+        id: json['_id'] as String,
+        dateCreated: json['dateCreated'] as String,
+        txid: json['txid'],
+        status: json['status'],
+        quantity: json['quantity'].toDouble());
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this._id;
+    data['_id'] = this._id;
     data['dateCreated'] = this._dateCreated;
     data['txid'] = this._txid;
     data['status'] = this._status;
     data['quantity'] = this._quantity;
     return data;
-  }
-
-  factory OrderInfo.fromJson(Map<String, dynamic> json) {
-    return OrderInfo(
-        id: json['id'] as String,
-        dateCreated: json['dateCreated'] as String,
-        txid: json['txid'],
-        status: json['status'],
-        quantity: json['quantity']);
   }
 
   String get id => _id;
@@ -60,8 +60,8 @@ class OrderInfo {
     this._status = status;
   }
 
-  get quantity => _quantity;
-  set quantity(var quantity) {
+  double get quantity => _quantity;
+  set quantity(double quantity) {
     this._quantity = quantity;
   }
 }

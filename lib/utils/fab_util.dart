@@ -22,7 +22,7 @@ import "package:hex/hex.dart";
 import 'package:crypto/crypto.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/environments/environment_type.dart';
-
+import 'dart:math';
 final String fabBaseUrl = environment["endpoints"]["fab"];
 final log = getLogger('fab_util');
 
@@ -259,7 +259,7 @@ btcToBase58Address(address) {
 }
 
 Future getFabTokenBalanceForABI(
-    String balanceInfoABI, String smartContractAddress, String address) async {
+    String balanceInfoABI, String smartContractAddress, String address, [int decimal]) async {
   var body = {
     'address': trimHexPrefix(smartContractAddress),
     'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
@@ -272,14 +272,20 @@ Future getFabTokenBalanceForABI(
     var json = jsonDecode(response.body);
     var unlockBalance = json['executionResult']['output'];
 
-    print('unlockBalance===' + unlockBalance.toString());
     if (unlockBalance == null || unlockBalance == '') {
       return 0.0;
     }
-    // var unlockInt = int.parse(unlockBalance, radix: 16);
+    // var unlockInt = int.parse(unlockBalance, radix: 16a);
     var unlockInt = BigInt.parse(unlockBalance, radix: 16);
-    print('unlockInt===' + unlockInt.toString());
-    tokenBalance = bigNum2Double(unlockInt);
+
+    if((decimal != null) && (decimal > 0)) {
+      tokenBalance = ((unlockInt) / BigInt.parse(pow(10, decimal).toString()));
+    } else {
+      tokenBalance = bigNum2Double(unlockInt);
+      print('tokenBalance for EXG==');
+      print(tokenBalance);
+    }
+
     print('tokenBalance===' + tokenBalance.toString());
   } catch (e) {}
   return tokenBalance;
@@ -295,12 +301,24 @@ Future getSmartContractABI(String smartContractAddress) async {
 Future getFabTokenBalanceByAddress(String address, String coinName) async {
   var smartContractAddress =
       environment["addresses"]["smartContract"][coinName];
-  String balanceInfoABI = '70a08231';
-  var tokenBalance = await getFabTokenBalanceForABI(
-      balanceInfoABI, smartContractAddress, address);
-  balanceInfoABI = '6ff95d25';
-  var tokenLockedBalance = await getFabTokenBalanceForABI(
-      balanceInfoABI, smartContractAddress, address);
+  var tokenBalance = 0.0;
+  var tokenLockedBalance = 0.0;
+  if(coinName == 'EXG') {
+    String balanceInfoABI = '70a08231';
+    tokenBalance = await getFabTokenBalanceForABI(
+        balanceInfoABI, smartContractAddress, address);
+    balanceInfoABI = '6ff95d25';
+    tokenLockedBalance = await getFabTokenBalanceForABI(
+        balanceInfoABI, smartContractAddress, address);
+  } else {
+    print('smartContractAddress for' + coinName + ':' + smartContractAddress);
+    String balanceInfoABI = '70a08231';
+    tokenBalance = await getFabTokenBalanceForABI(
+        balanceInfoABI, smartContractAddress, address, 6);
+    print('tokenBalance===');
+    print(tokenBalance);
+  }
+
   print('address=' + address.toString());
   print('tokenLockedBalance=' + tokenLockedBalance.toString());
   return {'balance': tokenBalance, 'lockbalance': tokenLockedBalance};
