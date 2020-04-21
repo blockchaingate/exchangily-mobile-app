@@ -71,6 +71,8 @@ dependencies:
 
   # Barcode Scan
   barcode_scan: 1.0.0
+  # barcode_scan:
+  #  git: git://github.com/apptreesoftware/flutter_barcode_reader.git
 
   # Flushbar instead of Snackbar for notifications
   # flushbar: 1.9.1

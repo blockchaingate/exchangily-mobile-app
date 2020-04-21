@@ -27,7 +27,7 @@ PODS:
 
 DEPENDENCIES:
   - barcode_scan (from `.symlinks/plugins/barcode_scan/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `Flutter`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - share (from `.symlinks/plugins/share/ios`)
@@ -38,7 +38,7 @@ DEPENDENCIES:
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - FMDB
     - MTBBarcodeScanner
 
@@ -46,7 +46,7 @@ EXTERNAL SOURCES:
   barcode_scan:
     :path: ".symlinks/plugins/barcode_scan/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: Flutter
   package_info:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
@@ -78,6 +78,6 @@ SPEC CHECKSUMS:
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   webview_flutter: bec7599de6bfbe8008a739aa3ebd7b364ea9d0cd
 
-PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
+PODFILE CHECKSUM: 102cecde423da0a442905db4fce8f20b63300204
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.0
