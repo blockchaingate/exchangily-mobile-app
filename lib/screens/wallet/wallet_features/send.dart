@@ -49,6 +49,7 @@ class SendWalletScreen extends StatelessWidget {
         body: SingleChildScrollView(
           // to avoid using ListView without having any list childs to iterate and use column as its child now
           child: Container(
+            margin: EdgeInsets.all(10.0),
             child: Column(
               // I was using ListView here earlier to solve keyboard overflow error
               children: <Widget>[
@@ -85,7 +86,7 @@ class SendWalletScreen extends StatelessWidget {
                                   labelText: AppLocalizations.of(context)
                                       .receiverWalletAddress,
                                   labelStyle:
-                                      Theme.of(context).textTheme.headline5),
+                                      Theme.of(context).textTheme.headline6),
                               style: Theme.of(context).textTheme.headline5,
                             ),
                           )),
@@ -104,7 +105,7 @@ class SendWalletScreen extends StatelessWidget {
                                 AppLocalizations.of(context).scanBarCode,
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline4
+                                    .headline5
                                     .copyWith(fontWeight: FontWeight.w400),
                               )
                             ],
