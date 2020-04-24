@@ -43,7 +43,6 @@ class WalletDashboardScreen extends StatelessWidget {
           log.w('wallet info not null');
           model.walletInfo = walletInfo;
           await model.refreshBalance();
-          //  model.calcTotalBal(walletInfo.length);
         } else {
           log.w('Retrieving wallets from local storage');
           await model.retrieveWallets();

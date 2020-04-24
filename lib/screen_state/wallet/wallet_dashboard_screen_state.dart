@@ -96,7 +96,9 @@ class WalletDashboardScreenState extends BaseState {
       setState(ViewState.Idle);
     });
   }
-
+/*-------------------------------------------------------------------------------------
+                          Refresh Balances
+-------------------------------------------------------------------------------------*/
   Future refreshBalance() async {
     setState(ViewState.Busy);
 
