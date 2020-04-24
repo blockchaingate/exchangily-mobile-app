@@ -26,7 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../shared/globals.dart' as globals;
-import 'package:intl/intl.dart';
 
 class CampaignPaymentScreenState extends BaseState {
   final log = getLogger('PaymentScreenState');
@@ -39,11 +38,12 @@ class CampaignPaymentScreenState extends BaseState {
       locator<CampaignUserDatabaseService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
+
   final sendAmountTextController = TextEditingController();
   String _groupValue;
   get groupValue => _groupValue;
   String prodUsdtWalletAddress = '';
-
+  String testUsdWalletAddress = '0xae397cfc8f67c46d533b844bfff25ad5ae89e63a';
   BuildContext context;
   String tickerName = '';
   String tokenType = '';
