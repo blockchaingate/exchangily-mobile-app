@@ -87,20 +87,33 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       controller:
                                           model.sendAmountTextController,
                                       decoration: InputDecoration(
-                                          contentPadding: EdgeInsets.only(
-                                              top: 35.0,
-                                              bottom: 1.0,
-                                              left: 15.0,
-                                              right: 14.0),
+                                          focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.zero,
+                                              borderSide: BorderSide(
+                                                  width: 1,
+                                                  color: globals.primaryColor)),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.zero,
+                                              // gapPadding: .5,
+                                              borderSide: BorderSide(
+                                                  width: .5,
+                                                  color: globals.grey)),
+                                          // contentPadding: EdgeInsets.only(
+                                          //     top: 35.0,
+                                          //     bottom: 1.0,
+                                          //     left: 15.0,
+                                          //     right: 14.0),
                                           isDense: true,
                                           prefix: Padding(
                                             padding: const EdgeInsets.only(
                                                 top: 18.0),
                                             child: DropdownButtonHideUnderline(
                                               child: DropdownButton(
+                                                dropdownColor:
+                                                    globals.primaryColor,
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline5,
+                                                    .headline6,
                                                 isDense: true,
                                                 value: model.selectedCurrency,
                                                 items: model.currencies
@@ -159,27 +172,39 @@ class CampaignPaymentScreen extends StatelessWidget {
                             ),
                             // Payment type container row
                             Container(
+                              color: globals.primaryColor.withAlpha(100),
                               width: MediaQuery.of(context).size.width - 100,
                               child: Row(
                                 children: <Widget>[
-                                  Text(
-                                    AppLocalizations.of(context).paymentType,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                    textAlign: TextAlign.start,
+                                  Expanded(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        AppLocalizations.of(context)
+                                            .paymentType,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
                                   ),
                                   // Row that contains both radio buttons
                                   Expanded(
                                     flex: 3,
                                     child: Container(
-                                      padding: EdgeInsets.only(left: 8.0),
+                                      //  padding: EdgeInsets.only(left: 8.0),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.end,
                                         children: <Widget>[
                                           UIHelper.horizontalSpaceSmall,
                                           // USD radio button row
                                           Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: <Widget>[
                                               Text('USD',
                                                   style: Theme.of(context)
@@ -254,31 +279,52 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Text(
-                                            AppLocalizations.of(context)
-                                                .bankName,
-                                            textAlign: TextAlign.start,
+                                          Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .bankName,
+                                              textAlign: TextAlign.start,
+                                            ),
                                           ),
-                                          Text('Key Bank')
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text('Key Bank',
+                                                textAlign: TextAlign.start),
+                                          )
                                         ],
                                       ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Text(AppLocalizations.of(context)
-                                              .routingNumber),
-                                          Text('041001039')
+                                          Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                AppLocalizations.of(context)
+                                                    .routingNumber),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text('041001039'),
+                                          )
                                         ],
                                       ),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Text(AppLocalizations.of(context)
-                                                  .bankAccount +
-                                              ' #'),
-                                          Text('350211024087')
+                                          Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                                AppLocalizations.of(context)
+                                                        .bankAccount +
+                                                    ' #'),
+                                          ),
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text('350211024087'),
+                                          )
                                         ],
                                       )
                                     ],
@@ -291,7 +337,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                             Container(
                               // cannot give padding here as it shows empty container when no radio button selected
                               color: globals.walletCardColor.withAlpha(100),
-                              width: MediaQuery.of(context).size.width - 75,
+                              //  width: MediaQuery.of(context).size.width - 75,
                               child: Visibility(
                                 visible: model.groupValue == 'USDT',
                                 child: Container(
@@ -313,8 +359,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       UIHelper.verticalSpaceSmall,
                                       isProduction
                                           ? Text(model.prodUsdtWalletAddress)
-                                          : Text(
-                                              '0xae397cfc8f67c46d533b844bfff25ad5ae89e63a',
+                                          : Text(model.testUsdWalletAddress,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1),
