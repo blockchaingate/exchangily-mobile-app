@@ -185,7 +185,8 @@ class _WithdrawState extends State<Withdraw> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 TextField(
-                    keyboardType: TextInputType.number,
+                    keyboardType:
+                        TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                             borderSide: new BorderSide(
