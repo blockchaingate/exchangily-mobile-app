@@ -135,6 +135,7 @@ class WalletDashboardScreenState extends BaseState {
         log.e('Something went wrong  - $error');
       });
       double marketPrice = await walletService.getCoinMarketPrice(name);
+      log.i('after market price');
       coinUsdBalance = walletService.calculateCoinUsdBalance(
           marketPrice, walletBal, walletLockedBal);
       WalletInfo wi = WalletInfo(
@@ -203,7 +204,6 @@ class WalletDashboardScreenState extends BaseState {
   getExchangeAssets() async {
     setState(ViewState.Busy);
     var res = await walletService.assetsBalance(exgAddress);
-    log.e('getExchangeAssets from service $res');
     var length = res.length;
     for (var i = 0; i < length; i++) {
       // Get their tickerName to compare with walletInfo tickernName
@@ -214,7 +214,7 @@ class WalletDashboardScreenState extends BaseState {
         if (coin == walletInfo[j].tickerName) {
           // log.e('$coin - $walletInfo[j].tickerName');
           walletInfo[j].inExchange = res[i]['amount'];
-          log.w('getExchangeAssets ${walletInfo[j].inExchange}');
+          // log.w('getExchangeAssets ${walletInfo[j].inExchange}');
           break;
         }
       }

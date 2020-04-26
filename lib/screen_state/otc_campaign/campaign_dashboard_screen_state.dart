@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -19,6 +20,7 @@ class CampaignDashboardScreenState extends BaseState {
   CampaignService campaignService = locator<CampaignService>();
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
+  ApiService _apiService = locator<ApiService>();
   CampaignUserData userData;
   String campaignName = '';
 
@@ -329,6 +331,7 @@ class CampaignDashboardScreenState extends BaseState {
   navigateByRouteName(String routeName, args) async {
     await navigationService.navigateTo(routeName, arguments: args);
   }
+
 /*-------------------------------------------------------------------------------------
       Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
 -------------------------------------------------------------------------------------*/
@@ -336,7 +339,7 @@ class CampaignDashboardScreenState extends BaseState {
   Future<double> getUsdValue() async {
     setBusy(true);
     double usdValue = 0;
-    await campaignService.getUsdPrices().then((res) {
+    await _apiService.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
         log.w(res['data']['EXG']['USD']);
         usdValue = res['data']['EXG']['USD'];

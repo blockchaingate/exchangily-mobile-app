@@ -52,7 +52,7 @@ Future serviceLocator() async {
   // singleton returns the old instance
   locator.registerLazySingleton(() => WalletService());
   locator.registerLazySingleton(() => VaultService());
-  locator.registerLazySingleton(() => Api());
+  locator.registerLazySingleton(() => ApiService());
   locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => WalletDataBaseService());
   locator.registerLazySingleton(() => SharedService());
