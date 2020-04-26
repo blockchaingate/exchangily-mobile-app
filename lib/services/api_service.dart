@@ -12,13 +12,15 @@
 */
 
 import 'dart:convert';
+import 'package:exchangilymobileapp/constants/constants.dart';
+
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 
 /// The service responsible for networking requests
-class Api {
+class ApiService {
   final log = getLogger('API');
   final client = new http.Client();
 
@@ -31,6 +33,22 @@ class Api {
   final btcBaseUrl = environment["endpoints"]["btc"];
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
+  final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
+
+/*-------------------------------------------------------------------------------------
+                                  Get coin currency Usd Prices
+-------------------------------------------------------------------------------------*/
+
+  Future getCoinCurrencyUsdPrice() async {
+    try {
+      var response = await client.get(coinCurrencyUsdPriceUrl);
+      var json = jsonDecode(response.body);
+      log.w(' getCoinCurrencyUsdPrice $json');
+      return json;
+    } catch (err) {
+      log.e('In getCoinCurrencyUsdPrice catch $err');
+    }
+  }
 
 // Get Coin Usd Price
   Future getCoinsUsdValue() async {

@@ -1,19 +1,19 @@
 class OrderInfo {
   String _id;
   String _dateCreated;
-  String _txid;
+  String _txId;
   String _status;
   double _quantity;
 
   OrderInfo(
       {String id,
       String dateCreated,
-      String txid,
+      String txId,
       String status,
       double quantity}) {
     this.id = id;
     this._dateCreated = dateCreated ?? '';
-    this._txid = txid ?? '';
+    this._txId = txId ?? '';
     this._status = status ?? '';
     this._quantity = quantity;
   }
@@ -22,7 +22,7 @@ class OrderInfo {
     return OrderInfo(
         id: json['_id'] as String,
         dateCreated: json['dateCreated'] as String,
-        txid: json['txid'],
+        txId: json['txId'],
         status: json['status'],
         quantity: json['quantity'].toDouble());
   }
@@ -31,7 +31,7 @@ class OrderInfo {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['_id'] = this._id;
     data['dateCreated'] = this._dateCreated;
-    data['txid'] = this._txid;
+    data['txid'] = this._txId;
     data['status'] = this._status;
     data['quantity'] = this._quantity;
     return data;
@@ -49,10 +49,10 @@ class OrderInfo {
     this._dateCreated = dateCreated;
   }
 
-  String get txid => _txid;
+  String get txId => _txId;
 
-  set txid(String txid) {
-    this._txid = txid;
+  set txId(String txid) {
+    this._txId = txid;
   }
 
   String get status => _status;

@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
@@ -11,6 +12,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -38,12 +40,13 @@ class CampaignPaymentScreenState extends BaseState {
       locator<CampaignUserDatabaseService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
+  ApiService _apiService = locator<ApiService>();
 
   final sendAmountTextController = TextEditingController();
   String _groupValue;
   get groupValue => _groupValue;
-  String prodUsdtWalletAddress = '';
-  String testUsdWalletAddress = '0xae397cfc8f67c46d533b844bfff25ad5ae89e63a';
+  String prodUsdtWalletAddress = Constants.prodUsdtWalletAddress;
+  String testUsdtWalletAddress = Constants.testUsdtWalletAddress;
   BuildContext context;
   String tickerName = '';
   String tokenType = '';
@@ -71,6 +74,7 @@ class CampaignPaymentScreenState extends BaseState {
       TextEditingController();
   double price = 0;
   Map<String, dynamic> passOrderList;
+  double usdtUnconfirmedOrderQuantity = 0;
 
 /*----------------------------------------------------------------------
                 Reset lists
@@ -90,9 +94,6 @@ class CampaignPaymentScreenState extends BaseState {
     resetLists();
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];
-    if (isProduction)
-      prodUsdtWalletAddress =
-          environment['addresses']['campaignAddress']['USDT'];
     setBusy(false);
   }
 
@@ -117,15 +118,16 @@ class CampaignPaymentScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   radioButtonSelection(value) async {
-    setState(ViewState.Busy);
+    setBusy(true);
     print(value);
     orderInfoContainerHeight = 510;
     _groupValue = value;
     if (value != 'USD') {
       await getWallet();
     }
+    FocusScope.of(context).requestFocus(FocusNode());
     setErrorMessage('');
-    setState((ViewState.Idle));
+    setBusy(false);
   }
 
   navigateToDashboard() {
@@ -166,7 +168,7 @@ class CampaignPaymentScreenState extends BaseState {
       String address = '';
       isProduction
           ? address = prodUsdtWalletAddress
-          : address = '0xae397cfc8f67c46d533b844bfff25ad5ae89e63a';
+          : address = testUsdtWalletAddress;
 
       await walletService
           .sendTransaction(
@@ -174,7 +176,8 @@ class CampaignPaymentScreenState extends BaseState {
           .then((res) async {
         log.w('Result $res');
         String txHash = res["txHash"];
-        setErrorMessage(res["errMsg"]);
+        String errorMessage = res["errMsg"];
+        // Transaction success
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           sendAmountTextController.text = '';
@@ -182,12 +185,17 @@ class CampaignPaymentScreenState extends BaseState {
           sharedService.alertResponse(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}');
-        } else if (errorMessage.isNotEmpty) {
-          log.e('Error Message: $errorMessage');
+        }
+        // There is an error
+        else if (errorMessage.isNotEmpty) {
+          log.e('Coin send Error Message: $errorMessage');
           sharedService.alertResponse(AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
-          setState(ViewState.Idle);
-        } else if (txHash == '' && errorMessage == '') {
+          setBusy(false);
+          isConfirming = false;
+        }
+        // Both txhash and error message is empty
+        else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
           sharedService.alertResponse(AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
@@ -195,29 +203,31 @@ class CampaignPaymentScreenState extends BaseState {
           isConfirming = false;
         }
         return txHash;
-      }).timeout(Duration(seconds: 25), onTimeout: () {
-        log.e('In time out');
+      })
+          // Coin send timeout
+          .timeout(Duration(seconds: 25), onTimeout: () {
+        log.e('In coin send time out');
         setBusy(false);
         isConfirming = false;
-
         setErrorMessage(
             AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
         return '';
-      }).catchError((error) {
-        log.e('In Catch error - $error');
+      })
+          // Coin send catch
+          .catchError((error) {
+        log.e('In coin send Catch error - $error');
         sharedService.alertResponse(AppLocalizations.of(context).genericError,
             '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
         setBusy(false);
         isConfirming = false;
       });
     } else if (dialogResponse.returnedText != 'Closed') {
-      setState(ViewState.Idle);
+      setBusy(false);
       setErrorMessage(
           AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
-    } else {
-      setBusy(false);
-      isConfirming = false;
     }
+    isConfirming = false;
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
@@ -261,8 +271,10 @@ class CampaignPaymentScreenState extends BaseState {
         isConfirming = false;
         setErrorMessage(AppLocalizations.of(context).createOrderFailed);
       } else {
+        // If order gets success
         log.e(res['orderNum']);
         var orderNumber = res['orderNum'];
+        // If USD order then show order numer
         if (_groupValue == 'USD') {
           sharedService.alertResponse(
               AppLocalizations.of(context).orderCreatedSuccessfully,
@@ -305,7 +317,7 @@ class CampaignPaymentScreenState extends BaseState {
           AppLocalizations.of(context).failed,
           AppLocalizations.of(context).orderCancelled,
         ];
-
+        usdtUnconfirmedOrderQuantity = 0;
         for (int i = 0; i < orderListFromApi.length; i++) {
           var status = orderListFromApi[i].status;
           if (status == "1") {
@@ -336,6 +348,12 @@ class CampaignPaymentScreenState extends BaseState {
     orderListFromApi[i].dateCreated = formattedDate;
     uiOrderStatusList.add(orderStatusList[status]);
     orderInfoList.add(orderListFromApi[i]);
+    log.w(orderListFromApi[i].toJson());
+    if (orderListFromApi[i].txId != '')
+      usdtUnconfirmedOrderQuantity =
+          usdtUnconfirmedOrderQuantity + orderListFromApi[i].quantity;
+    log.e(
+        'add order in the list totalOrderAmount $usdtUnconfirmedOrderQuantity');
   }
 
 /*----------------------------------------------------------------------
@@ -486,7 +504,9 @@ class CampaignPaymentScreenState extends BaseState {
     } else {
       if (amount == null ||
           !checkSendAmount ||
-          amount > walletInfo.availableBalance) {
+          amount > walletInfo.availableBalance ||
+          !isBalanceAvailabeForOrder()) {
+        log.e('$usdtUnconfirmedOrderQuantity');
         setErrorMessage(AppLocalizations.of(context).pleaseEnterValidNumber);
         sharedService.alertResponse(AppLocalizations.of(context).invalidAmount,
             AppLocalizations.of(context).pleaseEnterAmountLessThanYourWallet);
@@ -560,7 +580,7 @@ class CampaignPaymentScreenState extends BaseState {
   Future<double> getUsdValue() async {
     setBusy(true);
     double usdPrice = 0;
-    await campaignService.getUsdPrices().then((res) {
+    await _apiService.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
         log.w(res['data']['EXG']['USD']);
         log.e(selectedCurrency);
@@ -589,8 +609,20 @@ class CampaignPaymentScreenState extends BaseState {
     price = await getUsdValue();
     log.w('price $price');
     tokenPurchaseQuantity = amount / price;
+
     setBusy(false);
     isTokenCalc = false;
     return tokenPurchaseQuantity;
+  }
+
+/*----------------------------------------------------------------------
+                    Is Balance Available for order
+----------------------------------------------------------------------*/
+  bool isBalanceAvailabeForOrder() {
+    double amount = usdtUnconfirmedOrderQuantity * price;
+    log.e(
+        'usdtUnconfirmedOrderQuantity $usdtUnconfirmedOrderQuantity - price $price - Amount $amount - Wallet bal ${walletInfo.availableBalance}');
+    if (amount > walletInfo.availableBalance) return false;
+    return true;
   }
 }

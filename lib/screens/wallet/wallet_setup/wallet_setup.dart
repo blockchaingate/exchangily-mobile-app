@@ -38,16 +38,11 @@ class WalletSetupScreen extends StatelessWidget {
           model.sharedService.closeApp();
           return new Future(() => false);
         },
-        child: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height * 1,
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
-            alignment: Alignment.center,
-            color: globals.walletCardColor,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+          color: globals.walletCardColor,
+          child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              //  crossAxisAlignment: CrossAxpisAlignment.stretch,
-              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 // Logo Container
                 UIHelper.verticalSpaceLarge,
@@ -138,10 +133,11 @@ class WalletSetupScreen extends StatelessWidget {
                                           arguments: 'import');
                                     },
                                   ),
-                                )
+                                ),
                               ],
                             ),
-                          )
+                          ),
+                UIHelper.verticalSpaceLarge,
               ],
             ),
           ),

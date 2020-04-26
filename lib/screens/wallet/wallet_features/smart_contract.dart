@@ -32,7 +32,7 @@ class SmartContract extends StatefulWidget {
 }
 
 class _SmartContractState extends State<SmartContract> {
-  Api _api = locator<Api>();
+  ApiService _api = locator<ApiService>();
   String _currentFunction;
   String _smartContractName;
   var abis;
@@ -296,8 +296,15 @@ class _SmartContractState extends State<SmartContract> {
       var contractInfo = await walletService.getFabSmartContract(
           smartContractAddressController.value.text, abiHex, 800000, 50);
 
-      var res1 = await walletService.getFabTransactionHex(seed, [0],
-          contractInfo['contract'], value, contractInfo['totalFee'], 14, [], false);
+      var res1 = await walletService.getFabTransactionHex(
+          seed,
+          [0],
+          contractInfo['contract'],
+          value,
+          contractInfo['totalFee'],
+          14,
+          [],
+          false);
       var txHex = res1['txHex'];
       var errMsg = res1['errMsg'];
       var txHash = '';

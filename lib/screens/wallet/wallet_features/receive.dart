@@ -50,14 +50,16 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
             style: Theme.of(context).textTheme.headline3),
         centerTitle: true,
       ),
-      body: Container(
-        margin: EdgeInsets.all(10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            buildCopyAddressContainer(context),
-            buildQrImageContainer(),
-          ],
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.all(10.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              buildCopyAddressContainer(context),
+              buildQrImageContainer(),
+            ],
+          ),
         ),
       ),
     );
