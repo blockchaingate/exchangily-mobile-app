@@ -73,7 +73,8 @@ class _DepositState extends State<Deposit> {
           child: ListView(
             children: <Widget>[
               TextField(
-                keyboardType: TextInputType.number,
+                keyboardType: TextInputType.numberWithOptions(
+                                              decimal: true),
                 onChanged: (String amount) {
                   model.updateTransFee();
                 },

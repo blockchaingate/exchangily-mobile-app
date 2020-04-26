@@ -101,7 +101,7 @@ class AddGas extends StatelessWidget {
                 //     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
                 SizedBox(height: 10),
                 TextField(
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(

@@ -140,7 +140,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           filled: true,
                                           fillColor: globals.walletCardColor,
                                           hintText: AppLocalizations.of(context)
-                                              .quantity,
+                                              .amount,
                                           hintStyle: Theme.of(context)
                                               .textTheme
                                               .headline6
