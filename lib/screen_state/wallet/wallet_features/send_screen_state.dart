@@ -87,8 +87,21 @@ class SendScreenState extends BaseState {
       gasLimitTextController.text =
           environment["chains"]["FAB"]["gasLimit"].toString();
     }
+    getGasBalance();
     setState(ViewState.Idle);
   }
+
+  getGasBalance() async {
+    // await walletService.gasBalance(addr)
+  }
+
+  // getExgWalletAddr() async {
+  //   // Get coin details which we are making transaction through like USDT
+  //   await walletDataBaseService.getBytickerName('EXG').then((res) {
+  //     exgWalletAddress = res.address;
+  //     log.w('Exg wallet address $exgWalletAddress');
+  //   });
+  // }
 
   // Paste Clipboard Data In Receiver Address
 

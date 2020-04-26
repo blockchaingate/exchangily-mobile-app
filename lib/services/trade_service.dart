@@ -19,7 +19,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 
 class TradeService {
-  Api _api = locator<Api>();
+  ApiService _api = locator<ApiService>();
   Future<int> getAllPrices() async {
     final response =
         await http.get('https://jsonplaceholder.typicode.com/posts/1');
