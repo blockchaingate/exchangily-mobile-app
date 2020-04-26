@@ -139,8 +139,8 @@ class SendWalletScreen extends StatelessWidget {
                             }
                             //  });
                           },
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: true), // numnber keyboard
+                          keyboardType: TextInputType.numberWithOptions(
+                              decimal: true), // numnber keyboard
                           decoration: InputDecoration(
                               focusedBorder: UnderlineInputBorder(
                                   borderSide:
