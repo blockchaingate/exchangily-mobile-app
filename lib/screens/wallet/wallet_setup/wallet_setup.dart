@@ -38,14 +38,14 @@ class WalletSetupScreen extends StatelessWidget {
           model.sharedService.closeApp();
           return new Future(() => false);
         },
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
-            color: globals.walletCardColor,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 40),
+          color: globals.walletCardColor,
+          child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 // Logo Container
-
+                UIHelper.verticalSpaceLarge,
                 UIHelper.verticalSpaceLarge,
                 Container(
                   height: 50,
