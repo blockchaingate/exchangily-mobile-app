@@ -1,8 +1,11 @@
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/price.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
+import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,9 +48,11 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 class WalletService {
   final log = getLogger('Wallet Service');
-  Api _api = locator<Api>();
-
+  ApiService _api = locator<ApiService>();
+  double currentUsdValue;
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+
+  ApiService _apiService = locator<ApiService>();
   double coinUsdBalance;
   List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG', 'DUSD'];
 
@@ -67,6 +72,12 @@ class WalletService {
 
   String getRandomMnemonic() {
     String randomMnemonic = '';
+    if (isLocal == true) {
+      randomMnemonic =
+          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+      // randomMnemonic = 'group quick salad argue animal rubber wolf close weird school spell agent';
+      return randomMnemonic;
+    }
     randomMnemonic = bip39.generateMnemonic();
     return randomMnemonic;
   }
@@ -128,6 +139,9 @@ class WalletService {
     return seed;
   }
 
+/*----------------------------------------------------------------------
+                    Get Coin Address
+----------------------------------------------------------------------*/
   Future getCoinAddresses(String mnemonic) async {
     var seed = generateSeed(mnemonic);
     var root = bip32.BIP32.fromSeed(seed);
@@ -148,27 +162,61 @@ class WalletService {
     log.w('$name $address $tokenType');
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
-    log.w('$name - Coin Balance $bal');
+    // log.w('coinBalanceByAddress $name - $bal');
     if (bal['balance'].isNaN) {
       return 0.0;
     }
     return bal;
   }
+
+/*----------------------------------------------------------------------
+      Get Coin Price By Web Sockets (Not Using this anywhere right now)
+----------------------------------------------------------------------*/
+
+  getCoinPriceByWebSocket(String pair) {
+    currentUsdValue = 0;
+    final channel = IOWebSocketChannel.connect(Constants.COIN_PRICE_WS_URL,
+        pingInterval: Duration(minutes: 1));
+
+    channel.stream.listen((prices) async {
+      List<Price> coinListWithPriceData = Decoder.fromJsonArray(prices);
+      for (var i = 0; i < coinListWithPriceData.length; i++) {
+        if (coinListWithPriceData[i].symbol == 'EXGUSDT') {
+          var d = coinListWithPriceData[i].price;
+          currentUsdValue = stringUtils.bigNum2Double(d);
+        }
+      }
+    });
+    Future.delayed(Duration(seconds: 2), () {
+      channel.sink.close();
+      log.i('Channel closed');
+    });
+  }
+
 /*----------------------------------------------------------------------
                 Get Current Market Price For The Coin By Name
 ----------------------------------------------------------------------*/
 
   Future<double> getCoinMarketPrice(String name) async {
-    double currentUsdValue;
-    var usdVal = await _api.getCoinsUsdValue();
+    currentUsdValue = 0;
+
     if (name == 'exchangily') {
-      return currentUsdValue = 0.2;
-    }
-    if (name == 'dusd') {
+      await _apiService.getCoinCurrencyUsdPrice().then((res) {
+        if (res != null) {
+          currentUsdValue = res['data']['EXG']['USD'];
+          log.w('currentusdval $currentUsdValue');
+        }
+      });
+      return currentUsdValue;
+    } else if (name == 'dusd') {
       return currentUsdValue = 1.0;
+    } else {
+      var usdVal = await _api.getCoinsUsdValue();
+      double tempPriceHolder = usdVal[name]['usd'];
+      if (tempPriceHolder != null) {
+        currentUsdValue = tempPriceHolder;
+      }
     }
-    currentUsdValue = usdVal[name]['usd'];
-    log.w('USD VAL of $name - $currentUsdValue');
     return currentUsdValue;
   }
 
@@ -317,7 +365,7 @@ class WalletService {
   assetsBalance(String exgAddress) async {
     List<Map<String, dynamic>> bal = [];
     await _api.getAssetsBalance(exgAddress).then((res) {
-      log.w('assetsBalance $res');
+      //  log.w('assetsBalance $res');
       for (var i = 0; i < res.length; i++) {
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
@@ -365,13 +413,13 @@ class WalletService {
   double calculateCoinUsdBalance(
       double marketPrice, double actualWalletBalance, double lockedBalance) {
     log.w(
-        'usdVal =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
+        'marketPrice =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
     if (actualWalletBalance != 0 && marketPrice != null) {
       coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
       return coinUsdBalance;
     } else {
       coinUsdBalance = 0.0;
-      log.i('calculateCoinUsdBalance - Wallet balance 0');
+      //  log.i('calculateCoinUsdBalance - Wallet balance 0');
     }
     return coinUsdBalance;
   }
@@ -381,7 +429,7 @@ class WalletService {
     return 0;
   }
 /*----------------------------------------------------------------------
-                et Coin Type Id By Name
+                Get Coin Type Id By Name
 ----------------------------------------------------------------------*/
 
   getCoinTypeIdByName(String coinName) {

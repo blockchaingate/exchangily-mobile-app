@@ -44,7 +44,7 @@ class CampaignService {
   static const memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
   static const rewardsUrl = BASE_URL + 'campaign-order/rewards';
   static const memberProfileUrl = BASE_URL + 'campaign-order/profile';
-  static const usdPricesUrl = 'https://kanbanprod.fabcoinapi.com/USDvalues';
+
   static const resetPasswordUrl = BASE_URL + 'members/requestpwdreset';
 
   CampaignUserData userData;
@@ -247,21 +247,6 @@ class CampaignService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String loginToken = prefs.getString('loginToken');
     return loginToken;
-  }
-
-/*-------------------------------------------------------------------------------------
-                                  Get Usd Prices
--------------------------------------------------------------------------------------*/
-
-  Future getUsdPrices() async {
-    try {
-      var response = await client.get(usdPricesUrl);
-      var json = jsonDecode(response.body);
-      log.w(' getUsdPrices $json');
-      return json;
-    } catch (err) {
-      log.e('In getUsdPrices catch $err');
-    }
   }
 
 /*-------------------------------------------------------------------------------------

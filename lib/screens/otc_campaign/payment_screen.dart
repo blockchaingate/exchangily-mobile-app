@@ -46,7 +46,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                     :
                     // 1st container row Amount and payment type
                     Container(
-                        padding: EdgeInsets.all(10.0),
+                        width: MediaQuery.of(context).size.width - 70,
+                        padding: EdgeInsets.all(8.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -54,14 +55,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                             UIHelper.verticalSpaceLarge,
                             // Amount text and input row
                             Container(
-                              width: MediaQuery.of(context).size.width - 100,
                               child: Row(children: <Widget>[
-                                // Expanded(
-                                //     flex: 2,
-                                //     child: Text(
-                                //       AppLocalizations.of(context).amount,
-                                //       style: Theme.of(context).textTheme.headline5,
-                                //     )),
                                 Expanded(
                                   flex: 5,
                                   child: SizedBox(
@@ -94,15 +88,9 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                   color: globals.primaryColor)),
                                           enabledBorder: OutlineInputBorder(
                                               borderRadius: BorderRadius.zero,
-                                              // gapPadding: .5,
                                               borderSide: BorderSide(
                                                   width: .5,
                                                   color: globals.grey)),
-                                          // contentPadding: EdgeInsets.only(
-                                          //     top: 35.0,
-                                          //     bottom: 1.0,
-                                          //     left: 15.0,
-                                          //     right: 14.0),
                                           isDense: true,
                                           prefix: Padding(
                                             padding: const EdgeInsets.only(
@@ -173,7 +161,6 @@ class CampaignPaymentScreen extends StatelessWidget {
                             // Payment type container row
                             Container(
                               color: globals.primaryColor.withAlpha(100),
-                              width: MediaQuery.of(context).size.width - 100,
                               child: Row(
                                 children: <Widget>[
                                   Expanded(
@@ -195,7 +182,6 @@ class CampaignPaymentScreen extends StatelessWidget {
                                   Expanded(
                                     flex: 3,
                                     child: Container(
-                                      //  padding: EdgeInsets.only(left: 8.0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
@@ -253,7 +239,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                             Container(
                               // cannot give padding here as it shows empty container when no radio button selected
                               color: globals.walletCardColor.withAlpha(100),
-                              width: MediaQuery.of(context).size.width - 100,
+
                               child: Visibility(
                                 visible: model.groupValue == 'USD',
                                 child: Container(
@@ -275,6 +261,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           ),
                                         ],
                                       ),
+                                      UIHelper.verticalSpaceSmall,
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -337,11 +324,11 @@ class CampaignPaymentScreen extends StatelessWidget {
                             Container(
                               // cannot give padding here as it shows empty container when no radio button selected
                               color: globals.walletCardColor.withAlpha(100),
-                              //  width: MediaQuery.of(context).size.width - 75,
+
                               child: Visibility(
                                 visible: model.groupValue == 'USDT',
                                 child: Container(
-                                  padding: EdgeInsets.all(7.0),
+                                  padding: EdgeInsets.all(10.0),
                                   child: Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -359,7 +346,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                       UIHelper.verticalSpaceSmall,
                                       isProduction
                                           ? Text(model.prodUsdtWalletAddress)
-                                          : Text(model.testUsdWalletAddress,
+                                          : Text(model.testUsdtWalletAddress,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1),
@@ -369,10 +356,6 @@ class CampaignPaymentScreen extends StatelessWidget {
                                               model.groupValue != 'USD' &&
                                               model.walletInfo != null
                                           ? Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width -
-                                                  100,
                                               child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
@@ -427,7 +410,6 @@ class CampaignPaymentScreen extends StatelessWidget {
                             UIHelper.verticalSpaceSmall,
                             // Button row container
                             Container(
-                              width: MediaQuery.of(context).size.width - 100,
                               child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
