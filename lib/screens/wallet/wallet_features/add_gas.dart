@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/globals.dart' as globals;
@@ -50,7 +51,7 @@ class AddGas extends StatelessWidget {
               ? AppLocalizations.of(context).transactionId + ret['txHash']
               : ret["errMsg"],
           Icons.cancel,
-          globals.red,
+          globals.primaryColor,
           context);
     } else {
       if (res.returnedText != 'Closed') {
@@ -95,48 +96,59 @@ class AddGas extends StatelessWidget {
         body: Container(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                // Text(AppLocalizations.of(context).amount,
-                //     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
-                SizedBox(height: 10),
                 TextField(
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: new BorderSide(
                             color: Color(0XFF871fff), width: 1.0)),
-                    hintText: AppLocalizations.of(context).enterAmount,
-                    hintStyle: TextStyle(fontSize: 15.0, color: Colors.grey),
+                    hintText:
+                        AppLocalizations.of(context).enterAmount + '(FAB)',
+                    hintStyle: Theme.of(context).textTheme.headline6,
                   ),
                   controller: myController,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                 ),
                 SizedBox(height: 20),
-                MaterialButton(
-                  padding: EdgeInsets.all(15),
-                  color: globals.primaryColor,
-                  textColor: Colors.white,
-                  onPressed: () async {
-                    double amount = 0;
-                    if (myController.text != '') {
-                      amount = double.parse(myController.text);
-                    }
-                    // var res = await AddGasDo(double.parse(myController.text));
-                    myController.text == '' || amount == null
-                        ? walletService.showInfoFlushbar(
-                            AppLocalizations.of(context).invalidAmount,
-                            AppLocalizations.of(context).pleaseEnterValidNumber,
-                            Icons.cancel,
-                            globals.red,
-                            context)
-                        : checkPass(amount, context);
-                    //   print(res);
-                  },
-                  child: Text(
-                    AppLocalizations.of(context).confirm,
-                    style: Theme.of(context).textTheme.button,
-                  ),
+                Column(
+                  children: <Widget>[
+                    MaterialButton(
+                      padding: EdgeInsets.all(15),
+                      color: globals.primaryColor,
+                      textColor: Colors.white,
+                      onPressed: () async {
+                        double amount = 0;
+                        if (myController.text != '') {
+                          amount = double.parse(myController.text);
+                        }
+                        // var res = await AddGasDo(double.parse(myController.text));
+                        myController.text == '' || amount == null
+                            ? walletService.showInfoFlushbar(
+                                AppLocalizations.of(context).invalidAmount,
+                                AppLocalizations.of(context)
+                                    .pleaseEnterValidNumber,
+                                Icons.cancel,
+                                globals.red,
+                                context)
+                            : checkPass(amount, context);
+                        //   print(res);
+                      },
+                      child: Text(
+                        AppLocalizations.of(context).confirm,
+                        style: Theme.of(context).textTheme.button,
+                      ),
+                    ),
+                    UIHelper.verticalSpaceSmall,
+                    OutlineButton(
+                        borderSide: BorderSide(color: globals.primaryColor),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Cancel')),
+                  ],
                 )
               ],
             )));

@@ -8,4 +8,6 @@ class Constants {
   // Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
   static const COIN_CURRENCY_USD_PRICE_URL =
       'https://kanbanprod.fabcoinapi.com/USDvalues';
+  static const String PAIR_DECIMAL_CONFIG_URL =
+      'https://kanbanprod.fabcoinapi.com/kanban/getpairconfig';
 }

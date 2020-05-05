@@ -28,6 +28,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:share/share.dart';
+import 'package:exchangilymobileapp/utils/fab_util.dart';
 
 class ReceiveWalletScreen extends StatefulWidget {
   final WalletInfo walletInfo;
@@ -38,6 +39,19 @@ class ReceiveWalletScreen extends StatefulWidget {
 }
 
 class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
+  String convertedToFabAddress = '';
+  @override
+  void initState() {
+    super.initState();
+    log.w(widget.walletInfo.toJson());
+    if (widget.walletInfo.tickerName == 'EXG' ||
+        widget.walletInfo.tickerName == 'DUSD') {
+      convertedToFabAddress = exgToFabAddress(widget.walletInfo.address);
+      log.w(
+          'convertedToFabAddress from ${widget.walletInfo.address} to $convertedToFabAddress');
+    }
+  }
+
   final log = getLogger('Receive');
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   GlobalKey _globalKey = new GlobalKey();
@@ -156,7 +170,10 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         children: <Widget>[
           Text(AppLocalizations.of(context).address,
               style: Theme.of(context).textTheme.subtitle1),
-          Text(widget.walletInfo.address,
+          Text(
+              convertedToFabAddress == ''
+                  ? widget.walletInfo.address
+                  : convertedToFabAddress,
               style: Theme.of(context).textTheme.bodyText2),
           Container(
             width: 200,
@@ -178,7 +195,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                 ],
               ),
               onPressed: () {
-                copyAddress(widget.walletInfo.address);
+                copyAddress();
               },
               textColor: globals.white,
             ),
@@ -194,8 +211,8 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  copyAddress(String walletAddress) {
-    Clipboard.setData(new ClipboardData(text: walletAddress));
+  copyAddress() {
+    Clipboard.setData(new ClipboardData(text: convertedToFabAddress));
     Flushbar(
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
       message: AppLocalizations.of(context).addressCopied,

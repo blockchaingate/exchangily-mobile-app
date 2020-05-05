@@ -84,8 +84,7 @@ class MyApp extends StatelessWidget {
         canvasColor: globals.secondaryColor,
         primaryColor: globals.primaryColor,
         textTheme: TextTheme(
-          button: TextStyle(
-              fontSize: 20, letterSpacing: 1.15, color: globals.white),
+          button: TextStyle(fontSize: 12, color: globals.white),
           headline1: TextStyle(
               fontSize: 22,
               color: globals.white,

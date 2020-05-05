@@ -224,4 +224,17 @@ class ApiService {
     } catch (e) {}
     return nonce;
   }
+
+  // Get Decimal configuration for the coins
+  Future getPairDecimalConfig() async {
+    var url = Constants.PAIR_DECIMAL_CONFIG_URL;
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      log.w(' getCoinCurrencyUsdPrice $json');
+      return json;
+    } catch (err) {
+      log.e('In getCoinCurrencyUsdPrice catch $err');
+    }
+  }
 }

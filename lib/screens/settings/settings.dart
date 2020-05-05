@@ -57,7 +57,7 @@ class SettingsScreen extends StatelessWidget {
                         child: Text(
                           AppLocalizations.of(context).deleteWallet,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                       ),
                     ),
@@ -80,7 +80,7 @@ class SettingsScreen extends StatelessWidget {
                               ? AppLocalizations.of(context).displayMnemonic
                               : AppLocalizations.of(context).hideMnemonic,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                       ),
                     ),
@@ -122,7 +122,7 @@ class SettingsScreen extends StatelessWidget {
                                 AppLocalizations.of(context)
                                     .changeWalletLanguage,
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Theme.of(context).textTheme.headline5,
                               ),
                               value: model.selectedLanguage,
                               onChanged: (newValue) {
@@ -135,7 +135,7 @@ class SettingsScreen extends StatelessWidget {
                                         textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5),
+                                            .headline6),
                                   ),
                                   value: language,
                                 );
@@ -158,7 +158,7 @@ class SettingsScreen extends StatelessWidget {
                       children: <Widget>[
                         Text(
                           'v ${model.versionName}',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                         if (!isProduction)
                           Text(' Debug', style: TextStyle(color: Colors.white))
