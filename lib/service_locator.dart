@@ -81,7 +81,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => OtcScreenState());
   locator.registerFactory(() => OtcDetailsScreenState());
   locator.registerFactory(() => OrderListScreenState());
-  locator.registerFactory(() => DepositScreenState());
+  locator.registerFactory(() => MoveToExchangeScreenState());
   locator.registerFactory(() => CampaignInstructionsScreenState());
   locator.registerFactory(() => CampaignPaymentScreenState());
   locator.registerFactory(() => CampaignDashboardScreenState());

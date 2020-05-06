@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -84,9 +85,7 @@ class _RedepositState extends State<Redeposit> {
         break;
       }
     }
-
-    print('errDepositList===');
-    print(errDepositList);
+    print('errDepositList=== $errDepositList');
     if (errDepositList != null && errDepositList.length > 0) {
       setState(() {
         this.errDepositList = errDepositList;
@@ -131,6 +130,7 @@ class _RedepositState extends State<Redeposit> {
           break;
         }
       }
+
       if (errDepositItem == null) {
         walletService.showInfoFlushbar(
             '${AppLocalizations.of(context).redepositError}',
@@ -140,8 +140,11 @@ class _RedepositState extends State<Redeposit> {
             context);
       }
 
-      var amountInLink = BigInt.from(errDepositItem['amount']);
-
+      print('errDepositItem $errDepositItem');
+      num errDepositAmount = num.parse(errDepositItem['amount']);
+      print('errDepositAmount $errDepositAmount');
+      var amountInLink = BigInt.from(errDepositAmount);
+      print('amountInLink $amountInLink');
       var coinType = errDepositItem['coinType'];
 
       var transactionID = errDepositItem['transactionID'];
@@ -253,20 +256,18 @@ class _RedepositState extends State<Redeposit> {
         ),
         backgroundColor: Color(0xFF1F2233),
         body: Container(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            padding: EdgeInsets.all(20.0),
             child: ListView(
               children: <Widget>[
-                // Text("Amount:",
-                //     style: new TextStyle(color: Colors.grey, fontSize: 18.0)),
-                // SizedBox(height: 10),
                 Column(
                   children: errDepositList
                       .map((data) => RadioListTile(
+                            dense: true,
                             title: Text(
                               bigNum2Double(data["amount"]).toString(),
                               style: Theme.of(context)
                                   .textTheme
-                                  .display3
+                                  .headline5
                                   .copyWith(fontWeight: FontWeight.bold),
                             ),
                             value: data['transactionID'],
@@ -281,45 +282,44 @@ class _RedepositState extends State<Redeposit> {
                       .toList(),
                 ),
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  padding: EdgeInsets.only(left: 20.0),
                   child: Column(
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Text(
-                              AppLocalizations.of(context).kanbanGasFee,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .display3
-                                  .copyWith(fontWeight: FontWeight.bold),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            AppLocalizations.of(context).walletbalance +
+                                ' $bal',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left:
-                                      5), // padding left to keep some space from the text
-                              child: Text(
-                                '$kanbanTransFee',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .display3
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            )
-                          ],
-                        ),
+                            child: Text(
+                              '$coinName'.toUpperCase(),
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                          )
+                        ],
+                      ),
+                      UIHelper.verticalSpaceSmall,
+                      Row(
+                        children: <Widget>[
+                          Text(AppLocalizations.of(context).kanbanGasFee,
+                              style: Theme.of(context).textTheme.headline5),
+                          UIHelper.horizontalSpaceSmall,
+                          Text(
+                            '$kanbanTransFee',
+                            style: Theme.of(context).textTheme.headline5,
+                          )
+                        ],
                       ),
                       // Switch Row
                       Row(
                         children: <Widget>[
-                          Text(
-                            AppLocalizations.of(context).advance,
-                            style: Theme.of(context)
-                                .textTheme
-                                .display3
-                                .copyWith(fontWeight: FontWeight.bold),
-                          ),
+                          Text(AppLocalizations.of(context).advance,
+                              style: Theme.of(context).textTheme.headline5),
                           Switch(
                             value: transFeeAdvance,
                             inactiveTrackColor: globals.grey,
@@ -339,88 +339,80 @@ class _RedepositState extends State<Redeposit> {
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
-                                  Text(
-                                    AppLocalizations.of(context).kanbanGasPrice,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .display3
-                                        .copyWith(fontWeight: FontWeight.bold),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                        AppLocalizations.of(context)
+                                            .kanbanGasPrice,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
                                   ),
                                   Expanded(
-                                      child: Padding(
-                                          padding:
-                                              EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                          child: TextField(
-                                            controller:
-                                                _kanbanGasPriceTextController,
-                                            onChanged: (String amount) {
-                                              updateTransFee();
-                                            },
-                                            keyboardType: TextInputType
-                                                .number, // numnber keyboard
-                                            decoration: InputDecoration(
-                                                focusedBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: globals
-                                                                .primaryColor)),
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                globals.grey)),
-                                                hintText: '0.00000',
-                                                hintStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .display2
-                                                    .copyWith(fontSize: 20)),
-                                            style: TextStyle(
-                                                color: globals.grey,
-                                                fontSize: 24),
-                                          )))
+                                      flex: 5,
+                                      child: TextField(
+                                        controller:
+                                            _kanbanGasPriceTextController,
+                                        onChanged: (String amount) {
+                                          updateTransFee();
+                                        },
+                                        keyboardType: TextInputType
+                                            .number, // numnber keyboard
+                                        decoration: InputDecoration(
+                                            focusedBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color:
+                                                        globals.primaryColor)),
+                                            enabledBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: globals.grey)),
+                                            hintText: '0.00000',
+                                            hintStyle: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
+                                        style: TextStyle(
+                                            color: globals.grey, fontSize: 12),
+                                      ))
                                 ],
                               ),
                               Row(
                                 children: <Widget>[
-                                  Text(
-                                    AppLocalizations.of(context).kanbanGasLimit,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .display3
-                                        .copyWith(fontWeight: FontWeight.bold),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                        AppLocalizations.of(context)
+                                            .kanbanGasLimit,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
                                   ),
                                   Expanded(
-                                      child: Padding(
-                                          padding:
-                                              EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                          child: TextField(
-                                            controller:
-                                                _kanbanGasLimitTextController,
-                                            onChanged: (String amount) {
-                                              updateTransFee();
-                                            },
-                                            keyboardType: TextInputType
-                                                .number, // numnber keyboard
-                                            decoration: InputDecoration(
-                                                focusedBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: globals
-                                                                .primaryColor)),
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color:
-                                                                globals.grey)),
-                                                hintText: '0.00000',
-                                                hintStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .display2
-                                                    .copyWith(fontSize: 20)),
-                                            style: TextStyle(
-                                                color: globals.grey,
-                                                fontSize: 24),
-                                          )))
+                                      flex: 5,
+                                      child: TextField(
+                                        controller:
+                                            _kanbanGasLimitTextController,
+                                        onChanged: (String amount) {
+                                          updateTransFee();
+                                        },
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                decimal:
+                                                    true), // numnber keyboard
+                                        decoration: InputDecoration(
+                                            focusedBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color:
+                                                        globals.primaryColor)),
+                                            enabledBorder: UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: globals.grey)),
+                                            hintText: '0.00000',
+                                            hintStyle: Theme.of(context)
+                                                .textTheme
+                                                .headline5),
+                                        style: TextStyle(
+                                            color: globals.grey, fontSize: 12),
+                                      ))
                                 ],
                               )
                             ],
@@ -428,8 +420,7 @@ class _RedepositState extends State<Redeposit> {
                     ],
                   ),
                 ),
-
-                SizedBox(height: 20),
+                UIHelper.verticalSpaceSmall,
                 MaterialButton(
                   padding: EdgeInsets.all(15),
                   color: globals.primaryColor,
@@ -442,26 +433,6 @@ class _RedepositState extends State<Redeposit> {
                     style: Theme.of(context).textTheme.button,
                   ),
                 ),
-
-                SizedBox(height: 20),
-
-                Row(
-                  children: <Widget>[
-                    Text(
-                      AppLocalizations.of(context).walletbalance + ' $bal',
-                      style: Theme.of(context).textTheme.headline,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      child: Text(
-                        '$coinName'.toUpperCase(),
-                        style: Theme.of(context).textTheme.headline,
-                      ),
-                    )
-                  ],
-                )
               ],
             )));
   }

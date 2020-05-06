@@ -168,8 +168,6 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(AppLocalizations.of(context).address,
-              style: Theme.of(context).textTheme.subtitle1),
           Text(
               convertedToFabAddress == ''
                   ? widget.walletInfo.address
@@ -177,19 +175,26 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               style: Theme.of(context).textTheme.bodyText2),
           Container(
             width: 200,
-            child: RaisedButton(
+            child: OutlineButton(
+              borderSide: BorderSide(color: globals.primaryColor, width: 0.5),
               padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Icon(Icons.content_copy),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4.0),
+                    child: Icon(
+                      Icons.content_copy,
+                      size: 16,
+                    ),
+                  ),
                   Text(
                     AppLocalizations.of(context).copyAddress,
                     style: Theme.of(context)
                         .textTheme
-                        .headline4
+                        .headline5
                         .copyWith(fontWeight: FontWeight.w400),
                   ),
                 ],

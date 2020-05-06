@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import "package:flutter/material.dart";
 import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
@@ -41,7 +42,12 @@ class Gas extends StatelessWidget {
                 .headline5
                 .copyWith(wordSpacing: 1.25),
           ),
-        )
+        ),
+        UIHelper.horizontalSpaceSmall,
+        Expanded(
+            child: gasAmount == 0
+                ? Text('Please add gas to use all wallet features.')
+                : Text(''))
       ],
     );
   }
