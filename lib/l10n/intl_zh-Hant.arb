@@ -635,6 +635,18 @@
         "type": "text",
         "placeholders": {}
     },
+    "gasPrice": "燃料價格",
+    "@gasPrice": {
+        "description": "gas_price",
+        "type": "text",
+        "placeholders": {}
+    },
+    "gasLimit": "燃料限額",
+    "@gasLimit": {
+        "description": "gas_limit",
+        "type": "text",
+        "placeholders": {}
+    },
     "depositTransactionFailed": "存款交易失敗",
     "@depositTransactionFailed": {
         "description": "deposit_transaction_failed",
