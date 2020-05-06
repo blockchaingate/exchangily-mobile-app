@@ -1529,5 +1529,11 @@
     "description": "show_dialog_warnings",
     "type": "text",
     "placeholders": {}
+  },
+  "doNotShowTheseWarnings": "Do not show these warnings",
+  "@doNotShowTheseWarnings": {
+    "description": "do_not_show_these_warnings",
+    "type": "text",
+    "placeholders": {}
   }
 }

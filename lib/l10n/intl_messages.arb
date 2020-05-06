@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-06T19:12:57.666188",
+  "@@last_modified": "2020-05-06T19:38:09.295188",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1527,6 +1527,12 @@
   "showDialogWarnings": "Show dialog warnings",
   "@showDialogWarnings": {
     "description": "show_dialog_warnings",
+    "type": "text",
+    "placeholders": {}
+  },
+  "doNotShowTheseWarnings": "Do not show these warnings",
+  "@doNotShowTheseWarnings": {
+    "description": "do_not_show_these_warnings",
     "type": "text",
     "placeholders": {}
   }
