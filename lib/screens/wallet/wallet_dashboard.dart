@@ -289,7 +289,10 @@ class WalletDashboardScreen extends StatelessWidget {
                       ? Shimmer.fromColors(
                           baseColor: globals.primaryColor,
                           highlightColor: globals.grey,
-                          child: Gas(gasAmount: model.gasAmount),
+                          child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator()),
                         )
                       : Gas(gasAmount: model.gasAmount)),
               UIHelper.verticalSpaceSmall,

@@ -177,7 +177,7 @@ class SettingsScreen extends StatelessWidget {
                   child: Container(
                     color: globals.primaryColor,
                     width: 200,
-                    height: 30,
+                    height: 40,
                     child: Center(
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
