@@ -140,7 +140,9 @@ class _RedepositState extends State<Redeposit> {
             context);
       }
 
-      var amountInLink = BigInt.from(errDepositItem['amount']);
+      print('errDepositItem[amount]===');
+      print(errDepositItem['amount']);
+      var amountInLink = BigInt.parse(errDepositItem['amount'],radix: 10);
 
       var coinType = errDepositItem['coinType'];
 
