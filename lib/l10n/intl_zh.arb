@@ -635,6 +635,18 @@
         "type": "text",
         "placeholders": {}
     },
+    "gasPrice": "燃料价格",
+    "@gasPrice": {
+        "description": "gas_price",
+        "type": "text",
+        "placeholders": {}
+    },
+    "gasLimit": "燃料限额",
+    "@gasLimit": {
+        "description": "gas_limit",
+        "type": "text",
+        "placeholders": {}
+    },
     "move": "转移",
     "@move": {
         "description": "deposit_withdraw_move_header",
@@ -1559,7 +1571,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "doNotShowTheseWarnings": "下次不再显示该信息",
+  "doNotShowTheseWarnings": "不再显示该信息",
   "@doNotShowTheseWarnings": {
     "description": "do_not_show_these_warnings",
     "type": "text",
