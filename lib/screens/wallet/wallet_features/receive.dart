@@ -43,7 +43,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   @override
   void initState() {
     super.initState();
-    log.w(widget.walletInfo.toJson());
+    // log.w(widget.walletInfo.toJson());
     if (widget.walletInfo.tickerName == 'EXG' ||
         widget.walletInfo.tickerName == 'DUSD') {
       convertedToFabAddress = exgToFabAddress(widget.walletInfo.address);
@@ -217,7 +217,11 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   copyAddress() {
-    Clipboard.setData(new ClipboardData(text: convertedToFabAddress));
+    String address = convertedToFabAddress == ''
+        ? widget.walletInfo.address
+        : convertedToFabAddress;
+    log.w(address);
+    Clipboard.setData(new ClipboardData(text: address));
     Flushbar(
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
       message: AppLocalizations.of(context).addressCopied,

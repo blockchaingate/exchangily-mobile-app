@@ -35,6 +35,7 @@ class WalletFeaturesScreen extends StatelessWidget {
         model.walletInfo = walletInfo;
         model.context = context;
         model.getWalletFeatures();
+        model.getErrDeposit();
       },
       builder: (context, model, child) => Scaffold(
         key: key,

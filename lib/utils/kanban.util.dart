@@ -72,6 +72,7 @@ Future<Map<String, dynamic>> submitDeposit(
 
 Future getKanbanErrDeposit(String address) async {
   var url = environment['endpoints']['kanban'] + 'depositerr/' + address;
+  print(url);
   var client = new http.Client();
   var response = await client.get(url);
   var json = jsonDecode(response.body);

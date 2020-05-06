@@ -77,6 +77,7 @@ class WalletFeaturesScreenState extends BaseState {
   Future getErrDeposit() async {
     var address = await this.getExgAddress();
     var result = await walletService.getErrDeposit(address);
+    log.w(result);
     return result;
   }
 
