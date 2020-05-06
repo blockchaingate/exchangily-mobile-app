@@ -175,8 +175,12 @@ class _RedepositState extends State<Redeposit> {
             globals.white,
             context);
       } else {
-        walletService.showInfoFlushbar('Redeposit error', 'internal error',
-            Icons.cancel, globals.red, context);
+        walletService.showInfoFlushbar(
+            AppLocalizations.of(context).redepositFailedError,
+            AppLocalizations.of(context).serverError,
+            Icons.cancel,
+            globals.red,
+            context);
       }
     } else {
       if (res.returnedText != 'Closed') {

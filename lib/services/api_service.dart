@@ -13,6 +13,7 @@
 
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/models/wallet.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
@@ -226,15 +227,17 @@ class ApiService {
   }
 
   // Get Decimal configuration for the coins
-  Future getPairDecimalConfig() async {
+  Future<List<PairDecimalConfig>> getPairDecimalConfig() async {
     var url = Constants.PAIR_DECIMAL_CONFIG_URL;
     try {
       var response = await client.get(url);
-      var json = jsonDecode(response.body);
-      log.w(' getCoinCurrencyUsdPrice $json');
-      return json;
+      var jsonList = jsonDecode(response.body) as List;
+      log.w(' getCoinCurrencyUsdPrice $jsonList');
+      PairDecimalConfigList pairList = PairDecimalConfigList.fromJson(jsonList);
+      return pairList.pairList;
     } catch (err) {
       log.e('In getCoinCurrencyUsdPrice catch $err');
+      return null;
     }
   }
 }

@@ -1481,5 +1481,53 @@
     "description": "campaign_payment_order_updated_notification",
     "type": "text",
     "placeholders": {}
+  },
+  "redepositFailedError": "Redeposit failed",
+  "@redepositFailedError": {
+    "description": "redeposit_failed_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pendingConfirmDeposit": "Pending confirm deposit",
+  "@pendingConfirmDeposit": {
+    "description": "pending_confirm_deposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseConfirmYour": "Please confirm your",
+  "@pleaseConfirmYour": {
+    "description": "please_confirm_your",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deposit": "Deposit",
+  "@deposit": {
+    "description": "deposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "insufficientGasAmount": "Insufficient gas amount",
+  "@insufficientGasAmount": {
+    "description": "Insufficient gas amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseAddGasToTrade": "Please add gas to trade",
+  "@pleaseAddGasToTrade": {
+    "description": "please_add_gas_to_trade",
+    "type": "text",
+    "placeholders": {}
+  },
+  "hideDialogWarnings": "Hide dialog warnings",
+  "@hideDialogWarnings": {
+    "description": "hide_dialog_warnings",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showDialogWarnings": "Show dialog warnings",
+  "@showDialogWarnings": {
+    "description": "show_dialog_warnings",
+    "type": "text",
+    "placeholders": {}
   }
 }

@@ -19,6 +19,7 @@ import '../environments/environment.dart';
 mixin KanbanService {
   var client = new http.Client();
   final log = getLogger('KanbanService');
+
   getScarAddress() async {
     var url =
         environment['endpoints']['kanban'] + 'exchangily/getExchangeAddress';
