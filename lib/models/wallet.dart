@@ -146,3 +146,63 @@ class WalletInfoList {
     return new WalletInfoList(wallets: wallets);
   }
 }
+
+// Pair decimal config
+
+class PairDecimalConfig {
+  String _name;
+  double _priceDecimal;
+  double _qtyDecimal;
+
+  PairDecimalConfig({
+    String name,
+    double priceDecimal,
+    double qtyDecimal,
+  }) {
+    this._priceDecimal = priceDecimal ?? 0.0;
+    this._qtyDecimal = qtyDecimal ?? 0.0;
+
+    this._name = name;
+  }
+
+  Map<String, dynamic> toJson() => {
+        'priceDecimal': _priceDecimal,
+        'qtyDecimal': _qtyDecimal,
+        'name': _name,
+      };
+
+  factory PairDecimalConfig.fromJson(Map<String, dynamic> json) {
+    return new PairDecimalConfig(
+        priceDecimal: json['priceDecimal'] as double,
+        qtyDecimal: json['qtyDecimal'] as double,
+        name: json['name']);
+  }
+
+  double get priceDecimal => _priceDecimal;
+  set priceDecimal(double priceDecimal) {
+    this._priceDecimal = priceDecimal;
+  }
+
+  double get qtyDecimal => _qtyDecimal;
+
+  set qtyDecimal(double qtyDecimal) {
+    this._qtyDecimal = qtyDecimal;
+  }
+
+  String get name => _name;
+
+  set name(String name) {
+    this._name = name;
+  }
+}
+
+class PairDecimalConfigList {
+  final List<PairDecimalConfig> pairList;
+  PairDecimalConfigList({this.pairList});
+
+  factory PairDecimalConfigList.fromJson(List<dynamic> parsedJson) {
+    List<PairDecimalConfig> pairList = new List<PairDecimalConfig>();
+    pairList = parsedJson.map((i) => PairDecimalConfig.fromJson(i)).toList();
+    return new PairDecimalConfigList(pairList: pairList);
+  }
+}

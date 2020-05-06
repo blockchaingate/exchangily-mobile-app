@@ -31,6 +31,7 @@ import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/fab_util.dart';
 
 class SendScreenState extends BaseState {
   final log = getLogger('SendScreenState');
@@ -45,13 +46,12 @@ class SendScreenState extends BaseState {
   String errorMessage = '';
   var updatedBal;
   String toAddress;
-  double amount;
+  double amount = 0;
   int gasPrice = 0;
   int gasLimit = 0;
   int satoshisPerBytes = 0;
   WalletInfo walletInfo;
   bool checkSendAmount = false;
-  double amountDouble = 0;
   Timer timer;
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -109,12 +109,12 @@ class SendScreenState extends BaseState {
     setState(ViewState.Busy);
     ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
     receiverWalletAddressTextController.text = data.text;
+    toAddress = receiverWalletAddressTextController.text;
     setState(ViewState.Idle);
   }
 
   // Verify Password
-  Future verifyPassword(
-      tickerName, tokenType, toWalletAddress, amount, context) async {
+  Future verifyPassword() async {
     log.w('dialog called');
     setState(ViewState.Busy);
     var dialogResponse = await _dialogService.showDialog(
@@ -125,7 +125,8 @@ class SendScreenState extends BaseState {
     if (dialogResponse.confirmed) {
       String mnemonic = dialogResponse.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
-
+      String tickerName = walletInfo.tickerName.toUpperCase();
+      String tokenType = walletInfo.tokenType.toUpperCase();
       if (tickerName == 'USDT') {
         tokenType = 'ETH';
       } else if (tickerName == 'EXG') {
@@ -152,10 +153,14 @@ class SendScreenState extends BaseState {
           'satoshisPerBytes': satoshisPerBytes
         };
       }
-
+      log.e('tickname ${walletInfo.tickerName}');
+      // Convert FAB to EXG format
+      if (walletInfo.tickerName == 'EXG' || walletInfo.tickerName == 'DUSD') {
+        if (!toAddress.startsWith('0x')) toAddress = fabToExgAddress(toAddress);
+      }
       await walletService
           .sendTransaction(
-              tickerName, seed, [0], [], toWalletAddress, amount, options, true)
+              tickerName, seed, [0], [], toAddress, amount, options, true)
           .then((res) async {
         log.w('Result $res');
         txHash = res["txHash"];
@@ -164,26 +169,28 @@ class SendScreenState extends BaseState {
           log.w('TXhash $txHash');
           receiverWalletAddressTextController.text = '';
           sendAmountTextController.text = '';
-          String date = DateTime.now().toString();
-          // Build transaction history object
-          // TransactionInfo transactionHistory = new TransactionInfo(
-          //     tickerName: tickerName,
-          //     address: toWalletAddress,
-          //     amount: amount,
-          //     dateCreated: date);
-          // Add transaction history object in database
-          // await transactionHistoryDatabaseService
-          //     .insert(transactionHistory)
-          //     .then((data) => log.w('Saved in transaction history database'))
-          //     .catchError(
-          //         (onError) => log.e('Could not save in database $onError'));
-          // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
-          //   checkTxStatus(tickerName, txHash);
-          // });
+
           sharedService.alertResponse(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}');
-
+          String date = DateTime.now().toString();
+          //Build transaction history object
+          log.e('Date $date');
+          TransactionInfo transactionHistory = new TransactionInfo(
+              tickerName: tickerName.toString(),
+              address: toAddress.toString(),
+              amount: amount,
+              date: date.toString());
+          //  Add transaction history object in database
+          log.w('Transaction History ${transactionHistory.toJson()}');
+          await transactionHistoryDatabaseService
+              .insert(transactionHistory)
+              .then((data) => log.w('Saved in transaction history database'))
+              .catchError(
+                  (onError) => log.e('Could not save in database $onError'));
+          // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
+          //   checkTxStatus(tickerName, txHash);
+          // });
           setState(ViewState.Idle);
         }
         // else if (errorMessage.isNotEmpty) {
@@ -207,7 +214,7 @@ class SendScreenState extends BaseState {
             AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
       }).catchError((error) {
         log.e('In Catch error - $error');
-        sharedService.alertResponse(AppLocalizations.of(context).genericError,
+        sharedService.alertResponse(AppLocalizations.of(context).serverError,
             '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
         //errorMessage = AppLocalizations.of(context).transanctionFailed;
         setState(ViewState.Idle);
@@ -256,10 +263,7 @@ class SendScreenState extends BaseState {
 // Check Fields to see if user has filled both address and amount fields correctly
 
   checkFields(context) async {
-    log.w(walletInfo.address);
-    log.w(walletInfo.availableBalance);
     if (toAddress == '') {
-      log.w('Address $toAddress');
       sharedService.alertResponse(AppLocalizations.of(context).emptyAddress,
           AppLocalizations.of(context).pleaseEnterAnAddress);
     } else if (amount == null ||
@@ -269,8 +273,7 @@ class SendScreenState extends BaseState {
           AppLocalizations.of(context).pleaseEnterValidNumber);
     } else {
       FocusScope.of(context).requestFocus(FocusNode());
-      await verifyPassword(walletInfo.tickerName.toUpperCase(),
-          walletInfo.tokenType.toUpperCase(), toAddress, amount, context);
+      await verifyPassword();
       // await updateBalance(widget.walletInfo.address);
       // widget.walletInfo.availableBalance = model.updatedBal['balance'];
     }

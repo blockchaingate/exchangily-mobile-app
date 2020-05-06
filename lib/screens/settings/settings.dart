@@ -28,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
     return BaseScreen<SettingsScreenState>(
       onModelReady: (model) {
         model.context = context;
-        model.getAppVersion();
+        model.init();
       },
       builder: (context, model, child) => Scaffold(
         // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
@@ -52,12 +52,13 @@ class SettingsScreen extends StatelessWidget {
                     elevation: 4,
                     child: Container(
                       color: globals.walletCardColor,
-                      height: 100,
+                      padding: EdgeInsets.all(20),
+                      // height: 100,
                       child: Center(
                         child: Text(
                           AppLocalizations.of(context).deleteWallet,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                       ),
                     ),
@@ -72,15 +73,14 @@ class SettingsScreen extends StatelessWidget {
                     elevation: 5,
                     child: Container(
                       color: globals.walletCardColor,
-                      width: 200,
-                      height: 100,
+                      padding: EdgeInsets.all(20),
                       child: Center(
                         child: Text(
                           !model.isVisible
                               ? AppLocalizations.of(context).displayMnemonic
                               : AppLocalizations.of(context).hideMnemonic,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                       ),
                     ),
@@ -104,8 +104,6 @@ class SettingsScreen extends StatelessWidget {
                   elevation: 5,
                   child: Container(
                     color: globals.walletCardColor,
-                    width: 200,
-                    height: 100,
                     child: Center(
                       child: Theme.of(context).platform == TargetPlatform.iOS
                           ? CupertinoPicker(
@@ -117,33 +115,61 @@ class SettingsScreen extends StatelessWidget {
                                 Center(child: Text('${model.languages}'))
                               ],
                             )
-                          : DropdownButton(
-                              hint: Text(
-                                AppLocalizations.of(context)
-                                    .changeWalletLanguage,
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.headline4,
+                          : DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                iconEnabledColor: globals.primaryColor,
+                                iconSize: 26,
+                                hint: Text(
+                                  AppLocalizations.of(context)
+                                      .changeWalletLanguage,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                                value: model.selectedLanguage,
+                                onChanged: (newValue) {
+                                  model.changeWalletLanguage(newValue);
+                                },
+                                items: model.languages.map((language) {
+                                  return DropdownMenuItem(
+                                    child: Center(
+                                      child: Text(language,
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                    ),
+                                    value: language,
+                                  );
+                                }).toList(),
                               ),
-                              value: model.selectedLanguage,
-                              onChanged: (newValue) {
-                                model.changeWalletLanguage(newValue);
-                              },
-                              items: model.languages.map((language) {
-                                return DropdownMenuItem(
-                                  child: Center(
-                                    child: Text(language,
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5),
-                                  ),
-                                  value: language,
-                                );
-                              }).toList(),
                             ),
                     ),
                   ),
                 ),
+                Card(
+                    elevation: 5,
+                    color: globals.walletCardColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        model.isDialogDisplay
+                            ? Text(
+                                AppLocalizations.of(context).hideDialogWarnings,
+                                style: Theme.of(context).textTheme.headline5,
+                                textAlign: TextAlign.center,
+                              )
+                            : Text(
+                                AppLocalizations.of(context).showDialogWarnings,
+                                style: Theme.of(context).textTheme.headline5,
+                                textAlign: TextAlign.center),
+                        Checkbox(
+                            activeColor: globals.primaryColor,
+                            value: model.isDialogDisplay,
+                            onChanged: (value) {
+                              model.setDialogWarningValue(value);
+                            }),
+                      ],
+                    )),
 
                 // Version Code
                 Card(
@@ -151,14 +177,14 @@ class SettingsScreen extends StatelessWidget {
                   child: Container(
                     color: globals.primaryColor,
                     width: 200,
-                    height: 50,
+                    height: 30,
                     child: Center(
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'v ${model.versionName}',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headline6,
                         ),
                         if (!isProduction)
                           Text(' Debug', style: TextStyle(color: Colors.white))

@@ -349,6 +349,8 @@ class CampaignPaymentScreenState extends BaseState {
     uiOrderStatusList.add(orderStatusList[status]);
     orderInfoList.add(orderListFromApi[i]);
     log.w(orderListFromApi[i].toJson());
+    // This is for calculating pending amount so that user can't make orders more than
+    // its account balance until some of his orders are still pending
     if (orderListFromApi[i].txId != '')
       usdtUnconfirmedOrderQuantity =
           usdtUnconfirmedOrderQuantity + orderListFromApi[i].quantity;

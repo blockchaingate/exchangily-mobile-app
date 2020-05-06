@@ -235,7 +235,7 @@ exgToFabAddress(String address) {
 
    */
   address = bs58check.encode(HEX.decode(address));
-  // print('address after encode=' + address);
+  // log.w('address after encode=' + address);
 
   /*
   var decoded = bs58check.decode('mvLuZXGYMxpRM65kgzbfoKqs3FPcisM6ri');
@@ -245,6 +245,23 @@ exgToFabAddress(String address) {
   */
   return address;
 }
+
+String fabToExgAddress(String address) {
+  var decoded = bs58check.decode(address);
+  address = HEX.encode(decoded);
+  address = address.substring(2);
+  address = '0x' + address;
+  log.w('in fabToExgAddress $address');
+  return address;
+}
+
+/*
+  miuFiyLJPcg1i586vhj9JWvHa6bfttDJnd
+  var decoded = bs58check.decode('mvLuZXGYMxpRM65kgzbfoKqs3FPcisM6ri');
+  print(decoded);
+  print(HEX.encode(decoded));
+  print(bs58check.encode(decoded));
+  */
 
 btcToBase58Address(address) {
   var bytes = bs58check.decode(address);

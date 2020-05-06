@@ -1,4 +1,8 @@
 class Constants {
+  static const String BASE_KANBAN_PROD_URL =
+      'https://kanbanprod.fabcoinapi.com/';
+  static const String BASE_KANBAN_TEST_URL =
+      'https://kanbantest.fabcoinapi.com/';
   static const String COIN_PRICE_WS_URL =
       'wss://kanbanprod.fabcoinapi.com/ws/allprices';
   static const String testUsdtWalletAddress =
@@ -8,4 +12,8 @@ class Constants {
   // Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
   static const COIN_CURRENCY_USD_PRICE_URL =
       'https://kanbanprod.fabcoinapi.com/USDvalues';
+  static const String PAIR_DECIMAL_CONFIG_URL =
+      'https://kanbanprod.fabcoinapi.com/kanban/getpairconfig';
+  static const REDEPOSIT_STATUS_URL =
+      'https://kanbantest.fabcoinapi.com/checkstatus/';
 }
