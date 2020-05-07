@@ -67,7 +67,8 @@ class SharedService {
         false;
   }
 
-  Future<bool> alertResponse(String title, String message, {String path ,dynamic arguments}) async {
+  Future<bool> alertResponse(String title, String message,
+      {String path, dynamic arguments}) async {
     bool checkBoxValue = false;
     return showDialog(
             context: context,
@@ -88,19 +89,21 @@ class SharedService {
                     children: <Widget>[
                       UIHelper.verticalSpaceMedium,
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0, vertical: 6.0),
                         child: Text(
                           // add here cupertino widget to check in these small widgets first then the entire app
-                          message,textAlign: TextAlign.start,
+                          message, textAlign: TextAlign.start,
                           style: Theme.of(context).textTheme.headline5,
                         ),
                       ),
-                    //  UIHelper.verticalSpaceMedium,
+                      //  UIHelper.verticalSpaceMedium,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Checkbox(
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
                               value: checkBoxValue,
                               activeColor: globals.primaryColor,
                               onChanged: (bool value) async {
@@ -110,8 +113,10 @@ class SharedService {
 
                                 await setDialogWarningsStatus(checkBoxValue);
                               }),
-                          Text(AppLocalizations.of(context)
-                              .doNotShowTheseWarnings, style: Theme.of(context).textTheme.headline6,)
+                          Text(
+                            AppLocalizations.of(context).doNotShowTheseWarnings,
+                            style: Theme.of(context).textTheme.headline6,
+                          )
                         ],
                       ),
                     ],
@@ -127,7 +132,13 @@ class SharedService {
                         style: TextStyle(color: globals.grey, fontSize: 14),
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop(false);
+                        if (path == '') {
+                          Navigator.of(context).pop(false);
+                        } else {
+                          navigationService.navigateTo(path,
+                              arguments: arguments);
+                          Navigator.of(context).pop(false);
+                        }
                       },
                     ),
                   ),
