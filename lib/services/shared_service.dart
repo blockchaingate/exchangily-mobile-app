@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -25,6 +26,7 @@ import '../shared/globals.dart' as globals;
 class SharedService {
   BuildContext context;
   NavigationService navigationService = locator<NavigationService>();
+  final log = getLogger('SharedService');
 
   Future<bool> closeApp() async {
     return showDialog(
@@ -107,7 +109,7 @@ class SharedService {
                               value: checkBoxValue,
                               activeColor: globals.primaryColor,
                               onChanged: (bool value) async {
-                                print('in checkbox1');
+                               
                                 setState(() => checkBoxValue = value);
                                 print(checkBoxValue);
 
@@ -132,9 +134,11 @@ class SharedService {
                         style: TextStyle(color: globals.grey, fontSize: 14),
                       ),
                       onPressed: () {
-                        if (path == '') {
+                        if (path == '' || path == null) {
+                         
                           Navigator.of(context).pop(false);
                         } else {
+                           
                           navigationService.navigateTo(path,
                               arguments: arguments);
                           Navigator.of(context).pop(false);
@@ -187,17 +191,16 @@ class SharedService {
     -------------------------------------------------- */
 
   Future<bool> getDialogWarningsStatus() async {
-    bool isDialogDisplay = false;
+    
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isDialogDisplay = prefs.getBool('isDialogDisplay');
-    print('in get warning $isDialogDisplay');
-    return isDialogDisplay;
+    var holder = prefs.getBool('isDialogDisplay');
+    log.w('in getDialogWarningsStatus $holder');
+    if(holder == null) return false;
+    return true;
   }
 
   setDialogWarningsStatus(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isDialogDisplay', value);
-    print('in set');
-    print(prefs.getBool('isDialogDisplay'));
   }
 }

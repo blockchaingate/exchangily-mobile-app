@@ -47,12 +47,20 @@ class WalletDashboardScreenState extends BaseState {
       RefreshController(initialRefresh: false);
   bool isConfirmDeposit = false;
   WalletInfo confirmDepositCoinWallet;
+  List<PairDecimalConfig> pairDecimalConfigList = [];
 
   init() async {
     await refreshBalance();
     await getConfirmDepositStatus();
     showDialogWarning();
-    
+    await getDecimalPairConfig();
+  }
+
+  getDecimalPairConfig() async {
+    await apiService.getPairDecimalConfig().then((res) {
+      pairDecimalConfigList = res;
+    });
+    log.w(pairDecimalConfigList.length);
   }
 
   // Pull to refresh
@@ -102,7 +110,7 @@ class WalletDashboardScreenState extends BaseState {
       log.w('getConfirmDepositStatus $res');
       if (res != null) {
         print('22222');
-        if(res.length <= 0) return;
+        if (res.length <= 0) return;
         var singleTransaction = res[0];
         log.e('1 $singleTransaction');
         int coinType = singleTransaction['coinType'];
@@ -142,7 +150,7 @@ class WalletDashboardScreenState extends BaseState {
           sharedService.alertResponse(
               AppLocalizations.of(context).pendingConfirmDeposit,
               '${AppLocalizations.of(context).pleaseConfirmYour} ${confirmDepositCoinWallet.tickerName} ${AppLocalizations.of(context).deposit}',
-              path:'/walletFeatures',
+              path: '/walletFeatures',
               arguments: confirmDepositCoinWallet);
         log.w('value in get gas from get diaload warning $value');
       });
