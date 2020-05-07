@@ -2,8 +2,8 @@ class TransactionInfo {
   String _id;
   String _tickerName;
   String _address;
-  int _amount;
-  String _dateCreated;
+  double _amount;
+  String _date;
   String _txid;
   String _status;
   double _quantity;
@@ -12,18 +12,18 @@ class TransactionInfo {
       {String id,
       String tickerName,
       String address,
-      int amount,
-      String dateCreated,
+      double amount,
+      String date,
       String txid,
       String status,
       double quantity}) {
-    this._id = id;
+    this._id = id ?? '';
     this._tickerName = tickerName ?? '';
     this._address = address ?? '';
-    this._amount = amount ?? 0;
-    this._dateCreated = dateCreated ?? '';
+    this._amount = amount ?? 0.0;
+    this._date = date ?? '';
     this._txid = txid ?? '';
-    this._status = status ?? 0;
+    this._status = status ?? '';
     this._quantity = quantity ?? 0.0;
   }
 
@@ -33,7 +33,7 @@ class TransactionInfo {
     data['tickerName'] = this._tickerName;
     data['address'] = this._address;
     data['amount'] = this._amount;
-    data['dateCreated'] = this._dateCreated;
+    data['date'] = this._date;
     data['txid'] = this._txid;
     data['status'] = this._status;
     data['quantity'] = this._quantity;
@@ -46,7 +46,7 @@ class TransactionInfo {
         tickerName: json['tickerName'] as String,
         address: json['address'] as String,
         amount: json['amount'],
-        dateCreated: json['dateCreated'] as String,
+        date: json['date'] as String,
         txid: json['txid'],
         status: json['status'],
         quantity: json['quantity']);
@@ -70,16 +70,16 @@ class TransactionInfo {
     this._address = address;
   }
 
-  int get amount => _amount;
+  double get amount => _amount;
 
-  set amount(int amount) {
+  set amount(double amount) {
     this._amount = amount;
   }
 
-  String get dateCreated => _dateCreated;
+  String get date => _date;
 
-  set dateCreated(String dateCreated) {
-    this._dateCreated = dateCreated;
+  set date(String date) {
+    this._date = date;
   }
 
   String get txid => _txid;

@@ -607,17 +607,17 @@ class CampaignPaymentScreenState extends BaseState {
     setBusy(true);
     isTokenCalc = true;
     price = await getUsdValue();
-    log.w('price $price');
+    log.w('price $price - amount $amount');
     tokenPurchaseQuantity = amount / price;
 
     setBusy(false);
     isTokenCalc = false;
     return tokenPurchaseQuantity;
   }
-
 /*----------------------------------------------------------------------
                     Is Balance Available for order
 ----------------------------------------------------------------------*/
+
   bool isBalanceAvailabeForOrder() {
     double amount = usdtUnconfirmedOrderQuantity * price;
     log.e(

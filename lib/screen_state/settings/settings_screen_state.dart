@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
@@ -32,6 +33,7 @@ class SettingsScreenState extends BaseState {
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+  SharedService sharedService = locator<SharedService>();
   List<String> languages = ['English', 'Chinese'];
   String selectedLanguage;
   // bool result = false;
@@ -40,6 +42,17 @@ class SettingsScreenState extends BaseState {
   BuildContext context;
   String versionName = '';
   String versionCode = '';
+  bool isDialogDisplay = false;
+
+  init() {
+    setBusy(true);
+    sharedService.getDialogWarningsStatus().then((res) {
+      if (res != null) isDialogDisplay = res;
+    });
+    getAppVersion();
+    setBusy(false);
+  }
+
   void showMnemonic() async {
     await displayMnemonic();
     isVisible = !isVisible;
@@ -156,5 +169,13 @@ class SettingsScreenState extends BaseState {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     versionName = packageInfo.version;
     setState(ViewState.Idle);
+  }
+
+  // Set the display warning value to local storage
+  setDialogWarningValue(value) async {
+    setBusy(true);
+    sharedService.setDialogWarningsStatus(value);
+    isDialogDisplay = value;
+    setBusy(false);
   }
 }

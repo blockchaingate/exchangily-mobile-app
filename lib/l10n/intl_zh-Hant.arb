@@ -635,6 +635,18 @@
         "type": "text",
         "placeholders": {}
     },
+    "gasPrice": "燃料價格",
+    "@gasPrice": {
+        "description": "gas_price",
+        "type": "text",
+        "placeholders": {}
+    },
+    "gasLimit": "燃料限額",
+    "@gasLimit": {
+        "description": "gas_limit",
+        "type": "text",
+        "placeholders": {}
+    },
     "depositTransactionFailed": "存款交易失敗",
     "@depositTransactionFailed": {
         "description": "deposit_transaction_failed",
@@ -1312,5 +1324,58 @@
     "description": "campaign_payment_order_updated_notification",
     "type": "text",
     "placeholders": {}
-  }
-}
+  },
+"redepositFailedError": "向交易所轉幣確認失敗",
+  "@redepositFailedError": {
+    "description": "redeposit_failed_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pendingConfirmDeposit": "向交易所轉幣確認等候中",
+  "@pendingConfirmDeposit": {
+    "description": "pending_confirm_deposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseConfirmYour": "請確認您的向交易所轉",
+  "@pleaseConfirmYour": {
+    "description": "please_confirm_your",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deposit": "操作",
+  "@deposit": {
+    "description": "deposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "insufficientGasAmount": "燃料餘額不足",
+  "@insufficientGasAmount": {
+    "description": "Insufficient gas amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseAddGasToTrade": "如欲使用交易所需首先添加燃料",
+  "@pleaseAddGasToTrade": {
+    "description": "please_add_gas_to_trade",
+    "type": "text",
+    "placeholders": {}
+  },
+"hideDialogWarnings": "隱藏警告信息",
+  "@hideDialogWarnings": {
+    "description": "hide_dialog_warnings",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showDialogWarnings": "顯示警告信息",
+  "@showDialogWarnings": {
+    "description": "show_dialog_warnings",
+    "type": "text",
+    "placeholders": {}
+  },
+  "doNotShowTheseWarnings": "不再顯示該信息",
+  "@doNotShowTheseWarnings": {
+    "description": "do_not_show_these_warnings",
+    "type": "text",
+    "placeholders": {}
+  }}

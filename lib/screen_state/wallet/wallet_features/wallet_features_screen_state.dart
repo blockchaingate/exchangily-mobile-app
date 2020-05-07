@@ -44,8 +44,10 @@ class WalletFeaturesScreenState extends BaseState {
           Icons.arrow_downward, 'receive', Colors.redAccent),
       WalletFeatureName(AppLocalizations.of(context).send, Icons.arrow_upward,
           'send', Colors.lightBlue),
+      // move and trade = move to exchange
       WalletFeatureName(AppLocalizations.of(context).moveAndTrade,
           Icons.equalizer, 'deposit', Colors.purple),
+      // withdraw to wallet  = move to wallet
       WalletFeatureName(AppLocalizations.of(context).withdrawToWallet,
           Icons.exit_to_app, 'withdraw', Colors.cyan),
       WalletFeatureName(AppLocalizations.of(context).confirmDeposit,
@@ -75,6 +77,7 @@ class WalletFeaturesScreenState extends BaseState {
   Future getErrDeposit() async {
     var address = await this.getExgAddress();
     var result = await walletService.getErrDeposit(address);
+    log.w(result);
     return result;
   }
 
@@ -100,81 +103,4 @@ class WalletFeaturesScreenState extends BaseState {
       setState(ViewState.Idle);
     });
   }
-
-  // Check Pass
-  /*
-  checkPass(context) async {
-    var res = await dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
-        description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
-    if (res.confirmed) {
-      String mnemonic = res.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
-      var keyPairKanban = getExgKeyPair(seed);
-      var exgAddress = keyPairKanban['address'];
-      var nonce = await getNonce(exgAddress);
-
-      var amountInLink = BigInt.from(this.errDepositItem['amount']);
-
-      var coinType = this.errDepositItem['coinType'];
-      var r = this.errDepositItem['r'];
-      var s = this.errDepositItem['s'];
-      var v = this.errDepositItem['v'];
-      var transactionID = this.errDepositItem['transactionID'];
-
-      var resRedeposit = await this.submitredeposit(
-          amountInLink, keyPairKanban, nonce, coinType, r, s, v, transactionID);
-
-      log.w('resRedeposit=');
-      log.w(resRedeposit);
-      if ((resRedeposit != null) &&
-          (resRedeposit['transactionHash'] != null) &&
-          (resRedeposit['transactionHash'] != '')) {
-        walletService.showInfoFlushbar(
-            'Redeposit completed',
-            'TransactionId is:' + resRedeposit['transactionHash'],
-            Icons.cancel,
-            globals.white,
-            context);
-      } else {
-        walletService.showInfoFlushbar('Redeposit error', 'internal error',
-            Icons.cancel, globals.red, context);
-      }
-    } else {
-      if (res.returnedText != 'Closed') {
-        showNotification(context);
-      }
-    }
-  }
-
-  // Submit redeposit
-
-  submitredeposit(amountInLink, keyPairKanban, nonce, coinType, r, s, v,
-      transactionID) async {
-    log.w('transactionID for submitredeposit:' + transactionID);
-    var coinPoolAddress = await getCoinPoolAddress();
-    var signedMess = {'r': r, 's': s, 'v': v};
-    var abiHex = getDepositFuncABI(coinType, transactionID, amountInLink,
-        keyPairKanban['address'], signedMess);
-
-    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
-        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, environment["chains"]["KANBAN"]["gasPrice"], environment["chains"]["KANBAN"]["gasLimit"]);
-
-    var res = await sendKanbanRawTransaction(txKanbanHex);
-    return res;
-  }
-
-  // Show notification
-  showNotification(context) {
-    walletService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        globals.red,
-        context);
-  }
-
-   */
 }

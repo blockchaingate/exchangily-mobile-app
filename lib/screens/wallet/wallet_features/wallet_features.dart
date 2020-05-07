@@ -35,6 +35,7 @@ class WalletFeaturesScreen extends StatelessWidget {
         model.walletInfo = walletInfo;
         model.context = context;
         model.getWalletFeatures();
+        model.getErrDeposit();
       },
       builder: (context, model, child) => Scaffold(
         key: key,
@@ -304,37 +305,41 @@ class WalletFeaturesScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text(
-                    '${walletInfo.tickerName} ' +
-                        AppLocalizations.of(context).totalBalance,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        .copyWith(color: globals.buyPrice),
-                  ),
-                  Container(
-                    //width: 100,
-                    padding: EdgeInsets.only(left: 15),
-                    child: InkWell(
-                        onTap: () async {
-                          await model.refreshErrDeposit();
-                          await model.refreshBalance();
-                        },
-                        child: model.state == ViewState.Busy
-                            ? SizedBox(
-                                child: CircularProgressIndicator(),
-                                width: 20,
-                                height: 20,
-                              )
-                            : Center(
-                                child: Icon(
-                                  Icons.refresh,
-                                  color: globals.white,
-                                  size: 28,
-                                ),
-                              )),
+                  Expanded(
+                    flex: 4,
+                    child: Text(
+                      '${walletInfo.tickerName} ' +
+                          AppLocalizations.of(context).totalBalance,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          .copyWith(color: globals.buyPrice),
+                    ),
                   ),
                   Expanded(
+                    flex: 2,
+                    child: InkWell(
+                      onTap: () async {
+                        await model.refreshErrDeposit();
+                        await model.refreshBalance();
+                      },
+                      child: model.state == ViewState.Busy
+                          ? SizedBox(
+                              child: CircularProgressIndicator(),
+                              width: 20,
+                              height: 20,
+                            )
+                          : Center(
+                              child: Icon(
+                                Icons.refresh,
+                                color: globals.white,
+                                size: 18,
+                              ),
+                            ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
                     child: Text(
                       '${model.walletInfo.usdValue.toStringAsFixed(2)} USD',
                       textAlign: TextAlign.right,
@@ -407,7 +412,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                         ]),
                     child: Icon(
                       model.features[index].icon,
-                      size: 60,
+                      size: 40,
                       color: globals.white,
                     )),
                 Text(

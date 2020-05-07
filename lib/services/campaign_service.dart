@@ -25,27 +25,27 @@ class CampaignService {
   final String campaignId = '1';
   Campaign campaign;
 
-  static const BASE_URL = isProduction
+  static final BASE_URL = isProduction
       ? EnvironmentConfig.campaignProd
       : EnvironmentConfig.campaignTest;
-  static const registerUrl = BASE_URL + 'members/create';
-  static const loginUrl = BASE_URL + 'members/login';
-  static const kycWithTokenUrl = BASE_URL + 'kyc/create';
-  static const createOrderUrl = BASE_URL + 'campaign-order/create';
-  static const updateOrderUrl = BASE_URL + 'campaign-order/update';
-  static const listOrdersByWalletAddressUrl =
+  static final registerUrl = BASE_URL + 'members/create';
+  static final loginUrl = BASE_URL + 'members/login';
+  static final kycWithTokenUrl = BASE_URL + 'kyc/create';
+  static final createOrderUrl = BASE_URL + 'campaign-order/create';
+  static final updateOrderUrl = BASE_URL + 'campaign-order/update';
+  static final listOrdersByWalletAddressUrl =
       BASE_URL + 'campaign-order/wallet-orders/';
-  static const listOrdersByMemberIdUrl =
+  static final listOrdersByMemberIdUrl =
       BASE_URL + 'campaign-order/member-orders/';
-  static const rewardsWithTokenUrl = BASE_URL + 'coinorders/rewards';
-  static const setTokenUrl = BASE_URL + 'coinorders/rewards?token=';
-  static const campaignNameUrl = BASE_URL + 'campaign/1';
-  static const memberReferralsUrl = BASE_URL + 'campaign-referral/referrals/';
-  static const memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
-  static const rewardsUrl = BASE_URL + 'campaign-order/rewards';
-  static const memberProfileUrl = BASE_URL + 'campaign-order/profile';
+  static final rewardsWithTokenUrl = BASE_URL + 'coinorders/rewards';
+  static final setTokenUrl = BASE_URL + 'coinorders/rewards?token=';
+  static final campaignNameUrl = BASE_URL + 'campaign/1';
+  static final memberReferralsUrl = BASE_URL + 'campaign-referral/referrals/';
+  static final memberRewardUrl = BASE_URL + 'campaign-referral/rewards/';
+  static final rewardsUrl = BASE_URL + 'campaign-order/rewards';
+  static final memberProfileUrl = BASE_URL + 'campaign-order/profile';
 
-  static const resetPasswordUrl = BASE_URL + 'members/requestpwdreset';
+  static final resetPasswordUrl = BASE_URL + 'members/requestpwdreset';
 
   CampaignUserData userData;
   CampaignUserDatabaseService campaignUserDatabaseService =

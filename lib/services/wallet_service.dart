@@ -262,6 +262,23 @@ class WalletService {
       return _walletInfo;
     }
   }
+
+/*----------------------------------------------------------------------
+                  Get Exg Address
+----------------------------------------------------------------------*/
+
+  Future getExgAddress() async {
+    String address = '';
+    var res = await databaseService.getAll();
+    for (var i = 0; i < res.length; i++) {
+      WalletInfo item = res[i];
+      if (item.tickerName == 'EXG') {
+        address = item.address;
+        break;
+      }
+    }
+    return address;
+  }
 /*----------------------------------------------------------------------
                   Get Wallet Coins
 ----------------------------------------------------------------------*/
@@ -336,8 +353,17 @@ class WalletService {
       return _walletInfo;
     }
   }
+
 /*----------------------------------------------------------------------
-                Gas Balance
+                   Get Pair decimal Config
+----------------------------------------------------------------------*/
+
+  Future<PairDecimalConfig> getPairDecimalConfig() async {
+    await _api.getPairDecimalConfig();
+  }
+
+/*----------------------------------------------------------------------
+                    Gas Balance
 ----------------------------------------------------------------------*/
 
   Future<double> gasBalance(String addr) async {
@@ -799,6 +825,9 @@ class WalletService {
     }
   }
 
+/*----------------------------------------------------------------------
+                getErrDeposit
+----------------------------------------------------------------------*/
   Future getErrDeposit(String address) {
     return getKanbanErrDeposit(address);
   }

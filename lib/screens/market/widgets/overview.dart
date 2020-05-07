@@ -1,4 +1,6 @@
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import "package:flutter/material.dart";
 import "overview-block.dart";
 import '../../../models/price.dart';
@@ -63,7 +65,7 @@ class MarketOverviewState extends State<MarketOverview> {
       color: globals.walletCardColor,
       child: Container(
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+        margin: EdgeInsets.symmetric(horizontal: 30),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
