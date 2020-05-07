@@ -151,16 +151,16 @@ class WalletInfoList {
 
 class PairDecimalConfig {
   String _name;
-  double _priceDecimal;
-  double _qtyDecimal;
+  int _priceDecimal;
+  int _qtyDecimal;
 
   PairDecimalConfig({
     String name,
-    double priceDecimal,
-    double qtyDecimal,
+    int priceDecimal,
+    int qtyDecimal,
   }) {
-    this._priceDecimal = priceDecimal ?? 0.0;
-    this._qtyDecimal = qtyDecimal ?? 0.0;
+    this._priceDecimal = priceDecimal ?? 0;
+    this._qtyDecimal = qtyDecimal ?? 0;
 
     this._name = name;
   }
@@ -173,19 +173,19 @@ class PairDecimalConfig {
 
   factory PairDecimalConfig.fromJson(Map<String, dynamic> json) {
     return new PairDecimalConfig(
-        priceDecimal: json['priceDecimal'] as double,
-        qtyDecimal: json['qtyDecimal'] as double,
+        priceDecimal: json['priceDecimal'],
+        qtyDecimal: json['qtyDecimal'],
         name: json['name']);
   }
 
-  double get priceDecimal => _priceDecimal;
-  set priceDecimal(double priceDecimal) {
+  int get priceDecimal => _priceDecimal;
+  set priceDecimal(int priceDecimal) {
     this._priceDecimal = priceDecimal;
   }
 
-  double get qtyDecimal => _qtyDecimal;
+  int get qtyDecimal => _qtyDecimal;
 
-  set qtyDecimal(double qtyDecimal) {
+  set qtyDecimal(int qtyDecimal) {
     this._qtyDecimal = qtyDecimal;
   }
 

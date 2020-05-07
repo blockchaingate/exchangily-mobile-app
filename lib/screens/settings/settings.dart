@@ -153,16 +153,9 @@ class SettingsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        model.isDialogDisplay
-                            ? Text(
-                                AppLocalizations.of(context).hideDialogWarnings,
-                                style: Theme.of(context).textTheme.headline5,
-                                textAlign: TextAlign.center,
-                              )
-                            : Text(
-                                AppLocalizations.of(context).showDialogWarnings,
-                                style: Theme.of(context).textTheme.headline5,
-                                textAlign: TextAlign.center),
+                        Text(AppLocalizations.of(context).showDialogWarnings,
+                            style: Theme.of(context).textTheme.headline5,
+                            textAlign: TextAlign.center),
                         Checkbox(
                             activeColor: globals.primaryColor,
                             value: model.isDialogDisplay,

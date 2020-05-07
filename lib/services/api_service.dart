@@ -22,7 +22,7 @@ import '../environments/environment.dart';
 
 /// The service responsible for networking requests
 class ApiService {
-  final log = getLogger('API');
+  final log = getLogger('Apiervice');
   final client = new http.Client();
 
   static const usdCoinPriceUrl =

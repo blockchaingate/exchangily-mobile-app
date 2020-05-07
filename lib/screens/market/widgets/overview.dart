@@ -1,4 +1,6 @@
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import "package:flutter/material.dart";
 import "overview-block.dart";
 import '../../../models/price.dart';
@@ -35,7 +37,8 @@ class MarketOverviewState extends State<MarketOverview> {
       for (var i = 0; i < prices.length; i++) {
         var item = prices[i];
         if (item.symbol == "BTCUSDT") {
-          btcUsdtP = item.price;
+          btcUsdtP = NumberUtil().truncateDecimal(Decimal.fromInt(item.price.toInt()),digits:3);
+          print('1 ${item.price}');
           btcUsdtC = item.change;
         } else if (item.symbol == "EXGUSDT") {
           exgUsdtP = item.price;

@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class WalletDashboardScreenState extends BaseState {
   List<WalletInfo> walletInfo;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
+  ApiService apiService = locator<ApiService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   final double elevation = 5;
@@ -50,6 +52,7 @@ class WalletDashboardScreenState extends BaseState {
     await refreshBalance();
     await getConfirmDepositStatus();
     showDialogWarning();
+    
   }
 
   // Pull to refresh
@@ -97,7 +100,9 @@ class WalletDashboardScreenState extends BaseState {
     String address = await walletService.getExgAddress();
     await walletService.getErrDeposit(address).then((res) async {
       log.w('getConfirmDepositStatus $res');
-      if (res != null || res != []) {
+      if (res != null) {
+        print('22222');
+        if(res.length <= 0) return;
         var singleTransaction = res[0];
         log.e('1 $singleTransaction');
         int coinType = singleTransaction['coinType'];
@@ -118,7 +123,9 @@ class WalletDashboardScreenState extends BaseState {
   // Show dialog warning
 
   showDialogWarning() {
+    log.w('1 $gasAmount');
     if (gasAmount < 0.5) {
+      log.e('2');
       sharedService.getDialogWarningsStatus().then((value) {
         {
           if (value)
@@ -132,10 +139,10 @@ class WalletDashboardScreenState extends BaseState {
     if (isConfirmDeposit) {
       sharedService.getDialogWarningsStatus().then((value) {
         if (value)
-          sharedService.alertResponseWithPath(
+          sharedService.alertResponse(
               AppLocalizations.of(context).pendingConfirmDeposit,
               '${AppLocalizations.of(context).pleaseConfirmYour} ${confirmDepositCoinWallet.tickerName} ${AppLocalizations.of(context).deposit}',
-              '/walletFeatures',
+              path:'/walletFeatures',
               arguments: confirmDepositCoinWallet);
         log.w('value in get gas from get diaload warning $value');
       });

@@ -67,72 +67,7 @@ class SharedService {
         false;
   }
 
-  Future<bool> alertResponse(String title, String message) async {
-    bool checkBoxValue = false;
-    return showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                buttonPadding: EdgeInsets.only(bottom: 10),
-
-                actionsPadding: EdgeInsets.all(0),
-                contentPadding: EdgeInsets.only(left: 20.0, right: 20, top: 20),
-                // buttonPadding: EdgeInsets.symmetric(horizontal: 10.0),
-                elevation: 10,
-                backgroundColor: globals.walletCardColor.withOpacity(0.95),
-                title: Text(title),
-                titleTextStyle: Theme.of(context).textTheme.headline4,
-                contentTextStyle: TextStyle(color: globals.grey),
-                content: StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      UIHelper.horizontalSpaceSmall,
-                      Text(
-                        // add here cupertino widget to check in these small widgets first then the entire app
-                        message,
-                        style: Theme.of(context).textTheme.headline5,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Checkbox(
-                              value: checkBoxValue,
-                              activeColor: globals.primaryColor,
-                              onChanged: (bool value) async {
-                                print('in checkbox');
-                                setState(() => checkBoxValue = value);
-                                print(checkBoxValue);
-
-                                await setDialogWarningsStatus(checkBoxValue);
-                              }),
-                          Text(AppLocalizations.of(context)
-                              .doNotShowTheseWarnings)
-                        ],
-                      )
-                    ],
-                  );
-                }),
-                actions: <Widget>[
-                  FlatButton(
-                    padding: EdgeInsets.all(0),
-                    child: Text(
-                      AppLocalizations.of(context).close,
-                      style: TextStyle(color: globals.grey, fontSize: 14),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop(false);
-                    },
-                  ),
-                ],
-              );
-            }) ??
-        false;
-  }
-
-  // Alert response with path
-  Future<bool> alertResponseWithPath(String title, String message, String path,
-      {dynamic arguments}) async {
+  Future<bool> alertResponse(String title, String message, {String path ,dynamic arguments}) async {
     bool checkBoxValue = false;
     return showDialog(
             context: context,
@@ -143,48 +78,56 @@ class SharedService {
                 title: Text(title),
                 titleTextStyle: Theme.of(context).textTheme.headline4,
                 contentTextStyle: TextStyle(color: globals.grey),
+                contentPadding: EdgeInsets.symmetric(horizontal: 25),
                 content: StatefulBuilder(
                     builder: (BuildContext context, StateSetter setState) {
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      UIHelper.horizontalSpaceSmall,
-                      Text(
-                        // add here cupertino widget to check in these small widgets first then the entire app
-                        message,
-                        style: Theme.of(context).textTheme.headline5,
+                      UIHelper.verticalSpaceMedium,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+                        child: Text(
+                          // add here cupertino widget to check in these small widgets first then the entire app
+                          message,textAlign: TextAlign.start,
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
                       ),
+                    //  UIHelper.verticalSpaceMedium,
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Checkbox(
+                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                               value: checkBoxValue,
                               activeColor: globals.primaryColor,
                               onChanged: (bool value) async {
-                                print('in checkbox');
+                                print('in checkbox1');
                                 setState(() => checkBoxValue = value);
                                 print(checkBoxValue);
 
                                 await setDialogWarningsStatus(checkBoxValue);
                               }),
                           Text(AppLocalizations.of(context)
-                              .doNotShowTheseWarnings)
+                              .doNotShowTheseWarnings, style: Theme.of(context).textTheme.headline6,)
                         ],
-                      )
+                      ),
                     ],
                   );
                 }),
                 actions: <Widget>[
-                  Center(
+                  Container(
+                    margin: EdgeInsetsDirectional.only(bottom: 10),
                     child: FlatButton(
                       padding: EdgeInsets.all(0),
                       child: Text(
                         AppLocalizations.of(context).close,
                         style: TextStyle(color: globals.grey, fontSize: 14),
                       ),
-                      onPressed: () async {
+                      onPressed: () {
                         Navigator.of(context).pop(false);
-                        await navigationService.navigateTo(path,
-                            arguments: arguments);
                       },
                     ),
                   ),
