@@ -1281,6 +1281,50 @@ class AppLocalizations {
         name: 'orderUpdateNotification',
         desc: 'campaign_payment_order_updated_notification');
   }
+
+  String get redepositFailedError {
+    return Intl.message('Redeposit failed',
+        name: 'redepositFailedError', desc: 'redeposit_failed_error');
+  }
+
+  String get pendingConfirmDeposit {
+    return Intl.message('Pending confirm deposit',
+        name: 'pendingConfirmDeposit', desc: 'pending_confirm_deposit');
+  }
+
+  String get pleaseConfirmYour {
+    return Intl.message('Please confirm your',
+        name: 'pleaseConfirmYour', desc: 'please_confirm_your');
+  }
+
+  String get deposit {
+    return Intl.message('Deposit', name: 'deposit', desc: 'deposit');
+  }
+
+  String get insufficientGasAmount {
+    return Intl.message('Insufficient gas amount',
+        name: 'insufficientGasAmount', desc: 'Insufficient gas amount');
+  }
+
+  String get pleaseAddGasToTrade {
+    return Intl.message('Please add gas to trade',
+        name: 'pleaseAddGasToTrade', desc: 'please_add_gas_to_trade');
+  }
+
+  String get hideDialogWarnings {
+    return Intl.message('Hide dialog warnings',
+        name: 'hideDialogWarnings', desc: 'hide_dialog_warnings');
+  }
+
+  String get showDialogWarnings {
+    return Intl.message('Show dialog warnings',
+        name: 'showDialogWarnings', desc: 'show_dialog_warnings');
+  }
+
+  String get doNotShowTheseWarnings {
+    return Intl.message('Do not show these warnings',
+        name: 'doNotShowTheseWarnings', desc: 'do_not_show_these_warnings');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
@@ -23,13 +24,16 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import '../../environments/coins.dart' as coinList;
 
 class WalletDashboardScreenState extends BaseState {
   final log = getLogger('WalletDahsboardScreenState');
   List<WalletInfo> walletInfo;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
-  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+  ApiService apiService = locator<ApiService>();
+  WalletDataBaseService walletDatabaseService =
+      locator<WalletDataBaseService>();
   final double elevation = 5;
   double totalUsdBalance = 0;
   double coinUsdBalance;
@@ -41,6 +45,23 @@ class WalletDashboardScreenState extends BaseState {
   bool isHideSmallAmountAssets = false;
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
+  bool isConfirmDeposit = false;
+  WalletInfo confirmDepositCoinWallet;
+  List<PairDecimalConfig> pairDecimalConfigList = [];
+
+  init() async {
+    await refreshBalance();
+    await getConfirmDepositStatus();
+    showDialogWarning();
+    await getDecimalPairConfig();
+  }
+
+  getDecimalPairConfig() async {
+    await apiService.getPairDecimalConfig().then((res) {
+      pairDecimalConfigList = res;
+    });
+    log.w(pairDecimalConfigList.length);
+  }
 
   // Pull to refresh
   void onRefresh() async {
@@ -75,18 +96,72 @@ class WalletDashboardScreenState extends BaseState {
             .gasBalance(exgAddress)
             .then((data) => gasAmount = data)
             .catchError((onError) => log.e(onError));
-        setState(ViewState.Idle);
-        return gasAmount;
       }
     }
+
     setState(ViewState.Idle);
+    return gasAmount;
+  }
+
+  // Get Confirm deposit err
+  getConfirmDepositStatus() async {
+    String address = await walletService.getExgAddress();
+    await walletService.getErrDeposit(address).then((res) async {
+      log.w('getConfirmDepositStatus $res');
+      if (res != null) {
+        print('22222');
+        if (res.length <= 0) return;
+        var singleTransaction = res[0];
+        log.e('1 $singleTransaction');
+        int coinType = singleTransaction['coinType'];
+
+        log.w('2 $coinType');
+        isConfirmDeposit = true;
+        String name = coinList.coin_list[coinType]['name'];
+        log.e(name);
+        await walletDatabaseService.getBytickerName(name).then((res) {
+          if (res != null) {
+            confirmDepositCoinWallet = res;
+          }
+        });
+      }
+    });
+  }
+
+  // Show dialog warning
+
+  showDialogWarning() {
+    log.w('1 $gasAmount');
+    if (gasAmount < 0.5) {
+      log.e('2');
+      sharedService.getDialogWarningsStatus().then((value) {
+        {
+          if (value)
+            sharedService.alertResponse(
+                AppLocalizations.of(context).insufficientGasAmount,
+                AppLocalizations.of(context).pleaseAddGasToTrade);
+          log.w('value in get gas from get diaload warning $value');
+        }
+      });
+    }
+    if (isConfirmDeposit) {
+      sharedService.getDialogWarningsStatus().then((value) {
+        if (value)
+          sharedService.alertResponse(
+              AppLocalizations.of(context).pendingConfirmDeposit,
+              '${AppLocalizations.of(context).pleaseConfirmYour} ${confirmDepositCoinWallet.tickerName} ${AppLocalizations.of(context).deposit}',
+              path: '/walletFeatures',
+              arguments: confirmDepositCoinWallet);
+        log.w('value in get gas from get diaload warning $value');
+      });
+    }
   }
 
   // Retrive Wallets Object From Storage
 
   retrieveWallets() async {
     setState(ViewState.Busy);
-    await databaseService.getAll().then((res) {
+    await walletDatabaseService.getAll().then((res) {
       walletInfo = res;
       calcTotalBal(walletInfo.length);
       walletInfoCopy = walletInfo.map((element) => element).toList();
@@ -96,6 +171,7 @@ class WalletDashboardScreenState extends BaseState {
       setState(ViewState.Idle);
     });
   }
+
 /*-------------------------------------------------------------------------------------
                           Refresh Balances
 -------------------------------------------------------------------------------------*/
@@ -180,9 +256,9 @@ class WalletDashboardScreenState extends BaseState {
       // await databaseService.insert(dusdWalletInfo).then((res) {});
     }
     calcTotalBal(length);
-    await getGas();
     await getExchangeAssets();
     await updateWalletDatabase();
+    await getGas();
     if (!isProduction) debugVersionPopup();
     setState(ViewState.Idle);
     return walletInfo;
@@ -191,8 +267,8 @@ class WalletDashboardScreenState extends BaseState {
   // Update wallet database
   updateWalletDatabase() async {
     for (int i = 0; i < walletInfo.length; i++) {
-      await databaseService.update(walletInfo[i]);
-      await databaseService.getById(walletInfo[i].id);
+      await walletDatabaseService.update(walletInfo[i]);
+      await walletDatabaseService.getById(walletInfo[i].id);
     }
   }
 

@@ -15,7 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/globals.dart' as globals;
 
-class DepositScreenState extends BaseState {
+class MoveToExchangeScreenState extends BaseState {
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();

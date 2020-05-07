@@ -28,8 +28,7 @@ class SettingsScreen extends StatelessWidget {
     return BaseScreen<SettingsScreenState>(
       onModelReady: (model) {
         model.context = context;
-        model.getAppVersion();
-        model.checkLanguage();
+        model.init();
       },
       builder: (context, model, child) => Scaffold(
         // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
@@ -53,12 +52,13 @@ class SettingsScreen extends StatelessWidget {
                     elevation: 4,
                     child: Container(
                       color: globals.walletCardColor,
-                      height: 100,
+                      padding: EdgeInsets.all(20),
+                      // height: 100,
                       child: Center(
                         child: Text(
                           AppLocalizations.of(context).deleteWallet,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                       ),
                     ),
@@ -73,15 +73,14 @@ class SettingsScreen extends StatelessWidget {
                     elevation: 5,
                     child: Container(
                       color: globals.walletCardColor,
-                      width: 200,
-                      height: 100,
+                      padding: EdgeInsets.all(20),
                       child: Center(
                         child: Text(
                           !model.isVisible
                               ? AppLocalizations.of(context).displayMnemonic
                               : AppLocalizations.of(context).hideMnemonic,
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headline5,
                         ),
                       ),
                     ),
@@ -105,32 +104,44 @@ class SettingsScreen extends StatelessWidget {
                   elevation: 5,
                   child: Container(
                     color: globals.walletCardColor,
-                    width: 200,
-                    height: 100,
-                    child: Theme.of(context).platform == TargetPlatform.iOS
-                        ? CupertinoPicker(
-                            scrollController: FixedExtentScrollController(
-                                initialItem: model.initialLanguageValue),
-                            magnification: 1.25,
-                            itemExtent: 25,
-                            onSelectedItemChanged: (newValue) {
-                              model.changeWalletLanguage(
-                                  model.languages[newValue]);
-                            },
-                            children: <Widget>[
-                              for (int i = 0; i < model.languages.length; i++)
-                                Center(
-                                    child: Text(
-                                  '${model.languages[i]}',
-                                  style: Theme.of(context).textTheme.subtitle2,
-                                )),
-                            ],
-                          )
-                        : DropdownButton(
-                            hint: Text(
-                              AppLocalizations.of(context).changeWalletLanguage,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headline4,
+                    child: Center(
+                      child: Theme.of(context).platform == TargetPlatform.iOS
+                          ? CupertinoPicker(
+                              itemExtent: 1,
+                              onSelectedItemChanged: (int value) {
+                                // Check if it the widget works in ios device first then provide logic here
+                              },
+                              children: <Widget>[
+                                Center(child: Text('${model.languages}'))
+                              ],
+                            )
+                          : DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                iconEnabledColor: globals.primaryColor,
+                                iconSize: 26,
+                                hint: Text(
+                                  AppLocalizations.of(context)
+                                      .changeWalletLanguage,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                                value: model.selectedLanguage,
+                                onChanged: (newValue) {
+                                  model.changeWalletLanguage(newValue);
+                                },
+                                items: model.languages.map((language) {
+                                  return DropdownMenuItem(
+                                    child: Center(
+                                      child: Text(language,
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                    ),
+                                    value: language,
+                                  );
+                                }).toList(),
+                              ),
                             ),
                             value: model.selectedLanguage,
                             onChanged: (newValue) {
@@ -151,6 +162,25 @@ class SettingsScreen extends StatelessWidget {
                           ),
                   ),
                 ),
+                // Show/Hide dialog warning checkbox
+                Card(
+                    elevation: 5,
+                    color: globals.walletCardColor,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(AppLocalizations.of(context).showDialogWarnings,
+                            style: Theme.of(context).textTheme.headline5,
+                            textAlign: TextAlign.center),
+                        Checkbox(
+                          
+                            activeColor: globals.primaryColor,
+                            value: model.isDialogDisplay,
+                            onChanged: (value) {
+                              model.setDialogWarningValue(value);
+                            }),
+                      ],
+                    )),
 
                 // Version Code
                 Card(
@@ -158,14 +188,14 @@ class SettingsScreen extends StatelessWidget {
                   child: Container(
                     color: globals.primaryColor,
                     width: 200,
-                    height: 50,
+                    height: 40,
                     child: Center(
                         child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'v ${model.versionName}',
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headline6,
                         ),
                         if (!isProduction)
                           Text(' Debug', style: TextStyle(color: Colors.white))

@@ -12,22 +12,22 @@ class MarketOverviewBlock extends StatelessWidget {
     return Container(
         child: Column(
       children: <Widget>[
-        Text(pair, style: Theme.of(context).textTheme.headline4),
+        Text(pair, style: Theme.of(context).textTheme.headline5),
         UIHelper.horizontalSpaceSmall,
-        Text(price.toString(),
+        Text(price.toStringAsFixed(2),
             style: Theme.of(context)
                 .textTheme
                 .headline4
-                .copyWith(color: globals.primaryColor)),
+                .copyWith(color: globals.primaryColor,fontWeight: FontWeight.bold),),
         Text(
             (((change != null) && (change >= 0)) ? "+" : "") +
-                change.toString() +
+                change.toStringAsFixed(2) +
                 "%",
             style: TextStyle(
                 color: Color(((change != null) && (change >= 0))
                     ? 0XFF0da88b
                     : 0XFFe2103c),
-                fontSize: 14))
+                fontSize: 12))
       ],
     ));
   }

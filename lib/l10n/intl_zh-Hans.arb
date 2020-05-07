@@ -635,6 +635,18 @@
         "type": "text",
         "placeholders": {}
     },
+    "gasPrice": "燃料价格",
+    "@gasPrice": {
+        "description": "gas_price",
+        "type": "text",
+        "placeholders": {}
+    },
+    "gasLimit": "燃料限额",
+    "@gasLimit": {
+        "description": "gas_limit",
+        "type": "text",
+        "placeholders": {}
+    },
     "depositTransactionFailed": "存款交易失败",
     "@depositTransactionFailed": {
         "description": "deposit_transaction_failed",
@@ -1514,6 +1526,60 @@
   "orderUpdateNotification": "订单状态已经更新",
   "@orderUpdateNotification": {
     "description": "campaign_payment_order_updated_notification",
+    "type": "text",
+    "placeholders": {}
+  },
+  "redepositFailedError": "向交易所转币确认失败",
+  "@redepositFailedError": {
+    "description": "redeposit_failed_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pendingConfirmDeposit": "向交易所转币确认等候中",
+  "@pendingConfirmDeposit": {
+    "description": "pending_confirm_deposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseConfirmYour": "请确认您的向交易所转",
+  "@pleaseConfirmYour": {
+    "description": "please_confirm_your",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deposit": "操作",
+  "@deposit": {
+    "description": "deposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "insufficientGasAmount": "燃料余额不足",
+  "@insufficientGasAmount": {
+    "description": "Insufficient gas amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseAddGasToTrade": "如欲使用交易所需首先添加燃料",
+  "@pleaseAddGasToTrade": {
+    "description": "please_add_gas_to_trade",
+    "type": "text",
+    "placeholders": {}
+  },
+  "hideDialogWarnings": "隐藏警告信息",
+  "@hideDialogWarnings": {
+    "description": "hide_dialog_warnings",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showDialogWarnings": "显示警告信息",
+  "@showDialogWarnings": {
+    "description": "show_dialog_warnings",
+    "type": "text",
+    "placeholders": {}
+  },
+  "doNotShowTheseWarnings": "不再显示该信息",
+  "@doNotShowTheseWarnings": {
+    "description": "do_not_show_these_warnings",
     "type": "text",
     "placeholders": {}
   }

@@ -42,11 +42,11 @@ class WalletDashboardScreen extends StatelessWidget {
         if (walletInfo != null) {
           log.w('wallet info not null');
           model.walletInfo = walletInfo;
-          await model.refreshBalance();
+          await model.init();
         } else {
           log.w('Retrieving wallets from local storage');
           await model.retrieveWallets();
-          await model.refreshBalance();
+          await model.init();
         }
         await model.getGas();
       },
@@ -292,7 +292,10 @@ class WalletDashboardScreen extends StatelessWidget {
                       ? Shimmer.fromColors(
                           baseColor: globals.primaryColor,
                           highlightColor: globals.grey,
-                          child: Gas(gasAmount: model.gasAmount),
+                          child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator()),
                         )
                       : Gas(gasAmount: model.gasAmount)),
               UIHelper.verticalSpaceSmall,

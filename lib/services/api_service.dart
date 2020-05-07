@@ -13,6 +13,7 @@
 
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/models/wallet.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
@@ -21,7 +22,7 @@ import '../environments/environment.dart';
 
 /// The service responsible for networking requests
 class ApiService {
-  final log = getLogger('API');
+  final log = getLogger('Apiervice');
   final client = new http.Client();
 
   static const usdCoinPriceUrl =
@@ -223,5 +224,20 @@ class ApiService {
       nonce = int.parse(response.body);
     } catch (e) {}
     return nonce;
+  }
+
+  // Get Decimal configuration for the coins
+  Future<List<PairDecimalConfig>> getPairDecimalConfig() async {
+    var url = Constants.PAIR_DECIMAL_CONFIG_URL;
+    try {
+      var response = await client.get(url);
+      var jsonList = jsonDecode(response.body) as List;
+      log.w(' getCoinCurrencyUsdPrice $jsonList');
+      PairDecimalConfigList pairList = PairDecimalConfigList.fromJson(jsonList);
+      return pairList.pairList;
+    } catch (err) {
+      log.e('In getCoinCurrencyUsdPrice catch $err');
+      return null;
+    }
   }
 }

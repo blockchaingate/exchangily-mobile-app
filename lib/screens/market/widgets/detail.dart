@@ -36,7 +36,12 @@ class MarketDetailState extends State<MarketDetail>
     exgWidgets = [];
 
     for (var price in prices) {
+      print('price price price $price');
       if (price.symbol.endsWith("USDT")) {
+        setState(() {
+          price.high = double.parse(price.high.toStringAsFixed(2));
+          print('hight ${price.high}');
+        });
         usdtWidgets.add(DetailPair(price.symbol.replaceAll('USDT', '/USDT'),
             price.volume, price.price, price.change, price.low, price.high));
       } else if (price.symbol.endsWith("DUSD")) {
@@ -98,23 +103,23 @@ class MarketDetailState extends State<MarketDetail>
                       flex: 1,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
-                        child: Text('Ticker'),
+                        child: Text('Ticker',style: Theme.of(context).textTheme.subtitle2,),
                       )),
                   Expanded(
                     flex: 1,
-                    child: Text('Volume', textAlign: TextAlign.end),
+                    child: Text('Volume',style: Theme.of(context).textTheme.subtitle2, textAlign: TextAlign.end),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text('High', textAlign: TextAlign.end),
+                    child: Text('High',style: Theme.of(context).textTheme.subtitle2, textAlign: TextAlign.end),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text('Low', textAlign: TextAlign.end),
+                    child: Text('Low',style: Theme.of(context).textTheme.subtitle2, textAlign: TextAlign.end),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text('Change', textAlign: TextAlign.end),
+                    child: Text('Change',style: Theme.of(context).textTheme.subtitle2, textAlign: TextAlign.end),
                   ),
                 ],
               )),

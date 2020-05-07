@@ -42,12 +42,12 @@ class DetailPair extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(targetCoinName,
-                                style: Theme.of(context).textTheme.headline4),
+                                style: Theme.of(context).textTheme.headline5),
                             Text(price.toStringAsFixed(2),
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText1
-                                    .copyWith(fontWeight: FontWeight.bold))
+                                    )
                           ],
                         ),
                       ),

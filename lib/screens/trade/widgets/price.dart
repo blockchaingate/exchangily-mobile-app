@@ -53,7 +53,7 @@ class TradePriceState extends State<TradePrice> {
                     padding: EdgeInsets.fromLTRB(10.0, 10, 30.0, 10),
                     child: Text(
                         (currentPrice != null)
-                            ? currentPrice.price.toStringAsFixed(4)
+                            ? currentPrice.price.toStringAsFixed(2)
                             : '',
                         style: TextStyle(
                             fontSize: 40, color: globals.priceColor))),
@@ -62,7 +62,7 @@ class TradePriceState extends State<TradePrice> {
                         ((currentPrice != null)
                                 ? (currentPrice.price * currentUsdPrice)
                                 : 0)
-                            .toStringAsFixed(6),
+                            .toStringAsFixed(2),
                     style: Theme.of(context).textTheme.headline3)
               ],
             ),

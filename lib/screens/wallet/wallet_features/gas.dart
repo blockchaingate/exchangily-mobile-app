@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import "package:flutter/material.dart";
 import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
@@ -23,25 +24,34 @@ class Gas extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        GestureDetector(
-            onTap: () {
-              Navigator.pushNamed(context, '/addGas');
-            },
-            child: Icon(
-              Icons.add_circle,
-              semanticLabel: 'Add gas',
-              color: globals.primaryColor,
-            )),
-        Container(
-          padding: EdgeInsets.only(left: 5),
-          child: Text(
-            "${AppLocalizations.of(context).gas}: $gasAmount",
-            style: Theme.of(context)
-                .textTheme
-                .headline5
-                .copyWith(wordSpacing: 1.25),
+        Padding(
+          padding: const EdgeInsets.only(left: 5.0),
+          child: Icon(
+            Icons.donut_large,
+            size: 18,
+            color: globals.primaryColor,
           ),
-        )
+        ),
+        UIHelper.horizontalSpaceSmall,
+        Text(
+          "${AppLocalizations.of(context).gas}: $gasAmount",
+          style:
+              Theme.of(context).textTheme.headline5.copyWith(wordSpacing: 1.25),
+        ),
+        UIHelper.horizontalSpaceSmall,
+        MaterialButton(
+          minWidth: 70.0,
+          height: 24,
+          color: globals.primaryColor,
+          padding: EdgeInsets.all(0),
+          onPressed: () {
+            Navigator.pushNamed(context, '/addGas');
+          },
+          child: Text(
+            AppLocalizations.of(context).addGas,
+            style: Theme.of(context).textTheme.headline6,
+          ),
+        ),
       ],
     );
   }

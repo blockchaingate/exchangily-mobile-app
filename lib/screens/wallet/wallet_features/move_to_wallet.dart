@@ -29,16 +29,17 @@ import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:flutter/gestures.dart';
 
-class Withdraw extends StatefulWidget {
+class MoveToWalletScreen extends StatefulWidget {
   final WalletInfo walletInfo;
-
-  Withdraw({Key key, this.walletInfo}) : super(key: key);
+  MoveToWalletScreen({Key key, this.walletInfo}) : super(key: key);
 
   @override
-  _WithdrawState createState() => _WithdrawState();
+  _MoveToWalletScreenState createState() => _MoveToWalletScreenState();
 }
 
-class _WithdrawState extends State<Withdraw> {
+class _MoveToWalletScreenState extends State<MoveToWalletScreen> {
+  String gasFeeUnit = '';
+  String feeMeasurement = '';
   final _kanbanGasPriceTextController = TextEditingController();
   final _kanbanGasLimitTextController = TextEditingController();
   double kanbanTransFee = 0.0;
@@ -61,6 +62,14 @@ class _WithdrawState extends State<Withdraw> {
     _kanbanGasLimitTextController.text = gasLimit.toString();
 
     kanbanTransFee = bigNum2Double(gasPrice * gasLimit);
+
+    if (widget.walletInfo.tickerName == 'ETH' ||
+        widget.walletInfo.tickerName == 'USDT') {
+      gasFeeUnit = 'WEI';
+    } else if (widget.walletInfo.tickerName == 'FAB') {
+      gasFeeUnit = 'LIU';
+      feeMeasurement = '10^(-8)';
+    }
   }
 
   checkPass(double amount, context) async {
@@ -105,24 +114,27 @@ class _WithdrawState extends State<Withdraw> {
       var kanbanPrice = int.tryParse(_kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(_kanbanGasLimitTextController.text);
 
-      var ret = await walletService.withdrawDo(seed, coinName, coinAddress,
-          tokenType, amount, kanbanPrice, kanbanGasLimit);
-
-      if (ret["success"]) {
-        myController.text = '';
-      }
-
-      walletService.showInfoFlushbar(
-          ret["success"]
-              ? AppLocalizations.of(context).withdrawTransactionSuccessful
-              : AppLocalizations.of(context).withdrawTransactionFailed,
-          ret["success"]
-              ? '${AppLocalizations.of(context).transactionId}' +
-                  ret['data']['transactionHash']
-              : ret['data'],
-          Icons.cancel,
-          globals.red,
-          context);
+      await walletService
+          .withdrawDo(seed, coinName, coinAddress, tokenType, amount,
+              kanbanPrice, kanbanGasLimit)
+          .then((ret) {
+        if (ret["success"]) {
+          myController.text = '';
+        }
+        walletService.showInfoFlushbar(
+            ret["success"]
+                ? AppLocalizations.of(context).withdrawTransactionSuccessful
+                : AppLocalizations.of(context).withdrawTransactionFailed,
+            ret["success"]
+                ? '${AppLocalizations.of(context).transactionId}' +
+                    ret['data']['transactionHash']
+                : ret['data'],
+            Icons.cancel,
+            globals.red,
+            context);
+      }).catchError((err) {
+        print('Withdraw catch $err');
+      });
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
@@ -147,7 +159,7 @@ class _WithdrawState extends State<Withdraw> {
     var kanbanGasLimitBig = BigInt.from(kanbanGasLimit);
     var kanbanTransFeeDouble =
         bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
-
+    print('Update trans fee $kanbanTransFeeDouble');
     setState(() {
       kanbanTransFee = kanbanTransFeeDouble;
     });
@@ -182,9 +194,13 @@ class _WithdrawState extends State<Withdraw> {
         body: Container(
             padding: EdgeInsets.all(10),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 TextField(
+                    onChanged: (String amount) {
+                      updateTransFee();
+                    },
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
                     decoration: InputDecoration(
@@ -201,7 +217,22 @@ class _WithdrawState extends State<Withdraw> {
                         .textTheme
                         .headline5
                         .copyWith(fontWeight: FontWeight.w300)),
-                UIHelper.horizontalSpaceSmall,
+                UIHelper.verticalSpaceSmall,
+                // Exchange bal
+                Row(
+                  children: <Widget>[
+                    Text(AppLocalizations.of(context).inExchange + ' $bal',
+                        style: Theme.of(context).textTheme.bodyText2),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      child: Text('$coinName'.toUpperCase(),
+                          style: Theme.of(context).textTheme.bodyText2),
+                    )
+                  ],
+                ),
+                UIHelper.verticalSpaceSmall,
                 Row(
                   children: <Widget>[
                     Text(AppLocalizations.of(context).minimumAmount,
@@ -221,7 +252,7 @@ class _WithdrawState extends State<Withdraw> {
                     )
                   ],
                 ),
-                UIHelper.horizontalSpaceSmall,
+                UIHelper.verticalSpaceSmall,
                 // Kanban Gas Fee
                 Row(
                   children: <Widget>[
@@ -243,6 +274,7 @@ class _WithdrawState extends State<Withdraw> {
                   ],
                 ),
                 // Switch Row
+                UIHelper.verticalSpaceSmall,
                 Row(
                   children: <Widget>[
                     Text(AppLocalizations.of(context).advance,
@@ -263,6 +295,7 @@ class _WithdrawState extends State<Withdraw> {
                     )
                   ],
                 ),
+
                 Visibility(
                     visible: transFeeAdvance,
                     child: Column(
@@ -308,6 +341,7 @@ class _WithdrawState extends State<Withdraw> {
                           ],
                         ),
                         // Kanban Gas Limit
+
                         Row(
                           children: <Widget>[
                             Text(AppLocalizations.of(context).kanbanGasLimit,
@@ -345,28 +379,14 @@ class _WithdrawState extends State<Withdraw> {
                                             .textTheme
                                             .headline5
                                             .copyWith(
-                                                fontWeight: FontWeight.w300))))
+                                                fontWeight: FontWeight.w300)))),
                           ],
-                        )
+                        ),
+                        UIHelper.verticalSpaceSmall,
                       ],
                     )),
-                UIHelper.horizontalSpaceSmall,
-                // Exchange bal
 
-                Row(
-                  children: <Widget>[
-                    Text(AppLocalizations.of(context).inExchange + ' $bal',
-                        style: Theme.of(context).textTheme.bodyText2),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      child: Text('$coinName'.toUpperCase(),
-                          style: Theme.of(context).textTheme.bodyText2),
-                    )
-                  ],
-                ),
-                UIHelper.horizontalSpaceMedium,
+                UIHelper.verticalSpaceSmall,
                 MaterialButton(
                   padding: EdgeInsets.all(15),
                   color: globals.primaryColor,

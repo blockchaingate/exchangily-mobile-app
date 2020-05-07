@@ -75,6 +75,9 @@ class SendWalletScreen extends StatelessWidget {
                               controller:
                                   model.receiverWalletAddressTextController,
                               decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: globals.grey, width: 0.5)),
                                   suffixIcon: IconButton(
                                     icon: Icon(Icons.content_paste),
                                     onPressed: () async {
@@ -90,7 +93,7 @@ class SendWalletScreen extends StatelessWidget {
                               style: Theme.of(context).textTheme.headline5,
                             ),
                           )),
-                      RaisedButton(
+                      FlatButton(
                           padding: EdgeInsets.all(10),
                           onPressed: () {
                             model.scan();
@@ -131,10 +134,10 @@ class SendWalletScreen extends StatelessWidget {
                           onChanged: (String amount) {
                             // checkSendAmount does not directly work if you use it in if as condition so setting state here to make it work
                             //  setState(() {
-                            model.amountDouble = double.parse(amount);
+                            model.amount = double.parse(amount);
                             model.checkAmount(amount);
                             if (model.checkSendAmount == true &&
-                                model.amountDouble <= bal) {
+                                model.amount <= bal) {
                               model.updateTransFee();
                             }
                             //  });
@@ -146,14 +149,14 @@ class SendWalletScreen extends StatelessWidget {
                                   borderSide:
                                       BorderSide(color: globals.primaryColor)),
                               enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: globals.grey)),
+                                  borderSide: BorderSide(
+                                      color: globals.grey, width: 0.5)),
                               hintText: '0.00000',
                               hintStyle:
                                   TextStyle(fontSize: 14, color: globals.grey)),
-                          style:
-                              model.checkSendAmount && model.amountDouble <= bal
-                                  ? TextStyle(color: globals.grey, fontSize: 14)
-                                  : TextStyle(color: globals.red, fontSize: 14),
+                          style: model.checkSendAmount && model.amount <= bal
+                              ? TextStyle(color: globals.grey, fontSize: 14)
+                              : TextStyle(color: globals.red, fontSize: 14),
                         ),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
@@ -258,42 +261,52 @@ class SendWalletScreen extends StatelessWidget {
                                       tokenType == 'FAB'),
                                   child: Row(
                                     children: <Widget>[
-                                      Text(
-                                        AppLocalizations.of(context).gasPrice,
-                                        style: TextStyle(
-                                            fontSize: 16, color: globals.white),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .gasPrice,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400)),
                                       ),
                                       Expanded(
-                                          child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  55, 0, 0, 0),
-                                              child: TextField(
-                                                controller: model
-                                                    .gasPriceTextController,
-                                                onChanged: (String amount) {
-                                                  model.updateTransFee();
-                                                },
-                                                keyboardType:  TextInputType.numberWithOptions(decimal: true),
-                                                decoration: InputDecoration(
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: globals
-                                                                    .primaryColor)),
-                                                    enabledBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                    color: globals
-                                                                        .grey)),
-                                                    hintText: '0.00000',
-                                                    hintStyle: TextStyle(
-                                                        fontSize: 16,
-                                                        color: globals.white)),
-                                                style: TextStyle(
-                                                    color: globals.grey,
-                                                    fontSize: 16),
-                                              )))
+                                          flex: 6,
+                                          child: TextField(
+                                              controller:
+                                                  model.gasPriceTextController,
+                                              onChanged: (String amount) {
+                                                model.updateTransFee();
+                                              },
+                                              keyboardType:
+                                                  TextInputType.numberWithOptions(
+                                                      decimal: true),
+                                              decoration: InputDecoration(
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: globals
+                                                                  .primaryColor)),
+                                                  enabledBorder: UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          width: 0.5,
+                                                          color: globals.grey)),
+                                                  hintText: '0.00000',
+                                                  hintStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6
+                                                      .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.w400)),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w400)))
                                     ],
                                   )),
                               Visibility(
@@ -302,42 +315,55 @@ class SendWalletScreen extends StatelessWidget {
                                       tokenType == 'FAB'),
                                   child: Row(
                                     children: <Widget>[
-                                      Text(
-                                        AppLocalizations.of(context).gasLimit,
-                                        style: TextStyle(
-                                            fontSize: 16, color: globals.white),
+                                      Expanded(
+                                        flex: 3,
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .gasLimit,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400)),
                                       ),
                                       Expanded(
-                                          child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  55, 0, 0, 0),
-                                              child: TextField(
-                                                controller: model
-                                                    .gasLimitTextController,
-                                                onChanged: (String amount) {
-                                                  model.updateTransFee();
-                                                },
-                                                keyboardType:  TextInputType.numberWithOptions(decimal: true),
-                                                decoration: InputDecoration(
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: globals
-                                                                    .primaryColor)),
-                                                    enabledBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                    color: globals
-                                                                        .grey)),
-                                                    hintText: '0.00000',
-                                                    hintStyle: TextStyle(
-                                                        fontSize: 16,
-                                                        color: globals.white)),
-                                                style: TextStyle(
-                                                    color: globals.grey,
-                                                    fontSize: 16),
-                                              )))
+                                          flex: 6,
+                                          child: TextField(
+                                            controller:
+                                                model.gasLimitTextController,
+                                            onChanged: (String amount) {
+                                              model.updateTransFee();
+                                            },
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    decimal: true),
+                                            decoration: InputDecoration(
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: globals
+                                                                .primaryColor)),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            width: 0.5,
+                                                            color:
+                                                                globals.grey)),
+                                                hintText: '0.00000',
+                                                hintStyle: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w400)),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                          ))
                                     ],
                                   )),
                               Visibility(
@@ -346,49 +372,52 @@ class SendWalletScreen extends StatelessWidget {
                                       tokenType == 'FAB'),
                                   child: Row(
                                     children: <Widget>[
-                                      Text(
-                                        AppLocalizations.of(context)
-                                            .satoshisPerByte,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5
-                                            .copyWith(
-                                                fontWeight: FontWeight.w300),
-                                      ),
                                       Expanded(
-                                          child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  20, 0, 0, 0),
-                                              child: TextField(
-                                                controller: model
-                                                    .satoshisPerByteTextController,
-                                                onChanged: (String amount) {
-                                                  model.updateTransFee();
-                                                },
-                                                keyboardType:  TextInputType.numberWithOptions(decimal: true),
-                                                decoration: InputDecoration(
-                                                    focusedBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: globals
-                                                                    .primaryColor)),
-                                                    enabledBorder:
-                                                        UnderlineInputBorder(
-                                                            borderSide:
-                                                                BorderSide(
-                                                                    color: globals
-                                                                        .grey)),
-                                                    hintText: '0.00000',
-                                                    hintStyle: TextStyle(
-                                                        fontSize: 14,
-                                                        color: globals.white)),
-                                                style: Theme.of(context)
+                                        flex: 3,
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .satoshisPerByte,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6),
+                                      ),
+                                      //  UIHelper.horizontalSpaceLarge,
+                                      Expanded(
+                                          flex: 6,
+                                          child: TextField(
+                                            controller: model
+                                                .satoshisPerByteTextController,
+                                            onChanged: (String amount) {
+                                              model.updateTransFee();
+                                            },
+                                            keyboardType:
+                                                TextInputType.numberWithOptions(
+                                                    decimal: true),
+                                            decoration: InputDecoration(
+                                                focusedBorder:
+                                                    UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: globals
+                                                                .primaryColor)),
+                                                enabledBorder:
+                                                    UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color:
+                                                                globals.grey)),
+                                                hintText: '0.00000',
+                                                hintStyle: Theme.of(context)
                                                     .textTheme
-                                                    .headline5
+                                                    .headline6
                                                     .copyWith(
                                                         fontWeight:
-                                                            FontWeight.w300),
-                                              )))
+                                                            FontWeight.w400)),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w300),
+                                          ))
                                     ],
                                   ))
                             ],
@@ -440,10 +469,10 @@ class SendWalletScreen extends StatelessWidget {
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                 Container(
-                  height:
-                      100, // alignment was not working without the height so ;)
+                  // height:
+                  //     100, // alignment was not working without the height so ;)
                   padding: EdgeInsets.symmetric(horizontal: 10),
-                  alignment: Alignment(0.0, 1.0),
+                  // alignment: Alignment(0.0, 1.0),
                   child: model.state == ViewState.Busy
                       ? Padding(
                           padding: const EdgeInsets.all(5.0),
@@ -479,6 +508,7 @@ class SendWalletScreen extends StatelessWidget {
                           },
                         ),
                 ),
+                UIHelper.verticalSpaceMedium
               ],
             ),
           ),

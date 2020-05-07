@@ -31,7 +31,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/create_password.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/import_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/choose_wallet_language.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_and_trade.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_exchange.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/receive.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features.dart';
@@ -41,9 +41,8 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/trade/main.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/deposit.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/withdraw.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings.dart';
 
@@ -98,9 +97,6 @@ class RouteGenerator {
                   walletInfo: args,
                 ));
 
-      case '/moveToExchange':
-        return MaterialPageRoute(builder: (_) => MoveToExchangeScreen());
-
       case '/market':
         return MaterialPageRoute(builder: (_) => Market());
 
@@ -114,13 +110,15 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SmartContract());
 
       case '/deposit':
-        return MaterialPageRoute(builder: (_) => Deposit(walletInfo: args));
+        return MaterialPageRoute(
+            builder: (_) => MoveToExchangeScreen(walletInfo: args));
 
       case '/redeposit':
         return MaterialPageRoute(builder: (_) => Redeposit(walletInfo: args));
 
       case '/withdraw':
-        return MaterialPageRoute(builder: (_) => Withdraw(walletInfo: args));
+        return MaterialPageRoute(
+            builder: (_) => MoveToWalletScreen(walletInfo: args));
 
       case '/settings':
         return MaterialPageRoute(builder: (_) => SettingsScreen());

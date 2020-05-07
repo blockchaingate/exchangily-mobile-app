@@ -4,7 +4,7 @@ description: Decentralized Wallet App.
 version: 1.1.4+9
 
 environment:
-  sdk: '>=2.3.2 <3.0.0'
+  sdk: ">=2.3.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -75,13 +75,11 @@ dependencies:
   #  git: git://github.com/apptreesoftware/flutter_barcode_reader.git
 
   # Flushbar instead of Snackbar for notifications
-  # flushbar: 1.9.1
+  #flushbar: ^1.9.0
   flushbar:
     git:
       url: git://github.com/valterh4ck3r/flushbar
       ref: master
-
-  # Decimal
   decimal: ^0.3.5
 
   # Dependency injection
@@ -123,9 +121,9 @@ dependencies:
       ref: master
 
 dev_dependencies:
-  intl_translation: '^0.17.0'
+  intl_translation: "^0.17.0"
   intl: ^0.16.1
-  flutter_launcher_icons: '^0.7.3'
+  flutter_launcher_icons: "^0.7.3"
 
   flutter_test:
     sdk: flutter
