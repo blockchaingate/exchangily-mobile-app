@@ -146,6 +146,7 @@ class SettingsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+                // Show/Hide dialog warning checkbox
                 Card(
                     elevation: 5,
                     color: globals.walletCardColor,

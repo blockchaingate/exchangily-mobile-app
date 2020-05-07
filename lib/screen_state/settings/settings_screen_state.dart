@@ -46,9 +46,9 @@ class SettingsScreenState extends BaseState {
 
   init() {
     setBusy(true);
-    sharedService
-        .getDialogWarningsStatus()
-        .then((res) => isDialogDisplay = res);
+    sharedService.getDialogWarningsStatus().then((res) {
+      if (res != null) isDialogDisplay = res;
+    });
     getAppVersion();
     setBusy(false);
   }
