@@ -110,9 +110,9 @@ class SharedService {
                               activeColor: globals.primaryColor,
                               onChanged: (bool value) async {
                                 setState(() => checkBoxValue = value);
-                                print(checkBoxValue);
-
-                                await setDialogWarningsStatus(checkBoxValue);
+                                print(!checkBoxValue);
+// user click on do not show which is negative means false so to make it work it needs to be opposite to the orginal value
+                                await setDialogWarningsStatus(!checkBoxValue);
                               }),
                           Text(
                             AppLocalizations.of(context).doNotShowTheseWarnings,
@@ -191,7 +191,8 @@ class SharedService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var holder = prefs.getBool('isDialogDisplay');
     log.w('in getDialogWarningsStatus $holder');
-    if (holder == null) return false;
+    // when app doesn't find the value in the local storage then by default its true to show dialog warnings
+    if (holder == null) return true;
     return holder;
   }
 
