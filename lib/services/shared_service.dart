@@ -109,7 +109,6 @@ class SharedService {
                               value: checkBoxValue,
                               activeColor: globals.primaryColor,
                               onChanged: (bool value) async {
-                               
                                 setState(() => checkBoxValue = value);
                                 print(checkBoxValue);
 
@@ -135,10 +134,8 @@ class SharedService {
                       ),
                       onPressed: () {
                         if (path == '' || path == null) {
-                         
                           Navigator.of(context).pop(false);
                         } else {
-                           
                           navigationService.navigateTo(path,
                               arguments: arguments);
                           Navigator.of(context).pop(false);
@@ -191,12 +188,11 @@ class SharedService {
     -------------------------------------------------- */
 
   Future<bool> getDialogWarningsStatus() async {
-    
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var holder = prefs.getBool('isDialogDisplay');
     log.w('in getDialogWarningsStatus $holder');
-    if(holder == null) return false;
-    return true;
+    if (holder == null) return false;
+    return holder;
   }
 
   setDialogWarningsStatus(bool value) async {
