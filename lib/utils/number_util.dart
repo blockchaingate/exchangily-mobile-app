@@ -1,13 +1,44 @@
 import 'dart:math';
 
 import 'package:decimal/decimal.dart';
+import 'package:flutter/services.dart';
 
 class NumberUtil {
   static const int DEFAULT_DECIMAL_DIGITS = 2;
   int maxDecimalDigits;
 
-  double truncateDecimal(Decimal input, {int digits = DEFAULT_DECIMAL_DIGITS}) {
-    return (input * Decimal.fromInt(pow(10, digits))).truncateToDouble() /
-        pow(10, digits);
+ double truncateDouble(double val, int places){ 
+   double mod = pow(10.0, places); 
+   return ((val * mod).round().toDouble() / mod); 
+}
+}
+
+class DecimalTextInputFormatter extends TextInputFormatter {
+
+  DecimalTextInputFormatter({int decimalRange, bool activatedNegativeValues})
+  : assert(decimalRange == null || decimalRange >= 0,
+    'DecimalTextInputFormatter declaretion error') {
+    String dp = (decimalRange != null && decimalRange > 0) ? "([.][0-9]{0,$decimalRange}){0,1}" : "";
+    String num = "[0-9]*$dp";
+
+    if(activatedNegativeValues) {
+      _exp = new RegExp("^((((-){0,1})|((-){0,1}[0-9]$num))){0,1}\$");
+    }
+    else {
+      _exp = new RegExp("^($num){0,1}\$");
+    }
+  }
+
+  RegExp _exp;
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if(_exp.hasMatch(newValue.text)){
+      return newValue;
+    }
+    return oldValue;
   }
 }

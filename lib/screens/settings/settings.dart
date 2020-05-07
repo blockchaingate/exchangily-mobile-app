@@ -157,6 +157,7 @@ class SettingsScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.center),
                         Checkbox(
+                          
                             activeColor: globals.primaryColor,
                             value: model.isDialogDisplay,
                             onChanged: (value) {

@@ -26,6 +26,7 @@ import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -83,6 +84,26 @@ class BuySellScreenState extends BaseState {
   final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
   Orders orders;
   double transactionAmount = 0;
+  List<PairDecimalConfig> pairDecimalConfigList = [];
+  int priceDecimal = 0;
+  int quantityDecimal = 0;
+  ApiService apiService = locator<ApiService>();
+  String pair = '';
+
+  init() async {
+    log.e(pair);
+    splitPair(pair);
+    setDefaultGasPrice();
+    sell = [];
+    buy = [];
+    bidOrAsk = bidOrAsk;
+    orderListFromTradeService();
+    tradeListFromTradeService();
+    await retrieveWallets();
+    await orderList();
+    await tradeList();
+    await getDecimalPairConfig();
+  }
 
   // Set default price for kanban gas price and limit
   setDefaultGasPrice() {
@@ -97,6 +118,26 @@ class BuySellScreenState extends BaseState {
     var coinsArray = pair.split("/");
     baseCoinName = coinsArray[1];
     targetCoinName = coinsArray[0];
+  }
+
+  // getPairDecimalConfig
+
+  getDecimalPairConfig() async {
+    setBusy(true);
+    await apiService.getPairDecimalConfig().then((res) {
+      pairDecimalConfigList = res;
+      String currentCoinName = targetCoinName + baseCoinName;
+      log.w('Current coin name in get decimal config $currentCoinName');
+      for (PairDecimalConfig pair in pairDecimalConfigList) {
+        if (pair.name == currentCoinName) {
+          priceDecimal = pair.priceDecimal;
+          quantityDecimal = pair.qtyDecimal;
+          log.e('Price and quantity decimal $priceDecimal -- $quantityDecimal');
+        }
+      }
+    });
+    log.w(pairDecimalConfigList.length);
+    setBusy(false);
   }
 
   selectBuySellTab(bool value) {
@@ -486,6 +527,7 @@ class BuySellScreenState extends BaseState {
   // Slider Onchange
   sliderOnchange(newValue) {
     setState(ViewState.Busy);
+    log.w(quantityTextController.text);
     sliderValue = newValue;
     var targetCoinbalance = targetCoinWalletData.inExchange; // usd bal for buy
     var baseCoinbalance = baseCoinWalletData //coin(asset) bal for sell

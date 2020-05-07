@@ -13,7 +13,11 @@
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade-model.dart';
+import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/cupertino.dart';
@@ -51,7 +55,10 @@ class _TradeState extends State<Trade> with TradeService {
       new GlobalKey<TradePriceState>();
   final GlobalKey<TrademarketState> _tradeMarketState =
       new GlobalKey<TrademarketState>();
+      var pair;
 
+  List<PairDecimalConfig> pairDecimalConfigList = [];
+  ApiService apiService = locator<ApiService>();
   void _updateTrades(tradesString) {
     // _klinePageState.currentState.updateTrades(trades);
 
@@ -70,10 +77,18 @@ class _TradeState extends State<Trade> with TradeService {
     }
   }
 
+  getDecimalPairConfig() async {
+    await apiService.getPairDecimalConfig().then((res) {
+      pairDecimalConfigList = res;
+    });
+    print(pairDecimalConfigList.length);
+  }
+
   @override
   void initState() {
     super.initState();
-    var pair = widget.pair.replaceAll(RegExp('/'), '');
+    getDecimalPairConfig();
+     pair = widget.pair.replaceAll(RegExp('/'), '');
     allTradesChannel = getTradeListChannel(pair);
     allTradesChannel.stream.listen((trades) {
       // print('Trade Channel $trades');
@@ -103,6 +118,7 @@ class _TradeState extends State<Trade> with TradeService {
       var item;
       for (var i = 0; i < list.length; i++) {
         item = list[i];
+        
         if (item.symbol == pair) {
           break;
         }
@@ -113,8 +129,10 @@ class _TradeState extends State<Trade> with TradeService {
         item.close = bigNum2Double(item.close);
         item.volume = bigNum2Double(item.volume);
         item.price = bigNum2Double(item.price);
+       
+        item.price = item.price;
         item.high = bigNum2Double(item.high);
-
+     
         item.low = bigNum2Double(item.low);
 
         item.change = 0.0;
@@ -125,6 +143,9 @@ class _TradeState extends State<Trade> with TradeService {
         var usdPrice = 0.2;
         if (pair.endsWith("USDT")) {
           usdPrice = await getCoinMarketPrice('tether');
+          print('1111 $usdPrice');
+          usdPrice = NumberUtil().truncateDouble(usdPrice, 2);
+          print('2222 $usdPrice');
         } else if (pair.endsWith("BTC")) {
           usdPrice = await getCoinMarketPrice('btc');
         } else if (pair.endsWith("ETH")) {

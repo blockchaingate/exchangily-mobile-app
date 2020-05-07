@@ -37,8 +37,7 @@ class MarketOverviewState extends State<MarketOverview> {
       for (var i = 0; i < prices.length; i++) {
         var item = prices[i];
         if (item.symbol == "BTCUSDT") {
-          btcUsdtP = NumberUtil().truncateDecimal(Decimal.fromInt(item.price.toInt()),digits:3);
-          print('1 ${item.price}');
+          btcUsdtP = item.price;
           btcUsdtC = item.change;
         } else if (item.symbol == "EXGUSDT") {
           exgUsdtP = item.price;
@@ -66,7 +65,7 @@ class MarketOverviewState extends State<MarketOverview> {
       color: globals.walletCardColor,
       child: Container(
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
+        margin: EdgeInsets.symmetric(horizontal: 30),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
