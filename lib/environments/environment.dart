@@ -1,4 +1,5 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 Map devConfig = {
@@ -52,7 +53,8 @@ Map devConfig = {
     "BTC": 0.002,
     "FAB": 0.005,
     "ETH": 0.01,
-    "USDT": 10.0
+    "USDT": 10.0,
+    "DUSD": 10.0
   }
 };
 
@@ -111,13 +113,14 @@ Map productionConfig = {
     "BTC": 0.01,
     "FAB": 0.01,
     "ETH": 0.01,
-    "USDT": 10.0
+    "USDT": 10.0,
+    "DUSD": 10.0
   }
 };
 
 final environment = isProduction ? productionConfig : devConfig;
 
-class EnvironmentConfig {
-  static const String campaignTest = 'https://test.blockchaingate.com/v2/';
-  static const String campaignProd = 'https://blockchaingate.com/v2/';
+class EnvironmentConfig extends Constants {
+  static const String CAMPAIGN_TEST_URL = 'https://test.blockchaingate.com/v2/';
+  static const String CAMPAIGN_PROD_URL = 'https://blockchaingate.com/v2/';
 }

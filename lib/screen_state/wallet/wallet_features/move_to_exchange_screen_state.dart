@@ -13,9 +13,12 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../logger.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MoveToExchangeScreenState extends BaseState {
+  final log = getLogger('MoveToExchangeScreenState');
+
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
@@ -69,20 +72,28 @@ class MoveToExchangeScreenState extends BaseState {
 // Check Pass
   checkPass() async {
     setState(ViewState.Busy);
-    // if (!isValid) {
-    //   sharedService.alertError(AppLocalizations.of(context).invalidAmount,
-    //       AppLocalizations.of(context).pleaseEnterValidNumber);
-    //   setState(ViewState.Idle);
-    //   return;
-    // }
     var amount = double.tryParse(myController.text);
     log.i(amount);
-    if (amount == null || amount > walletInfo.availableBalance || amount == 0) {
-      sharedService.alertResponse(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterValidNumber);
+    if (amount == null ||
+        amount > walletInfo.availableBalance ||
+        amount == 0 ||
+        amount.isNegative) {
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          isWarning: false);
       setState(ViewState.Idle);
       return;
     }
+    if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).minimumAmountError,
+          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+          Icons.cancel,
+          globals.red,
+          context);
+      return;
+    }
+    setMessage('');
 
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -118,35 +129,30 @@ class MoveToExchangeScreenState extends BaseState {
       await walletService
           .depositDo(seed, coinName, tokenType, amount, option)
           .then((ret) {
-        if (ret["success"]) {
+        log.w(ret);
+        bool success = ret["success"];
+        if (success) {
           myController.text = '';
+          setMessage(ret['data']['transactionID']);
+        } else {
+          var errMsg = ret['data'];
+          if (errMsg == null || errMsg == '') {
+            errMsg = AppLocalizations.of(context).serverError;
+            setErrorMessage(errMsg);
+          }
         }
-        var errMsg = ret['data'];
-        if (errMsg == null || errMsg == '') {
-          errMsg = ret['error'];
-        }
-        if (errMsg == null || errMsg == '') {
-          errMsg = 'Unknown Error';
-        }
-        walletService.showInfoFlushbar(
-            ret["success"]
+        sharedService.alertDialog(
+            success
                 ? AppLocalizations.of(context).depositTransactionSuccess
                 : AppLocalizations.of(context).depositTransactionFailed,
-            ret["success"]
-                ? 'transactionID:' + ret['data']['transactionID']
-                : errMsg,
-            Icons.cancel,
-            globals.red,
-            context);
-        setState(ViewState.Idle);
+            success ? "" : AppLocalizations.of(context).serverError,
+            isWarning: false);
       }).catchError((onError) {
-        setState(ViewState.Idle);
-        log.e(onError);
+        log.e('Deposit Catch $onError');
       });
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
-        setState(ViewState.Idle);
       }
     }
     setState(ViewState.Idle);
@@ -154,7 +160,7 @@ class MoveToExchangeScreenState extends BaseState {
 
   showNotification(context) {
     setState(ViewState.Busy);
-    walletService.showInfoFlushbar(
+    sharedService.showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,
         AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
         Icons.cancel,
@@ -216,5 +222,10 @@ class MoveToExchangeScreenState extends BaseState {
     });
 
     setState(ViewState.Idle);
+  }
+
+// Copy txid and display flushbar
+  copyAndShowNotificatio(String message) {
+    sharedService.copyAddress(context, message);
   }
 }

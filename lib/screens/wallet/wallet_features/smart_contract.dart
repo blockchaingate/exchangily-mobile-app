@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
@@ -41,6 +42,7 @@ class _SmartContractState extends State<SmartContract> {
 
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  SharedService sharedService = locator<SharedService>();
 
   var inputs = [];
   var payable = false;
@@ -322,7 +324,7 @@ class _SmartContractState extends State<SmartContract> {
   }
 
   showNotification(context) {
-    walletService.showInfoFlushbar(
+    sharedService.showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,
         AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
         Icons.cancel,

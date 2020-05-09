@@ -11,7 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/order-model.dart';
 import 'package:exchangilymobileapp/screen_state/trade/buy_sell_screen_state.dart';
@@ -20,7 +19,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import "./order_detail.dart";
+
 import "./my_orders.dart";
 import 'package:flutter/foundation.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
@@ -33,7 +32,6 @@ class BuySell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('BuySellScreen');
     return BaseScreen<BuySellScreenState>(
       onModelReady: (model) async {
         model.context = context;
@@ -144,11 +142,11 @@ class BuySell extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Expanded(
-                          flex: 6,
+                          flex: 5,
                           child: Column(
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                padding: EdgeInsets.fromLTRB(10, 5, 5, 0),
                                 child: TextField(
                                   keyboardType: TextInputType.numberWithOptions(
                                       decimal: true),
@@ -167,14 +165,14 @@ class BuySell extends StatelessWidget {
                                           AppLocalizations.of(context).price,
                                       labelStyle: Theme.of(context)
                                           .textTheme
-                                          .headline5),
+                                          .subtitle2),
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                padding: EdgeInsets.fromLTRB(10, 5, 5, 0),
                                 child: TextField(
-                                   keyboardType: TextInputType.numberWithOptions(
+                                  keyboardType: TextInputType.numberWithOptions(
                                       decimal: true),
                                   inputFormatters: [
                                     DecimalTextInputFormatter(
@@ -191,7 +189,7 @@ class BuySell extends StatelessWidget {
                                           AppLocalizations.of(context).quantity,
                                       labelStyle: Theme.of(context)
                                           .textTheme
-                                          .headline5),
+                                          .subtitle2),
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
                               ),
@@ -217,13 +215,13 @@ class BuySell extends StatelessWidget {
                                     children: <Widget>[
                                       Padding(
                                         padding:
-                                            const EdgeInsets.only(right: 8.0),
+                                            const EdgeInsets.only(right: 5.0),
                                         child: Text(
                                           AppLocalizations.of(context)
                                               .transactionAmount,
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 14.0),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
                                         ),
                                       ),
                                       UIHelper.verticalSpaceSmall,
@@ -235,17 +233,17 @@ class BuySell extends StatelessWidget {
                                                     " " +
                                                     model.baseCoinName,
                                                 textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 14.0))
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5)
                                             : Text(
                                                 "${model.transactionAmount.toStringAsFixed(model.priceDecimal)}" +
                                                     " " +
                                                     model.baseCoinName,
                                                 textAlign: TextAlign.end,
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 14.0)),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5),
                                       )
                                     ],
                                   )),
@@ -259,9 +257,9 @@ class BuySell extends StatelessWidget {
                                       Text(
                                           AppLocalizations.of(context)
                                               .totalBalance,
-                                          style: TextStyle(
-                                              color: globals.primaryColor,
-                                              fontSize: 15.0)),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle1),
                                       // First Check if Object is null
                                       model.targetCoinWalletData == null &&
                                               model.baseCoinWalletData == null
@@ -271,18 +269,16 @@ class BuySell extends StatelessWidget {
                                                   "0.00" +
                                                       " " +
                                                       model.baseCoinName,
-                                                  style: TextStyle(
-                                                      color:
-                                                          globals.primaryColor,
-                                                      fontSize: 15.0))
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .subtitle1)
                                               : Text(
                                                   "0.00" +
                                                       " " +
                                                       model.targetCoinName,
-                                                  style: TextStyle(
-                                                      color:
-                                                          globals.primaryColor,
-                                                      fontSize: 15.0))
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .subtitle1)
                                           :
                                           // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
                                           model.bidOrAsk == true
@@ -290,18 +286,16 @@ class BuySell extends StatelessWidget {
                                                   "${model.baseCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
                                                       " " +
                                                       model.baseCoinName,
-                                                  style: TextStyle(
-                                                      color:
-                                                          globals.primaryColor,
-                                                      fontSize: 15.0))
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .subtitle1)
                                               : Text(
                                                   "${model.targetCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
                                                       " " +
                                                       model.targetCoinName,
-                                                  style: TextStyle(
-                                                      color:
-                                                          globals.primaryColor,
-                                                      fontSize: 15.0))
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .subtitle1)
                                     ],
                                   )),
                               // kanban gas fee
@@ -377,7 +371,9 @@ class BuySell extends StatelessWidget {
                                                       model.updateTransFee();
                                                     },
                                                     keyboardType: TextInputType
-                                                        .numberWithOptions(decimal: true), // numnber keyboard
+                                                        .numberWithOptions(
+                                                            decimal:
+                                                                true), // numnber keyboard
                                                     decoration: InputDecoration(
                                                         focusedBorder:
                                                             UnderlineInputBorder(
@@ -424,7 +420,9 @@ class BuySell extends StatelessWidget {
                                                               .updateTransFee();
                                                         },
                                                         keyboardType: TextInputType
-                                                            .numberWithOptions(decimal: true), // numnber keyboard
+                                                            .numberWithOptions(
+                                                                decimal:
+                                                                    true), // numnber keyboard
                                                         decoration: InputDecoration(
                                                             focusedBorder: UnderlineInputBorder(
                                                                 borderSide: BorderSide(
@@ -553,10 +551,8 @@ class BuySell extends StatelessWidget {
         for (var item in orderArray)
           InkWell(
             onTap: () {
-           
               model.quantityTextController.text = item.orderQuantity.toString();
               model.priceTextController.text = item.price.toString();
-           
             },
             child: Padding(
                 padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
@@ -571,7 +567,9 @@ class BuySell extends StatelessWidget {
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                         color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
-                        child: Text(item.orderQuantity.toStringAsFixed(model.quantityDecimal),
+                        child: Text(
+                            item.orderQuantity
+                                .toStringAsFixed(model.quantityDecimal),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 13.0)))
                   ],

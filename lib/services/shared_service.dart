@@ -69,8 +69,8 @@ class SharedService {
         false;
   }
 
-  Future<bool> alertResponse(String title, String message,
-      {String path, dynamic arguments}) async {
+  Future<bool> alertDialog(String title, String message,
+      {bool isWarning, String path, dynamic arguments}) async {
     bool checkBoxValue = false;
     return showDialog(
             context: context,
@@ -82,47 +82,55 @@ class SharedService {
                 titleTextStyle: Theme.of(context).textTheme.headline4,
                 contentTextStyle: TextStyle(color: globals.grey),
                 contentPadding: EdgeInsets.symmetric(horizontal: 25),
-                content: StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      UIHelper.verticalSpaceMedium,
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 6.0),
-                        child: Text(
-                          // add here cupertino widget to check in these small widgets first then the entire app
-                          message, textAlign: TextAlign.start,
-                          style: Theme.of(context).textTheme.headline5,
+                content: Visibility(
+                  visible: message != '',
+                  child: StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        UIHelper.verticalSpaceMedium,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0, vertical: 6.0),
+                          child: Text(
+                            // add here cupertino widget to check in these small widgets first then the entire app
+                            message, textAlign: TextAlign.start,
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
                         ),
-                      ),
-                      //  UIHelper.verticalSpaceMedium,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Checkbox(
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              value: checkBoxValue,
-                              activeColor: globals.primaryColor,
-                              onChanged: (bool value) async {
-                                setState(() => checkBoxValue = value);
-                                print(checkBoxValue);
-
-                                await setDialogWarningsStatus(checkBoxValue);
-                              }),
-                          Text(
-                            AppLocalizations.of(context).doNotShowTheseWarnings,
-                            style: Theme.of(context).textTheme.headline6,
-                          )
-                        ],
-                      ),
-                    ],
-                  );
-                }),
+                        // Do not show checkbox and text does not require to show on all dialogs
+                        Visibility(
+                          visible: isWarning ?? true,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Checkbox(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  value: checkBoxValue,
+                                  activeColor: globals.primaryColor,
+                                  onChanged: (bool value) async {
+                                    setState(() => checkBoxValue = value);
+                                    print(!checkBoxValue);
+                                    // user click on do not show which is negative means false so to make it work it needs to be opposite to the orginal value
+                                    await setDialogWarningsStatus(
+                                        !checkBoxValue);
+                                  }),
+                              Text(
+                                AppLocalizations.of(context)
+                                    .doNotShowTheseWarnings,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    );
+                  }),
+                ),
                 actions: <Widget>[
                   Container(
                     margin: EdgeInsetsDirectional.only(bottom: 10),
@@ -191,12 +199,23 @@ class SharedService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var holder = prefs.getBool('isDialogDisplay');
     log.w('in getDialogWarningsStatus $holder');
-    if (holder == null) return false;
+    // when app doesn't find the value in the local storage then by default its true to show dialog warnings
+    if (holder == null) return true;
     return holder;
   }
 
   setDialogWarningsStatus(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isDialogDisplay', value);
+  }
+
+/* ---------------------------------------------------
+                Copy Address
+--------------------------------------------------- */
+
+  void copyAddress(context, text) {
+    Clipboard.setData(new ClipboardData(text: text));
+    alertDialog(AppLocalizations.of(context).transactionId,
+        AppLocalizations.of(context).copiedSuccessfully);
   }
 }

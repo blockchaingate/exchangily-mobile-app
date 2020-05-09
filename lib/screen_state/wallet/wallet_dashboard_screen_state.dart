@@ -56,6 +56,7 @@ class WalletDashboardScreenState extends BaseState {
     await getDecimalPairConfig();
   }
 
+// Get decimal pair config
   getDecimalPairConfig() async {
     await apiService.getPairDecimalConfig().then((res) {
       pairDecimalConfigList = res;
@@ -86,20 +87,22 @@ class WalletDashboardScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  getGas() async {
-    setState(ViewState.Busy);
-    for (var i = 0; i < walletInfo.length; i++) {
-      String tName = walletInfo[i].tickerName;
-      if (tName == 'EXG') {
-        exgAddress = walletInfo[i].address;
-        await walletService
-            .gasBalance(exgAddress)
-            .then((data) => gasAmount = data)
-            .catchError((onError) => log.e(onError));
-      }
-    }
+  // Get EXG address from wallet database
+  Future<String> getExgAddressFromWalletDatabase() async {
+    String address = '';
+    await walletDatabaseService
+        .getBytickerName('EXG')
+        .then((res) => address = res.address);
+    return address;
+  }
 
-    setState(ViewState.Idle);
+  getGas() async {
+    String address = await getExgAddressFromWalletDatabase();
+    await walletService
+        .gasBalance(address)
+        .then((data) => gasAmount = data)
+        .catchError((onError) => log.e(onError));
+
     return gasAmount;
   }
 
@@ -131,28 +134,24 @@ class WalletDashboardScreenState extends BaseState {
   // Show dialog warning
 
   showDialogWarning() {
-    log.w('1 $gasAmount');
     if (gasAmount < 0.5) {
-      log.e('2');
       sharedService.getDialogWarningsStatus().then((value) {
         {
           if (value)
-            sharedService.alertResponse(
+            sharedService.alertDialog(
                 AppLocalizations.of(context).insufficientGasAmount,
                 AppLocalizations.of(context).pleaseAddGasToTrade);
-          log.w('value in get gas from get diaload warning $value');
         }
       });
     }
     if (isConfirmDeposit) {
       sharedService.getDialogWarningsStatus().then((value) {
         if (value)
-          sharedService.alertResponse(
+          sharedService.alertDialog(
               AppLocalizations.of(context).pendingConfirmDeposit,
               '${AppLocalizations.of(context).pleaseConfirmYour} ${confirmDepositCoinWallet.tickerName} ${AppLocalizations.of(context).deposit}',
               path: '/walletFeatures',
               arguments: confirmDepositCoinWallet);
-        log.w('value in get gas from get diaload warning $value');
       });
     }
   }
@@ -175,47 +174,54 @@ class WalletDashboardScreenState extends BaseState {
 /*-------------------------------------------------------------------------------------
                           Refresh Balances
 -------------------------------------------------------------------------------------*/
+
   Future refreshBalance() async {
     setState(ViewState.Busy);
 
     // Make a copy of walletInfo as after refresh its count doubled so this way we seperate the UI walletinfo from state
     // also copy wallet keep the previous balance when loading shows shimmers instead of blank screen or zero bal
-    walletInfoCopy = walletInfo.map((element) => element).toList();
+    await getGas();
     int length = walletInfoCopy.length;
-    print('refreshBalance walletInfoCopy length=' + length.toString());
     List<String> coinTokenType = walletService.tokenType;
     walletInfo.clear();
     double walletBal = 0.0;
     double walletLockedBal = 0.0;
+
+    // For loop starts
     for (var i = 0; i < length; i++) {
       int id = i + 1;
       print('i=' + i.toString());
       String tickerName = walletInfoCopy[i].tickerName;
       String address = walletInfoCopy[i].address;
       String name = walletInfoCopy[i].name;
-
+      // Get coin balance by address
       await walletService
           .coinBalanceByAddress(tickerName, address, coinTokenType[i])
           .then((balance) async {
+        log.e('bal $balance');
         walletBal = balance['balance'];
         walletLockedBal = balance['lockbalance'];
       }).timeout(Duration(seconds: 25), onTimeout: () async {
         setState(ViewState.Idle);
-        sharedService.alertResponse(
+        sharedService.alertDialog(
             '', AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
         await retrieveWallets();
         log.e('Timeout');
       }).catchError((error) async {
         setState(ViewState.Idle);
-        sharedService.alertResponse(
+        sharedService.alertDialog(
             '', AppLocalizations.of(context).genericError);
         await retrieveWallets();
         log.e('Something went wrong  - $error');
       });
+
+      // Get coin market price by name
       double marketPrice = await walletService.getCoinMarketPrice(name);
-      log.i('after market price');
+
+      // Calculate usd balance
       coinUsdBalance = walletService.calculateCoinUsdBalance(
           marketPrice, walletBal, walletLockedBal);
+      // Adding each coin details in the wallet
       WalletInfo wi = WalletInfo(
           id: id,
           tickerName: tickerName,
@@ -228,9 +234,10 @@ class WalletDashboardScreenState extends BaseState {
       walletInfo.add(wi);
     } // For loop ends
 
-    var hasDUSD = false;
-    var exgAddress = '';
-    var exgTokenType = '';
+    bool hasDUSD = false;
+    String exgAddress = '';
+    String exgTokenType = '';
+
     for (var i = 0; i < walletInfo.length; i++) {
       String tickerName = walletInfo[i].tickerName;
       if (tickerName == 'DUSD') {
@@ -256,7 +263,7 @@ class WalletDashboardScreenState extends BaseState {
     calcTotalBal(length);
     await getExchangeAssets();
     await updateWalletDatabase();
-    await getGas();
+
     if (!isProduction) debugVersionPopup();
     setState(ViewState.Idle);
     return walletInfo;
@@ -272,14 +279,14 @@ class WalletDashboardScreenState extends BaseState {
 
 // test version pop up
   debugVersionPopup() {
-    sharedService.alertResponse(AppLocalizations.of(context).notice,
+    sharedService.alertDialog(AppLocalizations.of(context).notice,
         AppLocalizations.of(context).testVersion);
   }
 
   // Get Exchange Assets
   getExchangeAssets() async {
-    setState(ViewState.Busy);
-    var res = await walletService.assetsBalance(exgAddress);
+    String address = await getExgAddressFromWalletDatabase();
+    var res = await walletService.assetsBalance(address);
     var length = res.length;
     for (var i = 0; i < length; i++) {
       // Get their tickerName to compare with walletInfo tickernName
@@ -290,13 +297,13 @@ class WalletDashboardScreenState extends BaseState {
         if (coin == walletInfo[j].tickerName) {
           // log.e('$coin - $walletInfo[j].tickerName');
           walletInfo[j].inExchange = res[i]['amount'];
+          walletInfo[j].lockedBalance = res[i]['lockedAmount'];
           // log.w('getExchangeAssets ${walletInfo[j].inExchange}');
           break;
         }
       }
     }
     walletInfoCopy = walletInfo.map((element) => element).toList();
-    setState(ViewState.Idle);
   }
 
   onBackButtonPressed() async {

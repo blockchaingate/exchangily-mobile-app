@@ -26,8 +26,8 @@ class CampaignService {
   Campaign campaign;
 
   static final BASE_URL = isProduction
-      ? EnvironmentConfig.campaignProd
-      : EnvironmentConfig.campaignTest;
+      ? EnvironmentConfig.CAMPAIGN_PROD_URL
+      : EnvironmentConfig.CAMPAIGN_TEST_URL;
   static final registerUrl = BASE_URL + 'members/create';
   static final loginUrl = BASE_URL + 'members/login';
   static final kycWithTokenUrl = BASE_URL + 'kyc/create';
