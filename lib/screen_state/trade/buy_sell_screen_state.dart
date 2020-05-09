@@ -464,7 +464,7 @@ class BuySellScreenState extends BaseState {
       var txHex = await txHexforPlaceOrder(seed);
       var resKanban = await sendKanbanRawTransaction(txHex);
       if (resKanban != null && resKanban['transactionHash'] != null) {
-        sharedService.alertResponse(
+        sharedService.alertDialog(
             AppLocalizations.of(context).placeOrderTransactionSuccessful,
             'txid:' + resKanban['transactionHash']);
         // walletService.showInfoFlushbar(

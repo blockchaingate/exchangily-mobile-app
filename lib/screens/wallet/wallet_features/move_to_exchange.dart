@@ -64,9 +64,9 @@ class MoveToExchangeScreen extends StatelessWidget {
         backgroundColor: Color(0xFF1F2233),
         body: Container(
           padding: EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          child: ListView(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               TextField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -91,13 +91,13 @@ class MoveToExchangeScreen extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Text(AppLocalizations.of(context).walletbalance + '  $bal',
-                      style: Theme.of(context).textTheme.bodyText2),
+                      style: Theme.of(context).textTheme.subtitle2),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                      horizontal: 10,
+                      horizontal: 3,
                     ),
                     child: Text('$coinName'.toUpperCase(),
-                        style: Theme.of(context).textTheme.bodyText2),
+                        style: Theme.of(context).textTheme.subtitle2),
                   )
                 ],
               ),
@@ -142,7 +142,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                   )
                 ],
               ),
-              UIHelper.verticalSpaceSmall,
+
               // Switch Row
               Row(
                 children: <Widget>[
@@ -175,45 +175,44 @@ class MoveToExchangeScreen extends StatelessWidget {
                               model.tokenType == 'FAB'),
                           child: Row(
                             children: <Widget>[
-                              Text(AppLocalizations.of(context).gasPrice,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(fontWeight: FontWeight.w300)),
                               Expanded(
-                                  child: Padding(
-                                      padding: EdgeInsets.fromLTRB(85, 0, 0, 0),
-                                      child: TextField(
-                                          controller: model
-                                              .gasPriceTextController,
-                                          onChanged: (String amount) {
-                                            model.updateTransFee();
-                                          },
-                                          keyboardType: TextInputType
-                                              .number, // numnber keyboard
-                                          decoration: InputDecoration(
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: globals
-                                                              .primaryColor)),
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: globals.grey)),
-                                              hintText: '0.00000',
-                                              hintStyle: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w300)),
-                                          style: Theme.of(context)
+                                flex: 3,
+                                child: Text(
+                                    AppLocalizations.of(context).gasPrice,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(fontWeight: FontWeight.w300)),
+                              ),
+                              Expanded(
+                                  flex: 5,
+                                  child: TextField(
+                                      controller: model.gasPriceTextController,
+                                      onChanged: (String amount) {
+                                        model.updateTransFee();
+                                      },
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              decimal:
+                                                  true), // numnber keyboard
+                                      decoration: InputDecoration(
+                                          focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: globals.primaryColor)),
+                                          enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: globals.grey)),
+                                          hintText: '0.00000',
+                                          hintStyle: Theme.of(context)
                                               .textTheme
                                               .headline5
                                               .copyWith(
-                                                  fontWeight:
-                                                      FontWeight.w300))))
+                                                  fontWeight: FontWeight.w300)),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5
+                                          .copyWith(
+                                              fontWeight: FontWeight.w300)))
                             ],
                           )),
                       Visibility(
@@ -222,45 +221,44 @@ class MoveToExchangeScreen extends StatelessWidget {
                               model.tokenType == 'FAB'),
                           child: Row(
                             children: <Widget>[
-                              Text(AppLocalizations.of(context).gasLimit,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(fontWeight: FontWeight.w300)),
                               Expanded(
-                                  child: Padding(
-                                      padding: EdgeInsets.fromLTRB(85, 0, 0, 0),
-                                      child: TextField(
-                                          controller: model
-                                              .gasLimitTextController,
-                                          onChanged: (String amount) {
-                                            model.updateTransFee();
-                                          },
-                                          keyboardType: TextInputType
-                                              .number, // numnber keyboard
-                                          decoration: InputDecoration(
-                                              focusedBorder:
-                                                  UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: globals
-                                                              .primaryColor)),
-                                              enabledBorder:
-                                                  UnderlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: globals.grey)),
-                                              hintText: '0.00000',
-                                              hintStyle: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w300)),
-                                          style: Theme.of(context)
+                                  flex: 3,
+                                  child: Text(
+                                    AppLocalizations.of(context).gasLimit,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(fontWeight: FontWeight.w300),
+                                  )),
+                              Expanded(
+                                  flex: 5,
+                                  child: TextField(
+                                      controller: model.gasLimitTextController,
+                                      onChanged: (String amount) {
+                                        model.updateTransFee();
+                                      },
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                              decimal:
+                                                  true), // numnber keyboard
+                                      decoration: InputDecoration(
+                                          focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: globals.primaryColor)),
+                                          enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: globals.grey)),
+                                          hintText: '0.00000',
+                                          hintStyle: Theme.of(context)
                                               .textTheme
                                               .headline5
                                               .copyWith(
-                                                  fontWeight:
-                                                      FontWeight.w300))))
+                                                  fontWeight: FontWeight.w300)),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5
+                                          .copyWith(
+                                              fontWeight: FontWeight.w300)))
                             ],
                           )),
                       Visibility(
@@ -269,12 +267,18 @@ class MoveToExchangeScreen extends StatelessWidget {
                               model.tokenType == 'FAB'),
                           child: Row(
                             children: <Widget>[
-                              Text(AppLocalizations.of(context).satoshisPerByte,
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  AppLocalizations.of(context).satoshisPerByte,
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline5
-                                      .copyWith(fontWeight: FontWeight.w300)),
+                                      .copyWith(fontWeight: FontWeight.w300),
+                                ),
+                              ),
                               Expanded(
+                                  flex: 5,
                                   child: Padding(
                                       padding: EdgeInsets.fromLTRB(50, 0, 0, 0),
                                       child: TextField(
@@ -283,8 +287,10 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         onChanged: (String amount) {
                                           model.updateTransFee();
                                         },
-                                        keyboardType: TextInputType
-                                            .number, // numnber keyboard
+                                        keyboardType:
+                                            TextInputType.numberWithOptions(
+                                                decimal:
+                                                    true), // numnber keyboard
                                         decoration: InputDecoration(
                                             focusedBorder: UnderlineInputBorder(
                                                 borderSide: BorderSide(
@@ -307,77 +313,111 @@ class MoveToExchangeScreen extends StatelessWidget {
                           )),
                       Row(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).kanbanGasPrice,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.w300)),
                           Expanded(
-                              child: Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: TextField(
-                                      controller:
-                                          model.kanbanGasPriceTextController,
-                                      onChanged: (String amount) {
-                                        model.updateTransFee();
-                                      },
-                                      keyboardType: TextInputType
-                                          .number, // numnber keyboard
-                                      decoration: InputDecoration(
-                                          focusedBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: globals.primaryColor)),
-                                          enabledBorder: UnderlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: globals.grey)),
-                                          hintText: '0.00000',
-                                          hintStyle: Theme.of(context)
-                                              .textTheme
-                                              .headline5
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w300)),
-                                      style: Theme.of(context)
+                              flex: 3,
+                              child: Text(
+                                AppLocalizations.of(context).kanbanGasPrice,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w300),
+                              )),
+                          Expanded(
+                              flex: 5,
+                              child: TextField(
+                                  controller:
+                                      model.kanbanGasPriceTextController,
+                                  onChanged: (String amount) {
+                                    model.updateTransFee();
+                                  },
+                                  keyboardType: TextInputType.numberWithOptions(
+                                      decimal: true), // numnber keyboard
+                                  decoration: InputDecoration(
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: globals.primaryColor)),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: globals.grey)),
+                                      hintText: '0.00000',
+                                      hintStyle: Theme.of(context)
                                           .textTheme
                                           .headline5
                                           .copyWith(
-                                              fontWeight: FontWeight.w300))))
+                                              fontWeight: FontWeight.w300)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .copyWith(fontWeight: FontWeight.w300)))
                         ],
                       ),
                       Row(
                         children: <Widget>[
-                          Text(AppLocalizations.of(context).kanbanGasLimit,
-                              style: Theme.of(context).textTheme.headline5),
                           Expanded(
-                              child: Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: TextField(
-                                    controller:
-                                        model.kanbanGasLimitTextController,
-                                    onChanged: (String amount) {
-                                      model.updateTransFee();
-                                    },
-                                    keyboardType: TextInputType
-                                        .number, // numnber keyboard
-                                    decoration: InputDecoration(
-                                        focusedBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: globals.primaryColor)),
-                                        enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: globals.grey)),
-                                        hintText: '0.00000',
-                                        hintStyle: Theme.of(context)
-                                            .textTheme
-                                            .headline5
-                                            .copyWith(
-                                                fontWeight: FontWeight.w300)),
-                                    style: TextStyle(
-                                        color: globals.grey, fontSize: 16),
-                                  )))
+                            flex: 3,
+                            child: Text(
+                                AppLocalizations.of(context).kanbanGasLimit,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w300)),
+                          ),
+                          Expanded(
+                              flex: 5,
+                              child: TextField(
+                                controller: model.kanbanGasLimitTextController,
+                                onChanged: (String amount) {
+                                  model.updateTransFee();
+                                },
+                                keyboardType: TextInputType.numberWithOptions(
+                                    decimal: true), // numnber keyboard
+                                decoration: InputDecoration(
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: globals.primaryColor)),
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: globals.grey)),
+                                    hintText: '0.00000',
+                                    hintStyle: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(fontWeight: FontWeight.w300)),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w300),
+                              ))
                         ],
                       )
                     ],
                   )),
+              UIHelper.verticalSpaceSmall,
+              // Success/Error container
+              Container(
+                  child: Visibility(
+                      visible: model.hasMessage,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(model.message),
+                          UIHelper.verticalSpaceSmall,
+                          RichText(
+                            text: TextSpan(
+                                text: AppLocalizations.of(context)
+                                    .taphereToCopyTxId,
+                                style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: globals.primaryColor),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    model.copyAndShowNotificatio(model.message);
+                                  }),
+                          ),
+                          UIHelper.verticalSpaceSmall,
+                        ],
+                      ))),
 
               UIHelper.verticalSpaceSmall,
               // Confirm Button
@@ -386,15 +426,6 @@ class MoveToExchangeScreen extends StatelessWidget {
                 color: globals.primaryColor,
                 textColor: Colors.white,
                 onPressed: () {
-                  //var res = await new WalletService().depositDo('ETH', '', double.parse(myController.text));
-                  // var res = await new WalletService().depositDo('USDT', 'ETH', double.parse(myController.text));
-                  // var res = await new WalletService().depositDo('FAB', '', double.parse(myController.text));
-                  //var res = await new WalletService().depositDo('EXG', 'FAB', double.parse(myController.text));
-                  // var res = await new WalletService().depositDo('BTC', '', double.parse(myController.text));
-                  //print('res from await depositDo=');
-                  //print(res);
-                  // double amount = double.parse(model.myController.text);
-
                   model.checkPass();
                 },
                 child: model.state == ViewState.Busy
