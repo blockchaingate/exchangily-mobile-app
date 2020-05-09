@@ -53,7 +53,8 @@ Map devConfig = {
     "BTC": 0.002,
     "FAB": 0.005,
     "ETH": 0.01,
-    "USDT": 10.0
+    "USDT": 10.0,
+    "DUSD": 10.0
   }
 };
 
@@ -112,7 +113,8 @@ Map productionConfig = {
     "BTC": 0.01,
     "FAB": 0.01,
     "ETH": 0.01,
-    "USDT": 10.0
+    "USDT": 10.0,
+    "DUSD": 10.0
   }
 };
 
