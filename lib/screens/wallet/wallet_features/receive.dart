@@ -105,7 +105,9 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     key: _globalKey,
                     child: QrImage(
                         backgroundColor: globals.white,
-                        data: widget.walletInfo.address,
+                        data: convertedToFabAddress == ''
+                            ? widget.walletInfo.address
+                            : convertedToFabAddress,
                         version: QrVersions.auto,
                         size: 300,
                         gapless: true,
@@ -140,7 +142,9 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                       _capturePng().then((byteData) {
                         file.writeAsBytes(byteData).then((onFile) {
                           Share.shareFile(onFile,
-                              text: widget.walletInfo.address);
+                              text: convertedToFabAddress == ''
+                                  ? widget.walletInfo.address
+                                  : convertedToFabAddress);
                         });
                       });
                     });
