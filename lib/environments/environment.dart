@@ -10,7 +10,7 @@ Map devConfig = {
       "hardfork": 'byzantium',
       "chainId": 3,
       "infura": "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 6000000000,
+      "gasPrice": 20000000000,
       "gasLimit": 100000
     },
     "FAB": {
@@ -65,7 +65,7 @@ Map productionConfig = {
       "hardfork": 'byzantium',
       "chainId": 1,
       "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 6000000000,
+      "gasPrice": 20000000000,
       "gasLimit": 100000
     },
     "FAB": {
