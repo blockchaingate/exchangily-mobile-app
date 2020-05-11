@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,8 @@ class Redeposit extends StatefulWidget {
 class _RedepositState extends State<Redeposit> {
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  SharedService sharedService = locator<SharedService>();
+
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   final _kanbanGasPriceTextController = TextEditingController();
   final _kanbanGasLimitTextController = TextEditingController();
@@ -132,7 +135,7 @@ class _RedepositState extends State<Redeposit> {
       }
 
       if (errDepositItem == null) {
-        walletService.showInfoFlushbar(
+        sharedService.showInfoFlushbar(
             '${AppLocalizations.of(context).redepositError}',
             '${AppLocalizations.of(context).redepositItemNotSelected}',
             Icons.cancel,
@@ -167,7 +170,7 @@ class _RedepositState extends State<Redeposit> {
       if ((resRedeposit != null) &&
           (resRedeposit['transactionHash'] != null) &&
           (resRedeposit['transactionHash'] != '')) {
-        walletService.showInfoFlushbar(
+        sharedService.showInfoFlushbar(
             '${AppLocalizations.of(context).redepositCompleted}',
             '${AppLocalizations.of(context).transactionId}' +
                 resRedeposit['transactionHash'],
@@ -175,7 +178,7 @@ class _RedepositState extends State<Redeposit> {
             globals.white,
             context);
       } else {
-        walletService.showInfoFlushbar(
+        sharedService.showInfoFlushbar(
             AppLocalizations.of(context).redepositFailedError,
             AppLocalizations.of(context).serverError,
             Icons.cancel,
@@ -214,7 +217,7 @@ class _RedepositState extends State<Redeposit> {
   }
 
   showNotification(context) {
-    walletService.showInfoFlushbar(
+    sharedService.showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,
         AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
         Icons.cancel,

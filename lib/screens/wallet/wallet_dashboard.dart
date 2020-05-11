@@ -292,11 +292,26 @@ class WalletDashboardScreen extends StatelessWidget {
                       ? Shimmer.fromColors(
                           baseColor: globals.primaryColor,
                           highlightColor: globals.grey,
-                          child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator()),
-                        )
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: Icon(
+                                  Icons.donut_large,
+                                  size: 18,
+                                  color: globals.primaryColor,
+                                ),
+                              ),
+                              UIHelper.horizontalSpaceSmall,
+                              Text(
+                                "${AppLocalizations.of(context).gas}: ${model.gasAmount}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(wordSpacing: 1.25),
+                              ),
+                            ],
+                          ))
                       : Gas(gasAmount: model.gasAmount)),
               UIHelper.verticalSpaceSmall,
 /*------------------------------------------------------------------------------

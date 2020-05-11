@@ -306,6 +306,7 @@ class WalletService {
             await getAddressForCoin(root, tickerName, tokenType: token);
         var bal =
             await getCoinBalanceByAddress(tickerName, addr, tokenType: token);
+        log.e('bal $bal');
         double walletBal = bal['balance'];
         double walletLockedBal = bal['lockbalance'];
         log.w(
@@ -337,6 +338,7 @@ class WalletService {
         for (var j = 0; j < _walletInfo.length; j++) {
           if (coin == _walletInfo[j].tickerName) {
             _walletInfo[j].inExchange = res[i]['amount'];
+            _walletInfo[j].lockedBalance = res[i]['lockedAmount'];
             break;
           }
         }
@@ -391,7 +393,7 @@ class WalletService {
   assetsBalance(String exgAddress) async {
     List<Map<String, dynamic>> bal = [];
     await _api.getAssetsBalance(exgAddress).then((res) {
-      //  log.w('assetsBalance $res');
+      log.w('assetsBalance exchange $res');
       for (var i = 0; i < res.length; i++) {
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
@@ -406,6 +408,7 @@ class WalletService {
         };
         bal.add(finalBal);
       }
+      log.e(bal);
     }).catchError((onError) {
       log.e('On error assetsBalance $onError');
       bal = [];

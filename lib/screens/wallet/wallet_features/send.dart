@@ -188,7 +188,7 @@ class SendWalletScreen extends StatelessWidget {
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     children: <Widget>[
                       Padding(

@@ -1,4 +1,5 @@
 import 'package:bitcoin_flutter/src/models/networks.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 Map devConfig = {
@@ -10,7 +11,7 @@ Map devConfig = {
       "hardfork": 'byzantium',
       "chainId": 3,
       "infura": "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 6000000000,
+      "gasPrice": 20000000000,
       "gasLimit": 100000
     },
     "FAB": {
@@ -52,7 +53,8 @@ Map devConfig = {
     "BTC": 0.002,
     "FAB": 0.005,
     "ETH": 0.01,
-    "USDT": 10.0
+    "USDT": 10.0,
+    "DUSD": 10.0
   }
 };
 
@@ -64,7 +66,7 @@ Map productionConfig = {
       "hardfork": 'byzantium',
       "chainId": 1,
       "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 6000000000,
+      "gasPrice": 20000000000,
       "gasLimit": 100000
     },
     "FAB": {
@@ -111,13 +113,14 @@ Map productionConfig = {
     "BTC": 0.01,
     "FAB": 0.01,
     "ETH": 0.01,
-    "USDT": 10.0
+    "USDT": 10.0,
+    "DUSD": 10.0
   }
 };
 
 final environment = isProduction ? productionConfig : devConfig;
 
-class EnvironmentConfig {
-  static const String campaignTest = 'https://test.blockchaingate.com/v2/';
-  static const String campaignProd = 'https://blockchaingate.com/v2/';
+class EnvironmentConfig extends Constants {
+  static const String CAMPAIGN_TEST_URL = 'https://test.blockchaingate.com/v2/';
+  static const String CAMPAIGN_PROD_URL = 'https://blockchaingate.com/v2/';
 }
