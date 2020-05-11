@@ -50,11 +50,11 @@ class CampaignRegisterAccountScreenState extends BaseState {
       // String loginToken = res['token'];
       String error = res['message'];
       if (res != null && (error == null || error == '')) {
-        sharedService.alertResponse(
+        sharedService.alertDialog(
             AppLocalizations.of(context).registrationSuccessful,
             AppLocalizations.of(context)
                 .pleaseCheckYourEmailToActivateYourAccount,
-            path:'/campaignLogin');
+            path: '/campaignLogin');
         // await campaignService.saveCampaignUserDataLocally(loginToken, userData);
         // navigationService.navigateTo('/campaignDashboard', arguments: userData);
         setBusy(false);

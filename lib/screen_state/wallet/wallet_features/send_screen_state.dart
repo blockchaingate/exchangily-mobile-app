@@ -32,6 +32,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import '../../../shared/globals.dart' as globals;
 
 class SendScreenState extends BaseState {
   final log = getLogger('SendScreenState');
@@ -170,9 +171,10 @@ class SendScreenState extends BaseState {
           receiverWalletAddressTextController.text = '';
           sendAmountTextController.text = '';
 
-          sharedService.alertResponse(
+          sharedService.alertDialog(
               AppLocalizations.of(context).sendTransactionComplete,
-              '$tickerName ${AppLocalizations.of(context).isOnItsWay}');
+              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+              isWarning: false);
           String date = DateTime.now().toString();
           //Build transaction history object
           log.e('Date $date');
@@ -201,8 +203,9 @@ class SendScreenState extends BaseState {
         // }
         else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
-          sharedService.alertResponse(AppLocalizations.of(context).genericError,
-              '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
+          sharedService.alertDialog(AppLocalizations.of(context).genericError,
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+              isWarning: false);
           setState(ViewState.Idle);
         }
         setState(ViewState.Idle);
@@ -214,8 +217,9 @@ class SendScreenState extends BaseState {
             AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
       }).catchError((error) {
         log.e('In Catch error - $error');
-        sharedService.alertResponse(AppLocalizations.of(context).serverError,
-            '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
+        sharedService.alertDialog(AppLocalizations.of(context).serverError,
+            '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+            isWarning: false);
         //errorMessage = AppLocalizations.of(context).transanctionFailed;
         setState(ViewState.Idle);
       });
@@ -264,13 +268,25 @@ class SendScreenState extends BaseState {
 
   checkFields(context) async {
     if (toAddress == '') {
-      sharedService.alertResponse(AppLocalizations.of(context).emptyAddress,
-          AppLocalizations.of(context).pleaseEnterAnAddress);
+      sharedService.alertDialog(AppLocalizations.of(context).emptyAddress,
+          AppLocalizations.of(context).pleaseEnterAnAddress,
+          isWarning: false);
     } else if (amount == null ||
+        amount == 0 ||
+        amount.isNegative ||
         !checkSendAmount ||
         amount > walletInfo.availableBalance) {
-      sharedService.alertResponse(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterValidNumber);
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          isWarning: false);
+    } else if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).minimumAmountError,
+          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+          Icons.cancel,
+          globals.red,
+          context);
+      return;
     } else {
       FocusScope.of(context).requestFocus(FocusNode());
       await verifyPassword();
@@ -306,8 +322,9 @@ class SendScreenState extends BaseState {
 // Copy Address
   copyAddress(context) {
     Clipboard.setData(new ClipboardData(text: txHash));
-    sharedService.alertResponse(AppLocalizations.of(context).transactionId,
-        AppLocalizations.of(context).copiedSuccessfully);
+    sharedService.alertDialog(AppLocalizations.of(context).transactionId,
+        AppLocalizations.of(context).copiedSuccessfully,
+        isWarning: false);
   }
 
   // Update Trans Fee
@@ -326,7 +343,7 @@ class SendScreenState extends BaseState {
       "tokenType": walletInfo.tokenType,
       "getTransFeeOnly": true
     };
-    print('widget.walletInfo.address=' + walletInfo.address);
+
     var address = walletInfo.address;
 
     await walletService
@@ -349,8 +366,9 @@ class SendScreenState extends BaseState {
       setState(ViewState.Idle);
       setBusy(false);
       log.e(err);
-      sharedService.alertResponse(AppLocalizations.of(context).genericError,
-          AppLocalizations.of(context).transanctionFailed);
+      sharedService.alertDialog(AppLocalizations.of(context).genericError,
+          AppLocalizations.of(context).transanctionFailed,
+          isWarning: false);
     });
     setState(ViewState.Idle);
     setBusy(false);
@@ -369,25 +387,27 @@ class SendScreenState extends BaseState {
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(ViewState.Idle);
-        sharedService.alertResponse(
-            '', AppLocalizations.of(context).userAccessDenied);
+        sharedService.alertDialog(
+            '', AppLocalizations.of(context).userAccessDenied,
+            isWarning: false);
         // receiverWalletAddressTextController.text =
         //     AppLocalizations.of(context).userAccessDenied;
       } else {
         setState(ViewState.Idle);
-        sharedService.alertResponse(
-            '', AppLocalizations.of(context).unknownError);
+        sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
+            isWarning: false);
         // receiverWalletAddressTextController.text =
         //     '${AppLocalizations.of(context).unknownError}: $e';
       }
     } on FormatException {
       setState(ViewState.Idle);
-      sharedService.alertResponse(AppLocalizations.of(context).scanCancelled,
-          AppLocalizations.of(context).userReturnedByPressingBackButton);
+      sharedService.alertDialog(AppLocalizations.of(context).scanCancelled,
+          AppLocalizations.of(context).userReturnedByPressingBackButton,
+          isWarning: false);
     } catch (e) {
       setState(ViewState.Idle);
-      sharedService.alertResponse(
-          '', AppLocalizations.of(context).unknownError);
+      sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
+          isWarning: false);
       // receiverWalletAddressTextController.text =
       //     '${AppLocalizations.of(context).unknownError}: $e';
     }

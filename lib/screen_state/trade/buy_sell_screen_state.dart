@@ -190,9 +190,7 @@ class BuySellScreenState extends BaseState {
 
       if (trades != null && trades.length > 0) {
         TradeModel latestTrade = trades[0];
-        setState(ViewState.Busy);
         currentPrice = latestTrade.price;
-        setState(ViewState.Idle);
       }
     });
     setState(ViewState.Idle);
@@ -230,6 +228,7 @@ class BuySellScreenState extends BaseState {
     log.e(address);
     setState(ViewState.Busy);
     if (address == null) {
+      setState(ViewState.Idle);
       return;
     }
     Timer.periodic(Duration(seconds: 3), (Timer time) async {
@@ -464,7 +463,7 @@ class BuySellScreenState extends BaseState {
       var txHex = await txHexforPlaceOrder(seed);
       var resKanban = await sendKanbanRawTransaction(txHex);
       if (resKanban != null && resKanban['transactionHash'] != null) {
-        sharedService.alertResponse(
+        sharedService.alertDialog(
             AppLocalizations.of(context).placeOrderTransactionSuccessful,
             'txid:' + resKanban['transactionHash']);
         // walletService.showInfoFlushbar(

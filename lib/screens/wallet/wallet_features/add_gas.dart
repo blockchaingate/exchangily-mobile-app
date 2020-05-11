@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,8 @@ import 'dart:typed_data';
 class AddGas extends StatelessWidget {
   final DialogService _dialogService = locator<DialogService>();
   final WalletService walletService = locator<WalletService>();
+  SharedService sharedService = locator<SharedService>();
+
   final log = getLogger('AddGas');
   final myController = TextEditingController();
   AddGas({Key key}) : super(key: key);
@@ -43,16 +46,14 @@ class AddGas extends StatelessWidget {
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
 
       myController.text = '';
-      walletService.showInfoFlushbar(
-          (ret["errMsg"] == '')
-              ? AppLocalizations.of(context).addGasTransactionSuccess
-              : AppLocalizations.of(context).addGasTransactionFailed,
-          (ret["errMsg"] == '')
-              ? AppLocalizations.of(context).transactionId + ret['txHash']
-              : ret["errMsg"],
-          Icons.cancel,
-          globals.primaryColor,
-          context);
+      sharedService.alertDialog(
+        (ret["errMsg"] == '')
+            ? AppLocalizations.of(context).addGasTransactionSuccess
+            : AppLocalizations.of(context).addGasTransactionFailed,
+        (ret["errMsg"] == '')
+            ? AppLocalizations.of(context).transactionId + ret['txHash']
+            : ret["errMsg"],
+      );
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
@@ -61,7 +62,7 @@ class AddGas extends StatelessWidget {
   }
 
   showNotification(context) {
-    walletService.showInfoFlushbar(
+    sharedService.showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,
         AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
         Icons.cancel,
@@ -126,7 +127,7 @@ class AddGas extends StatelessWidget {
                         }
                         // var res = await AddGasDo(double.parse(myController.text));
                         myController.text == '' || amount == null
-                            ? walletService.showInfoFlushbar(
+                            ? sharedService.showInfoFlushbar(
                                 AppLocalizations.of(context).invalidAmount,
                                 AppLocalizations.of(context)
                                     .pleaseEnterValidNumber,

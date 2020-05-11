@@ -182,14 +182,14 @@ class CampaignPaymentScreenState extends BaseState {
           log.w('TXhash $txHash');
           sendAmountTextController.text = '';
           await createCampaignOrder(txHash, tokenPurchaseQuantity);
-          sharedService.alertResponse(
+          sharedService.alertDialog(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}');
         }
         // There is an error
         else if (errorMessage.isNotEmpty) {
           log.e('Coin send Error Message: $errorMessage');
-          sharedService.alertResponse(AppLocalizations.of(context).genericError,
+          sharedService.alertDialog(AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
           setBusy(false);
           isConfirming = false;
@@ -197,7 +197,7 @@ class CampaignPaymentScreenState extends BaseState {
         // Both txhash and error message is empty
         else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
-          sharedService.alertResponse(AppLocalizations.of(context).genericError,
+          sharedService.alertDialog(AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
           setBusy(false);
           isConfirming = false;
@@ -216,7 +216,7 @@ class CampaignPaymentScreenState extends BaseState {
           // Coin send catch
           .catchError((error) {
         log.e('In coin send Catch error - $error');
-        sharedService.alertResponse(AppLocalizations.of(context).genericError,
+        sharedService.alertDialog(AppLocalizations.of(context).genericError,
             '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
         setBusy(false);
         isConfirming = false;
@@ -276,11 +276,11 @@ class CampaignPaymentScreenState extends BaseState {
         var orderNumber = res['orderNum'];
         // If USD order then show order numer
         if (_groupValue == 'USD') {
-          sharedService.alertResponse(
+          sharedService.alertDialog(
               AppLocalizations.of(context).orderCreatedSuccessfully,
               '${AppLocalizations.of(context).orderCreatedSuccessfully} $orderNumber ${AppLocalizations.of(context).afterHyphenWhenYouMakePayment}');
         } else {
-          sharedService.alertResponse(AppLocalizations.of(context).success,
+          sharedService.alertDialog(AppLocalizations.of(context).success,
               AppLocalizations.of(context).yourOrderHasBeenCreated);
         }
         await getCampaignOrdeList();
@@ -508,7 +508,7 @@ class CampaignPaymentScreenState extends BaseState {
           !isBalanceAvailabeForOrder()) {
         log.e('$usdtUnconfirmedOrderQuantity');
         setErrorMessage(AppLocalizations.of(context).pleaseEnterValidNumber);
-        sharedService.alertResponse(AppLocalizations.of(context).invalidAmount,
+        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
             AppLocalizations.of(context).pleaseEnterAmountLessThanYourWallet);
       } else {
         FocusScope.of(context).requestFocus(FocusNode());
