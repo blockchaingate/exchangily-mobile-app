@@ -232,11 +232,11 @@ class ApiService {
     try {
       var response = await client.get(url);
       var jsonList = jsonDecode(response.body) as List;
-      log.w(' getCoinCurrencyUsdPrice $jsonList');
+      log.w(' getPairDecimalConfig $jsonList');
       PairDecimalConfigList pairList = PairDecimalConfigList.fromJson(jsonList);
       return pairList.pairList;
     } catch (err) {
-      log.e('In getCoinCurrencyUsdPrice catch $err');
+      log.e('In getPairDecimalConfig catch $err');
       return null;
     }
   }

@@ -42,14 +42,18 @@ class SettingsScreenState extends BaseState {
   BuildContext context;
   String versionName = '';
   String versionCode = '';
+  static int initialLanguageValue = 0;
+  final FixedExtentScrollController scrollController =
+      FixedExtentScrollController(initialItem: initialLanguageValue);
   bool isDialogDisplay = false;
 
-  init() {
+  init() async {
     setBusy(true);
     sharedService.getDialogWarningsStatus().then((res) {
       if (res != null) isDialogDisplay = res;
     });
     getAppVersion();
+    await checkLanguage();
     setBusy(false);
   }
 
@@ -136,8 +140,8 @@ class SettingsScreenState extends BaseState {
     }
   }
 
-  checkLanguage() async{
-   SharedPreferences prefs = await SharedPreferences.getInstance();
+  checkLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     var lang = prefs.getString('lang');
     log.w('lang $lang');
     changeWalletLanguage(lang);

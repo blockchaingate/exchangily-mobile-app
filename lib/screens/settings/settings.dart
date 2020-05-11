@@ -103,18 +103,30 @@ class SettingsScreen extends StatelessWidget {
                 Card(
                   elevation: 5,
                   child: Container(
+                    //padding: EdgeInsets.all(15),
                     color: globals.walletCardColor,
                     child: Center(
                       child: Theme.of(context).platform == TargetPlatform.iOS
                           ? CupertinoPicker(
-                              itemExtent: 1,
+                            diameterRatio: 1.3,
+                           offAxisFraction: 5,
+                              scrollController: model.scrollController,
+                              itemExtent: 50,
                               onSelectedItemChanged: (int value) {
-                                // Check if it the widget works in ios device first then provide logic here
+                                String lang = '';
+                                if (value == 0) {
+                                  lang = 'en';
+                                } else if (value == 1) {
+                                  lang = 'zh';
+                                }
+                                model.changeWalletLanguage(lang);
                               },
-                              children: <Widget>[
-                                Center(child: Text('${model.languages}'))
-                              ],
-                            )
+                              children: List<Widget>.generate(
+                                  model.languages.length, (int index) {
+                                return  Center(
+                                  child:  Text(model.languages[index],style: Theme.of(context).textTheme.headline5,),
+                                );
+                              }))
                           : DropdownButtonHideUnderline(
                               child: DropdownButton(
                                 iconEnabledColor: globals.primaryColor,
@@ -143,23 +155,7 @@ class SettingsScreen extends StatelessWidget {
                                 }).toList(),
                               ),
                             ),
-                            value: model.selectedLanguage,
-                            onChanged: (newValue) {
-                              model.changeWalletLanguage(newValue);
-                            },
-                            items: model.languages.map((language) {
-                              return DropdownMenuItem(
-                                child: Center(
-                                  child: Text(language,
-                                      textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5),
-                                ),
-                                value: language,
-                              );
-                            }).toList(),
-                          ),
+                    ),
                   ),
                 ),
                 // Show/Hide dialog warning checkbox
@@ -173,7 +169,6 @@ class SettingsScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.headline5,
                             textAlign: TextAlign.center),
                         Checkbox(
-                          
                             activeColor: globals.primaryColor,
                             value: model.isDialogDisplay,
                             onChanged: (value) {
