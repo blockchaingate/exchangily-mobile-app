@@ -80,6 +80,24 @@ Future getKanbanErrDeposit(String address) async {
   return json;
 }
 
+Future<Map<String, dynamic>> submitReDeposit (
+    String rawKanbanTransaction) async {
+  var url = environment['endpoints']['kanban'] + 'resubmitDeposit';
+  var data = {'rawKanbanTransaction': rawKanbanTransaction};
+
+  try {
+    var client = new http.Client();
+    var response = await client.post(url, body: data);
+    //print('response from sendKanbanRawTransaction=');
+    // print(response.body);
+    Map<String, dynamic> res = jsonDecode(response.body);
+    return res;
+  } catch (e) {
+    //return e;
+    return {'success': false, 'data': 'error'};
+  }
+}
+
 Future<Map<String, dynamic>> sendKanbanRawTransaction(
     String rawKanbanTransaction) async {
   var url = environment['endpoints']['kanban'] + 'kanban/sendRawTransaction';
