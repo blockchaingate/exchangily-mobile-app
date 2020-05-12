@@ -44,7 +44,7 @@ class ApiService {
     try {
       var response = await client.get(coinCurrencyUsdPriceUrl);
       var json = jsonDecode(response.body);
-      log.w(' getCoinCurrencyUsdPrice $json');
+      log.w('getCoinCurrencyUsdPrice $json');
       return json;
     } catch (err) {
       log.e('In getCoinCurrencyUsdPrice catch $err');

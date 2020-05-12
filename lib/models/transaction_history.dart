@@ -1,4 +1,4 @@
-class TransactionInfo {
+class TransactionHistory {
   String _id;
   String _tickerName;
   String _address;
@@ -7,8 +7,9 @@ class TransactionInfo {
   String _txid;
   String _status;
   double _quantity;
+  String _tag;
 
-  TransactionInfo(
+  TransactionHistory(
       {String id,
       String tickerName,
       String address,
@@ -16,7 +17,8 @@ class TransactionInfo {
       String date,
       String txid,
       String status,
-      double quantity}) {
+      double quantity,
+      String tag}) {
     this._id = id ?? '';
     this._tickerName = tickerName ?? '';
     this._address = address ?? '';
@@ -25,6 +27,7 @@ class TransactionInfo {
     this._txid = txid ?? '';
     this._status = status ?? '';
     this._quantity = quantity ?? 0.0;
+    this._tag = tag ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -37,11 +40,12 @@ class TransactionInfo {
     data['txid'] = this._txid;
     data['status'] = this._status;
     data['quantity'] = this._quantity;
+    data['tag'] = this._tag;
     return data;
   }
 
-  factory TransactionInfo.fromJson(Map<String, dynamic> json) {
-    return TransactionInfo(
+  factory TransactionHistory.fromJson(Map<String, dynamic> json) {
+    return TransactionHistory(
         id: json['id'] as String,
         tickerName: json['tickerName'] as String,
         address: json['address'] as String,
@@ -49,7 +53,8 @@ class TransactionInfo {
         date: json['date'] as String,
         txid: json['txid'],
         status: json['status'],
-        quantity: json['quantity']);
+        quantity: json['quantity'],
+        tag: json['tag']);
   }
 
   String get id => _id;
@@ -97,15 +102,22 @@ class TransactionInfo {
   set quantity(double quantity) {
     this._quantity = quantity;
   }
+
+  String get tag => _tag;
+
+  set tag(String tag) {
+    this._tag = tag;
+  }
 }
 
-class TransactionInfoList {
-  final List<TransactionInfo> transactions;
-  TransactionInfoList({this.transactions});
+class TransactionHistoryList {
+  final List<TransactionHistory> transactions;
+  TransactionHistoryList({this.transactions});
 
-  factory TransactionInfoList.fromJson(List<dynamic> parsedJson) {
-    List<TransactionInfo> transactions = new List<TransactionInfo>();
-    transactions = parsedJson.map((i) => TransactionInfo.fromJson(i)).toList();
-    return new TransactionInfoList(transactions: transactions);
+  factory TransactionHistoryList.fromJson(List<dynamic> parsedJson) {
+    List<TransactionHistory> transactions = new List<TransactionHistory>();
+    transactions =
+        parsedJson.map((i) => TransactionHistory.fromJson(i)).toList();
+    return new TransactionHistoryList(transactions: transactions);
   }
 }

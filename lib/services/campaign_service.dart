@@ -8,7 +8,7 @@ import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/team_reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
-import 'package:exchangilymobileapp/models/transaction_info.dart';
+import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
@@ -209,7 +209,7 @@ class CampaignService {
                                   Get orders by wallet address
 -------------------------------------------------------------------------------------*/
 
-  Future<List<TransactionInfo>> getOrderByWalletAddress(
+  Future<List<TransactionHistory>> getOrderByWalletAddress(
       String exgWalletAddress) async {
     try {
       var response =
@@ -218,7 +218,8 @@ class CampaignService {
       var jsonList = jsonDecode(response.body)
           as List; // making this a list what i was missing earlier
       log.w('getOrderByWalletAddress $jsonList');
-      TransactionInfoList orderList = TransactionInfoList.fromJson(jsonList);
+      TransactionHistoryList orderList =
+          TransactionHistoryList.fromJson(jsonList);
       return orderList.transactions;
     } catch (err) {
       log.e('In getOrderByWalletAddress catch $err');

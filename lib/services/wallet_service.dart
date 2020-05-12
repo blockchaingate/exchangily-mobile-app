@@ -197,27 +197,25 @@ class WalletService {
                 Get Current Market Price For The Coin By Name
 ----------------------------------------------------------------------*/
 
-  Future<double> getCoinMarketPrice(String name) async {
+  Future<double> getCoinMarketPriceByName(String tickerName) async {
     currentUsdValue = 0;
-
-    if (name == 'exchangily') {
-      await _apiService.getCoinCurrencyUsdPrice().then((res) {
-        if (res != null) {
-          currentUsdValue = res['data']['EXG']['USD'];
-          log.w('currentusdval $currentUsdValue');
-        }
-      });
-      return currentUsdValue;
-    } else if (name == 'dusd') {
-      return currentUsdValue = 1.0;
-    } else {
-      var usdVal = await _api.getCoinsUsdValue();
-      double tempPriceHolder = usdVal[name]['usd'];
-      if (tempPriceHolder != null) {
-        currentUsdValue = tempPriceHolder;
+    await _apiService.getCoinCurrencyUsdPrice().then((res) {
+      if (res != null) {
+        currentUsdValue = res['data'][tickerName]['USD'];
       }
+    });
+    if (tickerName == 'DUSD') {
+      return currentUsdValue = 1.0;
     }
     return currentUsdValue;
+    // } else {
+    //   var usdVal = await _api.getCoinsUsdValue();
+    //   double tempPriceHolder = usdVal[name]['usd'];
+    //   if (tempPriceHolder != null) {
+    //     currentUsdValue = tempPriceHolder;
+    //   }
+    // }
+    //  return currentUsdValue;
   }
 
 /*----------------------------------------------------------------------
@@ -300,19 +298,16 @@ class WalletService {
         String tickerName = coinTickers[i];
         String name = coinNames[i];
         String token = tokenType[i];
-        var marketValue = await getCoinMarketPrice(name);
-        coinUsdMarketPrice.add(marketValue);
+        var coinMarketPrice = await getCoinMarketPriceByName(name);
+        coinUsdMarketPrice.add(coinMarketPrice);
         String addr =
             await getAddressForCoin(root, tickerName, tokenType: token);
         var bal =
             await getCoinBalanceByAddress(tickerName, addr, tokenType: token);
-        log.e('bal $bal');
+        log.w('bal in wallet service $bal');
         double walletBal = bal['balance'];
-        double walletLockedBal = bal['lockbalance'];
-        log.w(
-            'tickername $tickerName - address: $addr - balance: $walletBal - Locked balance: $walletLockedBal');
-        calculateCoinUsdBalance(
-            coinUsdMarketPrice[i], walletBal, walletLockedBal);
+        // double walletLockedBal = bal['lockbalance'];
+
         if (tickerName == 'EXG') {
           exgAddress = addr;
           log.e(exgAddress);
@@ -322,7 +317,7 @@ class WalletService {
             tokenType: token,
             address: addr,
             availableBalance: walletBal,
-            lockedBalance: walletLockedBal,
+            lockedBalance: 0.0,
             usdValue: coinUsdBalance,
             name: name);
         _walletInfo.add(wi);
@@ -336,9 +331,15 @@ class WalletService {
         // Second For Loop To check WalletInfo TickerName According to its length and
         // compare it with the same coin tickername from asset balance result until the match or loop ends
         for (var j = 0; j < _walletInfo.length; j++) {
-          if (coin == _walletInfo[j].tickerName) {
+          String tickerName = _walletInfo[j].tickerName;
+          if (coin == tickerName) {
             _walletInfo[j].inExchange = res[i]['amount'];
             _walletInfo[j].lockedBalance = res[i]['lockedAmount'];
+            double marketPrice = await getCoinMarketPriceByName(tickerName);
+            log.e(
+                'wallet service -- tickername $tickerName - market price $marketPrice - balance: ${_walletInfo[j].availableBalance} - Locked balance: ${_walletInfo[j].lockedBalance}');
+            calculateCoinUsdBalance(marketPrice,
+                _walletInfo[j].availableBalance, _walletInfo[j].lockedBalance);
             break;
           }
         }
@@ -408,7 +409,7 @@ class WalletService {
         };
         bal.add(finalBal);
       }
-      log.e(bal);
+      log.e('assetsBalance exchange after conversion $bal');
     }).catchError((onError) {
       log.e('On error assetsBalance $onError');
       bal = [];
@@ -443,12 +444,12 @@ class WalletService {
       double marketPrice, double actualWalletBalance, double lockedBalance) {
     log.w(
         'marketPrice =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
-    if (actualWalletBalance != 0 && marketPrice != null) {
+    if (marketPrice != null) {
       coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
       return coinUsdBalance;
     } else {
       coinUsdBalance = 0.0;
-      //  log.i('calculateCoinUsdBalance - Wallet balance 0');
+      log.i('calculateCoinUsdBalance - Wallet balance 0');
     }
     return coinUsdBalance;
   }

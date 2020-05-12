@@ -17,7 +17,7 @@ import 'dart:typed_data';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/transaction_info.dart';
+import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
@@ -178,7 +178,7 @@ class SendScreenState extends BaseState {
           String date = DateTime.now().toString();
           //Build transaction history object
           log.e('Date $date');
-          TransactionInfo transactionHistory = new TransactionInfo(
+          TransactionHistory transactionHistory = new TransactionHistory(
               tickerName: tickerName.toString(),
               address: toAddress.toString(),
               amount: amount,

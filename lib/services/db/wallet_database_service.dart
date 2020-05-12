@@ -68,11 +68,11 @@ class WalletDataBaseService {
   Future<List<WalletInfo>> getAll() async {
     await initDb();
     final Database db = await _database;
-    log.w('getall $db');
+    //  log.w('getall $db');
 
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
-    log.w('res $res');
+    //log.w('res $res');
     List<WalletInfo> list =
         res.isNotEmpty ? res.map((f) => WalletInfo.fromJson(f)).toList() : [];
     return list;
@@ -114,7 +114,7 @@ class WalletDataBaseService {
   Future getById(int id) async {
     final Database db = await _database;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
-    log.w('ID - $id --- $res');
+    // log.w('ID - $id --- $res');
     if (res.length > 0) {
       return WalletInfo.fromJson((res.first));
     }
