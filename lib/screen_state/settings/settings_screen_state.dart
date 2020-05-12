@@ -43,6 +43,7 @@ class SettingsScreenState extends BaseState {
   String versionName = '';
   String versionCode = '';
   bool isDialogDisplay = false;
+  ScrollController scrollController;
 
   init() {
     setBusy(true);

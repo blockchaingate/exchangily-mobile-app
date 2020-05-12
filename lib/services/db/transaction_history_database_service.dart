@@ -28,9 +28,12 @@ class TransactionHistoryDatabaseService {
   final String columnAddress = 'address';
   final String columnAmount = 'amount';
   final String columnDate = 'date';
+  final String columnTxId = 'txId';
+  final String columnStatus = 'status';
+  final String columnQuantity = 'quantity';
   final String columnTag = 'tag';
 
-  static final _databaseVersion = 2;
+  static final _databaseVersion = 3;
   static Future<Database> _database;
   String path = '';
 
@@ -53,8 +56,10 @@ class TransactionHistoryDatabaseService {
         $columnAddress TEXT,
         $columnAmount REAL,
         $columnDate TEXT,
-        $columnTag TEXT
-        ) ''');
+        $columnTxId TEXT,
+        $columnStatus TEXT,
+        $columnQuantity REAL,
+        $columnTag TEXT) ''');
   }
 
   // Get All Records From The Database
@@ -73,6 +78,7 @@ class TransactionHistoryDatabaseService {
 
 // Insert Data In The Database
   Future insert(TransactionHistory transactionHistory) async {
+    // await deleteDb();
     await initDb();
     final Database db = await _database;
     int id = await db.insert(tableName, transactionHistory.toJson(),
@@ -121,12 +127,6 @@ class TransactionHistoryDatabaseService {
     return null;
   }
 
-  // Delete Single Object From Database By Id
-  Future<void> deleteWallet(int id) async {
-    final db = await _database;
-    await db.delete(tableName, where: "id = ?", whereArgs: [id]);
-  }
-
   // Update database
   Future<void> update(TransactionHistory transactionHistory) async {
     final Database db = await _database;
@@ -151,12 +151,4 @@ class TransactionHistoryDatabaseService {
     await deleteDatabase(path);
     _database = null;
   }
-
-  // Storing TxID
-  // Future insertTxId(String txId) async{
-  //   final Database db = await _database;
-  //   int id = await db.insert('transaction', txid,
-  //       conflictAlgorithm: ConflictAlgorithm.replace);
-  //   return id;
-  // }
 }

@@ -4,9 +4,11 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -22,6 +24,8 @@ class MoveToExchangeScreenState extends BaseState {
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+      locator<TransactionHistoryDatabaseService>();
 
   WalletInfo walletInfo;
   BuildContext context;
@@ -134,6 +138,18 @@ class MoveToExchangeScreenState extends BaseState {
         if (success) {
           myController.text = '';
           setMessage(ret['data']['transactionID']);
+          String date = DateTime.now().toString();
+          TransactionHistory transactionHistory = new TransactionHistory(
+            id: 1,
+              tickerName: coinName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: '',
+              status: 'pending',
+              quantity: amount,
+              tag: 'deposit');
+          insertTransactionInDatabase(transactionHistory);
         } else {
           var errMsg = ret['data'];
           if (errMsg == null || errMsg == '') {
@@ -156,6 +172,16 @@ class MoveToExchangeScreenState extends BaseState {
       }
     }
     setState(ViewState.Idle);
+  }
+  // Insert transaction history in database
+
+  void insertTransactionInDatabase(
+      TransactionHistory transactionHistory) async {
+    log.w('Transaction History ${transactionHistory.toJson()}');
+    await transactionHistoryDatabaseService
+        .insert(transactionHistory)
+        .then((data) => log.w('Saved in transaction history database $data'))
+        .catchError((onError) => log.e('Could not save in database $onError'));
   }
 
   showNotification(context) {

@@ -43,10 +43,21 @@ class TransactionHistory extends StatelessWidget {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
-                                Icon(
-                                  Icons.arrow_upward,
-                                  size: 35,
-                                  color: globals.sellPrice,
+                                Column(
+                                  
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    transaction.tag == 'deposit' ?  Icon(
+                                      Icons.arrow_downward,
+                                      size: 30,
+                                      color: globals.sellPrice,
+                                    ):
+                                    Icon(
+                                      Icons.arrow_upward,
+                                      size: 30,
+                                      color: globals.sellPrice,
+                                    ),Text(transaction.tag)
+                                  ],
                                 ),
                                 Container(
                                   width: 230,
@@ -74,7 +85,7 @@ class TransactionHistory extends StatelessWidget {
                                       MainAxisAlignment.spaceAround,
                                   children: <Widget>[
                                     Text(
-                                      transaction.amount.toString(),
+                                      transaction.quantity.toString(),
                                       textAlign: TextAlign.center,
                                       style:
                                           Theme.of(context).textTheme.headline5,

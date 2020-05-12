@@ -1,65 +1,63 @@
 class TransactionHistory {
-  String _id;
+  int _id;
   String _tickerName;
   String _address;
   double _amount;
   String _date;
-  String _txid;
+  String _txId;
   String _status;
   double _quantity;
   String _tag;
 
   TransactionHistory(
-      {String id,
+      {int id,
       String tickerName,
       String address,
       double amount,
       String date,
-      String txid,
+      String txId,
       String status,
       double quantity,
       String tag}) {
-    this._id = id ?? '';
+    this._id = id ?? 1;
     this._tickerName = tickerName ?? '';
     this._address = address ?? '';
     this._amount = amount ?? 0.0;
     this._date = date ?? '';
-    this._txid = txid ?? '';
+    this._txId = txId ?? '';
     this._status = status ?? '';
     this._quantity = quantity ?? 0.0;
     this._tag = tag ?? '';
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this._id;
-    data['tickerName'] = this._tickerName;
-    data['address'] = this._address;
-    data['amount'] = this._amount;
-    data['date'] = this._date;
-    data['txid'] = this._txid;
-    data['status'] = this._status;
-    data['quantity'] = this._quantity;
-    data['tag'] = this._tag;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        'id': _id,
+        'tickerName': _tickerName,
+        'address': _address,
+        'amount': _amount,
+        'date': _date,
+        'txId': _txId,
+        'status': _status,
+        'quantity': _quantity,
+        'tag': _tag
+      };
 
   factory TransactionHistory.fromJson(Map<String, dynamic> json) {
     return TransactionHistory(
-        id: json['id'] as String,
+        id: json['id'],
         tickerName: json['tickerName'] as String,
         address: json['address'] as String,
         amount: json['amount'],
         date: json['date'] as String,
-        txid: json['txid'],
+        txId: json['txId'],
         status: json['status'],
         quantity: json['quantity'],
         tag: json['tag']);
   }
 
-  String get id => _id;
+  int get id => _id;
 
-  set id(String id) {
+  set id(int id) {
     this._id = id;
   }
 
@@ -87,10 +85,10 @@ class TransactionHistory {
     this._date = date;
   }
 
-  String get txid => _txid;
+  String get txId => _txId;
 
-  set txid(String txid) {
-    this._txid = txid;
+  set txId(String txId) {
+    this._txId = txId;
   }
 
   String get status => _status;
