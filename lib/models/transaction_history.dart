@@ -19,7 +19,7 @@ class TransactionHistory {
       String status,
       double quantity,
       String tag}) {
-    this._id = id ?? 1;
+    this._id = id;
     this._tickerName = tickerName ?? '';
     this._address = address ?? '';
     this._amount = amount ?? 0.0;

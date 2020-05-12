@@ -175,21 +175,18 @@ class SendScreenState extends BaseState {
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
               isWarning: false);
-          String date = DateTime.now().toString();
-          //Build transaction history object
-          log.e('Date $date');
+         String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
-              tickerName: tickerName.toString(),
-              address: toAddress.toString(),
-              amount: amount,
-              date: date.toString());
-          //  Add transaction history object in database
-          log.w('Transaction History ${transactionHistory.toJson()}');
-          await transactionHistoryDatabaseService
-              .insert(transactionHistory)
-              .then((data) => log.w('Saved in transaction history database'))
-              .catchError(
-                  (onError) => log.e('Could not save in database $onError'));
+              id: null,
+              tickerName: tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: txHash,
+              status: 'pending',
+              quantity: amount,
+              tag: 'send');
+          walletService.insertTransactionInDatabase(transactionHistory);
           // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
           //   checkTxStatus(tickerName, txHash);
           // });

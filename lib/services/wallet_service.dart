@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/price.dart';
+import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -46,12 +47,15 @@ import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
+import 'db/transaction_history_database_service.dart';
+
 class WalletService {
   final log = getLogger('Wallet Service');
   ApiService _api = locator<ApiService>();
   double currentUsdValue;
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
-
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+      locator<TransactionHistoryDatabaseService>();
   ApiService _apiService = locator<ApiService>();
   double coinUsdBalance;
   List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG', 'DUSD'];
@@ -363,6 +367,19 @@ class WalletService {
 
   Future<PairDecimalConfig> getPairDecimalConfig() async {
     await _api.getPairDecimalConfig();
+  }
+
+  // Insert transaction history in database
+
+  void insertTransactionInDatabase(
+      TransactionHistory transactionHistory) async {
+    log.w('Transaction History ${transactionHistory.toJson()}');
+    await transactionHistoryDatabaseService
+        .insert(transactionHistory)
+        .then((data) async {
+      log.w('Saved in transaction history database $data');
+      await transactionHistoryDatabaseService.getAll();
+    }).catchError((onError) => log.e('Could not save in database $onError'));
   }
 
 /*----------------------------------------------------------------------

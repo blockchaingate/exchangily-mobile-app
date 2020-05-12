@@ -31,7 +31,7 @@ class TransactionHistory extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                for (var transaction in model.transactionHistory)
+                for (var transaction in model.transactionHistory.reversed)
                   model.state == ViewState.Busy
                       ? CircularProgressIndicator()
                       : Card(
@@ -50,13 +50,13 @@ class TransactionHistory extends StatelessWidget {
                                     transaction.tag == 'deposit' ?  Icon(
                                       Icons.arrow_downward,
                                       size: 30,
-                                      color: globals.sellPrice,
+                                      color: globals.buyPrice,
                                     ):
                                     Icon(
                                       Icons.arrow_upward,
                                       size: 30,
                                       color: globals.sellPrice,
-                                    ),Text(transaction.tag)
+                                    ),Text(transaction.tag,style: Theme.of(context).textTheme.subtitle2,)
                                   ],
                                 ),
                                 Container(
@@ -73,7 +73,7 @@ class TransactionHistory extends StatelessWidget {
                                             color: globals.primaryColor),
                                       ),
                                       Text(
-                                        transaction.date,
+                                        transaction.date.substring(0,19),
                                         style: TextStyle(
                                             fontSize: 14, color: globals.white),
                                       ),
