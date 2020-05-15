@@ -248,7 +248,7 @@ Future<Uint8List> signPersonalMessageWith(
 
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
   // be aware that signature.v already is recovery + 27
-  print('signature.v======='+signature.v.toString());
+  print('signature.v=======' + signature.v.toString());
   print('chainId=' + chainId.toString());
 
   /*
@@ -307,7 +307,6 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     //var credentials = EthPrivateKey.fromHex(privateKey);
     var credentials = EthPrivateKey(privateKey);
 
-
     var chainId = environment["chains"]["ETH"]["chainId"];
     // chainId = 0;
     print('chainId==' + chainId.toString());
@@ -316,7 +315,8 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     //    .signPersonalMessage(stringToUint8List(originalMessage), chainId: chainId);
 
     signedMess = await signPersonalMessageWith(
-        _ethMessagePrefix, privateKey, stringToUint8List(originalMessage), chainId: chainId);
+        _ethMessagePrefix, privateKey, stringToUint8List(originalMessage),
+        chainId: chainId);
     String ss = HEX.encode(signedMess);
     //String ss2 = HEX.encode(signedMessOrig);
 
@@ -443,7 +443,7 @@ Future getCoinBalanceByAddress(String coinName, String address,
     log.e(e);
   }
 
-  return {'balance': -1, 'lockbalance': -1};
+  return {'balance': -1.0, 'lockbalance': -1.0};
 }
 
 Future getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) async {
@@ -463,5 +463,5 @@ Future getBalanceForCoin(root, coinName, {tokenType = '', index = 0}) async {
     }
   } catch (e) {}
 
-  return {'balance': -1, 'lockbalance': -1};
+  return {'balance': -1.0, 'lockbalance': -1.0};
 }

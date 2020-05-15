@@ -94,7 +94,7 @@ class WalletFeaturesScreenState extends BaseState {
       double walletLockedBal = data['lockbalance'];
       walletInfo.availableBalance = walletBalance;
       double currentUsdValue =
-          await walletService.getCoinMarketPriceByName(walletInfo.name);
+          await walletService.getCoinMarketPriceByTickerName(walletInfo.name);
       walletService.calculateCoinUsdBalance(
           currentUsdValue, walletBalance, walletLockedBal);
       walletInfo.usdValue = walletService.coinUsdBalance;

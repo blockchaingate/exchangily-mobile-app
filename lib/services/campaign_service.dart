@@ -144,6 +144,7 @@ class CampaignService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String loginToken = prefs.getString('loginToken');
     campaignOrder.toJson();
+    log.w('campaignOrder ${campaignOrder.toJson()}');
     Map<String, dynamic> body = {
       "campaignId": "1",
       "price": campaignOrder.price.toString(),

@@ -134,7 +134,8 @@ class MoveToExchangeScreenState extends BaseState {
         bool success = ret["success"];
         if (success) {
           myController.text = '';
-          setMessage(ret['data']['transactionID']);
+          String txId = ret['data']['transactionID'];
+          setMessage(txId);
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
               id: null,
@@ -142,17 +143,11 @@ class MoveToExchangeScreenState extends BaseState {
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: '',
+              txId: txId,
               status: 'pending',
               quantity: amount,
               tag: 'deposit');
           walletService.insertTransactionInDatabase(transactionHistory);
-        } else {
-          var errMsg = ret['data'];
-          if (errMsg == null || errMsg == '') {
-            errMsg = AppLocalizations.of(context).serverError;
-            setErrorMessage(errMsg);
-          }
         }
         sharedService.alertDialog(
             success

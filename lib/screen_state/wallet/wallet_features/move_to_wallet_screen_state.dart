@@ -109,7 +109,8 @@ class MoveToWalletScreenState extends BaseState {
         log.w(ret);
         bool success = ret["success"];
         if (success) {
-          String txId = ret['data']['transactionID'];
+          String txId = ret['transactionHash'];
+          log.e('txid $txId');
           amountController.text = '';
           setMessage(txId);
           String date = DateTime.now().toString();
@@ -119,7 +120,7 @@ class MoveToWalletScreenState extends BaseState {
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: txId,
+              txId: txId != null ? txId : '',
               status: 'pending',
               quantity: amount,
               tag: 'withdraw');

@@ -163,7 +163,7 @@ class WalletService {
 
   Future coinBalanceByAddress(
       String name, String address, String tokenType) async {
-    log.w('$name $address $tokenType');
+    log.w(' coinBalanceByAddress $name $address $tokenType');
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
     // log.w('coinBalanceByAddress $name - $bal');
@@ -201,16 +201,16 @@ class WalletService {
                 Get Current Market Price For The Coin By Name
 ----------------------------------------------------------------------*/
 
-  Future<double> getCoinMarketPriceByName(String tickerName) async {
+  Future<double> getCoinMarketPriceByTickerName(String tickerName) async {
     currentUsdValue = 0;
-    await _apiService.getCoinCurrencyUsdPrice().then((res) {
-      if (res != null) {
-        currentUsdValue = res['data'][tickerName]['USD'];
-      }
-    });
     if (tickerName == 'DUSD') {
       return currentUsdValue = 1.0;
     }
+    await _apiService.getCoinCurrencyUsdPrice().then((res) {
+      if (res != null) {
+        currentUsdValue = res['data'][tickerName]['USD'].toDouble();
+      }
+    });
     return currentUsdValue;
     // } else {
     //   var usdVal = await _api.getCoinsUsdValue();
@@ -302,7 +302,7 @@ class WalletService {
         String tickerName = coinTickers[i];
         String name = coinNames[i];
         String token = tokenType[i];
-        var coinMarketPrice = await getCoinMarketPriceByName(name);
+        var coinMarketPrice = await getCoinMarketPriceByTickerName(name);
         coinUsdMarketPrice.add(coinMarketPrice);
         String addr =
             await getAddressForCoin(root, tickerName, tokenType: token);
@@ -339,7 +339,8 @@ class WalletService {
           if (coin == tickerName) {
             _walletInfo[j].inExchange = res[i]['amount'];
             _walletInfo[j].lockedBalance = res[i]['lockedAmount'];
-            double marketPrice = await getCoinMarketPriceByName(tickerName);
+            double marketPrice =
+                await getCoinMarketPriceByTickerName(tickerName);
             log.e(
                 'wallet service -- tickername $tickerName - market price $marketPrice - balance: ${_walletInfo[j].availableBalance} - Locked balance: ${_walletInfo[j].lockedBalance}');
             calculateCoinUsdBalance(marketPrice,
@@ -359,14 +360,6 @@ class WalletService {
       log.e('Catch GetAll Wallets Failed $e');
       return _walletInfo;
     }
-  }
-
-/*----------------------------------------------------------------------
-                   Get Pair decimal Config
-----------------------------------------------------------------------*/
-
-  Future<PairDecimalConfig> getPairDecimalConfig() async {
-    await _api.getPairDecimalConfig();
   }
 
   // Insert transaction history in database
@@ -483,6 +476,7 @@ class WalletService {
     var coins =
         coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
     if (coins != null) {
+      log.w('getCoinTypeIdByName $coins');
       return coins[0]['id'];
     }
     return 0;
