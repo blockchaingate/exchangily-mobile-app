@@ -17,7 +17,7 @@ Map devConfig = {
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
       "satoshisPerBytes": 50,
-      "bytesPerInput": 152,
+      "bytesPerInput": 148,
       "gasPrice": 50,
       "gasLimit": 800000
     },
@@ -76,7 +76,7 @@ Map productionConfig = {
         "chainId": 0,
       },
       "satoshisPerBytes": 50,
-      "bytesPerInput": 152,
+      "bytesPerInput": 148,
       "gasPrice": 50,
       "gasLimit": 800000
     },
