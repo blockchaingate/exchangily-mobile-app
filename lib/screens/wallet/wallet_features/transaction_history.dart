@@ -47,27 +47,37 @@ class TransactionHistory extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      transaction.tag == 'deposit'
-                                          ? Icon(
-                                              Icons.arrow_downward,
-                                              size: 30,
-                                              color: globals.buyPrice,
-                                            )
-                                          : Icon(
-                                              Icons.arrow_upward,
-                                              size: 30,
-                                              color: globals.sellPrice,
-                                            ),
-                                      Text(
-                                        transaction.tag,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2,
-                                      )
-                                    ],
+                                  Container(
+                                    width: 50,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        transaction.tag == 'deposit'
+                                            ? Icon(
+                                                Icons.arrow_downward,
+                                                size: 24,
+                                                color: globals.buyPrice,
+                                              )
+                                            : Icon(
+                                                Icons.arrow_upward,
+                                                size: 24,
+                                                color: globals.sellPrice,
+                                              ),
+                                        Text(
+                                          transaction.tag == 'deposit'
+                                              ? AppLocalizations.of(context)
+                                                  .moveAndTrade
+                                              : AppLocalizations.of(context)
+                                                  .withdrawToWallet,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2,
+                                        )
+                                      ],
+                                    ),
                                   ),
                                   Container(
                                     width: 230,
@@ -79,7 +89,7 @@ class TransactionHistory extends StatelessWidget {
                                       children: <Widget>[
                                         Expanded(
                                           child: Text(
-                                            '${transaction.tickerName} : ${transaction.txId}',
+                                            '${transaction.txId}',
                                             style: TextStyle(
                                                 color: globals.white54),
                                           ),
@@ -91,11 +101,15 @@ class TransactionHistory extends StatelessWidget {
                                                 text:
                                                     AppLocalizations.of(context)
                                                         .taphereToCopyTxId,
-                                                style: TextStyle(
-                                                    decoration: TextDecoration
-                                                        .underline,
-                                                    color:
-                                                        globals.primaryColor),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2
+                                                    .copyWith(
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                        color: globals
+                                                            .primaryColor),
                                                 recognizer:
                                                     TapGestureRecognizer()
                                                       ..onTap = () {
@@ -115,12 +129,21 @@ class TransactionHistory extends StatelessWidget {
                                     ),
                                   ),
                                   Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
+                                      Text('${transaction.tickerName}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2),
+                                      Text(
+                                          AppLocalizations.of(context).quantity,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2),
                                       Text(
                                         transaction.quantity.toStringAsFixed(2),
-                                        textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5,

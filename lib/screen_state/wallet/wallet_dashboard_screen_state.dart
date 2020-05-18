@@ -249,14 +249,13 @@ class WalletDashboardScreenState extends BaseState {
                     'get pair decimal length, ${pairDecimalConfigList.length}');
                 for (PairDecimalConfig pair in pairDecimalConfigList) {
                   String fullWalletTickerName = walletTickerName + 'USDT';
-                  log.e('fullWalletTickerName $fullWalletTickerName');
+
                   if (pair.name == fullWalletTickerName) {
                     // walletInfo[i].pairDecimalConfig.priceDecimal =
                     //     pair.priceDecimal;
                     // walletInfo[i].pairDecimalConfig.priceDecimal =
                     //     pair.qtyDecimal;
-                    log.e(
-                        'Price and quantity decimal $priceDecimalConfig -- $quantityDecimalConfig');
+
                     break;
                   }
                 }

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-11T00:33:49.762673",
+  "@@last_modified": "2020-05-18T16:30:31.731134",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -222,13 +222,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "moveAndTrade": "Move to Exchange",
+  "moveAndTrade": "Move to exchange",
   "@moveAndTrade": {
     "description": "move_and_trade",
     "type": "text",
     "placeholders": {}
   },
-  "withdrawToWallet": "Move To Wallet",
+  "withdrawToWallet": "Move to wallet",
   "@withdrawToWallet": {
     "description": "withdraw_to_wallet",
     "type": "text",
@@ -324,7 +324,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "taphereToCopyTxId": "Tap here to copy TxId",
+  "taphereToCopyTxId": "Tap here to copy txId",
   "@taphereToCopyTxId": {
     "description": "taphereToCopyTxId",
     "type": "text",
@@ -1533,6 +1533,12 @@
   "doNotShowTheseWarnings": "Do not show these warnings",
   "@doNotShowTheseWarnings": {
     "description": "do_not_show_these_warnings",
+    "type": "text",
+    "placeholders": {}
+  },
+  "withdraw": "Withdraw",
+  "@withdraw": {
+    "description": "transaction_history_withdraw",
     "type": "text",
     "placeholders": {}
   }

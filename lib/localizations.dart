@@ -199,12 +199,12 @@ class AppLocalizations {
   }
 
   String get moveAndTrade {
-    return Intl.message('Move to Exchange',
+    return Intl.message('Move to exchange',
         name: 'moveAndTrade', desc: 'move_and_trade');
   }
 
   String get withdrawToWallet {
-    return Intl.message('Move To Wallet',
+    return Intl.message('Move to wallet',
         name: 'withdrawToWallet', desc: 'withdraw_to_wallet');
   }
 
@@ -290,7 +290,7 @@ class AppLocalizations {
   }
 
   String get taphereToCopyTxId {
-    return Intl.message('Tap here to copy TxId',
+    return Intl.message('Tap here to copy txId',
         name: 'taphereToCopyTxId', desc: 'taphereToCopyTxId');
   }
 
@@ -1324,6 +1324,11 @@ class AppLocalizations {
   String get doNotShowTheseWarnings {
     return Intl.message('Do not show these warnings',
         name: 'doNotShowTheseWarnings', desc: 'do_not_show_these_warnings');
+  }
+
+  String get withdraw {
+    return Intl.message('Withdraw',
+        name: 'withdraw', desc: 'transaction_history_withdraw');
   }
 }
 
