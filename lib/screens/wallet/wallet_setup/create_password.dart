@@ -213,8 +213,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         color: globals.primaryColor,
         textColor: Colors.white,
         onPressed: () async {
-          log.e('Random Mnemonic - ${widget.randomMnemonicFromRoute}');
           // Remove the on screen keyboard by shifting focus to unused focus node
+          model.setState(ViewState.Busy);
           FocusScope.of(context).requestFocus(FocusNode());
           var passSuccess = model.validatePassword(
               _passTextController.text, _confirmPassTextController.text);
@@ -225,6 +225,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           if (passSuccess) {
             await model.createOfflineWallets();
           }
+          model.setState(ViewState.Idle);
         },
         child: Text(
           AppLocalizations.of(context).createWallet,

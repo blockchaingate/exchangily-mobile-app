@@ -324,12 +324,12 @@ class WalletDashboardScreen extends StatelessWidget {
                             itemCount: model.walletInfoCopy.length,
                             itemBuilder: (BuildContext context, int index) {
                               return _coinDetailsCard(
-                                  model.walletInfo[index].tickerName
+                                  model.walletInfoCopy[index].tickerName
                                       .toLowerCase(),
-                                  model.walletInfo[index].availableBalance,
-                                  model.walletInfo[index].lockedBalance,
-                                  model.walletInfo[index].inExchange,
-                                  model.walletInfo[index].usdValue,
+                                  model.walletInfoCopy[index].availableBalance,
+                                  model.walletInfoCopy[index].lockedBalance,
+                                  model.walletInfoCopy[index].inExchange,
+                                  model.walletInfoCopy[index].usdValue,
                                   index,
                                   model.walletInfoCopy,
                                   model.elevation,

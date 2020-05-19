@@ -175,7 +175,7 @@ class SendScreenState extends BaseState {
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
               isWarning: false);
-         String date = DateTime.now().toString();
+          String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
               id: null,
               tickerName: tickerName,
@@ -187,9 +187,7 @@ class SendScreenState extends BaseState {
               quantity: amount,
               tag: 'send');
           walletService.insertTransactionInDatabase(transactionHistory);
-          // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
-          //   checkTxStatus(tickerName, txHash);
-          // });
+          walletService.checkTransactionStatus(transactionHistory);
           setState(ViewState.Idle);
         }
         // else if (errorMessage.isNotEmpty) {

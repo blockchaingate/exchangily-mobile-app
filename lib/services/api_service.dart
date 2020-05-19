@@ -38,16 +38,43 @@ class ApiService {
   final ethBaseUrl = environment["endpoints"]["eth"];
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
 
+/*----------------------------------------------------------------------
+                Transaction status
+----------------------------------------------------------------------*/
+
+  Future getTransactionStatus(String transactionId) async {
+    var url =
+        environment['endpoints']['kanban'] + 'checkstatus/' + transactionId;
+    log.e(url);
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      log.w(' getDepositTransactionStatus $json');
+      return json;
+    } catch (err) {
+      log.e('In getDepositTransactionStatus catch $err');
+    }
+  }
+
 /*-------------------------------------------------------------------------------------
                                   Get all wallet balance
 -------------------------------------------------------------------------------------*/
 
-  Future<List<WalletBalance>> getWalletBalance(walletAddressesBody) async {
+  Future<List<WalletBalance>> getWalletBalance(body) async {
     String url = kanbanBaseUrl + walletBalances;
+    log.i(url);
+
     try {
-      var response = await client.post(url, body: walletAddressesBody);
+      var response = await client.post(url, body: body);
+      bool success = jsonDecode(response.body)['success'];
+      if (success == true) {
+        print(success);
+      }
       var jsonList = jsonDecode(response.body)['data'];
       log.w(' getWalletBalance $jsonList');
+      if (jsonList == null) {
+        return null;
+      }
       WalletBalanceList balanceList = WalletBalanceList.fromJson(jsonList);
       return balanceList.balanceList;
     } catch (err) {

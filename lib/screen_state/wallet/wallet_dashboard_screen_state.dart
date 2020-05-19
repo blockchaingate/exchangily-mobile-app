@@ -42,7 +42,7 @@ class WalletDashboardScreenState extends BaseState {
   double gasAmount = 0;
   String exgAddress = '';
   String wallets;
-  List walletInfoCopy = [];
+  List<WalletInfo> walletInfoCopy = [];
   BuildContext context;
   bool isHideSmallAmountAssets = false;
   RefreshController refreshController =
@@ -54,10 +54,12 @@ class WalletDashboardScreenState extends BaseState {
   int quantityDecimalConfig = 0;
 
   init() async {
-    await getDecimalPairConfig();
+    setBusy(true);
+    // await getDecimalPairConfig();
     await refreshBalance();
     await getConfirmDepositStatus();
     showDialogWarning();
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
@@ -164,19 +166,19 @@ class WalletDashboardScreenState extends BaseState {
     }
   }
 
-  // Retrive Wallets Object From Storage
+  // Retrive Wallets From local DB
 
   retrieveWallets() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     await walletDatabaseService.getAll().then((res) {
       walletInfo = res;
       calcTotalBal();
       walletInfoCopy = walletInfo.map((element) => element).toList();
-      setState(ViewState.Idle);
     }).catchError((error) {
       log.e('Catch Error $error');
-      setState(ViewState.Idle);
+      setBusy(false);
     });
+    setBusy(false);
   }
 
 /*-------------------------------------------------------------------------------------
@@ -186,52 +188,60 @@ class WalletDashboardScreenState extends BaseState {
   Future refreshBalance() async {
     setBusy(true);
     totalUsdBalance = 0;
+    walletInfoCopy = await walletDatabaseService.getAll();
+    walletInfo = [];
     await getGas();
-    await getDecimalPairConfig();
+    //await getDecimalPairConfig();
 
-    Map<String, String> coinAddresses = {
+    Map<String, dynamic> walletBalancesBody = {
       'btcAddress': '',
       'ethAddress': '',
-      'fabAddress': ''
+      'fabAddress': '',
+      "showEXGAssets": "true"
     };
-    walletInfo.forEach((wallet) {
+    walletInfoCopy.forEach((wallet) {
       if (wallet.tickerName == 'BTC') {
-        coinAddresses['btcAddress'] = wallet.address;
+        walletBalancesBody['btcAddress'] = wallet.address;
       } else if (wallet.tickerName == 'ETH') {
-        coinAddresses['ethAddress'] = wallet.address;
+        walletBalancesBody['ethAddress'] = wallet.address;
       } else if (wallet.tickerName == 'FAB') {
-        coinAddresses['fabAddress'] = wallet.address;
+        walletBalancesBody['fabAddress'] = wallet.address;
       }
     });
+
+    log.e('Coin address $walletBalancesBody');
     await this
         .apiService
-        .getWalletBalance(coinAddresses)
+        .getWalletBalance(walletBalancesBody)
         .then((walletBalanceList) async {
       if (walletBalanceList != null) {
         // Loop wallet info list to udpate balances
-        for (var i = 0; i < walletInfo.length; i++) {
+        // log.e(
+        //     'copy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
+        for (var i = 0; i < walletInfoCopy.length; i++) {
+          log.w('i $i');
           // Loop wallet balance list from api
           for (var j = 0; j < walletBalanceList.length; j++) {
-            //  log.w('Wallet balance ${walletBalanceList[j].toJson()}');
-
-            String walletTickerName = walletInfo[i].tickerName;
+            log.w('j $j');
+            String walletTickerName = walletInfoCopy[i].tickerName;
             String walletBalanceCoinName = walletBalanceList[j].coin;
 
             // Compare wallet ticker name to wallet balance coin name
             if (walletTickerName == walletBalanceCoinName) {
-              walletInfo[i].availableBalance = walletBalanceList[j].balance;
-              walletInfo[i].lockedBalance = walletBalanceList[j].lockBalance;
-              walletInfo[i].inExchange =
-                  walletBalanceList[j].unlockedExchangeBalance;
-              double marketPrice = walletBalanceList[j].usdValue.usd;
+              log.w('in first if $walletTickerName');
+              // log.w('Wallet balance ${walletBalanceList[j].toJson()}');
+              log.e('Wallet info ${walletInfo.length}');
 
+              double marketPrice = walletBalanceList[j].usdValue.usd;
+              log.w('Market price $marketPrice');
               // Check if market price error from api then show the notification with ticker name
               // so that user know why USD val for that ticker is 0
               if (marketPrice == -1) {
+                log.w('in 2nd if $marketPrice');
                 marketPrice = 0.0;
                 sharedService.showInfoFlushbar(
-                    '$walletTickerName Notice',
-                    'Could not fetch the market price at the moment, please try again later',
+                    '$walletTickerName ${AppLocalizations.of(context).notice}',
+                    AppLocalizations.of(context).marketPriceFetchFailed,
                     Icons.cancel,
                     Colors.red,
                     context);
@@ -239,45 +249,64 @@ class WalletDashboardScreenState extends BaseState {
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
                   marketPrice,
-                  walletInfo[i].availableBalance,
-                  walletInfo[i].lockedBalance);
+                  walletBalanceList[j].balance,
+                  walletBalanceList[j].lockBalance);
 
-              // Adding USD val in the walletInfo instance
-              walletInfo[i].usdValue = usdValue;
-              if (pairDecimalConfigList != null) {
-                log.e(
-                    'get pair decimal length, ${pairDecimalConfigList.length}');
-                for (PairDecimalConfig pair in pairDecimalConfigList) {
-                  String fullWalletTickerName = walletTickerName + 'USDT';
+              // if (pairDecimalConfigList != null ||
+              //     pairDecimalConfigList != []) {
+              //   log.e(
+              //       'get pair decimal length, ${pairDecimalConfigList.length}');
+              //   for (PairDecimalConfig pair in pairDecimalConfigList) {
+              //     String fullWalletTickerName = walletTickerName + 'USDT';
 
-                  if (pair.name == fullWalletTickerName) {
-                    // walletInfo[i].pairDecimalConfig.priceDecimal =
-                    //     pair.priceDecimal;
-                    // walletInfo[i].pairDecimalConfig.priceDecimal =
-                    //     pair.qtyDecimal;
+              //     if (pair.name == fullWalletTickerName) {
+              //       // walletInfo[i].pairDecimalConfig.priceDecimal =
+              //       //     pair.priceDecimal;
+              //       // walletInfo[i].pairDecimalConfig.priceDecimal =
+              //       //     pair.qtyDecimal;
 
-                    break;
-                  }
-                }
-              }
+              //       break;
+              //     }
+              //   }
+              // }
+              WalletInfo wi = new WalletInfo(
+                  id: walletInfoCopy[i].id,
+                  tickerName: walletTickerName,
+                  tokenType: walletInfoCopy[i].tokenType,
+                  address: walletInfoCopy[i].address,
+                  availableBalance: walletBalanceList[j].balance,
+                  lockedBalance: walletBalanceList[j].lockBalance,
+                  usdValue: usdValue,
+                  name: walletInfoCopy[i].name,
+                  inExchange: walletBalanceList[j].unlockedExchangeBalance);
+              walletInfo.add(wi);
               log.w('Wallet info single ${walletInfo[i].toJson()}');
+              log.e('Wallet info ${walletInfo.length}');
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
+
           } // For loop j ends
           totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
           log.w('total usd  bal $totalUsdBalance');
-          walletInfoCopy = walletInfo.map((element) => element).toList();
         } // For loop i ends
 
         await updateWalletDatabase();
         if (!isProduction) debugVersionPopup();
       } // if wallet balance list != null ends
+      else {
+        walletInfo = await walletDatabaseService.getAll();
+        for (var i = 0; i < walletInfoCopy.length; i++) {
+          totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
+        }
+        log.e('Wallet balance NULL, fetching data from local DB');
+      }
     }).catchError((err) {
       log.e('Wallet balance CATCH $err');
       setBusy(false);
     });
     setBusy(false);
+    walletInfoCopy.clear();
   }
 
   // Update wallet database

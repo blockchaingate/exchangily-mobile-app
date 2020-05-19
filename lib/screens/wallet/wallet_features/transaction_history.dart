@@ -30,9 +30,9 @@ class TransactionHistory extends StatelessWidget {
           child: Container(
               padding: EdgeInsets.all(8.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                // mainAxisAlignment: MainAxisAlignment.start,
+                //  mainAxisSize: MainAxisSize.max,
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   for (var transaction in model.transactionHistory.reversed)
                     model.state == ViewState.Busy
@@ -40,9 +40,8 @@ class TransactionHistory extends StatelessWidget {
                         : Card(
                             elevation: 4,
                             child: Container(
-                              padding: EdgeInsets.all(5.0),
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
                               color: globals.walletCardColor,
-                              height: 100,
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -53,7 +52,7 @@ class TransactionHistory extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.center,
                                       children: [
                                         transaction.tag == 'deposit'
                                             ? Icon(
@@ -75,23 +74,28 @@ class TransactionHistory extends StatelessWidget {
                                           style: Theme.of(context)
                                               .textTheme
                                               .subtitle2,
+                                          textAlign: TextAlign.center,
                                         )
                                       ],
                                     ),
                                   ),
                                   Container(
-                                    width: 230,
+                                    //  width: 230,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Expanded(
-                                          child: Text(
-                                            '${transaction.txId}',
-                                            style: TextStyle(
-                                                color: globals.white54),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: 5.0),
+                                          child: SizedBox(
+                                            width: 200,
+                                            child: Text('${transaction.txId}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2),
                                           ),
                                         ),
                                         Visibility(
@@ -118,12 +122,15 @@ class TransactionHistory extends StatelessWidget {
                                                       }),
                                           ),
                                         ),
-                                        UIHelper.verticalSpaceSmall,
-                                        Text(
-                                          transaction.date.substring(0, 19),
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: globals.white),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5.0),
+                                          child: Text(
+                                            transaction.date.substring(0, 19),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          ),
                                         ),
                                       ],
                                     ),

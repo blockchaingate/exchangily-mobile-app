@@ -1330,6 +1330,13 @@ class AppLocalizations {
     return Intl.message('Withdraw',
         name: 'withdraw', desc: 'transaction_history_withdraw');
   }
+
+  String get marketPriceFetchFailed {
+    return Intl.message(
+        'Could not fetch the market price at the moment, please try again later',
+        name: 'marketPriceFetchFailed',
+        desc: 'wallet_dashboard_market_price_fetch_failed');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

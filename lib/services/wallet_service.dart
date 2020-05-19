@@ -1,10 +1,12 @@
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/models/price.dart';
 import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
@@ -54,6 +56,7 @@ class WalletService {
   ApiService _api = locator<ApiService>();
   double currentUsdValue;
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+  SharedService sharedService = locator<SharedService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   ApiService _apiService = locator<ApiService>();
@@ -70,6 +73,8 @@ class WalletService {
     'exchangily',
     'dusd'
   ];
+
+  Completer<AlertResponse> _completer;
 /*----------------------------------------------------------------------
                 Get Random Mnemonic
 ----------------------------------------------------------------------*/
@@ -245,7 +250,7 @@ class WalletService {
         String addr =
             await getAddressForCoin(root, tickerName, tokenType: token);
         WalletInfo wi = new WalletInfo(
-            id: id,
+            id: null,
             tickerName: tickerName,
             tokenType: token,
             address: addr,
@@ -254,8 +259,10 @@ class WalletService {
             usdValue: 0.0,
             name: name);
         _walletInfo.add(wi);
+        log.e("Offline wallet ${_walletInfo[i].toJson()}");
         await databaseService.insert(_walletInfo[i]);
       }
+      await databaseService.getAll();
       return _walletInfo;
     } catch (e) {
       log.e(e);
@@ -265,6 +272,39 @@ class WalletService {
     }
   }
 
+/*----------------------------------------------------------------------
+                Transaction status
+----------------------------------------------------------------------*/
+  Future<String> checkTransactionStatus(TransactionHistory transaction) async {
+    //  _completer = Completer<AlertResponse>();
+    String result = '';
+    AlertResponse alertResponse = AlertResponse();
+    Timer.periodic(Duration(minutes: 1), (Timer t) async {
+      var res = await _apiService.getTransactionStatus(transaction.txId);
+      log.w(res);
+
+      if (res['code'] == -1 ||
+          res['code'] == 0 ||
+          res['code'] == 1 ||
+          res['code'] == 2 ||
+          res['code'] == 3) {
+        t.cancel();
+        result = res['message'];
+        log.i('Timer cancel');
+        sharedService.alertDialog('${transaction.tickerName} status', '$result',
+            isWarning: false);
+        if (res['code'] == 0) {}
+      }
+    });
+    return result;
+    //  return _completer.future;
+  }
+
+  // Completer the _dialogCompleter to resume the Future's execution
+  void transactionComplete(AlertResponse response) {
+    _completer.complete(response);
+    _completer = null;
+  }
 /*----------------------------------------------------------------------
                   Get Exg Address
 ----------------------------------------------------------------------*/
@@ -282,7 +322,7 @@ class WalletService {
     return address;
   }
 /*----------------------------------------------------------------------
-                  Get Wallet Coins
+                  Get Wallet Coins (Not in use)
 ----------------------------------------------------------------------*/
 
   Future<List<WalletInfo>> getWalletCoins(String mnemonic) async {

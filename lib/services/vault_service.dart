@@ -23,8 +23,6 @@ class VaultService {
 
   Future secureMnemonic(context, String pass, String mnemonic) async {
     _walletService.generateSeed(mnemonic);
-
-    log.w(mnemonic);
     String userTypedKey = pass;
     final key = prefix0.Key.fromLength(32);
     final iv = prefix0.IV.fromUtf8(userTypedKey);
