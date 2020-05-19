@@ -378,13 +378,13 @@ class WalletService {
           String tickerName = _walletInfo[j].tickerName;
           if (coin == tickerName) {
             _walletInfo[j].inExchange = res[i]['amount'];
-            _walletInfo[j].lockedBalance = res[i]['lockedAmount'];
-            double marketPrice =
-                await getCoinMarketPriceByTickerName(tickerName);
-            log.e(
-                'wallet service -- tickername $tickerName - market price $marketPrice - balance: ${_walletInfo[j].availableBalance} - Locked balance: ${_walletInfo[j].lockedBalance}');
-            calculateCoinUsdBalance(marketPrice,
-                _walletInfo[j].availableBalance, _walletInfo[j].lockedBalance);
+            // _walletInfo[j].lockedBalance = res[i]['lockedAmount'];
+            // double marketPrice =
+            //     await getCoinMarketPriceByTickerName(tickerName);
+            // log.e(
+            //     'wallet service -- tickername $tickerName - market price $marketPrice - balance: ${_walletInfo[j].availableBalance} - Locked balance: ${_walletInfo[j].lockedBalance}');
+            // calculateCoinUsdBalance(marketPrice,
+            //     _walletInfo[j].availableBalance, _walletInfo[j].lockedBalance);
             break;
           }
         }

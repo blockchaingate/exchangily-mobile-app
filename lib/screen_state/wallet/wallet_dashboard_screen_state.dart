@@ -95,7 +95,7 @@ class WalletDashboardScreenState extends BaseState {
 // Calculate Total Usd Balance of Coins
   calcTotalBal() {
     totalUsdBalance = 0;
-    for (var i = 0; i < walletInfo.length; i++) {}
+    for (var i = 0; i < walletInfo.length; i++) {totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;}
   }
 
   // Get EXG address from wallet database
@@ -294,12 +294,92 @@ class WalletDashboardScreenState extends BaseState {
         await updateWalletDatabase();
         if (!isProduction) debugVersionPopup();
       } // if wallet balance list != null ends
+
+      // in else if walletBalances is null
       else {
-        walletInfo = await walletDatabaseService.getAll();
-        for (var i = 0; i < walletInfoCopy.length; i++) {
-          totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
+        int length = walletInfoCopy.length;
+        List<String> coinTokenType = walletService.tokenType;
+
+        double walletBal = 0.0;
+        double walletLockedBal = 0.0;
+
+        // For loop starts
+        for (var i = 0; i < length; i++) {
+          String tickerName = walletInfoCopy[i].tickerName;
+          String address = walletInfoCopy[i].address;
+          String name = walletInfoCopy[i].name;
+          // Get coin balance by address
+          await walletService
+              .coinBalanceByAddress(tickerName, address, coinTokenType[i])
+              .then((balance) async {
+            log.e('bal $balance');
+            walletBal = balance['balance'];
+            walletLockedBal = balance['lockbalance'];
+          }).timeout(Duration(seconds: 25), onTimeout: () async {
+            setBusy(false);
+            sharedService.alertDialog('',
+                AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+            await retrieveWallets();
+            log.e('Timeout');
+          }).catchError((error) async {
+            setState(ViewState.Idle);
+            sharedService.alertDialog(
+                '', AppLocalizations.of(context).genericError);
+            await retrieveWallets();
+            log.e('Something went wrong  - $error');
+          });
+
+          // Get coin market price by name
+          double marketPrice =
+              await walletService.getCoinMarketPriceByTickerName(tickerName);
+
+          // Calculate usd balance
+          coinUsdBalance = walletService.calculateCoinUsdBalance(
+              marketPrice, walletBal, walletLockedBal);
+          // Adding each coin details in the wallet
+          WalletInfo wi = WalletInfo(
+              id: walletInfoCopy[i].id,
+              tickerName: tickerName,
+              tokenType: coinTokenType[i],
+              address: address,
+              availableBalance: walletBal,
+              lockedBalance: walletLockedBal,
+              usdValue: coinUsdBalance,
+              name: name);
+          walletInfo.add(wi);
+        } // For loop ends
+
+        bool hasDUSD = false;
+        String exgAddress = '';
+        String exgTokenType = '';
+
+        for (var i = 0; i < walletInfo.length; i++) {
+          String tickerName = walletInfo[i].tickerName;
+          if (tickerName == 'DUSD') {
+            hasDUSD = true;
+          }
+          if (tickerName == 'EXG') {
+            exgAddress = walletInfo[i].address;
+            exgTokenType = walletInfo[i].tokenType;
+          }
         }
-        log.e('Wallet balance NULL, fetching data from local DB');
+        if (!hasDUSD) {
+          var dusdWalletInfo = new WalletInfo(
+              tickerName: 'DUSD',
+              tokenType: exgTokenType,
+              address: exgAddress,
+              availableBalance: 0.0,
+              lockedBalance: 0.0,
+              usdValue: 0.0,
+              name: 'dusd',
+              inExchange: 0.0);
+          walletInfo.add(dusdWalletInfo);
+        }
+        calcTotalBal();
+        await getExchangeAssetsBalance();
+        await updateWalletDatabase();
+
+        log.e('Wallet balance endpoint NULL, fetching wallet data using old methods');
       }
     }).catchError((err) {
       log.e('Wallet balance CATCH $err');
@@ -307,6 +387,27 @@ class WalletDashboardScreenState extends BaseState {
     });
     setBusy(false);
     walletInfoCopy.clear();
+  }
+
+  // get exchange asset balance
+  getExchangeAssetsBalance() async {
+    String address = await getExgAddressFromWalletDatabase();
+    var res = await walletService.assetsBalance(address);
+    var length = res.length;
+    // For loop over asset balance result
+    for (var i = 0; i < length; i++) {
+      // Get their tickerName to compare with walletInfo tickerName
+      String coin = res[i]['coin'];
+      // Second For Loop To check WalletInfo TickerName According to its length and
+      // compare it with the same coin tickername from asset balance result until the match or loop ends
+      for (var j = 0; j < walletInfo.length; j++) {
+        String tickerName = walletInfo[j].tickerName;
+        if (coin == tickerName) {
+          walletInfo[j].inExchange = res[i]['amount'];
+          break;
+        }
+      }
+    }
   }
 
   // Update wallet database
