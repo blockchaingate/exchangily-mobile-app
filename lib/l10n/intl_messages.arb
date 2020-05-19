@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-18T16:30:31.731134",
+  "@@last_modified": "2020-05-19T19:02:07.525902",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1539,6 +1539,30 @@
   "withdraw": "Withdraw",
   "@withdraw": {
     "description": "transaction_history_withdraw",
+    "type": "text",
+    "placeholders": {}
+  },
+  "marketPriceFetchFailed": "Could not fetch the market price at the moment, please try again later",
+  "@marketPriceFetchFailed": {
+    "description": "wallet_dashboard_market_price_fetch_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "completed": "Completed",
+  "@completed": {
+    "description": "transaction_history_completed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "requireRedeposit": "Require redeposit",
+  "@requireRedeposit": {
+    "description": "transaction_history_require_redeposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error": "Error",
+  "@error": {
+    "description": "transaction_history_error",
     "type": "text",
     "placeholders": {}
   }

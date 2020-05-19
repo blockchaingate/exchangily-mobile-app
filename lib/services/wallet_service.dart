@@ -55,7 +55,8 @@ class WalletService {
   final log = getLogger('Wallet Service');
   ApiService _api = locator<ApiService>();
   double currentUsdValue;
-  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+  WalletDataBaseService walletDatabaseService =
+      locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
@@ -260,9 +261,9 @@ class WalletService {
             name: name);
         _walletInfo.add(wi);
         log.e("Offline wallet ${_walletInfo[i].toJson()}");
-        await databaseService.insert(_walletInfo[i]);
+        await walletDatabaseService.insert(_walletInfo[i]);
       }
-      await databaseService.getAll();
+      await walletDatabaseService.getAll();
       return _walletInfo;
     } catch (e) {
       log.e(e);
@@ -275,17 +276,19 @@ class WalletService {
 /*----------------------------------------------------------------------
                 Transaction status
 ----------------------------------------------------------------------*/
-  Future<String> checkTransactionStatus(TransactionHistory transaction) async {
-    //  _completer = Completer<AlertResponse>();
+  Future<String> checkDepositTransactionStatus(
+      TransactionHistory transaction) async {
     String result = '';
-    AlertResponse alertResponse = AlertResponse();
     Timer.periodic(Duration(minutes: 1), (Timer t) async {
       var res = await _apiService.getTransactionStatus(transaction.txId);
       log.w(res);
-
+// 0 is confirmed
+// 1 is pending
+// 2 is failed (tx 1 failed),
+// 3 is need to redeposit (tx 2 failed)
+// -1 is error
       if (res['code'] == -1 ||
           res['code'] == 0 ||
-          res['code'] == 1 ||
           res['code'] == 2 ||
           res['code'] == 3) {
         t.cancel();
@@ -293,7 +296,73 @@ class WalletService {
         log.i('Timer cancel');
         sharedService.alertDialog('${transaction.tickerName} status', '$result',
             isWarning: false);
-        if (res['code'] == 0) {}
+        String date = DateTime.now().toString();
+
+        if (res['code'] == 0) {
+          log.e('Transaction history passed arguement ${transaction.toJson()}');
+          if (transaction != null) {
+            TransactionHistory transactionHistoryByTxId =
+                await transactionHistoryDatabaseService
+                    .getByTxId(transaction.txId);
+
+            TransactionHistory transactionHistory = new TransactionHistory(
+                id: transactionHistoryByTxId.id,
+                tickerName: transactionHistoryByTxId.tickerName,
+                address: '',
+                amount: 0.0,
+                date: date.toString(),
+                txId: transactionHistoryByTxId.txId,
+                status: 'Complete',
+                quantity: transactionHistoryByTxId.quantity,
+                tag: transactionHistoryByTxId.tag);
+
+            await transactionHistoryDatabaseService.update(transactionHistory);
+
+            // after this method i will test single status update field in the transaciton history
+            // await transactionHistoryDatabaseService
+            //     .updateStatus(transactionHistoryByTxId);
+            // await transactionHistoryDatabaseService.getByTxId(transaction.txId);
+          }
+        } else if (res['code'] == -1) {
+          TransactionHistory transactionHistory = new TransactionHistory(
+              id: null,
+              tickerName: transaction.tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: transaction.txId,
+              status: 'Error',
+              quantity: transaction.amount,
+              tag: transaction.tag);
+
+          await transactionHistoryDatabaseService.update(transactionHistory);
+        } else if (res['code'] == 2) {
+          TransactionHistory transactionHistory = new TransactionHistory(
+              id: null,
+              tickerName: transaction.tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: transaction.txId,
+              status: 'Failed',
+              quantity: transaction.amount,
+              tag: transaction.tag);
+
+          await transactionHistoryDatabaseService.update(transactionHistory);
+        } else if (res['code'] == 3) {
+          TransactionHistory transactionHistory = new TransactionHistory(
+              id: null,
+              tickerName: transaction.tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: transaction.txId,
+              status: 'Require redeposit',
+              quantity: transaction.amount,
+              tag: transaction.tag);
+
+          await transactionHistoryDatabaseService.update(transactionHistory);
+        }
       }
     });
     return result;
@@ -309,16 +378,11 @@ class WalletService {
                   Get Exg Address
 ----------------------------------------------------------------------*/
 
-  Future getExgAddress() async {
+  Future<String> getExgAddressFromWalletDatabase() async {
     String address = '';
-    var res = await databaseService.getAll();
-    for (var i = 0; i < res.length; i++) {
-      WalletInfo item = res[i];
-      if (item.tickerName == 'EXG') {
-        address = item.address;
-        break;
-      }
-    }
+    await walletDatabaseService
+        .getBytickerName('EXG')
+        .then((res) => address = res.address);
     return address;
   }
 /*----------------------------------------------------------------------
@@ -391,7 +455,7 @@ class WalletService {
       }
 
       for (int i = 0; i < _walletInfo.length; i++) {
-        await databaseService.insert(_walletInfo[i]);
+        await walletDatabaseService.insert(_walletInfo[i]);
       }
       return _walletInfo;
     } catch (e) {

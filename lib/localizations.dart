@@ -1337,6 +1337,22 @@ class AppLocalizations {
         name: 'marketPriceFetchFailed',
         desc: 'wallet_dashboard_market_price_fetch_failed');
   }
+
+  String get completed {
+    return Intl.message('Completed',
+        name: 'completed', desc: 'transaction_history_completed');
+  }
+
+  String get requireRedeposit {
+    return Intl.message('Require redeposit',
+        name: 'requireRedeposit',
+        desc: 'transaction_history_require_redeposit');
+  }
+
+  String get error {
+    return Intl.message('Error',
+        name: 'error', desc: 'transaction_history_error');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

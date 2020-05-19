@@ -95,7 +95,9 @@ class WalletDashboardScreenState extends BaseState {
 // Calculate Total Usd Balance of Coins
   calcTotalBal() {
     totalUsdBalance = 0;
-    for (var i = 0; i < walletInfo.length; i++) {totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;}
+    for (var i = 0; i < walletInfo.length; i++) {
+      totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
+    }
   }
 
   // Get EXG address from wallet database
@@ -119,7 +121,7 @@ class WalletDashboardScreenState extends BaseState {
 
   // Get Confirm deposit err
   getConfirmDepositStatus() async {
-    String address = await walletService.getExgAddress();
+    String address = await walletService.getExgAddressFromWalletDatabase();
     await walletService.getErrDeposit(address).then((res) async {
       log.w('getConfirmDepositStatus $res');
       if (res != null) {
@@ -379,7 +381,8 @@ class WalletDashboardScreenState extends BaseState {
         await getExchangeAssetsBalance();
         await updateWalletDatabase();
 
-        log.e('Wallet balance endpoint NULL, fetching wallet data using old methods');
+        log.e(
+            'Wallet balance endpoint NULL, fetching wallet data using old methods');
       }
     }).catchError((err) {
       log.e('Wallet balance CATCH $err');

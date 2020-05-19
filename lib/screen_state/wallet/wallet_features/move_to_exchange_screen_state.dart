@@ -147,6 +147,8 @@ class MoveToExchangeScreenState extends BaseState {
               status: 'pending',
               quantity: amount,
               tag: 'deposit');
+
+          walletService.checkDepositTransactionStatus(transactionHistory);
           walletService.insertTransactionInDatabase(transactionHistory);
         }
         sharedService.alertDialog(

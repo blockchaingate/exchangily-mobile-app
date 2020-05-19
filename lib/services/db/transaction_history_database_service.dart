@@ -127,16 +127,35 @@ class TransactionHistoryDatabaseService {
     return null;
   }
 
+  // Get Single Wallet By txId
+  Future<TransactionHistory> getByTxId(String txId) async {
+    final Database db = await _database;
+    List<Map> res =
+        await db.query(tableName, where: 'txId= ?', whereArgs: [txId]);
+    log.w('txId - $txId --- $res');
+    if (res.length > 0) {
+      return TransactionHistory.fromJson((res.first));
+    }
+    return null;
+  }
+
   // Update database
   Future<void> update(TransactionHistory transactionHistory) async {
     final Database db = await _database;
     await db.update(
       tableName,
       transactionHistory.toJson(),
-      where: "id = ?",
-      whereArgs: [transactionHistory.id],
+      where: "txId = ?",
+      whereArgs: [transactionHistory.txId],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  // Update  status
+  Future updateStatus(TransactionHistory transactionHistory) async {
+    final Database db = await _database;
+    await db.rawUpdate(
+        'UPDATE TransactionHistory SET status = ${transactionHistory.status} where txid = ${transactionHistory.txId}');
   }
 
   // Close Database

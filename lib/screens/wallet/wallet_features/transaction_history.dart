@@ -30,9 +30,6 @@ class TransactionHistory extends StatelessWidget {
           child: Container(
               padding: EdgeInsets.all(8.0),
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.start,
-                //  mainAxisSize: MainAxisSize.max,
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   for (var transaction in model.transactionHistory.reversed)
                     model.state == ViewState.Busy
@@ -40,11 +37,10 @@ class TransactionHistory extends StatelessWidget {
                         : Card(
                             elevation: 4,
                             child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 5.0),
                               color: globals.walletCardColor,
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   Container(
                                     width: 50,
@@ -65,6 +61,10 @@ class TransactionHistory extends StatelessWidget {
                                                 size: 24,
                                                 color: globals.sellPrice,
                                               ),
+                                        Text('${transaction.tickerName}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2),
                                         Text(
                                           transaction.tag == 'deposit'
                                               ? AppLocalizations.of(context)
@@ -79,8 +79,9 @@ class TransactionHistory extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  UIHelper.horizontalSpaceSmall,
                                   Container(
-                                    //  width: 230,
+                                    // width: 200,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
@@ -129,21 +130,21 @@ class TransactionHistory extends StatelessWidget {
                                             transaction.date.substring(0, 19),
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline5,
+                                                .headline5
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400),
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
+                                  UIHelper.horizontalSpaceSmall,
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Text('${transaction.tickerName}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2),
                                       Text(
                                           AppLocalizations.of(context).quantity,
                                           style: Theme.of(context)
@@ -153,8 +154,33 @@ class TransactionHistory extends StatelessWidget {
                                         transaction.quantity.toStringAsFixed(2),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5,
-                                      )
+                                            .headline5
+                                            .copyWith(
+                                                fontWeight: FontWeight.w400),
+                                      ),
+                                      UIHelper.verticalSpaceSmall,
+                                      Text(
+                                        '${AppLocalizations.of(context).status}:',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2,
+                                      ),
+                                      transaction.status.toUpperCase() ==
+                                              'COMPLETED'
+                                          ? Text(
+                                              transaction.status.toUpperCase(),
+                                              style: TextStyle(
+                                                  color: globals.buyPrice))
+                                          : transaction.status ==
+                                                  'Require redeposit'
+                                              ? Text(
+                                                  transaction.status
+                                                      .toUpperCase(),
+                                                  style: TextStyle(
+                                                      fontSize: 10,
+                                                      color: globals.yellow))
+                                              : Text(transaction.status
+                                                  .toUpperCase())
                                     ],
                                   ),
                                 ],

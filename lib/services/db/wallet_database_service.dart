@@ -152,12 +152,4 @@ class WalletDataBaseService {
     await deleteDatabase(path);
     _database = null;
   }
-
-  // Storing TxID
-  // Future insertTxId(String txId) async{
-  //   final Database db = await _database;
-  //   int id = await db.insert('transaction', txid,
-  //       conflictAlgorithm: ConflictAlgorithm.replace);
-  //   return id;
-  // }
 }
