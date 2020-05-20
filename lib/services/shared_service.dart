@@ -216,6 +216,7 @@ class SharedService {
   void copyAddress(context, text) {
     Clipboard.setData(new ClipboardData(text: text));
     alertDialog(AppLocalizations.of(context).transactionId,
-        AppLocalizations.of(context).copiedSuccessfully);
+        AppLocalizations.of(context).copiedSuccessfully,
+        isWarning: false);
   }
 }

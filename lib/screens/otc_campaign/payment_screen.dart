@@ -125,7 +125,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           suffix: Column(children: [
                                             Text(AppLocalizations.of(context)
                                                 .tokenQuantity),
-                                            model.busy
+                                            model.busy && model.isTokenCalc
                                                 ? SizedBox(
                                                     width: 10,
                                                     height: 10,
@@ -529,7 +529,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                         ),
                       ),
                       UIHelper.verticalSpaceSmall,
-                      model.busy
+                      model.busy && !model.isTokenCalc
                           ? Shimmer.fromColors(
                               baseColor: globals.primaryColor,
                               highlightColor: globals.white,

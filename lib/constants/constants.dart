@@ -1,3 +1,5 @@
+import 'package:exchangilymobileapp/environments/environment_type.dart';
+
 class Constants {
   static const String BASE_KANBAN_PROD_URL =
       'https://kanbanprod.fabcoinapi.com/';
@@ -13,7 +15,8 @@ class Constants {
   static const COIN_CURRENCY_USD_PRICE_URL =
       'https://kanbanprod.fabcoinapi.com/USDvalues';
   static const String PAIR_DECIMAL_CONFIG_URL =
-      'https://kanbanprod.fabcoinapi.com/kanban/getpairconfig';
+      (isProduction ? BASE_KANBAN_PROD_URL : BASE_KANBAN_TEST_URL) +
+          'kanban/getpairconfig';
   static const REDEPOSIT_STATUS_URL =
       'https://kanbantest.fabcoinapi.com/checkstatus/';
 }

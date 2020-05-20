@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -108,8 +109,22 @@ class MoveToWalletScreenState extends BaseState {
         log.w(ret);
         bool success = ret["success"];
         if (success) {
+          String txId = ret['transactionHash'];
+          log.e('txid $txId');
           amountController.text = '';
-          setMessage(ret['data']['transactionID']);
+          setMessage(txId);
+          String date = DateTime.now().toString();
+          TransactionHistory transactionHistory = new TransactionHistory(
+              id: null,
+              tickerName: coinName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: txId != null ? txId : '',
+              status: 'pending',
+              quantity: amount,
+              tag: 'withdraw');
+          walletService.insertTransactionInDatabase(transactionHistory);
         } else {
           var errMsg = ret['data'];
           if (errMsg == null || errMsg == '') {

@@ -456,7 +456,8 @@ class BuySell extends StatelessWidget {
                                         color: model.bidOrAsk
                                             ? Color(0xFF0da88b)
                                             : Color(0xFFe2103c),
-                                        onPressed: () => {model.placeOrder()},
+                                        onPressed: () =>
+                                            {model.checkPass(context)},
                                         child: Text(
                                             model.bidOrAsk
                                                 ? AppLocalizations.of(context)

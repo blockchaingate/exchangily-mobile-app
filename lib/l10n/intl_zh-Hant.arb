@@ -1378,4 +1378,41 @@
     "description": "do_not_show_these_warnings",
     "type": "text",
     "placeholders": {}
-  }}
+  },
+"withdraw": "轉去錢包",
+  "@withdraw": {
+    "description": "transaction_history_withdraw",
+    "type": "text",
+    "placeholders": {}
+  },
+  "marketPriceFetchFailed": "無法獲取市場當前價格，請稍候再試",
+  "@marketPriceFetchFailed": {
+    "description": "wallet_dashboard_market_price_fetch_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "completed": "完成",
+  "@completed": {
+    "description": "transaction_history_completed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "requireRedeposit": "需要確認向交易所轉幣",
+  "@requireRedeposit": {
+    "description": "transaction_history_require_redeposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error": "錯誤",
+  "@error": {
+    "description": "transaction_history_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pending": "处理中",
+  "@pending": {
+    "description": "transaction_history_pending",
+    "type": "text",
+    "placeholders": {}
+  }
+}

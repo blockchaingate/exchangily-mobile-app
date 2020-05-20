@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-06T19:38:09.295188",
+  "@@last_modified": "2020-05-19T21:32:36.540366",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -222,13 +222,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "moveAndTrade": "Move to Exchange",
+  "moveAndTrade": "Move to exchange",
   "@moveAndTrade": {
     "description": "move_and_trade",
     "type": "text",
     "placeholders": {}
   },
-  "withdrawToWallet": "Move To Wallet",
+  "withdrawToWallet": "Move to wallet",
   "@withdrawToWallet": {
     "description": "withdraw_to_wallet",
     "type": "text",
@@ -324,7 +324,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "taphereToCopyTxId": "Tap here to copy TxId",
+  "taphereToCopyTxId": "Tap here to copy txId",
   "@taphereToCopyTxId": {
     "description": "taphereToCopyTxId",
     "type": "text",
@@ -1533,6 +1533,42 @@
   "doNotShowTheseWarnings": "Do not show these warnings",
   "@doNotShowTheseWarnings": {
     "description": "do_not_show_these_warnings",
+    "type": "text",
+    "placeholders": {}
+  },
+  "withdraw": "Withdraw",
+  "@withdraw": {
+    "description": "transaction_history_withdraw",
+    "type": "text",
+    "placeholders": {}
+  },
+  "marketPriceFetchFailed": "Could not fetch the market price at the moment, please try again later",
+  "@marketPriceFetchFailed": {
+    "description": "wallet_dashboard_market_price_fetch_failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "completed": "Completed",
+  "@completed": {
+    "description": "transaction_history_completed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "requireRedeposit": "Require redeposit",
+  "@requireRedeposit": {
+    "description": "transaction_history_require_redeposit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "error": "Error",
+  "@error": {
+    "description": "transaction_history_error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pending": "Pending",
+  "@pending": {
+    "description": "transaction_history_pending",
     "type": "text",
     "placeholders": {}
   }
