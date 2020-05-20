@@ -52,8 +52,8 @@ getCreateOrderFuncABI(
     int orderType,
     int baseCoin,
     int targetCoin,
-    BigInt qty,
-    BigInt price,
+    String qty,
+    String price,
     int timeBeforeExpiration,
     bool payWithEXG,
     String orderHash) {
@@ -66,9 +66,9 @@ getCreateOrderFuncABI(
   abiHex += fixLength(orderType.toString(), 64);
   abiHex += fixLength(baseCoin.toString(), 64);
   abiHex += fixLength(targetCoin.toString(), 64);
-  var qtyHex = qty.toRadixString(16);
+  var qtyHex = BigInt.parse(qty).toRadixString(16);
   abiHex += fixLength(qtyHex, 64);
-  var priceHex = price.toRadixString(16);
+  var priceHex = BigInt.parse(price).toRadixString(16);
   abiHex += fixLength(priceHex, 64);
   abiHex += fixLength(timeBeforeExpiration.toString(), 64);
   var payWithEXGString = payWithEXG ? '1' : '0';

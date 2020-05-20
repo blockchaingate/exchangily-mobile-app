@@ -321,6 +321,28 @@ class BuySellScreenState extends BaseState {
     return output;
   }
 
+  toBitInt(num) {
+    var numString = num.toString();
+    var numStringArray = numString.split('.');
+    var zeroLength = 18;
+    var val = '';
+    if(numStringArray != null) {
+      val = numStringArray[0];
+      if(numStringArray.length == 2) {
+        zeroLength -= numStringArray[1].length;
+        val += numStringArray[1];
+      }
+    }
+
+    var valInt = int.parse(val);
+    val = valInt.toString();
+    for(var i=0;i<zeroLength;i++) {
+      val += '0';
+    }
+
+    return val;
+  }
+
 // Tx Hex For Place Order
   txHexforPlaceOrder(seed) async {
     setState(ViewState.Busy);
@@ -339,8 +361,11 @@ class BuySellScreenState extends BaseState {
     var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin,
         targetCoin, quantity, price, timeBeforeExpiration);
 
-    var qtyBigInt = BigInt.from(quantity * 1e18);
-    var priceBigInt = BigInt.from(price * 1e18);
+    var qtyBigInt = this.toBitInt(quantity);
+    var priceBigInt = this.toBitInt(price);
+
+    print('qtyBigInt==' + qtyBigInt);
+    print('priceBigInt==' + priceBigInt);
 
     var abiHex = getCreateOrderFuncABI(
         bidOrAsk,
