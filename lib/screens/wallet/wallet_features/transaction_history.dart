@@ -165,22 +165,42 @@ class TransactionHistory extends StatelessWidget {
                                             .textTheme
                                             .subtitle2,
                                       ),
-                                      transaction.status.toUpperCase() ==
-                                              'COMPLETED'
-                                          ? Text(
-                                              transaction.status.toUpperCase(),
-                                              style: TextStyle(
-                                                  color: globals.buyPrice))
-                                          : transaction.status ==
-                                                  'Require redeposit'
-                                              ? Text(
-                                                  transaction.status
-                                                      .toUpperCase(),
-                                                  style: TextStyle(
-                                                      fontSize: 10,
-                                                      color: globals.yellow))
-                                              : Text(transaction.status
-                                                  .toUpperCase())
+                                      if (transaction.status == 'Completed')
+                                        Text(
+                                            AppLocalizations.of(context)
+                                                .completed
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                                color: globals.buyPrice))
+                                      else if (transaction.status ==
+                                          'Require redeposit')
+                                        Text(
+                                            AppLocalizations.of(context)
+                                                .requireRedeposit
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: globals.yellow))
+                                      else if (transaction.status == 'Failed')
+                                        Text(
+                                            AppLocalizations.of(context)
+                                                .failed
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: globals.sellPrice))
+                                      else if (transaction.status == 'Error')
+                                        Text(
+                                            AppLocalizations.of(context)
+                                                .error
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: globals.sellPrice))
+                                      else
+                                        Text(AppLocalizations.of(context)
+                                            .pending
+                                            .toUpperCase())
                                     ],
                                   ),
                                 ],

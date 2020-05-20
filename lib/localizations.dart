@@ -1353,6 +1353,11 @@ class AppLocalizations {
     return Intl.message('Error',
         name: 'error', desc: 'transaction_history_error');
   }
+
+  String get pending {
+    return Intl.message('Pending',
+        name: 'pending', desc: 'transaction_history_pending');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

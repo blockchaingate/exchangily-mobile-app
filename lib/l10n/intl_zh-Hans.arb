@@ -1606,6 +1606,11 @@
     "description": "transaction_history_error",
     "type": "text",
     "placeholders": {}
+  },
+  "pending": "处理中",
+  "@pending": {
+    "description": "transaction_history_pending",
+    "type": "text",
+    "placeholders": {}
   }
-
 }

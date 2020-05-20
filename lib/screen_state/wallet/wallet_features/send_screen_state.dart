@@ -133,13 +133,17 @@ class SendScreenState extends BaseState {
       String tokenType = walletInfo.tokenType.toUpperCase();
       if (tickerName == 'USDT') {
         tokenType = 'ETH';
-        WalletInfo ethWallet =
-            await walletDatabaseService.getBytickerName('ETH');
-        if (ethWallet.availableBalance < 0.05) {
-          sharedService.alertDialog('Send Notice',
-              'To send ETH or USDT you need atleast .05 eth balance available in your wallet.',
-              isWarning: false);
-        }
+
+        // Check if ETH is available for making USDT transaction
+        // Same for Fab token based coins
+
+        // WalletInfo ethWallet =
+        //     await walletDatabaseService.getBytickerName('ETH');
+        // if (ethWallet.availableBalance < 0.05) {
+        //   sharedService.alertDialog('Send Notice',
+        //       'To send ETH or USDT you need atleast .05 eth balance available in your wallet.',
+        //       isWarning: false);
+        // }
       } else if (tickerName == 'EXG') {
         tokenType = 'FAB';
       }
