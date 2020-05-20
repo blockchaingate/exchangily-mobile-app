@@ -279,36 +279,31 @@ class MoveToExchangeScreen extends StatelessWidget {
                               ),
                               Expanded(
                                   flex: 5,
-                                  child: Padding(
-                                      padding: EdgeInsets.fromLTRB(50, 0, 0, 0),
-                                      child: TextField(
-                                        controller:
-                                            model.satoshisPerByteTextController,
-                                        onChanged: (String amount) {
-                                          model.updateTransFee();
-                                        },
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                                decimal:
-                                                    true), // numnber keyboard
-                                        decoration: InputDecoration(
-                                            focusedBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color:
-                                                        globals.primaryColor)),
-                                            enabledBorder: UnderlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: globals.grey)),
-                                            hintText: '0.00000',
-                                            hintStyle: Theme.of(context)
-                                                .textTheme
-                                                .headline5
-                                                .copyWith(
-                                                    fontWeight:
-                                                        FontWeight.w300)),
-                                        style: TextStyle(
-                                            color: globals.grey, fontSize: 16),
-                                      )))
+                                  child: TextField(
+                                    controller:
+                                        model.satoshisPerByteTextController,
+                                    onChanged: (String amount) {
+                                      model.updateTransFee();
+                                    },
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                            decimal: true), // numnber keyboard
+                                    decoration: InputDecoration(
+                                        focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: globals.primaryColor)),
+                                        enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: globals.grey)),
+                                        hintText: '0.00000',
+                                        hintStyle: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(
+                                                fontWeight: FontWeight.w300)),
+                                    style: TextStyle(
+                                        color: globals.grey, fontSize: 16),
+                                  ))
                             ],
                           )),
                       Row(
@@ -401,7 +396,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(model.message),
+                          Text(model.message != null ? model.message : ''),
                           UIHelper.verticalSpaceSmall,
                           RichText(
                             text: TextSpan(

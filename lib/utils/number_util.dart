@@ -7,24 +7,30 @@ class NumberUtil {
   static const int DEFAULT_DECIMAL_DIGITS = 2;
   int maxDecimalDigits;
 
- double truncateDouble(double val, int places){ 
-   double mod = pow(10.0, places); 
-   return ((val * mod).round().toDouble() / mod); 
-}
+  double truncateDouble(double val, int places) {
+    double mod = pow(10.0, places);
+    return ((val * mod).round().toDouble() / mod);
+  }
+
+  double parsedDouble(String value) {
+    double res = 0.0;
+    if (value != null) res = double.parse(value);
+    return res;
+  }
 }
 
 class DecimalTextInputFormatter extends TextInputFormatter {
-
   DecimalTextInputFormatter({int decimalRange, bool activatedNegativeValues})
-  : assert(decimalRange == null || decimalRange >= 0,
-    'DecimalTextInputFormatter declaretion error') {
-    String dp = (decimalRange != null && decimalRange > 0) ? "([.][0-9]{0,$decimalRange}){0,1}" : "";
+      : assert(decimalRange == null || decimalRange >= 0,
+            'DecimalTextInputFormatter declaretion error') {
+    String dp = (decimalRange != null && decimalRange > 0)
+        ? "([.][0-9]{0,$decimalRange}){0,1}"
+        : "";
     String num = "[0-9]*$dp";
 
-    if(activatedNegativeValues) {
+    if (activatedNegativeValues) {
       _exp = new RegExp("^((((-){0,1})|((-){0,1}[0-9]$num))){0,1}\$");
-    }
-    else {
+    } else {
       _exp = new RegExp("^($num){0,1}\$");
     }
   }
@@ -36,7 +42,7 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    if(_exp.hasMatch(newValue.text)){
+    if (_exp.hasMatch(newValue.text)) {
       return newValue;
     }
     return oldValue;

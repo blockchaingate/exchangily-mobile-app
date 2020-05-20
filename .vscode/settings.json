@@ -3,5 +3,6 @@
         "serializable"
     ],
     "java.configuration.updateBuildConfiguration": "automatic",
-    "editor.minimap.showSlider": "always"
+    "editor.minimap.showSlider": "always",
+    "editor.codeLens": false
 }

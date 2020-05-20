@@ -199,12 +199,12 @@ class AppLocalizations {
   }
 
   String get moveAndTrade {
-    return Intl.message('Move to Exchange',
+    return Intl.message('Move to exchange',
         name: 'moveAndTrade', desc: 'move_and_trade');
   }
 
   String get withdrawToWallet {
-    return Intl.message('Move To Wallet',
+    return Intl.message('Move to wallet',
         name: 'withdrawToWallet', desc: 'withdraw_to_wallet');
   }
 
@@ -290,7 +290,7 @@ class AppLocalizations {
   }
 
   String get taphereToCopyTxId {
-    return Intl.message('Tap here to copy TxId',
+    return Intl.message('Tap here to copy txId',
         name: 'taphereToCopyTxId', desc: 'taphereToCopyTxId');
   }
 
@@ -1324,6 +1324,39 @@ class AppLocalizations {
   String get doNotShowTheseWarnings {
     return Intl.message('Do not show these warnings',
         name: 'doNotShowTheseWarnings', desc: 'do_not_show_these_warnings');
+  }
+
+  String get withdraw {
+    return Intl.message('Withdraw',
+        name: 'withdraw', desc: 'transaction_history_withdraw');
+  }
+
+  String get marketPriceFetchFailed {
+    return Intl.message(
+        'Could not fetch the market price at the moment, please try again later',
+        name: 'marketPriceFetchFailed',
+        desc: 'wallet_dashboard_market_price_fetch_failed');
+  }
+
+  String get completed {
+    return Intl.message('Completed',
+        name: 'completed', desc: 'transaction_history_completed');
+  }
+
+  String get requireRedeposit {
+    return Intl.message('Require redeposit',
+        name: 'requireRedeposit',
+        desc: 'transaction_history_require_redeposit');
+  }
+
+  String get error {
+    return Intl.message('Error',
+        name: 'error', desc: 'transaction_history_error');
+  }
+
+  String get pending {
+    return Intl.message('Pending',
+        name: 'pending', desc: 'transaction_history_pending');
   }
 }
 

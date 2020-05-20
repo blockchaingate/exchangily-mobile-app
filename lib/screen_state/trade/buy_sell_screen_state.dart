@@ -206,9 +206,13 @@ class BuySellScreenState extends BaseState {
       for (var i = 0; i < walletInfo.length; i++) {
         coin = walletInfo[i];
         if (coin.tickerName == targetCoinName.toUpperCase()) {
+          log.e(
+              'Coin from wallet info ${coin.tickerName} ---  Target coin name $targetCoinName');
           targetCoinWalletData = coin;
         }
         if (coin.tickerName == baseCoinName.toUpperCase()) {
+          log.e(
+              'Coin from wallet info ${coin.tickerName} ---  Target coin name $baseCoinName');
           baseCoinWalletData = coin;
         }
         if (coin.tickerName == 'EXG') {
@@ -225,7 +229,6 @@ class BuySellScreenState extends BaseState {
   // Refresh Balances and Orders
 
   refresh(String address) {
-    log.e(address);
     setState(ViewState.Busy);
     if (address == null) {
       setState(ViewState.Idle);
@@ -328,6 +331,14 @@ class BuySellScreenState extends BaseState {
     var orderType = 1;
     var baseCoin = walletService.getCoinTypeIdByName(baseCoinName);
     var targetCoin = walletService.getCoinTypeIdByName(targetCoinName);
+
+
+    if (!bidOrAsk) {
+      var tmp = baseCoin;
+      baseCoin = targetCoin;
+      targetCoin = tmp;
+    }
+
     var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin,
         targetCoin, quantity, price, timeBeforeExpiration);
 
@@ -440,14 +451,6 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // Place Orders
-
-  placeOrder() {
-    setState(ViewState.Busy);
-    checkPass(context);
-    setState(ViewState.Idle);
-  }
-
   // Check Pass
   checkPass(context) async {
     setState(ViewState.Busy);
@@ -465,7 +468,8 @@ class BuySellScreenState extends BaseState {
       if (resKanban != null && resKanban['transactionHash'] != null) {
         sharedService.alertDialog(
             AppLocalizations.of(context).placeOrderTransactionSuccessful,
-            'txid:' + resKanban['transactionHash']);
+            'txid:' + resKanban['transactionHash'],
+            isWarning: false);
         // walletService.showInfoFlushbar(
         //     AppLocalizations.of(context).placeOrderTransactionSuccessful,
         //     'txid:' + resKanban['transactionHash'],

@@ -13,7 +13,7 @@
 
 import 'dart:async';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/transaction_info.dart';
+import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -28,8 +28,12 @@ class TransactionHistoryDatabaseService {
   final String columnAddress = 'address';
   final String columnAmount = 'amount';
   final String columnDate = 'date';
+  final String columnTxId = 'txId';
+  final String columnStatus = 'status';
+  final String columnQuantity = 'quantity';
+  final String columnTag = 'tag';
 
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 3;
   static Future<Database> _database;
   String path = '';
 
@@ -51,27 +55,30 @@ class TransactionHistoryDatabaseService {
         $columnTickerName TEXT,    
         $columnAddress TEXT,
         $columnAmount REAL,
-        $columnDate TEXT) ''');
+        $columnDate TEXT,
+        $columnTxId TEXT,
+        $columnStatus TEXT,
+        $columnQuantity REAL,
+        $columnTag TEXT) ''');
   }
 
   // Get All Records From The Database
 
-  Future<List<TransactionInfo>> getAll() async {
+  Future<List<TransactionHistory>> getAll() async {
     await initDb();
     final Database db = await _database;
-    log.w('getall $db');
-
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
-    log.w('res $res');
-    List<TransactionInfo> list = res.isNotEmpty
-        ? res.map((f) => TransactionInfo.fromJson(f)).toList()
+    log.w('get all res $res');
+    List<TransactionHistory> list = res.isNotEmpty
+        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
         : [];
     return list;
   }
 
 // Insert Data In The Database
-  Future insert(TransactionInfo transactionHistory) async {
+  Future insert(TransactionHistory transactionHistory) async {
+    // await deleteDb();
     await initDb();
     final Database db = await _database;
     int id = await db.insert(tableName, transactionHistory.toJson(),
@@ -79,16 +86,31 @@ class TransactionHistoryDatabaseService {
     return id;
   }
 
+  // Get Single Wallet By Tag
+  Future<List<TransactionHistory>> getByTagName(String tag) async {
+    await initDb();
+    final Database db = await _database;
+    List<Map> res =
+        await db.query(tableName, where: 'tag= ?', whereArgs: [tag]);
+    log.w('tagName - $tag --- $res');
+
+    List<TransactionHistory> list = res.isNotEmpty
+        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
+        : [];
+    return list;
+    // return TransactionHistory.fromJson((res.first));
+  }
+
   // Get Single Wallet By Name
-  Future<List<TransactionInfo>> getByName(String name) async {
+  Future<List<TransactionHistory>> getByName(String name) async {
     await initDb();
     final Database db = await _database;
     List<Map> res =
         await db.query(tableName, where: 'tickerName= ?', whereArgs: [name]);
     log.w('Name - $name --- $res');
 
-    List<TransactionInfo> list = res.isNotEmpty
-        ? res.map((f) => TransactionInfo.fromJson(f)).toList()
+    List<TransactionHistory> list = res.isNotEmpty
+        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
         : [];
     return list;
     // return TransactionHistory.fromJson((res.first));
@@ -100,27 +122,40 @@ class TransactionHistoryDatabaseService {
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.length > 0) {
-      return TransactionInfo.fromJson((res.first));
+      return TransactionHistory.fromJson((res.first));
     }
     return null;
   }
 
-  // Delete Single Object From Database By Id
-  Future<void> deleteWallet(int id) async {
-    final db = await _database;
-    await db.delete(tableName, where: "id = ?", whereArgs: [id]);
+  // Get Single Wallet By txId
+  Future<TransactionHistory> getByTxId(String txId) async {
+    final Database db = await _database;
+    List<Map> res =
+        await db.query(tableName, where: 'txId= ?', whereArgs: [txId]);
+    log.w('txId - $txId --- $res');
+    if (res.length > 0) {
+      return TransactionHistory.fromJson((res.first));
+    }
+    return null;
   }
 
   // Update database
-  Future<void> update(TransactionInfo transactionHistory) async {
+  Future<void> update(TransactionHistory transactionHistory) async {
     final Database db = await _database;
     await db.update(
       tableName,
       transactionHistory.toJson(),
-      where: "id = ?",
-      whereArgs: [transactionHistory.id],
+      where: "txId = ?",
+      whereArgs: [transactionHistory.txId],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  // Update  status
+  Future updateStatus(TransactionHistory transactionHistory) async {
+    final Database db = await _database;
+    await db.rawUpdate(
+        'UPDATE TransactionHistory SET status = ${transactionHistory.status} where txid = ${transactionHistory.txId}');
   }
 
   // Close Database
@@ -135,12 +170,4 @@ class TransactionHistoryDatabaseService {
     await deleteDatabase(path);
     _database = null;
   }
-
-  // Storing TxID
-  // Future insertTxId(String txId) async{
-  //   final Database db = await _database;
-  //   int id = await db.insert('transaction', txid,
-  //       conflictAlgorithm: ConflictAlgorithm.replace);
-  //   return id;
-  // }
 }

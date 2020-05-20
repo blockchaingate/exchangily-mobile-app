@@ -93,7 +93,7 @@ bigNum2Double(bigNum) {
   var dec =
       Decimal.parse(bigNum.toString()) / Decimal.parse('1000000000000000000');
   if (dec.toDouble() > 999999) {
-    return double.parse(dec.toDouble().toStringAsFixed(2));
+    return double.parse(dec.toDouble().toStringAsFixed(8));
   }
   var str = dec.toString();
   var s = str;

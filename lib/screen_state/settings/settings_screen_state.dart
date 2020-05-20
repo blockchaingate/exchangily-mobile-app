@@ -32,7 +32,8 @@ class SettingsScreenState extends BaseState {
   final log = getLogger('SettingsState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
-  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+  WalletDataBaseService walletDatabaseService =
+      locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
   List<String> languages = ['English', 'Chinese'];
   String selectedLanguage;
@@ -43,6 +44,7 @@ class SettingsScreenState extends BaseState {
   String versionName = '';
   String versionCode = '';
   bool isDialogDisplay = false;
+  ScrollController scrollController;
 
   init() {
     setBusy(true);
@@ -74,7 +76,7 @@ class SettingsScreenState extends BaseState {
       if (res.confirmed) {
         log.w('deleting wallet');
         await walletService.deleteEncryptedData();
-        await databaseService.deleteDb();
+        await walletDatabaseService.deleteDb();
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('lang');
         prefs.clear();

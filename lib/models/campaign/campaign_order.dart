@@ -54,7 +54,7 @@ class CampaignOrder {
     data['walletAdd'] = this._walletAdd;
     //  data['status'] = this._status;
     data['txId'] = this._txId;
-    data['amount'] = this._quantity;
+    data['quantity'] = this._quantity;
     data['paymentType'] = this._paymentType;
     // data['note'] = this._note;
     // data['officialNote'] = this._officialNote;
@@ -73,7 +73,7 @@ class CampaignOrder {
         walletAdd: json['walletAdd'],
         //   status: json['status'],
         txId: json['txId'],
-        quantity: json['amount'],
+        quantity: json['quantity'],
         paymentType: json['paymentType'],
         // note: json['note'],
         // officialNote: json['officialNote'],

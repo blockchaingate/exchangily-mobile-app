@@ -51,37 +51,6 @@ class CreatePasswordScreenState extends BaseState {
       _walletInfo = data;
       Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
       randomMnemonicFromRoute = '';
-      setState(ViewState.Idle);
-    }).catchError((onError) {
-      errorMessage = AppLocalizations.of(context).somethingWentWrong;
-      log.e(onError);
-      setState(ViewState.Idle);
-    });
-    setState(ViewState.Idle);
-  }
-
-/* ---------------------------------------------------
-                    Get All Coins Future
-    -------------------------------------------------- */
-  Future getAllCoins() async {
-    log.w(randomMnemonicFromRoute);
-    setState(ViewState.Busy);
-    _walletInfo = await _walletService
-        .getWalletCoins(randomMnemonicFromRoute)
-        .then((data) {
-      if (data == null || data == []) {
-        errorMessage = AppLocalizations.of(context).serverError;
-        setState(ViewState.Idle);
-      } else {
-        _walletInfo = data;
-        Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
-        randomMnemonicFromRoute = '';
-      }
-      //  return _walletInfo;
-    }).timeout(Duration(seconds: 25), onTimeout: () {
-      log.e('Timeout');
-      errorMessage =
-          AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
     }).catchError((onError) {
       errorMessage = AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);
