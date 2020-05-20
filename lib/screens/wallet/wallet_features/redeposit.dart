@@ -165,15 +165,13 @@ class _RedepositState extends State<Redeposit> {
       var resRedeposit = await this.submitredeposit(amountInLink, keyPairKanban,
           nonce, coinType, transactionID, signedMess);
 
-      log.w('resRedeposit=');
-      log.w(resRedeposit);
+
       if ((resRedeposit != null) &&
-          (resRedeposit['transactionHash'] != null) &&
-          (resRedeposit['transactionHash'] != '')) {
+          (resRedeposit['success'])) {
         sharedService.showInfoFlushbar(
             '${AppLocalizations.of(context).redepositCompleted}',
             '${AppLocalizations.of(context).transactionId}' +
-                resRedeposit['transactionHash'],
+                resRedeposit['data']['transactionID'],
             Icons.cancel,
             globals.white,
             context);
@@ -212,7 +210,7 @@ class _RedepositState extends State<Redeposit> {
         kanbanPrice,
         kanbanGasLimit);
 
-    var res = await sendKanbanRawTransaction(txKanbanHex);
+    var res = await submitReDeposit(txKanbanHex);
     return res;
   }
 

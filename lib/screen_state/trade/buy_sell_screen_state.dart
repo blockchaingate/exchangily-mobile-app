@@ -328,6 +328,14 @@ class BuySellScreenState extends BaseState {
     var orderType = 1;
     var baseCoin = walletService.getCoinTypeIdByName(baseCoinName);
     var targetCoin = walletService.getCoinTypeIdByName(targetCoinName);
+
+
+    if (!bidOrAsk) {
+      var tmp = baseCoin;
+      baseCoin = targetCoin;
+      targetCoin = tmp;
+    }
+
     var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin,
         targetCoin, quantity, price, timeBeforeExpiration);
 
