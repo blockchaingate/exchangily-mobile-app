@@ -289,7 +289,7 @@ class MoveToWalletScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(model.message),
+                                Text(model.message != null ? model.message: ''),
                                 UIHelper.verticalSpaceSmall,
                                 RichText(
                                   text: TextSpan(

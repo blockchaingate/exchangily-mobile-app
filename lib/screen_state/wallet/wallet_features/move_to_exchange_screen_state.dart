@@ -4,6 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -133,13 +134,22 @@ class MoveToExchangeScreenState extends BaseState {
         bool success = ret["success"];
         if (success) {
           myController.text = '';
-          setMessage(ret['data']['transactionID']);
-        } else {
-          var errMsg = ret['data'];
-          if (errMsg == null || errMsg == '') {
-            errMsg = AppLocalizations.of(context).serverError;
-            setErrorMessage(errMsg);
-          }
+          String txId = ret['data']['transactionID'];
+          setMessage(txId);
+          String date = DateTime.now().toString();
+          TransactionHistory transactionHistory = new TransactionHistory(
+              id: null,
+              tickerName: coinName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: txId,
+              status: 'pending',
+              quantity: amount,
+              tag: 'deposit');
+
+          walletService.checkDepositTransactionStatus(transactionHistory);
+          walletService.insertTransactionInDatabase(transactionHistory);
         }
         sharedService.alertDialog(
             success
@@ -149,6 +159,10 @@ class MoveToExchangeScreenState extends BaseState {
             isWarning: false);
       }).catchError((onError) {
         log.e('Deposit Catch $onError');
+        sharedService.alertDialog(
+            AppLocalizations.of(context).depositTransactionFailed,
+            AppLocalizations.of(context).serverError,
+            isWarning: false);
       });
     } else {
       if (res.returnedText != 'Closed') {

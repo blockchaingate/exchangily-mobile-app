@@ -17,10 +17,11 @@ import 'dart:typed_data';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/transaction_info.dart';
+import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -36,11 +37,14 @@ import '../../../shared/globals.dart' as globals;
 
 class SendScreenState extends BaseState {
   final log = getLogger('SendScreenState');
+
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
+  WalletDataBaseService walletDatabaseService =
+      locator<WalletDataBaseService>();
   BuildContext context;
   var options = {};
   String txHash = '';
@@ -53,7 +57,6 @@ class SendScreenState extends BaseState {
   int satoshisPerBytes = 0;
   WalletInfo walletInfo;
   bool checkSendAmount = false;
-  Timer timer;
 
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final receiverWalletAddressTextController = TextEditingController();
@@ -88,7 +91,7 @@ class SendScreenState extends BaseState {
       gasLimitTextController.text =
           environment["chains"]["FAB"]["gasLimit"].toString();
     }
-    getGasBalance();
+    //  getGasBalance();
     setState(ViewState.Idle);
   }
 
@@ -130,6 +133,17 @@ class SendScreenState extends BaseState {
       String tokenType = walletInfo.tokenType.toUpperCase();
       if (tickerName == 'USDT') {
         tokenType = 'ETH';
+
+        // Check if ETH is available for making USDT transaction
+        // Same for Fab token based coins
+
+        // WalletInfo ethWallet =
+        //     await walletDatabaseService.getBytickerName('ETH');
+        // if (ethWallet.availableBalance < 0.05) {
+        //   sharedService.alertDialog('Send Notice',
+        //       'To send ETH or USDT you need atleast .05 eth balance available in your wallet.',
+        //       isWarning: false);
+        // }
       } else if (tickerName == 'EXG') {
         tokenType = 'FAB';
       }
@@ -176,32 +190,20 @@ class SendScreenState extends BaseState {
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
               isWarning: false);
           String date = DateTime.now().toString();
-          //Build transaction history object
-          log.e('Date $date');
-          TransactionInfo transactionHistory = new TransactionInfo(
-              tickerName: tickerName.toString(),
-              address: toAddress.toString(),
-              amount: amount,
-              date: date.toString());
-          //  Add transaction history object in database
-          log.w('Transaction History ${transactionHistory.toJson()}');
-          await transactionHistoryDatabaseService
-              .insert(transactionHistory)
-              .then((data) => log.w('Saved in transaction history database'))
-              .catchError(
-                  (onError) => log.e('Could not save in database $onError'));
-          // timer = Timer.periodic(Duration(seconds: 55), (Timer t) {
-          //   checkTxStatus(tickerName, txHash);
-          // });
+          TransactionHistory transactionHistory = new TransactionHistory(
+              id: null,
+              tickerName: tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: txHash,
+              status: 'pending',
+              quantity: amount,
+              tag: 'send');
+          walletService.insertTransactionInDatabase(transactionHistory);
+          //  walletService.checkTransactionStatus(transactionHistory);
           setState(ViewState.Idle);
-        }
-        // else if (errorMessage.isNotEmpty) {
-        //   log.e('Error Message: $errorMessage');
-        //   sharedService.alertResponse(AppLocalizations.of(context).genericError,
-        //       '$tickerName ${AppLocalizations.of(context).transanctionFailed}');
-        //   setState(ViewState.Idle);
-        // }
-        else if (txHash == '' && errorMessage == '') {
+        } else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
           sharedService.alertDialog(AppLocalizations.of(context).genericError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
@@ -235,6 +237,7 @@ class SendScreenState extends BaseState {
   // Check transaction status not working yet
 
   checkTxStatus(String tickerName, String txHash) async {
+    Timer timer;
     if (tickerName == 'FAB') {
       await walletService.getFabTxStatus(txHash).then((res) {
         if (res != null) {
@@ -305,18 +308,6 @@ class SendScreenState extends BaseState {
     checkSendAmount = res;
     log.w('check send amount $checkSendAmount');
     setState(ViewState.Idle);
-  }
-
-// Pending update balance after send transaction
-  updateBalance(String address) async {
-    var bal = await walletService.getFabBalance(address);
-    log.w(bal['balance']);
-    // if (bal != null) {
-    //   updatedBal = bal;
-    //   log.w('in if Updated Bal ${updatedBal}');
-    // }
-    // updatedBal = 0;
-    // log.w('Not in if Updated Bal ${updatedBal}');
   }
 
 // Copy Address

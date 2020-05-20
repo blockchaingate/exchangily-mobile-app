@@ -1,9 +1,12 @@
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/models/price.dart';
+import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
@@ -46,12 +49,17 @@ import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
+import 'db/transaction_history_database_service.dart';
+
 class WalletService {
   final log = getLogger('Wallet Service');
   ApiService _api = locator<ApiService>();
   double currentUsdValue;
-  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
-
+  WalletDataBaseService walletDatabaseService =
+      locator<WalletDataBaseService>();
+  SharedService sharedService = locator<SharedService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+      locator<TransactionHistoryDatabaseService>();
   ApiService _apiService = locator<ApiService>();
   double coinUsdBalance;
   List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG', 'DUSD'];
@@ -66,6 +74,8 @@ class WalletService {
     'exchangily',
     'dusd'
   ];
+
+  Completer<AlertResponse> _completer;
 /*----------------------------------------------------------------------
                 Get Random Mnemonic
 ----------------------------------------------------------------------*/
@@ -159,7 +169,7 @@ class WalletService {
 
   Future coinBalanceByAddress(
       String name, String address, String tokenType) async {
-    log.w('$name $address $tokenType');
+    log.w(' coinBalanceByAddress $name $address $tokenType');
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
     // log.w('coinBalanceByAddress $name - $bal');
@@ -197,27 +207,25 @@ class WalletService {
                 Get Current Market Price For The Coin By Name
 ----------------------------------------------------------------------*/
 
-  Future<double> getCoinMarketPrice(String name) async {
+  Future<double> getCoinMarketPriceByTickerName(String tickerName) async {
     currentUsdValue = 0;
-
-    if (name == 'exchangily') {
-      await _apiService.getCoinCurrencyUsdPrice().then((res) {
-        if (res != null) {
-          currentUsdValue = res['data']['EXG']['USD'];
-          log.w('currentusdval $currentUsdValue');
-        }
-      });
-      return currentUsdValue;
-    } else if (name == 'dusd') {
+    if (tickerName == 'DUSD') {
       return currentUsdValue = 1.0;
-    } else {
-      var usdVal = await _api.getCoinsUsdValue();
-      double tempPriceHolder = usdVal[name]['usd'];
-      if (tempPriceHolder != null) {
-        currentUsdValue = tempPriceHolder;
-      }
     }
+    await _apiService.getCoinCurrencyUsdPrice().then((res) {
+      if (res != null) {
+        currentUsdValue = res['data'][tickerName]['USD'].toDouble();
+      }
+    });
     return currentUsdValue;
+    // } else {
+    //   var usdVal = await _api.getCoinsUsdValue();
+    //   double tempPriceHolder = usdVal[name]['usd'];
+    //   if (tempPriceHolder != null) {
+    //     currentUsdValue = tempPriceHolder;
+    //   }
+    // }
+    //  return currentUsdValue;
   }
 
 /*----------------------------------------------------------------------
@@ -243,7 +251,7 @@ class WalletService {
         String addr =
             await getAddressForCoin(root, tickerName, tokenType: token);
         WalletInfo wi = new WalletInfo(
-            id: id,
+            id: null,
             tickerName: tickerName,
             tokenType: token,
             address: addr,
@@ -252,8 +260,10 @@ class WalletService {
             usdValue: 0.0,
             name: name);
         _walletInfo.add(wi);
-        await databaseService.insert(_walletInfo[i]);
+        log.e("Offline wallet ${_walletInfo[i].toJson()}");
+        await walletDatabaseService.insert(_walletInfo[i]);
       }
+      await walletDatabaseService.getAll();
       return _walletInfo;
     } catch (e) {
       log.e(e);
@@ -264,23 +274,119 @@ class WalletService {
   }
 
 /*----------------------------------------------------------------------
+                Transaction status
+----------------------------------------------------------------------*/
+  Future<String> checkDepositTransactionStatus(
+      TransactionHistory transaction) async {
+    String result = '';
+    Timer.periodic(Duration(minutes: 1), (Timer t) async {
+      var res = await _apiService.getTransactionStatus(transaction.txId);
+      log.w(res);
+// 0 is confirmed
+// 1 is pending
+// 2 is failed (tx 1 failed),
+// 3 is need to redeposit (tx 2 failed)
+// -1 is error
+      if (res['code'] == -1 ||
+          res['code'] == 0 ||
+          res['code'] == 2 ||
+          res['code'] == 3) {
+        t.cancel();
+        result = res['message'];
+        log.i('Timer cancel');
+        sharedService.alertDialog('${transaction.tickerName} status', '$result',
+            isWarning: false);
+        String date = DateTime.now().toString();
+
+        if (res['code'] == 0) {
+          log.e('Transaction history passed arguement ${transaction.toJson()}');
+          if (transaction != null) {
+            TransactionHistory transactionHistoryByTxId =
+                await transactionHistoryDatabaseService
+                    .getByTxId(transaction.txId);
+
+            TransactionHistory transactionHistory = new TransactionHistory(
+                id: transactionHistoryByTxId.id,
+                tickerName: transactionHistoryByTxId.tickerName,
+                address: '',
+                amount: 0.0,
+                date: date.toString(),
+                txId: transactionHistoryByTxId.txId,
+                status: 'Complete',
+                quantity: transactionHistoryByTxId.quantity,
+                tag: transactionHistoryByTxId.tag);
+
+            await transactionHistoryDatabaseService.update(transactionHistory);
+
+            // after this method i will test single status update field in the transaciton history
+            // await transactionHistoryDatabaseService
+            //     .updateStatus(transactionHistoryByTxId);
+            // await transactionHistoryDatabaseService.getByTxId(transaction.txId);
+          }
+        } else if (res['code'] == -1) {
+          TransactionHistory transactionHistory = new TransactionHistory(
+              id: null,
+              tickerName: transaction.tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: transaction.txId,
+              status: 'Error',
+              quantity: transaction.amount,
+              tag: transaction.tag);
+
+          await transactionHistoryDatabaseService.update(transactionHistory);
+        } else if (res['code'] == 2) {
+          TransactionHistory transactionHistory = new TransactionHistory(
+              id: null,
+              tickerName: transaction.tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: transaction.txId,
+              status: 'Failed',
+              quantity: transaction.amount,
+              tag: transaction.tag);
+
+          await transactionHistoryDatabaseService.update(transactionHistory);
+        } else if (res['code'] == 3) {
+          TransactionHistory transactionHistory = new TransactionHistory(
+              id: null,
+              tickerName: transaction.tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: transaction.txId,
+              status: 'Require redeposit',
+              quantity: transaction.amount,
+              tag: transaction.tag);
+
+          await transactionHistoryDatabaseService.update(transactionHistory);
+        }
+      }
+    });
+    return result;
+    //  return _completer.future;
+  }
+
+  // Completer the _dialogCompleter to resume the Future's execution
+  void transactionComplete(AlertResponse response) {
+    _completer.complete(response);
+    _completer = null;
+  }
+/*----------------------------------------------------------------------
                   Get Exg Address
 ----------------------------------------------------------------------*/
 
-  Future getExgAddress() async {
+  Future<String> getExgAddressFromWalletDatabase() async {
     String address = '';
-    var res = await databaseService.getAll();
-    for (var i = 0; i < res.length; i++) {
-      WalletInfo item = res[i];
-      if (item.tickerName == 'EXG') {
-        address = item.address;
-        break;
-      }
-    }
+    await walletDatabaseService
+        .getBytickerName('EXG')
+        .then((res) => address = res.address);
     return address;
   }
 /*----------------------------------------------------------------------
-                  Get Wallet Coins
+                  Get Wallet Coins (Not in use)
 ----------------------------------------------------------------------*/
 
   Future<List<WalletInfo>> getWalletCoins(String mnemonic) async {
@@ -300,19 +406,16 @@ class WalletService {
         String tickerName = coinTickers[i];
         String name = coinNames[i];
         String token = tokenType[i];
-        var marketValue = await getCoinMarketPrice(name);
-        coinUsdMarketPrice.add(marketValue);
+        var coinMarketPrice = await getCoinMarketPriceByTickerName(name);
+        coinUsdMarketPrice.add(coinMarketPrice);
         String addr =
             await getAddressForCoin(root, tickerName, tokenType: token);
         var bal =
             await getCoinBalanceByAddress(tickerName, addr, tokenType: token);
-        log.e('bal $bal');
+        log.w('bal in wallet service $bal');
         double walletBal = bal['balance'];
-        double walletLockedBal = bal['lockbalance'];
-        log.w(
-            'tickername $tickerName - address: $addr - balance: $walletBal - Locked balance: $walletLockedBal');
-        calculateCoinUsdBalance(
-            coinUsdMarketPrice[i], walletBal, walletLockedBal);
+        // double walletLockedBal = bal['lockbalance'];
+
         if (tickerName == 'EXG') {
           exgAddress = addr;
           log.e(exgAddress);
@@ -322,7 +425,7 @@ class WalletService {
             tokenType: token,
             address: addr,
             availableBalance: walletBal,
-            lockedBalance: walletLockedBal,
+            lockedBalance: 0.0,
             usdValue: coinUsdBalance,
             name: name);
         _walletInfo.add(wi);
@@ -336,16 +439,23 @@ class WalletService {
         // Second For Loop To check WalletInfo TickerName According to its length and
         // compare it with the same coin tickername from asset balance result until the match or loop ends
         for (var j = 0; j < _walletInfo.length; j++) {
-          if (coin == _walletInfo[j].tickerName) {
+          String tickerName = _walletInfo[j].tickerName;
+          if (coin == tickerName) {
             _walletInfo[j].inExchange = res[i]['amount'];
-            _walletInfo[j].lockedBalance = res[i]['lockedAmount'];
+            // _walletInfo[j].lockedBalance = res[i]['lockedAmount'];
+            // double marketPrice =
+            //     await getCoinMarketPriceByTickerName(tickerName);
+            // log.e(
+            //     'wallet service -- tickername $tickerName - market price $marketPrice - balance: ${_walletInfo[j].availableBalance} - Locked balance: ${_walletInfo[j].lockedBalance}');
+            // calculateCoinUsdBalance(marketPrice,
+            //     _walletInfo[j].availableBalance, _walletInfo[j].lockedBalance);
             break;
           }
         }
       }
 
       for (int i = 0; i < _walletInfo.length; i++) {
-        await databaseService.insert(_walletInfo[i]);
+        await walletDatabaseService.insert(_walletInfo[i]);
       }
       return _walletInfo;
     } catch (e) {
@@ -356,12 +466,17 @@ class WalletService {
     }
   }
 
-/*----------------------------------------------------------------------
-                   Get Pair decimal Config
-----------------------------------------------------------------------*/
+  // Insert transaction history in database
 
-  Future<PairDecimalConfig> getPairDecimalConfig() async {
-    await _api.getPairDecimalConfig();
+  void insertTransactionInDatabase(
+      TransactionHistory transactionHistory) async {
+    log.w('Transaction History ${transactionHistory.toJson()}');
+    await transactionHistoryDatabaseService
+        .insert(transactionHistory)
+        .then((data) async {
+      log.w('Saved in transaction history database $data');
+      await transactionHistoryDatabaseService.getAll();
+    }).catchError((onError) => log.e('Could not save in database $onError'));
   }
 
 /*----------------------------------------------------------------------
@@ -408,7 +523,7 @@ class WalletService {
         };
         bal.add(finalBal);
       }
-      log.e(bal);
+      log.e('assetsBalance exchange after conversion $bal');
     }).catchError((onError) {
       log.e('On error assetsBalance $onError');
       bal = [];
@@ -443,12 +558,12 @@ class WalletService {
       double marketPrice, double actualWalletBalance, double lockedBalance) {
     log.w(
         'marketPrice =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
-    if (actualWalletBalance != 0 && marketPrice != null) {
+    if (marketPrice != null) {
       coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
       return coinUsdBalance;
     } else {
       coinUsdBalance = 0.0;
-      //  log.i('calculateCoinUsdBalance - Wallet balance 0');
+      log.i('calculateCoinUsdBalance - Wallet balance 0');
     }
     return coinUsdBalance;
   }
@@ -465,6 +580,7 @@ class WalletService {
     var coins =
         coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
     if (coins != null) {
+      log.w('getCoinTypeIdByName $coins');
       return coins[0]['id'];
     }
     return 0;

@@ -159,7 +159,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                                         fontWeight:
                                                             FontWeight.w400)),
                                             UIHelper.verticalSpaceSmall,
-                                            model.state == ViewState.Busy
+                                            model.busy
                                                 ? Shimmer.fromColors(
                                                     baseColor:
                                                         globals.primaryColor,
@@ -189,7 +189,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                           onTap: () async {
                                             await model.refreshBalance();
                                           },
-                                          child: model.state == ViewState.Busy
+                                          child: model.busy
                                               ? SizedBox(
                                                   child: Theme.of(context)
                                                               .platform ==
@@ -288,7 +288,7 @@ class WalletDashboardScreen extends StatelessWidget {
               // Gas Container
               Container(
                   margin: EdgeInsets.only(left: 8.0),
-                  child: model.state == ViewState.Busy
+                  child: model.busy
                       ? Shimmer.fromColors(
                           baseColor: globals.primaryColor,
                           highlightColor: globals.grey,
@@ -314,11 +314,12 @@ class WalletDashboardScreen extends StatelessWidget {
                           ))
                       : Gas(gasAmount: model.gasAmount)),
               UIHelper.verticalSpaceSmall,
+
 /*------------------------------------------------------------------------------
                             Build Wallet List Container
 -------------------------------------------------------------------------------*/
               Expanded(
-                  child: model.state == ViewState.Busy
+                  child: model.busy
                       ? Container(
                           margin: EdgeInsets.symmetric(horizontal: 8.0),
                           child: ListView.builder(
@@ -326,7 +327,8 @@ class WalletDashboardScreen extends StatelessWidget {
                             itemCount: model.walletInfoCopy.length,
                             itemBuilder: (BuildContext context, int index) {
                               return _coinDetailsCard(
-                                  '${model.walletInfoCopy[index].tickerName.toLowerCase()}',
+                                  model.walletInfoCopy[index].tickerName
+                                      .toLowerCase(),
                                   model.walletInfoCopy[index].availableBalance,
                                   model.walletInfoCopy[index].lockedBalance,
                                   model.walletInfoCopy[index].inExchange,
@@ -417,7 +419,7 @@ class WalletDashboardScreen extends StatelessWidget {
       walletInfo,
       elevation,
       context,
-      model) {
+      WalletDashboardScreenState model) {
     return Card(
       color: globals.walletCardColor,
       elevation: elevation,
@@ -469,18 +471,21 @@ class WalletDashboardScreen extends StatelessWidget {
                           child: Text(AppLocalizations.of(context).available,
                               style: Theme.of(context).textTheme.bodyText1),
                         ),
-                        model.state == ViewState.Busy
+                        model.busy
                             ? SizedBox(
                                 child: Shimmer.fromColors(
                                 baseColor: globals.red,
                                 highlightColor: globals.white,
                                 child: Text(
-                                  '$available',
+                                  available.toStringAsFixed(2),
                                   style: Theme.of(context).textTheme.bodyText1,
                                 ),
                               ))
                             : Expanded(
-                                child: Text('$available',
+                                child: Text(
+                                    available == 0
+                                        ? '0.0'
+                                        : available.toStringAsFixed(4),
                                     style:
                                         Theme.of(context).textTheme.bodyText2),
                               ),
@@ -503,7 +508,8 @@ class WalletDashboardScreen extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.bodyText2),
                               ))
-                            : Text('$locked',
+                            : Text(
+                                locked == 0 ? '0.0' : locked.toStringAsFixed(4),
                                 style: Theme.of(context).textTheme.bodyText2)
                       ],
                     ),
@@ -528,7 +534,10 @@ class WalletDashboardScreen extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                 ),
                               ))
-                            : Text('$assetsInExchange',
+                            : Text(
+                                assetsInExchange == 0
+                                    ? '0.0'
+                                    : assetsInExchange.toStringAsFixed(4),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: globals.primaryColor)),
                       ],

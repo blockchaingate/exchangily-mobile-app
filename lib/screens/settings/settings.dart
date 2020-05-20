@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +43,6 @@ class SettingsScreen extends StatelessWidget {
         body: Container(
           padding: EdgeInsets.all(10),
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 InkWell(
@@ -51,15 +50,27 @@ class SettingsScreen extends StatelessWidget {
                   child: Card(
                     elevation: 4,
                     child: Container(
+                      alignment: Alignment.center,
                       color: globals.walletCardColor,
                       padding: EdgeInsets.all(20),
                       // height: 100,
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context).deleteWallet,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 3.0),
+                            child: Icon(
+                              Icons.delete,
+                              color: globals.sellPrice,
+                              size: 18,
+                            ),
+                          ),
+                          Text(
+                            AppLocalizations.of(context).deleteWallet,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline5,
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -74,15 +85,27 @@ class SettingsScreen extends StatelessWidget {
                     child: Container(
                       color: globals.walletCardColor,
                       padding: EdgeInsets.all(20),
-                      child: Center(
-                        child: Text(
-                          !model.isVisible
-                              ? AppLocalizations.of(context).displayMnemonic
-                              : AppLocalizations.of(context).hideMnemonic,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                      ),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 3.0),
+                              child: Icon(
+                                !model.isVisible
+                                    ? Icons.enhanced_encryption
+                                    : Icons.remove_red_eye,
+                                color: globals.primaryColor,
+                                size: 18,
+                              ),
+                            ),
+                            Text(
+                              !model.isVisible
+                                  ? AppLocalizations.of(context).displayMnemonic
+                                  : AppLocalizations.of(context).hideMnemonic,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                          ]),
                     ),
                   ),
                   onTap: () {
@@ -108,8 +131,8 @@ class SettingsScreen extends StatelessWidget {
                     child: Center(
                       child: Theme.of(context).platform == TargetPlatform.iOS
                           ? CupertinoPicker(
-                            diameterRatio: 1.3,
-                           offAxisFraction: 5,
+                              diameterRatio: 1.3,
+                              offAxisFraction: 5,
                               scrollController: model.scrollController,
                               itemExtent: 50,
                               onSelectedItemChanged: (int value) {
@@ -123,8 +146,12 @@ class SettingsScreen extends StatelessWidget {
                               },
                               children: List<Widget>.generate(
                                   model.languages.length, (int index) {
-                                return  Center(
-                                  child:  Text(model.languages[index],style: Theme.of(context).textTheme.headline5,),
+                                return Center(
+                                  child: Text(
+                                    model.languages[index],
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
                                 );
                               }))
                           : DropdownButtonHideUnderline(
