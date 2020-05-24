@@ -13,8 +13,8 @@
 
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/constants.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
-import 'package:exchangilymobileapp/models/wallet_balance.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
@@ -99,14 +99,15 @@ class ApiService {
     }
   }
 
-  // Get Coin Usd Price
-  Future getCoinsUsdValue() async {
-    final res = await http.get(usdCoinPriceUrl);
-    if (res.statusCode == 200 || res.statusCode == 201) {
-      return jsonDecode(res.body);
-    }
-    return log.e('getCoinsUsdValue Failed to load the data from the API');
-  }
+  // Get Coin Usd Price ( OLD way to get the market price)
+
+  // Future getCoinsUsdValue() async {
+  //   final res = await http.get(usdCoinPriceUrl);
+  //   if (res.statusCode == 200 || res.statusCode == 201) {
+  //     return jsonDecode(res.body);
+  //   }
+  //   return log.e('getCoinsUsdValue Failed to load the data from the API');
+  // }
 
   // Get Gas Balance
   Future getGasBalance(String exgAddress) async {

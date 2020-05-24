@@ -42,7 +42,7 @@ class _BaseScreenState<T extends BaseState> extends State<BaseScreen<T>> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<T>(
-        builder: (context) => model,
+        create: (context) => model,
         child: Consumer<T>(builder: widget.builder));
   }
 }

@@ -1,8 +1,9 @@
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
-import 'package:exchangilymobileapp/models/price.dart';
-import 'package:exchangilymobileapp/models/transaction_history.dart';
+import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -32,7 +33,6 @@ import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
-import '../models/wallet.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:bitcoin_flutter/src/models/networks.dart';
@@ -185,7 +185,8 @@ class WalletService {
 
   getCoinPriceByWebSocket(String pair) {
     currentUsdValue = 0;
-    final channel = IOWebSocketChannel.connect(Constants.COIN_PRICE_WS_URL,
+    final channel = IOWebSocketChannel.connect(
+        Constants.COIN_PRICE_DETAILS_WS_URL,
         pingInterval: Duration(minutes: 1));
 
     channel.stream.listen((prices) async {

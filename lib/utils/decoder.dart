@@ -12,11 +12,11 @@
 */
 
 import 'dart:convert';
-import 'package:exchangilymobileapp/models/order-model.dart';
-import 'package:exchangilymobileapp/models/trade-model.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/orders.dart';
+import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 
-import '../models/price.dart';
-import '../models/orders.dart';
 import '../utils/string_util.dart';
 
 class Decoder {
@@ -33,7 +33,15 @@ class Decoder {
     double change = (close - open) / open * 100;
     double changeValue = 0.0;
     Price s = new Price(
-        symbol, price, high, low, open, close, volume, change, changeValue);
+        symbol: symbol,
+        price: price,
+        high: high,
+        low: low,
+        open: open,
+        close: close,
+        volume: volume,
+        change: change,
+        changeValue: changeValue);
     return s;
   }
 

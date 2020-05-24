@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -18,11 +19,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
-import '../../../models/wallet.dart';
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/services.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:flutter/gestures.dart';
 
 class MoveToWalletScreen extends StatelessWidget {
@@ -289,7 +288,8 @@ class MoveToWalletScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(model.message != null ? model.message: ''),
+                                Text(
+                                    model.message != null ? model.message : ''),
                                 UIHelper.verticalSpaceSmall,
                                 RichText(
                                   text: TextSpan(

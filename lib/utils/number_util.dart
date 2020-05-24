@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:decimal/decimal.dart';
 import 'package:flutter/services.dart';
 
 class NumberUtil {
@@ -12,9 +10,11 @@ class NumberUtil {
     return ((val * mod).round().toDouble() / mod);
   }
 
-  double parsedDouble(String value) {
+// Parse double
+  double parsedDouble(value) {
     double res = 0.0;
-    if (value != null) res = double.parse(value);
+
+    if (value != null) res = double.parse(value.toString());
     return res;
   }
 }

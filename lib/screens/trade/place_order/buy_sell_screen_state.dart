@@ -19,10 +19,10 @@ import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/order-model.dart';
-import 'package:exchangilymobileapp/models/orders.dart';
-import 'package:exchangilymobileapp/models/trade-model.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/orders.dart';
+import 'package:exchangilymobileapp/models/trade/trade-model.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -329,9 +329,9 @@ class BuySellScreenState extends BaseState {
     var numStringArray = numString.split('.');
     var zeroLength = 18;
     var val = '';
-    if(numStringArray != null) {
+    if (numStringArray != null) {
       val = numStringArray[0];
-      if(numStringArray.length == 2) {
+      if (numStringArray.length == 2) {
         zeroLength -= numStringArray[1].length;
         val += numStringArray[1];
       }
@@ -339,7 +339,7 @@ class BuySellScreenState extends BaseState {
 
     var valInt = int.parse(val);
     val = valInt.toString();
-    for(var i=0;i<zeroLength;i++) {
+    for (var i = 0; i < zeroLength; i++) {
       val += '0';
     }
 
@@ -353,7 +353,6 @@ class BuySellScreenState extends BaseState {
     var orderType = 1;
     var baseCoin = walletService.getCoinTypeIdByName(baseCoinName);
     var targetCoin = walletService.getCoinTypeIdByName(targetCoinName);
-
 
     if (!bidOrAsk) {
       var tmp = baseCoin;
@@ -588,7 +587,7 @@ class BuySellScreenState extends BaseState {
 
 // Show Notification
   showNotification(context) {
-    walletService.showInfoFlushbar(
+    sharedService.showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,
         AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
         Icons.cancel,

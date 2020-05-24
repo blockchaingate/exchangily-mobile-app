@@ -14,7 +14,7 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -429,9 +429,10 @@ class WalletDashboardScreen extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 10),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              UIHelper.horizontalSpaceSmall,
               // Card logo container
               Container(
                   padding: EdgeInsets.all(8),
@@ -449,6 +450,7 @@ class WalletDashboardScreen extends StatelessWidget {
                       Image.asset('assets/images/wallet-page/$tickerName.png'),
                   width: 35,
                   height: 35),
+              UIHelper.horizontalSpaceSmall,
               // Tickername available locked and inexchange column
               Container(
                 width: 180,
@@ -505,9 +507,14 @@ class WalletDashboardScreen extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.bodyText2),
                               ))
-                            : Text(
-                                locked == 0 ? '0.0' : locked.toStringAsFixed(4),
-                                style: Theme.of(context).textTheme.bodyText2)
+                            : Expanded(
+                                child: Text(
+                                    locked == 0
+                                        ? '0.0'
+                                        : locked.toStringAsFixed(4),
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2),
+                              )
                       ],
                     ),
                     // Inexchange Row
@@ -531,12 +538,14 @@ class WalletDashboardScreen extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                 ),
                               ))
-                            : Text(
-                                assetsInExchange == 0
-                                    ? '0.0'
-                                    : assetsInExchange.toStringAsFixed(4),
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: globals.primaryColor)),
+                            : Expanded(
+                                child: Text(
+                                    assetsInExchange == 0
+                                        ? '0.0'
+                                        : assetsInExchange.toStringAsFixed(4),
+                                    style:
+                                        TextStyle(color: globals.primaryColor)),
+                              ),
                       ],
                     ),
                   ],
@@ -545,64 +554,83 @@ class WalletDashboardScreen extends StatelessWidget {
 
               // Value USD and deposit - withdraw Container column
               Container(
+                width: MediaQuery.of(context).size.shortestSide - 280,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text('USD ${AppLocalizations.of(context).value}',
-                              style: Theme.of(context).textTheme.headline5),
-
-                          model.state == ViewState.Busy
-                              ? Shimmer.fromColors(
-                                  baseColor: globals.green,
-                                  highlightColor: globals.white,
-                                  child: Text(
-                                    '${usdValue.toStringAsFixed(2)}',
-                                    style: TextStyle(color: globals.green),
-                                  ),
-                                )
-                              : Text('${usdValue.toStringAsFixed(2)}',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(color: globals.green)),
-
-                          // Deposit and Withdraw Container Row
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              InkWell(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0, right: 5.0),
-                                    child: Icon(Icons.arrow_downward,
-                                        color: globals.green, size: 20),
-                                  ),
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/deposit',
-                                        arguments: model.walletInfo[index]);
-                                  }),
-                              InkWell(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0, left: 5.0),
-                                    child: Icon(
-                                      Icons.arrow_upward,
-                                      color: globals.red,
-                                      size: 20,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/withdraw',
-                                        arguments: model.walletInfo[index]);
-                                  }),
+                    model.state == ViewState.Busy
+                        ? Shimmer.fromColors(
+                            baseColor: globals.green,
+                            highlightColor: globals.white,
+                            child: Text(
+                              '${usdValue.toStringAsFixed(2)}',
+                              style: TextStyle(color: globals.green),
+                            ),
+                          )
+                        : Row(
+                            children: [
+                              Icon(
+                                Icons.attach_money,
+                                size: 14,
+                                color: globals.white54,
+                              ),
+                              Expanded(
+                                child: Text(
+                                    '${usdValue.toStringAsFixed(2)} USD',
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(color: globals.green)),
+                              ),
                             ],
                           ),
-                        ],
-                      ),
+
+                    // Deposit and Withdraw Container Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        InkWell(
+                            child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 8.0, right: 5.0, left: 2.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context).deposit,
+                                      style:
+                                          Theme.of(context).textTheme.subtitle2,
+                                    ),
+                                    Icon(Icons.arrow_downward,
+                                        color: globals.green, size: 16),
+                                  ],
+                                )),
+                            onTap: () {
+                              Navigator.pushNamed(context, '/deposit',
+                                  arguments: model.walletInfo[index]);
+                            }),
+                        Divider(
+                          endIndent: 5,
+                        ),
+                        InkWell(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context).withdraw,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                  ),
+                                  Icon(
+                                    Icons.arrow_upward,
+                                    color: globals.red,
+                                    size: 16,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              Navigator.pushNamed(context, '/withdraw',
+                                  arguments: model.walletInfo[index]);
+                            }),
+                      ],
                     ),
                   ],
                 ),

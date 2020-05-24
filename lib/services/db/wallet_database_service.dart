@@ -14,7 +14,7 @@
 import 'dart:async';
 
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 

@@ -11,23 +11,53 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import '../utils/string_util.dart' as stringUtils;
 
 class TradeService {
+  final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
-  Future<int> getAllPrices() async {
-    final response =
-        await http.get('https://jsonplaceholder.typicode.com/posts/1');
-    return 1;
+
+  Stream<int> epochUpdatesNumbers() async* {
+    while (true) {
+      await Future.delayed(const Duration(microseconds: 500));
+      int t = DateTime.now().second;
+      print('t $t');
+      yield t;
+    }
+  }
+
+/*----------------------------------------------------------------------
+          Get Coin Price Details Using allPrices Web Sockets
+----------------------------------------------------------------------*/
+
+  Stream<dynamic> getAllCoinPriceByWebSocket() {
+    try {
+      final channel =
+          IOWebSocketChannel.connect(Constants.COIN_PRICE_DETAILS_WS_URL);
+      Stream stream = channel.stream;
+
+      return stream;
+    } catch (err) {
+      throw Exception(
+          '$err'); // Error thrown here will go to onError in them view model
+    }
   }
 
   getAllPriceChannel() {
-    return IOWebSocketChannel.connect(environment['websocket'] + 'allprices');
+    final channel =
+        IOWebSocketChannel.connect(environment['websocket'] + 'allprices');
+
+    return channel;
   }
 
   getOrderListChannel(String pair) {
@@ -46,21 +76,12 @@ class TradeService {
     return IOWebSocketChannel.connect(wsString);
   }
 
-  getCoinMarketPrice(String name) async {
+  Future<double> getCoinMarketPrice(String name) async {
     double currentUsdValue;
-    var usdVal = await _api.getCoinsUsdValue();
-    if (name == 'exchangily') {
-      return currentUsdValue = 0.2;
-    }
+    var data = await _api.getCoinCurrencyUsdPrice();
 
-    if (name == 'btc') {
-      name = 'bitcoin';
-    } else if (name == 'fab') {
-      name = 'fabcoin';
-    } else if (name == 'eth') {
-      name = 'ethereum';
-    }
-    currentUsdValue = usdVal[name]['usd'];
+    currentUsdValue = data['data'][name.toUpperCase()]['USD'];
+    print('Current market price $currentUsdValue');
     return currentUsdValue;
   }
 

@@ -1,10 +1,10 @@
+import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import "package:flutter/material.dart";
 import "widgets/overview.dart";
 import "widgets/detail.dart";
 import '../../utils/decoder.dart';
 import 'package:web_socket_channel/io.dart';
-import '../../models/price.dart';
 import '../../services/trade_service.dart';
 import '../../utils/string_util.dart';
 

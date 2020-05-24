@@ -12,20 +12,19 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../shared/globals.dart' as globals;
-import '../../../models/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'dart:typed_data';
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
 import 'package:flutter/gestures.dart';
 import '../../../utils/kanban.util.dart';
 import '../../../utils/keypair_util.dart';
@@ -165,9 +164,7 @@ class _RedepositState extends State<Redeposit> {
       var resRedeposit = await this.submitredeposit(amountInLink, keyPairKanban,
           nonce, coinType, transactionID, signedMess);
 
-
-      if ((resRedeposit != null) &&
-          (resRedeposit['success'])) {
+      if ((resRedeposit != null) && (resRedeposit['success'])) {
         sharedService.showInfoFlushbar(
             '${AppLocalizations.of(context).redepositCompleted}',
             '${AppLocalizations.of(context).transactionId}' +

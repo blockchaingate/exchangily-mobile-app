@@ -1,9 +1,9 @@
 import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import "package:flutter/material.dart";
 import "overview-block.dart";
-import '../../../models/price.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MarketOverview extends StatefulWidget {

@@ -32,7 +32,8 @@ Future getEthTransactionStatus(String txid) async {
   var url = ethBaseUrl + 'getconfirmationcount/' + txid;
   var client = new http.Client();
   var response = await client.get(url);
-  return response;
+  print(response.body);
+  return response.body;
 }
 
 getEthNode(root, {index = 0}) {

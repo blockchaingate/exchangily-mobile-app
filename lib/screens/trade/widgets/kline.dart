@@ -12,9 +12,9 @@
 */
 
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/models/trade/kline_data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../models/kline_data_model.dart';
 import '../../../packages/bloc/klineBloc.dart';
 import '../../../packages/klinePage.dart';
 import 'dart:async';

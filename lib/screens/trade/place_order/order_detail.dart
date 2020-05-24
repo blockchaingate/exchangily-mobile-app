@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/models/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import "package:flutter/material.dart";
 
 class OrderDetail extends StatelessWidget {

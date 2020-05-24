@@ -12,8 +12,10 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/trade-model.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/trade/orders.dart';
+import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/models/trade/trade-model.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -27,8 +29,6 @@ import 'package:web_socket_channel/io.dart';
 import '../../services/trade_service.dart';
 // import "widgets/kline.dart";
 import '../../utils/decoder.dart';
-import '../../models/price.dart';
-import '../../models/orders.dart';
 import 'widgets/trading_view.dart';
 import '../../utils/string_util.dart';
 import '../../shared/globals.dart' as globals;
@@ -55,7 +55,7 @@ class _TradeState extends State<Trade> with TradeService {
       new GlobalKey<TradePriceState>();
   final GlobalKey<TrademarketState> _tradeMarketState =
       new GlobalKey<TrademarketState>();
-      var pair;
+  var pair;
 
   List<PairDecimalConfig> pairDecimalConfigList = [];
   ApiService apiService = locator<ApiService>();
@@ -88,7 +88,7 @@ class _TradeState extends State<Trade> with TradeService {
   void initState() {
     super.initState();
     getDecimalPairConfig();
-     pair = widget.pair.replaceAll(RegExp('/'), '');
+    pair = widget.pair.replaceAll(RegExp('/'), '');
     allTradesChannel = getTradeListChannel(pair);
     allTradesChannel.stream.listen((trades) {
       // print('Trade Channel $trades');
@@ -118,7 +118,7 @@ class _TradeState extends State<Trade> with TradeService {
       var item;
       for (var i = 0; i < list.length; i++) {
         item = list[i];
-        
+
         if (item.symbol == pair) {
           break;
         }
@@ -129,10 +129,10 @@ class _TradeState extends State<Trade> with TradeService {
         item.close = bigNum2Double(item.close);
         item.volume = bigNum2Double(item.volume);
         item.price = bigNum2Double(item.price);
-       
+
         item.price = item.price;
         item.high = bigNum2Double(item.high);
-     
+
         item.low = bigNum2Double(item.low);
 
         item.change = 0.0;
@@ -140,18 +140,16 @@ class _TradeState extends State<Trade> with TradeService {
           item.change = (item.changeValue / item.open * 100 * 10).round() / 10;
         }
 
-        var usdPrice = 0.2;
+        var usdPrice = 0.0;
         if (pair.endsWith("USDT")) {
-          usdPrice = await getCoinMarketPrice('tether');
-          print('1111 $usdPrice');
+          usdPrice = await getCoinMarketPrice('USDT');
           usdPrice = NumberUtil().truncateDouble(usdPrice, 2);
-          print('2222 $usdPrice');
         } else if (pair.endsWith("BTC")) {
-          usdPrice = await getCoinMarketPrice('btc');
+          usdPrice = await getCoinMarketPrice('BTC');
         } else if (pair.endsWith("ETH")) {
-          usdPrice = await getCoinMarketPrice('eth');
+          usdPrice = await getCoinMarketPrice('ETH');
         } else if (pair.endsWith("EXG")) {
-          usdPrice = await getCoinMarketPrice('exchangily');
+          usdPrice = await getCoinMarketPrice('EXG');
         }
 
         if (this._tradePriceState != null &&
