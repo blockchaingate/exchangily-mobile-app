@@ -45,7 +45,7 @@ class WalletDashboardScreen extends StatelessWidget {
           await model.init();
         } else {
           log.w('Retrieving wallets from local storage');
-          await model.retrieveWallets();
+          await model.retrieveWalletsFromLocalDatabase();
           await model.init();
         }
         await model.getGas();
@@ -568,11 +568,8 @@ class WalletDashboardScreen extends StatelessWidget {
                           )
                         : Row(
                             children: [
-                              Icon(
-                                Icons.attach_money,
-                                size: 14,
-                                color: globals.white54,
-                              ),
+                              Text('\$',
+                                  style: TextStyle(color: globals.green)),
                               Expanded(
                                 child: Text(
                                     '${usdValue.toStringAsFixed(2)} USD',

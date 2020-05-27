@@ -173,7 +173,7 @@ class WalletService {
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
     // log.w('coinBalanceByAddress $name - $bal');
-    if (bal['balance'].isNaN) {
+    if (bal['balance'].isNaN || bal['balance'] == null) {
       return 0.0;
     }
     return bal;

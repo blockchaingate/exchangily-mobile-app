@@ -440,7 +440,7 @@ Future getCoinBalanceByAddress(String coinName, String address,
       return await getFabTokenBalanceByAddress(address, coinName);
     }
   } catch (e) {
-    log.e(e);
+    log.e('getCoinBalanceByAddress $e');
   }
 
   return {'balance': -1.0, 'lockbalance': -1.0};

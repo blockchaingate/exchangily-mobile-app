@@ -63,19 +63,19 @@ class ApiService {
   Future<List<WalletBalance>> getWalletBalance(body) async {
     String url = kanbanBaseUrl + walletBalances;
     log.i(url);
-
+    WalletBalanceList balanceList;
     try {
       var response = await client.post(url, body: body);
       bool success = jsonDecode(response.body)['success'];
       if (success == true) {
         print(success);
-      }
-      var jsonList = jsonDecode(response.body)['data'];
-      log.w(' getWalletBalance $jsonList');
-      if (jsonList == null) {
+        var jsonList = jsonDecode(response.body)['data'];
+        log.w(' getWalletBalance $jsonList');
+        balanceList = WalletBalanceList.fromJson(jsonList);
+      } else {
+        log.e('get wallet balances returning null');
         return null;
       }
-      WalletBalanceList balanceList = WalletBalanceList.fromJson(jsonList);
       return balanceList.balanceList;
     } catch (err) {
       log.e('In getWalletBalance catch $err');

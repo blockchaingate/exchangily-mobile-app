@@ -12,7 +12,9 @@
 */
 
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/pairs/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -22,75 +24,83 @@ class MarketsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MarketsViewModal>.reactive(
-        builder: (context, model, _) => Container(
-            padding: EdgeInsets.all(10),
-            color: Colors.black,
-            child: model.isError
-                ? Container(
-                    alignment: Alignment.center,
-                    color: Colors.red,
-                    child: Text(model.errorMessage))
-                : Container(
-                    color: Colors.purple,
-                    child: Center(
-                      child: !model.dataReady
-                          ? CircularProgressIndicator(
-                              backgroundColor: Colors.purple.withAlpha(75),
-                            )
-                          : ListView.builder(
-                              itemCount: model.coinPriceDetails.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      UIHelper.horizontalSpaceSmall,
-                                      Expanded(
+        builder: (context, model, _) => Scaffold(
+              // padding: EdgeInsets.all(10),
+              // color: Colors.black,
+              body: model.isError
+                  ? Container(
+                      alignment: Alignment.center,
+                      color: Colors.red,
+                      child: Text(model.errorMessage))
+                  : !model.dataReady
+                      ? Center(
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.purple.withAlpha(75),
+                          ),
+                        )
+                      : Container(
+                          margin: EdgeInsets.only(top: 5.0),
+                          color: Theme.of(context).accentColor,
+                          child: Column(
+                            children: [
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                      flex: 1,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
                                         child: Text(
-                                          model.coinPriceDetails[index].symbol
-                                              .toString(),
+                                          'Ticker',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline4,
+                                              .subtitle2,
                                         ),
-                                      ),
-                                      UIHelper.horizontalSpaceSmall,
-                                      Expanded(
-                                        child: Text(
-                                          model.coinPriceDetails[index].price
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5,
-                                        ),
-                                      ),
-                                      UIHelper.horizontalSpaceSmall,
-                                      Expanded(
-                                        child: Text(
-                                          model.coinPriceDetails[index].high
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4,
-                                        ),
-                                      ),
-                                      UIHelper.horizontalSpaceSmall,
-                                      Expanded(
-                                        child: Text(
-                                          model.coinPriceDetails[index].low
-                                              .toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4,
-                                        ),
-                                      ),
-                                      UIHelper.horizontalSpaceSmall,
-                                    ]);
-                              },
-                            ),
-                    ),
-                  )),
+                                      )),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text('Volume',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2,
+                                        textAlign: TextAlign.end),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text('High',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2,
+                                        textAlign: TextAlign.end),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text('Low',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2,
+                                        textAlign: TextAlign.end),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Text('Change',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2,
+                                        textAlign: TextAlign.end),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                height: 200,
+                                child: MarketPairsTabView(
+                                    marketPairsTabBar: model.marketPairsTabBar),
+                              )
+                            ],
+                          ),
+                        ),
+              bottomNavigationBar: BottomNavBar(count: 1),
+            ),
         viewModelBuilder: () => MarketsViewModal());
   }
 }

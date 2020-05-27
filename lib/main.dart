@@ -74,6 +74,11 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: RouteGenerator.generateRoute,
       title: 'Exchangily Wallet',
       theme: ThemeData(
+        primaryColor: globals.primaryColor,
+        accentColor: globals.secondaryColor,
+        backgroundColor: globals.secondaryColor,
+        cardColor: globals.walletCardColor,
+        canvasColor: globals.secondaryColor,
         buttonTheme: ButtonThemeData(
             minWidth: double.infinity,
             buttonColor: globals.primaryColor,
@@ -81,8 +86,6 @@ class MyApp extends StatelessWidget {
             shape: StadiumBorder(),
             textTheme: ButtonTextTheme.primary),
         fontFamily: 'Roboto',
-        canvasColor: globals.secondaryColor,
-        primaryColor: globals.primaryColor,
         textTheme: TextTheme(
           button: TextStyle(fontSize: 14, color: globals.white),
           headline1: TextStyle(
