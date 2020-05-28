@@ -24,13 +24,42 @@ class MarketsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MarketsViewModal>.reactive(
+        onModelReady: (model) {
+          model.context = context;
+        },
         builder: (context, model, _) => Scaffold(
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: !model.dataReady
+                  ? Container()
+                  : Container(
+                      //  margin: EdgeInsets.only(left: 30),
+
+                      height: 70,
+                      child: Row(
+                        children: [
+                          for (var pair in model.btcFabExgUsdtPriceList)
+                            Expanded(
+                              child: Card(
+                                margin: EdgeInsets.all(1),
+                                elevation: 3,
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(pair.symbol.toString()),
+                                      Text(pair.price.toStringAsFixed(2))
+                                    ]),
+                              ),
+                            )
+                        ],
+                      ),
+                    ),
+
               // padding: EdgeInsets.all(10),
               // color: Colors.black,
               body: model.isError
                   ? Container(
                       alignment: Alignment.center,
-                      color: Colors.red,
                       child: Text(model.errorMessage))
                   : !model.dataReady
                       ? Center(
@@ -41,62 +70,10 @@ class MarketsView extends StatelessWidget {
                       : Container(
                           margin: EdgeInsets.only(top: 5.0),
                           color: Theme.of(context).accentColor,
-                          child: Column(
-                            children: [
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                      flex: 1,
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 5.0),
-                                        child: Text(
-                                          'Ticker',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2,
-                                        ),
-                                      )),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text('Volume',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2,
-                                        textAlign: TextAlign.end),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text('High',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2,
-                                        textAlign: TextAlign.end),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text('Low',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2,
-                                        textAlign: TextAlign.end),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Text('Change',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2,
-                                        textAlign: TextAlign.end),
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                height: 200,
-                                child: MarketPairsTabView(
-                                    marketPairsTabBar: model.marketPairsTabBar),
-                              )
-                            ],
+                          child: Container(
+                            // height: 200,
+                            child: MarketPairsTabView(
+                                marketPairsTabBar: model.marketPairsTabBar),
                           ),
                         ),
               bottomNavigationBar: BottomNavBar(count: 1),

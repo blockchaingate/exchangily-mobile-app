@@ -14,9 +14,11 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:flutter/material.dart';
@@ -28,14 +30,9 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
   String errorMessage = '';
   List<Price> pairPriceDetails = [];
   List<List<Price>> marketPairsTabBar = [];
-  //= new List<Map<String, List<Price>>>();
-  TabController tabController;
-  AnimationController animationController;
-
-  // Animation _colorBackground
-
-  int _currentIndex = 0;
-  int _prevTabControllerIndex = 0;
+  List<Price> btcFabExgUsdtPriceList = [];
+  SharedService sharedService = locator<SharedService>();
+  BuildContext context;
 
   @override
   Stream<dynamic> get stream =>
@@ -45,23 +42,29 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
   void onData(data) {
     List<List<Price>> marketPairsGroupList = [];
     List<Price> usdtPairsList = [];
+    btcFabExgUsdtPriceList = [];
     List<Price> dusdPairsList = [];
     List<Price> btcPairsList = [];
     List<Price> ethPairsList = [];
     List<Price> exgPairsList = [];
     for (var pair in pairPriceDetails) {
       if (pair.symbol.endsWith("USDT")) {
+        if (pair.symbol == 'BTCUSDT' ||
+            pair.symbol == 'FABUSDT' ||
+            pair.symbol == 'EXGUSDT') btcFabExgUsdtPriceList.add(pair);
+        pair.symbol = pair.symbol.replaceAll('USDT', '/USDT');
         usdtPairsList.add(pair);
-        log.w('MarketsViewModal ${marketPairsTabBar.length}');
       } else if (pair.symbol.endsWith("DUSD")) {
+        pair.symbol = pair.symbol.replaceAll('DUSD', '/DUSD');
         dusdPairsList.add(pair);
-        log.w('MarketsViewModal ${marketPairsTabBar.length}');
       } else if (pair.symbol.endsWith("BTC")) {
+        pair.symbol = pair.symbol.replaceAll('BTC', '/BTC');
         btcPairsList.add(pair);
-        log.w('MarketsViewModal ${marketPairsTabBar.length}');
       } else if (pair.symbol.endsWith("ETH")) {
+        pair.symbol = pair.symbol.replaceAll('ETH', '/ETH');
         ethPairsList.add(pair);
       } else if (pair.symbol.endsWith("EXG")) {
+        pair.symbol = pair.symbol.replaceAll('EXG', '/EXG');
         exgPairsList.add(pair);
       }
     }
@@ -71,7 +74,6 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
     marketPairsGroupList.add(ethPairsList);
     marketPairsGroupList.add(exgPairsList);
     marketPairsTabBar = marketPairsGroupList;
-    log.w('MarketsViewModal ${marketPairsTabBar.length}');
   }
 
   @override
@@ -106,6 +108,10 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
   @override
   void onError(error) {
     log.e('In onError $error');
+    sharedService.alertDialog(AppLocalizations.of(context).serverError,
+        AppLocalizations.of(context).marketPriceFetchFailed,
+        path: '/dashboard', isWarning: false);
+    setBusy(false);
   }
 
   @override

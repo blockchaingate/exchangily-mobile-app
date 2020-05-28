@@ -215,6 +215,7 @@ class WalletService {
     }
     await _apiService.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
+        log.i('getCoinMarketPriceByTickerName $res');
         currentUsdValue = res['data'][tickerName]['USD'].toDouble();
       }
     });

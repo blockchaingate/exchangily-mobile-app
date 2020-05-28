@@ -42,8 +42,9 @@ class Price {
     this._open = open ?? 0.0;
     this._close = close ?? 0.0;
     this._volume = volume ?? 0.0;
-    this._change = change ?? 0.0;
-    // (close - open) / open * 100 ?? 0.0;
+    this._change =
+        //change ?? 0.0;
+        (close - open) / open * 100 ?? 0.0;
     this._changeValue = changeValue ?? 0.0;
   }
 

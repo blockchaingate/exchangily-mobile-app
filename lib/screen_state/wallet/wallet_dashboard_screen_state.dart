@@ -215,6 +215,7 @@ class WalletDashboardScreenState extends BaseState {
     });
 
     log.e('Coin address $walletBalancesBody');
+
     // ----------------------------------------
     // Calling walletBalances in wallet service
     // ----------------------------------------
@@ -227,32 +228,28 @@ class WalletDashboardScreenState extends BaseState {
         // log.e(
         //     'copy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
         for (var i = 0; i < coinTickersLength; i++) {
-          log.w('i $i');
           // Loop wallet balance list from api
           for (var j = 0; j < walletBalanceList.length; j++) {
-            log.w('j $j');
             String walletTickerName = walletInfoCopy[i].tickerName;
             String walletBalanceCoinName = walletBalanceList[j].coin;
 
             // Compare wallet ticker name to wallet balance coin name
             if (walletTickerName == walletBalanceCoinName) {
-              log.w('in first if $walletTickerName');
-              // log.w('Wallet balance ${walletBalanceList[j].toJson()}');
-              log.e('Wallet info ${walletInfo.length}');
-
               double marketPrice = walletBalanceList[j].usdValue.usd;
-              log.w('Market price $marketPrice');
               // Check if market price error from api then show the notification with ticker name
               // so that user know why USD val for that ticker is 0
-              if (marketPrice == -1) {
-                log.w('in 2nd if $marketPrice');
-                marketPrice = 0.0;
-                sharedService.showInfoFlushbar(
-                    '$walletTickerName ${AppLocalizations.of(context).notice}',
-                    AppLocalizations.of(context).marketPriceFetchFailed,
-                    Icons.cancel,
-                    Colors.red,
-                    context);
+              if (marketPrice == -1 || marketPrice == 0) {
+                marketPrice = await walletService
+                    .getCoinMarketPriceByTickerName(walletTickerName);
+                if (marketPrice == 0 || marketPrice == null) {
+                  sharedService.showInfoFlushbar(
+                      '$walletTickerName ${AppLocalizations.of(context).notice}',
+                      AppLocalizations.of(context).marketPriceFetchFailed,
+                      Icons.cancel,
+                      Colors.red,
+                      context);
+                  marketPrice = 0.0;
+                }
               }
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
@@ -295,9 +292,9 @@ class WalletDashboardScreenState extends BaseState {
             } // If ends
 
           } // For loop j ends
-          totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
           log.w('total usd  bal $totalUsdBalance');
         } // For loop i ends
+        calcTotalBal();
 
         await updateWalletDatabase();
         if (!isProduction) debugVersionPopup();
