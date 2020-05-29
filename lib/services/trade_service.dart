@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:http/http.dart' as http;
+import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -47,6 +48,37 @@ class TradeService {
       Stream stream = channel.stream;
 
       return stream;
+    } catch (err) {
+      throw Exception(
+          '$err'); // Error thrown here will go to onError in them view model
+    }
+  }
+
+  /*----------------------------------------------------------------------
+                    Get Multiple Stream 
+----------------------------------------------------------------------*/
+
+  Map<String, StreamData<dynamic>> getMultipleStreams(String tickerName) {
+    try {
+      Map<String, StreamData<dynamic>> streamData;
+      final allPricesChannel =
+          IOWebSocketChannel.connect(Constants.COIN_PRICE_DETAILS_WS_URL);
+      StreamData allPricesStream;
+      allPricesStream.stream = allPricesChannel.stream;
+      log.i('all prices stream ${allPricesStream.stream}');
+      // Order List
+      final orderListChannel = getOrderListChannel(tickerName);
+      StreamData orderListStream = orderListChannel.stream;
+      // Trade List
+      final tradeListChannel = getTradeListChannel(tickerName);
+      StreamData tradeListStream = tradeListChannel.stream;
+      // Build a map of streams
+      streamData = {
+        'allPrices': allPricesStream,
+        'orderList': orderListStream,
+        'tradeList': tradeListStream
+      };
+      return streamData;
     } catch (err) {
       throw Exception(
           '$err'); // Error thrown here will go to onError in them view model

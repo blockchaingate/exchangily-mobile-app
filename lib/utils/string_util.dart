@@ -95,25 +95,26 @@ bigNum2Double(bigNum) {
   if (dec.toDouble() > 999999) {
     return double.parse(dec.toDouble().toStringAsFixed(8));
   }
-  var str = dec.toString();
-  var s = str;
-  if (str.length > 6) {
-    s = str.substring(0, 6);
-  }
+  // var str = dec.toString();
+  // var s = str;
+  // if (str.length > 6) {
+  //   s = str.substring(0, 6);
+  // }
 
-  double d = double.parse(s);
-  if (d == 0.0) {
-    if (str.length > 7) {
-      s = str.substring(0, 7);
-    }
-    d = double.parse(s);
-  }
-  if (d == 0.0) {
-    if (str.length > 8) {
-      s = str.substring(0, 8);
-    }
-    d = double.parse(s);
-  }
+  // double d = double.parse(s);
+  // if (d == 0.0) {
+  //   if (str.length > 7) {
+  //     s = str.substring(0, 7);
+  //   }
+  //   d = double.parse(s);
+  // }
+  // if (d == 0.0) {
+  //   if (str.length > 8) {
+  //     s = str.substring(0, 8);
+  //   }
+  //   d = double.parse(s);
+  // }
+  var d = dec.toDouble();
   return d;
   //double d = (BigInt.parse(bigNum.toString()) / BigInt.parse('1000000000000')).round() / 1000000;
   //return d;

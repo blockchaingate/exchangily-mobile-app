@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
 import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
@@ -106,6 +107,9 @@ class RouteGenerator {
 
       case '/trade':
         return MaterialPageRoute(builder: (_) => Trade('EXG/USDT'));
+
+      case '/exchangeTrade':
+        return MaterialPageRoute(builder: (_) => TradeView(tickerName: args));
 
       case '/addGas':
         return MaterialPageRoute(builder: (_) => AddGas());

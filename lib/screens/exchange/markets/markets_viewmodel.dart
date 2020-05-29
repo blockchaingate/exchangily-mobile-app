@@ -88,7 +88,8 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
 
       pairPriceDetails = priceList.prices;
       pairPriceDetails.forEach((element) {
-        //  log.w("Price ${element.toJson()}");
+        if (element.change.isNaN) element.change = 0.0;
+        //  log.w("Change after${element.symbol} ${element.change}");
       });
       isError = false;
       // setBusy(false);

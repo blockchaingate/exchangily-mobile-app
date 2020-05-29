@@ -1,4 +1,6 @@
 import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -40,30 +42,27 @@ class MarketPairsTabView extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 )),
                           ))
-                        //  tabNames.map((tickerName) {
-                        //   return Tab(
-                        //     child: Text(tickerName,
-                        //         style: Theme.of(context).textTheme.headline4),
-                        //   );
-                        // }).toList()
                       ]),
+                  // Ticker bar below
                   SizedBox(
                     height: 20,
-                    // width: 200,
                     child: Stack(
                       overflow: Overflow.visible,
                       children: [
                         Positioned.fill(
                           bottom: -12,
                           child: Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: 1.0, horizontal: 6),
-                            color: Theme.of(context).cardColor,
+                            margin: EdgeInsets.only(top: 3.0),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).cardColor,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(25),
+                                    topRight: Radius.circular(25))),
                             child: Card(
                               margin: EdgeInsets.symmetric(
                                   vertical: 1, horizontal: 6),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0),
+                                borderRadius: BorderRadius.circular(35),
                               ),
                               elevation: 1,
                               child: Row(
@@ -72,7 +71,7 @@ class MarketPairsTabView extends StatelessWidget {
                                       flex: 3,
                                       child: Padding(
                                         padding:
-                                            const EdgeInsets.only(left: 5.0),
+                                            const EdgeInsets.only(left: 10.0),
                                         child: Text(
                                           'Ticker',
                                           style: Theme.of(context)
@@ -125,13 +124,13 @@ class MarketPairsTabView extends StatelessWidget {
             )),
         body: Container(
           color: Theme.of(context).accentColor,
-          padding: EdgeInsets.only(top: 5),
+          // padding: EdgeInsets.only(top: 5),
           child: TabBarView(
               children: marketPairsTabBar.map((pairList) {
             return Container(
               // If i add row here than the error was that i should laid widget once only or get key null
               // so i extracted the widget and passed the List<Price> object which worked
-              child: PriceRow(pairList: pairList),
+              child: PriceDetailRow(pairList: pairList),
             );
           }).toList()),
         ),
@@ -140,10 +139,10 @@ class MarketPairsTabView extends StatelessWidget {
   }
 }
 
-class PriceRow extends StatelessWidget {
+class PriceDetailRow extends StatelessWidget {
   final List<Price> pairList;
-  PriceRow({Key key, this.pairList}) : super(key: key);
-
+  PriceDetailRow({Key key, this.pairList}) : super(key: key);
+  final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -156,15 +155,21 @@ class PriceRow extends StatelessWidget {
           //             color: Theme.of(context).primaryColor, width: 0.51))),
           //  padding: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
           child: Card(
-            margin: EdgeInsets.symmetric(vertical: 1, horizontal: 6),
+            margin: EdgeInsets.only(top: 1.0),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                navigationService.navigateTo('/exchangeTrade',
+                    arguments:
+                        pairList[index].symbol.replaceAll('/', '').toString());
+              },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      //   UIHelper.horizontalSpaceSmall,
+                      UIHelper.horizontalSpaceSmall,
                       Expanded(
                         flex: 3,
                         child: Column(
@@ -179,38 +184,32 @@ class PriceRow extends StatelessWidget {
                                   .copyWith(fontWeight: FontWeight.w400),
                             ),
                             Text(
-                              'Vol: ${pairList[index].volume.toString()}',
+                              'Vol: ${pairList[index].volume.toStringAsFixed(2)}',
                               style: Theme.of(context).textTheme.subtitle2,
                             )
                           ],
                         ),
                       ),
-                      //    UIHelper.horizontalSpaceSmall,
                       Expanded(
                         flex: 2,
                         child: Text(pairList[index].price.toString(),
                             style: Theme.of(context).textTheme.headline6,
                             textAlign: TextAlign.start),
                       ),
-                      //    UIHelper.horizontalSpaceSmall,
                       Expanded(
                         flex: 2,
                         child: Text(
                           pairList[index].high.toString(),
                           style: Theme.of(context).textTheme.headline6,
-                          //  textAlign: TextAlign.end
                         ),
                       ),
-                      //    UIHelper.horizontalSpaceSmall,
                       Expanded(
                         flex: 2,
                         child: Text(
                           pairList[index].low.toString(),
                           style: Theme.of(context).textTheme.headline6,
-                          //textAlign: TextAlign.end
                         ),
                       ),
-                      //   UIHelper.horizontalSpaceSmall,
                       Expanded(
                         flex: 2,
                         child: Text(

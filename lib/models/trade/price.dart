@@ -51,12 +51,12 @@ class Price {
   factory Price.fromJson(Map<String, dynamic> json) {
     return Price(
         symbol: json['symbol'].toString(),
-        price: bigNum2Double(NumberUtil().parsedDouble(json['price'])),
-        high: bigNum2Double(NumberUtil().parsedDouble(json['24h_high'])),
-        low: bigNum2Double(NumberUtil().parsedDouble(json['24h_low'])),
-        open: bigNum2Double(NumberUtil().parsedDouble(json['24h_open'])),
-        close: bigNum2Double(NumberUtil().parsedDouble(json['24h_close'])),
-        volume: bigNum2Double(NumberUtil().parsedDouble(json['24h_volume'])));
+        price: bigNum2Double(json['price']),
+        high: bigNum2Double(json['24h_high']),
+        low: bigNum2Double(json['24h_low']),
+        open: bigNum2Double(json['24h_open']),
+        close: bigNum2Double(json['24h_close']),
+        volume: bigNum2Double(json['24h_volume']));
   }
 
   Map<String, dynamic> toJson() {
@@ -123,13 +123,12 @@ class PriceList {
   factory PriceList.fromJson(List<dynamic> parsedJson) {
     List<Price> prices = new List<Price>();
     parsedJson.forEach((i) {
-      print('0000 ${i}');
+      // print('0000 ${i}');
       Price price = Price.fromJson(i);
-      print('1111 ${price.toJson()}');
+      //  print('1111 ${price.toJson()}');
       prices.add(price);
-      print(' Inside price list length ${prices.length}');
     });
-    print('price list length outer ${prices.length}');
+
     return new PriceList(prices: prices);
   }
 }
