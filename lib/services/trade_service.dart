@@ -61,23 +61,21 @@ class TradeService {
   Map<String, StreamData<dynamic>> getMultipleStreams(String tickerName) {
     try {
       Map<String, StreamData<dynamic>> streamData;
-      final allPricesChannel =
-          IOWebSocketChannel.connect(Constants.COIN_PRICE_DETAILS_WS_URL);
-      StreamData allPricesStream;
-      allPricesStream.stream = allPricesChannel.stream;
-      log.i('all prices stream ${allPricesStream.stream}');
+      final allPricesChannel = getAllCoinPriceByWebSocket();
+
       // Order List
       final orderListChannel = getOrderListChannel(tickerName);
-      StreamData orderListStream = orderListChannel.stream;
+
       // Trade List
       final tradeListChannel = getTradeListChannel(tickerName);
-      StreamData tradeListStream = tradeListChannel.stream;
+
       // Build a map of streams
       streamData = {
-        'allPrices': allPricesStream,
-        'orderList': orderListStream,
-        'tradeList': tradeListStream
+        'allPrices': StreamData<dynamic>(allPricesChannel),
+        'orderList': StreamData<dynamic>(orderListChannel.stream),
+        //  'tradeList': StreamData<dynamic>(tradeListChannel.stream)
       };
+      // log.w(streamData);
       return streamData;
     } catch (err) {
       throw Exception(
@@ -94,18 +92,23 @@ class TradeService {
 
   getOrderListChannel(String pair) {
     var wsString = environment['websocket'] + 'orders' + '@' + pair;
-    return IOWebSocketChannel.connect(wsString);
+    // if not put the IOWebSoketChannel.connect to variable channel and
+    // directly returns it then in the multiple stream it doesn't work
+    final channel = IOWebSocketChannel.connect(wsString);
+    return channel;
   }
 
   getTradeListChannel(String pair) {
     var wsString = environment['websocket'] + 'trades' + '@' + pair;
-    return IOWebSocketChannel.connect(wsString);
+    final channel = IOWebSocketChannel.connect(wsString);
+    return channel;
   }
 
   getTickerChannel(String pair, String interval) {
     var wsString =
         environment['websocket'] + 'ticker' + '@' + pair + '@' + interval;
-    return IOWebSocketChannel.connect(wsString);
+    final channel = IOWebSocketChannel.connect(wsString);
+    return channel;
   }
 
   Future<double> getCoinMarketPrice(String name) async {
@@ -123,5 +126,47 @@ class TradeService {
 
   getOrders(String exgAddress) async {
     return await _api.getOrders(exgAddress);
+  }
+
+  // Market Pair Group Price List
+  marketPairPriceGroups(pairPriceList) {
+    List<List<Price>> marketPairsGroupList = [];
+    List<Price> usdtPairsList = [];
+    List<Price> dusdPairsList = [];
+    List<Price> btcPairsList = [];
+    List<Price> ethPairsList = [];
+    List<Price> exgPairsList = [];
+    List<Price> btcFabExgUsdtPriceList = [];
+    for (var pair in pairPriceList) {
+      if (pair.symbol.endsWith("USDT")) {
+        if (pair.symbol == 'BTCUSDT' ||
+            pair.symbol == 'FABUSDT' ||
+            pair.symbol == 'EXGUSDT') btcFabExgUsdtPriceList.add(pair);
+        pair.symbol = pair.symbol.replaceAll('USDT', '/USDT');
+        usdtPairsList.add(pair);
+      } else if (pair.symbol.endsWith("DUSD")) {
+        pair.symbol = pair.symbol.replaceAll('DUSD', '/DUSD');
+        dusdPairsList.add(pair);
+      } else if (pair.symbol.endsWith("BTC")) {
+        pair.symbol = pair.symbol.replaceAll('BTC', '/BTC');
+        btcPairsList.add(pair);
+      } else if (pair.symbol.endsWith("ETH")) {
+        pair.symbol = pair.symbol.replaceAll('ETH', '/ETH');
+        ethPairsList.add(pair);
+      } else if (pair.symbol.endsWith("EXG")) {
+        pair.symbol = pair.symbol.replaceAll('EXG', '/EXG');
+        exgPairsList.add(pair);
+      }
+    }
+    marketPairsGroupList.add(usdtPairsList);
+    marketPairsGroupList.add(dusdPairsList);
+    marketPairsGroupList.add(btcPairsList);
+    marketPairsGroupList.add(ethPairsList);
+    marketPairsGroupList.add(exgPairsList);
+    Map<String, dynamic> res = {
+      'marketPairsGroupList': marketPairsGroupList,
+      'btcFabExgUsdtPriceList': btcFabExgUsdtPriceList
+    };
+    return res;
   }
 }

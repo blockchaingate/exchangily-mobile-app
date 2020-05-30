@@ -13,7 +13,6 @@
 
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/pairs/market_pairs_tab_view.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -25,6 +24,7 @@ class MarketsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MarketsViewModal>.reactive(
         onModelReady: (model) {
+          print('1');
           model.context = context;
         },
         builder: (context, model, _) => Scaffold(
@@ -63,10 +63,15 @@ class MarketsView extends StatelessWidget {
                       child: Text(model.errorMessage))
                   : !model.dataReady
                       ? Center(
-                          child: CircularProgressIndicator(
-                            backgroundColor: Colors.purple.withAlpha(75),
-                          ),
+                          child: AnimatedOpacity(
+                          opacity: 0.5,
+                          duration: Duration(seconds: 2),
+                          child: FlutterLogo(),
                         )
+                          // CircularProgressIndicator(
+                          //   backgroundColor: Colors.purple.withAlpha(75),
+                          // ),
+                          )
                       : Container(
                           margin: EdgeInsets.only(top: 5.0),
                           color: Theme.of(context).accentColor,

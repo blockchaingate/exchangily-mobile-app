@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/screens/trade/main.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -50,9 +51,9 @@ class MarketPairsTabView extends StatelessWidget {
                       overflow: Overflow.visible,
                       children: [
                         Positioned.fill(
-                          bottom: -12,
+                          bottom: -11,
                           child: Container(
-                            margin: EdgeInsets.only(top: 3.0),
+                            margin: EdgeInsets.only(top: 2.0, bottom: 2),
                             decoration: BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.only(
@@ -60,7 +61,7 @@ class MarketPairsTabView extends StatelessWidget {
                                     topRight: Radius.circular(25))),
                             child: Card(
                               margin: EdgeInsets.symmetric(
-                                  vertical: 1, horizontal: 6),
+                                  vertical: 1, horizontal: 8),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(35),
                               ),
@@ -160,9 +161,13 @@ class PriceDetailRow extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
             child: InkWell(
               onTap: () {
-                navigationService.navigateTo('/exchangeTrade',
-                    arguments:
-                        pairList[index].symbol.replaceAll('/', '').toString());
+                String pair =
+                    pairList[index].symbol.replaceAll('/', '').toString();
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => Trade(pair)),
+                // );
+                navigationService.navigateTo('/exchangeTrade', arguments: pair);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),

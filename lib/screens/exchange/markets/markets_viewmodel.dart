@@ -28,52 +28,25 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
   final log = getLogger('MarketsViewModal');
   bool isError = false;
   String errorMessage = '';
-  List<Price> pairPriceDetails = [];
+  List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
   List<Price> btcFabExgUsdtPriceList = [];
   SharedService sharedService = locator<SharedService>();
+  TradeService tradeService = locator<TradeService>();
   BuildContext context;
 
   @override
-  Stream<dynamic> get stream =>
-      locator<TradeService>().getAllCoinPriceByWebSocket();
+  Stream<dynamic> get stream {
+    Stream<dynamic> res = tradeService.getAllCoinPriceByWebSocket();
+    return res;
+  }
 
   @override
   void onData(data) {
-    List<List<Price>> marketPairsGroupList = [];
-    List<Price> usdtPairsList = [];
-    btcFabExgUsdtPriceList = [];
-    List<Price> dusdPairsList = [];
-    List<Price> btcPairsList = [];
-    List<Price> ethPairsList = [];
-    List<Price> exgPairsList = [];
-    for (var pair in pairPriceDetails) {
-      if (pair.symbol.endsWith("USDT")) {
-        if (pair.symbol == 'BTCUSDT' ||
-            pair.symbol == 'FABUSDT' ||
-            pair.symbol == 'EXGUSDT') btcFabExgUsdtPriceList.add(pair);
-        pair.symbol = pair.symbol.replaceAll('USDT', '/USDT');
-        usdtPairsList.add(pair);
-      } else if (pair.symbol.endsWith("DUSD")) {
-        pair.symbol = pair.symbol.replaceAll('DUSD', '/DUSD');
-        dusdPairsList.add(pair);
-      } else if (pair.symbol.endsWith("BTC")) {
-        pair.symbol = pair.symbol.replaceAll('BTC', '/BTC');
-        btcPairsList.add(pair);
-      } else if (pair.symbol.endsWith("ETH")) {
-        pair.symbol = pair.symbol.replaceAll('ETH', '/ETH');
-        ethPairsList.add(pair);
-      } else if (pair.symbol.endsWith("EXG")) {
-        pair.symbol = pair.symbol.replaceAll('EXG', '/EXG');
-        exgPairsList.add(pair);
-      }
-    }
-    marketPairsGroupList.add(usdtPairsList);
-    marketPairsGroupList.add(dusdPairsList);
-    marketPairsGroupList.add(btcPairsList);
-    marketPairsGroupList.add(ethPairsList);
-    marketPairsGroupList.add(exgPairsList);
-    marketPairsTabBar = marketPairsGroupList;
+    Map<String, dynamic> res =
+        tradeService.marketPairPriceGroups(pairPriceList);
+    marketPairsTabBar = res['marketPairsGroupList'];
+    btcFabExgUsdtPriceList = res['btcFabExgUsdtPriceList'];
   }
 
   @override
@@ -84,10 +57,10 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
       List<dynamic> jsonDynamicList = jsonDecode(data) as List;
       //   log.i(jsonDynamicList.length);
       PriceList priceList = PriceList.fromJson(jsonDynamicList);
-      // print('price list ${priceList.prices.length}');
+      log.i('pair price list ${priceList.prices.length}');
 
-      pairPriceDetails = priceList.prices;
-      pairPriceDetails.forEach((element) {
+      pairPriceList = priceList.prices;
+      pairPriceList.forEach((element) {
         if (element.change.isNaN) element.change = 0.0;
         //  log.w("Change after${element.symbol} ${element.change}");
       });

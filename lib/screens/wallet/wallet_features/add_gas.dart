@@ -26,11 +26,12 @@ import 'dart:typed_data';
 class AddGas extends StatelessWidget {
   final DialogService _dialogService = locator<DialogService>();
   final WalletService walletService = locator<WalletService>();
-  SharedService sharedService = locator<SharedService>();
+  AddGas({Key key}) : super(key: key);
+
+  final SharedService sharedService = locator<SharedService>();
 
   final log = getLogger('AddGas');
   final myController = TextEditingController();
-  AddGas({Key key}) : super(key: key);
 
   checkPass(double amount, context) async {
     var res = await _dialogService.showDialog(

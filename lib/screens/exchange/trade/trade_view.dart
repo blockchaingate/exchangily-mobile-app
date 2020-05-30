@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodal.dart';
+import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:stacked/stacked.dart';
@@ -9,22 +10,29 @@ class TradeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(tickerName);
     return ViewModelBuilder<TradeViewModal>.reactive(
-        createNewModelOnInsert: true,
-        onModelReady: (model) {
-          print('1');
-          print(model.tickerName);
-          model.tickerName = tickerName;
-          print('2');
-          print(model.tickerName);
-        },
-        builder: (context, model, _) => Scaffold(
-              appBar: AppBar(title: Text(tickerName), centerTitle: true),
-              body: Container(
-                child: Text('In trade'),
-              ),
-            ),
-        viewModelBuilder: () => TradeViewModal());
+      // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
+      // which is required override
+      viewModelBuilder: () => TradeViewModal(tickerName: tickerName),
+      onModelReady: (model) {
+        model.context = context;
+      },
+      builder: (context, model, _) => Scaffold(
+        appBar: AppBar(
+            title: FlatButton.icon(
+                textColor: Colors.white,
+                onPressed: () {
+                  model.showBottomSheet();
+                },
+                icon: Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                label: Text(tickerName)),
+            centerTitle: true,
+            automaticallyImplyLeading: false),
+        body: Container(
+          child: Text('In trade'),
+        ),
+        bottomNavigationBar: BottomNavBar(count: 1),
+      ),
+    );
   }
 }
