@@ -270,7 +270,7 @@ class WalletService {
     } catch (e) {
       log.e(e);
       _walletInfo = null;
-      log.e('Catch GetAll Wallets Failed $e');
+      log.e('Catch createOfflineWallets $e');
       return _walletInfo;
     }
   }

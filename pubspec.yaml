@@ -138,6 +138,7 @@ flutter:
     - assets/images/otc/
     - assets/images/otc-campaign/
     - assets/pages/index.html
+    - assets/images/shared/
 flutter_icons:
   image_path: 'assets/images/launcher/mobile-icon.png'
   android: true

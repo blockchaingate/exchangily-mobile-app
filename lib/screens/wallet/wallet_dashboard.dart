@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/app_drawer.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
@@ -29,8 +30,7 @@ import './wallet_features/gas.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 class WalletDashboardScreen extends StatelessWidget {
-  final List<WalletInfo> walletInfo;
-  WalletDashboardScreen({Key key, this.walletInfo}) : super(key: key);
+  WalletDashboardScreen({Key key}) : super(key: key);
 
   final log = getLogger('Dashboard');
 
@@ -39,15 +39,11 @@ class WalletDashboardScreen extends StatelessWidget {
     return BaseScreen<WalletDashboardScreenState>(
       onModelReady: (model) async {
         model.context = context;
-        if (walletInfo != null) {
-          log.w('wallet info not null');
-          model.walletInfo = walletInfo;
-          await model.init();
-        } else {
-          log.w('Retrieving wallets from local storage');
-          await model.retrieveWalletsFromLocalDatabase();
-          await model.init();
-        }
+
+        log.w('Retrieving wallets from local storage');
+        await model.retrieveWalletsFromLocalDatabase();
+        await model.init();
+
         await model.getGas();
       },
       builder: (context, model, child) => WillPopScope(
@@ -317,27 +313,32 @@ class WalletDashboardScreen extends StatelessWidget {
 -------------------------------------------------------------------------------*/
               Expanded(
                   child: model.busy
-                      ? Container(
-                          // margin: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: model.walletInfoCopy.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return _coinDetailsCard(
-                                  model.walletInfoCopy[index].tickerName
-                                      .toLowerCase(),
-                                  model.walletInfoCopy[index].availableBalance,
-                                  model.walletInfoCopy[index].lockedBalance,
-                                  model.walletInfoCopy[index].inExchange,
-                                  model.walletInfoCopy[index].usdValue,
-                                  index,
-                                  model.walletInfoCopy,
-                                  model.elevation,
-                                  context,
-                                  model);
-                            },
-                          ),
-                        )
+                      ? model.walletInfoCopy == null
+                          ? ShimmerLayout(
+                              layoutType: 'walletDashboard',
+                            )
+                          : Container(
+                              // margin: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: model.walletInfoCopy.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return _coinDetailsCard(
+                                      model.walletInfoCopy[index].tickerName
+                                          .toLowerCase(),
+                                      model.walletInfoCopy[index]
+                                          .availableBalance,
+                                      model.walletInfoCopy[index].lockedBalance,
+                                      model.walletInfoCopy[index].inExchange,
+                                      model.walletInfoCopy[index].usdValue,
+                                      index,
+                                      model.walletInfoCopy,
+                                      model.elevation,
+                                      context,
+                                      model);
+                                },
+                              ),
+                            )
                       : Container(
                           //   margin: EdgeInsets.symmetric(horizontal: 8.0),
                           child: SmartRefresher(
@@ -367,7 +368,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                       model.walletInfo[index].inExchange,
                                       model.walletInfo[index].usdValue,
                                       index,
-                                      walletInfo,
+                                      model.walletInfo,
                                       model.elevation,
                                       context,
                                       model),
@@ -383,7 +384,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                           model.walletInfo[index].inExchange,
                                           model.walletInfo[index].usdValue,
                                           index,
-                                          walletInfo,
+                                          model.walletInfo,
                                           model.elevation,
                                           context,
                                           model)),

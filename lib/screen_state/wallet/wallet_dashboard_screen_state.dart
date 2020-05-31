@@ -190,7 +190,9 @@ class WalletDashboardScreenState extends BaseState {
 
   Future refreshBalance() async {
     setBusy(true);
-    if (walletInfoCopy == [] || walletInfoCopy == null)
+    if (walletInfoCopy == [] ||
+        walletInfoCopy == null ||
+        walletInfoCopy.length == 0)
       walletInfoCopy = await walletDatabaseService.getAll();
 
     int coinTickersLength = walletService.coinTickers.length;

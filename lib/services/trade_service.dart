@@ -46,7 +46,6 @@ class TradeService {
       final channel =
           IOWebSocketChannel.connect(Constants.COIN_PRICE_DETAILS_WS_URL);
       Stream stream = channel.stream;
-
       return stream;
     } catch (err) {
       throw Exception(

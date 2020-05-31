@@ -39,6 +39,11 @@ class CreatePasswordScreenState extends BaseState {
   Pattern pattern =
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[`~!@#\$%\^&*\(\)-_\+\=\{\[\}\]]).{8,}$';
 
+  FocusNode passFocus = FocusNode();
+  TextEditingController passTextController = TextEditingController();
+  TextEditingController confirmPassTextController = TextEditingController();
+  WalletService walletService = locator<WalletService>();
+
 /* ---------------------------------------------------
                     Create Offline Wallets
     -------------------------------------------------- */
@@ -49,14 +54,14 @@ class CreatePasswordScreenState extends BaseState {
         .createOfflineWallets(randomMnemonicFromRoute)
         .then((data) {
       _walletInfo = data;
-      Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
+      Navigator.pushNamed(context, '/dashboard');
       randomMnemonicFromRoute = '';
     }).catchError((onError) {
       errorMessage = AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);
       setState(ViewState.Idle);
     });
-    setState(ViewState.Idle);
+    setState(ViewState.Busy);
   }
 
 /* ---------------------------------------------------
@@ -77,10 +82,11 @@ class CreatePasswordScreenState extends BaseState {
     return checkConfirmPasswordConditions;
   }
 
-  bool validatePassword(pass, confirmPass) {
+  validatePassword() {
     setState(ViewState.Busy);
     RegExp regex = new RegExp(pattern);
-
+    String pass = passTextController.text;
+    String confirmPass = confirmPassTextController.text;
     if (pass.isEmpty) {
       password = '';
       confirmPassword = '';
@@ -93,7 +99,7 @@ class CreatePasswordScreenState extends BaseState {
           Colors.red,
           context);
       setState(ViewState.Idle);
-      return false;
+      return;
     } else {
       if (!regex.hasMatch(pass)) {
         password = '';
@@ -107,7 +113,7 @@ class CreatePasswordScreenState extends BaseState {
             Colors.red,
             context);
         setState(ViewState.Idle);
-        return false;
+        return;
       } else if (pass != confirmPass) {
         password = '';
         confirmPassword = '';
@@ -120,15 +126,15 @@ class CreatePasswordScreenState extends BaseState {
             Colors.red,
             context);
         setState(ViewState.Idle);
-        return false;
+        return;
       } else {
         password = '';
         confirmPassword = '';
         _vaultService.secureMnemonic(context, pass, randomMnemonicFromRoute);
-        log.w('In else');
-        setState(ViewState.Idle);
-        return true;
+
+        createOfflineWallets();
       }
     }
+    setState(ViewState.Idle);
   }
 }

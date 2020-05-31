@@ -14,7 +14,10 @@
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/pairs/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
 class MarketsView extends StatelessWidget {
@@ -59,19 +62,13 @@ class MarketsView extends StatelessWidget {
               // color: Colors.black,
               body: model.isError
                   ? Container(
+                      margin: EdgeInsets.all(10),
                       alignment: Alignment.center,
                       child: Text(model.errorMessage))
-                  : !model.dataReady
-                      ? Center(
-                          child: AnimatedOpacity(
-                          opacity: 0.5,
-                          duration: Duration(seconds: 2),
-                          child: FlutterLogo(),
+                  : model.dataReady
+                      ? ShimmerLayout(
+                          layoutType: 'walletDashboard',
                         )
-                          // CircularProgressIndicator(
-                          //   backgroundColor: Colors.purple.withAlpha(75),
-                          // ),
-                          )
                       : Container(
                           margin: EdgeInsets.only(top: 5.0),
                           color: Theme.of(context).accentColor,

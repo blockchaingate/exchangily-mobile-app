@@ -34,10 +34,6 @@ class CreatePasswordScreen extends StatefulWidget {
 
 class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   final log = getLogger('CreatePassword');
-  FocusNode passFocus = FocusNode();
-  TextEditingController _passTextController = TextEditingController();
-  TextEditingController _confirmPassTextController = TextEditingController();
-  WalletService walletService = WalletService();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +48,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: Text(AppLocalizations.of(context).secureYourWallet,
-              style: Theme.of(context).textTheme.headline3),
+              style: Theme.of(context).textTheme.headline4),
           backgroundColor: globals.secondaryColor,
         ),
         body: Container(
@@ -115,7 +111,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                       textAlign: TextAlign.left,
                       style: Theme.of(context)
                           .textTheme
-                          .headline
+                          .headline5
                           .copyWith(fontWeight: FontWeight.bold),
                     )
                   ],
@@ -140,9 +136,9 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           });
         },
         keyboardType: TextInputType.visiblePassword,
-        focusNode: passFocus,
+        focusNode: model.passFocus,
         autofocus: true,
-        controller: _passTextController,
+        controller: model.passTextController,
         obscureText: true,
         maxLength: 16,
         style: model.checkPasswordConditions
@@ -176,7 +172,7 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
             model.checkConfirmPassword(pass);
           });
         },
-        controller: _confirmPassTextController,
+        controller: model.confirmPassTextController,
         obscureText: true,
         maxLength: 16,
         style: model.checkConfirmPasswordConditions
@@ -212,20 +208,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
         padding: EdgeInsets.all(15),
         color: globals.primaryColor,
         textColor: Colors.white,
-        onPressed: () async {
+        onPressed: () {
           // Remove the on screen keyboard by shifting focus to unused focus node
-          model.setState(ViewState.Busy);
-          FocusScope.of(context).requestFocus(FocusNode());
-          var passSuccess = model.validatePassword(
-              _passTextController.text, _confirmPassTextController.text);
 
-          _passTextController.text = '';
-          _confirmPassTextController.text = '';
-          model.errorMessage = '';
-          if (passSuccess) {
-            await model.createOfflineWallets();
-          }
-          model.setState(ViewState.Idle);
+          FocusScope.of(context).requestFocus(FocusNode());
+          model.validatePassword();
         },
         child: Text(
           AppLocalizations.of(context).createWallet,

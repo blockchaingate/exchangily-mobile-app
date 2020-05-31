@@ -80,8 +80,7 @@ class RouteGenerator {
                 CreatePasswordScreen(randomMnemonicFromRoute: args));
 
       case '/dashboard':
-        return MaterialPageRoute(
-            builder: (_) => WalletDashboardScreen(walletInfo: args));
+        return MaterialPageRoute(builder: (_) => WalletDashboardScreen());
 
       case '/walletFeatures':
         return MaterialPageRoute(
