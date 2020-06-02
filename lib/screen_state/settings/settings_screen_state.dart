@@ -47,7 +47,7 @@ class SettingsScreenState extends BaseState {
   final FixedExtentScrollController scrollController =
       FixedExtentScrollController(initialItem: initialLanguageValue);
   bool isDialogDisplay = false;
-  ScrollController scrollController;
+  //ScrollController scrollController;
 
   init() async {
     setBusy(true);
