@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/pairs/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -24,6 +25,8 @@ class TradeViewModal extends MultipleStreamViewModel {
   ApiService apiService = locator<ApiService>();
   List<PairDecimalConfig> pairDecimalConfigList = [];
   List<OrderModel> pairOrderList = [];
+  List<TradeModel> pairMarketTradeList = [];
+  Price currentPairPrice;
 
   List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
@@ -44,16 +47,27 @@ class TradeViewModal extends MultipleStreamViewModel {
     log.i(key);
     log.w(data);
     try {
+      /// Order list
       if (key == 'orderList') {
         List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
-        log.i(jsonDynamicList);
+        log.e('order $data');
         OrderList orderList = OrderList.fromJson(jsonDynamicList);
-        log.i('pair price list ${orderList.orders.length}');
+        // log.i('pair order list ${orderList.orders}');
 
         pairOrderList = orderList.orders;
         pairOrderList.forEach((element) {});
-      } else if (key == 'tradeList') {
-      } else if (key == 'allPrices') {
+      }
+
+      /// Market trade list
+      else if (key == 'marketTradeList') {
+        List<dynamic> jsonDynamicList = jsonDecode(data) as List;
+        log.e('TRADE list d $jsonDynamicList');
+        TradeList tradeList = TradeList.fromJson(jsonDynamicList);
+        pairMarketTradeList = tradeList.trades;
+      }
+
+      /// All prices list
+      else if (key == 'allPrices') {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
         //   log.i(jsonDynamicList.length);
         PriceList priceList = PriceList.fromJson(jsonDynamicList);
@@ -62,7 +76,10 @@ class TradeViewModal extends MultipleStreamViewModel {
         pairPriceList = priceList.prices;
         pairPriceList.forEach((element) {
           if (element.change.isNaN) element.change = 0.0;
-          //  log.w("Change after${element.symbol} ${element.change}");
+          if (element.symbol == tickerName) {
+            currentPairPrice = element;
+            //   log.i('Current pair Price ${currentPairPrice.toJson()}');
+          }
         });
         Map<String, dynamic> res =
             tradeService.marketPairPriceGroups(pairPriceList);
@@ -104,7 +121,7 @@ class TradeViewModal extends MultipleStreamViewModel {
         builder: (BuildContext context) {
           return Container(
               width: 200,
-              height: 500,
+              height: MediaQuery.of(context).size.height - 50,
               child: MarketPairsTabView(marketPairsTabBar: marketPairsTabBar));
         });
   }

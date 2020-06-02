@@ -34,12 +34,10 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
   BuildContext context;
+  List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];
 
   @override
-  Stream<dynamic> get stream {
-    Stream<dynamic> res = tradeService.getAllCoinPriceByWebSocket();
-    return res;
-  }
+  Stream<dynamic> get stream => tradeService.getAllCoinPriceByWebSocket();
 
   @override
   void onData(data) {
@@ -51,21 +49,15 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
 
   @override
   transformData(data) {
-    // coinPriceDetails = Decoder.fromJsonArray(data);
-    // setBusy(true);
     try {
       List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-      //   log.i(jsonDynamicList.length);
       PriceList priceList = PriceList.fromJson(jsonDynamicList);
       log.i('pair price list ${priceList.prices.length}');
-
       pairPriceList = priceList.prices;
       pairPriceList.forEach((element) {
         if (element.change.isNaN) element.change = 0.0;
-        //  log.w("Change after${element.symbol} ${element.change}");
       });
       isError = false;
-      // setBusy(false);
     } catch (err) {
       log.e('Catch error $err');
       print('Cancelling Stream Subsciption');
@@ -74,8 +66,6 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
       error != null
           ? errorMessage = error.message
           : errorMessage = err.toString();
-      //  setBusy(false);
-      // throw Exception('$err');
     }
   }
 

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_market_pairs_layout.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_wallet_dashboard_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,7 +14,7 @@ class ShimmerLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: ListView.builder(
-            itemCount: 5,
+            itemCount: 7,
             itemBuilder: (BuildContext context, int index) {
               Widget layout;
 
@@ -22,10 +23,11 @@ class ShimmerLayout extends StatelessWidget {
                     child: ShimmerWalletDashboardLayout(),
                     baseColor: Colors.grey,
                     highlightColor: Colors.white);
-              } else if (layoutType == 'markets') {
-                layout = Card(
-                  child: Container(),
-                );
+              } else if (layoutType == 'marketPairs') {
+                layout = Shimmer.fromColors(
+                    child: ShimmerMarketPairsLayout(),
+                    baseColor: Colors.grey,
+                    highlightColor: Colors.white);
               }
               return layout;
             }));

@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -39,7 +40,6 @@ class WalletDashboardScreen extends StatelessWidget {
     return BaseScreen<WalletDashboardScreenState>(
       onModelReady: (model) async {
         model.context = context;
-
         log.w('Retrieving wallets from local storage');
         await model.retrieveWalletsFromLocalDatabase();
         await model.init();
@@ -461,7 +461,7 @@ class WalletDashboardScreen extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         '$tickerName'.toUpperCase(),
-                        style: Theme.of(context).textTheme.headline2,
+                        style: Theme.of(context).textTheme.headline3,
                       ),
                       // Available Row
                       Row(
@@ -470,7 +470,7 @@ class WalletDashboardScreen extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(right: 5.0),
                             child: Text(AppLocalizations.of(context).available,
-                                style: Theme.of(context).textTheme.bodyText1),
+                                style: Theme.of(context).textTheme.headline6),
                           ),
                           model.busy
                               ? SizedBox(
@@ -480,7 +480,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                   child: Text(
                                     available.toStringAsFixed(2),
                                     style:
-                                        Theme.of(context).textTheme.bodyText1,
+                                        Theme.of(context).textTheme.headline6,
                                   ),
                                 ))
                               : Expanded(
@@ -490,7 +490,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                           : available.toStringAsFixed(4),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyText2),
+                                          .headline6),
                                 ),
                         ],
                       ),
@@ -498,9 +498,13 @@ class WalletDashboardScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(right: 5.0),
+                            padding: const EdgeInsets.only(
+                                top: 2.0, right: 5.0, bottom: 2.0),
                             child: Text(AppLocalizations.of(context).locked,
-                                style: Theme.of(context).textTheme.bodyText1),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(color: red)),
                           ),
                           model.state == ViewState.Busy
                               ? SizedBox(
@@ -510,7 +514,8 @@ class WalletDashboardScreen extends StatelessWidget {
                                   child: Text('$locked',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyText2),
+                                          .headline6
+                                          .copyWith(color: red)),
                                 ))
                               : Expanded(
                                   child: Text(
@@ -519,7 +524,8 @@ class WalletDashboardScreen extends StatelessWidget {
                                           : locked.toStringAsFixed(4),
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyText2),
+                                          .headline6
+                                          .copyWith(color: red)),
                                 )
                         ],
                       ),
@@ -532,7 +538,7 @@ class WalletDashboardScreen extends StatelessWidget {
                               child: Text(
                                   AppLocalizations.of(context).inExchange,
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.bodyText1),
+                                  style: Theme.of(context).textTheme.headline6),
                             ),
                           ),
                           model.state == ViewState.Busy
@@ -543,6 +549,8 @@ class WalletDashboardScreen extends StatelessWidget {
                                   child: Text(
                                     '$assetsInExchange',
                                     textAlign: TextAlign.center,
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
                                   ),
                                 ))
                               : Expanded(
@@ -550,8 +558,11 @@ class WalletDashboardScreen extends StatelessWidget {
                                       assetsInExchange == 0
                                           ? '0.0'
                                           : assetsInExchange.toStringAsFixed(4),
-                                      style: TextStyle(
-                                          color: globals.primaryColor)),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              color: globals.primaryColor)),
                                 ),
                         ],
                       ),

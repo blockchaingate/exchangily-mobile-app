@@ -6,10 +6,11 @@ class Constants {
   static const String BASE_KANBAN_TEST_URL =
       'https://kanbantest.fabcoinapi.com/';
   static const String COIN_PRICE_DETAILS_WS_URL =
-      // isProduction
-      // ?
-      'wss://kanbanprod.fabcoinapi.com/ws/allprices';
-  //: 'wss://kanbantest.fabcoinapi.com/ws/allprices';
+      // = isProduction
+      //    ?
+      'wss://kanbanprod.fabcoinapi.com/ws/allprices'
+      // : 'wss://kanbantest.fabcoinapi.com/ws/allprices'
+      ;
   static const String testUsdtWalletAddress =
       '0x7bfbfaf1d3f81827e1642114c7905de413d83321';
   static const String prodUsdtWalletAddress =

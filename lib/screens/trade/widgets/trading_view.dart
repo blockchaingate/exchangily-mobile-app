@@ -22,7 +22,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // realtime: https://jsfiddle.net/TradingView/yozeu6k1/
 
 class LoadHTMLFileToWEbView extends StatefulWidget {
-  String pair;
+  final String pair;
   LoadHTMLFileToWEbView(this.pair);
   @override
   _LoadHTMLFileToWEbViewState createState() => _LoadHTMLFileToWEbViewState();
@@ -35,7 +35,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     return Container(
         padding: EdgeInsets.all(0),
         margin: EdgeInsets.all(0),
-        height: 300,
+        height: 280,
         child: WebView(
           initialUrl: '',
           javascriptMode: JavascriptMode.unrestricted,

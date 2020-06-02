@@ -28,15 +28,6 @@ class TradeService {
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
 
-  Stream<int> epochUpdatesNumbers() async* {
-    while (true) {
-      await Future.delayed(const Duration(microseconds: 500));
-      int t = DateTime.now().second;
-      print('t $t');
-      yield t;
-    }
-  }
-
 /*----------------------------------------------------------------------
           Get Coin Price Details Using allPrices Web Sockets
 ----------------------------------------------------------------------*/
@@ -46,6 +37,7 @@ class TradeService {
       final channel =
           IOWebSocketChannel.connect(Constants.COIN_PRICE_DETAILS_WS_URL);
       Stream stream = channel.stream;
+
       return stream;
     } catch (err) {
       throw Exception(
@@ -53,7 +45,7 @@ class TradeService {
     }
   }
 
-  /*----------------------------------------------------------------------
+/*----------------------------------------------------------------------
                     Get Multiple Stream 
 ----------------------------------------------------------------------*/
 
@@ -70,11 +62,10 @@ class TradeService {
 
       // Build a map of streams
       streamData = {
-        'allPrices': StreamData<dynamic>(allPricesChannel),
-        'orderList': StreamData<dynamic>(orderListChannel.stream),
-        //  'tradeList': StreamData<dynamic>(tradeListChannel.stream)
+        //   'allPrices': StreamData<dynamic>(allPricesChannel),
+        //   'orderList': StreamData<dynamic>(orderListChannel.stream),
+        'marketTradeList': StreamData<dynamic>(tradeListChannel.stream)
       };
-      // log.w(streamData);
       return streamData;
     } catch (err) {
       throw Exception(
@@ -90,17 +81,27 @@ class TradeService {
   }
 
   getOrderListChannel(String pair) {
-    var wsString = environment['websocket'] + 'orders' + '@' + pair;
-    // if not put the IOWebSoketChannel.connect to variable channel and
-    // directly returns it then in the multiple stream it doesn't work
-    final channel = IOWebSocketChannel.connect(wsString);
-    return channel;
+    try {
+      var wsString = environment['websocket'] + 'orders' + '@' + pair;
+      // if not put the IOWebSoketChannel.connect to variable channel and
+      // directly returns it then in the multiple stream it doesn't work
+      final channel = IOWebSocketChannel.connect(wsString);
+      return channel;
+    } catch (err) {
+      throw Exception(
+          '$err'); // Error thrown here will go to onError in them view model
+    }
   }
 
   getTradeListChannel(String pair) {
-    var wsString = environment['websocket'] + 'trades' + '@' + pair;
-    final channel = IOWebSocketChannel.connect(wsString);
-    return channel;
+    try {
+      var wsString = environment['websocket'] + 'trades' + '@' + pair;
+      final channel = IOWebSocketChannel.connect(wsString);
+      return channel;
+    } catch (err) {
+      throw Exception(
+          '$err'); // Error thrown here will go to onError in them view model
+    }
   }
 
   getTickerChannel(String pair, String interval) {

@@ -181,12 +181,15 @@ class PriceDetailRow extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              pairList[index].symbol.toString(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6
-                                  .copyWith(fontWeight: FontWeight.w400),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 4.0),
+                              child: Text(
+                                pairList[index].symbol.toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6
+                                    .copyWith(fontWeight: FontWeight.w400),
+                              ),
                             ),
                             Text(
                               'Vol: ${pairList[index].volume.toStringAsFixed(2)}',

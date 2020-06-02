@@ -173,6 +173,11 @@ class OrderModel {
   set payWithExg(bool payWithExg) {
     this.payWithExg = payWithExg;
   }
+
+  bool get bidOrAsk => bidOrAsk;
+  set bidOrAsk(bool bidOrAsk) {
+    this._bidOrAsk = bidOrAsk;
+  }
 }
 
 class OrderList {

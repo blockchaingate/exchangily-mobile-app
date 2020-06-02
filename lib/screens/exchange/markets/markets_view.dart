@@ -27,7 +27,6 @@ class MarketsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<MarketsViewModal>.reactive(
         onModelReady: (model) {
-          print('1');
           model.context = context;
         },
         builder: (context, model, _) => Scaffold(
@@ -36,8 +35,6 @@ class MarketsView extends StatelessWidget {
               floatingActionButton: !model.dataReady
                   ? Container()
                   : Container(
-                      //  margin: EdgeInsets.only(left: 30),
-
                       height: 70,
                       child: Row(
                         children: [
@@ -58,25 +55,24 @@ class MarketsView extends StatelessWidget {
                       ),
                     ),
 
-              // padding: EdgeInsets.all(10),
-              // color: Colors.black,
+              /// See if below check is required after finishing the trade architecture
               body: model.isError
                   ? Container(
                       margin: EdgeInsets.all(10),
                       alignment: Alignment.center,
                       child: Text(model.errorMessage))
-                  : model.dataReady
-                      ? ShimmerLayout(
-                          layoutType: 'walletDashboard',
+                  : !model.dataReady
+                      ? Container(
+                          margin: EdgeInsets.only(top: 40),
+                          child: ShimmerLayout(
+                            layoutType: 'marketPairs',
+                          ),
                         )
                       : Container(
                           margin: EdgeInsets.only(top: 5.0),
                           color: Theme.of(context).accentColor,
-                          child: Container(
-                            // height: 200,
-                            child: MarketPairsTabView(
-                                marketPairsTabBar: model.marketPairsTabBar),
-                          ),
+                          child: MarketPairsTabView(
+                              marketPairsTabBar: model.marketPairsTabBar),
                         ),
               bottomNavigationBar: BottomNavBar(count: 1),
             ),

@@ -54,7 +54,13 @@ class Decoder {
     int time = json['time'];
     bool bidOrAsk = json['bidOrAsk'];
     TradeModel s = new TradeModel(
-        orderHash1, orderHash2, price, amount, blockNumber, time, bidOrAsk);
+        orderHash1: orderHash1,
+        orderHash2: orderHash2,
+        price: price,
+        amount: amount,
+        blockNumber: blockNumber,
+        time: time,
+        bidOrAsk: bidOrAsk);
     return s;
   }
 
