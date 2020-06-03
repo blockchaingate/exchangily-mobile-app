@@ -1,6 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/pairs/market_pairs_tab_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodal.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
@@ -28,29 +28,38 @@ class TradeView extends StatelessWidget {
         //   endDrawer: Text('End'),
         //backgroundColor: primaryColor.withOpacity(0.3),
         key: _scaffoldKey,
-        drawerDragStartBehavior: DragStartBehavior.down,
+
         drawer: model.dataReady('allPrices')
             ? Container(
-                //  margin: EdgeInsets.only(top: 20),
+                color: green,
+                padding: EdgeInsets.all(4),
+                margin: EdgeInsets.only(top: 20),
                 child: Column(
-                children: [
-                  Positioned(
-                      // top: -50,
-                      right: 5,
-                      bottom: -50,
-                      //  alignment: Alignment.topRight,
-                      child: IconButton(
-                        icon: Icon(Icons.cancel, color: red),
-                        onPressed: () {
-                          model.navigationService.goBack();
-                        },
-                      )),
-                  Expanded(
-                    child: MarketPairsTabView(
-                        marketPairsTabBar: model.marketPairsTabBar),
-                  ),
-                ],
-              ))
+                  children: [
+                    Stack(children: [
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        color: yellow,
+                        child: Positioned(
+                            top: -50,
+                            right: 5,
+                            //   bottom: -50,
+                            //  alignment: Alignment.bottomCenter,
+                            child: IconButton(
+                              icon: Icon(Icons.cancel, color: red),
+                              onPressed: () {
+                                model.navigationService.goBack();
+                              },
+                            )),
+                      ),
+                      Icon(Icons.access_alarm)
+                    ]),
+                    Expanded(
+                      child: MarketPairsTabView(
+                          marketPairsTabBar: model.marketPairsTabBar),
+                    ),
+                  ],
+                ))
             : Container(
                 child: Center(
                   child: Text(AppLocalizations.of(context).serverError),
@@ -73,100 +82,137 @@ class TradeView extends StatelessWidget {
         body: Container(
           child: ListView(
             children: [
-              /// Price, price change, low, high, vol Container
-              Container(
-                //  margin: EdgeInsets.all(5.0),
-                //  padding: EdgeInsets.all(5.0),
-                child: Column(
-                  children: <Widget>[
-                    // Price Row
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.fromLTRB(10.0, 10, 30.0, 10),
-                            child: Text(
-                                model.currentPairPrice.price.toStringAsFixed(2),
-                                style: TextStyle(
-                                    fontSize: 40, color: priceColor))),
-                        Column(
-                          children: [
-                            Text(
-                                "\$" +
-                                    model.currentPairPrice.price
-                                        .toStringAsFixed(2),
-                                style: Theme.of(context).textTheme.headline3),
-                            Row(
-                              children: [
-                                Text(
-                                    (model.currentPairPrice.close -
-                                            model.currentPairPrice.open)
-                                        .toStringAsFixed(2),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(
-                                            color: Color(model.currentPairPrice
-                                                        .close >
-                                                    model.currentPairPrice.open
-                                                ? 0XFF0da88b
-                                                : 0XFFe2103c))),
-                                UIHelper.horizontalSpaceSmall,
-                                Text(
-                                    model.currentPairPrice.change
-                                            .toStringAsFixed(2) +
-                                        "%",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(
-                                            color: Color(
-                                                model.currentPairPrice.change >=
-                                                        0
-                                                    ? 0XFF0da88b
-                                                    : 0XFFe2103c))),
-                              ],
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    // Change Price Value Row
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-                      color: walletCardColor,
-                      child: Column(children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(AppLocalizations.of(context).volume,
-                                style: Theme.of(context).textTheme.subtitle2),
-                            Text(AppLocalizations.of(context).low.toString(),
-                                style: Theme.of(context).textTheme.subtitle2),
-                            Text(AppLocalizations.of(context).high.toString(),
-                                style: Theme.of(context).textTheme.subtitle2),
-                          ],
-                        ),
-                        // Low Volume High Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(model.currentPairPrice?.low.toString(),
-                                style: Theme.of(context).textTheme.headline6),
-                            Text(model.currentPairPrice?.volume.toString(),
-                                style: Theme.of(context).textTheme.headline6),
-                            Text(model.currentPairPrice?.high.toString(),
-                                style: Theme.of(context).textTheme.headline6)
-                          ],
-                        ),
-                      ]),
-                    )
-                  ],
-                ),
-              ), // price container ends
+              /// Check if price current price object is not null
+              model.currentPairPrice == null
+                  ? Container(
+                      child: LinearProgressIndicator(
+                      backgroundColor: red,
+                      value: null,
+                    ))
+                  :
+
+                  /// Price, price change, low, high, vol Container
+
+                  Container(
+                      //  margin: EdgeInsets.all(5.0),
+                      //  padding: EdgeInsets.all(5.0),
+                      child: Column(
+                        children: <Widget>[
+                          // Price Row
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Padding(
+                                  padding:
+                                      EdgeInsets.fromLTRB(10.0, 10, 30.0, 10),
+                                  child: Text(
+                                      model.currentPairPrice.price
+                                          .toStringAsFixed(2),
+                                      style: TextStyle(
+                                          fontSize: 40, color: priceColor))),
+                              Column(
+                                children: [
+                                  Text(
+                                      "\$" +
+                                          model.currentPairPrice.price
+                                              .toStringAsFixed(2),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline3),
+                                  Row(
+                                    children: [
+                                      Text(
+                                          (model.currentPairPrice.close -
+                                                  model.currentPairPrice.open)
+                                              .toStringAsFixed(2),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                                  color: Color(model
+                                                              .currentPairPrice
+                                                              .close >
+                                                          model.currentPairPrice
+                                                              .open
+                                                      ? 0XFF0da88b
+                                                      : 0XFFe2103c))),
+                                      UIHelper.horizontalSpaceSmall,
+                                      Text(
+                                          model.currentPairPrice.change
+                                                  .toStringAsFixed(2) +
+                                              "%",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                                  color: Color(model
+                                                              .currentPairPrice
+                                                              .change >=
+                                                          0
+                                                      ? 0XFF0da88b
+                                                      : 0XFFe2103c))),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                          // Change Price Value Row
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 15.0),
+                            color: walletCardColor,
+                            child: Column(children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(AppLocalizations.of(context).volume,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2),
+                                  Text(
+                                      AppLocalizations.of(context)
+                                          .low
+                                          .toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2),
+                                  Text(
+                                      AppLocalizations.of(context)
+                                          .high
+                                          .toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2),
+                                ],
+                              ),
+                              // Low Volume High Row
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(model.currentPairPrice?.low.toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                  Text(
+                                      model.currentPairPrice?.volume.toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                  Text(model.currentPairPrice?.high.toString(),
+                                      style:
+                                          Theme.of(context).textTheme.headline6)
+                                ],
+                              ),
+                            ]),
+                          )
+                        ],
+                      ),
+                    ), // price container ends
               // Below container contains trading view chart in the trade tab
               // Container(
               //   //margin: EdgeInsets.symmetric(horizontal: 9.0),
@@ -175,7 +221,12 @@ class TradeView extends StatelessWidget {
               // Buy Sell Buttons
 
               /// Market orders
-              model.isBusy ? CircularProgressIndicator() : 
+              !model.dataReady('marketTradeList')
+                  ? Center(
+                      child: CircularProgressIndicator(
+                      backgroundColor: red,
+                    ))
+                  : Container(child: Text('Market Trade List data is ready'))
             ],
           ),
         ),

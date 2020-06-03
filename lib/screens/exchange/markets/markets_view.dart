@@ -11,8 +11,9 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/pairs/market_pairs_tab_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
@@ -54,26 +55,19 @@ class MarketsView extends StatelessWidget {
                         ],
                       ),
                     ),
-
-              /// See if below check is required after finishing the trade architecture
-              body: model.isError
+              body: !model.dataReady
                   ? Container(
-                      margin: EdgeInsets.all(10),
-                      alignment: Alignment.center,
-                      child: Text(model.errorMessage))
-                  : !model.dataReady
-                      ? Container(
-                          margin: EdgeInsets.only(top: 40),
-                          child: ShimmerLayout(
-                            layoutType: 'marketPairs',
-                          ),
-                        )
-                      : Container(
-                          margin: EdgeInsets.only(top: 5.0),
-                          color: Theme.of(context).accentColor,
-                          child: MarketPairsTabView(
-                              marketPairsTabBar: model.marketPairsTabBar),
-                        ),
+                      margin: EdgeInsets.only(top: 40),
+                      child: ShimmerLayout(
+                        layoutType: 'marketPairs',
+                      ),
+                    )
+                  : Container(
+                      margin: EdgeInsets.only(top: 5.0),
+                      color: Theme.of(context).accentColor,
+                      child: MarketPairsTabView(
+                          marketPairsTabBar: model.marketPairsTabBar),
+                    ),
               bottomNavigationBar: BottomNavBar(count: 1),
             ),
         viewModelBuilder: () => MarketsViewModal());

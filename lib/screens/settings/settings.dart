@@ -65,17 +65,20 @@ class SettingsScreen extends StatelessWidget {
                               size: 18,
                             ),
                           ),
-                          Text(
-                            AppLocalizations.of(context).deleteWallet,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline5,
-                          )
+                          model.isDeleting
+                              ? Text('Deleting wallet...')
+                              : Text(
+                                  AppLocalizations.of(context).deleteWallet,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
                         ],
                       ),
                     ),
                   ),
                   onTap: () async {
                     await model.deleteWallet();
+                    print('Wallet deleted');
                   },
                 ),
                 InkWell(

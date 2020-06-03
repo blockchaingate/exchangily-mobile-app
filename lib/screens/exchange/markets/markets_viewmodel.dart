@@ -26,7 +26,7 @@ import 'package:stacked/stacked.dart';
 
 class MarketsViewModal extends StreamViewModel<dynamic> {
   final log = getLogger('MarketsViewModal');
-  bool isError = false;
+
   String errorMessage = '';
   List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
@@ -37,7 +37,12 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
   List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];
 
   @override
-  Stream<dynamic> get stream => tradeService.getAllCoinPriceByWebSocket();
+  Stream<dynamic> get stream {
+    Stream<dynamic> res;
+
+    res = tradeService.getAllCoinPriceByWebSocket();
+    return res;
+  }
 
   @override
   void onData(data) {
@@ -57,25 +62,21 @@ class MarketsViewModal extends StreamViewModel<dynamic> {
       pairPriceList.forEach((element) {
         if (element.change.isNaN) element.change = 0.0;
       });
-      isError = false;
     } catch (err) {
       log.e('Catch error $err');
       print('Cancelling Stream Subsciption');
       streamSubscription.cancel();
-      isError = true;
-      error != null
-          ? errorMessage = error.message
-          : errorMessage = err.toString();
     }
   }
 
   @override
   void onError(error) {
     log.e('In onError $error');
+    errorMessage = error.toString();
+
     sharedService.alertDialog(AppLocalizations.of(context).serverError,
-        AppLocalizations.of(context).marketPriceFetchFailed,
+        AppLocalizations.of(context).marketPriceFetchFailed + errorMessage,
         path: '/dashboard', isWarning: false);
-    setBusy(false);
   }
 
   @override

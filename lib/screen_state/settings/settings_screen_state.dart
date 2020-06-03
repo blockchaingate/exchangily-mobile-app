@@ -44,6 +44,7 @@ class SettingsScreenState extends BaseState {
   String versionName = '';
   String versionCode = '';
   bool isDialogDisplay = false;
+  bool isDeleting = false;
   ScrollController scrollController;
 
   init() {
@@ -62,10 +63,11 @@ class SettingsScreenState extends BaseState {
 
   // Delete wallet and local storage
 
-  deleteWallet() async {
+  Future deleteWallet() async {
     errorMessage = '';
-    setState(ViewState.Busy);
-
+    isDeleting = true;
+    setBusy(true);
+    log.i('model busy $busy');
     await dialogService
         .showDialog(
             title: AppLocalizations.of(context).enterPassword,
@@ -75,29 +77,34 @@ class SettingsScreenState extends BaseState {
         .then((res) async {
       if (res.confirmed) {
         log.w('deleting wallet');
-        await walletService.deleteEncryptedData();
         await walletDatabaseService.deleteDb();
+        await walletService.deleteEncryptedData();
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('lang');
         prefs.clear();
         Navigator.pushNamed(context, '/');
-        setState(ViewState.Idle);
-        return null;
       } else if (res.returnedText == 'Closed') {
         log.e('Dialog Closed By User');
+        isDeleting = false;
         setState(ViewState.Idle);
         return errorMessage = '';
       } else {
         log.e('Wrong pass');
-        setState(ViewState.Idle);
+        setBusy(false);
+        isDeleting = false;
         return errorMessage =
             AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
       }
     }).catchError((error) {
       log.e(error);
-      setState(ViewState.Idle);
+      isDeleting = false;
+      setBusy(false);
+
       return false;
     });
+    log.i('model busy $busy');
+    isDeleting = false;
+    setBusy(false);
   }
 
   // Show mnemonic

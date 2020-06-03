@@ -5,10 +5,10 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
+/// TODO: Extract the tab bar functionality to its own class for reuse
 class MarketPairsTabView extends StatelessWidget {
   final List<List<Price>> marketPairsTabBar;
   MarketPairsTabView({Key key, this.marketPairsTabBar}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];

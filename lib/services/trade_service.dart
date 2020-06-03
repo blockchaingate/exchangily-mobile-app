@@ -27,22 +27,20 @@ import '../utils/string_util.dart' as stringUtils;
 class TradeService {
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
-
+  static String basePath = environment['websocket'];
 /*----------------------------------------------------------------------
           Get Coin Price Details Using allPrices Web Sockets
 ----------------------------------------------------------------------*/
 
   Stream<dynamic> getAllCoinPriceByWebSocket() {
+    Stream stream;
     try {
-      final channel =
-          IOWebSocketChannel.connect(Constants.COIN_PRICE_DETAILS_WS_URL);
-      Stream stream = channel.stream;
-
-      return stream;
+      final channel = getAllPriceChannel();
+      stream = channel.stream;
     } catch (err) {
-      throw Exception(
-          '$err'); // Error thrown here will go to onError in them view model
+      log.e('$err'); // Error thrown here will go to onError in them view model
     }
+    return stream;
   }
 
 /*----------------------------------------------------------------------
@@ -62,7 +60,7 @@ class TradeService {
 
       // Build a map of streams
       streamData = {
-        //   'allPrices': StreamData<dynamic>(allPricesChannel),
+        'allPrices': StreamData<dynamic>(allPricesChannel),
         //   'orderList': StreamData<dynamic>(orderListChannel.stream),
         'marketTradeList': StreamData<dynamic>(tradeListChannel.stream)
       };
@@ -74,8 +72,9 @@ class TradeService {
   }
 
   getAllPriceChannel() {
-    final channel =
-        IOWebSocketChannel.connect(environment['websocket'] + 'allprices');
+    String url = basePath + 'allPrices';
+    log.i(url);
+    final channel = IOWebSocketChannel.connect(url);
 
     return channel;
   }

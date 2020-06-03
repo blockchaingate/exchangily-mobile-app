@@ -5,7 +5,7 @@ import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/pairs/market_pairs_tab_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -26,7 +26,9 @@ class TradeViewModal extends MultipleStreamViewModel {
   List<PairDecimalConfig> pairDecimalConfigList = [];
   List<OrderModel> pairOrderList = [];
   List<TradeModel> pairMarketTradeList = [];
+  List myOrders = [];
   Price currentPairPrice;
+  List<dynamic> ordersViewTabBody = [];
 
   List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
@@ -37,15 +39,13 @@ class TradeViewModal extends MultipleStreamViewModel {
 // Change/update stream data before displaying on UI
   @override
   void onData(String key, data) {
-    if (key == 'allPrices') {}
+    ordersViewTabBody = [pairOrderList, pairMarketTradeList, myOrders];
+    log.w(ordersViewTabBody);
   }
 
   /// Transform stream data before notifying to view modal
   @override
   dynamic transformData(String key, data) {
-    log.i('Transform data');
-    log.i(key);
-    log.w(data);
     try {
       /// Order list
       if (key == 'orderList') {
@@ -69,7 +69,6 @@ class TradeViewModal extends MultipleStreamViewModel {
       /// All prices list
       else if (key == 'allPrices') {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-        //   log.i(jsonDynamicList.length);
         PriceList priceList = PriceList.fromJson(jsonDynamicList);
         log.i('pair price list ${priceList.prices.length}');
 
@@ -78,7 +77,6 @@ class TradeViewModal extends MultipleStreamViewModel {
           if (element.change.isNaN) element.change = 0.0;
           if (element.symbol == tickerName) {
             currentPairPrice = element;
-            //   log.i('Current pair Price ${currentPairPrice.toJson()}');
           }
         });
         Map<String, dynamic> res =

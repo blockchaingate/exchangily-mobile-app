@@ -50,7 +50,7 @@ class CreatePasswordScreenState extends BaseState {
 
   Future createOfflineWallets() async {
     setState(ViewState.Busy);
-    _walletInfo = await _walletService
+    await _walletService
         .createOfflineWallets(randomMnemonicFromRoute)
         .then((data) {
       _walletInfo = data;
@@ -61,7 +61,7 @@ class CreatePasswordScreenState extends BaseState {
       log.e(onError);
       setState(ViewState.Idle);
     });
-    setState(ViewState.Busy);
+    setState(ViewState.Idle);
   }
 
 /* ---------------------------------------------------
@@ -82,7 +82,7 @@ class CreatePasswordScreenState extends BaseState {
     return checkConfirmPasswordConditions;
   }
 
-  validatePassword() {
+  Future validatePassword() async {
     setState(ViewState.Busy);
     RegExp regex = new RegExp(pattern);
     String pass = passTextController.text;
@@ -128,11 +128,12 @@ class CreatePasswordScreenState extends BaseState {
         setState(ViewState.Idle);
         return;
       } else {
+        setState(ViewState.Busy);
         password = '';
         confirmPassword = '';
-        _vaultService.secureMnemonic(context, pass, randomMnemonicFromRoute);
-
-        createOfflineWallets();
+        await createOfflineWallets();
+        await _vaultService.secureMnemonic(
+            context, pass, randomMnemonicFromRoute);
       }
     }
     setState(ViewState.Idle);

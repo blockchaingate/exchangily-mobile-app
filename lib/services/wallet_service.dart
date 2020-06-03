@@ -95,7 +95,7 @@ class WalletService {
                 Save Encrypted Data to Storage
 ----------------------------------------------------------------------*/
 
-  saveEncryptedData(String data) async {
+  Future saveEncryptedData(String data) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/my_file.byte');
@@ -110,7 +110,7 @@ class WalletService {
                 Delete Encrypted Data
 ----------------------------------------------------------------------*/
 
-  deleteEncryptedData() async {
+  Future deleteEncryptedData() async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/my_file.byte');
     await file
@@ -235,6 +235,7 @@ class WalletService {
 ----------------------------------------------------------------------*/
 
   Future createOfflineWallets(String mnemonic) async {
+    await walletDatabaseService.getAll();
     List<WalletInfo> _walletInfo = [];
     if (_walletInfo != null) {
       _walletInfo.clear();
@@ -246,7 +247,7 @@ class WalletService {
 
     try {
       for (int i = 0; i < coinTickers.length; i++) {
-        int id = i + 1;
+        // int id = i + 1;
         String tickerName = coinTickers[i];
         String name = coinNames[i];
         String token = tokenType[i];
@@ -262,7 +263,7 @@ class WalletService {
             usdValue: 0.0,
             name: name);
         _walletInfo.add(wi);
-        log.e("Offline wallet ${_walletInfo[i].toJson()}");
+        log.i("Offline wallet ${_walletInfo[i].toJson()}");
         await walletDatabaseService.insert(_walletInfo[i]);
       }
       await walletDatabaseService.getAll();
