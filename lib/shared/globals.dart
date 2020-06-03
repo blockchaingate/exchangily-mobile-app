@@ -13,6 +13,7 @@
 import 'package:flutter/material.dart';
 
 final Color primaryColor = Color.fromRGBO(135, 31, 255, 1);
+final Color btnColor = Color.fromRGBO(125, 21, 255, 1);
 final Color secondaryColor = Color.fromRGBO(31, 33, 51, 1);
 final Color walletCardColor = Color.fromRGBO(43, 43, 75, 1);
 final Color iconBackgroundColor = Color.fromRGBO(83, 74, 223, 1);

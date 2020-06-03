@@ -69,6 +69,9 @@ dependencies:
   # Barcode Scan
   barcode_scan: 1.0.0
 
+  # Material icons
+  material_design_icons_flutter: ^4.0.5345
+
   # Flushbar instead of Snackbar for notifications
   #flushbar: ^1.9.0
   flushbar:
@@ -117,7 +120,7 @@ dependencies:
 
 dev_dependencies:
   intl_translation: '^0.17.0'
-  intl: ^0.16.1
+  intl: ^0.16.0
   flutter_launcher_icons: '^0.7.3'
 
   flutter_test:
@@ -131,6 +134,7 @@ flutter:
   #   iosBundleIdentifier: my.package
   assets:
     - assets/images/start-page/
+    - assets/images/img/
     - assets/images/wallet-page/
     - assets/images/otc/
     - assets/images/otc-campaign/
