@@ -2,29 +2,34 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/market_order_details_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodal.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
 // TODO: Change stream accordiongly when user select tab
 
-class OrdersTabView extends StatelessWidget {
+class OrdersTabView extends ViewModelBuilderWidget<TradeViewModal> {
   final List<dynamic> ordersViewTabBody;
   OrdersTabView({Key key, this.ordersViewTabBody}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
+  Widget builder(BuildContext context, TradeViewModal model, Widget child) {
     List<String> tabNames = ['Order Book', 'Market Trades', 'My Orders'];
+      double screenHeight = MediaQuery.of(context).size.height;
 
     return DefaultTabController(
       length: ordersViewTabBody.length,
-      child: Scaffold(
-        appBar: AppBar(
-            backgroundColor: Colors.white,
-            automaticallyImplyLeading: false,
-            bottom: PreferredSize(
-              preferredSize: Size(double.infinity, 13),
-              child: TabBar(
+      child: Column(
+        children: [
+          TabBar(onTap:  (int i){
+                            print('Tab $i');
+                            model.switchStreams(i);
+                          },
+            indicatorColor: primaryColor,
                   //  unselectedLabelColor: Colors.redAccent,
                   indicatorSize: TabBarIndicatorSize.tab,
                   // indicator: BoxDecoration(
@@ -39,38 +44,58 @@ class OrdersTabView extends StatelessWidget {
                           child: Align(
                         alignment: Alignment.center,
                         child: Text(tab,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              )),
                       ))
                   ]),
-            )),
-        body: Container(
+                    Container( height: screenHeight * 0.70,
           color: Theme.of(context).accentColor,
           child: TabBarView(
               children: ordersViewTabBody.map((tabBody) {
-            Container(
-              child: SelectedTabWidget(tabBody: tabBody),
-            );
+            int index = ordersViewTabBody.indexOf(tabBody);
+            print('Index $index');
+           return Container(
+              child:
+             SelectedTabWidget(
+               tabBody: tabBody,
+                index: index),
+           );
           }).toList()),
         ),
+        ],
+       
       ),
     );
   }
+  @override
+TradeViewModal viewModelBuilder(BuildContext context) => TradeViewModal();
+
 }
 
 class SelectedTabWidget extends StatelessWidget {
   final tabBody;
-  const SelectedTabWidget({Key key, this.tabBody}) : super(key: key);
+  final int index;
+  const SelectedTabWidget({Key key, 
+  this.tabBody, 
+  this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      if (1 == 1)
-        OrderDetails(orderList: tabBody)
-      else if (2 == 2)
-        MarketTradeDetails(marketTradeList: tabBody)
-    ]);
+        if (index == 0)
+        Expanded(child: Text('OrderBook'))
+         // OrderDetails(orderList: tabBody)
+        else if (index == 1)
+        Expanded(child: 
+    //    Container( child: ListView(children: [Text('Market Trades')]))
+    MarketOrderDetails(marketOrderList: tabBody)
+        )
+        else if (index == 2)
+        Expanded(child: Text('My orders'))
+    //OrderDetails(orderList: tabBody)
+      ]);
   }
 }
 
@@ -231,17 +256,3 @@ class OrderDetails extends StatelessWidget {
 }
 
 /// Market Trade Details
-class MarketTradeDetails extends StatelessWidget {
-  final List<TradeModel> marketTradeList;
-  const MarketTradeDetails({Key key, this.marketTradeList}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: PageView.builder(
-            itemCount: marketTradeList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Text('in market trades');
-            }));
-  }
-}

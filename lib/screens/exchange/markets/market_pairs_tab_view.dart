@@ -125,12 +125,9 @@ class MarketPairsTabView extends StatelessWidget {
             )),
         body: Container(
           color: Theme.of(context).accentColor,
-          // padding: EdgeInsets.only(top: 5),
           child: TabBarView(
               children: marketPairsTabBar.map((pairList) {
             return Container(
-              // If i add row here than the error was that i should laid widget once only or get key null
-              // so i extracted the widget and passed the List<Price> object which worked
               child: PriceDetailRow(pairList: pairList),
             );
           }).toList()),

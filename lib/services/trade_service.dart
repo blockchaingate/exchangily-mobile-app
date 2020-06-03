@@ -32,7 +32,7 @@ class TradeService {
           Get Coin Price Details Using allPrices Web Sockets
 ----------------------------------------------------------------------*/
 
-  Stream<dynamic> getAllCoinPriceByWebSocket() {
+  Stream getAllCoinPriceByWebSocket() {
     Stream stream;
     try {
       final channel = getAllPriceChannel();
@@ -61,8 +61,8 @@ class TradeService {
       // Build a map of streams
       streamData = {
         'allPrices': StreamData<dynamic>(allPricesChannel),
-        //   'orderList': StreamData<dynamic>(orderListChannel.stream),
-        'marketTradeList': StreamData<dynamic>(tradeListChannel.stream)
+        'orderBookList': StreamData<dynamic>(orderListChannel.stream),
+        'marketTradesList': StreamData<dynamic>(tradeListChannel.stream)
       };
       return streamData;
     } catch (err) {
@@ -70,6 +70,23 @@ class TradeService {
           '$err'); // Error thrown here will go to onError in them view model
     }
   }
+
+/*----------------------------------------------------------------------
+                    Trade Orders 
+----------------------------------------------------------------------*/
+
+  Stream getTradeOrderByWebSocket(String tickerName) {
+    Stream stream;
+    try {
+      final tradeListChannel = getTradeListChannel(tickerName);
+      stream = tradeListChannel.stream;
+    } catch (err) {
+      log.e('$err'); // Error thrown here will go to onError in them view model
+    }
+    return stream;
+  }
+
+  /// All Pair Price
 
   getAllPriceChannel() {
     String url = basePath + 'allPrices';

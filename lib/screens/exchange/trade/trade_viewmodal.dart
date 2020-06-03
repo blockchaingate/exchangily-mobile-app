@@ -24,11 +24,12 @@ class TradeViewModal extends MultipleStreamViewModel {
   TradeService tradeService = locator<TradeService>();
   ApiService apiService = locator<ApiService>();
   List<PairDecimalConfig> pairDecimalConfigList = [];
-  List<OrderModel> pairOrderList = [];
-  List<TradeModel> pairMarketTradeList = [];
+  List<OrderModel> orderBookList = [];
+  List<TradeModel> marketTradesList = [];
   List myOrders = [];
   Price currentPairPrice;
   List<dynamic> ordersViewTabBody = [];
+  bool marketTradeStreamSource = false;
 
   List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
@@ -39,35 +40,16 @@ class TradeViewModal extends MultipleStreamViewModel {
 // Change/update stream data before displaying on UI
   @override
   void onData(String key, data) {
-    ordersViewTabBody = [pairOrderList, pairMarketTradeList, myOrders];
-    log.w(ordersViewTabBody);
+    ordersViewTabBody = [orderBookList, marketTradesList, myOrders];
+    log.w('ordersViewTabBody $ordersViewTabBody');
   }
 
   /// Transform stream data before notifying to view modal
   @override
   dynamic transformData(String key, data) {
     try {
-      /// Order list
-      if (key == 'orderList') {
-        List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
-        log.e('order $data');
-        OrderList orderList = OrderList.fromJson(jsonDynamicList);
-        // log.i('pair order list ${orderList.orders}');
-
-        pairOrderList = orderList.orders;
-        pairOrderList.forEach((element) {});
-      }
-
-      /// Market trade list
-      else if (key == 'marketTradeList') {
-        List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-        log.e('TRADE list d $jsonDynamicList');
-        TradeList tradeList = TradeList.fromJson(jsonDynamicList);
-        pairMarketTradeList = tradeList.trades;
-      }
-
       /// All prices list
-      else if (key == 'allPrices') {
+      if (key == 'allPrices') {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
         PriceList priceList = PriceList.fromJson(jsonDynamicList);
         log.i('pair price list ${priceList.prices.length}');
@@ -82,18 +64,39 @@ class TradeViewModal extends MultipleStreamViewModel {
         Map<String, dynamic> res =
             tradeService.marketPairPriceGroups(pairPriceList);
         marketPairsTabBar = res['marketPairsGroupList'];
+      } // all prices ends
+
+      /// Order list
+      else if (key == 'orderBookList') {
+        List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
+        log.w('$key $data');
+        OrderList orderList = OrderList.fromJson(jsonDynamicList);
+        // log.i('pair order list ${orderList.orders}');
+
+        orderBookList = orderList.orders;
+        orderBookList.forEach((element) {});
+      }
+
+      /// Market trade list
+      else if (key == 'marketTradesList') {
+        List<dynamic> jsonDynamicList = jsonDecode(data) as List;
+        log.i('$key $data');
+        TradeList tradeList = TradeList.fromJson(jsonDynamicList);
+        marketTradesList = tradeList.trades;
       }
     } catch (err) {
       log.e('Catch error $err');
       log.e('Cancelling $key Stream Subsciption');
-
-      /// cancel stream subcription
       getSubscriptionForKey(key).cancel();
     }
   }
 
-  /// Initialize when model ready
+  @override
+  void onCancel(String key) {
+    log.e('Stream $key closed');
+  }
 
+  /// Initialize when model ready
   init() {
     getDecimalPairConfig();
   }
@@ -104,11 +107,6 @@ class TradeViewModal extends MultipleStreamViewModel {
       pairDecimalConfigList = res;
     });
     print(pairDecimalConfigList.length);
-  }
-
-  @override
-  void onCancel(String key) {
-    log.e('Stream $key closed');
   }
 
   /// Bottom sheet to show market pair price
@@ -122,5 +120,28 @@ class TradeViewModal extends MultipleStreamViewModel {
               height: MediaQuery.of(context).size.height - 50,
               child: MarketPairsTabView(marketPairsTabBar: marketPairsTabBar));
         });
+  }
+
+  /// Switch Streams
+  void switchStreams(int index) {
+    var marketTradesStream = getSubscriptionForKey('marketTradesList');
+    var orderBookStream = getSubscriptionForKey('orderBookList');
+
+    /// if user click on order book tab then check if market trades stream
+    /// is running or pause, if not pause then pause it and check if order book
+    /// stream is paused, if paused then resume it
+
+    if (index == 0) {
+      log.i('marketTradesList status ${marketTradesStream.isPaused}');
+      !marketTradesStream.isPaused ?? marketTradesStream.pause();
+      log.i('marketTradesList status ${marketTradesStream.isPaused}');
+      log.i('orderBookList status ${orderBookStream.isPaused}');
+      orderBookStream.isPaused ?? orderBookStream.resume();
+      log.i('orderBookList status ${orderBookStream.isPaused}');
+    } else if (index == 1) {
+      !orderBookStream.isPaused ?? orderBookStream.pause();
+      log.i('marketTradesList status ${marketTradesStream.isPaused}');
+      marketTradesStream.isPaused ?? marketTradesStream.resume();
+    }
   }
 }

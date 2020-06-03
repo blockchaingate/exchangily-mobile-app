@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orders_tab_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodal.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
@@ -221,12 +222,15 @@ class TradeView extends StatelessWidget {
               // Buy Sell Buttons
 
               /// Market orders
-              !model.dataReady('marketTradeList')
+              !model.dataReady('marketTradeList') &&
+                      !model.dataReady('orderBookList')
                   ? Center(
                       child: CircularProgressIndicator(
                       backgroundColor: red,
                     ))
-                  : Container(child: Text('Market Trade List data is ready'))
+                  : Container(
+                      child: OrdersTabView(
+                          ordersViewTabBody: model.ordersViewTabBody))
             ],
           ),
         ),
