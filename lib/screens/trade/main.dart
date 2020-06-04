@@ -276,7 +276,8 @@ class _TradeState extends State<Trade> with TradeService {
                   color: Color(0xFF2c2c4c),
                   child: Center(child: CircularProgressIndicator())))
         ]),
-        bottomNavigationBar: BottomNavBar(count: 2));
+        // bottomNavigationBar: BottomNavBar(count: 2)
+        );
   }
 
   @override

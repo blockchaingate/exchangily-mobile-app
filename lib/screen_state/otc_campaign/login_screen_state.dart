@@ -234,6 +234,6 @@ class CampaignLoginScreenState extends BaseState {
   }
 
   onBackButtonPressed() {
-    navigationService.navigateTo('/dashboard');
+    navigationService.navigateTo('/mainNav');
   }
 }

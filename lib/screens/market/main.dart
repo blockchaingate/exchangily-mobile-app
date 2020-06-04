@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:exchangilymobileapp/widgets/loading_animation.dart';
 import "package:flutter/material.dart";
 import "widgets/overview.dart";
 import "widgets/detail.dart";
@@ -65,10 +66,10 @@ class _MarketState extends State<Market> with TradeService {
                         data: _updatePrice(snapshot.data))
                   ],
                 )
-              : Center(child: CircularProgressIndicator());
+              : Loading();
         },
       ),
-      bottomNavigationBar: BottomNavBar(count: 1),
+      // bottomNavigationBar: BottomNavBar(count: 1),
     );
   }
 

@@ -52,11 +52,29 @@ class WalletFeaturesScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Container(
-                    child: Image.asset(
-                      'assets/images/start-page/logo.png',
-                      width: 200,
-                      height: 60,
-                      color: globals.white,
+                    width: MediaQuery.of(context).size.width,
+                    height: 60,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment:Alignment.center,
+                          child: Image.asset(
+                          'assets/images/start-page/logo.png',
+                          width: 200,
+                          height: 60,
+                          color: globals.white,
+                        ),
+                        ),
+                         Align(
+                          alignment:Alignment.centerRight,
+                            child: IconButton(
+                                icon: Icon(Icons.close,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                }))
+                      ],
                     ),
                   ),
                   Container(
@@ -287,7 +305,7 @@ class WalletFeaturesScreen extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: BottomNavBar(count: 0),
+        // bottomNavigationBar: BottomNavBar(count: 0),
       ),
     );
   }

@@ -49,7 +49,7 @@ class CreatePasswordScreenState extends BaseState {
         .createOfflineWallets(randomMnemonicFromRoute)
         .then((data) {
       _walletInfo = data;
-      Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
+      Navigator.pushNamed(context, '/mainNav', arguments: _walletInfo);
       randomMnemonicFromRoute = '';
     }).catchError((onError) {
       errorMessage = AppLocalizations.of(context).somethingWentWrong;
