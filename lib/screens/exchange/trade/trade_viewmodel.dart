@@ -13,9 +13,9 @@ import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class TradeViewModal extends MultipleStreamViewModel {
+class TradeViewModel extends MultipleStreamViewModel {
   final String tickerName;
-  TradeViewModal({this.tickerName});
+  TradeViewModel({this.tickerName});
 
   final log = getLogger('TradeViewModal');
 
@@ -24,7 +24,9 @@ class TradeViewModal extends MultipleStreamViewModel {
   TradeService tradeService = locator<TradeService>();
   ApiService apiService = locator<ApiService>();
   List<PairDecimalConfig> pairDecimalConfigList = [];
-  List<OrderModel> orderBookList = [];
+  List<OrderModel> buyOrderBookList = [];
+  List<OrderModel> sellOrderBookList = [];
+  List orderBook = [];
   List<TradeModel> marketTradesList = [];
   List myOrders = [];
   Price currentPairPrice;
@@ -40,8 +42,8 @@ class TradeViewModal extends MultipleStreamViewModel {
 // Change/update stream data before displaying on UI
   @override
   void onData(String key, data) {
-    ordersViewTabBody = [orderBookList, marketTradesList, myOrders];
-    log.w('ordersViewTabBody $ordersViewTabBody');
+    ordersViewTabBody = [orderBook, marketTradesList, myOrders];
+    // log.w('ordersViewTabBody $ordersViewTabBody');
   }
 
   /// Transform stream data before notifying to view modal
@@ -68,20 +70,29 @@ class TradeViewModal extends MultipleStreamViewModel {
 
       /// Order list
       else if (key == 'orderBookList') {
+        // Buy order
         List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
-        log.w('$key $data');
         OrderList orderList = OrderList.fromJson(jsonDynamicList);
-        // log.i('pair order list ${orderList.orders}');
 
-        orderBookList = orderList.orders;
-        orderBookList.forEach((element) {});
+        buyOrderBookList = orderList.orders;
+        buyOrderBookList.forEach((element) {});
+
+        // Sell orders
+        List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
+        OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
+
+        sellOrderBookList = orderList.orders;
+        sellOrderBookList.forEach((element) {});
+
+        // Fill orderBook list
+        orderBook = [buyOrderBookList, sellOrderBookList];
       }
 
       /// Market trade list
       else if (key == 'marketTradesList') {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-        log.i('$key $data');
         TradeList tradeList = TradeList.fromJson(jsonDynamicList);
+        log.i('$key $tradeList');
         marketTradesList = tradeList.trades;
       }
     } catch (err) {

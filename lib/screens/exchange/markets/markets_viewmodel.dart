@@ -24,7 +24,7 @@ import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class MarketsViewModal extends StreamViewModel<dynamic> {
+class MarketsViewModel extends StreamViewModel<dynamic> {
   final log = getLogger('MarketsViewModal');
 
   String errorMessage = '';

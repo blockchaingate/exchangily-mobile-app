@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orders_tab_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodal.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -18,10 +18,10 @@ class TradeView extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<TradeViewModal>.reactive(
+    return ViewModelBuilder<TradeViewModel>.reactive(
       // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
       // which is required override
-      viewModelBuilder: () => TradeViewModal(tickerName: tickerName),
+      viewModelBuilder: () => TradeViewModel(tickerName: tickerName),
       onModelReady: (model) {
         model.context = context;
       },

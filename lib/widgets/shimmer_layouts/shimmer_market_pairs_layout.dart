@@ -6,7 +6,7 @@ class ShimmerMarketPairsLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = 17;
+    double height = 14;
     double width = 50;
     return Container(
       // decoration:
@@ -34,7 +34,7 @@ class ShimmerMarketPairsLayout extends StatelessWidget {
                     height: height,
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    margin: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                     height: height,
                     width: width - 6,
                     decoration: BoxDecoration(

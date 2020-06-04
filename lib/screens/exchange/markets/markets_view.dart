@@ -26,7 +26,7 @@ class MarketsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MarketsViewModal>.reactive(
+    return ViewModelBuilder<MarketsViewModel>.reactive(
         onModelReady: (model) {
           model.context = context;
         },
@@ -70,6 +70,6 @@ class MarketsView extends StatelessWidget {
                     ),
               bottomNavigationBar: BottomNavBar(count: 1),
             ),
-        viewModelBuilder: () => MarketsViewModal());
+        viewModelBuilder: () => MarketsViewModel());
   }
 }
