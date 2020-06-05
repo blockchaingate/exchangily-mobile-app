@@ -15,12 +15,9 @@ class OrdersLayoutView extends StatelessWidget {
     if (orderBook != null) {
       orderBookBuyOrders = orderBook[0];
       orderBookSellOrders = orderBook[1];
-      print('Buy Orders in orde details layout view $orderBookBuyOrders');
-      print('----- $orderBook');
     }
-    // print('Buy Orders in orde details layout view $orderBookSellOrders');
     return Container(
-        padding: EdgeInsets.only(top: 5.0),
+        padding: EdgeInsets.all(5.0),
         child: Column(
           children: <Widget>[
             // Heading Buy Sell Orders Row
@@ -28,12 +25,12 @@ class OrdersLayoutView extends StatelessWidget {
               Container(
                 child: Text(AppLocalizations.of(context).buyOrders,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.subtitle2),
+                    style: Theme.of(context).textTheme.bodyText1),
               ),
               Container(
                 child: Text(AppLocalizations.of(context).sellOrders,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.subtitle2),
+                    style: Theme.of(context).textTheme.bodyText1),
               ),
             ]),
             UIHelper.horizontalSpaceSmall,
@@ -44,7 +41,6 @@ class OrdersLayoutView extends StatelessWidget {
               children: <Widget>[
                 // Buy Orders Column
                 Column(
-                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
@@ -56,9 +52,9 @@ class OrdersLayoutView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(AppLocalizations.of(context).quantity,
-                                style: TextStyle(fontSize: 12, color: grey)),
+                                style: TextStyle(fontSize: 9, color: grey)),
                             Text(AppLocalizations.of(context).price,
-                                style: TextStyle(fontSize: 12, color: grey))
+                                style: TextStyle(fontSize: 9, color: grey))
                           ]),
                     ),
 
@@ -92,9 +88,9 @@ class OrdersLayoutView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(AppLocalizations.of(context).price,
-                                  style: TextStyle(fontSize: 12, color: grey)),
+                                  style: TextStyle(fontSize: 9, color: grey)),
                               Text(AppLocalizations.of(context).quantity,
-                                  style: TextStyle(fontSize: 12, color: grey)),
+                                  style: TextStyle(fontSize: 9, color: grey)),
                             ]),
                       ),
 
@@ -136,26 +132,30 @@ class OrderDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        // width: MediaQuery.of(context).size.width * 0.45,
-        margin: EdgeInsets.only(bottom: 5.0),
+        margin: EdgeInsets.only(bottom: 2.0, right: 5.0, left: 5.0),
+        padding: EdgeInsets.all(3.0),
         color: isBuy ? buyOrders : sellOrders,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             // Quantity Container
             Expanded(
-                child: Text('${orders[index].orderQuantity.toStringAsFixed(3)}',
-                    textAlign: TextAlign.start,
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: isBuy ? Color(0xFF5e617f) : sellPrice))),
+                child: isBuy
+                    ? Text('${orders[index].orderQuantity.toStringAsFixed(3)}',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 12, color: grey))
+                    : Text('${orders[index].price.toStringAsFixed(3)}',
+                        textAlign: TextAlign.end,
+                        style: TextStyle(fontSize: 12, color: sellPrice))),
             // Price Container
             Expanded(
-                child: Text('${orders[index].price.toStringAsFixed(3)}',
-                    textAlign: TextAlign.end,
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: isBuy ? Color(0xFF5e617f) : sellPrice))),
+                child: isBuy
+                    ? Text('${orders[index].price.toStringAsFixed(3)}',
+                        textAlign: TextAlign.end,
+                        style: TextStyle(fontSize: 12, color: buyPrice))
+                    : Text('${orders[index].orderQuantity.toStringAsFixed(3)}',
+                        textAlign: TextAlign.start,
+                        style: TextStyle(fontSize: 12, color: grey))),
           ],
         ));
   }

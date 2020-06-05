@@ -83,7 +83,7 @@ class TradeViewModel extends MultipleStreamViewModel {
         List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
         OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
 
-        sellOrderBookList = orderList.orders;
+        sellOrderBookList = sellOrderList.orders;
         sellOrderBookList.forEach((element) {
           //   log.i('OrderBook SELL ${element.orderQuantity}');
         });

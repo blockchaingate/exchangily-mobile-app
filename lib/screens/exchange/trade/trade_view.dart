@@ -229,11 +229,8 @@ class TradeView extends StatelessWidget {
                       backgroundColor: red,
                     ))
                   : Container(
-                      child:
-                          // Center(child: Text('Tabs')),
-
-                          OrdersTabView(
-                              ordersViewTabBody: model.ordersViewTabBody))
+                      child: OrdersTabView(
+                          ordersViewTabBody: model.ordersViewTabBody))
             ],
           ),
         ),
