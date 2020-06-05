@@ -4,14 +4,21 @@ import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
-class OrderDetailsLayoutView extends StatelessWidget {
+class OrdersLayoutView extends StatelessWidget {
   final List orderBook;
-  OrderDetailsLayoutView({Key key, this.orderBook}) : super(key: key);
+  OrdersLayoutView({Key key, this.orderBook}) : super(key: key);
   // final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {
-    List<OrderModel> buyOrders = orderBook[0];
-    List<OrderModel> sellOrders = orderBook[1];
+    List<OrderModel> orderBookBuyOrders = [];
+    List<OrderModel> orderBookSellOrders = [];
+    if (orderBook != null) {
+      orderBookBuyOrders = orderBook[0];
+      orderBookSellOrders = orderBook[1];
+      print('Buy Orders in orde details layout view $orderBookBuyOrders');
+      print('----- $orderBook');
+    }
+    // print('Buy Orders in orde details layout view $orderBookSellOrders');
     return Container(
         padding: EdgeInsets.only(top: 5.0),
         child: Column(
@@ -32,8 +39,8 @@ class OrderDetailsLayoutView extends StatelessWidget {
             UIHelper.horizontalSpaceSmall,
             // Buy/Sell Row
             Row(
-              //  mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 // Buy Orders Column
                 Column(
@@ -57,13 +64,17 @@ class OrderDetailsLayoutView extends StatelessWidget {
 
                     // Buy Orders List View
                     SizedBox(
+                      width: 200,
                       height: 300,
                       child: ListView.builder(
                         shrinkWrap: true,
-                        itemCount: buyOrders.length,
+                        itemCount: orderBookBuyOrders.length,
                         itemBuilder: (BuildContext context, int index) {
                           return OrderDetailsView(
-                              buyOrders: buyOrders, index: index);
+                            orders: orderBookBuyOrders,
+                            index: index,
+                            isBuy: true,
+                          );
                         },
                       ),
                     )
@@ -87,50 +98,22 @@ class OrderDetailsLayoutView extends StatelessWidget {
                             ]),
                       ),
 
-                      // Sell Orders For Loop
-
-                      // Container(
-                      //   height: 400,
-                      //   child: ListView.builder(
-                      //     itemCount: sellOrders.length,
-                      //     itemBuilder: (BuildContext context, int index) {
-                      //       return Container(
-                      //         // decoration: const BoxDecoration(
-                      //         //   border: Border(
-                      //         //     top: BorderSide(
-                      //         //         width: 0.5, color: Color(0xFF4c5684)),
-                      //         //     bottom: BorderSide(
-                      //         //         width: 0.15, color: Color(0xFF4c5684)),
-                      //         //   ),
-                      //         //   //  color: Color(0xFF472a4a),
-                      //         // ),
-                      //         width: MediaQuery.of(context).size.width * 0.45,
-                      //         margin: EdgeInsets.only(bottom: 5.0),
-                      //         color: Color(0xFF472a4a).withAlpha(75),
-                      //         child: Row(
-                      //           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      //           children: <Widget>[
-                      //             Container(
-                      //                 width: 100,
-                      //                 child: Text(
-                      //                     sellOrders[index].price.toStringAsFixed(3),
-                      //                     textAlign: TextAlign.start,
-                      //                     style: TextStyle(
-                      //                         fontSize: 12, color: sellPrice))),
-                      //             Container(
-                      //                 width: 50,
-                      //                 padding: EdgeInsets.symmetric(vertical: 7.0),
-                      //                 child: Text(
-                      //                     sellOrders[index].orderQuantity.toString(),
-                      //                     textAlign: TextAlign.end,
-                      //                     style: TextStyle(
-                      //                         fontSize: 12, color: Color(0xFF5e617f))))
-                      //           ],
-                      //         ),
-                      //       );
-                      //     },
-                      //   ),
-                      // ),
+                      // Sell Orders List view
+                      SizedBox(
+                        width: 200,
+                        height: 300,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: orderBookSellOrders.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return OrderDetailsView(
+                              orders: orderBookSellOrders,
+                              index: index,
+                              isBuy: false,
+                            );
+                          },
+                        ),
+                      )
                     ]),
               ],
             )
@@ -141,36 +124,38 @@ class OrderDetailsLayoutView extends StatelessWidget {
 
 class OrderDetailsView extends StatelessWidget {
   final int index;
+  final bool isBuy;
+  final List<OrderModel> orders;
   const OrderDetailsView(
-      {Key key, @required this.buyOrders, @required this.index})
+      {Key key,
+      @required this.orders,
+      @required this.index,
+      @required this.isBuy})
       : super(key: key);
-
-  final List<OrderModel> buyOrders;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: MediaQuery.of(context).size.width * 0.45,
+        // width: MediaQuery.of(context).size.width * 0.45,
         margin: EdgeInsets.only(bottom: 5.0),
-        color: Color(0xFF264559).withAlpha(75),
+        color: isBuy ? buyOrders : sellOrders,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             // Quantity Container
-            Flexible(
-                fit: FlexFit.loose,
-                //  width: 50,
-                child: Text(buyOrders[index].orderQuantity.toStringAsFixed(2),
+            Expanded(
+                child: Text('${orders[index].orderQuantity.toStringAsFixed(3)}',
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 12, color: Color(0xFF5e617f)))),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: isBuy ? Color(0xFF5e617f) : sellPrice))),
             // Price Container
-            Flexible(
-                fit: FlexFit.loose,
-                //width: 100,
-                // padding: EdgeInsets.symmetric(vertical: 7.0),
-                child: Text(buyOrders[index].price.toStringAsFixed(3),
+            Expanded(
+                child: Text('${orders[index].price.toStringAsFixed(3)}',
                     textAlign: TextAlign.end,
-                    style: TextStyle(fontSize: 12, color: green))),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: isBuy ? Color(0xFF5e617f) : sellPrice))),
           ],
         ));
   }

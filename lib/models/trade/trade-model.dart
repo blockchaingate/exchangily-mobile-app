@@ -103,7 +103,7 @@ class TradeList {
   final List<TradeModel> trades;
   TradeList({this.trades});
   factory TradeList.fromJson(List<dynamic> parsedJson) {
-    print(parsedJson);
+    // print(parsedJson);
     List<TradeModel> trades = new List<TradeModel>();
     parsedJson.forEach((i) {
       TradeModel trade = TradeModel.fromJson(i);

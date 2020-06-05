@@ -90,7 +90,7 @@ class TradeService {
 
   getAllPriceChannel() {
     String url = basePath + 'allPrices';
-    log.i(url);
+    //  log.i(url);
     final channel = IOWebSocketChannel.connect(url);
 
     return channel;

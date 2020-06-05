@@ -79,9 +79,9 @@ class OrderModel {
     this._pairRight = pairRight;
     this._orderType = orderType;
     this._bidOrAsk = bidOrAsk;
-    this._price = price;
-    this._orderQuantity = orderQuantity;
-    this._filledQuantity = filledQuantity;
+    this._price = price ?? 0.0;
+    this._orderQuantity = orderQuantity ?? 0.0;
+    this._filledQuantity = filledQuantity ?? 0.0;
     this._time = time;
     this._isActive = isActive;
   }
@@ -119,14 +119,14 @@ class OrderModel {
     return data;
   }
 
-  String get address => address;
+  String get address => _address;
   set address(String address) {
-    this.address = address;
+    this._address = address;
   }
 
-  String get orderHash => orderHash;
+  String get orderHash => _orderHash;
   set orderHash(String orderHash) {
-    this.orderHash = orderHash;
+    this._orderHash = orderHash;
   }
 
   double get price => _price;
@@ -134,14 +134,14 @@ class OrderModel {
     this._price = price;
   }
 
-  double get filledQuantity => filledQuantity;
+  double get filledQuantity => _filledQuantity;
   set filledQuantity(double filledQuantity) {
-    this.filledQuantity = filledQuantity;
+    this._filledQuantity = filledQuantity;
   }
 
-  double get orderQuantity => orderQuantity;
+  double get orderQuantity => _orderQuantity;
   set orderQuantity(double orderQuantity) {
-    this.orderQuantity = orderQuantity;
+    this._orderQuantity = orderQuantity;
   }
 
   int get time => _time;
@@ -149,19 +149,19 @@ class OrderModel {
     this._time = time;
   }
 
-  int get pairRight => pairRight;
+  int get pairRight => _pairRight;
   set pairRight(int pairRight) {
-    this.pairRight = pairRight;
+    this._pairRight = pairRight;
   }
 
-  int get pairLeft => pairLeft;
+  int get pairLeft => _pairLeft;
   set pairLeft(int pairLeft) {
-    this.pairLeft = pairLeft;
+    this._pairLeft = pairLeft;
   }
 
-  int get orderType => orderType;
+  int get orderType => _orderType;
   set orderType(int orderType) {
-    this.orderType = orderType;
+    this._orderType = orderType;
   }
 
   bool get isActive => _isActive;
@@ -169,12 +169,12 @@ class OrderModel {
     this._isActive = isActive;
   }
 
-  bool get payWithExg => payWithExg;
+  bool get payWithExg => _payWithExg;
   set payWithExg(bool payWithExg) {
     this.payWithExg = payWithExg;
   }
 
-  bool get bidOrAsk => bidOrAsk;
+  bool get bidOrAsk => _bidOrAsk;
   set bidOrAsk(bool bidOrAsk) {
     this._bidOrAsk = bidOrAsk;
   }
@@ -183,11 +183,11 @@ class OrderModel {
 class OrderList {
   final List<OrderModel> orders;
   OrderList({this.orders});
+
   factory OrderList.fromJson(List<dynamic> parsedJson) {
-    print(parsedJson);
     List<OrderModel> orders = new List<OrderModel>();
     parsedJson.forEach((i) {
-      print('raw orders ${i}');
+      // print('raw orders ${i}');
       OrderModel order = OrderModel.fromJson(i);
       print('ready for ui orders ${order.toJson()}');
       orders.add(order);

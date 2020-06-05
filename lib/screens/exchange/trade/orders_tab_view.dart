@@ -2,8 +2,8 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/market_trades_details_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/order_details_layout_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/market_trades_layout_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/order_layout_view.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -76,10 +76,9 @@ class SelectedTabWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       if (index == 0)
-        // Expanded(child: Text('OrderBook'))
-        Expanded(child: OrderDetailsLayoutView(orderBook: tabBody))
+        Expanded(child: OrdersLayoutView(orderBook: tabBody))
       else if (index == 1)
-        Expanded(child: MarketOrderDetails(marketTrades: tabBody))
+        Expanded(child: MarketTradesLayoutView(marketTrades: tabBody))
       else if (index == 2)
         Expanded(child: Text('My orders'))
       //OrderDetails(orderList: tabBody)

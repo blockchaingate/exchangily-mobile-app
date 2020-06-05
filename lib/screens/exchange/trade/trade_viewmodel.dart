@@ -54,7 +54,7 @@ class TradeViewModel extends MultipleStreamViewModel {
       if (key == 'allPrices') {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
         PriceList priceList = PriceList.fromJson(jsonDynamicList);
-        log.i('pair price list ${priceList.prices.length}');
+        //  log.i('pair price list ${priceList.prices.length}');
 
         pairPriceList = priceList.prices;
         pairPriceList.forEach((element) {
@@ -72,19 +72,23 @@ class TradeViewModel extends MultipleStreamViewModel {
       else if (key == 'orderBookList') {
         // Buy order
         List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
+        log.w('OrderBook jsonDynamicList $jsonDynamicList');
         OrderList orderList = OrderList.fromJson(jsonDynamicList);
-
         buyOrderBookList = orderList.orders;
-        buyOrderBookList.forEach((element) {});
+        buyOrderBookList.forEach((element) {
+          log.w('OrderBook BUY ${element.isActive}');
+        });
 
-        // Sell orders
+        // // Sell orders
         List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
         OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
 
         sellOrderBookList = orderList.orders;
-        sellOrderBookList.forEach((element) {});
+        sellOrderBookList.forEach((element) {
+          //   log.i('OrderBook SELL ${element.orderQuantity}');
+        });
 
-        // Fill orderBook list
+        // // Fill orderBook list
         orderBook = [buyOrderBookList, sellOrderBookList];
       }
 
@@ -92,13 +96,13 @@ class TradeViewModel extends MultipleStreamViewModel {
       else if (key == 'marketTradesList') {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
         TradeList tradeList = TradeList.fromJson(jsonDynamicList);
-        log.i('$key $tradeList');
+        //log.i('$key $tradeList');
         marketTradesList = tradeList.trades;
       }
     } catch (err) {
       log.e('Catch error $err');
       log.e('Cancelling $key Stream Subsciption');
-      getSubscriptionForKey(key).cancel();
+      // getSubscriptionForKey(key).cancel();
     }
   }
 
