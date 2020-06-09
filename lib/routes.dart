@@ -108,7 +108,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => Trade('EXG/USDT'));
 
       case '/exchangeTrade':
-        return MaterialPageRoute(builder: (_) => TradeView(tickerName: args));
+        return MaterialPageRoute(
+            builder: (_) => TradeView(pairPriceByRoute: args));
 
       case '/addGas':
         return MaterialPageRoute(builder: (_) => AddGas());

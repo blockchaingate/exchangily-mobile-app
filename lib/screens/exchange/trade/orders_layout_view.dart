@@ -10,12 +10,6 @@ class OrdersLayoutView extends StatelessWidget {
   // final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {
-    List<OrderModel> orderBookBuyOrders = [];
-    List<OrderModel> orderBookSellOrders = [];
-    if (orderBook != null) {
-      orderBookBuyOrders = orderBook[0];
-      orderBookSellOrders = orderBook[1];
-    }
     return Container(
         padding: EdgeInsets.all(5.0),
         child: Column(
@@ -25,92 +19,60 @@ class OrdersLayoutView extends StatelessWidget {
               Container(
                 child: Text(AppLocalizations.of(context).buyOrders,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyText1),
+                    style: Theme.of(context).textTheme.headline6),
               ),
               Container(
                 child: Text(AppLocalizations.of(context).sellOrders,
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyText1),
+                    style: Theme.of(context).textTheme.headline6),
               ),
             ]),
-            UIHelper.horizontalSpaceSmall,
+            UIHelper.verticalSpaceSmall,
             // Buy/Sell Row
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                // Buy Orders Column
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      color: walletCardColor,
-                      width: MediaQuery.of(context).size.width * 0.45,
-                      padding: EdgeInsets.all(5.0),
-                      // Quantity/Price headers row
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(AppLocalizations.of(context).quantity,
-                                style: TextStyle(fontSize: 9, color: grey)),
-                            Text(AppLocalizations.of(context).price,
-                                style: TextStyle(fontSize: 9, color: grey))
-                          ]),
-                    ),
-
-                    // Buy Orders List View
-                    SizedBox(
-                      width: 200,
-                      height: 300,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: orderBookBuyOrders.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return OrderDetailsView(
-                            orders: orderBookBuyOrders,
-                            index: index,
-                            isBuy: true,
-                          );
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                // Column Sell Orders
-                Column(
+                // Buy/Sell Orders Column
+                for (var orders in orderBook)
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
                         color: walletCardColor,
                         width: MediaQuery.of(context).size.width * 0.45,
                         padding: EdgeInsets.all(5.0),
+                        // Quantity/Price headers row
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(AppLocalizations.of(context).price,
-                                  style: TextStyle(fontSize: 9, color: grey)),
                               Text(AppLocalizations.of(context).quantity,
                                   style: TextStyle(fontSize: 9, color: grey)),
+                              Text(AppLocalizations.of(context).price,
+                                  style: TextStyle(fontSize: 9, color: grey))
                             ]),
                       ),
 
-                      // Sell Orders List view
+                      // Buy/Sell Orders List View
                       SizedBox(
                         width: 200,
                         height: 300,
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: orderBookSellOrders.length,
+                          itemCount: orders.length,
                           itemBuilder: (BuildContext context, int index) {
+                            int orderTypeByIndex = orderBook.indexOf(orders);
                             return OrderDetailsView(
-                              orders: orderBookSellOrders,
+                              orders: orders,
                               index: index,
-                              isBuy: false,
+                              isBuy: orderTypeByIndex == 0 ? true : false,
                             );
                           },
                         ),
                       )
-                    ]),
+                    ],
+                  ),
               ],
             )
           ],
@@ -132,11 +94,11 @@ class OrderDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(bottom: 2.0, right: 5.0, left: 5.0),
+        margin: EdgeInsets.only(bottom: 2.0, right: 6.0, left: 6.0),
         padding: EdgeInsets.all(3.0),
         color: isBuy ? buyOrders : sellOrders,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             // Quantity Container
             Expanded(

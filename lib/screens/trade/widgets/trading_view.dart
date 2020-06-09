@@ -47,18 +47,14 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
   }
 
   _loadHtmlFromAssets() async {
-    //var pair = widget.pair.replaceAll(RegExp('/'), '');
-    // pair = 'index';
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var lang = prefs.getString('lang');
-    print('lang=' + lang);
     if (lang == 'en') {
       lang = 'en-US';
     } else if (lang == 'zh') {
       lang = 'zh-CN';
     }
 
-    print('lang==' + lang);
     var pairArray = widget.pair.split('/');
     String fileText = await rootBundle.loadString('assets/pages/index.html');
     fileText = fileText

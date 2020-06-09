@@ -5,7 +5,8 @@ class NavigationService {
       new GlobalKey<NavigatorState>();
 
   Future<dynamic> navigateTo(String routeName, {dynamic arguments}) async {
-    return navigatorKey.currentState.pushNamed(routeName, arguments: arguments);
+    return navigatorKey.currentState
+        .pushReplacementNamed(routeName, arguments: arguments);
   }
 
   goBack() {

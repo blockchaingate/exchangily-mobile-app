@@ -258,17 +258,17 @@ class BuySellScreenState extends BaseState {
 
       for (var i = 0; i < orders.length; i++) {
         var order = orders[i];
-        var orderHash = order['orderHash'];
-        var address = order['address'];
-        var orderType = order['orderType'];
-        var bidOrAsk = order['bidOrAsk'];
-        var pairLeft = order['pairLeft'];
-        var pairRight = order['pairRight'];
-        var price = bigNum2Double(order['price']);
-        var orderQuantity = bigNum2Double(order['orderQuantity']);
-        var filledQuantity = bigNum2Double(order['filledQuantity']);
-        var time = order['time'];
-        var isActive = order['isActive'];
+        var orderHash = order.orderHash;
+        var address = order.address;
+        var orderType = order.orderType;
+        var bidOrAsk = order.bidOrAsk;
+        var pairLeft = order.pairLeft;
+        var pairRight = order.pairRight;
+        var price = bigNum2Double(order.price);
+        var orderQuantity = bigNum2Double(order.orderQuantity);
+        var filledQuantity = bigNum2Double(order.filledQuantity);
+        var time = order.time;
+        var isActive = order.isActive;
 
         //{ "block":  "absdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
         var newOrd = {

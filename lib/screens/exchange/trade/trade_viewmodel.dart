@@ -8,42 +8,57 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class TradeViewModel extends MultipleStreamViewModel {
-  final String tickerName;
-  TradeViewModel({this.tickerName});
+  final Price pairPriceByRoute;
+  TradeViewModel({this.pairPriceByRoute});
 
   final log = getLogger('TradeViewModal');
 
   BuildContext context;
+
   NavigationService navigationService = locator<NavigationService>();
-  TradeService tradeService = locator<TradeService>();
+  WalletDataBaseService walletDataBaseService =
+      locator<WalletDataBaseService>();
   ApiService apiService = locator<ApiService>();
+  TradeService tradeService = locator<TradeService>();
+
   List<PairDecimalConfig> pairDecimalConfigList = [];
   List<OrderModel> buyOrderBookList = [];
   List<OrderModel> sellOrderBookList = [];
   List orderBook = [];
   List<TradeModel> marketTradesList = [];
-  List myOrders = [];
+  List<OrderModel> myOrders = [];
   Price currentPairPrice;
   List<dynamic> ordersViewTabBody = [];
   bool marketTradeStreamSource = false;
+  List<String> tabNames = ['Order Book', 'Market Trades', 'My Orders'];
 
   List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
+  String allPriceStreamKey = 'allPrices';
+  String orderBookStreamKey = 'orderBookList';
+  String marketTradesStreamKey = 'marketTradesList';
   @override
-  Map<String, StreamData> get streamsMap =>
-      tradeService.getMultipleStreams(tickerName);
+  Map<String, StreamData> get streamsMap => {
+        'allPrices': StreamData<dynamic>(tradeService.getAllCoinPriceStream()),
+        'orderBookList': StreamData<dynamic>(
+            tradeService.getOrdersStreamByTickerName(pairPriceByRoute.symbol)),
+        'marketTradesList': StreamData<dynamic>(tradeService
+            .getMarketTradesStreamByTickerName(pairPriceByRoute.symbol))
+      };
+  // Map<String, StreamData> res =
+  //     tradeService.getMultipleStreams(pairPriceByRoute.symbol);
 
 // Change/update stream data before displaying on UI
   @override
   void onData(String key, data) {
-    ordersViewTabBody = [orderBook, marketTradesList, myOrders];
-    // log.w('ordersViewTabBody $ordersViewTabBody');
+    if (hasError(key)) onCancel(key);
   }
 
   /// Transform stream data before notifying to view modal
@@ -51,64 +66,61 @@ class TradeViewModel extends MultipleStreamViewModel {
   dynamic transformData(String key, data) {
     try {
       /// All prices list
-      if (key == 'allPrices') {
+      if (key == allPriceStreamKey) {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
         PriceList priceList = PriceList.fromJson(jsonDynamicList);
-        //  log.i('pair price list ${priceList.prices.length}');
-
         pairPriceList = priceList.prices;
         pairPriceList.forEach((element) {
           if (element.change.isNaN) element.change = 0.0;
-          if (element.symbol == tickerName) {
+          if (element.symbol == pairPriceByRoute.symbol) {
             currentPairPrice = element;
           }
         });
+        log.e('pair price length ${priceList.prices.length}');
         Map<String, dynamic> res =
             tradeService.marketPairPriceGroups(pairPriceList);
         marketPairsTabBar = res['marketPairsGroupList'];
       } // all prices ends
 
       /// Order list
-      else if (key == 'orderBookList') {
+      else if (key == orderBookStreamKey) {
         // Buy order
         List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
-        log.w('OrderBook jsonDynamicList $jsonDynamicList');
+        log.w('OrderBook jsonDynamicList length ${jsonDynamicList.length}');
         OrderList orderList = OrderList.fromJson(jsonDynamicList);
         buyOrderBookList = orderList.orders;
-        buyOrderBookList.forEach((element) {
-          log.w('OrderBook BUY ${element.isActive}');
-        });
 
-        // // Sell orders
+        // Sell orders
         List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
         OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
-
         sellOrderBookList = sellOrderList.orders;
-        sellOrderBookList.forEach((element) {
-          //   log.i('OrderBook SELL ${element.orderQuantity}');
-        });
 
-        // // Fill orderBook list
+        // Fill orderBook list
         orderBook = [buyOrderBookList, sellOrderBookList];
       }
 
       /// Market trade list
-      else if (key == 'marketTradesList') {
+      else if (key == marketTradesStreamKey) {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
         TradeList tradeList = TradeList.fromJson(jsonDynamicList);
-        //log.i('$key $tradeList');
+        log.w('trades length ${tradeList.trades.length}');
         marketTradesList = tradeList.trades;
       }
     } catch (err) {
       log.e('Catch error $err');
-      log.e('Cancelling $key Stream Subsciption');
-      // getSubscriptionForKey(key).cancel();
     }
+  }
+
+  @override
+  void onError(String key, error) {
+    log.e('In onError $key $error');
+    getSubscriptionForKey(key).cancel();
   }
 
   @override
   void onCancel(String key) {
     log.e('Stream $key closed');
+    getSubscriptionForKey(key).cancel();
   }
 
   /// Initialize when model ready
@@ -138,7 +150,8 @@ class TradeViewModel extends MultipleStreamViewModel {
   }
 
   /// Switch Streams
-  void switchStreams(int index) {
+  void switchStreams(int index) async {
+    print('in switch streams trade view model $index');
     var marketTradesStream = getSubscriptionForKey('marketTradesList');
     var orderBookStream = getSubscriptionForKey('orderBookList');
 
@@ -147,16 +160,50 @@ class TradeViewModel extends MultipleStreamViewModel {
     /// stream is paused, if paused then resume it
 
     if (index == 0) {
-      log.i('marketTradesList status ${marketTradesStream.isPaused}');
-      !marketTradesStream.isPaused ?? marketTradesStream.pause();
-      log.i('marketTradesList status ${marketTradesStream.isPaused}');
-      log.i('orderBookList status ${orderBookStream.isPaused}');
-      orderBookStream.isPaused ?? orderBookStream.resume();
-      log.i('orderBookList status ${orderBookStream.isPaused}');
+      marketTradesStream.pause();
+      orderBookStream.resume();
     } else if (index == 1) {
-      !orderBookStream.isPaused ?? orderBookStream.pause();
-      log.i('marketTradesList status ${marketTradesStream.isPaused}');
-      marketTradesStream.isPaused ?? marketTradesStream.resume();
+      orderBookStream.pause();
+      marketTradesStream.resume();
+    } else if (index == 2) {
+      orderBookStream.pause();
+      marketTradesStream.pause();
+      await getMyOrders();
     }
+  }
+
+  void pauseAllStreams() {
+    getSubscriptionForKey('marketTradesList').pause();
+    getSubscriptionForKey('orderBookList').pause();
+    log.i('market trades and order book stream paused');
+  }
+
+  void resumeAllStreams() {
+    getSubscriptionForKey('marketTradesList').resume();
+    getSubscriptionForKey('orderBookList').resume();
+    log.i('market trades and order book stream resumed');
+  }
+
+  void cancelSingleStreamByKey(String key) {
+    var stream = getSubscriptionForKey(key);
+    stream.cancel();
+    log.e('Stream $key cancelled');
+  }
+
+  String updateTickerName(String tickerName) {
+    return tradeService.seperateBasePair(tickerName);
+  }
+
+  getMyOrders() async {
+    setBusy(true);
+    String exgAddress = await getExgAddress();
+    myOrders = await tradeService.getOrders(exgAddress);
+    setBusy(false);
+    log.w('My orders $myOrders');
+  }
+
+  Future<String> getExgAddress() async {
+    var exgWallet = await walletDataBaseService.getBytickerName('EXG');
+    return exgWallet.address;
   }
 }

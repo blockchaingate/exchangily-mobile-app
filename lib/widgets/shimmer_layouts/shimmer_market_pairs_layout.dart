@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -9,8 +10,7 @@ class ShimmerMarketPairsLayout extends StatelessWidget {
     double height = 14;
     double width = 50;
     return Container(
-      // decoration:
-      //  BoxDecoration(border: Border.all(width: 0.2, color: Colors.grey)),
+      margin: EdgeInsets.all(2.0),
       padding: EdgeInsets.all(10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

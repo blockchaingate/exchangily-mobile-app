@@ -12,15 +12,6 @@ class MarketTradesLayoutView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    timeFormatted(timeStamp) {
-      var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
-      return time.hour.toString() +
-          ':' +
-          time.minute.toString() +
-          ':' +
-          time.second.toString();
-    }
-
     return Container(
         padding: EdgeInsets.all(5.0),
         child: Column(
@@ -48,7 +39,7 @@ class MarketTradesLayoutView extends StatelessWidget {
                 ),
               ),
             ),
-            MarketTradeDetailView(marketTrades: marketTrades),
+            Expanded(child: MarketTradeDetailView(marketTrades: marketTrades)),
           ],
         ));
   }
@@ -64,8 +55,16 @@ class MarketTradeDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    timeFormatted(timeStamp) {
+      var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
+      return time.hour.toString() +
+          ':' +
+          time.minute.toString() +
+          ':' +
+          time.second.toString();
+    }
+
     return Container(
-      height: 400,
       child: ListView.builder(
           shrinkWrap: true,
           itemCount: marketTrades.length,
@@ -85,7 +84,8 @@ class MarketTradeDetailView extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 2,
-                      child: Text(marketTrades[index].time.toString(),
+                      child: Text(
+                          timeFormatted(marketTrades[index].time).toString(),
                           style: Theme.of(context).textTheme.headline6)),
                 ],
               ),

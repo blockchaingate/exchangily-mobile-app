@@ -189,7 +189,7 @@ class OrderList {
     parsedJson.forEach((i) {
       // print('raw orders ${i}');
       OrderModel order = OrderModel.fromJson(i);
-      print('ready for ui orders ${order.toJson()}');
+      //  print('ready for ui orders ${order.toJson()}');
       orders.add(order);
     });
     return new OrderList(orders: orders);

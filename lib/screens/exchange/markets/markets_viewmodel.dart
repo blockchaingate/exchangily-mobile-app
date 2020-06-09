@@ -40,7 +40,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   Stream<dynamic> get stream {
     Stream<dynamic> res;
 
-    res = tradeService.getAllCoinPriceByWebSocket();
+    res = tradeService.getAllCoinPriceStream();
     return res;
   }
 
@@ -56,14 +56,15 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   transformData(data) {
     try {
       List<dynamic> jsonDynamicList = jsonDecode(data) as List;
+
       PriceList priceList = PriceList.fromJson(jsonDynamicList);
-      log.i('pair price list ${priceList.prices.length}');
       pairPriceList = priceList.prices;
+      log.w('pair price list length ${pairPriceList.length}');
       pairPriceList.forEach((element) {
         if (element.change.isNaN) element.change = 0.0;
       });
     } catch (err) {
-      log.e('Catch error $err');
+      log.e('transformData Catch error $err');
       print('Cancelling Stream Subsciption');
       streamSubscription.cancel();
     }

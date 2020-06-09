@@ -55,19 +55,23 @@ class MarketsView extends StatelessWidget {
                         ],
                       ),
                     ),
-              body: !model.dataReady
-                  ? Container(
-                      margin: EdgeInsets.only(top: 40),
-                      child: ShimmerLayout(
-                        layoutType: 'marketPairs',
-                      ),
-                    )
-                  : Container(
-                      margin: EdgeInsets.only(top: 5.0),
-                      color: Theme.of(context).accentColor,
-                      child: MarketPairsTabView(
-                          marketPairsTabBar: model.marketPairsTabBar),
-                    ),
+              body:
+                  //  !model.dataReady
+                  //     ? Container(
+                  //         margin: EdgeInsets.only(top: 40),
+                  //         child: ShimmerLayout(
+                  //           layoutType: 'marketPairs',
+                  //         ),
+                  //       )
+                  //     :
+                  Container(
+                margin: EdgeInsets.only(top: 5.0),
+                color: Theme.of(context).accentColor,
+                child: MarketPairsTabView(
+                  marketPairsTabBar: model.marketPairsTabBar,
+                  isBusy: !model.dataReady,
+                ),
+              ),
               bottomNavigationBar: BottomNavBar(count: 1),
             ),
         viewModelBuilder: () => MarketsViewModel());

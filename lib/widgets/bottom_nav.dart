@@ -12,6 +12,8 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
@@ -19,7 +21,7 @@ import '../shared/globals.dart' as globals;
 class BottomNavBar extends StatelessWidget {
   final int count;
   BottomNavBar({Key key, this.count}) : super(key: key);
-
+  final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {
     final double paddingValue = 4; // change space between icon and title text
@@ -72,20 +74,26 @@ class BottomNavBar extends StatelessWidget {
       onTap: (int idx) {
         switch (idx) {
           case 0:
-            Navigator.pushNamed(context, '/dashboard');
+
+            /// when user in exchangeTrade route and then click on dashboard or
+            /// any bottom nav links then if i use pushReplacementNamed which is
+            /// an entry animation route, then this way it closes the running web sockets
+            /// automatically and everything is fine otherwise is i user popAndPushNamed here
+            /// then reading from socket exception error in the terminal
+            navigationService.navigateTo('/dashboard');
             break;
 
           case 1:
-            Navigator.pushNamed(context, '/marketsView');
+            navigationService.navigateTo('/marketsView');
             break;
           // case 2:
           //   Navigator.pushNamed(context, '/otc');
           //   break;
           case 2:
-            Navigator.pushNamed(context, '/campaignInstructions');
+            navigationService.navigateTo('/campaignInstructions');
             break;
           case 3:
-            Navigator.pushNamed(context, '/settings');
+            navigationService.navigateTo('/settings');
             break;
         }
       },

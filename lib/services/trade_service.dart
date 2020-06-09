@@ -11,8 +11,11 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:convert';
+
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:http/http.dart' as http;
@@ -32,11 +35,10 @@ class TradeService {
           Get Coin Price Details Using allPrices Web Sockets
 ----------------------------------------------------------------------*/
 
-  Stream getAllCoinPriceByWebSocket() {
+  Stream getAllCoinPriceStream() {
     Stream stream;
     try {
-      final channel = getAllPriceChannel();
-      stream = channel.stream;
+      stream = getAllPriceChannel().stream;
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
     }
@@ -47,39 +49,53 @@ class TradeService {
                     Get Multiple Stream 
 ----------------------------------------------------------------------*/
 
-  Map<String, StreamData<dynamic>> getMultipleStreams(String tickerName) {
+  // Map<String, StreamData<dynamic>> getMultipleStreams(String tickerName) {
+  //   try {
+  //     Map<String, StreamData<dynamic>> streamData;
+  //     final allPricesChannel = getAllCoinPriceByWebSocket();
+
+  //     // Order List
+  //     final orderListChannel = getOrderListChannel(tickerName);
+
+  //     // Trade List
+  //     final tradeListChannel = getTradeListChannel(tickerName);
+
+  //     // Build a map of streams
+  //     streamData = {
+  //       'allPrices': StreamData<dynamic>(allPricesChannel),
+  //       'orderBookList': StreamData<dynamic>(orderListChannel.stream),
+  //       'marketTradesList': StreamData<dynamic>(tradeListChannel.stream)
+  //     };
+
+  //     return streamData;
+  //   } catch (err) {
+  //     throw Exception(
+  //         '$err'); // Error thrown here will go to onError in them view model
+  //   }
+  // }
+
+/*----------------------------------------------------------------------
+                    Market Trade Orders 
+----------------------------------------------------------------------*/
+
+  Stream getMarketTradesStreamByTickerName(String tickerName) {
+    Stream stream;
     try {
-      Map<String, StreamData<dynamic>> streamData;
-      final allPricesChannel = getAllCoinPriceByWebSocket();
-
-      // Order List
-      final orderListChannel = getOrderListChannel(tickerName);
-
-      // Trade List
-      final tradeListChannel = getTradeListChannel(tickerName);
-
-      // Build a map of streams
-      streamData = {
-        'allPrices': StreamData<dynamic>(allPricesChannel),
-        'orderBookList': StreamData<dynamic>(orderListChannel.stream),
-        'marketTradesList': StreamData<dynamic>(tradeListChannel.stream)
-      };
-      return streamData;
+      stream = getTradeListChannel(tickerName).stream;
     } catch (err) {
-      throw Exception(
-          '$err'); // Error thrown here will go to onError in them view model
+      log.e('$err'); // Error thrown here will go to onError in them view model
     }
+    return stream;
   }
 
 /*----------------------------------------------------------------------
-                    Trade Orders 
+                      Orders
 ----------------------------------------------------------------------*/
 
-  Stream getTradeOrderByWebSocket(String tickerName) {
+  Stream getOrdersStreamByTickerName(String tickerName) {
     Stream stream;
     try {
-      final tradeListChannel = getTradeListChannel(tickerName);
-      stream = tradeListChannel.stream;
+      stream = getOrderListChannel(tickerName).stream;
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
     }
@@ -88,20 +104,20 @@ class TradeService {
 
   /// All Pair Price
 
-  getAllPriceChannel() {
+  IOWebSocketChannel getAllPriceChannel() {
     String url = basePath + 'allPrices';
     //  log.i(url);
-    final channel = IOWebSocketChannel.connect(url);
+    IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
 
     return channel;
   }
 
-  getOrderListChannel(String pair) {
+  IOWebSocketChannel getOrderListChannel(String pair) {
     try {
       var wsString = environment['websocket'] + 'orders' + '@' + pair;
       // if not put the IOWebSoketChannel.connect to variable channel and
       // directly returns it then in the multiple stream it doesn't work
-      final channel = IOWebSocketChannel.connect(wsString);
+      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
     } catch (err) {
       throw Exception(
@@ -109,10 +125,10 @@ class TradeService {
     }
   }
 
-  getTradeListChannel(String pair) {
+  IOWebSocketChannel getTradeListChannel(String pair) {
     try {
       var wsString = environment['websocket'] + 'trades' + '@' + pair;
-      final channel = IOWebSocketChannel.connect(wsString);
+      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
     } catch (err) {
       throw Exception(
@@ -140,8 +156,15 @@ class TradeService {
     return await _api.getAssetsBalance(exgAddress);
   }
 
-  getOrders(String exgAddress) async {
-    return await _api.getOrders(exgAddress);
+// Get my orders
+  Future<List<OrderModel>> getOrders(String exgAddress) async {
+    var data = await _api.getOrders(exgAddress);
+    log.w('raw data $data');
+    List<dynamic> jsonDynamicList = jsonDecode(data) as List;
+    log.w('OrderBook jsonDynamicList length ${jsonDynamicList.length}');
+    OrderList orderList = OrderList.fromJson(jsonDynamicList);
+    log.w('OrderBook order list length ${orderList.orders.length}');
+    return orderList.orders;
   }
 
   // Market Pair Group Price List
@@ -158,19 +181,19 @@ class TradeService {
         if (pair.symbol == 'BTCUSDT' ||
             pair.symbol == 'FABUSDT' ||
             pair.symbol == 'EXGUSDT') btcFabExgUsdtPriceList.add(pair);
-        pair.symbol = pair.symbol.replaceAll('USDT', '/USDT');
+        pair.symbol = seperateBasePair(pair.symbol);
         usdtPairsList.add(pair);
       } else if (pair.symbol.endsWith("DUSD")) {
-        pair.symbol = pair.symbol.replaceAll('DUSD', '/DUSD');
+        pair.symbol = seperateBasePair(pair.symbol);
         dusdPairsList.add(pair);
       } else if (pair.symbol.endsWith("BTC")) {
-        pair.symbol = pair.symbol.replaceAll('BTC', '/BTC');
+        pair.symbol = seperateBasePair(pair.symbol);
         btcPairsList.add(pair);
       } else if (pair.symbol.endsWith("ETH")) {
-        pair.symbol = pair.symbol.replaceAll('ETH', '/ETH');
+        pair.symbol = seperateBasePair(pair.symbol);
         ethPairsList.add(pair);
       } else if (pair.symbol.endsWith("EXG")) {
-        pair.symbol = pair.symbol.replaceAll('EXG', '/EXG');
+        pair.symbol = seperateBasePair(pair.symbol);
         exgPairsList.add(pair);
       }
     }
@@ -184,5 +207,28 @@ class TradeService {
       'btcFabExgUsdtPriceList': btcFabExgUsdtPriceList
     };
     return res;
+  }
+
+  // Seperate base pair
+  String seperateBasePair(String tickerName) {
+    String updateTickerName = '';
+
+    if (tickerName.endsWith("USDT")) {
+      updateTickerName = tickerName.replaceAll('USDT', '/USDT');
+    } else if (tickerName.endsWith("DUSD")) {
+      updateTickerName = tickerName.replaceAll('DUSD', '/DUSD');
+    } else if (tickerName.endsWith("BTC")) {
+      updateTickerName = tickerName.replaceAll('BTC', '/BTC');
+    } else if (tickerName.endsWith("ETH")) {
+      updateTickerName = tickerName.replaceAll('ETH', '/ETH');
+    } else if (tickerName.endsWith("EXG")) {
+      updateTickerName = tickerName.replaceAll('EXG', '/EXG');
+    }
+    return updateTickerName;
+  }
+
+  // Check pair ends with
+  bool pairNameEndsWith(String pair, String basePair) {
+    return pair.endsWith(basePair);
   }
 }

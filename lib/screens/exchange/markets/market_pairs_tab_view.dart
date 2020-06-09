@@ -3,18 +3,20 @@ import 'package:exchangilymobileapp/screens/trade/main.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
 
-/// TODO: Extract the tab bar functionality to its own class for reuse
 class MarketPairsTabView extends StatelessWidget {
   final List<List<Price>> marketPairsTabBar;
-  MarketPairsTabView({Key key, this.marketPairsTabBar}) : super(key: key);
+  final bool isBusy;
+  MarketPairsTabView({Key key, this.marketPairsTabBar, this.isBusy})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];
 
     return DefaultTabController(
-      length: marketPairsTabBar.length,
+      length: tabNames.length,
       child: Scaffold(
         appBar: AppBar(
             backgroundColor: Colors.white,
@@ -123,15 +125,28 @@ class MarketPairsTabView extends StatelessWidget {
                 ],
               ),
             )),
-        body: Container(
-          color: Theme.of(context).accentColor,
-          child: TabBarView(
-              children: marketPairsTabBar.map((pairList) {
-            return Container(
-              child: PriceDetailRow(pairList: pairList),
-            );
-          }).toList()),
-        ),
+        body: isBusy
+            ? Container(
+                color: Theme.of(context).accentColor,
+                child: TabBarView(
+                    children: tabNames.map((tab) {
+                  return Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    child: ShimmerLayout(
+                      layoutType: 'marketPairs',
+                    ),
+                  );
+                }).toList()),
+              )
+            : Container(
+                color: Theme.of(context).accentColor,
+                child: TabBarView(
+                    children: marketPairsTabBar.map((pairList) {
+                  return Container(
+                    child: PriceDetailRow(pairList: pairList),
+                  );
+                }).toList()),
+              ),
       ),
     );
   }
@@ -158,13 +173,17 @@ class PriceDetailRow extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
             child: InkWell(
               onTap: () {
-                String pair =
+                pairList[index].symbol =
                     pairList[index].symbol.replaceAll('/', '').toString();
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Trade(pair)),
-                // );
-                navigationService.navigateTo('/exchangeTrade', arguments: pair);
+                //navigationService.navigateTo
+
+                /// If i use pushReplacementNamed here
+                /// then reading from closed socket error is gone
+                /// but now all the streams are running all the time
+                /// as pushNamed doesn't remove the widget from the tree
+                /// so widget don't get dispose
+                Navigator.popAndPushNamed(context, '/exchangeTrade',
+                    arguments: pairList[index]);
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -184,7 +203,7 @@ class PriceDetailRow extends StatelessWidget {
                                 pairList[index].symbol.toString(),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline6
+                                    .headline5
                                     .copyWith(fontWeight: FontWeight.w400),
                               ),
                             ),

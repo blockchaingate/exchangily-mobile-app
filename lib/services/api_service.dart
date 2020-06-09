@@ -141,8 +141,10 @@ class ApiService {
     return {};
   }
 
-  // Get Orders
+  // Get Orders by address
   Future getOrders(String exgAddress) async {
+    String url = environment['endpoints']['kanban'] + orders + exgAddress;
+    log.i('get my orders url $url');
     try {
       final res = await http
           .get(environment['endpoints']['kanban'] + orders + exgAddress);
@@ -152,7 +154,6 @@ class ApiService {
     } catch (e) {
       log.e('getOrders Failed to load the data from the API， $e');
     }
-    return {};
   }
 
   // Get FabUtxos
