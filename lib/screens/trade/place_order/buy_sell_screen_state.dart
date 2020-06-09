@@ -237,7 +237,7 @@ class BuySellScreenState extends BaseState {
     Timer.periodic(Duration(seconds: 3), (Timer time) async {
       // print("Yeah, this line is printed after 3 seconds");
       var balances = await tradeService.getAssetsBalance(address);
-      var orders = await tradeService.getOrders(address);
+      var orders = await tradeService.getMyOrders(address);
 
       List<Map<String, dynamic>> newbals = [];
       List<Map<String, dynamic>> openOrds = [];

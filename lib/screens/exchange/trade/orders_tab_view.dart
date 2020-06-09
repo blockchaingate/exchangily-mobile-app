@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/market_trades_layout_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orders_layout_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orders_tab/my_orders_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders_tab/my_orders_layout_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 
 import 'package:flutter/material.dart';
@@ -61,7 +61,7 @@ class OrdersTabView extends
                     Expanded(
                         child: MarketTradesLayoutView(
                             marketTrades: model.marketTradesList)),
-                    Expanded(child: MyOrdersView(myOrders: model.myOrders))
+                    Expanded(child: MyOrdersLayoutView())
                   ]
 
                       //      ordersViewTabBody.map((tabBody) {

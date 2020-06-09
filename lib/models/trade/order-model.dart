@@ -59,6 +59,7 @@ class OrderModel {
   double _filledQuantity;
   int _time;
   bool _isActive;
+  String _pairName;
   OrderModel(
       {bool payWithExg,
       String orderHash,
@@ -71,7 +72,8 @@ class OrderModel {
       double orderQuantity,
       double filledQuantity,
       int time,
-      bool isActive}) {
+      bool isActive,
+      String pairName}) {
     this._payWithExg = payWithExg;
     this._orderHash = orderHash;
     this._address = address;
@@ -84,6 +86,7 @@ class OrderModel {
     this._filledQuantity = filledQuantity ?? 0.0;
     this._time = time;
     this._isActive = isActive;
+    this._pairName = pairName;
   }
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -99,7 +102,8 @@ class OrderModel {
         orderQuantity: bigNum2Double(json['orderQuantity']),
         filledQuantity: bigNum2Double(json['filledQuantity']),
         time: json['time'],
-        isActive: json['isActive']);
+        isActive: json['isActive'],
+        pairName: json['pairName']);
   }
 
   Map<String, dynamic> toJson() {
@@ -116,6 +120,7 @@ class OrderModel {
     data['filledQuantity'] = this._filledQuantity;
     data['time'] = this._time;
     data['isActive'] = this._isActive;
+    data['pairName'] = this._pairName;
     return data;
   }
 
@@ -171,12 +176,17 @@ class OrderModel {
 
   bool get payWithExg => _payWithExg;
   set payWithExg(bool payWithExg) {
-    this.payWithExg = payWithExg;
+    this._payWithExg = payWithExg;
   }
 
   bool get bidOrAsk => _bidOrAsk;
   set bidOrAsk(bool bidOrAsk) {
     this._bidOrAsk = bidOrAsk;
+  }
+
+  String get pairName => _pairName;
+  set pairName(String pairName) {
+    this._pairName = pairName;
   }
 }
 

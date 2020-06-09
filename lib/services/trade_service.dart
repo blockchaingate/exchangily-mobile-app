@@ -157,13 +157,15 @@ class TradeService {
   }
 
 // Get my orders
-  Future<List<OrderModel>> getOrders(String exgAddress) async {
-    var data = await _api.getOrders(exgAddress);
-    log.w('raw data $data');
-    List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-    log.w('OrderBook jsonDynamicList length ${jsonDynamicList.length}');
-    OrderList orderList = OrderList.fromJson(jsonDynamicList);
-    log.w('OrderBook order list length ${orderList.orders.length}');
+  Future<List<OrderModel>> getMyOrders(String exgAddress) async {
+    OrderList orderList;
+    try {
+      var data = await _api.getOrders(exgAddress);
+      log.w('raw data $data');
+      orderList = OrderList.fromJson(data);
+    } catch (err) {
+      log.e('getMyOrders Catch $err');
+    }
     return orderList.orders;
   }
 

@@ -146,8 +146,24 @@ class ApiService {
     String url = environment['endpoints']['kanban'] + orders + exgAddress;
     log.i('get my orders url $url');
     try {
-      final res = await http
-          .get(environment['endpoints']['kanban'] + orders + exgAddress);
+      final res = await http.get(url);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      log.e('getOrders Failed to load the data from the API， $e');
+    }
+  }
+
+  // Get Orders by tickername
+  Future getMyOrdersByTickerName(String exgAddress, String tickerName) async {
+    String url = environment['endpoints']['kanban'] +
+        'getordersbytickername' +
+        exgAddress +
+        tickerName;
+    log.i('getMyOrdersByTickerName url $url');
+    try {
+      final res = await http.get(url);
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }

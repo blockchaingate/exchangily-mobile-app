@@ -18,7 +18,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
-import 'orders_tab/my_orders_view.dart';
+import 'my_orders_tab/my_orders_layout_view.dart';
 
 class TradeView extends StatelessWidget {
   final Price pairPriceByRoute;
@@ -50,7 +50,9 @@ class TradeView extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: Container(
                       child: MarketPairsTabView(
-                          marketPairsTabBar: model.marketPairsTabBar),
+                        marketPairsTabBar: model.marketPairsTabBar,
+                        isBusy: false,
+                      ),
                     ),
                   ),
                   Positioned(
@@ -195,12 +197,7 @@ class TradeView extends StatelessWidget {
                               )
                             : MarketTradesLayoutView(
                                 marketTrades: model.marketTradesList),
-                        model.isBusy
-                            ? Container(
-                                margin: EdgeInsets.all(10),
-                                child:
-                                    ShimmerLayout(layoutType: 'marketTrades'))
-                            : MyOrdersView(myOrders: model.myOrders)
+                        MyOrdersLayoutView()
                       ]
 
                           //      ordersViewTabBody.map((tabBody) {
@@ -218,6 +215,7 @@ class TradeView extends StatelessWidget {
             ],
           ),
         ),
+        // Floatin Button buy/sell
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: Container(
             width: 160,

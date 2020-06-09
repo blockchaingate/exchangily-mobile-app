@@ -86,7 +86,7 @@ class TradeViewModel extends MultipleStreamViewModel {
       else if (key == orderBookStreamKey) {
         // Buy order
         List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
-        log.w('OrderBook jsonDynamicList length ${jsonDynamicList.length}');
+        //  log.w('OrderBook jsonDynamicList length ${jsonDynamicList}');
         OrderList orderList = OrderList.fromJson(jsonDynamicList);
         buyOrderBookList = orderList.orders;
 
@@ -168,7 +168,7 @@ class TradeViewModel extends MultipleStreamViewModel {
     } else if (index == 2) {
       orderBookStream.pause();
       marketTradesStream.pause();
-      await getMyOrders();
+      // await getMyOrders();
     }
   }
 
@@ -197,7 +197,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   getMyOrders() async {
     setBusy(true);
     String exgAddress = await getExgAddress();
-    myOrders = await tradeService.getOrders(exgAddress);
+    myOrders = await tradeService.getMyOrders(exgAddress);
     setBusy(false);
     log.w('My orders $myOrders');
   }
