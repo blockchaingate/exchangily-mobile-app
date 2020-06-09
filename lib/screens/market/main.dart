@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:exchangilymobileapp/widgets/carousel.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
 import "package:flutter/material.dart";
 import "widgets/overview.dart";
@@ -25,6 +26,14 @@ class _MarketState extends State<Market> with TradeService {
   List<Price> prices;
   double randDouble;
   IOWebSocketChannel allPriceChannel;
+
+  //temp use for test
+  final List<Map> images = [
+    {"imgUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1052&q=80"},
+    {"imgUrl": "https://images.unsplash.com/photo-1561451213-d5c9f0951fdf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
+    {"imgUrl": "https://images.unsplash.com/photo-1516245834210-c4c142787335?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +67,9 @@ class _MarketState extends State<Market> with TradeService {
           return snapshot.hasData
               ? ListView(
                   children: <Widget>[
+                    SizedBox(height:10),
+                    Carousel(imageData:images),
+                    SizedBox(height:10),
                     MarketOverview(
                         key: _marketOverviewState,
                         data: _updatePrice(snapshot.data)),

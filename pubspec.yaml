@@ -111,6 +111,19 @@ dependencies:
   # Flutter SVG
   flutter_svg: ^0.17.3+1
 
+  # Carousel
+  flutter_swiper: ^1.1.6
+
+  # validators 
+  validators: ^2.0.0+1
+
+  # cached_network_image
+  cached_network_image: ^2.0.0
+
+  # fancy_bottom_navigation
+  fancy_bottom_navigation: ^0.3.2
+
+
   # Share files
   share:
     git:

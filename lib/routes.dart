@@ -37,6 +37,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dart';
 import 'package:exchangilymobileapp/widgets/main_nav.dart';
+import 'package:exchangilymobileapp/widgets/main_nav_circle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
@@ -62,8 +63,8 @@ class RouteGenerator {
 
       //main navagation contains several pages
       case '/mainNav':
-        return MaterialPageRoute(builder: (_) => MainNav());
-
+        // return MaterialPageRoute(builder: (_) => MainNav());
+        return MaterialPageRoute(builder: (_) => MainNavCircle());
       case '/walletSetup':
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
 
