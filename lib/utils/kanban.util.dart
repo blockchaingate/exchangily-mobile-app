@@ -66,6 +66,8 @@ Future<Map<String, dynamic>> submitDeposit(
   };
   var client = new http.Client();
   var response = await client.post(url, body: data);
+  print("response body:");
+  print(response.body.toString());
   Map<String, dynamic> res = jsonDecode(response.body);
   return res;
 }

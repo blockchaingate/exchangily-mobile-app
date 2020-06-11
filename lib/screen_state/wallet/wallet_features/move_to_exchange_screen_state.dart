@@ -16,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../logger.dart';
 import '../../../shared/globals.dart' as globals;
+import 'package:flutter_beautiful_popup/main.dart';
 
 class MoveToExchangeScreenState extends BaseState {
   final log = getLogger('MoveToExchangeScreenState');
@@ -131,6 +132,7 @@ class MoveToExchangeScreenState extends BaseState {
           .depositDo(seed, coinName, tokenType, amount, option)
           .then((ret) {
         log.w(ret);
+
         bool success = ret["success"];
         if (success) {
           myController.text = '';
@@ -155,8 +157,30 @@ class MoveToExchangeScreenState extends BaseState {
             success
                 ? AppLocalizations.of(context).depositTransactionSuccess
                 : AppLocalizations.of(context).depositTransactionFailed,
-            success ? "" : AppLocalizations.of(context).serverError,
+            success
+                ? ""
+                : ret.containsKey("error") && ret["error"] != null
+                    ? ret["error"]
+                    : AppLocalizations.of(context).serverError,
             isWarning: false);
+
+        // final popup = BeautifulPopup(
+        //   context: context,
+        //   template: TemplateGift,
+        // );
+
+        // popup.show(
+        //   title: 'String or Widget',
+        //   content: 'String or Widget',
+        //   actions: [
+        //     popup.button(
+        //       label: 'Close',
+        //       onPressed: Navigator.of(context).pop,
+        //     ),
+        //   ],
+        //   // bool barrierDismissible = false,
+        //   // Widget close,
+        // );
       }).catchError((onError) {
         log.e('Deposit Catch $onError');
         sharedService.alertDialog(

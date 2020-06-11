@@ -111,6 +111,9 @@ dependencies:
   # State Management
   stacked: ^1.5.8
 
+  #flutter_beautiful_popup
+  flutter_beautiful_popup: ^1.5.0
+
   # Share files
   share:
     git:
