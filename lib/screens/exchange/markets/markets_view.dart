@@ -31,6 +31,24 @@ class MarketsView extends StatelessWidget {
           model.context = context;
         },
         builder: (context, model, _) => Scaffold(
+              body: Container(
+                margin: EdgeInsets.only(top: 5.0),
+                color: Theme.of(context).accentColor,
+                child: Column(
+                  children: [
+                    // Add more widgets here as the market view expands
+
+                    /// Market pairs tab
+                    /// this is a dumb widget so need to provide viewmodel
+                    Flexible(
+                      child: MarketPairsTabView(
+                        marketPairsTabBarView: model.marketPairsTabBar,
+                        isBusy: !model.dataReady,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerFloat,
               floatingActionButton: !model.dataReady
@@ -55,23 +73,6 @@ class MarketsView extends StatelessWidget {
                         ],
                       ),
                     ),
-              body:
-                  //  !model.dataReady
-                  //     ? Container(
-                  //         margin: EdgeInsets.only(top: 40),
-                  //         child: ShimmerLayout(
-                  //           layoutType: 'marketPairs',
-                  //         ),
-                  //       )
-                  //     :
-                  Container(
-                margin: EdgeInsets.only(top: 5.0),
-                color: Theme.of(context).accentColor,
-                child: MarketPairsTabView(
-                  marketPairsTabBar: model.marketPairsTabBar,
-                  isBusy: !model.dataReady,
-                ),
-              ),
               bottomNavigationBar: BottomNavBar(count: 1),
             ),
         viewModelBuilder: () => MarketsViewModel());

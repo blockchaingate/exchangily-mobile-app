@@ -6,9 +6,9 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class MarketTradesLayoutView extends StatelessWidget {
+class MarketTradesView extends StatelessWidget {
   final List<TradeModel> marketTrades;
-  const MarketTradesLayoutView({Key key, this.marketTrades}) : super(key: key);
+  const MarketTradesView({Key key, this.marketTrades}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,12 @@ class MarketTradeDetailView extends StatelessWidget {
           itemCount: marketTrades.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              padding: EdgeInsets.all(5.0),
+              /// bidorAsk value is null from the backend
+              /// so can't use the color for container
+
+              //    color: marketTrades[index].bidOrAsk ? buyOrders : sellOrders,
+              padding: EdgeInsets.all(4.0),
+              margin: EdgeInsets.only(bottom: 1.0),
               child: Row(
                 children: <Widget>[
                   UIHelper.horizontalSpaceSmall,

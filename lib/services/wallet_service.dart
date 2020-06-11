@@ -530,6 +530,7 @@ class WalletService {
     }).catchError((onError) {
       log.e('On error assetsBalance $onError');
       bal = [];
+      throw Exception;
     });
     return bal;
   }

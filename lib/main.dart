@@ -74,6 +74,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: RouteGenerator.generateRoute,
       title: 'Exchangily Wallet',
       theme: ThemeData(
+        disabledColor: globals.grey.withAlpha(100),
         primaryColor: globals.primaryColor,
         accentColor: globals.secondaryColor,
         backgroundColor: globals.secondaryColor,
@@ -87,29 +88,41 @@ class MyApp extends StatelessWidget {
             textTheme: ButtonTextTheme.primary),
         fontFamily: 'Roboto',
         textTheme: TextTheme(
-          button: TextStyle(fontSize: 14, color: globals.white),
-          headline1: TextStyle(
-              fontSize: 22,
-              color: globals.white,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 1.25),
-          headline2: TextStyle(
-              fontSize: 20, color: globals.white, fontWeight: FontWeight.w300),
-          headline3: TextStyle(fontSize: 18, color: globals.white),
-          headline4: TextStyle(
-              fontSize: 16, color: globals.white, fontWeight: FontWeight.w400),
-          subtitle1: TextStyle(
-              fontSize: 15, color: globals.white, fontWeight: FontWeight.w300),
-          headline5: TextStyle(
-              fontSize: 14, color: globals.white, fontWeight: FontWeight.w300),
-          subtitle2: TextStyle(
-              fontSize: 11, color: globals.grey, fontWeight: FontWeight.w300),
-          bodyText1: TextStyle(
-              fontSize: 13, color: globals.white, fontWeight: FontWeight.w300),
-          bodyText2: TextStyle(fontSize: 13, color: globals.red),
-          headline6: TextStyle(
-              fontSize: 12, color: globals.white, fontWeight: FontWeight.w300),
-        ),
+            button: TextStyle(fontSize: 14, color: globals.white),
+            headline1: TextStyle(
+                fontSize: 22,
+                color: globals.white,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.25),
+            headline2: TextStyle(
+                fontSize: 20,
+                color: globals.white,
+                fontWeight: FontWeight.w300),
+            headline3: TextStyle(fontSize: 18, color: globals.white),
+            headline4: TextStyle(
+                fontSize: 16,
+                color: globals.white,
+                fontWeight: FontWeight.w400),
+            subtitle1: TextStyle(
+                fontSize: 15,
+                color: globals.white,
+                fontWeight: FontWeight.w300),
+            headline5: TextStyle(
+                fontSize: 14,
+                color: globals.white,
+                fontWeight: FontWeight.w300),
+            subtitle2: TextStyle(
+                fontSize: 10, color: globals.grey, fontWeight: FontWeight.w300),
+            bodyText1: TextStyle(
+                fontSize: 13,
+                color: globals.white,
+                fontWeight: FontWeight.w300),
+            bodyText2: TextStyle(fontSize: 13, color: globals.red),
+            headline6: TextStyle(
+                decorationThickness: 2,
+                fontSize: 12,
+                color: globals.white,
+                fontWeight: FontWeight.w300)),
       ),
       // Removed the home and scaffold because initial route has set
       initialRoute: '/',

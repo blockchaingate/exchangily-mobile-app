@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
@@ -11,6 +12,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
+import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -27,23 +29,29 @@ class TradeViewModel extends MultipleStreamViewModel {
       locator<WalletDataBaseService>();
   ApiService apiService = locator<ApiService>();
   TradeService tradeService = locator<TradeService>();
+  WalletService walletService = locator<WalletService>();
 
   List<PairDecimalConfig> pairDecimalConfigList = [];
+
   List<OrderModel> buyOrderBookList = [];
   List<OrderModel> sellOrderBookList = [];
   List orderBook = [];
+
   List<TradeModel> marketTradesList = [];
+
   List<OrderModel> myOrders = [];
+
   Price currentPairPrice;
   List<dynamic> ordersViewTabBody = [];
-  bool marketTradeStreamSource = false;
-  List<String> tabNames = ['Order Book', 'Market Trades', 'My Orders'];
 
   List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
   String allPriceStreamKey = 'allPrices';
   String orderBookStreamKey = 'orderBookList';
   String marketTradesStreamKey = 'marketTradesList';
+
+  List myExchangeAssets = [];
+
   @override
   Map<String, StreamData> get streamsMap => {
         'allPrices': StreamData<dynamic>(tradeService.getAllCoinPriceStream()),
@@ -105,6 +113,9 @@ class TradeViewModel extends MultipleStreamViewModel {
         TradeList tradeList = TradeList.fromJson(jsonDynamicList);
         log.w('trades length ${tradeList.trades.length}');
         marketTradesList = tradeList.trades;
+        marketTradesList.forEach((element) {
+          log.e(element.toJson());
+        });
       }
     } catch (err) {
       log.e('Catch error $err');
@@ -145,7 +156,8 @@ class TradeViewModel extends MultipleStreamViewModel {
           return Container(
               width: 200,
               height: MediaQuery.of(context).size.height - 50,
-              child: MarketPairsTabView(marketPairsTabBar: marketPairsTabBar));
+              child:
+                  MarketPairsTabView(marketPairsTabBarView: marketPairsTabBar));
         });
   }
 
@@ -162,13 +174,21 @@ class TradeViewModel extends MultipleStreamViewModel {
     if (index == 0) {
       marketTradesStream.pause();
       orderBookStream.resume();
+      notifyListeners();
     } else if (index == 1) {
       orderBookStream.pause();
       marketTradesStream.resume();
+      notifyListeners();
     } else if (index == 2) {
       orderBookStream.pause();
       marketTradesStream.pause();
-      await getMyOrders();
+      notifyListeners();
+      // await getMyOrders();
+    } else if (index == 3) {
+      orderBookStream.pause();
+      marketTradesStream.pause();
+      await getExchangeAssets();
+      notifyListeners();
     }
   }
 
@@ -194,12 +214,23 @@ class TradeViewModel extends MultipleStreamViewModel {
     return tradeService.seperateBasePair(tickerName);
   }
 
-  getMyOrders() async {
+  // getMyOrders() async {
+  //   setBusy(true);
+  //   String exgAddress = await getExgAddress();
+  //   myOrders = await tradeService.getMyOrders(exgAddress);
+  //   setBusy(false);
+  //   log.w('My orders $myOrders');
+  // }
+
+  // Get Exchange Assets
+  getExchangeAssets() async {
     setBusy(true);
+    notifyListeners();
+    log.e('In get exchange assets');
     String exgAddress = await getExgAddress();
-    myOrders = await tradeService.getOrders(exgAddress);
+
+    myExchangeAssets = await walletService.assetsBalance(exgAddress);
     setBusy(false);
-    log.w('My orders $myOrders');
   }
 
   Future<String> getExgAddress() async {

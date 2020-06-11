@@ -1,8 +1,8 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 
-import 'package:exchangilymobileapp/screens/exchange/trade/market_trades_layout_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orders_layout_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orders_tab/my_orders_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trades_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orders_book_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 
 import 'package:flutter/material.dart';
@@ -42,26 +42,25 @@ class OrdersTabView extends
                     indicatorColor: primaryColor,
                     indicatorSize: TabBarIndicatorSize.tab,
                     tabs: [
-                      for (var tab in model.tabNames)
-                        Tab(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Text(tab,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              )),
-                        ))
+                      // for (var tab in model.tabNames)
+                      //   Tab(
+                      //       child: Align(
+                      //     alignment: Alignment.center,
+                      //     child: Text(tab,
+                      //         style: TextStyle(
+                      //           fontWeight: FontWeight.bold,
+                      //         )),
+                      //   ))
                     ]),
                 Container(
                   height: screenHeight * 0.70,
                   color: Theme.of(context).accentColor,
                   child: TabBarView(children: [
+                    Expanded(child: OrderBookView(orderBook: model.orderBook)),
                     Expanded(
-                        child: OrdersLayoutView(orderBook: model.orderBook)),
-                    Expanded(
-                        child: MarketTradesLayoutView(
+                        child: MarketTradesView(
                             marketTrades: model.marketTradesList)),
-                    Expanded(child: MyOrdersView(myOrders: model.myOrders))
+                    Expanded(child: MyOrdersView())
                   ]
 
                       //      ordersViewTabBody.map((tabBody) {
@@ -92,9 +91,9 @@ class SelectedTabWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       if (index == 0)
-        Expanded(child: OrdersLayoutView(orderBook: tabBody))
+        Expanded(child: OrderBookView(orderBook: tabBody))
       else if (index == 1)
-        Expanded(child: MarketTradesLayoutView(marketTrades: tabBody))
+        Expanded(child: MarketTradesView(marketTrades: tabBody))
       else if (index == 2)
         Expanded(child: Text('My orders'))
       // MyOrderDetails(orderList: tabBody)

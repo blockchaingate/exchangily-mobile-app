@@ -1,5 +1,4 @@
 import 'package:exchangilymobileapp/models/trade/price.dart';
-import 'package:exchangilymobileapp/screens/trade/main.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -7,9 +6,9 @@ import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
 
 class MarketPairsTabView extends StatelessWidget {
-  final List<List<Price>> marketPairsTabBar;
+  final List<List<Price>> marketPairsTabBarView;
   final bool isBusy;
-  MarketPairsTabView({Key key, this.marketPairsTabBar, this.isBusy})
+  MarketPairsTabView({Key key, this.marketPairsTabBarView, this.isBusy})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -141,9 +140,9 @@ class MarketPairsTabView extends StatelessWidget {
             : Container(
                 color: Theme.of(context).accentColor,
                 child: TabBarView(
-                    children: marketPairsTabBar.map((pairList) {
+                    children: marketPairsTabBarView.map((pairList) {
                   return Container(
-                    child: PriceDetailRow(pairList: pairList),
+                    child: MarketPairPriceDetailView(pairList: pairList),
                   );
                 }).toList()),
               ),
@@ -152,9 +151,9 @@ class MarketPairsTabView extends StatelessWidget {
   }
 }
 
-class PriceDetailRow extends StatelessWidget {
+class MarketPairPriceDetailView extends StatelessWidget {
   final List<Price> pairList;
-  PriceDetailRow({Key key, this.pairList}) : super(key: key);
+  MarketPairPriceDetailView({Key key, this.pairList}) : super(key: key);
   final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {
@@ -177,11 +176,6 @@ class PriceDetailRow extends StatelessWidget {
                     pairList[index].symbol.replaceAll('/', '').toString();
                 //navigationService.navigateTo
 
-                /// If i use pushReplacementNamed here
-                /// then reading from closed socket error is gone
-                /// but now all the streams are running all the time
-                /// as pushNamed doesn't remove the widget from the tree
-                /// so widget don't get dispose
                 Navigator.popAndPushNamed(context, '/exchangeTrade',
                     arguments: pairList[index]);
               },

@@ -63,14 +63,14 @@ class TradeModel {
     return json;
   }
 
-  String get orderHash1 => orderHash1;
+  String get orderHash1 => _orderHash1;
   set orderHash1(String orderHash1) {
-    this.orderHash1 = orderHash1;
+    this._orderHash1 = orderHash1;
   }
 
-  String get orderHash2 => orderHash2;
+  String get orderHash2 => _orderHash2;
   set orderHash2(String orderHash2) {
-    this.orderHash2 = orderHash2;
+    this._orderHash2 = orderHash2;
   }
 
   double get price => _price;
@@ -93,7 +93,7 @@ class TradeModel {
     this._blockNumber = blockNumber;
   }
 
-  bool get bidOrAsk => bidOrAsk;
+  bool get bidOrAsk => _bidOrAsk;
   set bidOrAsk(bool bidOrAsk) {
     this._bidOrAsk = bidOrAsk;
   }
