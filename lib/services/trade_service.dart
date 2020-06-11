@@ -152,7 +152,7 @@ class TradeService {
     return currentUsdValue;
   }
 
-// Get my orders
+// Get all my orders
   Future<List<OrderModel>> getMyOrders(String exgAddress) async {
     OrderList orderList;
     try {
@@ -161,6 +161,20 @@ class TradeService {
       return orderList.orders;
     } catch (err) {
       log.e('getMyOrders Catch $err');
+      throw Exception;
+    }
+  }
+
+  // Get my orders by tickername
+  Future<List<OrderModel>> getMyOrdersByTickerName(
+      String exgAddress, String tickerName) async {
+    OrderList orderList;
+    try {
+      var data = await _api.getMyOrdersByTickerName(exgAddress, tickerName);
+      orderList = OrderList.fromJson(data);
+      return orderList.orders;
+    } catch (err) {
+      log.e('getMyOrdersByTickerName Catch $err');
       throw Exception;
     }
   }

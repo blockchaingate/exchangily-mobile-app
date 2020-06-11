@@ -11,14 +11,14 @@ import 'my_order_details_view.dart';
 import 'my_order_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
-  //final List<OrderModel> myOrders;
-  const MyOrdersView({Key key}) : super(key: key);
+  final String tickerName;
+  MyOrdersView({Key key, this.tickerName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
         disposeViewModel: false,
-        viewModelBuilder: () => MyOrdersViewModel(),
+        viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
           print('in init MyOrdersView');
 
@@ -56,6 +56,15 @@ class MyOrdersView extends StatelessWidget {
                           length: 3,
                           child: Column(
                             children: [
+                              // Switch to show only current pair orders
+                              Container(
+                                  padding: EdgeInsets.all(5),
+                                  child: FlatButton(
+                                      onPressed: () {
+                                        model.swapSources();
+                                      },
+                                      child: Text(AppLocalizations.of(context)
+                                          .showOnlyCurrentPairOrders))),
                               UIHelper.verticalSpaceSmall,
                               // Order type tabs
                               Column(
@@ -94,6 +103,7 @@ class MyOrdersView extends StatelessWidget {
                                     ],
                                     indicatorColor: Colors.white,
                                   ),
+
                                   UIHelper.verticalSpaceSmall,
                                   // header
                                   priceFieldsHeadersRow(context),
@@ -115,7 +125,7 @@ class MyOrdersView extends StatelessWidget {
                                               child: MyOrderDetailsView(
                                                   orders: orders));
                                         }).toList(),
-                                      ))
+                                      )),
                                 ],
                               ),
                             ],

@@ -147,7 +147,7 @@ class TradeView extends StatelessWidget {
                           model.switchStreams(tabIndex);
                         },
                         indicatorColor: primaryColor,
-                        indicatorSize: TabBarIndicatorSize.label,
+                        indicatorSize: TabBarIndicatorSize.tab,
                         tabs: [
                           Text(AppLocalizations.of(context).orderBook,
                               style: Theme.of(context)
@@ -206,7 +206,7 @@ class TradeView extends StatelessWidget {
                             : MarketTradesView(
                                 marketTrades: model.marketTradesList),
                         // My Trades view
-                        MyOrdersView(),
+                        MyOrdersView(tickerName: pairPriceByRoute.symbol),
                         model.isBusy
                             // My Exchange Asssets
                             ? Container(

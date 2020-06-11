@@ -157,8 +157,9 @@ class ApiService {
   // Get Orders by tickername
   Future getMyOrdersByTickerName(String exgAddress, String tickerName) async {
     String url = environment['endpoints']['kanban'] +
-        'getordersbytickername' +
+        'getordersbytickername/' +
         exgAddress +
+        '/' +
         tickerName;
     log.i('getMyOrdersByTickerName url $url');
     try {
@@ -168,6 +169,7 @@ class ApiService {
       }
     } catch (e) {
       log.e('getOrders Failed to load the data from the API， $e');
+      throw Exception;
     }
   }
 

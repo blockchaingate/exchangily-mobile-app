@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-19T21:32:36.540366",
+  "@@last_modified": "2020-06-11T11:43:38.430167",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1569,6 +1569,24 @@
   "pending": "Pending",
   "@pending": {
     "description": "transaction_history_pending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "allOrders": "All Orders",
+  "@allOrders": {
+    "description": "exchange_all_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myOrders": "My Orders",
+  "@myOrders": {
+    "description": "exchange_my_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showOnlyCurrentPairOrders": "Show only current pair orders",
+  "@showOnlyCurrentPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
     "type": "text",
     "placeholders": {}
   }

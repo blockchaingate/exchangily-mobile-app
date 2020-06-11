@@ -54,6 +54,7 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   @override
   Map<String, StreamData> get streamsMap => {
+        //
         'allPrices': StreamData<dynamic>(tradeService.getAllCoinPriceStream()),
         'orderBookList': StreamData<dynamic>(
             tradeService.getOrdersStreamByTickerName(pairPriceByRoute.symbol)),

@@ -1565,5 +1565,11 @@
     "description": "transaction_history_error",
     "type": "text",
     "placeholders": {}
+  },
+  "showOnlyCurrentPairOrders": "Show only current pair orders",
+  "@showOnlyCurrentPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
+    "type": "text",
+    "placeholders": {}
   }
 }

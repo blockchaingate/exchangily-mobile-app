@@ -19,6 +19,9 @@ import 'package:hex/hex.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 
 class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
+  final String tickerName;
+  MyOrdersViewModel({this.tickerName});
+
   final log = getLogger('MyOrdersViewModel');
 
   WalletDataBaseService walletDataBaseService =
@@ -47,15 +50,16 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
     //   log.w('waiting for prior future to complete...');
     //   return myAllOrders;
     // } else {
-    return await tradeService.getMyOrders(exgAddress);
+
     //  }
 
-    //_showCurrentPairOrders
-
-    /// Add new api end point here which only gets the orders for
-    /// current tickername
-    //  ? await tradeService.getMyOrders(exgAddress)
-    //  :
+    if (_showCurrentPairOrders) {
+      /// Add new api end point here which only gets the orders for
+      /// current tickername
+      return await tradeService.getMyOrders(exgAddress);
+    } else {
+      return await tradeService.getMyOrdersByTickerName(exgAddress, tickerName);
+    }
   }
 
   // Get Exg address from wallet database
@@ -65,6 +69,7 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
   }
 
   void swapSources() {
+    log.w('swap sources');
     _showCurrentPairOrders = !_showCurrentPairOrders;
     notifySourceChanged();
   }
