@@ -56,9 +56,9 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
     if (_showCurrentPairOrders) {
       /// Add new api end point here which only gets the orders for
       /// current tickername
-      return await tradeService.getMyOrders(exgAddress);
+      return tradeService.getMyOrders(exgAddress);
     } else {
-      return await tradeService.getMyOrdersByTickerName(exgAddress, tickerName);
+      return tradeService.getMyOrdersByTickerName(exgAddress, tickerName);
     }
   }
 
@@ -69,7 +69,7 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
   }
 
   void swapSources() {
-    log.w('swap sources');
+    log.w('swap sources show current pair orders only $showCurrentPairOrders');
     _showCurrentPairOrders = !_showCurrentPairOrders;
     notifySourceChanged();
   }

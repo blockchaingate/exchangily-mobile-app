@@ -115,7 +115,7 @@ class TradeViewModel extends MultipleStreamViewModel {
         log.w('trades length ${tradeList.trades.length}');
         marketTradesList = tradeList.trades;
         marketTradesList.forEach((element) {
-          log.e(element.toJson());
+          //   log.e(element.toJson());
         });
       }
     } catch (err) {
@@ -225,13 +225,16 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   // Get Exchange Assets
   getExchangeAssets() async {
-    setBusy(true);
+    // setBusy(true);
     notifyListeners();
     log.e('In get exchange assets');
     String exgAddress = await getExgAddress();
-
+    var res = runBusyFuture(await walletService.assetsBalance(exgAddress));
+    log.w('res $res');
+    res.then((value) => myExchangeAssets = value);
+    log.e('my assets $myExchangeAssets');
     myExchangeAssets = await walletService.assetsBalance(exgAddress);
-    setBusy(false);
+    // setBusy(false);
   }
 
   Future<String> getExgAddress() async {

@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange_assets_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
@@ -7,7 +8,6 @@ import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import 'my_order_details_view.dart';
 import 'my_order_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
@@ -16,7 +16,7 @@ class MyOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MyOrdersViewModel>.reactive(
+    return ViewModelBuilder<MyOrdersViewModel>.nonReactive(
         disposeViewModel: false,
         viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
@@ -113,19 +113,17 @@ class MyOrdersView extends StatelessWidget {
                                           MediaQuery.of(context).size.height *
                                               0.40,
                                       margin: EdgeInsets.all(5),
-                                      child:
-                                          //  !model.dataReady
-                                          //     ? ShimmerLayout(
-                                          //         layoutType: 'marketTrades')
-                                          //     :
-                                          TabBarView(
-                                        children: model.myOrdersTabBarView
-                                            .map((orders) {
-                                          return Container(
-                                              child: MyOrderDetailsView(
-                                                  orders: orders));
-                                        }).toList(),
-                                      )),
+                                      child: !model.dataReady
+                                          ? ShimmerLayout(
+                                              layoutType: 'marketTrades')
+                                          : TabBarView(
+                                              children: model.myOrdersTabBarView
+                                                  .map((orders) {
+                                                return Container(
+                                                    child: MyOrderDetailsView(
+                                                        orders: orders));
+                                              }).toList(),
+                                            )),
                                 ],
                               ),
                             ],
@@ -169,4 +167,82 @@ class MyOrdersView extends StatelessWidget {
       ]),
     );
   }
+}
+
+class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
+  final List<OrderModel> orders;
+  const MyOrderDetailsView({Key key, this.orders}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, MyOrdersViewModel model) {
+    return
+        // !model.dataReady
+        //     ? ShimmerLayout(layoutType: 'marketTrades')
+        //     :
+        ListView.builder(
+            itemCount: orders.length,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              var order = orders[index];
+              return Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Text('$index',
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 1,
+                      child: Text(
+                          order.bidOrAsk
+                              ? AppLocalizations.of(context).buy
+                              : AppLocalizations.of(context).sell,
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                                color: Color(
+                                    (order.bidOrAsk) ? 0xFF0da88b : 0xFFe2103c),
+                              ))),
+                  Expanded(
+                      flex: 2,
+                      child: Text(order.pairName.toString(),
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 2,
+                      child: Text(order.price.toString(),
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 2,
+                      child: Text(
+                          '${model.filledAmount.toString()} (${model.filledPercentage.toStringAsFixed(2)}%)',
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 1,
+                      child: order.isActive
+                          ? model.isBusy
+                              ? CircularProgressIndicator()
+                              : IconButton(
+                                  color: red,
+                                  icon: Icon(
+                                    Icons.close,
+                                    size: 16,
+                                  ),
+                                  onPressed: () {
+                                    model.checkPass(context, order.orderHash);
+                                  })
+                          : IconButton(
+                              disabledColor:
+                                  Theme.of(context).disabledColor.withAlpha(50),
+                              icon: Icon(
+                                Icons.close,
+                                size: 16,
+                              ),
+                              onPressed: () {
+                                print('closed orders');
+                              }))
+                ],
+              );
+            });
+  }
+
+  // @override
+  // MyOrdersViewModel viewModelBuilder(BuildContext context) =>
+  //     MyOrdersViewModel();
 }
