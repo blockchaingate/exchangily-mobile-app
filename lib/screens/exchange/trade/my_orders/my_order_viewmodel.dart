@@ -30,6 +30,11 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
   double filledAmount = 0;
   double filledPercentage = 0;
   String errorMessage = '';
+  List<OrderModel> myAllOrders = [];
+  List<OrderModel> myOpenOrders = [];
+  List<OrderModel> myCloseOrders = [];
+
+  List<List<OrderModel>> myOrdersTabBarView = [];
 
   bool _showCurrentPairOrders = false;
   bool get showCurrentPairOrders => _showCurrentPairOrders;
@@ -54,9 +59,26 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
 
   @override
   void onData(List<OrderModel> data) {
+    myAllOrders = data;
+
+    /// 'amount' = orderQuantity,
+    /// 'filledAmount' = filledQuantity
+
     data.forEach((element) {
-      filledAmount = element.orderQuantity + element.filledQuantity;
-      filledPercentage = element.filledQuantity * 100 / filledAmount;
+      print('${element.orderQuantity} -- ${element.filledQuantity}');
+      filledAmount = doubleAdd(element.orderQuantity, element.filledQuantity);
+      filledPercentage = (element.filledQuantity *
+          100 /
+          doubleAdd(element.filledQuantity, element.orderQuantity));
+
+      if (element.isActive)
+        myOpenOrders.add(element);
+      else
+        myCloseOrders.add(element);
+
+      getAssetBalance();
+
+      myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
     });
   }
 
@@ -75,6 +97,7 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
   }
 
   checkPass(context, orderHash) async {
+    setBusy(true);
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -88,6 +111,7 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
       var resKanban = await sendKanbanRawTransaction(txHex);
       print('resKanban===');
       if (resKanban != null && resKanban["transactionHash"] != null) {
+        futureToRun();
         walletService.showInfoFlushbar(
             'Your cancel order transaction was successfull',
             'txid:' + resKanban["transactionHash"],
@@ -99,10 +123,17 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
-        futureToRun();
       }
     }
+    setBusy(false);
   }
+
+  getAssetBalance() async {
+    String exgAddress = await getExgAddress();
+    await tradeService.getAssetsBalance(exgAddress);
+  }
+
+  // Cancel order
 
   txHexforCancelOrder(seed, orderHash) async {
     String exgAddress = await getExgAddress();

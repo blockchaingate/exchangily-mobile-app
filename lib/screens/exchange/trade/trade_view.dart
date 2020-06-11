@@ -2,9 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/market_trades_layout_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orders_layout_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orders_tab_view.dart';
+
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
@@ -18,7 +16,9 @@ import 'package:flutter/widgets.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
-import 'my_orders_tab/my_orders_layout_view.dart';
+import 'market_trades/market_trades_view.dart';
+import 'my_orders/my_orders_view.dart';
+import 'orderbook/orders_view.dart';
 
 class TradeView extends StatelessWidget {
   final Price pairPriceByRoute;
@@ -50,7 +50,7 @@ class TradeView extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     child: Container(
                       child: MarketPairsTabView(
-                        marketPairsTabBar: model.marketPairsTabBar,
+                        marketPairsTabBarView: model.marketPairsTabBar,
                         isBusy: false,
                       ),
                     ),
@@ -150,6 +150,8 @@ class TradeView extends StatelessWidget {
               //         ),
               //       )
               //     :
+
+              // Tabs for orderbook, market trades and my orders
               DefaultTabController(
                 length: 3,
                 //ordersViewTabBody.length,
@@ -157,6 +159,7 @@ class TradeView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TabBar(
+                        indicatorWeight: 3.0,
                         onTap: (int tabIndex) {
                           model.switchStreams(tabIndex);
                         },
@@ -176,7 +179,8 @@ class TradeView extends StatelessWidget {
                     Container(
                       height: MediaQuery.of(context).size.height * 0.60,
                       child: TabBarView(children: [
-                        !model.dataReady('orderBookList')
+                        !model.dataReady(model.orderBookStreamKey)
+                            // order book container
                             ? Container(
                                 margin: EdgeInsets.symmetric(
                                     horizontal: 5.0, vertical: 20),
@@ -185,8 +189,9 @@ class TradeView extends StatelessWidget {
                                   layoutType: 'orderbook',
                                 ),
                               )
-                            : OrdersLayoutView(orderBook: model.orderBook),
-                        !model.dataReady('marketTradesList')
+                            : OrdersView(orderBook: model.orderBook),
+                        !model.dataReady(model.marketTradesStreamKey)
+                            // market trades container
                             ? Container(
                                 margin: EdgeInsets.symmetric(
                                     horizontal: 5.0, vertical: 20),
@@ -195,9 +200,10 @@ class TradeView extends StatelessWidget {
                                   layoutType: 'marketTrades',
                                 ),
                               )
-                            : MarketTradesLayoutView(
+                            : MarketTradesView(
                                 marketTrades: model.marketTradesList),
-                        MyOrdersLayoutView()
+                        // my trades view
+                        MyOrdersView()
                       ]
 
                           //      ordersViewTabBody.map((tabBody) {

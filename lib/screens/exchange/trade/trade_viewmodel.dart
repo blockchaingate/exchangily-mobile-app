@@ -145,7 +145,8 @@ class TradeViewModel extends MultipleStreamViewModel {
           return Container(
               width: 200,
               height: MediaQuery.of(context).size.height - 50,
-              child: MarketPairsTabView(marketPairsTabBar: marketPairsTabBar));
+              child:
+                  MarketPairsTabView(marketPairsTabBarView: marketPairsTabBar));
         });
   }
 

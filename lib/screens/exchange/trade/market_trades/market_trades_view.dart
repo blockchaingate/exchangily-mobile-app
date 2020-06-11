@@ -6,9 +6,9 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class MarketTradesLayoutView extends StatelessWidget {
+class MarketTradesView extends StatelessWidget {
   final List<TradeModel> marketTrades;
-  const MarketTradesLayoutView({Key key, this.marketTrades}) : super(key: key);
+  const MarketTradesView({Key key, this.marketTrades}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -4,9 +4,9 @@ import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
-class OrdersLayoutView extends StatelessWidget {
+class OrdersView extends StatelessWidget {
   final List orderBook;
-  OrdersLayoutView({Key key, this.orderBook}) : super(key: key);
+  OrdersView({Key key, this.orderBook}) : super(key: key);
   // final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {

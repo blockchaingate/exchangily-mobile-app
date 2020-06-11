@@ -138,7 +138,6 @@ class ApiService {
     } catch (e) {
       log.e('getAssetsBalance Failed to load the data from the API, $e');
     }
-    return {};
   }
 
   // Get Orders by address

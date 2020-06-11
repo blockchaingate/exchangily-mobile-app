@@ -1358,6 +1358,11 @@ class AppLocalizations {
     return Intl.message('Pending',
         name: 'pending', desc: 'transaction_history_pending');
   }
+
+  String get allOrders {
+    return Intl.message('All Orders',
+        name: 'allOrders', desc: 'exchange_all_orders');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
