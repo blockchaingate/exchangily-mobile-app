@@ -176,11 +176,6 @@ class MarketPairPriceDetailView extends StatelessWidget {
                     pairList[index].symbol.replaceAll('/', '').toString();
                 //navigationService.navigateTo
 
-                /// If i use pushReplacementNamed here
-                /// then reading from closed socket error is gone
-                /// but now all the streams are running all the time
-                /// as pushNamed doesn't remove the widget from the tree
-                /// so widget don't get dispose
                 Navigator.popAndPushNamed(context, '/exchangeTrade',
                     arguments: pairList[index]);
               },

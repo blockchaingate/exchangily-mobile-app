@@ -1363,6 +1363,11 @@ class AppLocalizations {
     return Intl.message('All Orders',
         name: 'allOrders', desc: 'exchange_all_orders');
   }
+
+  String get myOrders {
+    return Intl.message('My Orders',
+        name: 'myOrders', desc: 'exchange_my_orders');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -2,6 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange_assets_view.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
@@ -18,7 +19,7 @@ import 'package:stacked/stacked.dart';
 
 import 'market_trades/market_trades_view.dart';
 import 'my_orders/my_orders_view.dart';
-import 'orderbook/orders_view.dart';
+import 'orderbook/orders_book_view.dart';
 
 class TradeView extends StatelessWidget {
   final Price pairPriceByRoute;
@@ -42,8 +43,28 @@ class TradeView extends StatelessWidget {
       },
       builder: (context, model, _) => Scaffold(
         key: _scaffoldKey,
-        drawer: model.dataReady('allPrices')
+        appBar: AppBar(
+            backgroundColor: primaryColor.withOpacity(0.25),
+            leading: IconButton(
+              icon: Icon(Icons.compare_arrows),
+              onPressed: () {
+                // model.pauseAllStreams();
+                _scaffoldKey.currentState.openDrawer();
+              },
+            ),
+            title: Text(
+              model.updateTickerName(pairPriceByRoute.symbol),
+              style: Theme.of(context).textTheme.headline4,
+            ),
+            centerTitle: true,
+            automaticallyImplyLeading: false),
+        drawer: !model.dataReady('allPrices')
             ? Container(
+                child: Center(
+                  child: Text(AppLocalizations.of(context).loading),
+                ),
+              )
+            : Container(
                 margin: EdgeInsets.only(top: 10),
                 child: Stack(overflow: Overflow.visible, children: [
                   Align(
@@ -81,39 +102,12 @@ class TradeView extends StatelessWidget {
                         ),
                       )),
                   // Icon(Icons.access_alarm)
-                ]))
-            : Container(
-                child: Center(
-                  child: Text(AppLocalizations.of(context).serverError),
-                ),
-              ),
-        appBar: AppBar(
-            backgroundColor: primaryColor.withOpacity(0.25),
-            leading: IconButton(
-              icon: Icon(Icons.compare_arrows),
-              onPressed: () {
-                // model.pauseAllStreams();
-                _scaffoldKey.currentState.openDrawer();
-              },
-            ),
-            title: Text(
-              model.updateTickerName(pairPriceByRoute.symbol),
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            centerTitle: true,
-            automaticallyImplyLeading: false),
+                ])),
+
         body: Container(
-          child:
-              //  model.hasError('allPrices') ||
-              //         model.hasError('orderBookList') ||
-              //         model.hasError('marketTradesList')
-              //     ? Center(
-              //         child: Text('Data Stream Failed'),
-              //       )
-              //     :
-              ListView(
+          child: ListView(
             children: [
-              /// Check if price current price object is not null
+              /// Check if all price stream is ready
               !model.dataReady(model.allPriceStreamKey)
                   ? Container(
                       child: Shimmer.fromColors(
@@ -138,44 +132,53 @@ class TradeView extends StatelessWidget {
                     model.updateTickerName(pairPriceByRoute.symbol)),
               ),
 
-              /// Market orders
-              // !model.dataReady('marketTradeList') &&
-              // !model.dataReady('orderBookList')
-              //     ? Container(
-              //         margin:
-              //             EdgeInsets.symmetric(horizontal: 5.0, vertical: 20),
-              //         height: 150,
-              //         child: ShimmerLayout(
-              //           layoutType: 'orderbook',
-              //         ),
-              //       )
-              //     :
-
               // Tabs for orderbook, market trades and my orders
+              UIHelper.verticalSpaceSmall,
               DefaultTabController(
-                length: 3,
+                length: 4,
                 //ordersViewTabBody.length,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TabBar(
-                        indicatorWeight: 3.0,
+                        labelPadding: EdgeInsets.symmetric(
+                            vertical: 2.0, horizontal: 2.0),
                         onTap: (int tabIndex) {
                           model.switchStreams(tabIndex);
                         },
                         indicatorColor: primaryColor,
-                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicatorSize: TabBarIndicatorSize.label,
                         tabs: [
-                          for (var tab in model.tabNames)
-                            Tab(
-                                child: Align(
-                              alignment: Alignment.center,
-                              child: Text(tab,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            ))
+                          Text(AppLocalizations.of(context).orderBook,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      decorationThickness: 3)),
+                          Text(AppLocalizations.of(context).marketTrades,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      decorationThickness: 3)),
+                          Text(AppLocalizations.of(context).myOrders,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      decorationThickness: 3)),
+                          Text(AppLocalizations.of(context).assets,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(
+                                      fontWeight: FontWeight.w500,
+                                      decorationThickness: 3)),
                         ]),
+                    UIHelper.verticalSpaceSmall,
                     Container(
                       height: MediaQuery.of(context).size.height * 0.60,
                       child: TabBarView(children: [
@@ -189,7 +192,7 @@ class TradeView extends StatelessWidget {
                                   layoutType: 'orderbook',
                                 ),
                               )
-                            : OrdersView(orderBook: model.orderBook),
+                            : OrderBookView(orderBook: model.orderBook),
                         !model.dataReady(model.marketTradesStreamKey)
                             // market trades container
                             ? Container(
@@ -202,8 +205,20 @@ class TradeView extends StatelessWidget {
                               )
                             : MarketTradesView(
                                 marketTrades: model.marketTradesList),
-                        // my trades view
-                        MyOrdersView()
+                        // My Trades view
+                        MyOrdersView(),
+                        model.isBusy
+                            // My Exchange Asssets
+                            ? Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 5.0, vertical: 5),
+                                height: 150,
+                                child: ShimmerLayout(
+                                  layoutType: 'marketTrades',
+                                ),
+                              )
+                            : MyExchangeAssetsView(
+                                myExchangeAssets: model.myExchangeAssets)
                       ]
 
                           //      ordersViewTabBody.map((tabBody) {
@@ -217,7 +232,8 @@ class TradeView extends StatelessWidget {
                     ),
                   ],
                 ),
-              )
+              ),
+              UIHelper.verticalSpaceSmall,
             ],
           ),
         ),

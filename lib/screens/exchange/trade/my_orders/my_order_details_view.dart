@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
 
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
@@ -7,18 +8,19 @@ import 'package:stacked/stacked.dart';
 
 import 'my_order_viewmodel.dart';
 
-class MyOrderDetailsView extends ViewModelBuilderWidget<MyOrdersViewModel> {
-  const MyOrderDetailsView({Key key}) : super(key: key);
+class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
+  final List<OrderModel> orders;
+  const MyOrderDetailsView({Key key, this.orders}) : super(key: key);
 
   @override
-  Widget builder(BuildContext context, MyOrdersViewModel model, Widget child) {
+  Widget build(BuildContext context, MyOrdersViewModel model) {
     return !model.dataReady
         ? ShimmerLayout(layoutType: 'marketTrades')
         : ListView.builder(
-            itemCount: model.myOrdersTabBarView.length,
+            itemCount: orders.length,
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
-              var order = model.data[index];
+              var order = orders[index];
               return Row(
                 children: [
                   Expanded(
@@ -77,7 +79,7 @@ class MyOrderDetailsView extends ViewModelBuilderWidget<MyOrdersViewModel> {
             });
   }
 
-  @override
-  MyOrdersViewModel viewModelBuilder(BuildContext context) =>
-      MyOrdersViewModel();
+  // @override
+  // MyOrdersViewModel viewModelBuilder(BuildContext context) =>
+  //     MyOrdersViewModel();
 }

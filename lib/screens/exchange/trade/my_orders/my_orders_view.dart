@@ -1,6 +1,8 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange_assets_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -15,9 +17,16 @@ class MyOrdersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
+        disposeViewModel: false,
         viewModelBuilder: () => MyOrdersViewModel(),
         onModelReady: (model) {
-          print('in init MyOrdersLayoutView');
+          print('in init MyOrdersView');
+
+          model.myOrdersTabBarView = [
+            model.myAllOrders,
+            model.myOpenOrders,
+            model.myCloseOrders
+          ];
         },
         builder: (context, model, _) => Container(
             child:
@@ -44,7 +53,7 @@ class MyOrdersView extends StatelessWidget {
                     // Layout
                     : Container(
                         child: DefaultTabController(
-                          length: 4,
+                          length: 3,
                           child: Column(
                             children: [
                               UIHelper.verticalSpaceSmall,
@@ -52,10 +61,9 @@ class MyOrdersView extends StatelessWidget {
                               Column(
                                 children: <Widget>[
                                   TabBar(
-                                    onTap: (int i) {
-                                      // model.showOrdersInTabView(i);
-                                    },
-                                    indicatorSize: TabBarIndicatorSize.tab,
+                                    onTap: (int i) {},
+                                    indicatorSize: TabBarIndicatorSize
+                                        .tab, // model.showOrdersInTabView(i);
                                     indicator: BoxDecoration(
                                       color: Colors.redAccent,
                                       gradient: LinearGradient(colors: [
@@ -83,32 +91,30 @@ class MyOrdersView extends StatelessWidget {
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
-                                      Text(AppLocalizations.of(context).assets,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6)
                                     ],
                                     indicatorColor: Colors.white,
                                   ),
                                   UIHelper.verticalSpaceSmall,
                                   // header
                                   priceFieldsHeadersRow(context),
-
                                   // Tab bar view container
                                   Container(
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.40,
                                       margin: EdgeInsets.all(5),
-
-                                      //height: 330,
-                                      child: TabBarView(
-                                        children: [
-                                          MyOrderDetailsView(),
-                                          MyOrderDetailsView(),
-                                          MyOrderDetailsView(),
-                                          AssetBalance()
-                                        ],
+                                      child:
+                                          //  !model.dataReady
+                                          //     ? ShimmerLayout(
+                                          //         layoutType: 'marketTrades')
+                                          //     :
+                                          TabBarView(
+                                        children: model.myOrdersTabBarView
+                                            .map((orders) {
+                                          return Container(
+                                              child: MyOrderDetailsView(
+                                                  orders: orders));
+                                        }).toList(),
                                       ))
                                 ],
                               ),
@@ -151,17 +157,6 @@ class MyOrdersView extends StatelessWidget {
               style: Theme.of(context).textTheme.subtitle2),
         ),
       ]),
-    );
-  }
-}
-
-class AssetBalance extends StatelessWidget {
-  const AssetBalance({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Text(''),
     );
   }
 }

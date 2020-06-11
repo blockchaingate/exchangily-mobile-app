@@ -4,9 +4,9 @@ import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
-class OrdersView extends StatelessWidget {
+class OrderBookView extends StatelessWidget {
   final List orderBook;
-  OrdersView({Key key, this.orderBook}) : super(key: key);
+  OrderBookView({Key key, this.orderBook}) : super(key: key);
   // final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class OrdersView extends StatelessWidget {
                     children: <Widget>[
                       Container(
                         color: walletCardColor,
-                        width: MediaQuery.of(context).size.width * 0.45,
+                        width: MediaQuery.of(context).size.width * 0.48,
                         padding: EdgeInsets.all(5.0),
                         // Quantity/Price headers row
                         child: Row(
@@ -56,8 +56,8 @@ class OrdersView extends StatelessWidget {
 
                       // Buy/Sell Orders List View
                       SizedBox(
-                        width: 200,
-                        height: 300,
+                        width: MediaQuery.of(context).size.width * 0.48,
+                        height: MediaQuery.of(context).size.height * 0.46,
                         child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: orders.length,
@@ -94,7 +94,7 @@ class OrderDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(bottom: 2.0, right: 6.0, left: 6.0),
+        margin: EdgeInsets.only(bottom: 2.0),
         padding: EdgeInsets.all(3.0),
         color: isBuy ? buyOrders : sellOrders,
         child: Row(
@@ -107,7 +107,7 @@ class OrderDetailsView extends StatelessWidget {
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 12, color: grey))
                     : Text('${orders[index].price.toStringAsFixed(3)}',
-                        textAlign: TextAlign.end,
+                        textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 12, color: sellPrice))),
             // Price Container
             Expanded(
@@ -116,7 +116,7 @@ class OrderDetailsView extends StatelessWidget {
                         textAlign: TextAlign.end,
                         style: TextStyle(fontSize: 12, color: buyPrice))
                     : Text('${orders[index].orderQuantity.toStringAsFixed(3)}',
-                        textAlign: TextAlign.start,
+                        textAlign: TextAlign.end,
                         style: TextStyle(fontSize: 12, color: grey))),
           ],
         ));

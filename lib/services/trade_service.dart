@@ -152,21 +152,17 @@ class TradeService {
     return currentUsdValue;
   }
 
-  getAssetsBalance(String exgAddress) async {
-    return await _api.getAssetsBalance(exgAddress);
-  }
-
 // Get my orders
   Future<List<OrderModel>> getMyOrders(String exgAddress) async {
     OrderList orderList;
     try {
       var data = await _api.getOrders(exgAddress);
-      log.w('raw data $data');
       orderList = OrderList.fromJson(data);
+      return orderList.orders;
     } catch (err) {
       log.e('getMyOrders Catch $err');
+      throw Exception;
     }
-    return orderList.orders;
   }
 
   // Market Pair Group Price List

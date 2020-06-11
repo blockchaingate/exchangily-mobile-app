@@ -143,7 +143,7 @@ class ApiService {
   // Get Orders by address
   Future getOrders(String exgAddress) async {
     String url = environment['endpoints']['kanban'] + orders + exgAddress;
-    log.i('get my orders url $url');
+    log.w('get my orders url $url');
     try {
       final res = await http.get(url);
       if (res.statusCode == 200 || res.statusCode == 201) {

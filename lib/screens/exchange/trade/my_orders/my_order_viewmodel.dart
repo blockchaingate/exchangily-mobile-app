@@ -41,12 +41,24 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
 
   @override
   Future<List<OrderModel>> futureToRun() async {
+    log.i('runing future to run -- $anyObjectsBusy -- $isBusy');
     String exgAddress = await getExgAddress();
-    return _showCurrentPairOrders
-        ? await tradeService.getMyOrders(exgAddress)
-        : await tradeService.getMyOrders(exgAddress);
+    // if (anyObjectsBusy) {
+    //   log.w('waiting for prior future to complete...');
+    //   return myAllOrders;
+    // } else {
+    return await tradeService.getMyOrders(exgAddress);
+    //  }
+
+    //_showCurrentPairOrders
+
+    /// Add new api end point here which only gets the orders for
+    /// current tickername
+    //  ? await tradeService.getMyOrders(exgAddress)
+    //  :
   }
 
+  // Get Exg address from wallet database
   Future<String> getExgAddress() async {
     var exgWallet = await walletDataBaseService.getBytickerName('EXG');
     return exgWallet.address;
@@ -59,31 +71,37 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
 
   @override
   void onData(List<OrderModel> data) {
+    log.w('check busy -- $anyObjectsBusy -- $isBusy');
     myAllOrders = data;
-
-    /// 'amount' = orderQuantity,
-    /// 'filledAmount' = filledQuantity
-
+    log.w('My order length ${myAllOrders.length}');
     data.forEach((element) {
-      print('${element.orderQuantity} -- ${element.filledQuantity}');
+      /// 'amount' = orderQuantity,
+      /// 'filledAmount' = filledQuantity
       filledAmount = doubleAdd(element.orderQuantity, element.filledQuantity);
       filledPercentage = (element.filledQuantity *
           100 /
           doubleAdd(element.filledQuantity, element.orderQuantity));
 
-      if (element.isActive)
+      if (element.isActive) {
         myOpenOrders.add(element);
-      else
+
+        //  log.e('Close orders ${myOpenOrders.length}');
+      } else if (!element.isActive) {
         myCloseOrders.add(element);
 
-      getAssetBalance();
+        //  log.w('Close orders ${myCloseOrders.length}');
+      }
 
-      myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
+      // Add order lists to orders tab bar view
     });
+    myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
+    log.e('check busy -- $anyObjectsBusy -- $isBusy');
+    log.w('data end');
   }
 
   @override
   void onError(error) {
+    log.e('Future error $error');
     errorMessage = error.toString();
   }
 
@@ -126,11 +144,6 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
       }
     }
     setBusy(false);
-  }
-
-  getAssetBalance() async {
-    String exgAddress = await getExgAddress();
-    await tradeService.getAssetsBalance(exgAddress);
   }
 
   // Cancel order

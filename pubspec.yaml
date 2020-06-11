@@ -109,7 +109,7 @@ dependencies:
   flutter_svg: ^0.17.3+1
 
   # State Management
-  stacked: ^1.5.4
+  stacked: ^1.5.8
 
   # Share files
   share:
