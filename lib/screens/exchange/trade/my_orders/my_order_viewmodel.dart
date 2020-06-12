@@ -43,23 +43,17 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
   bool get showCurrentPairOrders => _showCurrentPairOrders;
 
   @override
-  Future<List<OrderModel>> futureToRun() async {
-    log.i('runing future to run -- $anyObjectsBusy -- $isBusy');
+  Future<List<OrderModel>> futureToRun() =>
+      _showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
+
+  Future<List<OrderModel>> getAllMyOrders() async {
     String exgAddress = await getExgAddress();
-    // if (anyObjectsBusy) {
-    //   log.w('waiting for prior future to complete...');
-    //   return myAllOrders;
-    // } else {
+    return tradeService.getMyOrders(exgAddress);
+  }
 
-    //  }
-
-    if (_showCurrentPairOrders) {
-      /// Add new api end point here which only gets the orders for
-      /// current tickername
-      return tradeService.getMyOrders(exgAddress);
-    } else {
-      return tradeService.getMyOrdersByTickerName(exgAddress, tickerName);
-    }
+  Future<List<OrderModel>> getMyOrdersByTickerName() async {
+    String exgAddress = await getExgAddress();
+    return tradeService.getMyOrdersByTickerName(exgAddress, tickerName);
   }
 
   // Get Exg address from wallet database
@@ -76,7 +70,6 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
 
   @override
   void onData(List<OrderModel> data) {
-    log.w('check busy -- $anyObjectsBusy -- $isBusy');
     myAllOrders = data;
     log.w('My order length ${myAllOrders.length}');
     data.forEach((element) {
@@ -100,8 +93,6 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
       // Add order lists to orders tab bar view
     });
     myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
-    log.e('check busy -- $anyObjectsBusy -- $isBusy');
-    log.w('data end');
   }
 
   @override

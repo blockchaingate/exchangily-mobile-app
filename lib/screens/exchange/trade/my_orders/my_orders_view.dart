@@ -16,7 +16,7 @@ class MyOrdersView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MyOrdersViewModel>.nonReactive(
+    return ViewModelBuilder<MyOrdersViewModel>.reactive(
         disposeViewModel: false,
         viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
@@ -57,15 +57,26 @@ class MyOrdersView extends StatelessWidget {
                           child: Column(
                             children: [
                               // Switch to show only current pair orders
-                              Container(
-                                  padding: EdgeInsets.all(5),
-                                  child: FlatButton(
-                                      onPressed: () {
-                                        model.swapSources();
-                                      },
-                                      child: Text(AppLocalizations.of(context)
-                                          .showOnlyCurrentPairOrders))),
-                              UIHelper.verticalSpaceSmall,
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.7,
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: SwitchListTile.adaptive(
+                                        activeColor: primaryColor,
+                                        dense: true,
+                                        contentPadding: EdgeInsets.all(0),
+                                        title: Text(
+                                            AppLocalizations.of(context)
+                                                .showOnlyCurrentPairOrders,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6),
+                                        value: model.showCurrentPairOrders,
+                                        onChanged: (v) {
+                                          model.swapSources();
+                                        })),
+                              ),
+
                               // Order type tabs
                               Column(
                                 children: <Widget>[
@@ -157,6 +168,10 @@ class MyOrdersView extends StatelessWidget {
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
             flex: 2,
+            child: Text(AppLocalizations.of(context).quantity,
+                style: Theme.of(context).textTheme.subtitle2)),
+        Expanded(
+            flex: 2,
             child: Text(AppLocalizations.of(context).filledAmount,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
@@ -207,6 +222,10 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                   Expanded(
                       flex: 2,
                       child: Text(order.price.toString(),
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 2,
+                      child: Text(order.orderQuantity.toString(),
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 2,

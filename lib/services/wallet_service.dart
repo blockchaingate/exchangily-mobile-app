@@ -508,14 +508,14 @@ class WalletService {
                       Assets Balance
 ----------------------------------------------------------------------*/
 
-  assetsBalance(String exgAddress) async {
-    List<Map<String, dynamic>> bal = [];
-    await _api.getAssetsBalance(exgAddress).then((res) {
-      log.w('assetsBalance exchange $res');
+  Future assetsBalance(String exgAddress) async {
+    try {
+      List<Map<String, dynamic>> bal = [];
+      var res = await _api.getAssetsBalance(exgAddress);
+      // log.w('assetsBalance exchange $res');
       for (var i = 0; i < res.length; i++) {
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
-
         var unlockedAmount =
             stringUtils.bigNum2Double(tempBal['unlockedAmount']);
         var lockedAmount = stringUtils.bigNum2Double(tempBal['lockedAmount']);
@@ -526,13 +526,12 @@ class WalletService {
         };
         bal.add(finalBal);
       }
-      log.e('assetsBalance exchange after conversion $bal');
-    }).catchError((onError) {
+      log.w('assetsBalance exchange after conversion $bal');
+      return bal;
+    } catch (onError) {
       log.e('On error assetsBalance $onError');
-      bal = [];
-      throw Exception;
-    });
-    return bal;
+      throw Exception('Catch error $onError');
+    }
   }
 
   /* ---------------------------------------------------

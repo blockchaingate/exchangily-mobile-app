@@ -161,7 +161,7 @@ class TradeService {
       return orderList.orders;
     } catch (err) {
       log.e('getMyOrders Catch $err');
-      throw Exception;
+      throw Exception('Catch Exception $err');
     }
   }
 

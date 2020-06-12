@@ -149,18 +149,18 @@ class TradeViewModel extends MultipleStreamViewModel {
   }
 
   /// Bottom sheet to show market pair price
-  showBottomSheet() {
-    showModalBottomSheet(
-        backgroundColor: Colors.white,
-        context: context,
-        builder: (BuildContext context) {
-          return Container(
-              width: 200,
-              height: MediaQuery.of(context).size.height - 50,
-              child:
-                  MarketPairsTabView(marketPairsTabBarView: marketPairsTabBar));
-        });
-  }
+  // showBottomSheet() {
+  //   showModalBottomSheet(
+  //       backgroundColor: Colors.white,
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Container(
+  //             width: 200,
+  //             height: MediaQuery.of(context).size.height - 50,
+  //             child:
+  //                 MarketPairsTabView(marketPairsTabBarView: marketPairsTabBar));
+  //       });
+  // }
 
   /// Switch Streams
   void switchStreams(int index) async {
@@ -193,18 +193,6 @@ class TradeViewModel extends MultipleStreamViewModel {
     }
   }
 
-  void pauseAllStreams() {
-    getSubscriptionForKey('marketTradesList').pause();
-    getSubscriptionForKey('orderBookList').pause();
-    log.i('market trades and order book stream paused');
-  }
-
-  void resumeAllStreams() {
-    getSubscriptionForKey('marketTradesList').resume();
-    getSubscriptionForKey('orderBookList').resume();
-    log.i('market trades and order book stream resumed');
-  }
-
   void cancelSingleStreamByKey(String key) {
     var stream = getSubscriptionForKey(key);
     stream.cancel();
@@ -225,16 +213,17 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   // Get Exchange Assets
   getExchangeAssets() async {
-    // setBusy(true);
+    setBusy(true);
     notifyListeners();
     log.e('In get exchange assets');
     String exgAddress = await getExgAddress();
-    var res = runBusyFuture(await walletService.assetsBalance(exgAddress));
-    log.w('res $res');
-    res.then((value) => myExchangeAssets = value);
-    log.e('my assets $myExchangeAssets');
-    myExchangeAssets = await walletService.assetsBalance(exgAddress);
-    // setBusy(false);
+
+    await walletService.assetsBalance(exgAddress).then((value) {
+      // log.w('value $value');
+      myExchangeAssets = value;
+      // log.w('exchange assets $myExchangeAssets');
+    });
+    setBusy(false);
   }
 
   Future<String> getExgAddress() async {

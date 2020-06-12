@@ -76,6 +76,7 @@ class TradeView extends StatelessWidget {
                       ),
                     ),
                   ),
+                  // Close button position bottom right
                   Positioned(
                       bottom: 0,
                       right: 0,
@@ -141,44 +142,46 @@ class TradeView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TabBar(
-                        labelPadding: EdgeInsets.symmetric(
-                            vertical: 2.0, horizontal: 2.0),
+                        labelPadding: EdgeInsets.symmetric(vertical: 5),
                         onTap: (int tabIndex) {
                           model.switchStreams(tabIndex);
                         },
+                        indicatorPadding: EdgeInsets.all(3),
                         indicatorColor: primaryColor,
                         indicatorSize: TabBarIndicatorSize.tab,
+                        // Tabs
                         tabs: [
                           Text(AppLocalizations.of(context).orderBook,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline6
+                                  .headline5
                                   .copyWith(
                                       fontWeight: FontWeight.w500,
                                       decorationThickness: 3)),
                           Text(AppLocalizations.of(context).marketTrades,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline6
+                                  .headline5
                                   .copyWith(
                                       fontWeight: FontWeight.w500,
                                       decorationThickness: 3)),
                           Text(AppLocalizations.of(context).myOrders,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline6
+                                  .headline5
                                   .copyWith(
                                       fontWeight: FontWeight.w500,
                                       decorationThickness: 3)),
                           Text(AppLocalizations.of(context).assets,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline6
+                                  .headline5
                                   .copyWith(
                                       fontWeight: FontWeight.w500,
                                       decorationThickness: 3)),
                         ]),
                     UIHelper.verticalSpaceSmall,
+                    // Tabs view container
                     Container(
                       height: MediaQuery.of(context).size.height * 0.60,
                       child: TabBarView(children: [
