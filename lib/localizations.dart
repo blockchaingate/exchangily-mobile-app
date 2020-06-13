@@ -1374,6 +1374,11 @@ class AppLocalizations {
         name: 'showOnlyCurrentPairOrders',
         desc: 'exchange_my_orders_show_current_pair_orders');
   }
+
+  String get symbol {
+    return Intl.message('Symbol',
+        name: 'symbol', desc: 'exchange_my_exchange_assets');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

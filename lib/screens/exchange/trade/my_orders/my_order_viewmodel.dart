@@ -17,8 +17,13 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:hex/hex.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 
-class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
+import 'package:exchangilymobileapp/models/trade/price.dart';
+
+class MyOrdersViewModel extends // BaseViewModel {
+    FutureViewModel<List<OrderModel>> {
   final String tickerName;
   MyOrdersViewModel({this.tickerName});
 
@@ -29,31 +34,53 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
   TradeService tradeService = locator<TradeService>();
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
-
+  NavigationService navigationService = locator<NavigationService>();
+  ApiService apiService = locator<ApiService>();
   double filledAmount = 0;
   double filledPercentage = 0;
   String errorMessage = '';
   List<OrderModel> myAllOrders = [];
   List<OrderModel> myOpenOrders = [];
   List<OrderModel> myCloseOrders = [];
-
   List<List<OrderModel>> myOrdersTabBarView = [];
-
+  bool isFutureError = false;
   bool _showCurrentPairOrders = false;
   bool get showCurrentPairOrders => _showCurrentPairOrders;
 
+  init() {
+    //  getAllMyOrders();
+  }
+
   @override
   Future<List<OrderModel>> futureToRun() =>
-      _showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
+      !_showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
 
   Future<List<OrderModel>> getAllMyOrders() async {
     String exgAddress = await getExgAddress();
-    return tradeService.getMyOrders(exgAddress);
+    log.e('error state $hasError');
+    //  myAllOrders =
+    return await apiService.getOrders(exgAddress);
+    //.then((value) => onData(value));
+    // setBusy(false);
+    //  return myAllOrders;
+  }
+
+  Future<List<OrderModel>> test() async {
+    isFutureError = false;
+    String exgAddress = await getExgAddress();
+    //  myAllOrders =
+    return await apiService.getOrdersTest(exgAddress);
+    //.then((value) => onData(value));
+    // setBusy(false);
+    //  return myAllOrders;
   }
 
   Future<List<OrderModel>> getMyOrdersByTickerName() async {
     String exgAddress = await getExgAddress();
-    return tradeService.getMyOrdersByTickerName(exgAddress, tickerName);
+    isFutureError = false;
+    return await tradeService.getMyOrdersByTickerName(exgAddress, tickerName);
+    // .then((value) => onData(value));
+    //return myAllOrders;
   }
 
   // Get Exg address from wallet database
@@ -63,40 +90,47 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
   }
 
   void swapSources() {
-    log.w('swap sources show current pair orders only $showCurrentPairOrders');
+    //   setBusy(true);
+    log.w(
+        'swap sources show current pair orders only ${!showCurrentPairOrders}');
     _showCurrentPairOrders = !_showCurrentPairOrders;
+    //  _showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
     notifySourceChanged();
+    //  setBusy(false);
   }
 
   @override
   void onData(List<OrderModel> data) {
-    myAllOrders = data;
-    log.w('My order length ${myAllOrders.length}');
-    data.forEach((element) {
-      /// 'amount' = orderQuantity,
-      /// 'filledAmount' = filledQuantity
-      filledAmount = doubleAdd(element.orderQuantity, element.filledQuantity);
-      filledPercentage = (element.filledQuantity *
-          100 /
-          doubleAdd(element.filledQuantity, element.orderQuantity));
+    if (data != null) {
+      myAllOrders = data;
+      log.e('My order length ${myAllOrders.length}');
+      data.forEach((element) {
+        /// 'amount' = orderQuantity,
+        /// 'filledAmount' = filledQuantity
+        filledAmount = doubleAdd(element.orderQuantity, element.filledQuantity);
+        filledPercentage = (element.filledQuantity *
+            100 /
+            doubleAdd(element.filledQuantity, element.orderQuantity));
 
-      if (element.isActive) {
-        myOpenOrders.add(element);
+        if (element.isActive) {
+          myOpenOrders.add(element);
+          //  log.e('Close orders ${myOpenOrders.length}');
+        } else if (!element.isActive) {
+          myCloseOrders.add(element);
+          //  log.w('Close orders ${myCloseOrders.length}');
+        }
 
-        //  log.e('Close orders ${myOpenOrders.length}');
-      } else if (!element.isActive) {
-        myCloseOrders.add(element);
-
-        //  log.w('Close orders ${myCloseOrders.length}');
-      }
-
-      // Add order lists to orders tab bar view
-    });
-    myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
+        // Add order lists to orders tab bar view
+      });
+      log.w('open orders ${myOpenOrders.length}');
+      log.w('close orders ${myCloseOrders.length}');
+      myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
+    }
   }
 
   @override
   void onError(error) {
+    isFutureError = true;
     log.e('Future error $error');
     errorMessage = error.toString();
   }
@@ -125,7 +159,7 @@ class MyOrdersViewModel extends FutureViewModel<List<OrderModel>> {
       var resKanban = await sendKanbanRawTransaction(txHex);
       print('resKanban===');
       if (resKanban != null && resKanban["transactionHash"] != null) {
-        futureToRun();
+        // futureToRun();
         walletService.showInfoFlushbar(
             'Your cancel order transaction was successfull',
             'txid:' + resKanban["transactionHash"],

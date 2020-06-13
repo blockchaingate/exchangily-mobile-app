@@ -4,10 +4,10 @@ import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange_assets_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
-
+import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-
+import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
 import 'my_order_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
@@ -21,7 +21,7 @@ class MyOrdersView extends StatelessWidget {
         viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
           print('in init MyOrdersView');
-
+          model.init();
           model.myOrdersTabBarView = [
             model.myAllOrders,
             model.myOpenOrders,
@@ -31,7 +31,7 @@ class MyOrdersView extends StatelessWidget {
         builder: (context, model, _) => Container(
             child:
                 // error handling
-                model.hasError
+                model.isFutureError
                     ? Container(
                         color: Colors.red.withAlpha(150),
                         padding: EdgeInsets.all(25),
@@ -42,11 +42,16 @@ class MyOrdersView extends StatelessWidget {
                               'An error has occered while fetching orders: ${model.errorMessage}',
                               style: TextStyle(color: Colors.white),
                             ),
-                            FlatButton(
-                                onPressed: () {
-                                  model.futureToRun();
-                                },
-                                child: Text('Reload'))
+                            IconButton(
+                              icon: Icon(Icons.replay),
+                              color: white,
+                              onPressed: () {
+                                model.isFutureError = false;
+                                print(
+                                    'Running futures to run again to reset the hasError and try to get the data so that user can see the data with view instead of error screen');
+                                model.futureToRun();
+                              },
+                            ),
                           ],
                         ),
                       )
@@ -57,24 +62,26 @@ class MyOrdersView extends StatelessWidget {
                           child: Column(
                             children: [
                               // Switch to show only current pair orders
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.7,
-                                child: Align(
-                                    alignment: Alignment.center,
-                                    child: SwitchListTile.adaptive(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      AppLocalizations.of(context)
+                                          .showOnlyCurrentPairOrders,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                  Transform.scale(
+                                    scale: 0.75,
+                                    child: Switch.adaptive(
                                         activeColor: primaryColor,
-                                        dense: true,
-                                        contentPadding: EdgeInsets.all(0),
-                                        title: Text(
-                                            AppLocalizations.of(context)
-                                                .showOnlyCurrentPairOrders,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6),
                                         value: model.showCurrentPairOrders,
                                         onChanged: (v) {
                                           model.swapSources();
-                                        })),
+                                        }),
+                                  ),
+                                ],
                               ),
 
                               // Order type tabs
@@ -203,7 +210,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                 children: [
                   Expanded(
                       flex: 1,
-                      child: Text('$index',
+                      child: Text('${index + 1}',
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 1,

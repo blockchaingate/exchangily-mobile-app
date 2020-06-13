@@ -54,11 +54,11 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   @override
   Map<String, StreamData> get streamsMap => {
-        //
-        'allPrices': StreamData<dynamic>(tradeService.getAllCoinPriceStream()),
-        'orderBookList': StreamData<dynamic>(
-            tradeService.getOrdersStreamByTickerName(pairPriceByRoute.symbol)),
-        'marketTradesList': StreamData<dynamic>(tradeService
+        allPriceStreamKey:
+            StreamData<dynamic>(tradeService.getAllCoinPriceStream()),
+        orderBookStreamKey: StreamData<dynamic>(tradeService
+            .getOrderBookStreamByTickerName(pairPriceByRoute.symbol)),
+        marketTradesStreamKey: StreamData<dynamic>(tradeService
             .getMarketTradesStreamByTickerName(pairPriceByRoute.symbol))
       };
   // Map<String, StreamData> res =
@@ -66,13 +66,12 @@ class TradeViewModel extends MultipleStreamViewModel {
 
 // Change/update stream data before displaying on UI
   @override
-  void onData(String key, data) {
-    if (hasError(key)) onCancel(key);
-  }
+  void onData(String key, data) {}
 
   /// Transform stream data before notifying to view modal
   @override
   dynamic transformData(String key, data) {
+    log.e('checking error ${getError(key)}');
     try {
       /// All prices list
       if (key == allPriceStreamKey) {
@@ -85,17 +84,16 @@ class TradeViewModel extends MultipleStreamViewModel {
             currentPairPrice = element;
           }
         });
-        log.e('pair price length ${priceList.prices.length}');
         Map<String, dynamic> res =
             tradeService.marketPairPriceGroups(pairPriceList);
         marketPairsTabBar = res['marketPairsGroupList'];
+        // notifyListeners();
       } // all prices ends
 
       /// Order list
       else if (key == orderBookStreamKey) {
         // Buy order
         List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
-        log.w('OrderBook jsonDynamicList length ${jsonDynamicList.length}');
         OrderList orderList = OrderList.fromJson(jsonDynamicList);
         buyOrderBookList = orderList.orders;
 
@@ -104,8 +102,11 @@ class TradeViewModel extends MultipleStreamViewModel {
         OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
         sellOrderBookList = sellOrderList.orders;
 
+        log.w(
+            'OrderBook length -- ${buyOrderBookList.length} ${sellOrderList.orders.length}');
         // Fill orderBook list
         orderBook = [buyOrderBookList, sellOrderBookList];
+        // notifyListeners();
       }
 
       /// Market trade list
@@ -117,6 +118,7 @@ class TradeViewModel extends MultipleStreamViewModel {
         marketTradesList.forEach((element) {
           //   log.e(element.toJson());
         });
+        //  notifyListeners();
       }
     } catch (err) {
       log.e('Catch error $err');
@@ -127,17 +129,18 @@ class TradeViewModel extends MultipleStreamViewModel {
   void onError(String key, error) {
     log.e('In onError $key $error');
     getSubscriptionForKey(key).cancel();
+    getSubscriptionForKey(key).resume();
   }
 
   @override
   void onCancel(String key) {
     log.e('Stream $key closed');
-    getSubscriptionForKey(key).cancel();
+    // getSubscriptionForKey(key).cancel();
   }
 
   /// Initialize when model ready
   init() {
-    getDecimalPairConfig();
+    //  getDecimalPairConfig();
   }
 
   /// Get Decimal Pair Configuration
@@ -175,22 +178,34 @@ class TradeViewModel extends MultipleStreamViewModel {
     if (index == 0) {
       marketTradesStream.pause();
       orderBookStream.resume();
-      notifyListeners();
+      //  notifyListeners();
     } else if (index == 1) {
       orderBookStream.pause();
       marketTradesStream.resume();
-      notifyListeners();
+      // notifyListeners();
     } else if (index == 2) {
       orderBookStream.pause();
       marketTradesStream.pause();
-      notifyListeners();
+      // notifyListeners();
       // await getMyOrders();
     } else if (index == 3) {
       orderBookStream.pause();
       marketTradesStream.pause();
       await getExchangeAssets();
-      notifyListeners();
+      //  notifyListeners();
     }
+  }
+
+  pauseAllStreams() {
+    log.e('Stream pause');
+    getSubscriptionForKey('marketTradesList').pause();
+    getSubscriptionForKey('orderBookList').pause();
+  }
+
+  resumeAllStreams() {
+    log.e('Stream resume');
+    getSubscriptionForKey('marketTradesList').resume();
+    getSubscriptionForKey('orderBookList').resume();
   }
 
   void cancelSingleStreamByKey(String key) {
@@ -213,17 +228,21 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   // Get Exchange Assets
   getExchangeAssets() async {
-    setBusy(true);
-    notifyListeners();
+    //  setBusy(true);
+    //  notifyListeners();
     log.e('In get exchange assets');
+    setBusyForObject(myExchangeAssets, true);
     String exgAddress = await getExgAddress();
-
-    await walletService.assetsBalance(exgAddress).then((value) {
-      // log.w('value $value');
-      myExchangeAssets = value;
-      // log.w('exchange assets $myExchangeAssets');
-    });
-    setBusy(false);
+    var res = await runBusyFuture(walletService.assetsBalance(exgAddress));
+    log.w('Asset exchange $res');
+    if (res != null) myExchangeAssets = res;
+    // await walletService.assetsBalance(exgAddress).then((value) {
+    //   // log.w('value $value');
+    //   myExchangeAssets = value;
+    //   // log.w('exchange assets $myExchangeAssets');
+    // });
+    //  setBusy(false);
+    setBusyForObject(myExchangeAssets, false);
   }
 
   Future<String> getExgAddress() async {

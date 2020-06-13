@@ -48,6 +48,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit.dar
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings.dart';
 
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'screens/otc_campaign/token_details_screen.dart';
 
 final log = getLogger('Routes');
@@ -110,6 +111,10 @@ class RouteGenerator {
       case '/exchangeTrade':
         return MaterialPageRoute(
             builder: (_) => TradeView(pairPriceByRoute: args));
+
+      case '/myExchangeOrders':
+        return MaterialPageRoute(
+            builder: (_) => MyOrdersView(tickerName: args));
 
       case '/addGas':
         return MaterialPageRoute(builder: (_) => AddGas());

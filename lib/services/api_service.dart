@@ -20,6 +20,7 @@ import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
 
 /// The service responsible for networking requests
 class ApiService {
@@ -130,7 +131,7 @@ class ApiService {
         environment['endpoints']['kanban'] + assetsBalance + exgAddress;
     log.w('get assets balance url $url');
     try {
-      final res = await http.get(url);
+      final res = await client.get(url);
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
@@ -141,16 +142,36 @@ class ApiService {
   }
 
   // Get Orders by address
-  Future getOrders(String exgAddress) async {
+  Future getOrdersTest(String exgAddress) async {
     String url = environment['endpoints']['kanban'] + orders + exgAddress;
     log.w('get my orders url $url');
     try {
-      final res = await http.get(url);
-      if (res.statusCode == 200 || res.statusCode == 201) {
-        return jsonDecode(res.body);
-      }
-    } catch (e) {
-      log.e('getOrders Failed to load the data from the API， $e');
+      throw Exception('Catch Exception');
+    } catch (err) {
+      log.e('getOrders Failed to load the data from the API， $err');
+      throw Exception('Catch Exception $err');
+    }
+  }
+
+  // Get Orders by address
+  Future<List<OrderModel>> getOrders(String exgAddress) async {
+    try {
+      String url = environment['endpoints']['kanban'] + orders + exgAddress;
+      log.w('get my orders url $url');
+      print('in try');
+      var res = await client.get(url);
+      print('after res');
+      //.timeout(Duration(seconds: 25));
+      // .then((value) => throw Exception('Timeout'));
+      var jsonList = jsonDecode(res.body) as List;
+      print('after json list ${jsonList.length}');
+      OrderList orderList = OrderList.fromJson(jsonList);
+      print('after order list ${orderList.orders.length}');
+      //  throw Exception('Catch Exception');
+      return orderList.orders;
+    } catch (err) {
+      log.e('getOrders Failed to load the data from the API， $err');
+      throw Exception('Catch Exception $err');
     }
   }
 
@@ -164,6 +185,7 @@ class ApiService {
     log.i('getMyOrdersByTickerName url $url');
     try {
       final res = await http.get(url);
+      print('after res $res');
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }

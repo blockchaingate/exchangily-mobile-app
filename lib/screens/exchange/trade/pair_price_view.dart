@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PairPriceView extends StatelessWidget {
   final Price pairPrice;
@@ -13,6 +14,15 @@ class PairPriceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return isBusy
+        ? Shimmer.fromColors(
+            child: buildContainer(context),
+            baseColor: grey,
+            highlightColor: primaryColor)
+        : buildContainer(context);
+  }
+
+  Container buildContainer(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 10),
       child: Column(

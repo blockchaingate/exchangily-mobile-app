@@ -28,9 +28,8 @@ class MarketPairPriceDetailView extends StatelessWidget {
               onTap: () {
                 pairList[index].symbol =
                     pairList[index].symbol.replaceAll('/', '').toString();
-                //navigationService.navigateTo
-
-                Navigator.popAndPushNamed(context, '/exchangeTrade',
+                navigationService.navigateUsingpopAndPushedNamed(
+                    '/exchangeTrade',
                     arguments: pairList[index]);
               },
               child: Container(
@@ -65,21 +64,30 @@ class MarketPairPriceDetailView extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(pairList[index].price.toString(),
-                            style: Theme.of(context).textTheme.headline6,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(fontWeight: FontWeight.w400),
                             textAlign: TextAlign.start),
                       ),
                       Expanded(
                         flex: 2,
                         child: Text(
                           pairList[index].high.toString(),
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(fontWeight: FontWeight.w400),
                         ),
                       ),
                       Expanded(
                         flex: 2,
                         child: Text(
                           pairList[index].low.toString(),
-                          style: Theme.of(context).textTheme.headline6,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline6
+                              .copyWith(fontWeight: FontWeight.w400),
                         ),
                       ),
                       Expanded(
@@ -91,10 +99,10 @@ class MarketPairPriceDetailView extends StatelessWidget {
                                   '%'
                               : pairList[index].change.toStringAsFixed(2) + '%',
                           style: Theme.of(context).textTheme.headline6.copyWith(
-                                color: Color(pairList[index].change >= 0
-                                    ? 0XFF0da88b
-                                    : 0XFFe2103c),
-                              ),
+                              color: Color(pairList[index].change >= 0
+                                  ? 0XFF0da88b
+                                  : 0XFFe2103c),
+                              fontWeight: FontWeight.w400),
                         ),
                       ),
                     ]),
