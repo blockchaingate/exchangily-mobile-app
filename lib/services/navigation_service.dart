@@ -33,4 +33,8 @@ class NavigationService {
   goBack() {
     return navigatorKey.currentState.pop();
   }
+
+  bool isFinalRoute() {
+    return navigatorKey.currentState.canPop();
+  }
 }

@@ -167,45 +167,46 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   /// Switch Streams
   void switchStreams(int index) async {
-    print('in switch streams trade view model $index');
-    var marketTradesStream = getSubscriptionForKey('marketTradesList');
-    var orderBookStream = getSubscriptionForKey('orderBookList');
-
-    /// if user click on order book tab then check if market trades stream
-    /// is running or pause, if not pause then pause it and check if order book
-    /// stream is paused, if paused then resume it
+    print('Pause/Resume streams $index');
 
     if (index == 0) {
-      marketTradesStream.pause();
-      orderBookStream.resume();
-      //  notifyListeners();
+      pauseStream(marketTradesStreamKey);
+      getSubscriptionForKey(orderBookStreamKey).resume();
+      notifyListeners();
     } else if (index == 1) {
-      orderBookStream.pause();
-      marketTradesStream.resume();
-      // notifyListeners();
+      pauseStream(orderBookStreamKey);
+      getSubscriptionForKey(marketTradesStreamKey).resume();
+      notifyListeners();
     } else if (index == 2) {
-      orderBookStream.pause();
-      marketTradesStream.pause();
-      // notifyListeners();
-      // await getMyOrders();
+      pauseAllStreams();
     } else if (index == 3) {
-      orderBookStream.pause();
-      marketTradesStream.pause();
+      pauseAllStreams();
       await getExchangeAssets();
-      //  notifyListeners();
     }
   }
 
   pauseAllStreams() {
     log.e('Stream pause');
-    getSubscriptionForKey('marketTradesList').pause();
-    getSubscriptionForKey('orderBookList').pause();
+    getSubscriptionForKey(marketTradesStreamKey).pause();
+    getSubscriptionForKey(orderBookStreamKey).pause();
+    notifyListeners();
   }
 
   resumeAllStreams() {
     log.e('Stream resume');
+
     getSubscriptionForKey('marketTradesList').resume();
     getSubscriptionForKey('orderBookList').resume();
+    notifyListeners();
+  }
+
+  pauseStream(String key) {
+    // If the subscription is paused more than once,
+    // an equal number of resumes must be performed to resume the stream
+    log.e(getSubscriptionForKey(key).isPaused);
+    if (!getSubscriptionForKey(key).isPaused)
+      getSubscriptionForKey(key).pause();
+    log.i(getSubscriptionForKey(key).isPaused);
   }
 
   void cancelSingleStreamByKey(String key) {
@@ -248,5 +249,9 @@ class TradeViewModel extends MultipleStreamViewModel {
   Future<String> getExgAddress() async {
     var exgWallet = await walletDataBaseService.getBytickerName('EXG');
     return exgWallet.address;
+  }
+
+  onBackButtonPressed() async {
+    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
   }
 }

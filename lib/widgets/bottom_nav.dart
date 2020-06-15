@@ -84,7 +84,7 @@ class BottomNavBar extends StatelessWidget {
             break;
 
           case 1:
-            navigationService.navigateUsingPushReplacementNamed('/marketsView');
+            navigationService.navigateUsingpopAndPushedNamed('/marketsView');
             break;
           // case 2:
           //   Navigator.pushNamed(context, '/otc');

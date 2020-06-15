@@ -52,6 +52,13 @@ class MyOrdersViewModel extends // BaseViewModel {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+
+    super.dispose();
+  }
+
+  @override
   Future<List<OrderModel>> futureToRun() =>
       !_showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
 
@@ -91,8 +98,7 @@ class MyOrdersViewModel extends // BaseViewModel {
 
   void swapSources() {
     //   setBusy(true);
-    log.w(
-        'swap sources show current pair orders only ${!showCurrentPairOrders}');
+    log.w('swap sources show all pairs ${!showCurrentPairOrders}');
     _showCurrentPairOrders = !_showCurrentPairOrders;
     //  _showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
     notifySourceChanged();

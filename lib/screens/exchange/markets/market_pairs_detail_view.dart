@@ -26,9 +26,10 @@ class MarketPairPriceDetailView extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
             child: InkWell(
               onTap: () {
+                //  navigationService.goBack();
                 pairList[index].symbol =
                     pairList[index].symbol.replaceAll('/', '').toString();
-                navigationService.navigateUsingpopAndPushedNamed(
+                navigationService.navigateUsingPushReplacementNamed(
                     '/exchangeTrade',
                     arguments: pairList[index]);
               },

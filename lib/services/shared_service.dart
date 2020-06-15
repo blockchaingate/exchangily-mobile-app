@@ -43,13 +43,13 @@ class SharedService {
                 content: Text(
                   // add here cupertino widget to check in these small widgets first then the entire app
                   '${AppLocalizations.of(context).closeTheApp}?',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 14),
                 ),
                 actions: <Widget>[
                   FlatButton(
                     child: Text(
                       AppLocalizations.of(context).no,
-                      style: TextStyle(color: globals.white, fontSize: 16),
+                      style: TextStyle(color: globals.white, fontSize: 12),
                     ),
                     onPressed: () {
                       Navigator.of(context).pop(false);
@@ -57,7 +57,7 @@ class SharedService {
                   ),
                   FlatButton(
                     child: Text(AppLocalizations.of(context).yes,
-                        style: TextStyle(color: globals.white, fontSize: 16)),
+                        style: TextStyle(color: globals.white, fontSize: 12)),
                     onPressed: () {
                       SystemChannels.platform
                           .invokeMethod('SystemNavigator.pop');

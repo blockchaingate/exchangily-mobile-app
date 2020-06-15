@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,8 @@ class WalletDashboardScreenState extends BaseState {
   List<WalletInfo> walletInfo;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
+
+  final NavigationService navigationService = locator<NavigationService>();
   ApiService apiService = locator<ApiService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
@@ -416,18 +419,20 @@ class WalletDashboardScreenState extends BaseState {
   getExchangeAssetsBalance() async {
     String address = await getExgAddressFromWalletDatabase();
     var res = await walletService.assetsBalance(address);
-    var length = res.length;
-    // For loop over asset balance result
-    for (var i = 0; i < length; i++) {
-      // Get their tickerName to compare with walletInfo tickerName
-      String coin = res[i]['coin'];
-      // Second For Loop To check WalletInfo TickerName According to its length and
-      // compare it with the same coin tickername from asset balance result until the match or loop ends
-      for (var j = 0; j < walletInfo.length; j++) {
-        String tickerName = walletInfo[j].tickerName;
-        if (coin == tickerName) {
-          walletInfo[j].inExchange = res[i]['amount'];
-          break;
+    if (res != null) {
+      var length = res.length;
+      // For loop over asset balance result
+      for (var i = 0; i < length; i++) {
+        // Get their tickerName to compare with walletInfo tickerName
+        String coin = res[i]['coin'];
+        // Second For Loop To check WalletInfo TickerName According to its length and
+        // compare it with the same coin tickername from asset balance result until the match or loop ends
+        for (var j = 0; j < walletInfo.length; j++) {
+          String tickerName = walletInfo[j].tickerName;
+          if (coin == tickerName) {
+            walletInfo[j].inExchange = res[i]['amount'];
+            break;
+          }
         }
       }
     }

@@ -68,7 +68,7 @@ class MyOrdersView extends StatelessWidget {
                                 children: [
                                   Text(
                                       AppLocalizations.of(context)
-                                          .showOnlyCurrentPairOrders,
+                                          .showAllPairOrders,
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6),

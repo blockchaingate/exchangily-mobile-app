@@ -57,6 +57,7 @@ class TradeService {
     Stream stream;
     try {
       var wsString = environment['websocket'] + 'trades' + '@' + tickerName;
+      log.w(wsString);
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       stream = channel.stream;
       return stream;
@@ -144,8 +145,8 @@ class TradeService {
     try {
       var data = await _api.getOrders(exgAddress);
       orderList = OrderList.fromJson(data);
-      throw Exception('Catch Exception');
-      //  return orderList.orders;
+      // throw Exception('Catch Exception');
+      return orderList.orders;
     } catch (err) {
       log.e('getMyOrders Catch $err');
       throw Exception('Catch Exception $err');

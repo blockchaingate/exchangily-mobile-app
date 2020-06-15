@@ -15,12 +15,16 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseWalletLanguageScreenState extends BaseState {
   final log = getLogger('ChooseWalletLanguageScreenState');
   BuildContext context;
+
+  final NavigationService navigationService = locator<NavigationService>();
   String errorMessage = '';
 
   Future checkLanguage() async {
@@ -33,7 +37,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
     } else {
       setState(ViewState.Idle);
       setLangauge(lang);
-      Navigator.pushNamed(context, '/walletSetup');
+      navigationService.navigateUsingPushReplacementNamed('/walletSetup');
     }
     setState(ViewState.Idle);
   }

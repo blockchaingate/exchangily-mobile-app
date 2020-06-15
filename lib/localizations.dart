@@ -1375,6 +1375,12 @@ class AppLocalizations {
         desc: 'exchange_my_orders_show_current_pair_orders');
   }
 
+  String get showAllPairOrders {
+    return Intl.message('Show all pair\'s orders',
+        name: 'showAllPairOrders',
+        desc: 'exchange_my_orders_show_current_pair_orders');
+  }
+
   String get symbol {
     return Intl.message('Symbol',
         name: 'symbol', desc: 'exchange_my_exchange_assets');
