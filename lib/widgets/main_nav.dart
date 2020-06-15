@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
 import 'package:exchangilymobileapp/screens/settings/settings.dart';
@@ -27,7 +28,7 @@ class _MainNavState extends State<MainNav> {
           physics: new NeverScrollableScrollPhysics(),
           children: <Widget>[
             WalletDashboardScreen(),
-            Market(),
+            MarketsView(),
             CampaignInstructionScreen(),
             SettingsScreen()
           ],
@@ -106,4 +107,7 @@ class _MainNavState extends State<MainNav> {
     super.dispose();
     _pageController.dispose();
   }
+}
+
+class MarketView {
 }

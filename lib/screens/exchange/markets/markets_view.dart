@@ -79,7 +79,7 @@ class MarketsView extends StatelessWidget {
                           ],
                         ),
                       ),
-                bottomNavigationBar: BottomNavBar(count: 1),
+                // bottomNavigationBar: BottomNavBar(count: 1),
               ),
             ),
         viewModelBuilder: () => MarketsViewModel());
