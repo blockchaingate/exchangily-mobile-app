@@ -22,8 +22,10 @@ class CampaignInstructionScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
               centerTitle: true,
+              leading: Container(),
               title: Text(AppLocalizations.of(context).campaignInstructions,
                   style: Theme.of(context).textTheme.headline3)),
+              
           key: key,
           body: model.busy
               ? Column(

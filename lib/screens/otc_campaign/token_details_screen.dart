@@ -13,7 +13,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text('Token Details',
+          title: Text(AppLocalizations.of(context).tokenDetails,
               // AppLocalizations.of(context).myRewardDetails,
               style: Theme.of(context).textTheme.headline3),
         ),
@@ -28,7 +28,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
                   padding: EdgeInsets.all(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[Text('My Tokens'), Text('234513')],
+                    children: <Widget>[Text(AppLocalizations.of(context).myOrders), Text('234513')],
                   ),
                 ),
               ),
@@ -36,7 +36,7 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
                 color: globals.walletCardColor,
                 elevation: 5,
                 child: Column(
-                  children: <Widget>[Text('My Reward Tokens'), Text('875444')],
+                  children: <Widget>[Text(AppLocalizations.of(context).myRewardTokens), Text('875444')],
                 ),
               )
             ],

@@ -395,7 +395,7 @@ class WalletDashboardScreen extends StatelessWidget {
                         ))
             ],
           ),
-          bottomNavigationBar: BottomNavBar(count: 0),
+          // bottomNavigationBar: BottomNavBar(count: 0),
         ),
       ),
     );

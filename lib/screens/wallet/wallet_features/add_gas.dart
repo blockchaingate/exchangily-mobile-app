@@ -149,7 +149,7 @@ class AddGas extends StatelessWidget {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('Cancel')),
+                        child: Text(AppLocalizations.of(context).cancel)),
                   ],
                 )
               ],

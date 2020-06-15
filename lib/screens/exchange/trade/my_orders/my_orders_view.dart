@@ -46,7 +46,7 @@ class MyOrdersView extends StatelessWidget {
                                 onPressed: () {
                                   model.futureToRun();
                                 },
-                                child: Text('Reload'))
+                                child: Text(AppLocalizations.of(context).reload))
                           ],
                         ),
                       )

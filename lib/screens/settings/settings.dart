@@ -39,6 +39,7 @@ class SettingsScreen extends StatelessWidget {
           title: Text(AppLocalizations.of(context).settings,
               style: Theme.of(context).textTheme.headline3),
           backgroundColor: globals.secondaryColor,
+          leading: Container(),
         ),
         body: Container(
           padding: EdgeInsets.all(10),
@@ -247,7 +248,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ]),
         ),
-        bottomNavigationBar: BottomNavBar(count: 3),
+        // bottomNavigationBar: BottomNavBar(count: 3),
       ),
     );
   }

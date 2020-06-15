@@ -17,6 +17,8 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +29,7 @@ class WalletFeaturesScreen extends StatelessWidget {
   final WalletInfo walletInfo;
   WalletFeaturesScreen({Key key, this.walletInfo}) : super(key: key);
   final log = getLogger('WalletFeatures');
+  NavigationService navigationService = locator<NavigationService>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,7 @@ class WalletFeaturesScreen extends StatelessWidget {
         model.getErrDeposit();
       },
       builder: (context, model, child) => Scaffold(
+        // appBar: AppBar(),
         key: key,
         body: ListView(
           children: <Widget>[
@@ -52,11 +56,31 @@ class WalletFeaturesScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   Container(
-                    child: Image.asset(
-                      'assets/images/start-page/logo.png',
-                      width: 200,
-                      height: 60,
-                      color: globals.white,
+                    width: MediaQuery.of(context).size.width,
+                    height: 60,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment:Alignment.center,
+                          child: Image.asset(
+                          'assets/images/start-page/logo.png',
+                          width: 200,
+                          height: 60,
+                          color: globals.white,
+                        ),
+                        ),
+                         Align(
+                          alignment:Alignment.centerRight,
+                            child: IconButton(
+                                icon: Icon(Icons.close,
+                                  color: Colors.white,
+                                ),
+                                onPressed: () {
+                                  // Navigator.pop(context);
+                                  // Navigator.of(context, rootNavigator: true).pop('dialog');
+                                  navigationService.navigateTo('/mainNav');
+                                }))
+                      ],
                     ),
                   ),
                   Container(
@@ -287,7 +311,7 @@ class WalletFeaturesScreen extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: BottomNavBar(count: 0),
+        // bottomNavigationBar: BottomNavBar(count: 0),
       ),
     );
   }

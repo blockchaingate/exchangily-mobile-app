@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import "package:flutter/material.dart";
 import "detail-pair.dart";
@@ -110,25 +111,25 @@ class MarketDetailState extends State<MarketDetail>
                       )),
                   Expanded(
                     flex: 1,
-                    child: Text('Volume',
+                    child: Text(AppLocalizations.of(context).volume,
                         style: Theme.of(context).textTheme.subtitle2,
                         textAlign: TextAlign.end),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text('High',
+                    child: Text(AppLocalizations.of(context).high,
                         style: Theme.of(context).textTheme.subtitle2,
                         textAlign: TextAlign.end),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text('Low',
+                    child: Text(AppLocalizations.of(context).low,
                         style: Theme.of(context).textTheme.subtitle2,
                         textAlign: TextAlign.end),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text('Change',
+                    child: Text(AppLocalizations.of(context).change,
                         style: Theme.of(context).textTheme.subtitle2,
                         textAlign: TextAlign.end),
                   ),

@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
@@ -38,6 +39,8 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/receive.dart'
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dart';
+import 'package:exchangilymobileapp/widgets/main_nav.dart';
+import 'package:exchangilymobileapp/widgets/main_nav_circle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
@@ -60,6 +63,11 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageScreen());
+
+      //main navagation contains several pages
+      case '/mainNav':
+        return MaterialPageRoute(builder: (_) => MainNav());
+        // return MaterialPageRoute(builder: (_) => MainNavCircle());
       case '/walletSetup':
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
 
@@ -191,13 +199,14 @@ class RouteGenerator {
   }
 
   static Route _errorRoute(settings) {
+    BuildContext context;
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Error', style: TextStyle(color: Colors.white)),
+          title: Text(AppLocalizations.of(context).error, style: TextStyle(color: Colors.white)),
         ),
         body: Center(
-          child: Text('No route defined for ${settings.name}',
+          child: Text(AppLocalizations.of(context).noRouteDefined +' ${settings.name}',
               style: TextStyle(color: Colors.white)),
         ),
       );

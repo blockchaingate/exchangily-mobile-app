@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trades_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
@@ -27,7 +28,7 @@ class OrdersTabView extends
     // print(' ordersViewTabBody.length ${ordersViewTabBody.length}');
     return !model.dataReady('orderBookList')
         ? Center(
-            child: Text('Loading...'),
+            child: Text(AppLocalizations.of(context).loading+'...'),
           )
         : DefaultTabController(
             length: 3,
@@ -95,7 +96,7 @@ class SelectedTabWidget extends StatelessWidget {
       else if (index == 1)
         Expanded(child: MarketTradesView(marketTrades: tabBody))
       else if (index == 2)
-        Expanded(child: Text('My orders'))
+        Expanded(child: Text(AppLocalizations.of(context).myOrders))
       // MyOrderDetails(orderList: tabBody)
     ]);
   }
