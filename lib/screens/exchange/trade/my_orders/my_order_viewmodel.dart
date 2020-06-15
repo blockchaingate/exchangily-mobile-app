@@ -52,13 +52,6 @@ class MyOrdersViewModel extends // BaseViewModel {
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-
-    super.dispose();
-  }
-
-  @override
   Future<List<OrderModel>> futureToRun() =>
       !_showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
 

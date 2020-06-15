@@ -1,19 +1,28 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
+import 'package:stacked/stacked.dart';
 
-class MyExchangeAssetsView extends StatelessWidget {
-  final List myExchangeAssets;
-  const MyExchangeAssetsView({Key key, this.myExchangeAssets})
-      : super(key: key);
+class MyExchangeAssetsView
+    extends ViewModelBuilderWidget<MyExchangeAssetsViewModel> {
+  // final List myExchangeAssets;
+  const MyExchangeAssetsView({
+    Key key,
+    //this.myExchangeAssets
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: myExchangeAssets == null
+  Widget builder(
+      BuildContext context, MyExchangeAssetsViewModel model, Widget child) {
+    return
+        // ViewModelBuilder.reactive(builder: null, viewModelBuilder: null)
+
+        Container(
+      child: !model.dataReady
           ? ShimmerLayout(
               layoutType: 'marketTrades',
             )
@@ -54,10 +63,10 @@ class MyExchangeAssetsView extends StatelessWidget {
                 Flexible(
                   child: Container(
                     child: ListView.builder(
-                        itemCount: myExchangeAssets.length,
+                        itemCount: model.data.length,
                         itemBuilder: (BuildContext context, int index) {
                           String tickerName =
-                              myExchangeAssets[index]["coin"].toString();
+                              model.data[index]["coin"].toString();
                           return Container(
                             // color: grey.withAlpha(25),
 
@@ -82,8 +91,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                                     flex: 2,
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 10),
-                                      child: Text(
-                                          myExchangeAssets[index]["coin"],
+                                      child: Text(model.data[index]["coin"],
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -91,15 +99,14 @@ class MyExchangeAssetsView extends StatelessWidget {
                                 Expanded(
                                     flex: 2,
                                     child: Text(
-                                        myExchangeAssets[index]["amount"]
-                                            .toString(),
+                                        model.data[index]["amount"].toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6)),
                                 Expanded(
                                     flex: 2,
                                     child: Text(
-                                        myExchangeAssets[index]["lockedAmount"]
+                                        model.data[index]["lockedAmount"]
                                             .toString(),
                                         style: Theme.of(context)
                                             .textTheme
@@ -114,4 +121,8 @@ class MyExchangeAssetsView extends StatelessWidget {
             ),
     );
   }
+
+  @override
+  MyExchangeAssetsViewModel viewModelBuilder(BuildContext context) =>
+      MyExchangeAssetsViewModel();
 }

@@ -89,6 +89,6 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   }
 
   onBackButtonPressed() async {
-    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+    navigationService.navigateTo('/dashboard');
   }
 }
