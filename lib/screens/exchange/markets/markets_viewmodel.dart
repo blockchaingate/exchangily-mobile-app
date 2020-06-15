@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/utils/decoder.dart';
@@ -33,6 +34,8 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   List<Price> btcFabExgUsdtPriceList = [];
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
+
+  final NavigationService navigationService = locator<NavigationService>();
   BuildContext context;
   List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];
 
@@ -83,5 +86,9 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   @override
   void onCancel() {
     log.e('Stream closed');
+  }
+
+  onBackButtonPressed() async {
+    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
   }
 }

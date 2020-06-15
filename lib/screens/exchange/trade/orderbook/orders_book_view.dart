@@ -27,7 +27,7 @@ class OrderBookView extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6),
               ),
             ]),
-            UIHelper.verticalSpaceSmall,
+
             // Buy/Sell Row
 
             Row(

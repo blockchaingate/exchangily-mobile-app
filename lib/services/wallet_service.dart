@@ -434,25 +434,27 @@ class WalletService {
         _walletInfo.add(wi);
       }
       var res = await assetsBalance(exgAddress);
-      var length = res.length;
-      // For loop over asset balance result
-      for (var i = 0; i < length; i++) {
-        // Get their tickerName to compare with walletInfo tickerName
-        String coin = res[i]['coin'];
-        // Second For Loop To check WalletInfo TickerName According to its length and
-        // compare it with the same coin tickername from asset balance result until the match or loop ends
-        for (var j = 0; j < _walletInfo.length; j++) {
-          String tickerName = _walletInfo[j].tickerName;
-          if (coin == tickerName) {
-            _walletInfo[j].inExchange = res[i]['amount'];
-            // _walletInfo[j].lockedBalance = res[i]['lockedAmount'];
-            // double marketPrice =
-            //     await getCoinMarketPriceByTickerName(tickerName);
-            // log.e(
-            //     'wallet service -- tickername $tickerName - market price $marketPrice - balance: ${_walletInfo[j].availableBalance} - Locked balance: ${_walletInfo[j].lockedBalance}');
-            // calculateCoinUsdBalance(marketPrice,
-            //     _walletInfo[j].availableBalance, _walletInfo[j].lockedBalance);
-            break;
+      if (res != null) {
+        var length = res.length;
+        // For loop over asset balance result
+        for (var i = 0; i < length; i++) {
+          // Get their tickerName to compare with walletInfo tickerName
+          String coin = res[i]['coin'];
+          // Second For Loop To check WalletInfo TickerName According to its length and
+          // compare it with the same coin tickername from asset balance result until the match or loop ends
+          for (var j = 0; j < _walletInfo.length; j++) {
+            String tickerName = _walletInfo[j].tickerName;
+            if (coin == tickerName) {
+              _walletInfo[j].inExchange = res[i]['amount'];
+              // _walletInfo[j].lockedBalance = res[i]['lockedAmount'];
+              // double marketPrice =
+              //     await getCoinMarketPriceByTickerName(tickerName);
+              // log.e(
+              //     'wallet service -- tickername $tickerName - market price $marketPrice - balance: ${_walletInfo[j].availableBalance} - Locked balance: ${_walletInfo[j].lockedBalance}');
+              // calculateCoinUsdBalance(marketPrice,
+              //     _walletInfo[j].availableBalance, _walletInfo[j].lockedBalance);
+              break;
+            }
           }
         }
       }
@@ -508,14 +510,14 @@ class WalletService {
                       Assets Balance
 ----------------------------------------------------------------------*/
 
-  assetsBalance(String exgAddress) async {
-    List<Map<String, dynamic>> bal = [];
-    await _api.getAssetsBalance(exgAddress).then((res) {
-      log.w('assetsBalance exchange $res');
+  Future assetsBalance(String exgAddress) async {
+    try {
+      List<Map<String, dynamic>> bal = [];
+      var res = await _api.getAssetsBalance(exgAddress);
+      // log.w('assetsBalance exchange $res');
       for (var i = 0; i < res.length; i++) {
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
-
         var unlockedAmount =
             stringUtils.bigNum2Double(tempBal['unlockedAmount']);
         var lockedAmount = stringUtils.bigNum2Double(tempBal['lockedAmount']);
@@ -526,13 +528,12 @@ class WalletService {
         };
         bal.add(finalBal);
       }
-      log.e('assetsBalance exchange after conversion $bal');
-    }).catchError((onError) {
+      log.w('assetsBalance exchange after conversion $bal');
+      return bal;
+    } catch (onError) {
       log.e('On error assetsBalance $onError');
-      bal = [];
-      throw Exception;
-    });
-    return bal;
+      throw Exception('Catch error $onError');
+    }
   }
 
   /* ---------------------------------------------------

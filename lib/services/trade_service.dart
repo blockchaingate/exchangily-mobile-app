@@ -38,41 +38,16 @@ class TradeService {
   Stream getAllCoinPriceStream() {
     Stream stream;
     try {
-      stream = getAllPriceChannel().stream;
+      String url = basePath + 'allPrices';
+      //  log.i(url);
+      IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
+      stream = channel.stream;
+      return stream.asBroadcastStream();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
+      throw Exception(err);
     }
-    return stream;
   }
-
-/*----------------------------------------------------------------------
-                    Get Multiple Stream 
-----------------------------------------------------------------------*/
-
-  // Map<String, StreamData<dynamic>> getMultipleStreams(String tickerName) {
-  //   try {
-  //     Map<String, StreamData<dynamic>> streamData;
-  //     final allPricesChannel = getAllCoinPriceByWebSocket();
-
-  //     // Order List
-  //     final orderListChannel = getOrderListChannel(tickerName);
-
-  //     // Trade List
-  //     final tradeListChannel = getTradeListChannel(tickerName);
-
-  //     // Build a map of streams
-  //     streamData = {
-  //       'allPrices': StreamData<dynamic>(allPricesChannel),
-  //       'orderBookList': StreamData<dynamic>(orderListChannel.stream),
-  //       'marketTradesList': StreamData<dynamic>(tradeListChannel.stream)
-  //     };
-
-  //     return streamData;
-  //   } catch (err) {
-  //     throw Exception(
-  //         '$err'); // Error thrown here will go to onError in them view model
-  //   }
-  // }
 
 /*----------------------------------------------------------------------
                     Market Trade Orders 
@@ -81,25 +56,37 @@ class TradeService {
   Stream getMarketTradesStreamByTickerName(String tickerName) {
     Stream stream;
     try {
-      stream = getTradeListChannel(tickerName).stream;
+      var wsString = environment['websocket'] + 'trades' + '@' + tickerName;
+      log.w(wsString);
+      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
+      stream = channel.stream;
+      return stream;
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
+      throw Exception(err);
     }
-    return stream;
   }
 
 /*----------------------------------------------------------------------
                       Orders
 ----------------------------------------------------------------------*/
 
-  Stream getOrdersStreamByTickerName(String tickerName) {
+  Stream getOrderBookStreamByTickerName(String tickerName) {
     Stream stream;
     try {
-      stream = getOrderListChannel(tickerName).stream;
+      var wsString = environment['websocket'] + 'orders' + '@' + tickerName;
+      log.w(wsString);
+      // log.w('getOrderBookStreamByTickerName $wsString');
+      // if not put the IOWebSoketChannel.connect to variable channel and
+      // directly returns it then in the multiple stream it doesn't work
+      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
+      stream = channel.stream;
+
+      return stream;
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
+      throw Exception(err);
     }
-    return stream;
   }
 
   /// All Pair Price
@@ -152,15 +139,30 @@ class TradeService {
     return currentUsdValue;
   }
 
-// Get my orders
+// Get all my orders
   Future<List<OrderModel>> getMyOrders(String exgAddress) async {
     OrderList orderList;
     try {
       var data = await _api.getOrders(exgAddress);
       orderList = OrderList.fromJson(data);
+      // throw Exception('Catch Exception');
       return orderList.orders;
     } catch (err) {
       log.e('getMyOrders Catch $err');
+      throw Exception('Catch Exception $err');
+    }
+  }
+
+  // Get my orders by tickername
+  Future<List<OrderModel>> getMyOrdersByTickerName(
+      String exgAddress, String tickerName) async {
+    OrderList orderList;
+    try {
+      var data = await _api.getMyOrdersByTickerName(exgAddress, tickerName);
+      orderList = OrderList.fromJson(data);
+      return orderList.orders;
+    } catch (err) {
+      log.e('getMyOrdersByTickerName Catch $err');
       throw Exception;
     }
   }
@@ -204,6 +206,7 @@ class TradeService {
       'marketPairsGroupList': marketPairsGroupList,
       'btcFabExgUsdtPriceList': btcFabExgUsdtPriceList
     };
+
     return res;
   }
 

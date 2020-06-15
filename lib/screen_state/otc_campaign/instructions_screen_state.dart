@@ -83,4 +83,8 @@ class CampaignInstructionsScreenState extends BaseState {
     setBusy(false);
     log.e(busy);
   }
+
+  onBackButtonPressed() async {
+    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+  }
 }

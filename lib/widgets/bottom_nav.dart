@@ -80,20 +80,21 @@ class BottomNavBar extends StatelessWidget {
             /// an entry animation route, then this way it closes the running web sockets
             /// automatically and everything is fine otherwise is i user popAndPushNamed here
             /// then reading from socket exception error in the terminal
-            navigationService.navigateTo('/dashboard');
+            navigationService.navigateUsingPushReplacementNamed('/dashboard');
             break;
 
           case 1:
-            navigationService.navigateTo('/marketsView');
+            navigationService.navigateUsingpopAndPushedNamed('/marketsView');
             break;
           // case 2:
           //   Navigator.pushNamed(context, '/otc');
           //   break;
           case 2:
-            navigationService.navigateTo('/campaignInstructions');
+            navigationService
+                .navigateUsingPushReplacementNamed('/campaignInstructions');
             break;
           case 3:
-            navigationService.navigateTo('/settings');
+            navigationService.navigateUsingPushReplacementNamed('/settings');
             break;
         }
       },

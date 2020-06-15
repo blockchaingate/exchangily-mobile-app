@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -26,6 +27,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 class CreatePasswordScreenState extends BaseState {
   final WalletService _walletService = locator<WalletService>();
   final VaultService _vaultService = locator<VaultService>();
+  final NavigationService navigationService = locator<NavigationService>();
 
   List<WalletInfo> _walletInfo;
   final log = getLogger('CreatePasswordScreenState');

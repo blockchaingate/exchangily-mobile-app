@@ -1399,6 +1399,22 @@ class AppLocalizations {
     return Intl.message('input validation', name: 'inputValidation', desc: 'inputValidation_text');
   }
 
+  String get showOnlyCurrentPairOrders {
+    return Intl.message('Show only current pair orders',
+        name: 'showOnlyCurrentPairOrders',
+        desc: 'exchange_my_orders_show_current_pair_orders');
+  }
+
+  String get showAllPairOrders {
+    return Intl.message('Show all pair\'s orders',
+        name: 'showAllPairOrders',
+        desc: 'exchange_my_orders_show_current_pair_orders');
+  }
+
+  String get symbol {
+    return Intl.message('Symbol',
+        name: 'symbol', desc: 'exchange_my_exchange_assets');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

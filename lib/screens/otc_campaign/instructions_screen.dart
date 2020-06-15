@@ -18,7 +18,11 @@ class CampaignInstructionScreen extends StatelessWidget {
         model.context = context;
         await model.initState();
       },
-      builder: (context, model, child) => Container(
+      builder: (context, model, child) => WillPopScope(
+        onWillPop: () async {
+          model.onBackButtonPressed();
+          return new Future(() => true);
+        },
         child: Scaffold(
           appBar: AppBar(
               centerTitle: true,

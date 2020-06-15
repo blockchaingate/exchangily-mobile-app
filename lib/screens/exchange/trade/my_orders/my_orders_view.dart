@@ -1,27 +1,27 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange_assets_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
-
+import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-
-import 'my_order_details_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
 import 'my_order_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
-  //final List<OrderModel> myOrders;
-  const MyOrdersView({Key key}) : super(key: key);
+  final String tickerName;
+  MyOrdersView({Key key, this.tickerName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
         disposeViewModel: false,
-        viewModelBuilder: () => MyOrdersViewModel(),
+        viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
           print('in init MyOrdersView');
-
+          model.init();
           model.myOrdersTabBarView = [
             model.myAllOrders,
             model.myOpenOrders,
@@ -31,7 +31,7 @@ class MyOrdersView extends StatelessWidget {
         builder: (context, model, _) => Container(
             child:
                 // error handling
-                model.hasError
+                model.isFutureError
                     ? Container(
                         color: Colors.red.withAlpha(150),
                         padding: EdgeInsets.all(25),
@@ -42,11 +42,16 @@ class MyOrdersView extends StatelessWidget {
                               'An error has occered while fetching orders: ${model.errorMessage}',
                               style: TextStyle(color: Colors.white),
                             ),
-                            FlatButton(
-                                onPressed: () {
-                                  model.futureToRun();
-                                },
-                                child: Text(AppLocalizations.of(context).reload))
+                            IconButton(
+                              icon: Icon(Icons.replay),
+                              color: white,
+                              onPressed: () {
+                                model.isFutureError = false;
+                                print(
+                                    'Running futures to run again to reset the hasError and try to get the data so that user can see the data with view instead of error screen');
+                                model.futureToRun();
+                              },
+                            ),
                           ],
                         ),
                       )
@@ -56,7 +61,29 @@ class MyOrdersView extends StatelessWidget {
                           length: 3,
                           child: Column(
                             children: [
-                              UIHelper.verticalSpaceSmall,
+                              // Switch to show only current pair orders
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      AppLocalizations.of(context)
+                                          .showAllPairOrders,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                  Transform.scale(
+                                    scale: 0.75,
+                                    child: Switch.adaptive(
+                                        activeColor: primaryColor,
+                                        value: model.showCurrentPairOrders,
+                                        onChanged: (v) {
+                                          model.swapSources();
+                                        }),
+                                  ),
+                                ],
+                              ),
+
                               // Order type tabs
                               Column(
                                 children: <Widget>[
@@ -94,6 +121,7 @@ class MyOrdersView extends StatelessWidget {
                                     ],
                                     indicatorColor: Colors.white,
                                   ),
+
                                   UIHelper.verticalSpaceSmall,
                                   // header
                                   priceFieldsHeadersRow(context),
@@ -103,19 +131,17 @@ class MyOrdersView extends StatelessWidget {
                                           MediaQuery.of(context).size.height *
                                               0.40,
                                       margin: EdgeInsets.all(5),
-                                      child:
-                                          //  !model.dataReady
-                                          //     ? ShimmerLayout(
-                                          //         layoutType: 'marketTrades')
-                                          //     :
-                                          TabBarView(
-                                        children: model.myOrdersTabBarView
-                                            .map((orders) {
-                                          return Container(
-                                              child: MyOrderDetailsView(
-                                                  orders: orders));
-                                        }).toList(),
-                                      ))
+                                      child: !model.dataReady
+                                          ? ShimmerLayout(
+                                              layoutType: 'marketTrades')
+                                          : TabBarView(
+                                              children: model.myOrdersTabBarView
+                                                  .map((orders) {
+                                                return Container(
+                                                    child: MyOrderDetailsView(
+                                                        orders: orders));
+                                              }).toList(),
+                                            )),
                                 ],
                               ),
                             ],
@@ -149,6 +175,10 @@ class MyOrdersView extends StatelessWidget {
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
             flex: 2,
+            child: Text(AppLocalizations.of(context).quantity,
+                style: Theme.of(context).textTheme.subtitle2)),
+        Expanded(
+            flex: 2,
             child: Text(AppLocalizations.of(context).filledAmount,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
@@ -159,4 +189,86 @@ class MyOrdersView extends StatelessWidget {
       ]),
     );
   }
+}
+
+class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
+  final List<OrderModel> orders;
+  const MyOrderDetailsView({Key key, this.orders}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, MyOrdersViewModel model) {
+    return
+        // !model.dataReady
+        //     ? ShimmerLayout(layoutType: 'marketTrades')
+        //     :
+        ListView.builder(
+            itemCount: orders.length,
+            shrinkWrap: true,
+            itemBuilder: (BuildContext context, int index) {
+              var order = orders[index];
+              return Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Text('${index + 1}',
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 1,
+                      child: Text(
+                          order.bidOrAsk
+                              ? AppLocalizations.of(context).buy
+                              : AppLocalizations.of(context).sell,
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                                color: Color(
+                                    (order.bidOrAsk) ? 0xFF0da88b : 0xFFe2103c),
+                              ))),
+                  Expanded(
+                      flex: 2,
+                      child: Text(order.pairName.toString(),
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 2,
+                      child: Text(order.price.toString(),
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 2,
+                      child: Text(order.orderQuantity.toString(),
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 2,
+                      child: Text(
+                          '${model.filledAmount.toString()} (${model.filledPercentage.toStringAsFixed(2)}%)',
+                          style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 1,
+                      child: order.isActive
+                          ? model.isBusy
+                              ? CircularProgressIndicator()
+                              : IconButton(
+                                  color: red,
+                                  icon: Icon(
+                                    Icons.close,
+                                    size: 16,
+                                  ),
+                                  onPressed: () {
+                                    model.checkPass(context, order.orderHash);
+                                  })
+                          : IconButton(
+                              disabledColor:
+                                  Theme.of(context).disabledColor.withAlpha(50),
+                              icon: Icon(
+                                Icons.close,
+                                size: 16,
+                              ),
+                              onPressed: () {
+                                print('closed orders');
+                              }))
+                ],
+              );
+            });
+  }
+
+  // @override
+  // MyOrdersViewModel viewModelBuilder(BuildContext context) =>
+  //     MyOrdersViewModel();
 }

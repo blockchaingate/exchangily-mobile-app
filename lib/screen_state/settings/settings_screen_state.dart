@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,8 @@ class SettingsScreenState extends BaseState {
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
+
+  final NavigationService navigationService = locator<NavigationService>();
   List<String> languages = ['English', 'Chinese'];
   String selectedLanguage;
   // bool result = false;
@@ -186,5 +189,9 @@ class SettingsScreenState extends BaseState {
     sharedService.setDialogWarningsStatus(value);
     isDialogDisplay = value;
     setBusy(false);
+  }
+
+  onBackButtonPressed() async {
+    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
   }
 }

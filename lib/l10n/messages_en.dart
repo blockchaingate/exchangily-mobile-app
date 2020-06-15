@@ -227,6 +227,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "setPasswordNote" : MessageLookupByLibrary.simpleMessage("Note: For Password reset you have to keep the mnemonic safe as that is the only way to recover the wallet"),
     "settings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "showDialogWarnings" : MessageLookupByLibrary.simpleMessage("Show dialog warnings"),
+    "showOnlyCurrentPairOrders" : MessageLookupByLibrary.simpleMessage("Show only current pair orders"),
     "showPassword" : MessageLookupByLibrary.simpleMessage("Show password"),
     "signUp" : MessageLookupByLibrary.simpleMessage("Sign Up"),
     "silver" : MessageLookupByLibrary.simpleMessage("silver"),
