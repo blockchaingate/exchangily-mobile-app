@@ -38,14 +38,10 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   final NavigationService navigationService = locator<NavigationService>();
   BuildContext context;
   List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];
+  Price price;
 
   @override
-  Stream<dynamic> get stream {
-    Stream<dynamic> res;
-
-    res = tradeService.getAllCoinPriceStream();
-    return res;
-  }
+  Stream<dynamic> get stream => tradeService.getAllCoinPriceStream();
 
   @override
   void onData(data) {
@@ -68,8 +64,8 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
       });
     } catch (err) {
       log.e('transformData Catch error $err');
-      print('Cancelling Stream Subsciption');
-      streamSubscription.cancel();
+      //  print('Cancelling Stream Subsciption');
+      //streamSubscription.cancel();
     }
   }
 
@@ -89,6 +85,13 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   }
 
   onBackButtonPressed() async {
-    navigationService.navigateTo('/dashboard');
+    log.w(
+        'back button pressed, is final route ${navigationService.isFinalRoute()}');
+
+    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+  }
+
+  pauseStream() {
+    if (!streamSubscription.isPaused) streamSubscription.pause();
   }
 }

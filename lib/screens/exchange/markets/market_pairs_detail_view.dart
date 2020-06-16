@@ -1,16 +1,19 @@
 import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
-class MarketPairPriceDetailView extends StatelessWidget {
+class MarketPairPriceDetailView extends ViewModelWidget<MarketsViewModel> {
   final List<Price> pairList;
   MarketPairPriceDetailView({Key key, this.pairList}) : super(key: key);
   final NavigationService navigationService = locator<NavigationService>();
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, MarketsViewModel model) {
     return ListView.builder(
       itemCount: pairList.length,
       itemBuilder: (BuildContext context, int index) {
@@ -26,11 +29,15 @@ class MarketPairPriceDetailView extends StatelessWidget {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
             child: InkWell(
               onTap: () {
-                //  navigationService.goBack();
                 pairList[index].symbol =
                     pairList[index].symbol.replaceAll('/', '').toString();
                 navigationService.navigateTo('/exchangeTrade',
                     arguments: pairList[index]);
+
+                /// pause or cancel the all prices stream here
+                /// and then find the way to resume this stream
+                /// when user comes back to market view
+                //model.pauseStream();
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),

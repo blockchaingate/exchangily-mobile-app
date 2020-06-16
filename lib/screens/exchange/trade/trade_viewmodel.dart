@@ -71,7 +71,6 @@ class TradeViewModel extends MultipleStreamViewModel {
   /// Transform stream data before notifying to view modal
   @override
   dynamic transformData(String key, data) {
-    log.e('checking error ${getError(key)}');
     try {
       /// All prices list
       if (key == allPriceStreamKey) {
@@ -123,7 +122,6 @@ class TradeViewModel extends MultipleStreamViewModel {
         });
         //  notifyListeners();
       }
-      print('transform ends');
     } catch (err) {
       log.e('Catch error $err');
     }

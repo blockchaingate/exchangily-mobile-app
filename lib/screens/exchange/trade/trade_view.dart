@@ -2,6 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell.dart/buy_sell_view.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
@@ -51,6 +52,8 @@ class TradeView extends StatelessWidget {
             onPressed: () {
               //  model.pauseAllStreams();
               //   _scaffoldKey.currentState.openDrawer();
+              // model.navigationService
+              //     .navigateUsingpopAndPushedNamed('/marketsView');
               model.navigationService.goBack();
             },
           ),
