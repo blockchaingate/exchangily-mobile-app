@@ -15,6 +15,7 @@ class OrderBookView extends StatelessWidget {
         child: Column(
           children: <Widget>[
             // Heading Buy Sell Orders Row
+
             Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
               Container(
                 child: Text(AppLocalizations.of(context).buyOrders,
@@ -39,20 +40,41 @@ class OrderBookView extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Container(
-                        color: walletCardColor,
-                        width: MediaQuery.of(context).size.width * 0.48,
-                        padding: EdgeInsets.all(5.0),
-                        // Quantity/Price headers row
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(AppLocalizations.of(context).quantity,
-                                  style: TextStyle(fontSize: 9, color: grey)),
-                              Text(AppLocalizations.of(context).price,
-                                  style: TextStyle(fontSize: 9, color: grey))
-                            ]),
-                      ),
+                      orderBook.indexOf(orders) == 0
+                          ? Container(
+                              color: walletCardColor,
+                              width: MediaQuery.of(context).size.width * 0.48,
+                              padding: EdgeInsets.all(5.0),
+                              // Quantity/Price headers row
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppLocalizations.of(context).quantity,
+                                        style: TextStyle(
+                                            fontSize: 9, color: grey)),
+                                    Text(AppLocalizations.of(context).price,
+                                        style:
+                                            TextStyle(fontSize: 9, color: grey))
+                                  ]),
+                            )
+                          : Container(
+                              color: walletCardColor,
+                              width: MediaQuery.of(context).size.width * 0.48,
+                              padding: EdgeInsets.all(5.0),
+                              // Quantity/Price headers row
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(AppLocalizations.of(context).price,
+                                        style: TextStyle(
+                                            fontSize: 9, color: grey)),
+                                    Text(AppLocalizations.of(context).quantity,
+                                        style: TextStyle(
+                                            fontSize: 9, color: grey)),
+                                  ]),
+                            ),
 
                       // Buy/Sell Orders List View
                       SizedBox(
@@ -94,31 +116,36 @@ class OrderDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(bottom: 2.0),
-        padding: EdgeInsets.all(3.0),
-        color: isBuy ? buyOrders : sellOrders,
-        child: Row(
-          //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            // Quantity Container
-            Expanded(
-                child: isBuy
-                    ? Text('${orders[index].orderQuantity.toStringAsFixed(3)}',
+      margin: EdgeInsets.only(bottom: 2.0),
+      padding: EdgeInsets.all(3.0),
+      color: isBuy ? buyOrders : sellOrders,
+      child: isBuy
+          ? Row(
+              children: <Widget>[
+                Expanded(
+                    child: Text(
+                        '${orders[index].orderQuantity.toStringAsFixed(3)}',
                         textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 12, color: grey))
-                    : Text('${orders[index].price.toStringAsFixed(3)}',
+                        style: TextStyle(fontSize: 12, color: grey))),
+                Expanded(
+                    child: Text('${orders[index].price.toStringAsFixed(3)}',
+                        textAlign: TextAlign.end,
+                        style: TextStyle(fontSize: 12, color: buyPrice))),
+              ],
+            )
+          : Row(
+              children: <Widget>[
+                Expanded(
+                    child: Text('${orders[index].price.toStringAsFixed(3)}',
                         textAlign: TextAlign.start,
                         style: TextStyle(fontSize: 12, color: sellPrice))),
-            // Price Container
-            Expanded(
-                child: isBuy
-                    ? Text('${orders[index].price.toStringAsFixed(3)}',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(fontSize: 12, color: buyPrice))
-                    : Text('${orders[index].orderQuantity.toStringAsFixed(3)}',
+                Expanded(
+                    child: Text(
+                        '${orders[index].orderQuantity.toStringAsFixed(3)}',
                         textAlign: TextAlign.end,
                         style: TextStyle(fontSize: 12, color: grey))),
-          ],
-        ));
+              ],
+            ),
+    );
   }
 }

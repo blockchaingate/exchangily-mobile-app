@@ -29,6 +29,7 @@ class MarketsView extends StatelessWidget {
     return ViewModelBuilder<MarketsViewModel>.reactive(
         onModelReady: (model) {
           model.context = context;
+          print('in markets view');
         },
         builder: (context, model, _) => WillPopScope(
               onWillPop: () async {

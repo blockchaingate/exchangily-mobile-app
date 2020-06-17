@@ -71,10 +71,10 @@ class TradeViewModel extends MultipleStreamViewModel {
   /// Transform stream data before notifying to view modal
   @override
   dynamic transformData(String key, data) {
-    log.e('checking error ${getError(key)}');
     try {
       /// All prices list
       if (key == allPriceStreamKey) {
+        print('in all prices');
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
         PriceList priceList = PriceList.fromJson(jsonDynamicList);
         pairPriceList = priceList.prices;
@@ -87,11 +87,12 @@ class TradeViewModel extends MultipleStreamViewModel {
         Map<String, dynamic> res =
             tradeService.marketPairPriceGroups(pairPriceList);
         marketPairsTabBar = res['marketPairsGroupList'];
-        // notifyListeners();
+        log.w('all price list length ${priceList.prices.length}');
       } // all prices ends
 
       /// Order list
       else if (key == orderBookStreamKey) {
+        print('in orders list');
         // Buy order
         List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
         OrderList orderList = OrderList.fromJson(jsonDynamicList);
@@ -111,6 +112,7 @@ class TradeViewModel extends MultipleStreamViewModel {
 
       /// Market trade list
       else if (key == marketTradesStreamKey) {
+        print('in market trades');
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
         TradeList tradeList = TradeList.fromJson(jsonDynamicList);
         log.w('trades length ${tradeList.trades.length}');
@@ -165,25 +167,30 @@ class TradeViewModel extends MultipleStreamViewModel {
   //       });
   // }
 
-  /// Switch Streams
-  void switchStreams(int index) async {
-    print('Pause/Resume streams $index');
+// ----------
+// Not using between this
+//-------------
 
-    if (index == 0) {
-      pauseStream(marketTradesStreamKey);
-      getSubscriptionForKey(orderBookStreamKey).resume();
-      notifyListeners();
-    } else if (index == 1) {
-      pauseStream(orderBookStreamKey);
-      getSubscriptionForKey(marketTradesStreamKey).resume();
-      notifyListeners();
-    } else if (index == 2) {
-      pauseAllStreams();
-    } else if (index == 3) {
-      pauseAllStreams();
-      await getExchangeAssets();
-    }
-  }
+  /// Switch Streams
+  // void switchStreams(int index) async {
+  //   print('Pause/Resume streams $index');
+
+  //   if (index == 0) {
+  //     pauseStream(marketTradesStreamKey);
+  //     getSubscriptionForKey(orderBookStreamKey).resume();
+  //     notifyListeners();
+  //   } else if (index == 1) {
+  //     pauseStream(orderBookStreamKey);
+  //     getSubscriptionForKey(marketTradesStreamKey).resume();
+  //     notifyListeners();
+  //   } else if (index == 2) {
+  //     pauseAllStreams();
+  //   } else if (index == 3) {
+  //     //cancelSingleStreamByKey(orderBookStreamKey);
+  //     pauseAllStreams();
+  //     await getExchangeAssets();
+  //   }
+  // }
 
   pauseAllStreams() {
     log.e('Stream pause');
@@ -207,13 +214,19 @@ class TradeViewModel extends MultipleStreamViewModel {
     if (!getSubscriptionForKey(key).isPaused)
       getSubscriptionForKey(key).pause();
     log.i(getSubscriptionForKey(key).isPaused);
+    notifyListeners();
   }
 
   void cancelSingleStreamByKey(String key) {
     var stream = getSubscriptionForKey(key);
     stream.cancel();
     log.e('Stream $key cancelled');
+    notifyListeners();
   }
+
+// ----------
+// Not using between this
+//-------------
 
   String updateTickerName(String tickerName) {
     return tradeService.seperateBasePair(tickerName);

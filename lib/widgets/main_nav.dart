@@ -90,9 +90,6 @@ class _MainNavState extends State<MainNav> {
   }
 
   void navigateToPage(int page) {
-    // _pageController.animateToPage(page,
-    //     duration: Duration(milliseconds: 300), curve: Curves.ease);
-
     _pageController.jumpToPage(page);
   }
 
@@ -120,5 +117,4 @@ class _MainNavState extends State<MainNav> {
   }
 }
 
-class MarketView {
-}
+class MarketView {}

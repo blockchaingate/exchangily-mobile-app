@@ -42,7 +42,7 @@ class TradeService {
       //  log.i(url);
       IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
       stream = channel.stream;
-      return stream.asBroadcastStream();
+      return stream;
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
       throw Exception(err);
@@ -149,6 +149,18 @@ class TradeService {
       return orderList.orders;
     } catch (err) {
       log.e('getMyOrders Catch $err');
+      throw Exception('Catch Exception $err');
+    }
+  }
+
+// Remove this function when implment new architecture
+  // Get all my orders
+  Future getOrders(String exgAddress) async {
+    try {
+      var data = await _api.getOrders(exgAddress);
+      return data;
+    } catch (err) {
+      log.e('getOrders Catch $err');
       throw Exception('Catch Exception $err');
     }
   }
