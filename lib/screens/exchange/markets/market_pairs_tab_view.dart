@@ -32,15 +32,6 @@ class MarketPairsTabView extends StatelessWidget {
               headerSliverBuilder:
                   (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
-                  // SliverAppBar(
-                  //   expandedHeight: 300.0,
-                  //   floating: false,
-                  //   pinned: true,
-                  //   flexibleSpace: FlexibleSpaceBar(
-                  //     centerTitle: true,
-                  //     //background: Image.asset()
-                  //   ),
-                  // ),
                   SliverToBoxAdapter(
                     child: Column(
                       children: [
@@ -119,66 +110,6 @@ class MarketPairsTabView extends StatelessWidget {
                   ),
                 ];
               },
-              // appBar: AppBar(
-              //     backgroundColor: Colors.white,
-              //     automaticallyImplyLeading: false, // removes the back button
-              //     bottom: PreferredSize(
-              //       preferredSize: Size(double.infinity, 13),
-              //       child: Column(
-              //         // mainAxisAlignment: MainAxisAlignment.end,
-              //         children: [
-              //           TabBar(
-              //               unselectedLabelColor: Colors.redAccent,
-              //               indicatorSize: TabBarIndicatorSize.tab,
-              //               indicator: BoxDecoration(
-              //                   gradient: LinearGradient(
-              //                       colors: [Colors.redAccent, Colors.orangeAccent]),
-              //                   shape: BoxShape.rectangle,
-              //                   borderRadius: BorderRadius.circular(25),
-              //                   color: Colors.redAccent),
-              //               tabs: [
-              //                 for (var tab in tabNames)
-              //                   Tab(
-              //                       child: Align(
-              //                     alignment: Alignment.center,
-              //                     child: Text(tab,
-              //                         style: TextStyle(
-              //                           fontWeight: FontWeight.bold,
-              //                         )),
-              //                   ))
-              //               ]),
-              //           // Ticker bar below
-              //           SizedBox(
-              //             height: 20,
-              //             child: Stack(
-              //               overflow: Overflow.visible,
-              //               children: [
-              //                 Positioned.fill(
-              //                   bottom: -11,
-              //                   child: Container(
-              //                     margin: EdgeInsets.only(top: 2.0, bottom: 2),
-              //                     decoration: BoxDecoration(
-              //                         color: Theme.of(context).cardColor,
-              //                         borderRadius: BorderRadius.only(
-              //                             topLeft: Radius.circular(15),
-              //                             topRight: Radius.circular(15))),
-              //                     child: Card(
-              //                       margin: EdgeInsets.symmetric(
-              //                           vertical: 1, horizontal: 8),
-              //                       shape: RoundedRectangleBorder(
-              //                         borderRadius: BorderRadius.circular(35),
-              //                       ),
-              //                       elevation: 1,
-              //                       child: HeaderRow(),
-              //                     ),
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              //           ),
-              //         ],
-              //       ),
-              //     )),
               body: isBusy
                   ? Container(
                       color: Theme.of(context).accentColor,
@@ -281,20 +212,21 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
         new SizedBox(
           height: 20,
           child: Container(
-            padding: EdgeInsets.only(top: 2.0, bottom: 2),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              // borderRadius: BorderRadius.only(
-              //     topLeft: Radius.circular(15),
-              //     topRight: Radius.circular(15))
-            ),
-            child: Card(
-              margin: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(35),
+            child: Container(
+              padding: EdgeInsets.only(top: 2.0, bottom: 2),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15))),
+              child: Card(
+                margin: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(35),
+                ),
+                elevation: 1,
+                child: HeaderRow(),
               ),
-              elevation: 1,
-              child: HeaderRow(),
             ),
           ),
         ),
