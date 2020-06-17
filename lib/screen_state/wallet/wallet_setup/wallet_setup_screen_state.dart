@@ -44,7 +44,7 @@ class WalletSetupScreenState extends BaseState {
         setState(ViewState.Idle);
         isWallet = true;
         // Navigator.of(context).pushNamed('/mainNav');
-        navigationService.navigateTo('/mainNav');
+        navigationService.navigateTo('/mainNav',arguments: 0);
       }
     }).timeout(Duration(seconds: 20), onTimeout: () {
       log.e('In time out');

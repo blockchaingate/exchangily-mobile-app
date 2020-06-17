@@ -44,7 +44,7 @@ class TradeView extends StatelessWidget {
       },
       builder: (context, model, _) => WillPopScope(
         onWillPop: () async {
-          model.onBackButtonPressed();
+          Navigator.pushReplacementNamed(context, '/mainNav', arguments: 1);
           return new Future(() => true);
         },
         child: Scaffold(
@@ -63,6 +63,15 @@ class TradeView extends StatelessWidget {
                 model.updateTickerName(pairPriceByRoute.symbol),
                 style: Theme.of(context).textTheme.headline4,
               ),
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/mainNav',
+                        arguments: 1);
+                  },
+                )
+              ],
               centerTitle: true,
               automaticallyImplyLeading: false),
           drawer: Container(
@@ -289,7 +298,7 @@ class TradeView extends StatelessWidget {
                   ))
                 ],
               )),
-          bottomNavigationBar: BottomNavBar(count: 1),
+          // bottomNavigationBar: BottomNavBar(count: 1),
         ),
       ),
     );

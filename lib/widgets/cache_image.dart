@@ -20,11 +20,13 @@ class CacheImage extends StatefulWidget {
 class _CacheImageState extends State<CacheImage> {
   @override
   Widget build(BuildContext context) {
-    
     //check if it is a online image
-    bool isurl = isURL(widget.url, requireTld: false);
+    bool isurl = widget.url.startsWith("http") ? true : false;
     //check if it is an assets image
-    bool isasset = isurl ? false : widget.url.startsWith("/assets") ? true : false;
+    bool isasset =
+        isurl ? false : widget.url.startsWith("assets") ? true : false;
+
+    // print("Image status: isurl: $isurl  isasset: $isasset url: widget.url");
 
     return isurl
         ? new CachedNetworkImage(
@@ -45,9 +47,16 @@ class _CacheImageState extends State<CacheImage> {
             errorWidget: (context, url, error) => new Icon(Icons.error),
             fit: widget.fit != null ? widget.fit : BoxFit.cover,
           )
-        : Image.asset(
-            isasset?"widget.url":"/assets/image/img/noImage.png",
+        : Image(
+            image: AssetImage(
+              isasset ? widget.url : "/assets/images/img/noImage.png",
+            ),
             fit: BoxFit.fitWidth,
           );
+
+    // Image.asset(
+    //   isasset ? widget.url : "/assets/images/img/noImage.png",
+    //   fit: BoxFit.fitWidth,
+    // );
   }
 }

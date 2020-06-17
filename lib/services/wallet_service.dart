@@ -62,9 +62,53 @@ class WalletService {
       locator<TransactionHistoryDatabaseService>();
   ApiService _apiService = locator<ApiService>();
   double coinUsdBalance;
-  List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG', 'DUSD'];
+  List<String> coinTickers = [
+    'BTC',
+    'ETH',
+    'FAB',
+    'USDT',
+    'EXG',
+    'DUSD',
+    'BNB',
+    'INB',
+    'HOT',
+    'CEL',
+    'MATIC',
+    'IOST',
+    'MANA',
+    'WAX',
+    'ELF',
+    'GNO',
+    'POWR',
+    'WINGS',
+    'MTL',
+    'KNC',
+    'GVT',
+  ];
 
-  List<String> tokenType = ['', '', '', 'ETH', 'FAB', 'FAB'];
+  List<String> tokenType = [
+    '',
+    '',
+    '',
+    'ETH',
+    'FAB',
+    'FAB',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+  ];
 
   List<String> coinNames = [
     'bitcoin',
@@ -72,7 +116,22 @@ class WalletService {
     'fabcoin',
     'tether',
     'exchangily',
-    'dusd'
+    'dusd',
+    'Binance Coin',
+    'Insight Chain',
+    'Holo',
+    'Celsius',
+    'Matic Network',
+    'IOST',
+    'Decentraland',
+    'wax',
+    'aelf',
+    'Gnosis',
+    'powr',
+    'Power Ledger',
+    'Metal',
+    'Kyber Network',
+    'Genesis Vision',
   ];
 
   Completer<AlertResponse> _completer;

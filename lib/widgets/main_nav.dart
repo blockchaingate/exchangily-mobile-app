@@ -9,6 +9,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
 
 class MainNav extends StatefulWidget {
+  MainNav({this.currentPage=0});
+  final int currentPage;
+  
   @override
   _MainNavState createState() => _MainNavState();
 }
@@ -18,6 +21,7 @@ class _MainNavState extends State<MainNav> {
   int _page = 0;
   final double paddingValue = 4; // change space between icon and title text
   final double iconSize = 25; // change icon size
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,8 +90,10 @@ class _MainNavState extends State<MainNav> {
   }
 
   void navigateToPage(int page) {
-    _pageController.animateToPage(page,
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
+    // _pageController.animateToPage(page,
+    //     duration: Duration(milliseconds: 300), curve: Curves.ease);
+
+    _pageController.jumpToPage(page);
   }
 
   void onPageChanged(int page) {
@@ -99,7 +105,12 @@ class _MainNavState extends State<MainNav> {
   @override
   void initState() {
     super.initState();
-    _pageController = new PageController();
+    _pageController = new PageController(initialPage: widget.currentPage);
+    setState(() {
+      this._page = widget.currentPage;
+      // print("current page: ${widget.currentPage}");
+      // print("_page: ${this._page}");
+    });
   }
 
   @override

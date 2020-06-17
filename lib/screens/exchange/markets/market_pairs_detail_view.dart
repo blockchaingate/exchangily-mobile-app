@@ -32,6 +32,7 @@ class MarketPairPriceDetailView extends StatelessWidget {
                 navigationService.navigateUsingPushReplacementNamed(
                     '/exchangeTrade',
                     arguments: pairList[index]);
+                    
               },
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
