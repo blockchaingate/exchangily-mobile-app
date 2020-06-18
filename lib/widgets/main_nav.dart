@@ -43,7 +43,7 @@ class _MainNavState extends State<MainNav> {
           // currentIndex: _selectedIndex,
           type: BottomNavigationBarType.fixed,
           selectedFontSize: 14,
-          elevation: 20,
+          elevation: 10,
           unselectedItemColor: globals.grey,
           backgroundColor: globals.walletCardColor,
           selectedItemColor: globals.primaryColor,
