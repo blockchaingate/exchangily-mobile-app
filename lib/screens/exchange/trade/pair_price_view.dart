@@ -66,43 +66,28 @@ class PairPriceView extends StatelessWidget {
 
             child: Column(children: <Widget>[
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  UIHelper.horizontalSpaceMedium,
-                  Expanded(
-                    flex: 2,
-                    child: Text(AppLocalizations.of(context).volume,
-                        style: Theme.of(context).textTheme.subtitle2),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(AppLocalizations.of(context).low.toString(),
-                        style: Theme.of(context).textTheme.subtitle2),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(AppLocalizations.of(context).high.toString(),
-                        style: Theme.of(context).textTheme.subtitle2),
-                  ),
+                  Text(AppLocalizations.of(context).volume,
+                      style: Theme.of(context).textTheme.subtitle2),
+                  Text(AppLocalizations.of(context).low.toString(),
+                      style: Theme.of(context).textTheme.subtitle2),
+                  Text(AppLocalizations.of(context).high.toString(),
+                      style: Theme.of(context).textTheme.subtitle2),
                 ],
               ),
               // Low Volume High Row
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  UIHelper.horizontalSpaceMedium,
-                  Expanded(
-                    flex: 2,
-                    child: Text(pairPrice.volume.toString(),
-                        style: Theme.of(context).textTheme.headline6),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(pairPrice.low.toString(),
-                        style: Theme.of(context).textTheme.headline6),
-                  ),
-                  Expanded(
-                      flex: 2,
-                      child: Text(pairPrice.high.toString(),
-                          style: Theme.of(context).textTheme.headline6)),
+                  Text(pairPrice.low.toString(),
+                      style: Theme.of(context).textTheme.headline6),
+                  Text(pairPrice.volume.toString(),
+                      style: Theme.of(context).textTheme.headline6),
+                  Text(pairPrice.high.toString(),
+                      style: Theme.of(context).textTheme.headline6)
                 ],
               ),
             ]),

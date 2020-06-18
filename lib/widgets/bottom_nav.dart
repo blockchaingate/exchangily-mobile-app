@@ -74,7 +74,13 @@ class BottomNavBar extends StatelessWidget {
       onTap: (int idx) {
         switch (idx) {
           case 0:
-            navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+
+            /// when user in exchangeTrade route and then click on dashboard or
+            /// any bottom nav links then if i use pushReplacementNamed which is
+            /// an entry animation route, then this way it closes the running web sockets
+            /// automatically and everything is fine otherwise is i user popAndPushNamed here
+            /// then reading from socket exception error in the terminal
+            navigationService.navigateUsingPushReplacementNamed('/dashboard');
             break;
 
           case 1:
@@ -85,10 +91,10 @@ class BottomNavBar extends StatelessWidget {
           //   break;
           case 2:
             navigationService
-                .navigateUsingpopAndPushedNamed('/campaignInstructions');
+                .navigateUsingPushReplacementNamed('/campaignInstructions');
             break;
           case 3:
-            navigationService.navigateUsingpopAndPushedNamed('/settings');
+            navigationService.navigateUsingPushReplacementNamed('/settings');
             break;
         }
       },
