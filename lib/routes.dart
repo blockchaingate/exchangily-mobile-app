@@ -67,7 +67,7 @@ class RouteGenerator {
 
       //main navagation contains several pages
       case '/mainNav':
-        return MaterialPageRoute(builder: (_) => MainNav(currentPage:args));
+        return MaterialPageRoute(builder: (_) => MainNav());
         // return MaterialPageRoute(builder: (_) => MainNavCircle());
       case '/walletSetup':
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
@@ -157,7 +157,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
 
       case '/campaignInstructions':
-        return MaterialPageRoute(builder: (_) => CampaignInstructionScreen(newPage: args,));
+        return MaterialPageRoute(builder: (_) => CampaignInstructionScreen());
 
       case '/campaignPayment':
         return MaterialPageRoute(builder: (_) => CampaignPaymentScreen());

@@ -61,7 +61,7 @@ class CreatePasswordScreenState extends BaseState {
         .then((data) {
       _walletInfo = data;
       // Navigator.pushNamed(context, '/mainNav', arguments: _walletInfo);
-      navigationService.navigateTo('/mainNav',arguments: 0);
+      navigationService.navigateTo('/mainNav');
       randomMnemonicFromRoute = '';
     }).catchError((onError) {
       errorMessage = AppLocalizations.of(context).somethingWentWrong;
