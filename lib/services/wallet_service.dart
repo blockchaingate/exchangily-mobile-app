@@ -50,6 +50,7 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 import 'db/transaction_history_database_service.dart';
+import 'package:bitbox/bitbox.dart' as Bitbox;
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -63,7 +64,6 @@ class WalletService {
   ApiService _apiService = locator<ApiService>();
   double coinUsdBalance;
   List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG', 'DUSD'];
-
   List<String> tokenType = ['', '', '', 'ETH', 'FAB', 'FAB'];
 
   List<String> coinNames = [
@@ -76,6 +76,11 @@ class WalletService {
   ];
 
   Completer<AlertResponse> _completer;
+
+/*----------------------------------------------------------------------
+                Generate BCH address
+----------------------------------------------------------------------*/
+
 /*----------------------------------------------------------------------
                 Get Random Mnemonic
 ----------------------------------------------------------------------*/
@@ -146,6 +151,12 @@ class WalletService {
   generateSeed(String mnemonic) {
     Uint8List seed = bip39.mnemonicToSeed(mnemonic);
     log.w(seed);
+    return seed;
+  }
+
+  generateBchSeed(String mnemonic) {
+    Uint8List seed = Bitbox.Mnemonic.toSeed(mnemonic);
+    log.w('BCH seed $seed');
     return seed;
   }
 
@@ -242,7 +253,10 @@ class WalletService {
     } else {
       _walletInfo = [];
     }
+    final accountDerivationPath = "m/44'/145'/0'/0";
     var seed = generateSeed(mnemonic);
+    var bchSeed = generateBchSeed(mnemonic);
+    final masterNode = Bitbox.HDNode.fromSeed(seed, false);
     var root = bip32.BIP32.fromSeed(seed);
 
     try {
