@@ -37,11 +37,6 @@ class TradeView extends StatelessWidget {
       onModelReady: (model) {
         print('in init trade view');
         model.context = context;
-        // if (model.dataReady(model.allPriceStreamKey)) {
-        //   print('before cancelling stream');
-        //   model.cancelSingleStreamByKey(model.allPriceStreamKey);
-        // }
-        // model.resumeAllStreams();
       },
       builder: (context, model, _) => Scaffold(
         key: _scaffoldKey,
@@ -50,10 +45,6 @@ class TradeView extends StatelessWidget {
           leading: IconButton(
             icon: Icon(Icons.compare_arrows),
             onPressed: () {
-              //  model.pauseAllStreams();
-              //   _scaffoldKey.currentState.openDrawer();
-              // model.navigationService
-              //     .navigateUsingpopAndPushedNamed('/marketsView');
               model.navigationService.goBack();
             },
           ),
@@ -62,61 +53,11 @@ class TradeView extends StatelessWidget {
             style: Theme.of(context).textTheme.headline4,
           ),
           centerTitle: true,
-          // automaticallyImplyLeading: false
         ),
-        // drawer: Container(
-        //     margin: EdgeInsets.only(top: 10),
-        //     child: Stack(overflow: Overflow.visible, children: [
-        //       Align(
-        //         alignment: Alignment.topCenter,
-        //         child: Container(
-        //           child: model.dataReady('allPrices')
-        //               ? MarketPairsTabView(
-        //                   marketPairsTabBarView: model.marketPairsTabBar,
-        //                   isBusy: false,
-        //                 )
-        //               : Container(
-        //                   child: Center(
-        //                     child: Text(AppLocalizations.of(context).loading),
-        //                   ),
-        //                 ),
-        //         ),
-        //       ),
-        //       // Close button position bottom right
-        //       Positioned(
-        //           bottom: 0,
-        //           right: 0,
-        //           child: Container(
-        //             padding: EdgeInsets.all(5),
-        //             decoration: BoxDecoration(
-        //                 color: red,
-        //                 borderRadius: BorderRadius.only(
-        //                     topLeft: Radius.circular(90),
-        //                     bottomLeft: Radius.circular(1))),
-        //             child: Padding(
-        //               padding: const EdgeInsets.only(left: 8.0, top: 8.0),
-        //               child: IconButton(
-        //                 icon: Icon(
-        //                   Icons.close,
-        //                   color: white,
-        //                   size: 30,
-        //                 ),
-        //                 onPressed: () {
-        //                   model.resumeAllStreams();
-        //                   model.navigationService.goBack();
-        //                 },
-        //               ),
-        //             ),
-        //           )),
-        //       // Icon(Icons.access_alarm)
-        //     ])),
 
         body: Container(
           child: ListView(
             children: [
-              /// Check if all price stream is ready
-              // model.dataReady('allPrices') || model.currentPairPrice != null
-              //     ?
               Container(
                 margin: EdgeInsets.only(top: 5.0),
                 child: PairPriceView(
@@ -224,16 +165,7 @@ class TradeView extends StatelessWidget {
                             : MyExchangeAssetsView(
                                 // myExchangeAssets: model.myExchangeAssets
                                 )
-                      ]
-
-                          //      ordersViewTabBody.map((tabBody) {
-                          //   int index = ordersViewTabBody.indexOf(tabBody);
-                          //   print('Index $index');
-                          //   return Container(
-                          //     child: SelectedTabWidget(tabBody: tabBody, index: index),
-                          //   );
-                          // }).toList()
-                          ),
+                      ]),
                     ),
                   ],
                 ),
