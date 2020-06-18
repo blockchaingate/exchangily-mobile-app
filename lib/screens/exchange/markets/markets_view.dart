@@ -49,6 +49,7 @@ class MarketsView extends StatelessWidget {
                       Flexible(
                         child: MarketPairsTabView(
                           marketPairsTabBarView: model.marketPairsTabBar,
+                          priceList: model.btcFabExgUsdtPriceList,
                           isBusy: !model.dataReady,
                         ),
                       ),
