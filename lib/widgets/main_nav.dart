@@ -9,9 +9,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
 
 class MainNav extends StatefulWidget {
-  MainNav({this.currentPage=0});
-  final int currentPage;
-  
   @override
   _MainNavState createState() => _MainNavState();
 }
@@ -21,7 +18,6 @@ class _MainNavState extends State<MainNav> {
   int _page = 0;
   final double paddingValue = 4; // change space between icon and title text
   final double iconSize = 25; // change icon size
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +39,7 @@ class _MainNavState extends State<MainNav> {
           // currentIndex: _selectedIndex,
           type: BottomNavigationBarType.fixed,
           selectedFontSize: 14,
-          elevation: 20,
+          elevation: 10,
           unselectedItemColor: globals.grey,
           backgroundColor: globals.walletCardColor,
           selectedItemColor: globals.primaryColor,
@@ -102,12 +98,7 @@ class _MainNavState extends State<MainNav> {
   @override
   void initState() {
     super.initState();
-    _pageController = new PageController(initialPage: widget.currentPage);
-    setState(() {
-      this._page = widget.currentPage;
-      // print("current page: ${widget.currentPage}");
-      // print("_page: ${this._page}");
-    });
+    _pageController = new PageController();
   }
 
   @override
