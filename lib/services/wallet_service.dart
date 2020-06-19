@@ -1,3 +1,4 @@
+import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
@@ -116,8 +117,8 @@ class WalletService {
     'bitcoin',
     'ethereum',
     'fabcoin',
-    'bitcoin cash'
-        'tether',
+    'bitcoin cash',
+    'tether',
     'exchangily',
     'dusd',
     'Binance Coin',
@@ -652,7 +653,8 @@ class WalletService {
       double marketPrice, double actualWalletBalance, double lockedBalance) {
     log.w(
         'marketPrice =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
-    if (marketPrice != null) {
+    if (marketPrice != null &&
+        (!actualWalletBalance.isNegative || !lockedBalance.isNegative)) {
       coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
       return coinUsdBalance;
     } else {

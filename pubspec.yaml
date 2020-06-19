@@ -116,11 +116,11 @@ dependencies:
 
   #flutter_beautiful_popup
   flutter_beautiful_popup: ^1.5.0
-  
+
   # Carousel
   flutter_swiper: ^1.1.6
 
-  # validators 
+  # validators
   validators: ^2.0.0+1
 
   # cached_network_image
@@ -129,6 +129,8 @@ dependencies:
   # fancy_bottom_navigation
   fancy_bottom_navigation: ^0.3.2
 
+  # bch address
+  bitbox: ^0.0.1
 
   # Share files
   share:
