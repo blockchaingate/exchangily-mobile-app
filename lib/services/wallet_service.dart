@@ -50,7 +50,6 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 import 'db/transaction_history_database_service.dart';
-import 'package:bitbox/bitbox.dart' as Bitbox;
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -67,29 +66,78 @@ class WalletService {
     'BTC',
     'ETH',
     'FAB',
+    'BCH',
     'USDT',
     'EXG',
     'DUSD',
-    'BCH'
+    'BNB',
+    'INB',
+    'HOT',
+    'CEL',
+    'MATIC',
+    'IOST',
+    'MANA',
+    'WAX',
+    'ELF',
+    'GNO',
+    'POWR',
+    'WINGS',
+    'MTL',
+    'KNC',
+    'GVT',
   ];
-  List<String> tokenType = ['', '', '', 'ETH', 'FAB', 'FAB', ''];
+
+  List<String> tokenType = [
+    '',
+    '',
+    '',
+    '',
+    'ETH',
+    'FAB',
+    'FAB',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+  ];
 
   List<String> coinNames = [
     'bitcoin',
     'ethereum',
     'fabcoin',
-    'tether',
+    'bitcoin cash'
+        'tether',
     'exchangily',
     'dusd',
-    'bitcoin cash'
+    'Binance Coin',
+    'Insight Chain',
+    'Holo',
+    'Celsius',
+    'Matic Network',
+    'IOST',
+    'Decentraland',
+    'wax',
+    'aelf',
+    'Gnosis',
+    'powr',
+    'Power Ledger',
+    'Metal',
+    'Kyber Network',
+    'Genesis Vision',
   ];
 
   Completer<AlertResponse> _completer;
-
-/*----------------------------------------------------------------------
-                Generate BCH address
-----------------------------------------------------------------------*/
-
 /*----------------------------------------------------------------------
                 Get Random Mnemonic
 ----------------------------------------------------------------------*/

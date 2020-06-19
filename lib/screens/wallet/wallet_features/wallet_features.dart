@@ -78,7 +78,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                                 onPressed: () {
                                   // Navigator.pop(context);
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
-                                  navigationService.navigateTo('/mainNav');
+                                  navigationService.navigateTo('/mainNav',arguments: 0);
                                 }))
                       ],
                     ),
