@@ -98,10 +98,10 @@ class WalletDashboardScreenState extends BaseState {
 // Calculate Total Usd Balance of Coins
   calcTotalBal() {
     totalUsdBalance = 0;
-    print('Wallet info length in calcTotal ${walletInfo.length}');
     for (var i = 0; i < walletInfo.length; i++) {
       totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
     }
+    log.i('Total usd balance $totalUsdBalance');
   }
 
   // Get EXG address from wallet database
@@ -197,7 +197,6 @@ class WalletDashboardScreenState extends BaseState {
         walletInfoCopy == null ||
         walletInfoCopy.length == 0)
       walletInfoCopy = await walletDatabaseService.getAll();
-
     int coinTickersLength = walletService.coinTickers.length;
     walletInfo = [];
     await getGas();
@@ -241,12 +240,13 @@ class WalletDashboardScreenState extends BaseState {
             // Compare wallet ticker name to wallet balance coin name
             if (walletTickerName == walletBalanceCoinName) {
               double marketPrice = walletBalanceList[j].usdValue.usd;
+              double availableBal = walletBalanceList[j].balance;
               // Check if market price error from api then show the notification with ticker name
               // so that user know why USD val for that ticker is 0
               if (marketPrice == -1 || marketPrice == 0) {
                 marketPrice = await walletService
                     .getCoinMarketPriceByTickerName(walletTickerName);
-                if (marketPrice == 0 || marketPrice == null) {
+                if (marketPrice == null) {
                   sharedService.showInfoFlushbar(
                       '$walletTickerName ${AppLocalizations.of(context).notice}',
                       AppLocalizations.of(context).marketPriceFetchFailed,
@@ -256,6 +256,8 @@ class WalletDashboardScreenState extends BaseState {
                   marketPrice = 0.0;
                 }
               }
+
+              if (availableBal.isNegative) walletBalanceList[j].balance = 0;
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
                   marketPrice,
@@ -297,7 +299,6 @@ class WalletDashboardScreenState extends BaseState {
             } // If ends
 
           } // For loop j ends
-          log.w('total usd  bal $totalUsdBalance');
         } // For loop i ends
         calcTotalBal();
 

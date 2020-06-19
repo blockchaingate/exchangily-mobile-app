@@ -63,8 +63,16 @@ class WalletService {
       locator<TransactionHistoryDatabaseService>();
   ApiService _apiService = locator<ApiService>();
   double coinUsdBalance;
-  List<String> coinTickers = ['BTC', 'ETH', 'FAB', 'USDT', 'EXG', 'DUSD'];
-  List<String> tokenType = ['', '', '', 'ETH', 'FAB', 'FAB'];
+  List<String> coinTickers = [
+    'BTC',
+    'ETH',
+    'FAB',
+    'USDT',
+    'EXG',
+    'DUSD',
+    'BCH'
+  ];
+  List<String> tokenType = ['', '', '', 'ETH', 'FAB', 'FAB', ''];
 
   List<String> coinNames = [
     'bitcoin',
@@ -72,7 +80,8 @@ class WalletService {
     'fabcoin',
     'tether',
     'exchangily',
-    'dusd'
+    'dusd',
+    'bitcoin cash'
   ];
 
   Completer<AlertResponse> _completer;
@@ -158,6 +167,20 @@ class WalletService {
     Uint8List seed = Bitbox.Mnemonic.toSeed(mnemonic);
     log.w('BCH seed $seed');
     return seed;
+  }
+
+  // Generate BCH address
+  String generateBchAddress(String mnemonic) {
+    var bchSeed = generateBchSeed(mnemonic);
+    final masterNode = Bitbox.HDNode.fromSeed(bchSeed, false);
+    final accountDerivationPath = "m/44'/145'/0'/0";
+    final accountNode = masterNode.derivePath(accountDerivationPath);
+    final accountXPriv = accountNode.toXPriv();
+    final childNode = accountNode.derive(0);
+    final cashAddress = childNode.toCashAddress();
+
+    final address = cashAddress.split(":")[1];
+    return address;
   }
 
 /*----------------------------------------------------------------------
@@ -253,11 +276,15 @@ class WalletService {
     } else {
       _walletInfo = [];
     }
-    final accountDerivationPath = "m/44'/145'/0'/0";
     var seed = generateSeed(mnemonic);
-    var bchSeed = generateBchSeed(mnemonic);
-    final masterNode = Bitbox.HDNode.fromSeed(seed, false);
     var root = bip32.BIP32.fromSeed(seed);
+
+    // BCH address
+    String bchAddress = generateBchAddress(mnemonic);
+    log.e('BCH address $bchAddress');
+    // get address details
+    final addressDetails = await Bitbox.Address.details(bchAddress);
+    log.w('BCH address details $addressDetails');
 
     try {
       for (int i = 0; i < coinTickers.length; i++) {
@@ -271,7 +298,7 @@ class WalletService {
             id: null,
             tickerName: tickerName,
             tokenType: token,
-            address: addr,
+            address: tickerName == 'BCH' ? bchAddress : addr,
             availableBalance: 0.0,
             lockedBalance: 0.0,
             usdValue: 0.0,

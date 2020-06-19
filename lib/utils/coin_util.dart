@@ -41,6 +41,7 @@ import 'package:pointycastle/macs/hmac.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 import 'varuint.dart';
+import 'package:bitbox/bitbox.dart' as Bitbox;
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
