@@ -401,17 +401,17 @@ getAddressForCoin(root, 'FAB');
 getAddressForCoin(root, 'USDT', tokenType: 'ETH');
 getAddressForCoin(root, 'EXG', tokenType: 'FAB');
  */
-Future getAddressForCoin(root, String coinName,
+Future getAddressForCoin(root, String tickerName,
     {tokenType = '', index = 0}) async {
-  if (coinName == 'BTC') {
-    var node = getBtcNode(root, index: index);
-    return getBtcAddressForNode(node);
-  } else if ((coinName == 'ETH') || (tokenType == 'ETH')) {
+  if (tickerName == 'BTC' || tickerName == 'LTC') {
+    var node = getBtcNode(root, tickerName: tickerName, index: index);
+    return getBtcAddressForNode(node, tickerName: tickerName);
+  } else if ((tickerName == 'ETH') || (tokenType == 'ETH')) {
     var node = getEthNode(root, index: index);
     return await getEthAddressForNode(node);
-  } else if (coinName == 'FAB') {
+  } else if (tickerName == 'FAB') {
     var node = getFabNode(root, index: index);
-    return getBtcAddressForNode(node);
+    return getBtcAddressForNode(node, tickerName: tickerName);
   } else if (tokenType == 'FAB') {
     var node = getFabNode(root, index: index);
     var fabPublicKey = node.publicKey;

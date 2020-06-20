@@ -49,7 +49,7 @@ import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
-
+import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'db/transaction_history_database_service.dart';
 
 class WalletService {
@@ -71,6 +71,7 @@ class WalletService {
     'USDT',
     'EXG',
     'DUSD',
+    'LTC',
     'BNB',
     'INB',
     'HOT',
@@ -96,6 +97,7 @@ class WalletService {
     'ETH',
     'FAB',
     'FAB',
+    '',
     'ETH',
     'ETH',
     'ETH',
@@ -121,6 +123,7 @@ class WalletService {
     'tether',
     'exchangily',
     'dusd',
+    'litecoin',
     'Binance Coin',
     'Insight Chain',
     'Holo',
@@ -218,6 +221,11 @@ class WalletService {
     return seed;
   }
 
+  generateBip32Root(Uint8List seed) {
+    var root = bip32.BIP32.fromSeed(seed);
+    return root;
+  }
+
   // Generate BCH address
   String generateBchAddress(String mnemonic) {
     var bchSeed = generateBchSeed(mnemonic);
@@ -227,8 +235,43 @@ class WalletService {
     final accountXPriv = accountNode.toXPriv();
     final childNode = accountNode.derive(0);
     final cashAddress = childNode.toCashAddress();
-
     final address = cashAddress.split(":")[1];
+
+    return address;
+  }
+
+  // Generate LTC address
+  generateLtcAddress(String mnemonic, {index = 0}) async {
+    String tickerName = 'LTC';
+    NetworkType liteCoinNetworkType = new NetworkType(
+        messagePrefix: '\x19Litecoin Signed Message:\n',
+        bip32: new Bip32Type(public: 0x019da462, private: 0x019d9cfe),
+        pubKeyHash: 0x30,
+        scriptHash: 0x32,
+        wif: 0xb0);
+    var seed = generateSeed(mnemonic);
+    var root = generateBip32Root(seed);
+    var coinType = environment["CoinType"]["$tickerName"].toString();
+    var node = root.derivePath("m/44'/" + "2" + "'/0'/0/" + index.toString());
+
+    String address1 = new P2PKH(
+            data: new BitcoinFlutter.PaymentData(pubkey: node.publicKey),
+            network: liteCoinNetworkType)
+        .data
+        .address;
+    print('ticker: $tickerName --  address1: ${address1}');
+
+    String address = '';
+
+    final keyPair = ECPair.makeRandom(network: liteCoinNetworkType);
+    print('keyPair: ${keyPair.publicKey}');
+
+    address = new P2PKH(
+            data: new BitcoinFlutter.PaymentData(pubkey: keyPair.publicKey),
+            network: liteCoinNetworkType)
+        .data
+        .address;
+    log.w('$address');
     return address;
   }
 
@@ -326,14 +369,12 @@ class WalletService {
       _walletInfo = [];
     }
     var seed = generateSeed(mnemonic);
-    var root = bip32.BIP32.fromSeed(seed);
+    var root = generateBip32Root(seed);
 
     // BCH address
     String bchAddress = generateBchAddress(mnemonic);
-    log.e('BCH address $bchAddress');
-    // get address details
     final addressDetails = await Bitbox.Address.details(bchAddress);
-    log.w('BCH address details $addressDetails');
+    log.e('Address $bchAddress -- address details $addressDetails');
 
     try {
       for (int i = 0; i < coinTickers.length; i++) {
@@ -360,9 +401,8 @@ class WalletService {
       return _walletInfo;
     } catch (e) {
       log.e(e);
-      _walletInfo = null;
       log.e('Catch createOfflineWallets $e');
-      return _walletInfo;
+      throw Exception('Catch createOfflineWallets $e');
     }
   }
 
@@ -1031,7 +1071,7 @@ class WalletService {
         var alice = ECPair.fromPrivateKey(privateKey,
             compressed: true, network: environment["chains"]["BTC"]["network"]);
 
-        txb.sign(i, alice);
+        txb.sign(vin: i, keyPair: alice);
       }
 
       var txHex = txb.build().toHex();
@@ -1182,7 +1222,7 @@ class WalletService {
         var privateKey = receivePrivateKeyArr[i];
         var alice = ECPair.fromPrivateKey(privateKey,
             compressed: true, network: environment["chains"]["BTC"]["network"]);
-        txb.sign(i, alice);
+        txb.sign(vin: i, keyPair: alice);
       }
 
       var tx = txb.build();

@@ -261,20 +261,21 @@ class WalletDashboardScreen extends StatelessWidget {
                       ),
                     ),
                     // Plus sign container
-                    // Container(
-                    //   margin:
-                    //       EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
-                    //   decoration: BoxDecoration(
-                    //       color: globals.primaryColor,
-                    //       borderRadius: BorderRadius.circular(50)),
-                    //   child: IconButton(
-                    //     onPressed: () {
-                    //       Navigator.pushNamed(context, '/campaignInstructions');
-                    //     },
-                    //     icon: Icon(Icons.add),
-                    //     color: globals.white,
-                    //   ),
-                    // )
+                    Container(
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+                      decoration: BoxDecoration(
+                          color: globals.primaryColor,
+                          borderRadius: BorderRadius.circular(50)),
+                      child: IconButton(
+                        onPressed: () {
+                          model.walletService.generateLtcAddress(
+                              model.walletService.getRandomMnemonic());
+                        },
+                        icon: Icon(Icons.add),
+                        color: globals.white,
+                      ),
+                    )
                   ],
                 ),
               ),

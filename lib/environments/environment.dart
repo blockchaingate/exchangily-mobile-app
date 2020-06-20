@@ -23,7 +23,7 @@ Map devConfig = {
     },
     "KANBAN": {"chainId": 212, "gasPrice": 50000000, "gasLimit": 20000000}
   },
-  "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150},
+  "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150, "BCH": 1, "LTC": 1, "DOGE": 1},
   'endpoints': {
     'kanban': 'https://kanbantest.fabcoinapi.com/',
     'btc': 'https://btctest.fabcoinapi.com/',
@@ -82,7 +82,14 @@ Map productionConfig = {
     },
     "KANBAN": {"chainId": 211, "gasPrice": 50000000, "gasLimit": 20000000}
   },
-  "CoinType": {"BTC": 0, "ETH": 60, "FAB": 1150},
+  "CoinType": {
+    "BTC": 0,
+    "ETH": 60,
+    "FAB": 1150,
+    "BCH": 145,
+    "LTC": 2,
+    "DOGE": 3
+  },
   'endpoints': {
     'kanban': 'https://kanbanprod.fabcoinapi.com/',
     'btc': 'https://btcprod.fabcoinapi.com/',
