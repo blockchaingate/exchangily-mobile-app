@@ -23,6 +23,10 @@ class MarketPairsTabView extends StatelessWidget {
         "imgUrl": "assets/images/slider/campaign.jpg",
         "route": '/campaignInstructions'
       },
+      {
+        "imgUrl": "assets/images/slider/campaign2.jpg",
+        "route": ''
+      },
       // {"imgUrl": "https://images.unsplash.com/photo-1561451213-d5c9f0951fdf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
       // {"imgUrl": "https://images.unsplash.com/photo-1516245834210-c4c142787335?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
     ];
