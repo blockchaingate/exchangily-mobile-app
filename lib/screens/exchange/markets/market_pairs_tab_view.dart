@@ -14,7 +14,10 @@ class MarketPairsTabView extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];
+    List<String> tabNames = [
+      // 'FAV.',
+      'USDT', 'DUSD', 'BTC', 'ETH', 'EXG'
+    ];
     final List<Map> images = [
       {
         "imgUrl": "assets/images/slider/campaign.jpg",
@@ -44,7 +47,7 @@ class MarketPairsTabView extends StatelessWidget {
                     child: Offstage(
                       offstage: isBusy,
                       child: Container(
-                        margin: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                        margin: EdgeInsets.fromLTRB(10, 0, 10, 5),
                         height: 40,
                         child: Row(
                           children: [
@@ -145,7 +148,10 @@ class HeaderRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return
+        // Container();
+
+        Row(
       children: <Widget>[
         Expanded(
             flex: 3,
@@ -194,10 +200,14 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   final TabBar _tabBar;
 
+  // @override
+  // double get minExtent => _tabBar.preferredSize.height + 20;
+  // @override
+  // double get maxExtent => _tabBar.preferredSize.height + 20;
   @override
-  double get minExtent => _tabBar.preferredSize.height + 20;
+  double get minExtent => _tabBar.preferredSize.height;
   @override
-  double get maxExtent => _tabBar.preferredSize.height + 20;
+  double get maxExtent => _tabBar.preferredSize.height;
 
   @override
   Widget build(
@@ -209,27 +219,27 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
           child: _tabBar,
           color: Color(0xff202138),
         ),
-        new SizedBox(
-          height: 20,
-          child: Container(
-            child: Container(
-              padding: EdgeInsets.only(top: 2.0, bottom: 2),
-              decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15))),
-              child: Card(
-                margin: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(35),
-                ),
-                elevation: 1,
-                child: HeaderRow(),
-              ),
-            ),
-          ),
-        ),
+        // new SizedBox(
+        //   height: 20,
+        //   child: Container(
+        //     child: Container(
+        //       padding: EdgeInsets.only(top: 2.0, bottom: 2),
+        //       decoration: BoxDecoration(
+        //           color: Theme.of(context).cardColor,
+        //           borderRadius: BorderRadius.only(
+        //               topLeft: Radius.circular(15),
+        //               topRight: Radius.circular(15))),
+        //       child: Card(
+        //         margin: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
+        //         shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(35),
+        //         ),
+        //         elevation: 1,
+        //         child: HeaderRow(),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
