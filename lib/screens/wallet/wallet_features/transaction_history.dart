@@ -184,48 +184,52 @@ class TransactionHistory extends StatelessWidget {
                                                 fontWeight: FontWeight.w400),
                                       ),
                                       UIHelper.verticalSpaceSmall,
-                                      Text(
-                                        '${AppLocalizations.of(context).status}:',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2,
-                                      ),
-                                      if (transaction.status == 'Complete')
-                                        Text(
-                                            AppLocalizations.of(context)
-                                                .completed
-                                                .toUpperCase(),
-                                            style: TextStyle(
-                                                color: globals.buyPrice))
-                                      else if (transaction.status ==
-                                          'Require redeposit')
-                                        Text(
-                                            AppLocalizations.of(context)
-                                                .requireRedeposit
-                                                .toUpperCase(),
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: globals.yellow))
-                                      else if (transaction.status == 'Failed')
-                                        Text(
-                                            AppLocalizations.of(context)
-                                                .failed
-                                                .toUpperCase(),
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: globals.sellPrice))
-                                      else if (transaction.status == 'Error')
-                                        Text(
-                                            AppLocalizations.of(context)
-                                                .error
-                                                .toUpperCase(),
-                                            style: TextStyle(
-                                                fontSize: 10,
-                                                color: globals.sellPrice))
-                                      else
-                                        Text(AppLocalizations.of(context)
-                                            .pending
-                                            .toUpperCase())
+                                      transaction.tag != 'send'
+                                          ? Container(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${AppLocalizations.of(context).status}:',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .subtitle2,
+                                                  ),
+                                                  if (transaction.status == 'Complete')
+                                                    Text(AppLocalizations.of(context).completed.toUpperCase(),
+                                                        style: TextStyle(
+                                                            color: globals
+                                                                .buyPrice))
+                                                  else if (transaction.status ==
+                                                      'Require redeposit')
+                                                    Text(
+                                                        AppLocalizations.of(context)
+                                                            .requireRedeposit
+                                                            .toUpperCase(),
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color:
+                                                                globals.yellow))
+                                                  else if (transaction.status ==
+                                                      'Failed')
+                                                    Text(AppLocalizations.of(context).failed.toUpperCase(),
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: globals
+                                                                .sellPrice))
+                                                  else if (transaction.status ==
+                                                      'Error')
+                                                    Text(AppLocalizations.of(context).error.toUpperCase(),
+                                                        style: TextStyle(
+                                                            fontSize: 10,
+                                                            color: globals.sellPrice))
+                                                  else
+                                                    Text(AppLocalizations.of(context).pending.toUpperCase(), style: TextStyle(fontSize: 10, color: globals.sellPrice))
+                                                ],
+                                              ),
+                                            )
+                                          : Container(),
                                     ],
                                   ),
                                 ],
