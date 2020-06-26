@@ -89,9 +89,8 @@ class WalletFeaturesScreenState extends BaseState {
         .coinBalanceByAddress(
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
         .then((data) async {
-      setState(ViewState.Idle);
-      log.w(data);
-      log.w(walletBalance);
+      log.e('data $data');
+
       walletBalance = data['balance'];
       double walletLockedBal = data['lockbalance'];
       walletInfo.availableBalance = walletBalance;
@@ -100,9 +99,11 @@ class WalletFeaturesScreenState extends BaseState {
       walletService.calculateCoinUsdBalance(
           currentUsdValue, walletBalance, walletLockedBal);
       walletInfo.usdValue = walletService.coinUsdBalance;
-    }).catchError((onError) {
-      log.e(onError);
+    }).catchError((err) {
+      log.e(err);
       setState(ViewState.Idle);
+      throw Exception(err);
     });
+    setState(ViewState.Idle);
   }
 }

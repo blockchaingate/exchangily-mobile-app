@@ -434,6 +434,8 @@ Future getCoinBalanceByAddress(String coinName, String address,
   try {
     if (coinName == 'BTC') {
       return await getBtcBalanceByAddress(address);
+    } else if (coinName == 'LTC') {
+      return await getLtcBalanceByAddress(address);
     } else if (coinName == 'ETH') {
       return await getEthBalanceByAddress(address);
     } else if (coinName == 'FAB') {

@@ -12,6 +12,8 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:exchangilymobileapp/utils/ltc_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -1106,7 +1108,6 @@ class WalletService {
       options,
       bool doSubmit) async {
     final root = bip32.BIP32.fromSeed(seed);
-    print('root in send transaction $root');
     var totalInput = 0;
     var finished = false;
     var gasPrice = 0;
@@ -1149,7 +1150,7 @@ class WalletService {
     log.w('satoshisPerBytes=' + satoshisPerBytes.toString());
 
     // BTC
-    if (coin == 'BTC' || coin == 'LTC') {
+    if (coin == 'BTC') {
       if (bytesPerInput == 0) {
         bytesPerInput = environment["chains"]["BTC"]["bytesPerInput"];
       }
@@ -1237,6 +1238,112 @@ class WalletService {
       txHex = tx.toHex();
       if (doSubmit) {
         var res = await _api.postBtcTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+        return {'txHash': txHash, 'errMsg': errMsg};
+      } else {
+        txHash = '0x' + tx.getId();
+      }
+    }
+
+    // LTC Transaction
+    else if (coin == 'LTC') {
+      BitcoinFlutter.NetworkType liteCoinNetworkType =
+          new BitcoinFlutter.NetworkType(
+              messagePrefix: '\x19Litecoin Signed Message:\n',
+              bip32: new BitcoinFlutter.Bip32Type(
+                  public: 0x019da462, private: 0x019d9cfe),
+              pubKeyHash: 0x30,
+              scriptHash: 0x32,
+              wif: 0xb0);
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["BTC"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["BTC"]["satoshisPerBytes"];
+      }
+      var amountNum = amount * 1e8;
+      amountNum += (2 * 34 + 10) * satoshisPerBytes;
+      final txb = new TransactionBuilder(
+          network: isProduction ? liteCoinNetworkType : BitcoinFlutter.testnet);
+
+      for (var i = 0; i < addressIndexList.length; i++) {
+        var index = addressIndexList[i];
+        var node = root.derivePath("m/44'/" +
+            environment["CoinType"]["LTC"].toString() +
+            "'/0'/0/" +
+            index.toString());
+        var fromAddress = getLtcAddressForNode(node);
+        if (addressList.length > 0) {
+          fromAddress = addressList[i];
+        }
+        if (i == 0) {
+          changeAddress = fromAddress;
+        }
+        final privateKey = node.privateKey;
+        var utxos = await _api.getLtcUtxos(fromAddress);
+        //print('utxos=');
+        //print(utxos);
+        if ((utxos == null) || (utxos.length == 0)) {
+          continue;
+        }
+        for (var j = 0; j < utxos.length; j++) {
+          var tx = utxos[j];
+          if (tx['idx'] < 0) {
+            continue;
+          }
+          txb.addInput(tx['txid'], tx['idx']);
+          amountNum -= tx['value'];
+          amountNum += bytesPerInput * satoshisPerBytes;
+          totalInput += tx['value'];
+          receivePrivateKeyArr.add(privateKey);
+          if (amountNum <= 0) {
+            finished = true;
+            break;
+          }
+        }
+      }
+
+      if (!finished) {
+        txHex = '';
+        txHash = '';
+        errMsg = 'not enough fund.';
+        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
+      }
+
+      var transFee =
+          (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
+              (2 * 34 + 10) * satoshisPerBytes;
+      transFeeDouble = transFee / 1e8;
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      var output1 = (totalInput - amount * 1e8 - transFee).round();
+      var output2 = (amount * 1e8).round();
+
+      txb.addOutput(changeAddress, output1);
+      txb.addOutput(toAddress, output2);
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+        var privateKey = receivePrivateKeyArr[i];
+        var alice = ECPair.fromPrivateKey(privateKey,
+            compressed: true,
+            network:
+                isProduction ? liteCoinNetworkType : BitcoinFlutter.testnet);
+        txb.sign(vin: i, keyPair: alice);
+      }
+
+      var tx = txb.build();
+      txHex = tx.toHex();
+      if (doSubmit) {
+        var res = await _api.postLtcTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg};
@@ -1342,7 +1449,11 @@ class WalletService {
           txHash = '0x' + tx.getId();
         }
       }
-    } else if (tokenType == 'FAB') {
+    }
+
+    // Token FAB
+
+    else if (tokenType == 'FAB') {
       if (bytesPerInput == 0) {
         bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
       }
@@ -1364,21 +1475,20 @@ class WalletService {
       print('amountSentIntamountSentInt=');
       print(amountSentInt.toString());
       var amountSentHex = amountSentInt.toRadixString(16);
-      print('000');
+
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(stringUtils.trimHexPrefix(amountSentHex), 64);
-      print('001');
+
       contractAddress = stringUtils.trimHexPrefix(contractAddress);
 
-      print('111');
       var contractInfo = await getFabSmartContract(
           contractAddress, fxnCallHex, gasLimit, gasPrice);
 
       if (addressList != null && addressList.length > 0) {
         addressList[0] = exgToFabAddress(addressList[0]);
       }
-      print('222');
+
       var res1 = await getFabTransactionHex(
           seed,
           addressIndexList,
@@ -1414,7 +1524,9 @@ class WalletService {
           txHash = '0x' + tx.getId();
         }
       }
-    } else if (tokenType == 'ETH') {
+    }
+    // Token type ETH
+    else if (tokenType == 'ETH') {
       if (gasPrice == 0) {
         gasPrice = environment["chains"]["ETH"]["gasPrice"];
       }
@@ -1445,19 +1557,47 @@ class WalletService {
       final address = await credentials.extractAddress();
       final addressHex = address.hex;
       final nonce = await _api.getEthNonce(addressHex);
+
       gasLimit = 100000;
-      var amountSentInt = BigInt.from(amount * 1e6);
+      var convertedDecimalAmount;
+      if (coin == 'BNB' ||
+          coin == 'INB' ||
+          coin == 'REP' ||
+          coin == 'HOT' ||
+          coin == 'MATIC' ||
+          coin == 'IOST' ||
+          coin == 'MANA' ||
+          coin == 'ELF' ||
+          coin == 'GNO' ||
+          coin == 'WINGS' ||
+          coin == 'KNC' ||
+          coin == 'GVT' ||
+          coin == 'DRGN') {
+        convertedDecimalAmount = BigInt.parse(toBigInt(amount));
+        //   (BigInt.from(10).pow(18) * BigInt.from(amount));
+        log.e('amount send $convertedDecimalAmount');
+      } else if (coin == 'FUN' || coin == 'WAX' || coin == 'MTL') {
+        convertedDecimalAmount = (BigInt.from(10).pow(8) * BigInt.from(amount));
+        log.e('amount send $convertedDecimalAmount');
+      } else if (coin == 'POWR') {
+        convertedDecimalAmount = (BigInt.from(10).pow(6) * BigInt.from(amount));
+      } else if (coin == 'CEL') {
+        convertedDecimalAmount = (BigInt.from(10).pow(4) * BigInt.from(amount));
+      }
+
       var transferAbi = 'a9059cbb';
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(
-              stringUtils.trimHexPrefix(amountSentInt.toRadixString(16)), 64);
+              stringUtils
+                  .trimHexPrefix(convertedDecimalAmount.toRadixString(16)),
+              64);
       var apiUrl =
           environment["chains"]["ETH"]["infura"]; //Replace with your API
 
       var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
-
+      print('5 $nonce -- $contractAddress -- ${EtherUnit.wei} -- $fxnCallHex');
       final signed = await ethClient.signTransaction(
           credentials,
           Transaction(
@@ -1485,7 +1625,7 @@ class WalletService {
       'txHex': txHex,
       'txHash': txHash,
       'errMsg': errMsg,
-      'amountSent': amountSent,
+      'amountSent': amount,
       'transFee': transFeeDouble
     };
   }
