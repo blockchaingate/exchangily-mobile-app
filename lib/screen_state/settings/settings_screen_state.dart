@@ -166,6 +166,7 @@ class SettingsScreenState extends BaseState {
       prefs.setString('lang', 'en');
     }
     setState(ViewState.Idle);
+    Navigator.pushReplacementNamed(context, '/mainNav', arguments: 0);
   }
 
   // Pin code

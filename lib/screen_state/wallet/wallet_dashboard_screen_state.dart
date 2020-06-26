@@ -26,6 +26,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../environments/coins.dart' as coinList;
 
 class WalletDashboardScreenState extends BaseState {
@@ -55,6 +56,9 @@ class WalletDashboardScreenState extends BaseState {
   List<PairDecimalConfig> pairDecimalConfigList = [];
   int priceDecimalConfig = 0;
   int quantityDecimalConfig = 0;
+  var lang;
+
+  var top = 0.0;
 
   init() async {
     setBusy(true);
@@ -62,6 +66,8 @@ class WalletDashboardScreenState extends BaseState {
     await refreshBalance();
     await getConfirmDepositStatus();
     showDialogWarning();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    lang = prefs.getString('lang');
     setBusy(false);
   }
 
@@ -459,4 +465,13 @@ class WalletDashboardScreenState extends BaseState {
     sharedService.context = context;
     await sharedService.closeApp();
   }
+
+  updateAppbarHeight(h){
+    top = h;
+  }
+
+  getAppbarHeight(){
+    return top;
+  }
+
 }
