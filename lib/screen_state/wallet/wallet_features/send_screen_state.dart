@@ -270,7 +270,18 @@ class SendScreenState extends BaseState {
 // Check Fields to see if user has filled both address and amount fields correctly
 
   checkFields(context) async {
+    print('in check fields');
+    txHash = '';
+    errorMessage = '';
+    //walletInfo = walletInfo;
+    amount = double.tryParse(sendAmountTextController.text);
+    toAddress = receiverWalletAddressTextController.text;
+    gasPrice = int.tryParse(gasPriceTextController.text);
+    gasLimit = int.tryParse(gasLimitTextController.text);
+    satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
+
     if (toAddress == '') {
+      print('address empty');
       sharedService.alertDialog(AppLocalizations.of(context).emptyAddress,
           AppLocalizations.of(context).pleaseEnterAnAddress,
           isWarning: false);
@@ -279,6 +290,7 @@ class SendScreenState extends BaseState {
         amount.isNegative ||
         !checkSendAmount ||
         amount > walletInfo.availableBalance) {
+      print('amount no good');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
@@ -291,6 +303,7 @@ class SendScreenState extends BaseState {
           context);
       return;
     } else {
+      print('else');
       FocusScope.of(context).requestFocus(FocusNode());
       await verifyPassword();
       // await updateBalance(widget.walletInfo.address);

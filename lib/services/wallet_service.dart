@@ -150,8 +150,10 @@ class WalletService {
     String randomMnemonic = '';
     if (isLocal == true) {
       randomMnemonic =
-          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-      // randomMnemonic = 'group quick salad argue animal rubber wolf close weird school spell agent';
+          // 'hidden arch mind decline summer convince voice together pony infant input lunar';
+          "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
+      //   'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+      //  'group quick salad argue animal rubber wolf close weird school spell agent';
       return randomMnemonic;
     }
     randomMnemonic = bip39.generateMnemonic();
@@ -211,7 +213,7 @@ class WalletService {
 
   generateSeed(String mnemonic) {
     Uint8List seed = bip39.mnemonicToSeed(mnemonic);
-    log.w(seed);
+    log.w('Seed $seed');
     return seed;
   }
 
@@ -228,9 +230,11 @@ class WalletService {
 
   // Generate BCH address
   String generateBchAddress(String mnemonic) {
+    String tickerName = 'BCH';
     var bchSeed = generateBchSeed(mnemonic);
     final masterNode = Bitbox.HDNode.fromSeed(bchSeed, false);
-    final accountDerivationPath = "m/44'/145'/0'/0";
+    var coinType = environment["CoinType"]["$tickerName"].toString();
+    final accountDerivationPath = "m/44'/" + '$coinType' + "'/0'/0";
     final accountNode = masterNode.derivePath(accountDerivationPath);
     final accountXPriv = accountNode.toXPriv();
     final childNode = accountNode.derive(0);
@@ -252,27 +256,30 @@ class WalletService {
     var seed = generateSeed(mnemonic);
     var root = generateBip32Root(seed);
     var coinType = environment["CoinType"]["$tickerName"].toString();
-    var node = root.derivePath("m/44'/" + "2" + "'/0'/0/" + index.toString());
+    log.w('coin type $coinType');
+    var node =
+        root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
 
     String address1 = new P2PKH(
             data: new BitcoinFlutter.PaymentData(pubkey: node.publicKey),
-            network: liteCoinNetworkType)
+            network:
+                isProduction ? liteCoinNetworkType : BitcoinFlutter.testnet)
         .data
         .address;
-    print('ticker: $tickerName --  address1: ${address1}');
+    print('ticker: $tickerName --  address1: $address1');
 
-    String address = '';
+    // String address = '';
 
-    final keyPair = ECPair.makeRandom(network: liteCoinNetworkType);
-    print('keyPair: ${keyPair.publicKey}');
+    // final keyPair = ECPair.makeRandom(network: liteCoinNetworkType);
+    // print('keyPair: ${keyPair.publicKey}');
 
-    address = new P2PKH(
-            data: new BitcoinFlutter.PaymentData(pubkey: keyPair.publicKey),
-            network: liteCoinNetworkType)
-        .data
-        .address;
-    log.w('$address');
-    return address;
+    // address = new P2PKH(
+    //         data: new BitcoinFlutter.PaymentData(pubkey: keyPair.publicKey),
+    //         network: liteCoinNetworkType)
+    //     .data
+    //     .address;
+    // log.w('$address');
+    return address1;
   }
 
 /*----------------------------------------------------------------------
@@ -341,7 +348,7 @@ class WalletService {
     }
     await _apiService.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
-        log.i('getCoinMarketPriceByTickerName $res');
+        //   log.i('getCoinMarketPriceByTickerName $res');
         currentUsdValue = res['data'][tickerName]['USD'].toDouble();
       }
     });
@@ -369,6 +376,7 @@ class WalletService {
       _walletInfo = [];
     }
     var seed = generateSeed(mnemonic);
+    print('seed in createOfflineWallets $seed');
     var root = generateBip32Root(seed);
 
     // BCH address
@@ -378,7 +386,6 @@ class WalletService {
 
     try {
       for (int i = 0; i < coinTickers.length; i++) {
-        // int id = i + 1;
         String tickerName = coinTickers[i];
         String name = coinNames[i];
         String token = tokenType[i];
@@ -693,8 +700,7 @@ class WalletService {
       double marketPrice, double actualWalletBalance, double lockedBalance) {
     log.w(
         'marketPrice =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
-    if (marketPrice != null &&
-        (!actualWalletBalance.isNegative || !lockedBalance.isNegative)) {
+    if (marketPrice != null) {
       coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
       return coinUsdBalance;
     } else {
@@ -1100,7 +1106,7 @@ class WalletService {
       options,
       bool doSubmit) async {
     final root = bip32.BIP32.fromSeed(seed);
-
+    print('root in send transaction $root');
     var totalInput = 0;
     var finished = false;
     var gasPrice = 0;
@@ -1141,7 +1147,9 @@ class WalletService {
     log.w('gasPrice=' + gasPrice.toString());
     log.w('gasLimit=' + gasLimit.toString());
     log.w('satoshisPerBytes=' + satoshisPerBytes.toString());
-    if (coin == 'BTC') {
+
+    // BTC
+    if (coin == 'BTC' || coin == 'LTC') {
       if (bytesPerInput == 0) {
         bytesPerInput = environment["chains"]["BTC"]["bytesPerInput"];
       }

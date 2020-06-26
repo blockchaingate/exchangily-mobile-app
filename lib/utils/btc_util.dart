@@ -42,37 +42,18 @@ Future getBtcBalanceByAddress(String address) async {
 
 getBtcNode(root, {String tickerName, index = 0}) {
   var coinType = environment["CoinType"]["$tickerName"].toString();
+  print('network $coinType');
   var node =
       root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
-  print('ticker: $tickerName --  node: $node');
+  print('Node $tickerName -- ${node.publicKey}');
   return node;
 }
 
 String getBtcAddressForNode(node, {String tickerName}) {
-  String address = '';
-  if (tickerName == 'LTC') {
-    NetworkType liteCoinNetworkType = new NetworkType(
-        messagePrefix: '\x19Litecoin Signed Message:\n',
-        bip32: new Bip32Type(public: 0x019da462, private: 0x019d9cfe),
-        pubKeyHash: 0x30,
-        scriptHash: 0x32,
-        wif: 0xb0);
-
-    final keyPair = ECPair.makeRandom(network: liteCoinNetworkType);
-    print('keyPair: $keyPair');
-    final wif = keyPair.toWIF();
-    address = new P2PKH(
-            data: new PaymentData(pubkey: keyPair.publicKey),
-            network: liteCoinNetworkType)
-        .data
-        .address;
-  }
-
-  address = new P2PKH(
+  return P2PKH(
           data: new PaymentData(pubkey: node.publicKey),
           //  new P2PKHData(pubkey: node.publicKey),
-          network: environment["chains"]["$tickerName"]["network"])
+          network: environment["chains"]["BTC"]["network"])
       .data
       .address;
-  return address;
 }

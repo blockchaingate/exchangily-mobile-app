@@ -419,7 +419,7 @@ class WalletDashboardScreen extends StatelessWidget {
       elevation,
       context,
       WalletDashboardScreenState model) {
-    print('single wallet ${walletInfo[index].toJson()}');
+    // print('single wallet ${walletInfo[index].toJson()}');
     return Card(
       color: globals.walletCardColor,
       elevation: elevation,

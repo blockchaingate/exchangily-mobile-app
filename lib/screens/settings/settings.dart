@@ -71,8 +71,7 @@ class SettingsScreen extends StatelessWidget {
                               : Text(
                                   AppLocalizations.of(context).deleteWallet,
                                   textAlign: TextAlign.center,
-                                  style:
-                                      Theme.of(context).textTheme.headline5,
+                                  style: Theme.of(context).textTheme.headline5,
                                 ),
                         ],
                       ),
@@ -105,8 +104,7 @@ class SettingsScreen extends StatelessWidget {
                             ),
                             Text(
                               !model.isVisible
-                                  ? AppLocalizations.of(context)
-                                      .displayMnemonic
+                                  ? AppLocalizations.of(context).displayMnemonic
                                   : AppLocalizations.of(context).hideMnemonic,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline5,
@@ -260,8 +258,7 @@ class SettingsScreen extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline6,
                         ),
                         if (!isProduction)
-                          Text(' Debug',
-                              style: TextStyle(color: Colors.white))
+                          Text(' Debug', style: TextStyle(color: Colors.white))
                       ],
                     )),
                   ),

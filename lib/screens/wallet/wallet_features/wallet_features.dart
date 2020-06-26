@@ -29,7 +29,6 @@ class WalletFeaturesScreen extends StatelessWidget {
   final WalletInfo walletInfo;
   WalletFeaturesScreen({Key key, this.walletInfo}) : super(key: key);
   final log = getLogger('WalletFeatures');
-  NavigationService navigationService = locator<NavigationService>();
 
   @override
   Widget build(BuildContext context) {
@@ -61,24 +60,26 @@ class WalletFeaturesScreen extends StatelessWidget {
                     child: Stack(
                       children: [
                         Align(
-                          alignment:Alignment.center,
+                          alignment: Alignment.center,
                           child: Image.asset(
-                          'assets/images/start-page/logo.png',
-                          width: 200,
-                          height: 60,
-                          color: globals.white,
+                            'assets/images/start-page/logo.png',
+                            width: 200,
+                            height: 60,
+                            color: globals.white,
+                          ),
                         ),
-                        ),
-                         Align(
-                          alignment:Alignment.centerRight,
+                        Align(
+                            alignment: Alignment.centerRight,
                             child: IconButton(
-                                icon: Icon(Icons.close,
+                                icon: Icon(
+                                  Icons.close,
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
                                   // Navigator.pop(context);
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
-                                  navigationService.navigateTo('/mainNav',arguments: 0);
+                                  model.navigationService
+                                      .navigateTo('/mainNav', arguments: 0);
                                 }))
                       ],
                     ),

@@ -193,10 +193,12 @@ class WalletDashboardScreenState extends BaseState {
 
   Future refreshBalance() async {
     setBusy(true);
-    if (walletInfoCopy == [] ||
-        walletInfoCopy == null ||
-        walletInfoCopy.length == 0)
-      walletInfoCopy = await walletDatabaseService.getAll();
+
+    await walletDatabaseService.getAll().then((walletList) {
+      walletInfoCopy = [];
+      walletInfoCopy = walletList;
+    });
+
     int coinTickersLength = walletService.coinTickers.length;
     walletInfo = [];
     await getGas();
@@ -206,6 +208,9 @@ class WalletDashboardScreenState extends BaseState {
       'btcAddress': '',
       'ethAddress': '',
       'fabAddress': '',
+      'ltcAddress': '',
+      'dogeAddress': '',
+      'bchAddress': '',
       "showEXGAssets": "true"
     };
     walletInfoCopy.forEach((wallet) {
@@ -215,10 +220,16 @@ class WalletDashboardScreenState extends BaseState {
         walletBalancesBody['ethAddress'] = wallet.address;
       } else if (wallet.tickerName == 'FAB') {
         walletBalancesBody['fabAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'LTC') {
+        walletBalancesBody['ltcAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'DOGE') {
+        walletBalancesBody['dogeAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'BCH') {
+        walletBalancesBody['bchAddress'] = wallet.address;
       }
     });
 
-    log.e('Coin address $walletBalancesBody');
+    log.i('Coin address $walletBalancesBody');
 
     // ----------------------------------------
     // Calling walletBalances in wallet service
@@ -232,6 +243,7 @@ class WalletDashboardScreenState extends BaseState {
         // log.e(
         //     'copy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
         walletInfoCopy.forEach((wallet) async {
+          log.w('wallet balance from api ${wallet.toJson()}}');
           // Loop wallet balance list from api
           for (var j = 0; j <= walletBalanceList.length; j++) {
             String walletTickerName = wallet.tickerName;
@@ -239,32 +251,23 @@ class WalletDashboardScreenState extends BaseState {
 
             // Compare wallet ticker name to wallet balance coin name
             if (walletTickerName == walletBalanceCoinName) {
-              double marketPrice = walletBalanceList[j].usdValue.usd;
-              double availableBal = walletBalanceList[j].balance;
-              double lockedBal = walletBalanceList[j].lockBalance;
+              double marketPrice = walletBalanceList[j].usdValue.usd ?? 0.0;
+              double availableBal = walletBalanceList[j].balance ?? 0.0;
+              double lockedBal = walletBalanceList[j].lockBalance ?? 0.0;
               // Check if market price error from api then show the notification with ticker name
               // so that user know why USD val for that ticker is 0
-              if (marketPrice == -1 || marketPrice == 0) {
-                marketPrice = await walletService
-                    .getCoinMarketPriceByTickerName(walletTickerName);
-                if (marketPrice == null) {
-                  sharedService.showInfoFlushbar(
-                      '$walletTickerName ${AppLocalizations.of(context).notice}',
-                      AppLocalizations.of(context).marketPriceFetchFailed,
-                      Icons.cancel,
-                      Colors.red,
-                      context);
-                  marketPrice = 0.0;
-                }
-              }
-              // If passing any negative value to UI then that pair won't show up in the list
-              if (availableBal.isNegative) walletBalanceList[j].balance = 0;
-              if (lockedBal.isNegative) walletBalanceList[j].lockBalance = 0;
+              // log.e('Market Price $marketPrice');
+              // // removed getCoinPriceByTickername from here and use the market price value only now
+              // if (marketPrice.isNegative) {
+              //   marketPrice = 0.0;
+              // }
+
+              // // If passing any negative value to UI then that pair won't show up in the list
+              // if (availableBal.isNegative) walletBalanceList[j].balance = 0;
+              // if (lockedBal.isNegative) walletBalanceList[j].lockBalance = 0;
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
-                  marketPrice,
-                  walletBalanceList[j].balance,
-                  walletBalanceList[j].lockBalance);
+                  marketPrice, availableBal, lockedBal);
 
               // if (pairDecimalConfigList != null ||
               //     pairDecimalConfigList != []) {
@@ -294,8 +297,8 @@ class WalletDashboardScreenState extends BaseState {
                   name: wallet.name,
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
-              log.w('Wallet info single ${wallet.toJson()}');
-              log.e('Wallet info ${walletInfo.length}');
+              // log.w('Wallet info single ${wallet.toJson()}');
+              // log.e('Wallet info ${walletInfo.length}');
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends

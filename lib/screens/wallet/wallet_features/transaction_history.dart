@@ -50,6 +50,10 @@ class TransactionHistory extends StatelessWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
+                                        Text('${transaction.tickerName}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2),
                                         transaction.tag == 'deposit'
                                             ? Icon(
                                                 Icons.arrow_downward,
@@ -61,21 +65,42 @@ class TransactionHistory extends StatelessWidget {
                                                 size: 24,
                                                 color: globals.sellPrice,
                                               ),
-                                        Text('${transaction.tickerName}',
+                                        if (transaction.tag == 'moveToExchange')
+                                          Text(
+                                            AppLocalizations.of(context)
+                                                .moveAndTrade,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .subtitle2),
-                                        Text(
-                                          transaction.tag == 'deposit'
-                                              ? AppLocalizations.of(context)
-                                                  .moveAndTrade
-                                              : AppLocalizations.of(context)
-                                                  .withdrawToWallet,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2,
-                                          textAlign: TextAlign.center,
-                                        )
+                                                .subtitle2,
+                                            textAlign: TextAlign.center,
+                                          )
+                                        else if (transaction.tag ==
+                                            'withdrawToWallet')
+                                          Text(
+                                            AppLocalizations.of(context)
+                                                .withdrawToWallet,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2,
+                                            textAlign: TextAlign.center,
+                                          )
+                                        else if (transaction.tag == 'send')
+                                          Text(
+                                            AppLocalizations.of(context).send,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2,
+                                            textAlign: TextAlign.center,
+                                          )
+                                        else if (transaction.tag == 'deposit')
+                                          Text(
+                                            AppLocalizations.of(context)
+                                                .deposit,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2,
+                                            textAlign: TextAlign.center,
+                                          )
                                       ],
                                     ),
                                   ),

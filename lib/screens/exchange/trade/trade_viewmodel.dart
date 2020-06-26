@@ -140,6 +140,14 @@ class TradeViewModel extends MultipleStreamViewModel {
     // getSubscriptionForKey(key).cancel();
   }
 
+  @override
+  @mustCallSuper
+  void dispose() {
+    tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
+    log.i('Close all IOWebsocket connections');
+    super.dispose();
+  }
+
   /// Initialize when model ready
   init() {
     //  getDecimalPairConfig();
