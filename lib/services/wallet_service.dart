@@ -656,7 +656,7 @@ class WalletService {
   getOriginalMessage(
       int coinType, String txHash, BigInt amount, String address) {
     var buf = '';
-    buf += stringUtils.fixLength(coinType.toString(), 4);
+    buf += stringUtils.fixLength(coinType.toRadixString(16), 4);
     buf += stringUtils.fixLength(txHash, 64);
     var hexString = amount.toRadixString(16);
     buf += stringUtils.fixLength(hexString, 64);
