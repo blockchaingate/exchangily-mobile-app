@@ -390,6 +390,30 @@ getOfficalAddress(String coinName) {
 
   if ((address != null) && (address.length > 0)) {
     return address[0]['address'];
+  } else if (coinName == 'BNB' ||
+      coinName == 'INB' ||
+      coinName == 'REP' ||
+      coinName == 'HOT' ||
+      coinName == 'MATIC' ||
+      coinName == 'IOST' ||
+      coinName == 'MANA' ||
+      coinName == 'ELF' ||
+      coinName == 'GNO' ||
+      coinName == 'WINGS' ||
+      coinName == 'KNC' ||
+      coinName == 'GVT' ||
+      coinName == 'DRGN' ||
+      coinName == 'FUN' ||
+      coinName == 'WAX' ||
+      coinName == 'MTL' ||
+      coinName == 'POWR' ||
+      coinName == 'CEL') {
+    var address1 = environment['addresses']['exchangilyOfficial']
+        .where((addr) => addr['name'] == 'erc20')
+        .toList();
+
+    print('address1 $address1');
+    return address1[0]['address'];
   }
   return null;
 }

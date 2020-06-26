@@ -63,7 +63,17 @@ Map devConfig = {
       {'name': 'BTC', 'address': 'muQDw5hVmFgD1GrrWvUt6kjrzauC4Msaki'},
       {'name': 'ETH', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
       {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
-      {'name': 'DUSD', 'address': '0xdcd0f23125f74ef621dfa3310625f8af0dcd971b'}
+      {'name': 'DUSD', 'address': '0xdcd0f23125f74ef621dfa3310625f8af0dcd971b'},
+      {
+        'name': 'BCH',
+        'address': 'bchtest:qzvyhe6dn2hz7tgu624shm80js6knj2vj57l54rl6w',
+      },
+      {'name': 'LTC', 'address': 'muQDw5hVmFgD1GrrWvUt6kjrzauC4Msaki'},
+      {'name': 'DOGE', 'address': 'ni5RuJJ5Bcbxe992Zm9X51HSFbR5UR44Hh'},
+      {
+        'name': 'erc20',
+        'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'
+      },
     ]
   },
   "websocket": "wss://kanbantest.fabcoinapi.com/ws/",
@@ -169,7 +179,14 @@ Map productionConfig = {
       {'name': 'BTC', 'address': '1CKg6irbGXHxBHuTx7MeqYQUuMZ8aEok8z'},
       {'name': 'ETH', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'},
       {'name': 'USDT', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'},
-      {'name': 'DUSD', 'address': '0x9d95ee21e4f1b05bbfd0094daf4ce110deb00931'}
+      {'name': 'DUSD', 'address': '0x9d95ee21e4f1b05bbfd0094daf4ce110deb00931'},
+      {
+        'name': 'BCH',
+        'address': 'bitcoincash:qq7zkgp2vz3v5m38vy5cwf26k27y4rvkdy0fam589r'
+      },
+      {'name': 'LTC', 'address': 'LXgK78jxrVk9wVn1KJiU7SGawi6tJxv2tw'},
+      {'name': 'DOGE', 'address': 'DM3aQpvSLDnFm6iYiNHZzTs4juRUSwb4ji'},
+      {'name': 'erc20', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'}
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },

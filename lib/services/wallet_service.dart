@@ -459,7 +459,7 @@ class WalletService {
                 tag: transactionHistoryByTxId.tag);
 
             await transactionHistoryDatabaseService.update(transactionHistory);
-
+            await transactionHistoryDatabaseService.getByTxId(transaction.txId);
             // after this method i will test single status update field in the transaciton history
             // await transactionHistoryDatabaseService
             //     .updateStatus(transactionHistoryByTxId);
@@ -811,10 +811,11 @@ class WalletService {
 
   Future<Map<String, dynamic>> depositDo(
       seed, String coinName, String tokenType, double amount, option) async {
-    var errRes = new Map();
+    Map<String, dynamic> errRes = new Map<String, dynamic>();
     errRes['success'] = false;
 
     var officalAddress = getOfficalAddress(coinName);
+    print('official address in wallet service deposit do $officalAddress');
     if (officalAddress == null) {
       errRes['data'] = 'no official address';
       return errRes;
@@ -835,7 +836,7 @@ class WalletService {
     var kanbanGasLimit = option['kanbanGasLimit'];
     var resST = await sendTransaction(
         coinName, seed, [0], [], officalAddress, amount, option, false);
-
+    if (resST != null) log.w(resST);
     if (resST['errMsg'] != '') {
       errRes['data'] = resST['errMsg'];
       return errRes;

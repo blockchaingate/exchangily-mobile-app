@@ -406,7 +406,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     color: globals.primaryColor),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    model.copyAndShowNotificatio(model.message);
+                                    model
+                                        .copyAndShowNotification(model.message);
                                   }),
                           ),
                           UIHelper.verticalSpaceSmall,

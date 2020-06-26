@@ -190,7 +190,7 @@ class TransactionHistory extends StatelessWidget {
                                             .textTheme
                                             .subtitle2,
                                       ),
-                                      if (transaction.status == 'Completed')
+                                      if (transaction.status == 'Complete')
                                         Text(
                                             AppLocalizations.of(context)
                                                 .completed
