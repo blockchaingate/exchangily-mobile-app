@@ -13,17 +13,6 @@ class Carousel extends StatelessWidget {
       child: Swiper(
         loop: true,
         autoplay: imageData.length > 1 ? true : false,
-        autoplayDelay:7000,
-        // duration: 600,
-        pagination: new SwiperPagination(builder: new SwiperCustomPagination(
-            builder: (BuildContext context, SwiperPluginConfig config) {
-          return new DotSwiperPaginationBuilder(
-                  color: Colors.white38,
-                  activeColor: Colors.white,
-                  size: 8.0,
-                  activeSize: 8.0)
-              .build(context, config);
-        })),
         itemBuilder: (BuildContext context, int index) {
           String imgUrl = imageData[index]["imgUrl"];
           return InkWell(
@@ -38,8 +27,7 @@ class Carousel extends StatelessWidget {
                 onTap: () {
                   if (imageData[index].containsKey("route") &&
                       imageData[index]["route"].length > 0) {
-                    Navigator.pushNamed(context, imageData[index]["route"],
-                        arguments: true);
+                    Navigator.pushNamed(context, imageData[index]["route"],arguments: true);
                   }
                 },
               ),

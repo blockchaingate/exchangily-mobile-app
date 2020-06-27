@@ -271,34 +271,33 @@ class TradeView extends StatelessWidget {
                 // floatingActionButton:
                 // bottomNavigationBar: BottomNavBar(count: 1),
                 bottomNavigationBar: Container(
-                    padding: EdgeInsets.symmetric(horizontal:10),
                     width: 160,
                     //margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         //Add Favorite
-                        // Flexible(
-                        //     flex: 2,
-                        //     child: Container(
-                        //       margin: EdgeInsets.only(right: 2.0),
-                        //       child: FlatButton(
-                        //         padding: EdgeInsets.all(0),
-                        //         color: buyPrice,
-                        //         onPressed: () {
-                        //           Navigator.push(
-                        //             context,
-                        //             MaterialPageRoute(
-                        //                 builder: (context) => BuySell(
-                        //                     pair: model.currentPairPrice.symbol,
-                        //                     bidOrAsk: true)),
-                        //           );
-                        //         },
-                        //         child: Text(AppLocalizations.of(context).buy,
-                        //             style:
-                        //                 TextStyle(fontSize: 13, color: white)),
-                        //       ),
-                        //     )),
+                        Flexible(
+                            flex: 2,
+                            child: Container(
+                              margin: EdgeInsets.only(right: 2.0),
+                              child: FlatButton(
+                                padding: EdgeInsets.all(0),
+                                color: buyPrice,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BuySell(
+                                            pair: model.currentPairPrice.symbol,
+                                            bidOrAsk: true)),
+                                  );
+                                },
+                                child: Text(AppLocalizations.of(context).buy,
+                                    style:
+                                        TextStyle(fontSize: 13, color: white)),
+                              ),
+                            )),
                         // Buy Button
                         Flexible(
                             flex: 1,
@@ -322,7 +321,6 @@ class TradeView extends StatelessWidget {
                               ),
                             )),
                         // Sell button
-                        SizedBox(width:5),
                         Flexible(
                             flex: 1,
                             child: RaisedButton(

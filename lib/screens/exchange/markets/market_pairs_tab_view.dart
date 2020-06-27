@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/widgets/carousel.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
-import '../../../shared/globals.dart' as globals;
+
 import 'market_pairs_detail_view.dart';
 
 class MarketPairsTabView extends StatelessWidget {
@@ -22,10 +22,6 @@ class MarketPairsTabView extends StatelessWidget {
       {
         "imgUrl": "assets/images/slider/campaign.jpg",
         "route": '/campaignInstructions'
-      },
-      {
-        "imgUrl": "assets/images/slider/campaign2.jpg",
-        "route": ''
       },
       // {"imgUrl": "https://images.unsplash.com/photo-1561451213-d5c9f0951fdf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
       // {"imgUrl": "https://images.unsplash.com/photo-1516245834210-c4c142787335?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
@@ -91,12 +87,9 @@ class MarketPairsTabView extends StatelessWidget {
                           indicatorSize: TabBarIndicatorSize.tab,
                           indicator: BoxDecoration(
                               gradient: LinearGradient(colors: [
-                                globals.primaryColor,
-                                globals.walletCardColor,
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter
-                              ),
+                                Colors.redAccent,
+                                Colors.yellowAccent
+                              ]),
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(20),
