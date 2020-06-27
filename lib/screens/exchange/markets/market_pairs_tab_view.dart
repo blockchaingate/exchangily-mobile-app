@@ -84,18 +84,16 @@ class MarketPairsTabView extends StatelessWidget {
                   SliverPersistentHeader(
                     delegate: _SliverAppBarDelegate(
                       TabBar(
+                          indicatorPadding: EdgeInsets.zero,
+                          labelPadding: EdgeInsets.zero,
                           unselectedLabelColor: Color(0xffaaaaaa),
                           unselectedLabelStyle: TextStyle(fontSize: 14),
-                          labelStyle: TextStyle(fontSize: 16),
                           indicatorSize: TabBarIndicatorSize.tab,
                           indicator: BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Color(0xff851fff),
-                                    Color(0xff2b2c4b)
-                                  ]),
+                              gradient: LinearGradient(colors: [
+                                Colors.redAccent,
+                                Colors.yellowAccent
+                              ]),
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(20),

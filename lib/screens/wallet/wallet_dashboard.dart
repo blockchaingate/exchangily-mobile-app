@@ -101,17 +101,19 @@ class WalletDashboardScreen extends StatelessWidget {
                                                 3,
                                             child: model.lang == "zh"
                                                 ? Center(
-                                                  child: Text(
-                                                      AppLocalizations.of(context)
-                                                          .totalBalance,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline4
-                                                          .copyWith(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          )),
-                                                )
+                                                    child: Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .totalBalance,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline4
+                                                            .copyWith(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            )),
+                                                  )
                                                 : FittedBox(
                                                     fit: BoxFit.fitWidth,
                                                     child: Text(
@@ -707,6 +709,7 @@ class WalletDashboardScreen extends StatelessWidget {
       elevation,
       context,
       WalletDashboardScreenState model) {
+    // print('single wallet ${walletInfo[index].toJson()}');
     return Card(
       color: globals.walletCardColor,
       elevation: elevation,

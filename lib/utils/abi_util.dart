@@ -36,7 +36,7 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
     String addressInKanban, signedMessage) {
   var abiHex = "379eb862";
   abiHex += trimHexPrefix(signedMessage["v"]);
-  abiHex += fixLength(coinType.toString(), 62);
+  abiHex += fixLength(coinType.toRadixString(16), 62);
   abiHex += trimHexPrefix(txHash);
   var amountHex = amountInLink.toRadixString(16);
 

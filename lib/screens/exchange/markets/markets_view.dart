@@ -39,7 +39,7 @@ class MarketsView extends StatelessWidget {
               child: Scaffold(
                 body: Container(
                   margin: EdgeInsets.only(top: 5.0),
-                  color: Theme.of(context).accentColor,
+                  //   color: Theme.of(context).tra,
                   child: Column(
                     children: [
                       // Add more widgets here as the market view expands

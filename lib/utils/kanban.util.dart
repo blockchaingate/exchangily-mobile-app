@@ -74,7 +74,7 @@ Future<Map<String, dynamic>> submitDeposit(
 
 Future getKanbanErrDeposit(String address) async {
   var url = environment['endpoints']['kanban'] + 'depositerr/' + address;
-  // print(url);
+  print('getKanbanErrDeposit $url');
   try {
     var client = new http.Client();
     var response = await client.get(url);
@@ -84,6 +84,7 @@ Future getKanbanErrDeposit(String address) async {
   } catch (err) {
     print(
         'Catch getKanbanErrDeposit in kanban util $err'); // Error thrown here will go to onError in them view model
+    throw Exception(err);
   }
 }
 

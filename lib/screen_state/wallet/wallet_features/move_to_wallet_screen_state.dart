@@ -33,8 +33,8 @@ class MoveToWalletScreenState extends BaseState {
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
   final amountController = TextEditingController();
-  double kanbanTransFee = 0.0;
-  double minimumAmount = 0.0;
+  var kanbanTransFee;
+  var minimumAmount;
   bool transFeeAdvance = false;
 
   void initState() {

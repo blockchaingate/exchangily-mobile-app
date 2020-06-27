@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
@@ -39,17 +40,19 @@ Future getBtcBalanceByAddress(String address) async {
   return {'balance': btcBalance, 'lockbalance': 0.0};
 }
 
-getBtcNode(root, {index = 0}) {
-  var node = root.derivePath("m/44'/" +
-      environment["CoinType"]["BTC"].toString() +
-      "'/0'/0/" +
-      index.toString());
+getBtcNode(root, {String tickerName, index = 0}) {
+  var coinType = environment["CoinType"]["$tickerName"].toString();
+  print('network $coinType');
+  var node =
+      root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
+  print('Node $tickerName -- ${node.publicKey}');
   return node;
 }
 
-String getBtcAddressForNode(node) {
+String getBtcAddressForNode(node, {String tickerName}) {
   return P2PKH(
-          data: new P2PKHData(pubkey: node.publicKey),
+          data: new PaymentData(pubkey: node.publicKey),
+          //  new P2PKHData(pubkey: node.publicKey),
           network: environment["chains"]["BTC"]["network"])
       .data
       .address;

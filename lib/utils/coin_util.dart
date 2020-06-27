@@ -15,6 +15,7 @@ import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:exchangilymobileapp/utils/ltc_util.dart';
 
 import '../packages/bip32/bip32_base.dart' as bip32;
 
@@ -41,6 +42,7 @@ import 'package:pointycastle/macs/hmac.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 import 'varuint.dart';
+import 'package:bitbox/bitbox.dart' as Bitbox;
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
@@ -388,6 +390,30 @@ getOfficalAddress(String coinName) {
 
   if ((address != null) && (address.length > 0)) {
     return address[0]['address'];
+  } else if (coinName == 'BNB' ||
+      coinName == 'INB' ||
+      coinName == 'REP' ||
+      coinName == 'HOT' ||
+      coinName == 'MATIC' ||
+      coinName == 'IOST' ||
+      coinName == 'MANA' ||
+      coinName == 'ELF' ||
+      coinName == 'GNO' ||
+      coinName == 'WINGS' ||
+      coinName == 'KNC' ||
+      coinName == 'GVT' ||
+      coinName == 'DRGN' ||
+      coinName == 'FUN' ||
+      coinName == 'WAX' ||
+      coinName == 'MTL' ||
+      coinName == 'POWR' ||
+      coinName == 'CEL') {
+    var address1 = environment['addresses']['exchangilyOfficial']
+        .where((addr) => addr['name'] == 'erc20')
+        .toList();
+
+    print('address1 $address1');
+    return address1[0]['address'];
   }
   return null;
 }
@@ -400,17 +426,19 @@ getAddressForCoin(root, 'FAB');
 getAddressForCoin(root, 'USDT', tokenType: 'ETH');
 getAddressForCoin(root, 'EXG', tokenType: 'FAB');
  */
-Future getAddressForCoin(root, String coinName,
+Future getAddressForCoin(root, String tickerName,
     {tokenType = '', index = 0}) async {
-  if (coinName == 'BTC') {
-    var node = getBtcNode(root, index: index);
-    return getBtcAddressForNode(node);
-  } else if ((coinName == 'ETH') || (tokenType == 'ETH')) {
+  if (tickerName == 'BTC') {
+    var node = getBtcNode(root, tickerName: tickerName, index: index);
+    return getBtcAddressForNode(node, tickerName: tickerName);
+  } else if (tickerName == 'LTC') {
+    return generateLtcAddress(root);
+  } else if ((tickerName == 'ETH') || (tokenType == 'ETH')) {
     var node = getEthNode(root, index: index);
     return await getEthAddressForNode(node);
-  } else if (coinName == 'FAB') {
+  } else if (tickerName == 'FAB') {
     var node = getFabNode(root, index: index);
-    return getBtcAddressForNode(node);
+    return getBtcAddressForNode(node, tickerName: tickerName);
   } else if (tokenType == 'FAB') {
     var node = getFabNode(root, index: index);
     var fabPublicKey = node.publicKey;
@@ -430,6 +458,8 @@ Future getCoinBalanceByAddress(String coinName, String address,
   try {
     if (coinName == 'BTC') {
       return await getBtcBalanceByAddress(address);
+    } else if (coinName == 'LTC') {
+      return await getLtcBalanceByAddress(address);
     } else if (coinName == 'ETH') {
       return await getEthBalanceByAddress(address);
     } else if (coinName == 'FAB') {

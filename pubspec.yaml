@@ -20,8 +20,8 @@ dependencies:
   # Bip39
   bip39: ^1.0.3
   bs58check: ^1.0.1
-  # bitcoin Flutter
-  bitcoin_flutter: ^1.0.7
+  # # bitcoin Flutter
+  # bitcoin_flutter: ^1.0.7
 
   # Pointy Castle
   # pointycastle: ^1.0.1
@@ -116,11 +116,11 @@ dependencies:
 
   #flutter_beautiful_popup
   flutter_beautiful_popup: ^1.5.0
-  
+
   # Carousel
   flutter_swiper: ^1.1.6
 
-  # validators 
+  # validators
   validators: ^2.0.0+1
 
   # cached_network_image
@@ -129,6 +129,11 @@ dependencies:
   # fancy_bottom_navigation
   fancy_bottom_navigation: ^0.3.2
 
+  # bch address
+  bitbox: ^0.0.1
+
+  # Generate LTC and DOGE coin address
+  bitcoin_flutter: ^2.0.1
 
   # Share files
   share:

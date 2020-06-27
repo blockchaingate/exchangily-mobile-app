@@ -31,6 +31,17 @@ class TradeService {
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
   static String basePath = environment['websocket'];
+
+/*----------------------------------------------------------------------
+                    Close IOWebSocket Connections
+----------------------------------------------------------------------*/
+
+  closeIOWebSocketConnections(String pair) {
+    getAllPriceChannel().sink.close();
+    getOrderListChannel(pair).sink.close();
+    getTradeListChannel(pair).sink.close();
+  }
+
 /*----------------------------------------------------------------------
           Get Coin Price Details Using allPrices Web Sockets
 ----------------------------------------------------------------------*/
@@ -89,13 +100,11 @@ class TradeService {
     }
   }
 
-  /// All Pair Price
+  /// IOWebSockets
 
   IOWebSocketChannel getAllPriceChannel() {
     String url = basePath + 'allPrices';
-    //  log.i(url);
     IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
-
     return channel;
   }
 
