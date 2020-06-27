@@ -43,8 +43,8 @@ class SettingsScreen extends StatelessWidget {
         ),
         body: Container(
           padding: EdgeInsets.all(10),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 InkWell(
                   splashColor: globals.primaryColor,
