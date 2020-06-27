@@ -1,5 +1,6 @@
 // Generate LTC address
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
+import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:http/http.dart' as http;
@@ -57,3 +58,11 @@ Future getLtcBalanceByAddress(String address) async {
   } catch (e) {}
   return {'balance': btcBalance, 'lockbalance': 0.0};
 }
+
+final testnet = new NetworkType(
+    messagePrefix: '\x18Bitcoin Signed Message:\n',
+    bech32: 'tb',
+    bip32: new Bip32Type(public: 0x043587cf, private: 0x04358394),
+    pubKeyHash: 0x6f,
+    scriptHash: 0xc4,
+    wif: 0xef);
