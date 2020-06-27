@@ -23,11 +23,11 @@ class Gas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
+      // mainAxisAlignment: MainAxisAlignment.center,
+      // mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 0.0),
+          padding: const EdgeInsets.only(left: 5.0),
           child: Icon(
             Icons.donut_large,
             size: 18,
