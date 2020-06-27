@@ -201,9 +201,12 @@ Uint8List _padTo32(Uint8List data) {
 }
 
 Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
-    {int chainId}) async {
-  Uint8List messageHash =
-      magicHash(originalMessage, environment["chains"]["BTC"]["network"]);
+    {int chainId, String coinName}) async {
+  Uint8List messageHash = magicHash(
+      originalMessage,
+      coinName == 'BTC' || coinName == 'FAB'
+          ? environment["chains"]['BTC']["network"]
+          : environment["chains"]['LTC']["network"]);
 
   var signature = sign(messageHash, privateKey);
 
@@ -328,12 +331,18 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     s = ss.substring(64, 128);
     v = ss.substring(128);
     print('v=' + v);
-  } else if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
+  } else if (coinName == 'FAB' ||
+      coinName == 'BTC' ||
+      coinName == 'LTC' ||
+      tokenType == 'FAB') {
     //var hdWallet = new HDWallet.fromSeed(seed, network: testnet);
 
     var coinType = environment["CoinType"]["FAB"];
     if (coinName == 'BTC') {
       coinType = environment["CoinType"]["BTC"];
+    }
+    if (coinName == 'LTC') {
+      coinType = environment["CoinType"]["LTC"];
     }
 
     var bitCoinChild =
@@ -343,7 +352,8 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     var privateKey = bitCoinChild.privateKey;
     // var credentials = EthPrivateKey(privateKey);
 
-    signedMess = await signBtcMessageWith(originalMessage, privateKey);
+    signedMess = await signBtcMessageWith(originalMessage, privateKey,
+        coinName: coinName);
 
     String ss = HEX.encode(signedMess);
 

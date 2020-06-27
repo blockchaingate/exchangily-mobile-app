@@ -761,7 +761,7 @@ class WalletService {
     var amountInLink = BigInt.from(amount * 1e18);
 
     var addressInWallet = coinAddress;
-    if (coinName == 'BTC' || coinName == 'FAB') {
+    if (coinName == 'BTC' || coinName == 'FAB' || coinName == 'LTC') {
       /*
       print('addressInWallet before');
       print(addressInWallet);
