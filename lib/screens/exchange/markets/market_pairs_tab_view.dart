@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/widgets/carousel.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
-
+import '../../../shared/globals.dart' as globals;
 import 'market_pairs_detail_view.dart';
 
 class MarketPairsTabView extends StatelessWidget {
@@ -91,9 +91,12 @@ class MarketPairsTabView extends StatelessWidget {
                           indicatorSize: TabBarIndicatorSize.tab,
                           indicator: BoxDecoration(
                               gradient: LinearGradient(colors: [
-                                Colors.redAccent,
-                                Colors.yellowAccent
-                              ]),
+                                globals.primaryColor,
+                                globals.walletCardColor,
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter
+                              ),
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(20),
