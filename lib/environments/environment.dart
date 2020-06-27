@@ -1,4 +1,4 @@
-import 'package:bitcoin_flutter/src/models/networks.dart';
+import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
@@ -6,8 +6,16 @@ import 'package:exchangilymobileapp/utils/ltc_util.dart';
 Map devConfig = {
   "decimal": {'priceDecimal': 6, 'volDecimal': 4},
   "chains": {
-    "BTC": {"network": testnet, "satoshisPerBytes": 50, "bytesPerInput": 152},
-    "LTC": {"network": testnet, "satoshisPerBytes": 50, "bytesPerInput": 152},
+    "BTC": {
+      "network": BitcoinFlutter.testnet,
+      "satoshisPerBytes": 50,
+      "bytesPerInput": 152
+    },
+    "LTC": {
+      "network": BitcoinFlutter.testnet,
+      "satoshisPerBytes": 50,
+      "bytesPerInput": 152
+    },
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
@@ -112,7 +120,11 @@ Map devConfig = {
 
 Map productionConfig = {
   "chains": {
-    "BTC": {"network": bitcoin, "satoshisPerBytes": 50, "bytesPerInput": 152},
+    "BTC": {
+      "network": BitcoinFlutter.bitcoin,
+      "satoshisPerBytes": 50,
+      "bytesPerInput": 152
+    },
     "LTC": {
       "network": liteCoinNetworkType,
       "satoshisPerBytes": 50,
