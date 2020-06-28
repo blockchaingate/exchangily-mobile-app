@@ -66,7 +66,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               width: MediaQuery.of(context).size.width * 3 / 11,
               child: Text(
                 titles[0],
-                style: Theme.of(context).textTheme.subtitle2,
+                style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize:14),
               ),
             ),
             onSort: (columnIndex, sortAscending) {
@@ -92,7 +92,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               width: MediaQuery.of(context).size.width * 2 / 11,
               child: Text(
                 titles[1],
-                style: Theme.of(context).textTheme.subtitle2,
+                style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize:14),
               ),
             ),
             onSort: (columnIndex, sortAscending) {
@@ -118,7 +118,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               width: MediaQuery.of(context).size.width * 2 / 11,
               child: Text(
                 titles[2],
-                style: Theme.of(context).textTheme.subtitle2,
+                style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize:14),
               ),
             ),
             onSort: (columnIndex, sortAscending) {
@@ -144,7 +144,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               width: MediaQuery.of(context).size.width * 2 / 11,
               child: Text(
                 titles[3],
-                style: Theme.of(context).textTheme.subtitle2,
+                style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize:14),
               ),
             ),
             onSort: (columnIndex, sortAscending) {
@@ -170,7 +170,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               width: MediaQuery.of(context).size.width * 2 / 11,
               child: Text(
                 titles[0],
-                style: Theme.of(context).textTheme.subtitle2,
+                style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize:14),
               ),
             ),
             onSort: (columnIndex, sortAscending) {
@@ -202,7 +202,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
         //               : MediaQuery.of(context).size.width * 2 / 11,
         //           child: Text(
         //             e,
-        //             style: Theme.of(context).textTheme.subtitle2,
+        //             style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize:14),
         //           ),
         //         ),
         //         onSort: (columnIndex, ascending) {
@@ -242,7 +242,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                             ),
                             Text(
                               'Vol: ${itemRow.volume.toStringAsFixed(2)}',
-                              style: Theme.of(context).textTheme.subtitle2,
+                              style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize:14),
                             )
                           ],
                         ),
