@@ -219,12 +219,6 @@ class WalletService {
     return seed;
   }
 
-  generateBchSeed(String mnemonic) {
-    Uint8List seed = Bitbox.Mnemonic.toSeed(mnemonic);
-    log.w('BCH seed $seed');
-    return seed;
-  }
-
   generateBip32Root(Uint8List seed) {
     var root = bip32.BIP32.fromSeed(seed);
     return root;
@@ -233,15 +227,15 @@ class WalletService {
   // Generate BCH address
   String generateBchAddress(String mnemonic) {
     String tickerName = 'BCH';
-    var bchSeed = generateBchSeed(mnemonic);
+    var bchSeed = generateSeed(mnemonic);
     final masterNode = Bitbox.HDNode.fromSeed(bchSeed, false);
     var coinType = environment["CoinType"]["$tickerName"].toString();
     final accountDerivationPath = "m/44'/" + '$coinType' + "'/0'/0";
     final accountNode = masterNode.derivePath(accountDerivationPath);
     final accountXPriv = accountNode.toXPriv();
     final childNode = accountNode.derive(0);
-    final cashAddress = childNode.toCashAddress();
-    final address = cashAddress.split(":")[1];
+    final address = childNode.toCashAddress();
+    // final address = cashAddress.split(":")[1];
 
     return address;
   }
@@ -378,7 +372,6 @@ class WalletService {
       _walletInfo = [];
     }
     var seed = generateSeed(mnemonic);
-    print('seed in createOfflineWallets $seed');
     var root = generateBip32Root(seed);
 
     // BCH address
@@ -700,8 +693,6 @@ class WalletService {
 
   double calculateCoinUsdBalance(
       double marketPrice, double actualWalletBalance, double lockedBalance) {
-    log.w(
-        'marketPrice =$marketPrice, actualwallet bal $actualWalletBalance, locked wallet bal $lockedBalance');
     if (marketPrice != null) {
       coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
       return coinUsdBalance;
