@@ -22,54 +22,123 @@ class AssetssList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            Text(AppLocalizations.of(context).coin,
-                style: TextStyle(
-                  color: globals.primaryColor,
-                  fontSize: 14.0,
-                )),
-            for (var item in assetsArray)
-              Padding(
-                  padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-                  child: Text(item["coin"],
-                      style: TextStyle(color: Colors.white70, fontSize: 14.0)))
-          ],
-        ),
-        Column(
-          children: <Widget>[
-            Text(AppLocalizations.of(context).amount,
-                style: TextStyle(
-                  color: globals.primaryColor,
-                  fontSize: 14.0,
-                )),
-            for (var item in assetsArray)
-              Padding(
-                  padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-                  child: Text(item["amount"].toString(),
-                      style:
-                          new TextStyle(color: Colors.white70, fontSize: 14.0)))
-          ],
-        ),
-        Column(
-          children: <Widget>[
-            Text(AppLocalizations.of(context).lockedAmount,
-                style: TextStyle(
-                  color: globals.primaryColor,
-                  fontSize: 14.0,
-                )),
-            for (var item in assetsArray)
-              Padding(
-                  padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-                  child: Text(item["lockedAmount"].toString(),
-                      style:
-                          new TextStyle(color: Colors.white70, fontSize: 14.0)))
-          ],
-        )
-      ],
+    return Container(
+      height: 300,
+      margin: EdgeInsets.only(bottom: 15.0),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  flex: 2,
+                  child: Text(AppLocalizations.of(context).coin,
+                      style: TextStyle(
+                        color: globals.grey,
+                        fontSize: 11.0,
+                      ))),
+              Expanded(
+                  flex: 3,
+                  child: Text(AppLocalizations.of(context).amount,
+                      style: TextStyle(
+                        color: globals.grey,
+                        fontSize: 11.0,
+                      ))),
+              Expanded(
+                  flex: 3,
+                  child: Text(AppLocalizations.of(context).lockedAmount,
+                      style: TextStyle(
+                        color: globals.grey,
+                        fontSize: 11.0,
+                      )))
+            ],
+          ),
+          Expanded(
+            child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: assetsArray.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Row(
+                    children: [
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                            child: Text(assetsArray[index]["coin"],
+                                style: TextStyle(
+                                    color: Colors.white70, fontSize: 14.0))),
+                      ),
+                      Expanded(
+                          flex: 3,
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                              child: Text(
+                                  assetsArray[index]["amount"].toString(),
+                                  style: new TextStyle(
+                                      color: Colors.white70, fontSize: 14.0)))),
+                      Expanded(
+                          flex: 3,
+                          child: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+                              child: Text(
+                                  assetsArray[index]["lockedAmount"].toString(),
+                                  style: new TextStyle(
+                                      color: Colors.white70, fontSize: 14.0))))
+                    ],
+                  );
+                }),
+          ),
+        ],
+      ),
     );
+
+    // Row(
+    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //   children: <Widget>[
+    //     Column(
+    //       children: <Widget>[
+    //         Text(AppLocalizations.of(context).coin,
+    //             style: TextStyle(
+    //               color: globals.grey,
+    //               fontSize: 12.0,
+    //             )),
+    //         for (var item in assetsArray)
+    //           Padding(
+    //               padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+    //               child: Text(item["coin"],
+    //                   style: TextStyle(color: Colors.white70, fontSize: 14.0)))
+    //       ],
+    //     ),
+    //     Column(
+    //       children: <Widget>[
+    //         Text(AppLocalizations.of(context).amount,
+    //             style: TextStyle(
+    //               color: globals.grey,
+    //               fontSize: 12.0,
+    //             )),
+    //         for (var item in assetsArray)
+    //           Padding(
+    //               padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+    //               child: Text(item["amount"].toString(),
+    //                   style:
+    //                       new TextStyle(color: Colors.white70, fontSize: 14.0)))
+    //       ],
+    //     ),
+    //     Column(
+    //       children: <Widget>[
+    //         Text(AppLocalizations.of(context).lockedAmount,
+    //             style: TextStyle(
+    //               color: globals.grey,
+    //               fontSize: 12.0,
+    //             )),
+    //         for (var item in assetsArray)
+    //           Padding(
+    //               padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+    //               child: Text(item["lockedAmount"].toString(),
+    //                   style:
+    //                       new TextStyle(color: Colors.white70, fontSize: 14.0)))
+    //       ],
+    //     )
+    //   ],
+    // );
   }
 }
