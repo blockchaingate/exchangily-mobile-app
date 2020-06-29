@@ -48,13 +48,13 @@ class AddGas extends StatelessWidget {
 
       myController.text = '';
       sharedService.alertDialog(
-        (ret["errMsg"] == '')
-            ? AppLocalizations.of(context).addGasTransactionSuccess
-            : AppLocalizations.of(context).addGasTransactionFailed,
-        (ret["errMsg"] == '')
-            ? AppLocalizations.of(context).transactionId + ret['txHash']
-            : ret["errMsg"],
-      );
+          (ret["errMsg"] == '')
+              ? AppLocalizations.of(context).addGasTransactionSuccess
+              : AppLocalizations.of(context).addGasTransactionFailed,
+          (ret["errMsg"] == '')
+              ? AppLocalizations.of(context).transactionId + ret['txHash']
+              : ret["errMsg"],
+          isWarning: false);
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
@@ -99,7 +99,7 @@ class AddGas extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+              // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 TextField(
                   keyboardType: TextInputType.numberWithOptions(decimal: true),

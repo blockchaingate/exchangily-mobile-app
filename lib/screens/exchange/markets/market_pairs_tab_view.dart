@@ -122,7 +122,7 @@ class MarketPairsTabView extends StatelessWidget {
                       child: TabBarView(
                           children: tabNames.map((tab) {
                         return Container(
-                          child: Center(child: Loading()),
+                          child: Loading(),
                           // margin: EdgeInsets.only(top: 10.0),
                           // child: ShimmerLayout(
                           //   layoutType: 'marketPairs',

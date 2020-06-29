@@ -1637,6 +1637,18 @@
     "description": "backup_mnemonic_notice_content",
     "type": "text",
     "placeholders": {}
+  },
+  "ticker": "Ticker",
+  "@ticker": {
+    "description": "ticker_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "vol": "Vol",
+  "@vol": {
+    "description": "vol_text",
+    "type": "text",
+    "placeholders": {}
   }
 
 }
