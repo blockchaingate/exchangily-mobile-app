@@ -78,7 +78,10 @@ class SharedService {
               return AlertDialog(
                 elevation: 10,
                 backgroundColor: globals.walletCardColor.withOpacity(0.95),
-                title: Text(title),
+                title: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                ),
                 titleTextStyle: Theme.of(context).textTheme.headline4,
                 contentTextStyle: TextStyle(color: globals.grey),
                 contentPadding: EdgeInsets.symmetric(horizontal: 25),
@@ -97,7 +100,7 @@ class SharedService {
                               horizontal: 12.0, vertical: 6.0),
                           child: Text(
                             // add here cupertino widget to check in these small widgets first then the entire app
-                            message, textAlign: TextAlign.start,
+                            message, textAlign: TextAlign.left,
                             style: Theme.of(context).textTheme.headline5,
                           ),
                         ),
@@ -126,32 +129,63 @@ class SharedService {
                               ),
                             ],
                           ),
-                        )
+                        ),
+                        SizedBox(height:10),
+                        Container(
+                          margin: EdgeInsetsDirectional.only(bottom: 10),
+                          child: FlatButton(
+                            color: globals.primaryColor,
+                            padding: EdgeInsets.all(0),
+                            child: Text(
+                              AppLocalizations.of(context).close,
+                              style: TextStyle(
+                                  color: Colors.white, fontSize: 14),
+                            ),
+                            onPressed: () {
+                              if (path == '' || path == null) {
+                                Navigator.of(context).pop(false);
+                              } else {
+                                navigationService.navigateTo(path,
+                                    arguments: arguments);
+                                Navigator.of(context).pop(false);
+                              }
+                            },
+                          ),
+                        ),
                       ],
                     );
                   }),
                 ),
-                actions: <Widget>[
-                  Container(
-                    margin: EdgeInsetsDirectional.only(bottom: 10),
-                    child: FlatButton(
-                      padding: EdgeInsets.all(0),
-                      child: Text(
-                        AppLocalizations.of(context).close,
-                        style: TextStyle(color: globals.grey, fontSize: 14),
-                      ),
-                      onPressed: () {
-                        if (path == '' || path == null) {
-                          Navigator.of(context).pop(false);
-                        } else {
-                          navigationService.navigateTo(path,
-                              arguments: arguments);
-                          Navigator.of(context).pop(false);
-                        }
-                      },
-                    ),
-                  ),
-                ],
+                actions: [],
+                // actions: <Widget>[
+                //   Container(
+                //     margin: EdgeInsetsDirectional.only(bottom: 10),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: [
+                //         FlatButton(
+                //           color: globals.primaryColor,
+                //           padding: EdgeInsets.all(0),
+                //           child: Center(
+                //             child: Text(
+                //               AppLocalizations.of(context).close,
+                //               style: TextStyle(color: Colors.white, fontSize: 14),
+                //             ),
+                //           ),
+                //           onPressed: () {
+                //             if (path == '' || path == null) {
+                //               Navigator.of(context).pop(false);
+                //             } else {
+                //               navigationService.navigateTo(path,
+                //                   arguments: arguments);
+                //               Navigator.of(context).pop(false);
+                //             }
+                //           },
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ],
               );
             }) ??
         false;

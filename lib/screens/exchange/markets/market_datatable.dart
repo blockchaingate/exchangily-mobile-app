@@ -82,7 +82,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle2
-                      .copyWith(fontSize: 14),
+                      .copyWith(fontSize: 15),
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -111,7 +111,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle2
-                      .copyWith(fontSize: 14),
+                      .copyWith(fontSize: 15),
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -140,7 +140,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle2
-                      .copyWith(fontSize: 14),
+                      .copyWith(fontSize: 15),
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -169,7 +169,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle2
-                      .copyWith(fontSize: 14),
+                      .copyWith(fontSize: 15),
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -198,7 +198,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle2
-                      .copyWith(fontSize: 14),
+                      .copyWith(fontSize: 15),
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -265,7 +265,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline5
-                                      .copyWith(fontWeight: FontWeight.w400),
+                                      .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
                                 ),
                               ),
                               Text(
@@ -292,7 +292,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
-                                  .copyWith(fontWeight: FontWeight.w400),
+                                  .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
                               textAlign: TextAlign.start),
                         ),
                         onTap: () {
@@ -308,7 +308,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           style: Theme.of(context)
                               .textTheme
                               .headline6
-                              .copyWith(fontWeight: FontWeight.w400),
+                              .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
                         ),
                         onTap: () {
                           itemRow.symbol =
@@ -323,7 +323,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           style: Theme.of(context)
                               .textTheme
                               .headline6
-                              .copyWith(fontWeight: FontWeight.w400),
+                              .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
                         ),
                         onTap: () {
                           itemRow.symbol =
@@ -341,7 +341,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               color: Color(itemRow.change >= 0
                                   ? 0XFF0da88b
                                   : 0XFFe2103c),
-                              fontWeight: FontWeight.w400),
+                              fontWeight: FontWeight.w400,fontSize: 16),
                         ),
                         onTap: () {
                           itemRow.symbol =
