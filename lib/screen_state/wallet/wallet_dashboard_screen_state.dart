@@ -204,9 +204,9 @@ class WalletDashboardScreenState extends BaseState {
       walletInfoCopy = [];
       walletInfoCopy = walletList;
     });
+    walletInfo = [];
 
     int coinTickersLength = walletService.coinTickers.length;
-    walletInfo = [];
     await getGas();
     //await getDecimalPairConfig();
 
@@ -249,7 +249,6 @@ class WalletDashboardScreenState extends BaseState {
         // log.e(
         //     'copy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
         walletInfoCopy.forEach((wallet) async {
-          log.w('wallet balance from api ${wallet.toJson()}}');
           // Loop wallet balance list from api
           for (var j = 0; j <= walletBalanceList.length; j++) {
             String walletTickerName = wallet.tickerName;
@@ -260,7 +259,7 @@ class WalletDashboardScreenState extends BaseState {
               double marketPrice = walletBalanceList[j].usdValue.usd ?? 0.0;
               double availableBal = walletBalanceList[j].balance ?? 0.0;
               double lockedBal = walletBalanceList[j].lockBalance ?? 0.0;
-              log.e('available bal $walletTickerName -- $availableBal');
+
               // Check if market price error from api then show the notification with ticker name
               // so that user know why USD val for that ticker is 0
 

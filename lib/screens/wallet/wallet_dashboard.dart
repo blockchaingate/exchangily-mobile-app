@@ -417,7 +417,6 @@ class WalletDashboardScreen extends StatelessWidget {
       elevation,
       context,
       WalletDashboardScreenState model) {
-    print('single wallet ${walletInfo[index].toJson()}');
     return Card(
       color: globals.walletCardColor,
       elevation: elevation,
@@ -664,7 +663,6 @@ class WalletDashboardScreen extends StatelessWidget {
     );
   }
 }
-
 
 // /*
 // * Copyright (c) 2020 Exchangily LLC

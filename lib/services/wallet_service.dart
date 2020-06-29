@@ -228,7 +228,7 @@ class WalletService {
   String generateBchAddress(String mnemonic) {
     String tickerName = 'BCH';
     var bchSeed = generateSeed(mnemonic);
-    final masterNode = Bitbox.HDNode.fromSeed(bchSeed, false);
+    final masterNode = Bitbox.HDNode.fromSeed(bchSeed);
     var coinType = environment["CoinType"]["$tickerName"].toString();
     final accountDerivationPath = "m/44'/" + '$coinType' + "'/0'/0";
     final accountNode = masterNode.derivePath(accountDerivationPath);
