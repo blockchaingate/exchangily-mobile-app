@@ -1,8 +1,9 @@
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/widgets/carousel.dart';
+import 'package:exchangilymobileapp/widgets/loading_animation.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
-
+import '../../../shared/globals.dart' as globals;
 import 'market_pairs_detail_view.dart';
 
 class MarketPairsTabView extends StatelessWidget {
@@ -23,6 +24,7 @@ class MarketPairsTabView extends StatelessWidget {
         "imgUrl": "assets/images/slider/campaign.jpg",
         "route": '/campaignInstructions'
       },
+      {"imgUrl": "assets/images/slider/campaign2.jpg", "route": ''},
       // {"imgUrl": "https://images.unsplash.com/photo-1561451213-d5c9f0951fdf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
       // {"imgUrl": "https://images.unsplash.com/photo-1516245834210-c4c142787335?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
     ];
@@ -86,14 +88,17 @@ class MarketPairsTabView extends StatelessWidget {
                           unselectedLabelStyle: TextStyle(fontSize: 14),
                           indicatorSize: TabBarIndicatorSize.tab,
                           indicator: BoxDecoration(
-                              gradient: LinearGradient(colors: [
-                                Colors.redAccent,
-                                Colors.yellowAccent
-                              ]),
+                              gradient: LinearGradient(
+                                  colors: [
+                                    globals.primaryColor,
+                                    globals.walletCardColor,
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter),
                               shape: BoxShape.rectangle,
                               borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20)),
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10)),
                               color: Colors.redAccent),
                           tabs: [
                             for (var tab in tabNames)
@@ -117,10 +122,11 @@ class MarketPairsTabView extends StatelessWidget {
                       child: TabBarView(
                           children: tabNames.map((tab) {
                         return Container(
-                          margin: EdgeInsets.only(top: 10.0),
-                          child: ShimmerLayout(
-                            layoutType: 'marketPairs',
-                          ),
+                          child: Loading(),
+                          // margin: EdgeInsets.only(top: 10.0),
+                          // child: ShimmerLayout(
+                          //   layoutType: 'marketPairs',
+                          // ),
                         );
                       }).toList()),
                     )
@@ -202,10 +208,11 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   // double get minExtent => _tabBar.preferredSize.height + 20;
   // @override
   // double get maxExtent => _tabBar.preferredSize.height + 20;
+
   @override
-  double get minExtent => _tabBar.preferredSize.height;
+  double get minExtent => _tabBar.preferredSize.height - 10;
   @override
-  double get maxExtent => _tabBar.preferredSize.height;
+  double get maxExtent => _tabBar.preferredSize.height - 10;
 
   @override
   Widget build(
@@ -213,8 +220,12 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return Column(
       children: [
         new Container(
+          height: _tabBar.preferredSize.height - 10,
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: _tabBar,
+          child: PreferredSize(
+              child: _tabBar,
+              preferredSize: Size(MediaQuery.of(context).size.width,
+                  _tabBar.preferredSize.height - 10)),
           color: Color(0xff202138),
         ),
         // new SizedBox(

@@ -30,6 +30,7 @@ class ConfirmMnemonicScreenState extends BaseState {
   String listToStringMnemonic = '';
 
   verifyMnemonic(controller, context, count, routeName) {
+    // print("routeName: $routeName");
     userTypedMnemonicList.clear();
     for (var i = 0; i < count; i++) {
       userTypedMnemonicList.add(controller[i].text);
