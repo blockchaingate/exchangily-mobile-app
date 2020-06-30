@@ -2,6 +2,7 @@ import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
+import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 
 Map devConfig = {
   "decimal": {'priceDecimal': 6, 'volDecimal': 4},
@@ -12,7 +13,12 @@ Map devConfig = {
       "bytesPerInput": 152
     },
     "LTC": {
-      "network": BitcoinFlutter.testnet,
+      "network": liteCoinTestnetNetwork,
+      "satoshisPerBytes": 50,
+      "bytesPerInput": 152
+    },
+    "DOGE": {
+      "network": dogeCoinTestnetNetwork,
       "satoshisPerBytes": 50,
       "bytesPerInput": 152
     },
@@ -38,6 +44,7 @@ Map devConfig = {
     'kanban': 'https://kanbantest.fabcoinapi.com/',
     'btc': 'https://btctest.fabcoinapi.com/',
     'ltc': 'https://ltctest.fabcoinapi.com/',
+    'doge': 'https://dogetest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
     'campaign': 'https://test.blockchaingate.com/v2/'
@@ -126,8 +133,13 @@ Map productionConfig = {
       "bytesPerInput": 152
     },
     "LTC": {
-      "network": liteCoinNetworkType,
-      "satoshisPerBytes": 50,
+      "network": liteCoinMainnetNetwork,
+      "satoshisPerBytes": 200,
+      "bytesPerInput": 152
+    },
+    "DOGE": {
+      "network": dogeCoinMainnetNetwork,
+      "satoshisPerBytes": 400000,
       "bytesPerInput": 152
     },
     "ETH": {
@@ -163,6 +175,7 @@ Map productionConfig = {
     'kanban': 'https://kanbanprod.fabcoinapi.com/',
     'btc': 'https://btcprod.fabcoinapi.com/',
     'ltc': 'https://ltcprod.fabcoinapi.com/',
+    'doge': 'https://dogeprod.fabcoinapi.com/',
     'fab': 'https://fabprod.fabcoinapi.com/',
     'eth': 'https://ethprod.fabcoinapi.com/',
     'campaign': 'https://blockchaingate.com/v2/'

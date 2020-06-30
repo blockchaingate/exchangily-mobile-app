@@ -14,6 +14,7 @@ import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,7 @@ class WalletService {
     'EXG',
     'DUSD',
     'LTC',
+    'DOGE',
     'BNB',
     'INB',
     'HOT',
@@ -99,6 +101,7 @@ class WalletService {
     'ETH',
     'FAB',
     'FAB',
+    '',
     '',
     'ETH',
     'ETH',
@@ -126,7 +129,8 @@ class WalletService {
     'exchangily',
     'dusd',
     'litecoin',
-    'Binance Coin',
+    'dogecoin'
+        'Binance Coin',
     'Insight Chain',
     'Holo',
     'Celsius',
@@ -153,7 +157,7 @@ class WalletService {
     if (isLocal == true) {
       randomMnemonic =
           'hidden arch mind decline summer convince voice together pony infant input lunar';
-          // "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
+      // "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
       //   'culture sound obey clean pretty medal churn behind chief cactus alley ready';
       //  'group quick salad argue animal rubber wolf close weird school spell agent';
       return randomMnemonic;
@@ -241,25 +245,18 @@ class WalletService {
   }
 
   // Generate LTC address
-  generateLtcAddress(String mnemonic, {index = 0}) async {
-    String tickerName = 'LTC';
-    NetworkType liteCoinNetworkType = new NetworkType(
-        messagePrefix: '\x19Litecoin Signed Message:\n',
-        bip32: new Bip32Type(public: 0x019da462, private: 0x019d9cfe),
-        pubKeyHash: 0x30,
-        scriptHash: 0x32,
-        wif: 0xb0);
+  generateDogeAddress(String mnemonic, {index = 0}) async {
+    String tickerName = 'DOGE';
+    ;
     var seed = generateSeed(mnemonic);
     var root = generateBip32Root(seed);
-    var coinType = environment["CoinType"]["$tickerName"].toString();
-    log.w('coin type $coinType');
-    var node =
-        root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
+    // var coinType = environment["CoinType"]["$tickerName"].toString();
+    //  log.w('coin type $coinType');
+    var node = root.derivePath("m/44'/3'/0'/0/" + index.toString());
 
     String address1 = new P2PKH(
             data: new BitcoinFlutter.PaymentData(pubkey: node.publicKey),
-            network:
-                isProduction ? liteCoinNetworkType : BitcoinFlutter.testnet)
+            network: dogeCoinMainnetNetwork)
         .data
         .address;
     print('ticker: $tickerName --  address1: $address1');
@@ -752,7 +749,10 @@ class WalletService {
     var amountInLink = BigInt.from(amount * 1e18);
 
     var addressInWallet = coinAddress;
-    if (coinName == 'BTC' || coinName == 'FAB' || coinName == 'LTC') {
+    if (coinName == 'BTC' ||
+        coinName == 'FAB' ||
+        coinName == 'LTC' ||
+        coinName == 'DOGE') {
       /*
       print('addressInWallet before');
       print(addressInWallet);
@@ -1239,33 +1239,27 @@ class WalletService {
     }
 
     // LTC Transaction
-    else if (coin == 'LTC') {
-      BitcoinFlutter.NetworkType liteCoinNetworkType =
-          new BitcoinFlutter.NetworkType(
-              messagePrefix: '\x19Litecoin Signed Message:\n',
-              bip32: new BitcoinFlutter.Bip32Type(
-                  public: 0x019da462, private: 0x019d9cfe),
-              pubKeyHash: 0x30,
-              scriptHash: 0x32,
-              wif: 0xb0);
+    else if (coin == 'LTC' || coin == 'DOGE') {
       if (bytesPerInput == 0) {
-        bytesPerInput = environment["chains"]["BTC"]["bytesPerInput"];
+        bytesPerInput = environment["chains"][coin]["bytesPerInput"];
       }
       if (satoshisPerBytes == 0) {
-        satoshisPerBytes = environment["chains"]["BTC"]["satoshisPerBytes"];
+        satoshisPerBytes = environment["chains"][coin]["satoshisPerBytes"];
       }
       var amountNum = amount * 1e8;
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
-          network: isProduction ? liteCoinNetworkType : BitcoinFlutter.testnet);
+          network: environment["chains"][coin]["network"]);
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
         var node = root.derivePath("m/44'/" +
-            environment["CoinType"]["LTC"].toString() +
+            environment["CoinType"][coin].toString() +
             "'/0'/0/" +
             index.toString());
-        var fromAddress = getLtcAddressForNode(node);
+        var fromAddress = coin == 'LTC'
+            ? getLtcAddressForNode(node)
+            : getDogeAddressForNode(node);
         if (addressList.length > 0) {
           fromAddress = addressList[i];
         }
@@ -1273,7 +1267,9 @@ class WalletService {
           changeAddress = fromAddress;
         }
         final privateKey = node.privateKey;
-        var utxos = await _api.getLtcUtxos(fromAddress);
+        var utxos = coin == 'LTC'
+            ? await _api.getLtcUtxos(fromAddress)
+            : await _api.getDogeUtxos(fromAddress);
         //print('utxos=');
         //print(utxos);
         if ((utxos == null) || (utxos.length == 0)) {
@@ -1326,9 +1322,7 @@ class WalletService {
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
         var alice = ECPair.fromPrivateKey(privateKey,
-            compressed: true,
-            network:
-                isProduction ? liteCoinNetworkType : BitcoinFlutter.testnet);
+            compressed: true, network: environment["chains"][coin]["network"]);
         txb.sign(vin: i, keyPair: alice);
       }
 

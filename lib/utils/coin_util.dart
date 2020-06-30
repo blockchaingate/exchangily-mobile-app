@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
+import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 
 import '../packages/bip32/bip32_base.dart' as bip32;
 
@@ -443,6 +444,8 @@ Future getAddressForCoin(root, String tickerName,
     return getBtcAddressForNode(node, tickerName: tickerName);
   } else if (tickerName == 'LTC') {
     return generateLtcAddress(root);
+  } else if (tickerName == 'DOGE') {
+    return generateDogeAddress(root);
   } else if ((tickerName == 'ETH') || (tokenType == 'ETH')) {
     var node = getEthNode(root, index: index);
     return await getEthAddressForNode(node);

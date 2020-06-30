@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -73,6 +74,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                   model.updateTransFee();
                 },
                 decoration: InputDecoration(
+                  suffix: Text(
+                      AppLocalizations.of(context).minimumAmount +
+                          ': ' +
+                          environment['minimumWithdraw'][coinName].toString(),
+                      style: Theme.of(context).textTheme.headline6),
                   enabledBorder: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0XFF871fff), width: 1.0)),

@@ -42,10 +42,8 @@ Future getBtcBalanceByAddress(String address) async {
 
 getBtcNode(root, {String tickerName, index = 0}) {
   var coinType = environment["CoinType"]["$tickerName"].toString();
-  print('network $coinType');
   var node =
       root.derivePath("m/44'/" + coinType + "'/0'/0/" + index.toString());
-  print('Node $tickerName -- ${node.publicKey}');
   return node;
 }
 

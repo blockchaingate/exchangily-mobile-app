@@ -36,6 +36,7 @@ class ApiService {
   final String walletBalances = 'walletBalances';
   final btcBaseUrl = environment["endpoints"]["btc"];
   final ltcBaseUrl = environment["endpoints"]["ltc"];
+  final dogeBaseUrl = environment["endpoints"]["doge"];
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
@@ -218,6 +219,21 @@ class ApiService {
   // Get LtcUtxos
   Future getLtcUtxos(String address) async {
     var url = ltcBaseUrl + 'getutxos/' + address;
+    log.w(url);
+
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      return json;
+    } catch (e) {
+      log.e('getLtcUtxos $e');
+      throw Exception('e');
+    }
+  }
+
+  // Get DogeUtxos
+  Future getDogeUtxos(String address) async {
+    var url = dogeBaseUrl + 'getutxos/' + address;
     log.w(url);
 
     try {
