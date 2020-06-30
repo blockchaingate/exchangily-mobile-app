@@ -152,8 +152,8 @@ class WalletService {
     String randomMnemonic = '';
     if (isLocal == true) {
       randomMnemonic =
-          // 'hidden arch mind decline summer convince voice together pony infant input lunar';
-          "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
+          'hidden arch mind decline summer convince voice together pony infant input lunar';
+          // "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
       //   'culture sound obey clean pretty medal churn behind chief cactus alley ready';
       //  'group quick salad argue animal rubber wolf close weird school spell agent';
       return randomMnemonic;
@@ -736,6 +736,7 @@ class WalletService {
   getOriginalMessage(
       int coinType, String txHash, BigInt amount, String address) {
     var buf = '';
+    print('coinType.toRadixString(16)=' + coinType.toRadixString(16));
     buf += stringUtils.fixLength(coinType.toRadixString(16), 4);
     buf += stringUtils.fixLength(txHash, 64);
     var hexString = amount.toRadixString(16);
