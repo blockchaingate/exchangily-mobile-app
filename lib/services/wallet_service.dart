@@ -724,7 +724,6 @@ class WalletService {
   getOriginalMessage(
       int coinType, String txHash, BigInt amount, String address) {
     var buf = '';
-    print('coinType.toRadixString(16)=' + coinType.toRadixString(16));
     buf += stringUtils.fixLength(coinType.toRadixString(16), 4);
     buf += stringUtils.fixLength(txHash, 64);
     var hexString = amount.toRadixString(16);
@@ -1240,22 +1239,117 @@ class WalletService {
     }
 
     // LTC Transaction
-    else if (coin == 'LTC' || coin == 'DOGE') {
+    else if (coin == 'LTC') {
       if (bytesPerInput == 0) {
-        bytesPerInput = environment["chains"][coin]["bytesPerInput"];
+        bytesPerInput = environment["chains"]["LTC"]["bytesPerInput"];
       }
       if (satoshisPerBytes == 0) {
-        satoshisPerBytes = environment["chains"][coin]["satoshisPerBytes"];
+        satoshisPerBytes = environment["chains"]["LTC"]["satoshisPerBytes"];
       }
       var amountNum = amount * 1e8;
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
-          network: environment["chains"][coin]["network"]);
+          network: environment["chains"]["LTC"]["network"]);
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
         var node = root.derivePath("m/44'/" +
-            environment["CoinType"][coin].toString() +
+            environment["CoinType"]["LTC"].toString() +
+            "'/0'/0/" +
+            index.toString());
+        var fromAddress = getLtcAddressForNode(node);
+        if (addressList.length > 0) {
+          fromAddress = addressList[i];
+        }
+        if (i == 0) {
+          changeAddress = fromAddress;
+        }
+        final privateKey = node.privateKey;
+        var utxos = await _api.getLtcUtxos(fromAddress);
+
+        if ((utxos == null) || (utxos.length == 0)) {
+          continue;
+        }
+        for (var j = 0; j < utxos.length; j++) {
+          var tx = utxos[j];
+          if (tx['idx'] < 0) {
+            continue;
+          }
+          txb.addInput(tx['txid'], tx['idx']);
+          amountNum -= tx['value'];
+          amountNum += bytesPerInput * satoshisPerBytes;
+          totalInput += tx['value'];
+          receivePrivateKeyArr.add(privateKey);
+          if (amountNum <= 0) {
+            finished = true;
+            break;
+          }
+        }
+      }
+
+      if (!finished) {
+        txHex = '';
+        txHash = '';
+        errMsg = 'not enough fund.';
+        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
+      }
+
+      var transFee =
+          (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
+              (2 * 34 + 10) * satoshisPerBytes;
+      transFeeDouble = transFee / 1e8;
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      var output1 = (totalInput - amount * 1e8 - transFee).round();
+      var output2 = (amount * 1e8).round();
+
+      txb.addOutput(changeAddress, output1);
+      txb.addOutput(toAddress, output2);
+      for (var i = 0; i < receivePrivateKeyArr.length; i++) {
+        var privateKey = receivePrivateKeyArr[i];
+        var alice = ECPair.fromPrivateKey(privateKey,
+            compressed: true, network: environment["chains"]["LTC"]["network"]);
+        txb.sign(vin: i, keyPair: alice);
+      }
+
+      var tx = txb.build();
+      txHex = tx.toHex();
+      if (doSubmit) {
+        var res = await _api.postLtcTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+        return {'txHash': txHash, 'errMsg': errMsg};
+      } else {
+        txHash = '0x' + tx.getId();
+      }
+    }
+
+    // DOGE Transaction
+    else if (coin == 'DOGE') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["$coin"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["$coin"]["satoshisPerBytes"];
+      }
+      var amountNum = amount * 1e8;
+      amountNum += (2 * 34 + 10) * satoshisPerBytes;
+      final txb = new TransactionBuilder(
+          network: environment["chains"]["$coin"]["network"]);
+
+      for (var i = 0; i < addressIndexList.length; i++) {
+        var index = addressIndexList[i];
+        var node = root.derivePath("m/44'/" +
+            environment["CoinType"]["$coin"].toString() +
             "'/0'/0/" +
             index.toString());
         var fromAddress = coin == 'LTC'
@@ -1267,6 +1361,7 @@ class WalletService {
         if (i == 0) {
           changeAddress = fromAddress;
         }
+
         final privateKey = node.privateKey;
         var utxos = coin == 'LTC'
             ? await _api.getLtcUtxos(fromAddress)
@@ -1319,18 +1414,22 @@ class WalletService {
       var output2 = (amount * 1e8).round();
 
       txb.addOutput(changeAddress, output1);
+      log.e(' 0 $toAddress $output2 ${txb.network}');
       txb.addOutput(toAddress, output2);
+      log.e(' 1 ${environment["chains"]["$coin"]["network"]}');
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
         var alice = ECPair.fromPrivateKey(privateKey,
-            compressed: true, network: environment["chains"][coin]["network"]);
+            compressed: true,
+            network: environment["chains"]["$coin"]["network"]);
         txb.sign(vin: i, keyPair: alice);
       }
-
       var tx = txb.build();
       txHex = tx.toHex();
       if (doSubmit) {
-        var res = await _api.postLtcTx(txHex);
+        var res = coin == 'LTC'
+            ? await _api.postLtcTx(txHex)
+            : await _api.postDogeTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg};

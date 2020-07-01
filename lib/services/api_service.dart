@@ -241,7 +241,7 @@ class ApiService {
       var json = jsonDecode(response.body);
       return json;
     } catch (e) {
-      log.e('getLtcUtxos $e');
+      log.e('getDogeUtxos $e');
       throw Exception('e');
     }
   }
@@ -275,6 +275,32 @@ class ApiService {
   // Post Ltc Transaction
   Future postLtcTx(String txHex) async {
     var url = ltcBaseUrl + 'postrawtransaction';
+    var json;
+    var txHash = '';
+    var errMsg = '';
+    try {
+      var data = {'rawtx': txHex};
+      var response = await client.post(url, body: data);
+
+      json = jsonDecode(response.body);
+    } catch (e) {}
+
+    log.w('json= $json');
+    if (json != null) {
+      if (json['txid'] != null) {
+        txHash = '0x' + json['txid'];
+      } else if (json['Error'] != null) {
+        errMsg = json['Error'];
+      }
+    } else {
+      errMsg = 'invalid json format.';
+    }
+    return {'txHash': txHash, 'errMsg': errMsg};
+  }
+
+  // Post Ltc Transaction
+  Future postDogeTx(String txHex) async {
+    var url = dogeBaseUrl + 'postrawtransaction';
     var json;
     var txHash = '';
     var errMsg = '';

@@ -16,13 +16,15 @@ BitcoinFlutter.NetworkType liteCoinMainnetNetwork =
         wif: 0xb0);
 
 // test net config
-final liteCoinTestnetNetwork = new NetworkType(
+final liteCoinTestnetNetwork = new BitcoinFlutter.NetworkType(
     messagePrefix: '\x19Litecoin Signed Message:\n',
-    bip32: new Bip32Type(public: 0x0436f6e1, private: 0x0436ef7d),
+    bip32:
+        new BitcoinFlutter.Bip32Type(public: 0x0436f6e1, private: 0x0436ef7d),
     pubKeyHash: 0x6f,
     scriptHash: 0x3a,
     wif: 0xef);
 
+// Generate LTC address
 generateLtcAddress(root, {index = 0}) async {
   var coinType = environment["CoinType"]["LTC"].toString();
   var node =
@@ -37,6 +39,7 @@ generateLtcAddress(root, {index = 0}) async {
   return address;
 }
 
+// Generate getLtcAddressForNode
 String getLtcAddressForNode(node, {String tickerName}) {
   return BitcoinFlutter.P2PKH(
           data: new BitcoinFlutter.PaymentData(pubkey: node.publicKey),
@@ -45,6 +48,7 @@ String getLtcAddressForNode(node, {String tickerName}) {
       .address;
 }
 
+// getLtcTransactionStatus
 Future getLtcTransactionStatus(String txid) async {
   var response;
   var url = ltcBaseUrl + 'gettransactionjson/' + txid;
@@ -56,6 +60,7 @@ Future getLtcTransactionStatus(String txid) async {
   return response;
 }
 
+// getLtcBalanceByAddress
 Future getLtcBalanceByAddress(String address) async {
   var url = ltcBaseUrl + 'getbalance/' + address;
   var btcBalance = 0.0;

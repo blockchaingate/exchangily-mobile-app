@@ -14,12 +14,12 @@ Map devConfig = {
     },
     "LTC": {
       "network": liteCoinTestnetNetwork,
-      "satoshisPerBytes": 50,
-      "bytesPerInput": 152
+      "satoshisPerBytes": 200,
+      "bytesPerInput": 155
     },
     "DOGE": {
       "network": dogeCoinTestnetNetwork,
-      "satoshisPerBytes": 50,
+      "satoshisPerBytes": 400000,
       "bytesPerInput": 152
     },
     "ETH": {
