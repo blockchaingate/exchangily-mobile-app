@@ -874,8 +874,8 @@ class WalletService {
     print(signedMess['s']);
     print(signedMess['v']);
     return null;
+    */
 
-     */
     var coinPoolAddress = await getCoinPoolAddress();
 
     var abiHex = getDepositFuncABI(

@@ -203,11 +203,15 @@ Uint8List _padTo32(Uint8List data) {
 
 Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
     {int chainId, String coinName}) async {
+  var network = environment["chains"]['BTC']["network"];
+  if(coinName == 'LTC') {
+    network = environment["chains"]['LTC']["network"];
+  } else
+  if(coinName == 'DOGE') {
+    network = environment["chains"]['DOGE']["network"];
+  }
   Uint8List messageHash = magicHash(
-      originalMessage,
-      coinName == 'BTC' || coinName == 'FAB'
-          ? environment["chains"]['BTC']["network"]
-          : environment["chains"]['LTC']["network"]);
+      originalMessage, network);
 
   var signature = sign(messageHash, privateKey);
 
@@ -335,6 +339,7 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
   } else if (coinName == 'FAB' ||
       coinName == 'BTC' ||
       coinName == 'LTC' ||
+      coinName == 'DOGE' ||
       tokenType == 'FAB') {
     //var hdWallet = new HDWallet.fromSeed(seed, network: testnet);
 
@@ -345,7 +350,9 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     if (coinName == 'LTC') {
       coinType = environment["CoinType"]["LTC"];
     }
-
+    if (coinName == 'DOGE') {
+      coinType = environment["CoinType"]["DOGE"];
+    }
     var bitCoinChild =
         root.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
     //var btcWallet =
