@@ -9,17 +9,17 @@ Map devConfig = {
   "chains": {
     "BTC": {
       "network": BitcoinFlutter.testnet,
-      "satoshisPerBytes": 50,
+      "satoshisPerBytes": 100,
       "bytesPerInput": 152
     },
     "LTC": {
       "network": liteCoinTestnetNetwork,
-      "satoshisPerBytes": 200,
+      "satoshisPerBytes": 400,
       "bytesPerInput": 155
     },
     "DOGE": {
       "network": dogeCoinTestnetNetwork,
-      "satoshisPerBytes": 400000,
+      "satoshisPerBytes": 800000,
       "bytesPerInput": 152
     },
     "ETH": {
@@ -27,14 +27,14 @@ Map devConfig = {
       "hardfork": 'byzantium',
       "chainId": 3,
       "infura": "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 20000000000,
+      "gasPrice": 90000000000,
       "gasLimit": 100000
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
-      "satoshisPerBytes": 50,
+      "satoshisPerBytes": 100,
       "bytesPerInput": 148,
-      "gasPrice": 50,
+      "gasPrice": 100,
       "gasLimit": 800000
     },
     "KANBAN": {"chainId": 212, "gasPrice": 50000000, "gasLimit": 20000000}
@@ -129,17 +129,17 @@ Map productionConfig = {
   "chains": {
     "BTC": {
       "network": BitcoinFlutter.bitcoin,
-      "satoshisPerBytes": 50,
+      "satoshisPerBytes": 100,
       "bytesPerInput": 152
     },
     "LTC": {
       "network": liteCoinMainnetNetwork,
-      "satoshisPerBytes": 200,
+      "satoshisPerBytes": 400,
       "bytesPerInput": 152
     },
     "DOGE": {
       "network": dogeCoinMainnetNetwork,
-      "satoshisPerBytes": 400000,
+      "satoshisPerBytes": 800000,
       "bytesPerInput": 152
     },
     "ETH": {
@@ -147,7 +147,7 @@ Map productionConfig = {
       "hardfork": 'byzantium',
       "chainId": 1,
       "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 20000000000,
+      "gasPrice": 90000000000,
       "gasLimit": 100000
     },
     "FAB": {
@@ -156,9 +156,9 @@ Map productionConfig = {
         "networkId": 0,
         "chainId": 0,
       },
-      "satoshisPerBytes": 50,
+      "satoshisPerBytes": 100,
       "bytesPerInput": 148,
-      "gasPrice": 50,
+      "gasPrice": 100,
       "gasLimit": 800000
     },
     "KANBAN": {"chainId": 211, "gasPrice": 50000000, "gasLimit": 20000000}

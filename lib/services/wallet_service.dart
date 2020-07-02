@@ -832,8 +832,10 @@ class WalletService {
     */
     var kanbanGasPrice = option['kanbanGasPrice'];
     var kanbanGasLimit = option['kanbanGasLimit'];
+    print('111');
     var resST = await sendTransaction(
         coinName, seed, [0], [], officalAddress, amount, option, false);
+    print('222');
     if (resST != null) log.w(resST);
     if (resST['errMsg'] != '') {
       errRes['data'] = resST['errMsg'];
@@ -859,6 +861,7 @@ class WalletService {
 
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
+    print('txHash=' + txHash);
     var originalMessage = getOriginalMessage(
         coinType,
         stringUtils.trimHexPrefix(txHash),
@@ -868,14 +871,7 @@ class WalletService {
     var signedMess =
         await signedMessage(originalMessage, seed, coinName, tokenType);
 
-    /*
-    print('signedMess=');
-    print(signedMess['r']);
-    print(signedMess['s']);
-    print(signedMess['v']);
-    return null;
 
-     */
     var coinPoolAddress = await getCoinPoolAddress();
 
     var abiHex = getDepositFuncABI(
@@ -1360,6 +1356,7 @@ class WalletService {
             "'/0'/0/" +
             index.toString());
         var fromAddress = getDogeAddressForNode(node);
+        print('fromAddress==' + fromAddress);
         if (addressList.length > 0) {
           fromAddress = addressList[i];
         }
@@ -1666,7 +1663,7 @@ class WalletService {
       } else if (coin == 'FUN' || coin == 'WAX' || coin == 'MTL') {
         convertedDecimalAmount = (BigInt.from(10).pow(8) * BigInt.from(amount));
         log.e('amount send $convertedDecimalAmount');
-      } else if (coin == 'POWR') {
+      } else if (coin == 'POWR' || coin == 'USDT') {
         convertedDecimalAmount = (BigInt.from(10).pow(6) * BigInt.from(amount));
       } else if (coin == 'CEL') {
         convertedDecimalAmount = (BigInt.from(10).pow(4) * BigInt.from(amount));
