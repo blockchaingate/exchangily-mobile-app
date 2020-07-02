@@ -859,6 +859,7 @@ class WalletService {
 
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
+    print('txHash=' + txHash);
     var originalMessage = getOriginalMessage(
         coinType,
         stringUtils.trimHexPrefix(txHash),
@@ -868,13 +869,6 @@ class WalletService {
     var signedMess =
         await signedMessage(originalMessage, seed, coinName, tokenType);
 
-    /*
-    print('signedMess=');
-    print(signedMess['r']);
-    print(signedMess['s']);
-    print(signedMess['v']);
-    return null;
-    */
 
     var coinPoolAddress = await getCoinPoolAddress();
 
@@ -1360,6 +1354,7 @@ class WalletService {
             "'/0'/0/" +
             index.toString());
         var fromAddress = getDogeAddressForNode(node);
+        print('fromAddress==' + fromAddress);
         if (addressList.length > 0) {
           fromAddress = addressList[i];
         }
