@@ -50,14 +50,14 @@ class VerifyMnemonicWalletScreen extends StatelessWidget {
               vertical: 40,
             ),
             padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-            child: _buttonGrid(mnemonicTextController, count),
+            child: _textGrid(mnemonicTextController, count),
           ),
         ],
       ),
     );
   }
 
-  Widget _buttonGrid(controller, _count) {
+  Widget _textGrid(controller, _count) {
     return GridView.extent(
         maxCrossAxisExtent: 125,
         padding: const EdgeInsets.all(2),
@@ -65,10 +65,10 @@ class VerifyMnemonicWalletScreen extends StatelessWidget {
         crossAxisSpacing: 10,
         shrinkWrap: true,
         childAspectRatio: 2,
-        children: _buildButtonGrid(_count, controller));
+        children: _buildTextGrid(_count, controller));
   }
 
-  List<Container> _buildButtonGrid(int count, controller) =>
+  List<Container> _buildTextGrid(int count, controller) =>
       List.generate(count, (i) {
         var hintMnemonicWordNumber = i + 1;
         controller.add(TextEditingController());

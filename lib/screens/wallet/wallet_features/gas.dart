@@ -36,7 +36,7 @@ class Gas extends StatelessWidget {
         ),
         UIHelper.horizontalSpaceSmall,
         Text(
-          "${AppLocalizations.of(context).gas}: ${gasAmount.toStringAsFixed(2)}",
+          "${AppLocalizations.of(context).gas}: ${gasAmount.toStringAsFixed(8)}",
           style:
               Theme.of(context).textTheme.headline5.copyWith(wordSpacing: 1.25),
         ),
