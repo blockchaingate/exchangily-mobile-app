@@ -64,12 +64,17 @@ Future<Map<String, dynamic>> submitDeposit(
     'rawTransaction': rawTransaction,
     'rawKanbanTransaction': rawKanbanTransaction
   };
-  var client = new http.Client();
-  var response = await client.post(url, body: data);
-  print("response body:");
-  print(response.body.toString());
-  Map<String, dynamic> res = jsonDecode(response.body);
-  return res;
+  try {
+    var client = new http.Client();
+    var response = await client.post(url, body: data);
+    print("Kanban_util submitDeposit response body:");
+    print(response.body.toString());
+    Map<String, dynamic> res = jsonDecode(response.body);
+    return res;
+  } catch (err) {
+    print('Catch submitDeposit in kanban util $err');
+    throw Exception(err);
+  }
 }
 
 Future getKanbanErrDeposit(String address) async {

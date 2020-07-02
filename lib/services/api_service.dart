@@ -283,19 +283,20 @@ class ApiService {
       var response = await client.post(url, body: data);
 
       json = jsonDecode(response.body);
-    } catch (e) {}
-
-    log.w('json= $json');
-    if (json != null) {
-      if (json['txid'] != null) {
-        txHash = '0x' + json['txid'];
-      } else if (json['Error'] != null) {
-        errMsg = json['Error'];
+      log.w('json= $json');
+      if (json != null) {
+        if (json['txid'] != null) {
+          txHash = '0x' + json['txid'];
+        } else if (json['Error'] != null) {
+          errMsg = json['Error'];
+        }
+      } else {
+        errMsg = 'invalid json format.';
       }
-    } else {
-      errMsg = 'invalid json format.';
+      return {'txHash': txHash, 'errMsg': errMsg};
+    } catch (e) {
+      log.e('postLtcTx $e');
     }
-    return {'txHash': txHash, 'errMsg': errMsg};
   }
 
   // Post Ltc Transaction
@@ -309,19 +310,20 @@ class ApiService {
       var response = await client.post(url, body: data);
 
       json = jsonDecode(response.body);
-    } catch (e) {}
-
-    log.w('json= $json');
-    if (json != null) {
-      if (json['txid'] != null) {
-        txHash = '0x' + json['txid'];
-      } else if (json['Error'] != null) {
-        errMsg = json['Error'];
+      log.w('json= $json');
+      if (json != null) {
+        if (json['txid'] != null) {
+          txHash = '0x' + json['txid'];
+        } else if (json['Error'] != null) {
+          errMsg = json['Error'];
+        }
+      } else {
+        errMsg = 'invalid json format.';
       }
-    } else {
-      errMsg = 'invalid json format.';
+      return {'txHash': txHash, 'errMsg': errMsg};
+    } catch (e) {
+      log.e('postDogeTx $e');
     }
-    return {'txHash': txHash, 'errMsg': errMsg};
   }
 
   // Get Fab Transaction

@@ -240,8 +240,16 @@ class WalletService {
     final childNode = accountNode.derive(0);
     final address = childNode.toCashAddress();
     // final address = cashAddress.split(":")[1];
+    getBchAddressDetails(address);
 
     return address;
+  }
+
+  // get BCH address details
+  Future getBchAddressDetails(String bchAddress) async {
+    final addressDetails = await Bitbox.Address.details(bchAddress);
+    log.e('Address $bchAddress -- address details $addressDetails');
+    return addressDetails;
   }
 
   // Generate LTC address
@@ -373,8 +381,6 @@ class WalletService {
 
     // BCH address
     String bchAddress = generateBchAddress(mnemonic);
-    final addressDetails = await Bitbox.Address.details(bchAddress);
-    log.e('Address $bchAddress -- address details $addressDetails');
 
     try {
       for (int i = 0; i < coinTickers.length; i++) {
@@ -752,7 +758,8 @@ class WalletService {
     if (coinName == 'BTC' ||
         coinName == 'FAB' ||
         coinName == 'LTC' ||
-        coinName == 'DOGE') {
+        coinName == 'DOGE' ||
+        coinName == 'BCH') {
       /*
       print('addressInWallet before');
       print(addressInWallet);
@@ -1336,25 +1343,23 @@ class WalletService {
     // DOGE Transaction
     else if (coin == 'DOGE') {
       if (bytesPerInput == 0) {
-        bytesPerInput = environment["chains"]["$coin"]["bytesPerInput"];
+        bytesPerInput = environment["chains"]["DOGE"]["bytesPerInput"];
       }
       if (satoshisPerBytes == 0) {
-        satoshisPerBytes = environment["chains"]["$coin"]["satoshisPerBytes"];
+        satoshisPerBytes = environment["chains"]["DOGE"]["satoshisPerBytes"];
       }
       var amountNum = amount * 1e8;
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
-          network: environment["chains"]["$coin"]["network"]);
+          network: environment["chains"]["DOGE"]["network"]);
 
       for (var i = 0; i < addressIndexList.length; i++) {
         var index = addressIndexList[i];
         var node = root.derivePath("m/44'/" +
-            environment["CoinType"]["$coin"].toString() +
+            environment["CoinType"]["DOGE"].toString() +
             "'/0'/0/" +
             index.toString());
-        var fromAddress = coin == 'LTC'
-            ? getLtcAddressForNode(node)
-            : getDogeAddressForNode(node);
+        var fromAddress = getDogeAddressForNode(node);
         if (addressList.length > 0) {
           fromAddress = addressList[i];
         }
@@ -1363,9 +1368,7 @@ class WalletService {
         }
 
         final privateKey = node.privateKey;
-        var utxos = coin == 'LTC'
-            ? await _api.getLtcUtxos(fromAddress)
-            : await _api.getDogeUtxos(fromAddress);
+        var utxos = await _api.getDogeUtxos(fromAddress);
         //print('utxos=');
         //print(utxos);
         if ((utxos == null) || (utxos.length == 0)) {
@@ -1414,22 +1417,20 @@ class WalletService {
       var output2 = (amount * 1e8).round();
 
       txb.addOutput(changeAddress, output1);
-      log.e(' 0 $toAddress $output2 ${txb.network}');
+
       txb.addOutput(toAddress, output2);
-      log.e(' 1 ${environment["chains"]["$coin"]["network"]}');
+
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
         var alice = ECPair.fromPrivateKey(privateKey,
             compressed: true,
-            network: environment["chains"]["$coin"]["network"]);
+            network: environment["chains"]["DOGE"]["network"]);
         txb.sign(vin: i, keyPair: alice);
       }
       var tx = txb.build();
       txHex = tx.toHex();
       if (doSubmit) {
-        var res = coin == 'LTC'
-            ? await _api.postLtcTx(txHex)
-            : await _api.postDogeTx(txHex);
+        var res = await _api.postDogeTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
         return {'txHash': txHash, 'errMsg': errMsg};

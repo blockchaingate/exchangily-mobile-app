@@ -60,26 +60,26 @@ class MoveToWalletScreenState extends BaseState {
   checkPass() async {
     setBusy(true);
     var amount = double.tryParse(amountController.text);
-    if (amount == null ||
-        amount > walletInfo.availableBalance ||
-        amount == 0 ||
-        amount.isNegative) {
-      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterValidNumber,
-          isWarning: false);
-      setBusy(false);
-      return;
-    }
+    // if (amount == null ||
+    //     // amount > walletInfo.availableBalance ||
+    //     // amount == 0 ||
+    //     amount.isNegative) {
+    //   sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+    //       AppLocalizations.of(context).pleaseEnterValidNumber,
+    //       isWarning: false);
+    //   setBusy(false);
+    //   return;
+    // }
 
-    if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).minimumAmountError,
-          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-          Icons.cancel,
-          globals.red,
-          context);
-      return;
-    }
+    // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+    //   sharedService.showInfoFlushbar(
+    //       AppLocalizations.of(context).minimumAmountError,
+    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+    //       Icons.cancel,
+    //       globals.red,
+    //       context);
+    //   return;
+    // }
     setMessage('');
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -98,7 +98,12 @@ class MoveToWalletScreenState extends BaseState {
       if (coinName == 'EXG') {
         tokenType = 'FAB';
       }
-
+      print('coin address 1 $coinAddress');
+      if (coinName == 'BCH') {
+        await walletService.getBchAddressDetails(coinAddress).then(
+            (addressDetails) => coinAddress = addressDetails['legacyAddress']);
+      }
+      print('coin address 2 $coinAddress');
       var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
 
