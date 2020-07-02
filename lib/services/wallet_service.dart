@@ -90,7 +90,7 @@ class WalletService {
     'WINGS',
     'MTL',
     'KNC',
-    'GVT',
+    'GVT'
   ];
 
   List<String> tokenType = [
@@ -117,7 +117,7 @@ class WalletService {
     'ETH',
     'ETH',
     'ETH',
-    'ETH',
+    'ETH'
   ];
 
   List<String> coinNames = [
@@ -129,8 +129,8 @@ class WalletService {
     'exchangily',
     'dusd',
     'litecoin',
-    'dogecoin'
-        'Binance Coin',
+    'dogecoin',
+    'Binance Coin',
     'Insight Chain',
     'Holo',
     'Celsius',
@@ -144,7 +144,7 @@ class WalletService {
     'Power Ledger',
     'Metal',
     'Kyber Network',
-    'Genesis Vision',
+    'Genesis Vision'
   ];
 
   Completer<AlertResponse> _completer;

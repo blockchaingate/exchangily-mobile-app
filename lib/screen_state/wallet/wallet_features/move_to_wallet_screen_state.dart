@@ -98,12 +98,12 @@ class MoveToWalletScreenState extends BaseState {
       if (coinName == 'EXG') {
         tokenType = 'FAB';
       }
-      print('coin address 1 $coinAddress');
+
       if (coinName == 'BCH') {
         await walletService.getBchAddressDetails(coinAddress).then(
             (addressDetails) => coinAddress = addressDetails['legacyAddress']);
       }
-      print('coin address 2 $coinAddress');
+
       var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
 
