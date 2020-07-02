@@ -34,6 +34,93 @@ class CampaignInstructionsScreenState extends BaseState {
   BuildContext context;
   bool isGuideReady = false;
 
+  final List<Map> eventContent = [
+    {
+      "type": "row",
+      "title": "BRIEF INTRO",
+      "text":
+          "The campaign is to celebrate the official launch of eXchangily and regulatory licensing approval in the United States and Canada."
+    },
+    {
+      "type": "row",
+      "title": "DATE PERIOD",
+      "text":
+          "From today and will run until all 5 Million EXG reward tokens are given away."
+    },
+    {
+      "type": "row",
+      "title": "ABOUT EXCHAGILY",
+      "text":
+          "eXchangily is the 1st fully licensed decentralized crypto exchange, offering fast, autonomous transactions, cross-chain capability and 100% profit sharing to EXG token holders."
+    },
+    {
+      "type": "row",
+      "title": "EVENT DETAIL",
+      "text":
+          "The campaign is open to existing and new investors, a minimum of \$100USD purchase of EXG is required during the campaign to obtain a referral code."
+    },
+    {
+      "type": "form",
+      "content": [
+        {
+          "icon": "assets/images/img/level-01.png",
+          "title": "SILVER",
+          "price": "\$100+",
+          "tier1": "TIER 1",
+          "reword1":"8%",
+          "client1":"1-2",
+          "tier2": "TIER 2",
+          "reword2":"4%",
+          "client2":"3-4",
+          "tier3": "TIER 3",
+          "reword3":"1%",
+          "client3":"5+",
+        },
+        {
+          "icon": "assets/images/img/level-02.png",
+          "title": "GOLD",
+          "price": "\$500+",
+          "tier1": "TIER 1",
+          "reword1":"9%",
+          "client1":"1-2",
+          "tier2": "TIER 2",
+          "reword2":"5%",
+          "client2":"3-4",
+          "tier3": "TIER 3",
+          "reword3":"2%",
+          "client3":"5+",
+        },
+        {
+          "icon": "assets/images/img/level-03.png",
+          "title": "DIAMOND",
+           "price": "\$1000+",
+          "tier1": "TIER 1",
+          "reword1":"10%",
+          "client1":"1-2",
+          "tier2": "TIER 2",
+          "reword2":"6%",
+          "client2":"3-4",
+          "tier3": "TIER 3",
+          "reword3":"3%",
+          "client3":"5+",
+        },
+        
+      ],
+      
+    },
+    {
+      "type": "row",
+      "title": "EXTRA BONUS",
+      "text":
+          "Every \$100USD purchase of EXG entitles you to 1 FAB, upto a maximum of 5 FAB Purchases of EXG can be made in USDT, ETH and BTC, via the eXchangily exchange or with USD, CAD or RMB via OTC."
+    },
+    // {"title":"","text":""},
+    // {"title":"","text":""},
+    // {"title":"","text":""},
+    // {"title":"","text":""},
+    // {"title":"","text":""},
+  ];
+
   // Init state
 
   initState() async {
