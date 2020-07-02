@@ -130,7 +130,7 @@ class SharedService {
                             ],
                           ),
                         ),
-                        SizedBox(height:10),
+                        SizedBox(height: 10),
                         Container(
                           margin: EdgeInsetsDirectional.only(bottom: 10),
                           child: FlatButton(
@@ -138,8 +138,8 @@ class SharedService {
                             padding: EdgeInsets.all(0),
                             child: Text(
                               AppLocalizations.of(context).close,
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 14),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
                             ),
                             onPressed: () {
                               if (path == '' || path == null) {
@@ -214,12 +214,12 @@ class SharedService {
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
       title: title,
       message: message,
-      icon: Icon(
-        iconData,
-        size: 24,
-        color: globals.primaryColor,
-      ),
-      leftBarIndicatorColor: leftBarColor,
+      // icon: Icon(
+      //   iconData,
+      //   size: 24,
+      //   color: globals.primaryColor,
+      // ),
+      // leftBarIndicatorColor: leftBarColor,
       duration: Duration(seconds: 5),
       isDismissible: true,
     ).show(context);
