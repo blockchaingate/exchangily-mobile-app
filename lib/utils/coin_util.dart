@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
+import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 
 import '../packages/bip32/bip32_base.dart' as bip32;
 
@@ -201,10 +202,55 @@ Uint8List _padTo32(Uint8List data) {
 }
 
 Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
-    {int chainId}) async {
-  Uint8List messageHash =
-      magicHash(originalMessage, environment["chains"]["BTC"]["network"]);
+    {int chainId, var network}) async {
+  print('signBtcMessageWith begin');
+  Uint8List messageHash = magicHash(
+      originalMessage, network);
 
+  print('network=');
+  print(network);
+  print('messageHash=');
+  print(messageHash);
+  var signature = sign(messageHash, privateKey);
+
+  // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
+  // be aware that signature.v already is recovery + 27
+
+  /*
+  final chainIdV =
+      chainId != null ? (signature.v - 27 + (chainId * 2 + 35)) : signature.v;
+  */
+
+  //print('signature.vsignature.vsignature.v=' + signature.v.toString());
+  final chainIdV = signature.v;
+  signature = MsgSignature(signature.r, signature.s, chainIdV);
+
+  //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
+  //print('signature.v====');
+  //print(signature.v);
+  final r = _padTo32(intToBytes(signature.r));
+  final s = _padTo32(intToBytes(signature.s));
+  var v = intToBytes(BigInt.from(signature.v));
+
+  if (signature.v == 0) {
+    v = Uint8List.fromList([0].toList());
+  }
+  //print('vvvv=');
+  //print(v);
+  // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
+  return uint8ListFromList(r + s + v);
+}
+
+Future<Uint8List> signDogeMessageWith(originalMessage, Uint8List privateKey,
+    {int chainId, var network}) async {
+  print('signDogeMessageWith');
+  Uint8List messageHash = magicHashDoge(
+      originalMessage, network);
+  //messageHash.insert(1, 25);
+  print('network=');
+  print(network);
+  print('messageHash=');
+  print(messageHash);
   var signature = sign(messageHash, privateKey);
 
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
@@ -274,13 +320,40 @@ Future<Uint8List> signPersonalMessageWith(
 Uint8List magicHash(String message, [NetworkType network]) {
   network = network ?? bitcoin;
   Uint8List messagePrefix = utf8.encode(network.messagePrefix);
+  print('messagePrefix===');
+  print(messagePrefix);
   int messageVISize = encodingLength(message.length);
+  print('messageVISize===');
+  print(messageVISize);
   int length = messagePrefix.length + messageVISize + message.length;
   Uint8List buffer = new Uint8List(length);
   buffer.setRange(0, messagePrefix.length, messagePrefix);
   encode(message.length, buffer, messagePrefix.length);
   buffer.setRange(
       messagePrefix.length + messageVISize, length, utf8.encode(message));
+  print('buffer=');
+  print(buffer);
+  return hash256(buffer);
+}
+
+Uint8List magicHashDoge(String message, [NetworkType network]) {
+  network = network ?? bitcoin;
+  Uint8List messagePrefix = utf8.encode(network.messagePrefix);
+
+  int messageVISize = encodingLength(message.length);
+
+  int length = messagePrefix.length + messageVISize + message.length + 1;
+  Uint8List buffer = new Uint8List(length);
+  buffer.setRange(0, 1, [25]);
+
+  buffer.setRange(1, messagePrefix.length + 1, messagePrefix);
+
+
+  encode(message.length, buffer, messagePrefix.length + 1);
+  buffer.setRange(
+      messagePrefix.length + messageVISize + 1, length, utf8.encode(message));
+  print('buffer=');
+  print(buffer);
   return hash256(buffer);
 }
 
@@ -292,16 +365,11 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
   var s = '';
   var v = '';
 
-  final root = bip32.BIP32.fromSeed(
-      seed,
-      bip32.NetworkType(
-          wif: environment["chains"]["BTC"]["network"].wif,
-          bip32: new bip32.Bip32Type(
-              public: environment["chains"]["BTC"]["network"].bip32.public,
-              private: environment["chains"]["BTC"]["network"].bip32.private)));
+
 
   var signedMess;
   if (coinName == 'ETH' || tokenType == 'ETH') {
+    final root = bip32.BIP32.fromSeed(seed);
     var coinType = environment["CoinType"]["ETH"];
     final ethCoinChild =
         root.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
@@ -328,22 +396,52 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     s = ss.substring(64, 128);
     v = ss.substring(128);
     print('v=' + v);
-  } else if (coinName == 'FAB' || coinName == 'BTC' || tokenType == 'FAB') {
+  } else if (coinName == 'FAB' ||
+      coinName == 'BTC' ||
+      coinName == 'LTC' ||
+      coinName == 'DOGE' ||
+      tokenType == 'FAB') {
     //var hdWallet = new HDWallet.fromSeed(seed, network: testnet);
+
+    var network = environment["chains"]['BTC']["network"];
+    if(coinName == 'LTC') {
+      network = environment["chains"]['LTC']["network"];
+    } else
+    if(coinName == 'DOGE') {
+      network = environment["chains"]['DOGE']["network"];
+    }
+    final root2 = bip32.BIP32.fromSeed(
+        seed,
+        bip32.NetworkType(
+            wif: network.wif,
+            bip32: new bip32.Bip32Type(
+                public: network.bip32.public,
+                private: network.bip32.private)));
 
     var coinType = environment["CoinType"]["FAB"];
     if (coinName == 'BTC') {
       coinType = environment["CoinType"]["BTC"];
     }
-
+    if (coinName == 'LTC') {
+      coinType = environment["CoinType"]["LTC"];
+    }
+    if (coinName == 'DOGE') {
+      coinType = environment["CoinType"]["DOGE"];
+    }
     var bitCoinChild =
-        root.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+      root2.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
     //var btcWallet =
     //    hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
     var privateKey = bitCoinChild.privateKey;
     // var credentials = EthPrivateKey(privateKey);
 
-    signedMess = await signBtcMessageWith(originalMessage, privateKey);
+    if(coinName == 'DOGE') {
+      signedMess = await signDogeMessageWith(originalMessage, privateKey,
+          network: network);
+    } else {
+      signedMess = await signBtcMessageWith(originalMessage, privateKey,
+          network: network);
+    }
 
     String ss = HEX.encode(signedMess);
 
@@ -433,6 +531,8 @@ Future getAddressForCoin(root, String tickerName,
     return getBtcAddressForNode(node, tickerName: tickerName);
   } else if (tickerName == 'LTC') {
     return generateLtcAddress(root);
+  } else if (tickerName == 'DOGE') {
+    return generateDogeAddress(root);
   } else if ((tickerName == 'ETH') || (tokenType == 'ETH')) {
     var node = getEthNode(root, index: index);
     return await getEthAddressForNode(node);

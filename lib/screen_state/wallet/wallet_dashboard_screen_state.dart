@@ -204,9 +204,9 @@ class WalletDashboardScreenState extends BaseState {
       walletInfoCopy = [];
       walletInfoCopy = walletList;
     });
+    walletInfo = [];
 
     int coinTickersLength = walletService.coinTickers.length;
-    walletInfo = [];
     await getGas();
     //await getDecimalPairConfig();
 
@@ -249,7 +249,6 @@ class WalletDashboardScreenState extends BaseState {
         // log.e(
         //     'copy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
         walletInfoCopy.forEach((wallet) async {
-          log.w('wallet balance from api ${wallet.toJson()}}');
           // Loop wallet balance list from api
           for (var j = 0; j <= walletBalanceList.length; j++) {
             String walletTickerName = wallet.tickerName;
@@ -260,20 +259,24 @@ class WalletDashboardScreenState extends BaseState {
               double marketPrice = walletBalanceList[j].usdValue.usd ?? 0.0;
               double availableBal = walletBalanceList[j].balance ?? 0.0;
               double lockedBal = walletBalanceList[j].lockBalance ?? 0.0;
+
               // Check if market price error from api then show the notification with ticker name
               // so that user know why USD val for that ticker is 0
-              // log.e('Market Price $marketPrice');
-              // // removed getCoinPriceByTickername from here and use the market price value only now
-              // if (marketPrice.isNegative) {
-              //   marketPrice = 0.0;
-              // }
+
+              // removed getCoinPriceByTickername from here and use the market price value only now
+              if (marketPrice.isNegative) {
+                marketPrice = 0.0;
+              }
 
               // // If passing any negative value to UI then that pair won't show up in the list
-              // if (availableBal.isNegative) walletBalanceList[j].balance = 0;
-              // if (lockedBal.isNegative) walletBalanceList[j].lockBalance = 0;
+              if (availableBal.isNegative) walletBalanceList[j].balance = 0.0;
+              if (lockedBal.isNegative) walletBalanceList[j].lockBalance = 0.0;
+
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
-                  marketPrice, availableBal, lockedBal);
+                  marketPrice,
+                  walletBalanceList[j].balance,
+                  walletBalanceList[j].lockBalance);
 
               // if (pairDecimalConfigList != null ||
               //     pairDecimalConfigList != []) {
@@ -303,14 +306,26 @@ class WalletDashboardScreenState extends BaseState {
                   name: wallet.name,
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
-              // log.w('Wallet info single ${wallet.toJson()}');
-              // log.e('Wallet info ${walletInfo.length}');
+
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
 
           } // For loop j ends
         }); // wallet info copy for each ends
+
+        // Test to find unique wallet objects
+        final seen = Set<WalletInfo>();
+        //   walletInfo = walletInfo.where((wallet) => seen.add(wallet)).toList();
+
+        //  walletInfo = Set.of(wallets).toList();
+
+        // Observable.fromIterable(walletInfo).distinct().doOnData((event) {
+        //   log.e('DISTINCT ${event.tickerName}');
+        //   walletInfo.add(event);
+        // });
+        // walletInfo = wallets.toSet().toList();
+
         calcTotalBal();
         await updateWalletDatabase();
         if (!isProduction) debugVersionPopup();
@@ -466,12 +481,11 @@ class WalletDashboardScreenState extends BaseState {
     await sharedService.closeApp();
   }
 
-  updateAppbarHeight(h){
+  updateAppbarHeight(h) {
     top = h;
   }
 
-  getAppbarHeight(){
+  getAppbarHeight() {
     return top;
   }
-
 }

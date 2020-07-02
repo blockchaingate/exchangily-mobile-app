@@ -1,24 +1,40 @@
-import 'package:bitcoin_flutter/src/models/networks.dart';
+import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
+import 'package:exchangilymobileapp/utils/ltc_util.dart';
+import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 
 Map devConfig = {
   "decimal": {'priceDecimal': 6, 'volDecimal': 4},
   "chains": {
-    "BTC": {"network": testnet, "satoshisPerBytes": 50, "bytesPerInput": 152},
+    "BTC": {
+      "network": BitcoinFlutter.testnet,
+      "satoshisPerBytes": 100,
+      "bytesPerInput": 152
+    },
+    "LTC": {
+      "network": liteCoinTestnetNetwork,
+      "satoshisPerBytes": 400,
+      "bytesPerInput": 155
+    },
+    "DOGE": {
+      "network": dogeCoinTestnetNetwork,
+      "satoshisPerBytes": 800000,
+      "bytesPerInput": 152
+    },
     "ETH": {
       "chain": 'ropsten',
       "hardfork": 'byzantium',
       "chainId": 3,
       "infura": "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 20000000000,
+      "gasPrice": 90000000000,
       "gasLimit": 100000
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
-      "satoshisPerBytes": 50,
+      "satoshisPerBytes": 100,
       "bytesPerInput": 148,
-      "gasPrice": 50,
+      "gasPrice": 100,
       "gasLimit": 800000
     },
     "KANBAN": {"chainId": 212, "gasPrice": 50000000, "gasLimit": 20000000}
@@ -28,6 +44,7 @@ Map devConfig = {
     'kanban': 'https://kanbantest.fabcoinapi.com/',
     'btc': 'https://btctest.fabcoinapi.com/',
     'ltc': 'https://ltctest.fabcoinapi.com/',
+    'doge': 'https://dogetest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
     'campaign': 'https://test.blockchaingate.com/v2/'
@@ -110,13 +127,27 @@ Map devConfig = {
 
 Map productionConfig = {
   "chains": {
-    "BTC": {"network": bitcoin, "satoshisPerBytes": 50, "bytesPerInput": 152},
+    "BTC": {
+      "network": BitcoinFlutter.bitcoin,
+      "satoshisPerBytes": 100,
+      "bytesPerInput": 152
+    },
+    "LTC": {
+      "network": liteCoinMainnetNetwork,
+      "satoshisPerBytes": 400,
+      "bytesPerInput": 152
+    },
+    "DOGE": {
+      "network": dogeCoinMainnetNetwork,
+      "satoshisPerBytes": 800000,
+      "bytesPerInput": 152
+    },
     "ETH": {
       "chain": 'mainnet',
       "hardfork": 'byzantium',
       "chainId": 1,
       "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 20000000000,
+      "gasPrice": 90000000000,
       "gasLimit": 100000
     },
     "FAB": {
@@ -125,9 +156,9 @@ Map productionConfig = {
         "networkId": 0,
         "chainId": 0,
       },
-      "satoshisPerBytes": 50,
+      "satoshisPerBytes": 100,
       "bytesPerInput": 148,
-      "gasPrice": 50,
+      "gasPrice": 100,
       "gasLimit": 800000
     },
     "KANBAN": {"chainId": 211, "gasPrice": 50000000, "gasLimit": 20000000}
@@ -144,6 +175,7 @@ Map productionConfig = {
     'kanban': 'https://kanbanprod.fabcoinapi.com/',
     'btc': 'https://btcprod.fabcoinapi.com/',
     'ltc': 'https://ltcprod.fabcoinapi.com/',
+    'doge': 'https://dogeprod.fabcoinapi.com/',
     'fab': 'https://fabprod.fabcoinapi.com/',
     'eth': 'https://ethprod.fabcoinapi.com/',
     'campaign': 'https://blockchaingate.com/v2/'

@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
+import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
 
 class MainNav extends StatefulWidget {
   MainNav({this.currentPage = 0});
@@ -21,13 +23,18 @@ class _MainNavState extends State<MainNav> {
   int _page = 0;
   final double paddingValue = 4; // change space between icon and title text
   final double iconSize = 25; // change icon size
+  SharedService sharedService = locator<SharedService>();
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       // onWillPop: () async => false,
       onWillPop: () async {
-        
+        if (_page == 0) {
+          sharedService.context = context;
+          await sharedService.closeApp();
+          return new Future(() => false);
+        }
         onPageChanged(0);
         navigateToPage(0);
         return new Future(() => false);

@@ -48,6 +48,12 @@ class MoveToExchangeScreenState extends BaseState {
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
+    } else if (coinName == 'LTC') {
+      satoshisPerByteTextController.text =
+          environment["chains"]["LTC"]["satoshisPerBytes"].toString();
+    } else if (coinName == 'DOGE') {
+      satoshisPerByteTextController.text =
+          environment["chains"]["DOGE"]["satoshisPerBytes"].toString();
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       gasPriceTextController.text =
           environment["chains"]["ETH"]["gasPrice"].toString();

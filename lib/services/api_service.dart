@@ -36,6 +36,7 @@ class ApiService {
   final String walletBalances = 'walletBalances';
   final btcBaseUrl = environment["endpoints"]["btc"];
   final ltcBaseUrl = environment["endpoints"]["ltc"];
+  final dogeBaseUrl = environment["endpoints"]["doge"];
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
@@ -230,6 +231,21 @@ class ApiService {
     }
   }
 
+  // Get DogeUtxos
+  Future getDogeUtxos(String address) async {
+    var url = dogeBaseUrl + 'getutxos/' + address;
+    log.w(url);
+
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      return json;
+    } catch (e) {
+      log.e('getDogeUtxos $e');
+      throw Exception('e');
+    }
+  }
+
   // Post Btc Transaction
   Future postBtcTx(String txHex) async {
     var url = btcBaseUrl + 'postrawtransaction';
@@ -267,19 +283,47 @@ class ApiService {
       var response = await client.post(url, body: data);
 
       json = jsonDecode(response.body);
-    } catch (e) {}
-
-    log.w('json= $json');
-    if (json != null) {
-      if (json['txid'] != null) {
-        txHash = '0x' + json['txid'];
-      } else if (json['Error'] != null) {
-        errMsg = json['Error'];
+      log.w('json= $json');
+      if (json != null) {
+        if (json['txid'] != null) {
+          txHash = '0x' + json['txid'];
+        } else if (json['Error'] != null) {
+          errMsg = json['Error'];
+        }
+      } else {
+        errMsg = 'invalid json format.';
       }
-    } else {
-      errMsg = 'invalid json format.';
+      return {'txHash': txHash, 'errMsg': errMsg};
+    } catch (e) {
+      log.e('postLtcTx $e');
     }
-    return {'txHash': txHash, 'errMsg': errMsg};
+  }
+
+  // Post Ltc Transaction
+  Future postDogeTx(String txHex) async {
+    var url = dogeBaseUrl + 'postrawtransaction';
+    var json;
+    var txHash = '';
+    var errMsg = '';
+    try {
+      var data = {'rawtx': txHex};
+      var response = await client.post(url, body: data);
+
+      json = jsonDecode(response.body);
+      log.w('json= $json');
+      if (json != null) {
+        if (json['txid'] != null) {
+          txHash = '0x' + json['txid'];
+        } else if (json['Error'] != null) {
+          errMsg = json['Error'];
+        }
+      } else {
+        errMsg = 'invalid json format.';
+      }
+      return {'txHash': txHash, 'errMsg': errMsg};
+    } catch (e) {
+      log.e('postDogeTx $e');
+    }
   }
 
   // Get Fab Transaction
