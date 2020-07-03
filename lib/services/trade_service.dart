@@ -15,8 +15,10 @@ import 'dart:convert';
 
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:http/http.dart' as http;
 import 'package:stacked/stacked.dart';
@@ -31,6 +33,28 @@ class TradeService {
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
   static String basePath = environment['websocket'];
+
+/*----------------------------------------------------------------------
+                    getPairDecimalConfig
+----------------------------------------------------------------------*/
+
+  Future<DecimalConfig> getDecimalPairConfig(String pairName) async {
+    List<PairDecimalConfig> pairDecimalConfigList = [];
+    DecimalConfig singlePairDecimalConfig = new DecimalConfig();
+    await _api.getPairDecimalConfig().then((res) {
+      pairDecimalConfigList = res;
+      log.w('Current pair name in get decimal config $pairName');
+      for (PairDecimalConfig pair in pairDecimalConfigList) {
+        if (pair.name == pairName) {
+          singlePairDecimalConfig = DecimalConfig(
+              priceDecimal: pair.priceDecimal,
+              quantityDecimal: pair.qtyDecimal);
+          log.e('Price and quantity decimal $singlePairDecimalConfig');
+        }
+      }
+    });
+    return singlePairDecimalConfig;
+  }
 
 /*----------------------------------------------------------------------
                     Close IOWebSocket Connections

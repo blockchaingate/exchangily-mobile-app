@@ -104,7 +104,6 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   logout() async {
-    await initState();
     if (userData != null) {
       await campaignUserDatabaseService.deleteUserData(userData.email);
       log.w('User data deleted successfully.');
@@ -125,7 +124,7 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(true);
     await campaignService.getMemberProfile(userData).then((res) {
       if (res != null) {
-        log.w('myProfile $res');
+        // log.w('myProfile $res');
         String level = res['membership'].toString();
         if (level == 'gold') {
           memberLevelTextColor = 0xffE6BE8A;

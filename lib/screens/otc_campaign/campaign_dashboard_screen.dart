@@ -20,6 +20,7 @@ class CampaignDashboardScreen extends StatelessWidget {
     return BaseScreen<CampaignDashboardScreenState>(
       onModelReady: (model) async {
         model.context = context;
+        model.userData = userData;
         await model.init();
       },
       builder: (context, model, child) => Scaffold(

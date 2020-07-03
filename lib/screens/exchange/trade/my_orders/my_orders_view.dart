@@ -39,7 +39,8 @@ class MyOrdersView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'An error has occered while fetching orders: ${model.errorMessage}',
+                              AppLocalizations.of(context).serverError +
+                                  ': ${model.errorMessage}',
                               style: TextStyle(color: Colors.white),
                             ),
                             IconButton(
