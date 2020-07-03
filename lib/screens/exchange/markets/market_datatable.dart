@@ -20,15 +20,6 @@ class _MarketDataTableState extends State<MarketDataTable> {
   List<Price> cpPairList;
 
   final NavigationService navigationService = locator<NavigationService>();
-  final List titles = [
-    'Ticker',
-    'Price',
-    'High',
-    'Low',
-    'Change',
-  ];
-
-  // List titles;
 
   bool _sortNameAsc = true;
   bool _sortPriceAsc = true;
@@ -41,13 +32,6 @@ class _MarketDataTableState extends State<MarketDataTable> {
 
   @override
   void initState() {
-    // titles = [
-    //   AppLocalizations.of(context).ticker,
-    //   AppLocalizations.of(context).price,
-    //   AppLocalizations.of(context).high,
-    //   AppLocalizations.of(context).low,
-    //   AppLocalizations.of(context).change,
-    // ];
     super.initState();
   }
 
@@ -107,7 +91,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
-                 AppLocalizations.of(context).price,
+                  AppLocalizations.of(context).price,
                   style: Theme.of(context)
                       .textTheme
                       .subtitle2
@@ -220,33 +204,6 @@ class _MarketDataTableState extends State<MarketDataTable> {
               },
             ),
           ],
-
-          // titles
-          //     .map(
-          //       (e) => DataColumn(
-          //         label: Container(
-          //           width: titles[0] == e
-          //               ? MediaQuery.of(context).size.width * 3 / 11
-          //               : MediaQuery.of(context).size.width * 2 / 11,
-          //           child: Text(
-          //             e,
-          //             style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize:14),
-          //           ),
-          //         ),
-          //         onSort: (columnIndex, ascending) {
-          //           if(){
-
-          //           }
-          //           setState(() {
-          //             sort.map((e) => {e == false});
-          //             sort[columnIndex] = true;
-          //             _sortColumnIndex = columnIndex;
-          //           });
-          //           onSortColum(columnIndex, ascending);
-          //         },
-          //       ),
-          //     )
-          //     .toList(),
           rows: pairList
               .map((itemRow) => DataRow(
                     cells: <DataCell>[
@@ -265,7 +222,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline5
-                                      .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
+                                      .copyWith(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16),
                                 ),
                               ),
                               Text(
@@ -292,7 +251,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
-                                  .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
+                                  .copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16),
                               textAlign: TextAlign.start),
                         ),
                         onTap: () {
@@ -305,10 +266,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                       DataCell(
                         Text(
                           itemRow.high.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                              fontWeight: FontWeight.w400, fontSize: 16),
                         ),
                         onTap: () {
                           itemRow.symbol =
@@ -320,10 +279,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                       DataCell(
                         Text(
                           itemRow.low.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                              fontWeight: FontWeight.w400, fontSize: 16),
                         ),
                         onTap: () {
                           itemRow.symbol =
@@ -341,7 +298,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               color: Color(itemRow.change >= 0
                                   ? 0XFF0da88b
                                   : 0XFFe2103c),
-                              fontWeight: FontWeight.w400,fontSize: 16),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16),
                         ),
                         onTap: () {
                           itemRow.symbol =
@@ -356,79 +314,3 @@ class _MarketDataTableState extends State<MarketDataTable> {
     );
   }
 }
-
-// DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 3 / 11,
-//               child: Text(
-//                 titles[0],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),
-//           DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 2 / 11,
-//               child: Text(
-//                 titles[1],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),
-//           DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 2 / 11,
-//               child: Text(
-//                 titles[2],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),
-//           DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 2 / 11,
-//               child: Text(
-//                 titles[3],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),
-//           DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 2 / 11,
-//               child: Text(
-//                 titles[0],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),

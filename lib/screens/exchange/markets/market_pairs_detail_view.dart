@@ -15,14 +15,6 @@ class MarketPairPriceDetailView extends StatelessWidget {
   MarketPairPriceDetailView({Key key, this.pairList}) : super(key: key);
   final NavigationService navigationService = locator<NavigationService>();
 
-  final List titles = [
-    'Ticker',
-    'Price',
-    'High',
-    'Low',
-    'Change',
-  ];
-
   @override
   Widget build(BuildContext context) {
     // if (false)
