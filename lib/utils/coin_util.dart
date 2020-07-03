@@ -399,6 +399,7 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
   } else if (coinName == 'FAB' ||
       coinName == 'BTC' ||
       coinName == 'LTC' ||
+      coinName == 'BCH' ||
       coinName == 'DOGE' ||
       tokenType == 'FAB') {
     //var hdWallet = new HDWallet.fromSeed(seed, network: testnet);
@@ -427,6 +428,9 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     }
     if (coinName == 'DOGE') {
       coinType = environment["CoinType"]["DOGE"];
+    }
+    if (coinName == 'BCH') {
+      coinType = environment["CoinType"]["BCH"];
     }
     var bitCoinChild =
       root2.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
