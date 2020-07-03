@@ -203,8 +203,8 @@ class SendScreenState extends BaseState {
               tag: 'send');
           walletService.insertTransactionInDatabase(transactionHistory);
         } else if (txHash == '' && errorMessage == '') {
-          log.w('Both TxHash and Error Message are empty $errorMessage');
-          sharedService.alertDialog(AppLocalizations.of(context).genericError,
+          log.e('Both TxHash and Error Message are empty $errorMessage');
+          sharedService.alertDialog("",
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
               isWarning: false);
           setState(ViewState.Idle);

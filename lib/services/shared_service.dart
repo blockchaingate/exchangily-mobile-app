@@ -76,15 +76,21 @@ class SharedService {
             context: context,
             builder: (context) {
               return AlertDialog(
-                elevation: 10,
+                titlePadding: EdgeInsets.all(0),
+                actionsPadding: EdgeInsets.all(0),
+                elevation: 5,
                 backgroundColor: globals.walletCardColor.withOpacity(0.95),
-                title: Text(
-                  title,
-                  textAlign: TextAlign.center,
-                ),
+                title: title == ""
+                    ? Container()
+                    : Container(
+                        child: Text(
+                          title,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
                 titleTextStyle: Theme.of(context).textTheme.headline4,
                 contentTextStyle: TextStyle(color: globals.grey),
-                contentPadding: EdgeInsets.symmetric(horizontal: 25),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
                 content: Visibility(
                   visible: message != '',
                   child: StatefulBuilder(
@@ -130,62 +136,63 @@ class SharedService {
                             ],
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Container(
-                          margin: EdgeInsetsDirectional.only(bottom: 10),
-                          child: FlatButton(
-                            color: globals.primaryColor,
-                            padding: EdgeInsets.all(0),
-                            child: Text(
-                              AppLocalizations.of(context).close,
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
-                            ),
-                            onPressed: () {
-                              if (path == '' || path == null) {
-                                Navigator.of(context).pop(false);
-                              } else {
-                                navigationService.navigateTo(path,
-                                    arguments: arguments);
-                                Navigator.of(context).pop(false);
-                              }
-                            },
-                          ),
-                        ),
+                        // SizedBox(height: 10),
+                        // Container(
+                        //   margin: EdgeInsetsDirectional.only(bottom: 10),
+                        //   child: FlatButton(
+                        //     // color: globals.primaryColor,
+                        //     padding: EdgeInsets.all(0),
+                        //     child: Text(
+                        //       AppLocalizations.of(context).close,
+                        //       style:
+                        //           TextStyle(color: Colors.white, fontSize: 14),
+                        //     ),
+                        //     onPressed: () {
+                        //       if (path == '' || path == null) {
+                        //         Navigator.of(context).pop(false);
+                        //       } else {
+                        //         navigationService.navigateTo(path,
+                        //             arguments: arguments);
+                        //         Navigator.of(context).pop(false);
+                        //       }
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     );
                   }),
                 ),
-                actions: [],
-                // actions: <Widget>[
-                //   Container(
-                //     margin: EdgeInsetsDirectional.only(bottom: 10),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: [
-                //         FlatButton(
-                //           color: globals.primaryColor,
-                //           padding: EdgeInsets.all(0),
-                //           child: Center(
-                //             child: Text(
-                //               AppLocalizations.of(context).close,
-                //               style: TextStyle(color: Colors.white, fontSize: 14),
-                //             ),
-                //           ),
-                //           onPressed: () {
-                //             if (path == '' || path == null) {
-                //               Navigator.of(context).pop(false);
-                //             } else {
-                //               navigationService.navigateTo(path,
-                //                   arguments: arguments);
-                //               Navigator.of(context).pop(false);
-                //             }
-                //           },
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ],
+                // actions: [],
+                actions: <Widget>[
+                  Container(
+                    margin: EdgeInsetsDirectional.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
+                          color: globals.primaryColor,
+                          padding: EdgeInsets.all(0),
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context).close,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (path == '' || path == null) {
+                              Navigator.of(context).pop(false);
+                            } else {
+                              navigationService.navigateTo(path,
+                                  arguments: arguments);
+                              Navigator.of(context).pop(false);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               );
             }) ??
         false;
