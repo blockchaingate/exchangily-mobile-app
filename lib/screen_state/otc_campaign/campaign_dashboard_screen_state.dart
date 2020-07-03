@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
@@ -43,8 +45,40 @@ class CampaignDashboardScreenState extends BaseState {
   List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
   List<CampaignReward> campaignRewardList = [];
-  initState() async {
-    log.w(' In init');
+
+/*----------------------------------------------------------------------
+                    Init
+----------------------------------------------------------------------*/
+
+  init() async {
+    await campaignService.getSavedLoginToken().then((token) async {
+      if (token != '' || token != null) {
+        await myProfile(userData);
+        await myRewardsByToken();
+        await getCampaignName();
+        tokenCheckTimer();
+      } else {
+        navigationService.navigateTo('/campaignLogin');
+      }
+    });
+  }
+
+/*----------------------------------------------------------------------
+                    Token check timer
+----------------------------------------------------------------------*/
+
+  tokenCheckTimer() {
+    Timer.periodic(Duration(minutes: 5), (t) async {
+      await campaignService.getSavedLoginToken().then((token) async {
+        if (token != '' || token != null) {
+          log.i('timer token present');
+        } else {
+          navigationService.navigateTo('/campaignLogin');
+          t.cancel();
+          log.e('Timer cancel');
+        }
+      });
+    });
   }
 
 /*----------------------------------------------------------------------
