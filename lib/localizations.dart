@@ -261,16 +261,6 @@ class AppLocalizations {
         desc: 'warning_import_or_confirm_mnemonic');
   }
 
-  String get backupMnemonicNoticeTitle {
-    return Intl.message('What is backup mnemonic? Why it is important?',
-        name: 'backupMnemonicNoticeTitle', desc: 'backup_mnemonic_notice_title');
-  }
-
-  String get backupMnemonicNoticeContent {
-    return Intl.message("Backup mnemonic is a list of words which store all the information needed to recover virtual coin funds on-chain. Wallet software will typically generate a backup mnemonic and instruct the user to write it down on paper. If the user's computer breaks or their hard drive becomes corrupted, they can download the same wallet software again and use the paper backup to get their virtual coins back. Anybody else who discovers the phrase can steal the virtual coins, so it must be kept safe like jewels or cash. For example, it must not be typed into any website. Backup mnemonic are an excellent way of backing up and storing bitcoins and so they are used by almost all well-regarded wallets.",
-        name: 'backupMnemonicNoticeContent', desc: 'backup_mnemonic_notice_content');
-  }
-
   String get enterPassword {
     return Intl.message('Enter Password',
         name: 'enterPassword', desc: 'create_password_enter_password');
@@ -1388,15 +1378,18 @@ class AppLocalizations {
   }
 
   String get noRouteDefined {
-    return Intl.message('No route defined for', name: 'NoRouteDefined', desc: 'NoRouteDefined_text');
+    return Intl.message('No route defined for',
+        name: 'NoRouteDefined', desc: 'NoRouteDefined_text');
   }
 
   String get myRewardTokens {
-    return Intl.message('My Reward Tokens', name: 'myRewardTokens', desc: 'myRewardTokens_text');
+    return Intl.message('My Reward Tokens',
+        name: 'myRewardTokens', desc: 'myRewardTokens_text');
   }
 
   String get inputValidation {
-    return Intl.message('input validation', name: 'inputValidation', desc: 'inputValidation_text');
+    return Intl.message('input validation',
+        name: 'inputValidation', desc: 'inputValidation_text');
   }
 
   String get showOnlyCurrentPairOrders {
@@ -1414,6 +1407,28 @@ class AppLocalizations {
   String get symbol {
     return Intl.message('Symbol',
         name: 'symbol', desc: 'exchange_my_exchange_assets');
+  }
+
+  String get backupMnemonicNoticeTitle {
+    return Intl.message(
+        'What is mnemonic? Why it is so important to backup mnemonic phrases?',
+        name: 'backupMnemonicNoticeTitle',
+        desc: 'backup_mnemonic_notice_title');
+  }
+
+  String get backupMnemonicNoticeContent {
+    return Intl.message(
+        "A mnemonic phrase is a list of words which store all the information needed to recover virtual coin funds on-chain. Wallet software will typically generate a mnemonic phrase and instruct the user to write it down on paper. If the user's computer breaks or their hard drive becomes corrupted, they can download the same wallet software again and use the paper backup to get their virtual coins back. Anybody else who discovers the phrase can steal the virtual coins, so it must be kept safe like jewels or cash. For example, it must not be typed into any website. A mnemonic phrase are an excellent way of backing up and storing bitcoins and so they are used by almost all well-regarded wallets.",
+        name: 'backupMnemonicNoticeContent',
+        desc: 'backup_mnemonic_notice_content');
+  }
+
+  String get ticker {
+    return Intl.message("Ticker", name: 'ticker', desc: 'ticker_text');
+  }
+
+  String get vol {
+    return Intl.message("Vol", name: 'vol', desc: 'vol_text');
   }
 }
 

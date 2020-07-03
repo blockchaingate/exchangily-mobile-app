@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -61,9 +62,12 @@ class CreatePasswordScreenState extends BaseState {
         .then((data) {
       _walletInfo = data;
       // Navigator.pushNamed(context, '/mainNav', arguments: _walletInfo);
-      navigationService.navigateTo('/mainNav');
+      navigationService.navigateTo('/mainNav', arguments: 0);
       randomMnemonicFromRoute = '';
     }).catchError((onError) {
+      passwordMatch = false;
+      password = '';
+      confirmPassword = '';
       errorMessage = AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);
       setState(ViewState.Idle);
@@ -86,6 +90,7 @@ class CreatePasswordScreenState extends BaseState {
     var res = RegexValidator(pattern).isValid(confirmPass);
     checkConfirmPasswordConditions = res;
     password == confirmPass ? passwordMatch = true : passwordMatch = false;
+    if (passwordMatch) errorMessage = '';
     return checkConfirmPasswordConditions;
   }
 
@@ -94,7 +99,7 @@ class CreatePasswordScreenState extends BaseState {
     RegExp regex = new RegExp(pattern);
     String pass = passTextController.text;
     String confirmPass = confirmPassTextController.text;
-    if (pass.isEmpty) {
+    if (pass.isEmpty && isProduction) {
       password = '';
       confirmPassword = '';
       checkPasswordConditions = false;
@@ -108,7 +113,7 @@ class CreatePasswordScreenState extends BaseState {
       setState(ViewState.Idle);
       return;
     } else {
-      if (!regex.hasMatch(pass)) {
+      if (!regex.hasMatch(pass) && isProduction) {
         password = '';
         confirmPassword = '';
         checkPasswordConditions = false;
@@ -121,7 +126,7 @@ class CreatePasswordScreenState extends BaseState {
             context);
         setState(ViewState.Idle);
         return;
-      } else if (pass != confirmPass) {
+      } else if (pass != confirmPass && isProduction) {
         password = '';
         confirmPassword = '';
         checkPasswordConditions = false;

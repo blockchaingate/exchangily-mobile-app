@@ -23,7 +23,7 @@ import 'dart:typed_data';
 
 getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
   var abiHex = "3295d51e";
-  abiHex += fixLength(coinType.toString(), 64);
+  abiHex += fixLength(coinType.toRadixString(16), 64);
 
   var amountHex = amountInLink.toRadixString(16);
   abiHex += fixLength(trimHexPrefix(amountHex), 64);
@@ -36,7 +36,7 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
     String addressInKanban, signedMessage) {
   var abiHex = "379eb862";
   abiHex += trimHexPrefix(signedMessage["v"]);
-  abiHex += fixLength(coinType.toString(), 62);
+  abiHex += fixLength(coinType.toRadixString(16), 62);
   abiHex += trimHexPrefix(txHash);
   var amountHex = amountInLink.toRadixString(16);
 

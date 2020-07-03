@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.2.0+1
+version: 1.2.0+2
 
 environment:
   sdk: '>=2.3.2 <3.0.0'
@@ -20,8 +20,8 @@ dependencies:
   # Bip39
   bip39: ^1.0.3
   bs58check: ^1.0.1
-  # bitcoin Flutter
-  bitcoin_flutter: ^1.0.7
+  # # bitcoin Flutter
+  # bitcoin_flutter: ^1.0.7
 
   # Pointy Castle
   # pointycastle: ^1.0.1
@@ -112,25 +112,28 @@ dependencies:
   flutter_svg: ^0.17.3+1
 
   # State Management
-  stacked: ^1.6.0
+  stacked: ^1.5.8
 
-  # Flutter_beautiful_popup
+  #flutter_beautiful_popup
   flutter_beautiful_popup: ^1.5.0
 
   # Carousel
   flutter_swiper: ^1.1.6
 
-  # Validators
+  # validators
   validators: ^2.0.0+1
 
-  # Cached_network_image
+  # cached_network_image
   cached_network_image: ^2.0.0
 
-  # Fancy_bottom_navigation
+  # fancy_bottom_navigation
   fancy_bottom_navigation: ^0.3.2
 
-  # To generate BCH address
+  # bch address
   bitbox: ^0.0.1
+
+  # Generate LTC and DOGE coin address
+  bitcoin_flutter: ^2.0.1
 
   # Share files
   share:
@@ -161,6 +164,7 @@ flutter:
     - assets/images/otc-campaign/
     - assets/pages/index.html
     - assets/images/shared/
+    - assets/images/slider/
 flutter_icons:
   image_path: 'assets/images/launcher/mobile-icon.png'
   android: true

@@ -168,11 +168,12 @@ class SendScreenState extends BaseState {
           'satoshisPerBytes': satoshisPerBytes
         };
       }
-      log.e('tickname ${walletInfo.tickerName}');
+
       // Convert FAB to EXG format
       if (walletInfo.tickerName == 'EXG' || walletInfo.tickerName == 'DUSD') {
         if (!toAddress.startsWith('0x')) toAddress = fabToExgAddress(toAddress);
       }
+
       await walletService
           .sendTransaction(
               tickerName, seed, [0], [], toAddress, amount, options, true)
@@ -201,8 +202,6 @@ class SendScreenState extends BaseState {
               quantity: amount,
               tag: 'send');
           walletService.insertTransactionInDatabase(transactionHistory);
-          //  walletService.checkTransactionStatus(transactionHistory);
-          setState(ViewState.Idle);
         } else if (txHash == '' && errorMessage == '') {
           log.w('Both TxHash and Error Message are empty $errorMessage');
           sharedService.alertDialog(AppLocalizations.of(context).genericError,
@@ -270,7 +269,18 @@ class SendScreenState extends BaseState {
 // Check Fields to see if user has filled both address and amount fields correctly
 
   checkFields(context) async {
+    print('in check fields');
+    txHash = '';
+    errorMessage = '';
+    //walletInfo = walletInfo;
+    amount = double.tryParse(sendAmountTextController.text);
+    toAddress = receiverWalletAddressTextController.text;
+    gasPrice = int.tryParse(gasPriceTextController.text);
+    gasLimit = int.tryParse(gasLimitTextController.text);
+    satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
+
     if (toAddress == '') {
+      print('address empty');
       sharedService.alertDialog(AppLocalizations.of(context).emptyAddress,
           AppLocalizations.of(context).pleaseEnterAnAddress,
           isWarning: false);
@@ -279,18 +289,22 @@ class SendScreenState extends BaseState {
         amount.isNegative ||
         !checkSendAmount ||
         amount > walletInfo.availableBalance) {
+      print('amount no good');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
-    } else if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).minimumAmountError,
-          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-          Icons.cancel,
-          globals.red,
-          context);
-      return;
-    } else {
+    }
+    // else if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+    //   sharedService.showInfoFlushbar(
+    //       AppLocalizations.of(context).minimumAmountError,
+    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+    //       Icons.cancel,
+    //       globals.red,
+    //       context);
+    //   return;
+    // }
+    else {
+      print('else');
       FocusScope.of(context).requestFocus(FocusNode());
       await verifyPassword();
       // await updateBalance(widget.walletInfo.address);

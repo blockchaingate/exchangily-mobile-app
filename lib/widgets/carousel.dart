@@ -6,12 +6,6 @@ class Carousel extends StatelessWidget {
   final List<Map> imageData;
   Carousel({this.imageData});
 
-  // final List<Map> images = [
-  //   {"imgUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1052&q=80"},
-  //   {"imgUrl": "https://s27389.pcdn.co/wp-content/uploads/2020/03/three-new-ways-doing-business-enabled-blockchain.jpeg"},
-  //   {"imgUrl": "https://assets.weforum.org/report/image/wM-N1S6t0HWgbv1IOS24C78jNLctPTn2CV9HxoUhRro.PNG"},
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,15 +13,35 @@ class Carousel extends StatelessWidget {
       child: Swiper(
         loop: true,
         autoplay: imageData.length > 1 ? true : false,
+        autoplayDelay:7000,
+        // duration: 600,
+        pagination: new SwiperPagination(builder: new SwiperCustomPagination(
+            builder: (BuildContext context, SwiperPluginConfig config) {
+          return new DotSwiperPaginationBuilder(
+                  color: Colors.white38,
+                  activeColor: Colors.white,
+                  size: 8.0,
+                  activeSize: 8.0)
+              .build(context, config);
+        })),
         itemBuilder: (BuildContext context, int index) {
           String imgUrl = imageData[index]["imgUrl"];
           return InkWell(
             onTap: () {},
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: CacheImage(
-                imgUrl,
-                fit: BoxFit.fill,
+              child: InkWell(
+                child: CacheImage(
+                  imgUrl,
+                  fit: BoxFit.fill,
+                ),
+                onTap: () {
+                  if (imageData[index].containsKey("route") &&
+                      imageData[index]["route"].length > 0) {
+                    Navigator.pushNamed(context, imageData[index]["route"],
+                        arguments: true);
+                  }
+                },
               ),
             ),
           );

@@ -488,19 +488,7 @@ class SendWalletScreen extends StatelessWidget {
                                   .headline4
                                   .copyWith(fontWeight: FontWeight.w400)),
                           onPressed: () async {
-                            model.txHash = '';
-                            model.errorMessage = '';
-                            model.walletInfo = walletInfo;
-                            model.amount = double.tryParse(
-                                model.sendAmountTextController.text);
-                            model.toAddress =
-                                model.receiverWalletAddressTextController.text;
-                            model.gasPrice =
-                                int.tryParse(model.gasPriceTextController.text);
-                            model.gasLimit =
-                                int.tryParse(model.gasLimitTextController.text);
-                            model.satoshisPerBytes = int.tryParse(
-                                model.satoshisPerByteTextController.text);
+                            print('Send pressed');
                             model.checkFields(context);
                           },
                         ),

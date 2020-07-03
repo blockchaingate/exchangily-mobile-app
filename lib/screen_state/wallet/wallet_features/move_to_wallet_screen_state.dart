@@ -33,8 +33,8 @@ class MoveToWalletScreenState extends BaseState {
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
   final amountController = TextEditingController();
-  double kanbanTransFee = 0.0;
-  double minimumAmount = 0.0;
+  var kanbanTransFee;
+  var minimumAmount;
   bool transFeeAdvance = false;
 
   void initState() {
@@ -60,26 +60,26 @@ class MoveToWalletScreenState extends BaseState {
   checkPass() async {
     setBusy(true);
     var amount = double.tryParse(amountController.text);
-    if (amount == null ||
-        amount > walletInfo.availableBalance ||
-        amount == 0 ||
-        amount.isNegative) {
-      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterValidNumber,
-          isWarning: false);
-      setBusy(false);
-      return;
-    }
+    // if (amount == null ||
+    //     // amount > walletInfo.availableBalance ||
+    //     // amount == 0 ||
+    //     amount.isNegative) {
+    //   sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+    //       AppLocalizations.of(context).pleaseEnterValidNumber,
+    //       isWarning: false);
+    //   setBusy(false);
+    //   return;
+    // }
 
-    if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).minimumAmountError,
-          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-          Icons.cancel,
-          globals.red,
-          context);
-      return;
-    }
+    // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+    //   sharedService.showInfoFlushbar(
+    //       AppLocalizations.of(context).minimumAmountError,
+    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+    //       Icons.cancel,
+    //       globals.red,
+    //       context);
+    //   return;
+    // }
     setMessage('');
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -97,6 +97,11 @@ class MoveToWalletScreenState extends BaseState {
       }
       if (coinName == 'EXG') {
         tokenType = 'FAB';
+      }
+
+      if (coinName == 'BCH') {
+        await walletService.getBchAddressDetails(coinAddress).then(
+            (addressDetails) => coinAddress = addressDetails['legacyAddress']);
       }
 
       var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);

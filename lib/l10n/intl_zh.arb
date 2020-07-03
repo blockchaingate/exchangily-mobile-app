@@ -1612,8 +1612,84 @@
     "description": "transaction_history_pending",
     "type": "text",
     "placeholders": {}
+  },
+  "allOrders": "全部订单",
+  "@allOrders": {
+    "description": "exchange_all_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myOrders": "我的订单",
+  "@myOrders": {
+    "description": "exchange_my_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "change": "涨幅",
+  "@change": {
+    "description": "change_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "reload": "重新载入",
+  "@reload": {
+    "description": "reload_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myRewardTokens": "我的硬币奖励",
+  "@myRewardTokens": {
+    "description": "myRewardTokens_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "inputValidation": "输入验证",
+  "@inputValidation": {
+    "description": "inputValidation_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showOnlyCurrentPairOrders": "只显示当前匹配订单",
+  "@showOnlyCurrentPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showAllPairOrders": "显示全部匹配订单",
+  "@showAllPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "symbol": "符号",
+  "@symbol": {
+    "description": "exchange_my_exchange_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMnemonicNoticeTitle": "什么是助记词? 为什么备份助记词很重要?",
+  "@backupMnemonicNoticeTitle": {
+    "description": "backup_mnemonic_notice_title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMnemonicNoticeContent": "最常见的助记词就是一组 12 个单词。其实助记词就是私钥，本质上也是一串随机数。不过因为随机数形式和私钥形式都不方便使用，所以比特币社区通过了 BIP39 协议，来允许将随机数通过特定编码转化为词库中的单词。助记词不用区分大小写，又是较为常见的单词，比私钥的使用上要方便的多，所以近年来，助记词钱包已经逐渐成为主流钱包。",
+  "@backupMnemonicNoticeContent": {
+    "description": "backup_mnemonic_notice_content",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ticker": "标签",
+  "@ticker": {
+    "description": "ticker_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "vol": "数量",
+  "@vol": {
+    "description": "vol_text",
+    "type": "text",
+    "placeholders": {}
   }
-
-
   
 }

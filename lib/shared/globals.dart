@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 final Color primaryColor = Color.fromRGBO(135, 31, 255, 1);
 final Color btnColor = Color.fromRGBO(125, 21, 255, 1);
@@ -32,3 +33,14 @@ final Color buyPrice = Color(0xFF0da88b);
 final Color red = Colors.red;
 final Color exgLogoColor = Color.fromRGBO(207, 101, 68, .85);
 final Color fabLogoColor = Color.fromRGBO(162, 48, 203, .85);
+
+//added by Jack
+final Color cardColor = Color(0xff2b2a48);
+
+final Widget svgLogo = SvgPicture.asset(
+  "assets/images/wallet-page/exlogo.svg",
+);
+
+final Widget pngLogo = Image.asset(
+  "assets/images/wallet-page/exlogo.png",
+);

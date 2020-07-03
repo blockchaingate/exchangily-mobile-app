@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -74,6 +75,12 @@ class MoveToWalletScreen extends StatelessWidget {
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: true),
                         decoration: InputDecoration(
+                            suffix: Text(
+                                AppLocalizations.of(context).minimumAmount +
+                                    ': ' +
+                                    environment['minimumWithdraw'][coinName]
+                                        .toString(),
+                                style: Theme.of(context).textTheme.headline6),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: new BorderSide(
                                     color: Color(0XFF871fff), width: 1.0)),
@@ -102,26 +109,7 @@ class MoveToWalletScreen extends StatelessWidget {
                         )
                       ],
                     ),
-                    UIHelper.verticalSpaceSmall,
-                    Row(
-                      children: <Widget>[
-                        Text(AppLocalizations.of(context).minimumAmount,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(fontWeight: FontWeight.w300)),
-                        Padding(
-                          padding: EdgeInsets.only(
-                              left:
-                                  5), // padding left to keep some space from the text
-                          child: Text('${model.minimumAmount}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.w300)),
-                        )
-                      ],
-                    ),
+
                     UIHelper.verticalSpaceSmall,
                     // Kanban Gas Fee
                     Row(

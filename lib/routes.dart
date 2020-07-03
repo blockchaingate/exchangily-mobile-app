@@ -27,6 +27,7 @@ import 'package:exchangilymobileapp/screens/otc_campaign/reward_details_screen.d
 import 'package:exchangilymobileapp/screens/otc_campaign/order_details_screen.dart';
 
 import 'package:exchangilymobileapp/screens/otc_campaign/team_reward_details_screen.dart';
+import 'package:exchangilymobileapp/screens/settings/language.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
@@ -67,8 +68,8 @@ class RouteGenerator {
 
       //main navagation contains several pages
       case '/mainNav':
-        return MaterialPageRoute(builder: (_) => MainNav());
-        // return MaterialPageRoute(builder: (_) => MainNavCircle());
+        return MaterialPageRoute(builder: (_) => MainNav(currentPage: args));
+      // return MaterialPageRoute(builder: (_) => MainNavCircle());
       case '/walletSetup':
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
 
@@ -157,7 +158,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
 
       case '/campaignInstructions':
-        return MaterialPageRoute(builder: (_) => CampaignInstructionScreen());
+        return MaterialPageRoute(
+            builder: (_) => CampaignInstructionScreen(
+                  newPage: args,
+                ));
 
       case '/campaignPayment':
         return MaterialPageRoute(builder: (_) => CampaignPaymentScreen());
@@ -198,6 +202,9 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => CampaignRegisterAccountScreen());
 
+      case '/switchLanguage':
+        return MaterialPageRoute(builder: (_) => LanguageScreen());
+
       default:
         return _errorRoute(settings);
     }
@@ -208,10 +215,12 @@ class RouteGenerator {
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context).error, style: TextStyle(color: Colors.white)),
+          title: Text(AppLocalizations.of(context).error,
+              style: TextStyle(color: Colors.white)),
         ),
         body: Center(
-          child: Text(AppLocalizations.of(context).noRouteDefined +' ${settings.name}',
+          child: Text(
+              AppLocalizations.of(context).noRouteDefined + ' ${settings.name}',
               style: TextStyle(color: Colors.white)),
         ),
       );
