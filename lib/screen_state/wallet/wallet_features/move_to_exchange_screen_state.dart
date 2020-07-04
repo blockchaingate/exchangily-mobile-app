@@ -4,8 +4,8 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/transaction_history.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -16,6 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../logger.dart';
 import '../../../shared/globals.dart' as globals;
+import 'package:flutter_beautiful_popup/main.dart';
 
 class MoveToExchangeScreenState extends BaseState {
   final log = getLogger('MoveToExchangeScreenState');
@@ -47,6 +48,12 @@ class MoveToExchangeScreenState extends BaseState {
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
+    } else if (coinName == 'LTC') {
+      satoshisPerByteTextController.text =
+          environment["chains"]["LTC"]["satoshisPerBytes"].toString();
+    } else if (coinName == 'DOGE') {
+      satoshisPerByteTextController.text =
+          environment["chains"]["DOGE"]["satoshisPerBytes"].toString();
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       gasPriceTextController.text =
           environment["chains"]["ETH"]["gasPrice"].toString();
@@ -92,6 +99,7 @@ class MoveToExchangeScreenState extends BaseState {
           Icons.cancel,
           globals.red,
           context);
+      setState(ViewState.Idle);
       return;
     }
     setMessage('');
@@ -104,12 +112,13 @@ class MoveToExchangeScreenState extends BaseState {
     if (res.confirmed) {
       String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      if (coinName == 'USDT') {
-        tokenType = 'ETH';
-      }
-      if (coinName == 'EXG') {
-        tokenType = 'FAB';
-      }
+      log.i('wallet info  ${walletInfo.toJson()}');
+      // if (coinName == 'USDT' || coinName == 'HOT') {
+      //   tokenType = 'ETH';
+      // }
+      // if (coinName == 'EXG') {
+      //   tokenType = 'FAB';
+      // }
 
       var gasPrice = int.tryParse(gasPriceTextController.text);
       var gasLimit = int.tryParse(gasLimitTextController.text);
@@ -118,19 +127,23 @@ class MoveToExchangeScreenState extends BaseState {
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
 
       var option = {
-        "gasPrice": gasPrice,
-        "gasLimit": gasLimit,
-        "satoshisPerBytes": satoshisPerBytes,
+        "gasPrice": gasPrice ?? 0,
+        "gasLimit": gasLimit ?? 0,
+        "satoshisPerBytes": satoshisPerBytes ?? 0,
         'kanbanGasPrice': kanbanGasPrice,
         'kanbanGasLimit': kanbanGasLimit,
-        'tokenType': tokenType,
-        'contractAddress': environment["addresses"]["smartContract"][coinName]
+        'tokenType': walletInfo.tokenType,
+        'contractAddress': environment["addresses"]["smartContract"]
+            [walletInfo.tickerName]
       };
-
+      print(
+          '3 - -$seed, -- ${walletInfo.tickerName}, -- ${walletInfo.tokenType}, --   $amount, - - $option');
       await walletService
-          .depositDo(seed, coinName, tokenType, amount, option)
+          .depositDo(
+              seed, walletInfo.tickerName, walletInfo.tokenType, amount, option)
           .then((ret) {
         log.w(ret);
+
         bool success = ret["success"];
         if (success) {
           myController.text = '';
@@ -139,7 +152,7 @@ class MoveToExchangeScreenState extends BaseState {
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
               id: null,
-              tickerName: coinName,
+              tickerName: walletInfo.tickerName,
               address: '',
               amount: 0.0,
               date: date.toString(),
@@ -155,8 +168,30 @@ class MoveToExchangeScreenState extends BaseState {
             success
                 ? AppLocalizations.of(context).depositTransactionSuccess
                 : AppLocalizations.of(context).depositTransactionFailed,
-            success ? "" : AppLocalizations.of(context).serverError,
+            success
+                ? ""
+                : ret.containsKey("error") && ret["error"] != null
+                    ? ret["error"]
+                    : AppLocalizations.of(context).serverError,
             isWarning: false);
+
+        // final popup = BeautifulPopup(
+        //   context: context,
+        //   template: TemplateGift,
+        // );
+
+        // popup.show(
+        //   title: 'String or Widget',
+        //   content: 'String or Widget',
+        //   actions: [
+        //     popup.button(
+        //       label: 'Close',
+        //       onPressed: Navigator.of(context).pop,
+        //     ),
+        //   ],
+        //   // bool barrierDismissible = false,
+        //   // Widget close,
+        // );
       }).catchError((onError) {
         log.e('Deposit Catch $onError');
         sharedService.alertDialog(
@@ -239,7 +274,7 @@ class MoveToExchangeScreenState extends BaseState {
   }
 
 // Copy txid and display flushbar
-  copyAndShowNotificatio(String message) {
+  copyAndShowNotification(String message) {
     sharedService.copyAddress(context, message);
   }
 }

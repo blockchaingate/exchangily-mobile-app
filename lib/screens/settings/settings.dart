@@ -39,11 +39,12 @@ class SettingsScreen extends StatelessWidget {
           title: Text(AppLocalizations.of(context).settings,
               style: Theme.of(context).textTheme.headline3),
           backgroundColor: globals.secondaryColor,
+          leading: Container(),
         ),
         body: Container(
           padding: EdgeInsets.all(10),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 InkWell(
                   splashColor: globals.primaryColor,
@@ -65,17 +66,20 @@ class SettingsScreen extends StatelessWidget {
                               size: 18,
                             ),
                           ),
-                          Text(
-                            AppLocalizations.of(context).deleteWallet,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline5,
-                          )
+                          model.isDeleting
+                              ? Text('Deleting wallet...')
+                              : Text(
+                                  AppLocalizations.of(context).deleteWallet,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
                         ],
                       ),
                     ),
                   ),
                   onTap: () async {
                     await model.deleteWallet();
+                    print('Wallet deleted');
                   },
                 ),
                 InkWell(
@@ -123,10 +127,43 @@ class SettingsScreen extends StatelessWidget {
                     )),
                   ),
                 ),
+                //language switch
+                // InkWell(
+                //   child: Card(
+                //     elevation: 4,
+                //     child: Container(
+                //       alignment: Alignment.center,
+                //       color: globals.walletCardColor,
+                //       padding: EdgeInsets.all(20),
+                //       // height: 100,
+                //       child: Row(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: [
+                //           Padding(
+                //             padding: const EdgeInsets.only(right: 3.0),
+                //             child: Icon(
+                //               Icons.language,
+                //               color: Colors.deepOrange,
+                //               size: 18,
+                //             ),
+                //           ),
+                //           Text(
+                //             AppLocalizations.of(context).changeWalletLanguage,
+                //             textAlign: TextAlign.center,
+                //             style: Theme.of(context).textTheme.headline5,
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                //   onTap: () {
+                //     Navigator.pushNamed(context, '/switchLanguage');
+                //   },
+                // ),
+
                 Card(
                   elevation: 5,
                   child: Container(
-                    //padding: EdgeInsets.all(15),
                     color: globals.walletCardColor,
                     child: Center(
                       child: Theme.of(context).platform == TargetPlatform.iOS
@@ -162,7 +199,8 @@ class SettingsScreen extends StatelessWidget {
                                   AppLocalizations.of(context)
                                       .changeWalletLanguage,
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline5,
+                                  style:
+                                      Theme.of(context).textTheme.headline5,
                                 ),
                                 value: model.selectedLanguage,
                                 onChanged: (newValue) {
@@ -225,13 +263,6 @@ class SettingsScreen extends StatelessWidget {
                     )),
                   ),
                 ),
-                // Comment expand below in production release
-                // Expanded(
-                //     child: Visibility(
-                //   visible: !isProduction,
-                //   child: Text('Debug Version',
-                //       style: TextStyle(color: Colors.white)),
-                // )),
                 Container(
                   padding: EdgeInsets.all(5),
                   child: Center(
@@ -244,7 +275,7 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ]),
         ),
-        bottomNavigationBar: BottomNavBar(count: 3),
+        // bottomNavigationBar: BottomNavBar(count: 3),
       ),
     );
   }

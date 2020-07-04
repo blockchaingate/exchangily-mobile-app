@@ -12,8 +12,10 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/trade-model.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/trade/orders.dart';
+import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/models/trade/trade-model.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -27,8 +29,6 @@ import 'package:web_socket_channel/io.dart';
 import '../../services/trade_service.dart';
 // import "widgets/kline.dart";
 import '../../utils/decoder.dart';
-import '../../models/price.dart';
-import '../../models/orders.dart';
 import 'widgets/trading_view.dart';
 import '../../utils/string_util.dart';
 import '../../shared/globals.dart' as globals;
@@ -55,7 +55,7 @@ class _TradeState extends State<Trade> with TradeService {
       new GlobalKey<TradePriceState>();
   final GlobalKey<TrademarketState> _tradeMarketState =
       new GlobalKey<TrademarketState>();
-      var pair;
+  var pair;
 
   List<PairDecimalConfig> pairDecimalConfigList = [];
   ApiService apiService = locator<ApiService>();
@@ -77,18 +77,18 @@ class _TradeState extends State<Trade> with TradeService {
     }
   }
 
-  getDecimalPairConfig() async {
-    await apiService.getPairDecimalConfig().then((res) {
-      pairDecimalConfigList = res;
-    });
-    print(pairDecimalConfigList.length);
-  }
+//  getDecimalPairConfig() async {
+//     await apiService.getPairDecimalConfig().then((res) {
+//       pairDecimalConfigList = res;
+//     });
+//     print(pairDecimalConfigList.length);
+//   }
 
   @override
   void initState() {
     super.initState();
-    getDecimalPairConfig();
-     pair = widget.pair.replaceAll(RegExp('/'), '');
+    // getDecimalPairConfig();
+    pair = widget.pair.replaceAll(RegExp('/'), '');
     allTradesChannel = getTradeListChannel(pair);
     allTradesChannel.stream.listen((trades) {
       // print('Trade Channel $trades');
@@ -118,7 +118,7 @@ class _TradeState extends State<Trade> with TradeService {
       var item;
       for (var i = 0; i < list.length; i++) {
         item = list[i];
-        
+
         if (item.symbol == pair) {
           break;
         }
@@ -129,10 +129,10 @@ class _TradeState extends State<Trade> with TradeService {
         item.close = bigNum2Double(item.close);
         item.volume = bigNum2Double(item.volume);
         item.price = bigNum2Double(item.price);
-       
+
         item.price = item.price;
         item.high = bigNum2Double(item.high);
-     
+
         item.low = bigNum2Double(item.low);
 
         item.change = 0.0;
@@ -140,18 +140,16 @@ class _TradeState extends State<Trade> with TradeService {
           item.change = (item.changeValue / item.open * 100 * 10).round() / 10;
         }
 
-        var usdPrice = 0.2;
+        var usdPrice = 0.0;
         if (pair.endsWith("USDT")) {
-          usdPrice = await getCoinMarketPrice('tether');
-          print('1111 $usdPrice');
+          usdPrice = await getCoinMarketPrice('USDT');
           usdPrice = NumberUtil().truncateDouble(usdPrice, 2);
-          print('2222 $usdPrice');
         } else if (pair.endsWith("BTC")) {
-          usdPrice = await getCoinMarketPrice('btc');
+          usdPrice = await getCoinMarketPrice('BTC');
         } else if (pair.endsWith("ETH")) {
-          usdPrice = await getCoinMarketPrice('eth');
+          usdPrice = await getCoinMarketPrice('ETH');
         } else if (pair.endsWith("EXG")) {
-          usdPrice = await getCoinMarketPrice('exchangily');
+          usdPrice = await getCoinMarketPrice('EXG');
         }
 
         if (this._tradePriceState != null &&
@@ -176,110 +174,107 @@ class _TradeState extends State<Trade> with TradeService {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CupertinoNavigationBar(
-          padding: EdgeInsetsDirectional.only(top: 5, bottom: 5),
-          leading: CupertinoButton(
-            padding: EdgeInsets.all(0),
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              if (Navigator.canPop(context)) {
-                closeChannels();
-                Navigator.pop(context);
-              }
-            },
+      appBar: CupertinoNavigationBar(
+        padding: EdgeInsetsDirectional.only(top: 5, bottom: 5),
+        leading: CupertinoButton(
+          padding: EdgeInsets.all(0),
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
           ),
-          middle: Text(
-            widget.pair,
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: globals.walletCardColor,
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              closeChannels();
+              Navigator.pop(context);
+            }
+          },
         ),
-        //backgroundColor: Color(0xFF1F2233),
-        body: Stack(children: <Widget>[
-          ListView(
-            children: <Widget>[
-              TradePrice(key: _tradePriceState),
-              // Below container contains trading view chart in the trade tab
-              Container(
-                  margin: EdgeInsets.symmetric(horizontal: 9.0),
-                  child: LoadHTMLFileToWEbView(widget.pair)),
-              // Below class contains the order book and market trades
-              Trademarket(key: _tradeMarketState),
-              SizedBox(height: 60)
-            ],
-          ),
-          // Buy Sell Buttons
-          Visibility(
-              visible: (tradeChannelCompleted &&
-                  priceChannelCompleted &&
-                  orderChannelCompleted),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                    width: 250,
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        // Buy Button
-                        Flexible(
-                            child: Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: FlatButton(
-                            color: globals.buyPrice,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BuySell(
-                                        pair: widget.pair, bidOrAsk: true)),
-                              );
-                            },
-                            child: Text(AppLocalizations.of(context).buy,
-                                style: TextStyle(
-                                    fontSize: 13, color: globals.white)),
-                          ),
-                        )),
-                        // Sell button
-                        Flexible(
-                            child: RaisedButton(
-                          color: globals.sellPrice.withAlpha(175),
-                          shape: StadiumBorder(
-                              side: BorderSide(
-                                  color: globals.sellPrice, width: 2)),
+        middle: Text(
+          widget.pair,
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: globals.walletCardColor,
+      ),
+      //backgroundColor: Color(0xFF1F2233),
+      body: Stack(children: <Widget>[
+        ListView(
+          children: <Widget>[
+            TradePrice(key: _tradePriceState),
+            // Below container contains trading view chart in the trade tab
+            Container(
+                margin: EdgeInsets.symmetric(horizontal: 9.0),
+                child: LoadHTMLFileToWEbView(widget.pair)),
+            // Below class contains the order book and market trades
+            Trademarket(key: _tradeMarketState),
+            SizedBox(height: 60)
+          ],
+        ),
+        // Buy Sell Buttons
+        Visibility(
+            visible: (tradeChannelCompleted &&
+                priceChannelCompleted &&
+                orderChannelCompleted),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                  width: 250,
+                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      // Buy Button
+                      Flexible(
+                          child: Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
+                        child: FlatButton(
+                          color: globals.buyPrice,
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => BuySell(
-                                      pair: widget.pair, bidOrAsk: false)),
+                                      pair: widget.pair, bidOrAsk: true)),
                             );
                           },
-                          child: Text(AppLocalizations.of(context).sell,
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.white)),
-                        ))
-                      ],
-                    )),
-              )),
-          Visibility(
-              visible: !(tradeChannelCompleted &&
-                  priceChannelCompleted &&
-                  orderChannelCompleted),
-              child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  color: Color(0xFF2c2c4c),
-                  child: Center(
-                      child: Theme.of(context).platform == TargetPlatform.iOS
-                          ? CupertinoActivityIndicator()
-                          : CircularProgressIndicator())))
-        ]),
-        bottomNavigationBar: BottomNavBar(count: 2));
+                          child: Text(AppLocalizations.of(context).buy,
+                              style: TextStyle(
+                                  fontSize: 13, color: globals.white)),
+                        ),
+                      )),
+                      // Sell button
+                      Flexible(
+                          child: RaisedButton(
+                        color: globals.sellPrice.withAlpha(175),
+                        shape: StadiumBorder(
+                            side:
+                                BorderSide(color: globals.sellPrice, width: 2)),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BuySell(
+                                    pair: widget.pair, bidOrAsk: false)),
+                          );
+                        },
+                        child: Text(AppLocalizations.of(context).sell,
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.white)),
+                      ))
+                    ],
+                  )),
+            )),
+        Visibility(
+            visible: !(tradeChannelCompleted &&
+                priceChannelCompleted &&
+                orderChannelCompleted),
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Color(0xFF2c2c4c),
+                child: Center(child: CircularProgressIndicator())))
+      ]),
+      // bottomNavigationBar: BottomNavBar(count: 2)
+    );
   }
 
   @override

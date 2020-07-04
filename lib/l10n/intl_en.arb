@@ -1565,5 +1565,90 @@
     "description": "transaction_history_error",
     "type": "text",
     "placeholders": {}
+  },
+  "pending": "Pending",
+  "@pending": {
+    "description": "transaction_history_pending",
+    "type": "text",
+    "placeholders": {}
+  },
+  "allOrders": "All Orders",
+  "@allOrders": {
+    "description": "exchange_all_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myOrders": "My Orders",
+  "@myOrders": {
+    "description": "exchange_my_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "change": "change",
+  "@change": {
+    "description": "change_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "reload": "reload",
+  "@reload": {
+    "description": "reload_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myRewardTokens": "My Reward Tokens",
+  "@myRewardTokens": {
+    "description": "myRewardTokens_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "inputValidation": "input validation",
+  "@inputValidation": {
+    "description": "inputValidation_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showOnlyCurrentPairOrders": "Show only current pair orders",
+  "@showOnlyCurrentPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showAllPairOrders": "Show all pair's orders",
+  "@showAllPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "symbol": "Symbol",
+  "@symbol": {
+    "description": "exchange_my_exchange_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMnemonicNoticeTitle": "What is mnemonic? Why it is so important to backup mnemonic phrases?",
+  "@backupMnemonicNoticeTitle": {
+    "description": "backup_mnemonic_notice_title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMnemonicNoticeContent": "A mnemonic phrase is a list of words which store all the information needed to recover virtual coin funds on-chain. Wallet software will typically generate a mnemonic phrase and instruct the user to write it down on paper. If the user's computer breaks or their hard drive becomes corrupted, they can download the same wallet software again and use the paper backup to get their virtual coins back. Anybody else who discovers the phrase can steal the virtual coins, so it must be kept safe like jewels or cash. For example, it must not be typed into any website. A mnemonic phrase are an excellent way of backing up and storing bitcoins and so they are used by almost all well-regarded wallets.",
+  "@backupMnemonicNoticeContent": {
+    "description": "backup_mnemonic_notice_content",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ticker": "Ticker",
+  "@ticker": {
+    "description": "ticker_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "vol": "Vol",
+  "@vol": {
+    "description": "vol_text",
+    "type": "text",
+    "placeholders": {}
   }
+
 }

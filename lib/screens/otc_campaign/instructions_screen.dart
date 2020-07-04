@@ -9,7 +9,9 @@ import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignInstructionScreen extends StatelessWidget {
-  const CampaignInstructionScreen({Key key}) : super(key: key);
+  const CampaignInstructionScreen({Key key, this.newPage = false})
+      : super(key: key);
+  final bool newPage;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +20,24 @@ class CampaignInstructionScreen extends StatelessWidget {
         model.context = context;
         await model.initState();
       },
-      builder: (context, model, child) => Container(
+      builder: (context, model, child) => WillPopScope(
+        onWillPop: () async {
+          print("is newpage: $newPage");
+          if (newPage)
+            // Navigator.pushReplacementNamed(context, '/mainNav', arguments: 1);
+            model.navigationService.goBack();
+          return new Future(() => true);
+        },
         child: Scaffold(
           appBar: AppBar(
               centerTitle: true,
+              leading: newPage
+                  ? IconButton(
+                      icon: Icon(Icons.arrow_back_ios),
+                      onPressed: () {
+                        model.navigationService.goBack();
+                      })
+                  : Container(),
               title: Text(AppLocalizations.of(context).campaignInstructions,
                   style: Theme.of(context).textTheme.headline3)),
           key: key,

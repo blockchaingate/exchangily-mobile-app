@@ -224,7 +224,7 @@ class OtcDetailsScreen extends StatelessWidget {
                               children: <Widget>[
                                 Container(
                                     //  width: 50,
-                                    child: Text('Quantity',
+                                    child: Text(AppLocalizations.of(context).quantity,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),
@@ -270,7 +270,7 @@ class OtcDetailsScreen extends StatelessWidget {
                               children: <Widget>[
                                 Container(
                                     //  width: 50,
-                                    child: Text('Amount',
+                                    child: Text(AppLocalizations.of(context).amount,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),

@@ -43,13 +43,13 @@ class SharedService {
                 content: Text(
                   // add here cupertino widget to check in these small widgets first then the entire app
                   '${AppLocalizations.of(context).closeTheApp}?',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 14),
                 ),
                 actions: <Widget>[
                   FlatButton(
                     child: Text(
                       AppLocalizations.of(context).no,
-                      style: TextStyle(color: globals.white, fontSize: 16),
+                      style: TextStyle(color: globals.white, fontSize: 12),
                     ),
                     onPressed: () {
                       Navigator.of(context).pop(false);
@@ -57,7 +57,7 @@ class SharedService {
                   ),
                   FlatButton(
                     child: Text(AppLocalizations.of(context).yes,
-                        style: TextStyle(color: globals.white, fontSize: 16)),
+                        style: TextStyle(color: globals.white, fontSize: 12)),
                     onPressed: () {
                       SystemChannels.platform
                           .invokeMethod('SystemNavigator.pop');
@@ -76,12 +76,20 @@ class SharedService {
             context: context,
             builder: (context) {
               return AlertDialog(
-                elevation: 10,
+                titlePadding: EdgeInsets.all(0),
+                actionsPadding: EdgeInsets.all(0),
+                elevation: 5,
                 backgroundColor: globals.walletCardColor.withOpacity(0.95),
-                title: Text(title),
+                title: title == ""
+                    ? Container()
+                    : Container(
+                        color: globals.primaryColor.withOpacity(0.1),
+                        padding: EdgeInsets.all(10),
+                        child: Text(title),
+                      ),
                 titleTextStyle: Theme.of(context).textTheme.headline4,
                 contentTextStyle: TextStyle(color: globals.grey),
-                contentPadding: EdgeInsets.symmetric(horizontal: 25),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
                 content: Visibility(
                   visible: message != '',
                   child: StatefulBuilder(
@@ -97,7 +105,7 @@ class SharedService {
                               horizontal: 12.0, vertical: 6.0),
                           child: Text(
                             // add here cupertino widget to check in these small widgets first then the entire app
-                            message, textAlign: TextAlign.start,
+                            message, textAlign: TextAlign.left,
                             style: Theme.of(context).textTheme.headline5,
                           ),
                         ),
@@ -126,29 +134,61 @@ class SharedService {
                               ),
                             ],
                           ),
-                        )
+                        ),
+                        // SizedBox(height: 10),
+                        // Container(
+                        //   margin: EdgeInsetsDirectional.only(bottom: 10),
+                        //   child: FlatButton(
+                        //     // color: globals.primaryColor,
+                        //     padding: EdgeInsets.all(0),
+                        //     child: Text(
+                        //       AppLocalizations.of(context).close,
+                        //       style:
+                        //           TextStyle(color: Colors.white, fontSize: 14),
+                        //     ),
+                        //     onPressed: () {
+                        //       if (path == '' || path == null) {
+                        //         Navigator.of(context).pop(false);
+                        //       } else {
+                        //         navigationService.navigateTo(path,
+                        //             arguments: arguments);
+                        //         Navigator.of(context).pop(false);
+                        //       }
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     );
                   }),
                 ),
+                // actions: [],
                 actions: <Widget>[
                   Container(
                     margin: EdgeInsetsDirectional.only(bottom: 10),
-                    child: FlatButton(
-                      padding: EdgeInsets.all(0),
-                      child: Text(
-                        AppLocalizations.of(context).close,
-                        style: TextStyle(color: globals.grey, fontSize: 14),
-                      ),
-                      onPressed: () {
-                        if (path == '' || path == null) {
-                          Navigator.of(context).pop(false);
-                        } else {
-                          navigationService.navigateTo(path,
-                              arguments: arguments);
-                          Navigator.of(context).pop(false);
-                        }
-                      },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
+                          color: globals.primaryColor,
+                          padding: EdgeInsets.all(0),
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context).close,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (path == '' || path == null) {
+                              Navigator.of(context).pop(false);
+                            } else {
+                              navigationService.navigateTo(path,
+                                  arguments: arguments);
+                              Navigator.of(context).pop(false);
+                            }
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -180,12 +220,12 @@ class SharedService {
       backgroundColor: globals.secondaryColor.withOpacity(0.75),
       title: title,
       message: message,
-      icon: Icon(
-        iconData,
-        size: 24,
-        color: globals.primaryColor,
-      ),
-      leftBarIndicatorColor: leftBarColor,
+      // icon: Icon(
+      //   iconData,
+      //   size: 24,
+      //   color: globals.primaryColor,
+      // ),
+      // leftBarIndicatorColor: leftBarColor,
       duration: Duration(seconds: 5),
       isDismissible: true,
     ).show(context);

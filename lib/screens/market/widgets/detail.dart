@@ -1,6 +1,7 @@
+import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/trade/price.dart';
 import "package:flutter/material.dart";
 import "detail-pair.dart";
-import '../../../models/price.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MarketDetail extends StatefulWidget {
@@ -36,7 +37,7 @@ class MarketDetailState extends State<MarketDetail>
     exgWidgets = [];
 
     for (var price in prices) {
-      print('price price price $price');
+      print('price ${price.price}');
       if (price.symbol.endsWith("USDT")) {
         setState(() {
           price.high = double.parse(price.high.toStringAsFixed(2));
@@ -103,23 +104,34 @@ class MarketDetailState extends State<MarketDetail>
                       flex: 1,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5.0),
-                        child: Text('Ticker',style: Theme.of(context).textTheme.subtitle2,),
+                        child: Text(
+                          'Ticker',
+                          style: Theme.of(context).textTheme.subtitle2,
+                        ),
                       )),
                   Expanded(
                     flex: 1,
-                    child: Text('Volume',style: Theme.of(context).textTheme.subtitle2, textAlign: TextAlign.end),
+                    child: Text(AppLocalizations.of(context).volume,
+                        style: Theme.of(context).textTheme.subtitle2,
+                        textAlign: TextAlign.end),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text('High',style: Theme.of(context).textTheme.subtitle2, textAlign: TextAlign.end),
+                    child: Text(AppLocalizations.of(context).high,
+                        style: Theme.of(context).textTheme.subtitle2,
+                        textAlign: TextAlign.end),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text('Low',style: Theme.of(context).textTheme.subtitle2, textAlign: TextAlign.end),
+                    child: Text(AppLocalizations.of(context).low,
+                        style: Theme.of(context).textTheme.subtitle2,
+                        textAlign: TextAlign.end),
                   ),
                   Expanded(
                     flex: 1,
-                    child: Text('Change',style: Theme.of(context).textTheme.subtitle2, textAlign: TextAlign.end),
+                    child: Text(AppLocalizations.of(context).change,
+                        style: Theme.of(context).textTheme.subtitle2,
+                        textAlign: TextAlign.end),
                   ),
                 ],
               )),

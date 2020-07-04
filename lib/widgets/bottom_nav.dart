@@ -12,6 +12,8 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
@@ -19,7 +21,7 @@ import '../shared/globals.dart' as globals;
 class BottomNavBar extends StatelessWidget {
   final int count;
   BottomNavBar({Key key, this.count}) : super(key: key);
-
+  final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {
     final double paddingValue = 4; // change space between icon and title text
@@ -72,20 +74,21 @@ class BottomNavBar extends StatelessWidget {
       onTap: (int idx) {
         switch (idx) {
           case 0:
-            Navigator.pushNamed(context, '/dashboard');
+            navigationService.navigateUsingpopAndPushedNamed('/dashboard');
             break;
 
           case 1:
-            Navigator.pushNamed(context, '/market');
+            navigationService.navigateUsingpopAndPushedNamed('/marketsView');
             break;
           // case 2:
           //   Navigator.pushNamed(context, '/otc');
           //   break;
           case 2:
-            Navigator.pushNamed(context, '/campaignInstructions');
+            navigationService
+                .navigateUsingpopAndPushedNamed('/campaignInstructions');
             break;
           case 3:
-            Navigator.pushNamed(context, '/settings');
+            navigationService.navigateUsingpopAndPushedNamed('/settings');
             break;
         }
       },

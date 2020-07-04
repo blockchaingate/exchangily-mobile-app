@@ -23,7 +23,7 @@ import 'dart:typed_data';
 
 getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
   var abiHex = "3295d51e";
-  abiHex += fixLength(coinType.toString(), 64);
+  abiHex += fixLength(coinType.toRadixString(16), 64);
 
   var amountHex = amountInLink.toRadixString(16);
   abiHex += fixLength(trimHexPrefix(amountHex), 64);
@@ -36,7 +36,7 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
     String addressInKanban, signedMessage) {
   var abiHex = "379eb862";
   abiHex += trimHexPrefix(signedMessage["v"]);
-  abiHex += fixLength(coinType.toString(), 62);
+  abiHex += fixLength(coinType.toRadixString(16), 62);
   abiHex += trimHexPrefix(txHash);
   var amountHex = amountInLink.toRadixString(16);
 
@@ -52,8 +52,8 @@ getCreateOrderFuncABI(
     int orderType,
     int baseCoin,
     int targetCoin,
-    BigInt qty,
-    BigInt price,
+    String qty,
+    String price,
     int timeBeforeExpiration,
     bool payWithEXG,
     String orderHash) {
@@ -66,9 +66,9 @@ getCreateOrderFuncABI(
   abiHex += fixLength(orderType.toString(), 64);
   abiHex += fixLength(baseCoin.toString(), 64);
   abiHex += fixLength(targetCoin.toString(), 64);
-  var qtyHex = qty.toRadixString(16);
+  var qtyHex = BigInt.parse(qty).toRadixString(16);
   abiHex += fixLength(qtyHex, 64);
-  var priceHex = price.toRadixString(16);
+  var priceHex = BigInt.parse(price).toRadixString(16);
   abiHex += fixLength(priceHex, 64);
   abiHex += fixLength(timeBeforeExpiration.toString(), 64);
   var payWithEXGString = payWithEXG ? '1' : '0';

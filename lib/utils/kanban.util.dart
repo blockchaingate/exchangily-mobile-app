@@ -64,23 +64,36 @@ Future<Map<String, dynamic>> submitDeposit(
     'rawTransaction': rawTransaction,
     'rawKanbanTransaction': rawKanbanTransaction
   };
-  var client = new http.Client();
-  var response = await client.post(url, body: data);
-  Map<String, dynamic> res = jsonDecode(response.body);
-  return res;
+  try {
+    var client = new http.Client();
+    var response = await client.post(url, body: data);
+    print("Kanban_util submitDeposit response body:");
+    print(response.body.toString());
+    Map<String, dynamic> res = jsonDecode(response.body);
+    return res;
+  } catch (err) {
+    print('Catch submitDeposit in kanban util $err');
+    throw Exception(err);
+  }
 }
 
 Future getKanbanErrDeposit(String address) async {
   var url = environment['endpoints']['kanban'] + 'depositerr/' + address;
-  // print(url);
-  var client = new http.Client();
-  var response = await client.get(url);
-  var json = jsonDecode(response.body);
-  // print('Kanban.util-getKanbanErrDeposit $json');
-  return json;
+  print('getKanbanErrDeposit $url');
+  try {
+    var client = new http.Client();
+    var response = await client.get(url);
+    var json = jsonDecode(response.body);
+    // print('Kanban.util-getKanbanErrDeposit $json');
+    return json;
+  } catch (err) {
+    print(
+        'Catch getKanbanErrDeposit in kanban util $err'); // Error thrown here will go to onError in them view model
+    throw Exception(err);
+  }
 }
 
-Future<Map<String, dynamic>> submitReDeposit (
+Future<Map<String, dynamic>> submitReDeposit(
     String rawKanbanTransaction) async {
   var url = environment['endpoints']['kanban'] + 'resubmitDeposit';
   var data = {'rawKanbanTransaction': rawKanbanTransaction};

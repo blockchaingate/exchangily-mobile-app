@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,8 @@ class SettingsScreenState extends BaseState {
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
+
+  final NavigationService navigationService = locator<NavigationService>();
   List<String> languages = ['English', 'Chinese'];
   String selectedLanguage;
   // bool result = false;
@@ -44,10 +47,12 @@ class SettingsScreenState extends BaseState {
   String versionName = '';
   String versionCode = '';
   static int initialLanguageValue = 0;
-  final FixedExtentScrollController scrollController =
+  final FixedExtentScrollController fixedScrollController =
       FixedExtentScrollController(initialItem: initialLanguageValue);
   bool isDialogDisplay = false;
   //ScrollController scrollController;
+  bool isDeleting = false;
+  ScrollController scrollController;
 
   init() async {
     setBusy(true);
@@ -66,10 +71,11 @@ class SettingsScreenState extends BaseState {
 
   // Delete wallet and local storage
 
-  deleteWallet() async {
+  Future deleteWallet() async {
     errorMessage = '';
-    setState(ViewState.Busy);
-
+    isDeleting = true;
+    setBusy(true);
+    log.i('model busy $busy');
     await dialogService
         .showDialog(
             title: AppLocalizations.of(context).enterPassword,
@@ -79,29 +85,34 @@ class SettingsScreenState extends BaseState {
         .then((res) async {
       if (res.confirmed) {
         log.w('deleting wallet');
-        await walletService.deleteEncryptedData();
         await walletDatabaseService.deleteDb();
+        await walletService.deleteEncryptedData();
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('lang');
         prefs.clear();
         Navigator.pushNamed(context, '/');
-        setState(ViewState.Idle);
-        return null;
       } else if (res.returnedText == 'Closed') {
         log.e('Dialog Closed By User');
+        isDeleting = false;
         setState(ViewState.Idle);
         return errorMessage = '';
       } else {
         log.e('Wrong pass');
-        setState(ViewState.Idle);
+        setBusy(false);
+        isDeleting = false;
         return errorMessage =
             AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
       }
     }).catchError((error) {
       log.e(error);
-      setState(ViewState.Idle);
+      isDeleting = false;
+      setBusy(false);
+
       return false;
     });
+    log.i('model busy $busy');
+    isDeleting = false;
+    setBusy(false);
   }
 
   // Show mnemonic
@@ -166,6 +177,7 @@ class SettingsScreenState extends BaseState {
       prefs.setString('lang', 'zh');
     }
     setState(ViewState.Idle);
+    Navigator.pushReplacementNamed(context, '/mainNav', arguments: 0);
   }
 
   // Pin code
@@ -189,5 +201,9 @@ class SettingsScreenState extends BaseState {
     sharedService.setDialogWarningsStatus(value);
     isDialogDisplay = value;
     setBusy(false);
+  }
+
+  onBackButtonPressed() async {
+    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
   }
 }

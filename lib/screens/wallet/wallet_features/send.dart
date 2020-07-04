@@ -12,7 +12,7 @@
 */
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -491,19 +491,7 @@ class SendWalletScreen extends StatelessWidget {
                                   .headline4
                                   .copyWith(fontWeight: FontWeight.w400)),
                           onPressed: () async {
-                            model.txHash = '';
-                            model.errorMessage = '';
-                            model.walletInfo = walletInfo;
-                            model.amount = double.tryParse(
-                                model.sendAmountTextController.text);
-                            model.toAddress =
-                                model.receiverWalletAddressTextController.text;
-                            model.gasPrice =
-                                int.tryParse(model.gasPriceTextController.text);
-                            model.gasLimit =
-                                int.tryParse(model.gasLimitTextController.text);
-                            model.satoshisPerBytes = int.tryParse(
-                                model.satoshisPerByteTextController.text);
+                            print('Send pressed');
                             model.checkFields(context);
                           },
                         ),

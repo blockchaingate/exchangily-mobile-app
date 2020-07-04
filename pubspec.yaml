@@ -1,6 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
+version: 1.2.1+31
 
 version: 1.1.7+31
 environment:
@@ -20,8 +21,8 @@ dependencies:
   # Bip39
   bip39: ^1.0.3
   bs58check: ^1.0.1
-  # bitcoin Flutter
-  bitcoin_flutter: ^1.0.7
+  # # bitcoin Flutter
+  # bitcoin_flutter: ^1.0.7
 
   # Pointy Castle
   # pointycastle: ^1.0.1
@@ -44,8 +45,8 @@ dependencies:
   # Font Awesome
   font_awesome_flutter: 8.8.0
 
-  # Provider
-  provider: 3.1.0+1
+  # A wrapper around InheritedWidget to make them easier to use and more reusable.
+  provider: ^4.0.1
 
   # Pattern Formatter
   pattern_formatter: ^1.0.0
@@ -74,6 +75,9 @@ dependencies:
   # barcode_scan:
   #  git: git://github.com/apptreesoftware/flutter_barcode_reader.git
 
+  # Material icons
+  material_design_icons_flutter: ^4.0.5345
+
   # Flushbar instead of Snackbar for notifications
   #flushbar: ^1.9.0
   flushbar:
@@ -95,7 +99,7 @@ dependencies:
   # Shared Preferences
   shared_preferences: ^0.5.4+1
 
-  # Shimmer
+  # Loading animation
   shimmer: ^1.0.1
 
   # Sqflite
@@ -113,6 +117,30 @@ dependencies:
   # Flutter SVG
   flutter_svg: ^0.17.3+1
 
+  # State Management
+  stacked: ^1.5.8
+
+  #flutter_beautiful_popup
+  flutter_beautiful_popup: ^1.5.0
+
+  # Carousel
+  flutter_swiper: ^1.1.6
+
+  # validators
+  validators: ^2.0.0+1
+
+  # cached_network_image
+  cached_network_image: ^2.0.0
+
+  # fancy_bottom_navigation
+  fancy_bottom_navigation: ^0.3.2
+
+  # bch address
+  bitbox: ^0.0.1
+
+  # Generate LTC and DOGE coin address
+  bitcoin_flutter: ^2.0.1
+
   # Share files
   share:
     git:
@@ -122,7 +150,7 @@ dependencies:
 
 dev_dependencies:
   intl_translation: '^0.17.0'
-  intl: ^0.16.1
+  intl: ^0.16.0
   flutter_launcher_icons: '^0.7.3'
 
   flutter_test:
@@ -136,10 +164,13 @@ flutter:
   #   iosBundleIdentifier: my.package
   assets:
     - assets/images/start-page/
+    - assets/images/img/
     - assets/images/wallet-page/
     - assets/images/otc/
     - assets/images/otc-campaign/
     - assets/pages/index.html
+    - assets/images/shared/
+    - assets/images/slider/
 flutter_icons:
   image_path: "assets/images/launcher/mobile-icon-ios.png"
 

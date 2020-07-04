@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:decimal/decimal.dart';
 import 'package:flutter/services.dart';
 
 class NumberUtil {
@@ -12,9 +10,11 @@ class NumberUtil {
     return ((val * mod).round().toDouble() / mod);
   }
 
-  double parsedDouble(String value) {
+// Parse double
+  double parsedDouble(value) {
     double res = 0.0;
-    if (value != null) res = double.parse(value);
+
+    if (value != null) res = double.parse(value.toString());
     return res;
   }
 }
@@ -47,4 +47,26 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     }
     return oldValue;
   }
+}
+
+toBigInt(amount) {
+  var numString = amount.toString();
+  var numStringArray = numString.split('.');
+  var decimalLength = 18;
+  var val = '';
+  if (numStringArray != null) {
+    val = numStringArray[0];
+    if (numStringArray.length == 2) {
+      decimalLength -= numStringArray[1].length;
+      val += numStringArray[1];
+    }
+  }
+
+  var valInt = int.parse(val);
+  val = valInt.toString();
+  for (var i = 0; i < decimalLength; i++) {
+    val += '0';
+  }
+  print('value $val');
+  return val;
 }

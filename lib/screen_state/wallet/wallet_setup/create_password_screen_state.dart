@@ -12,19 +12,23 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 
 class CreatePasswordScreenState extends BaseState {
   final WalletService _walletService = locator<WalletService>();
   final VaultService _vaultService = locator<VaultService>();
+  final NavigationService navigationService = locator<NavigationService>();
 
   List<WalletInfo> _walletInfo;
   final log = getLogger('CreatePasswordScreenState');
@@ -39,19 +43,31 @@ class CreatePasswordScreenState extends BaseState {
   Pattern pattern =
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[`~!@#\$%\^&*\(\)-_\+\=\{\[\}\]]).{8,}$';
 
+  FocusNode passFocus = FocusNode();
+  TextEditingController passTextController = TextEditingController();
+  TextEditingController confirmPassTextController = TextEditingController();
+  WalletService walletService = locator<WalletService>();
+
 /* ---------------------------------------------------
                     Create Offline Wallets
     -------------------------------------------------- */
 
   Future createOfflineWallets() async {
+    NavigationService navigationService = locator<NavigationService>();
     setState(ViewState.Busy);
-    _walletInfo = await _walletService
+    await _vaultService.secureMnemonic(
+        context, passTextController.text, randomMnemonicFromRoute);
+    await _walletService
         .createOfflineWallets(randomMnemonicFromRoute)
         .then((data) {
       _walletInfo = data;
-      Navigator.pushNamed(context, '/dashboard', arguments: _walletInfo);
+      // Navigator.pushNamed(context, '/mainNav', arguments: _walletInfo);
+      navigationService.navigateTo('/mainNav', arguments: 0);
       randomMnemonicFromRoute = '';
     }).catchError((onError) {
+      passwordMatch = false;
+      password = '';
+      confirmPassword = '';
       errorMessage = AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);
       setState(ViewState.Idle);
@@ -74,14 +90,16 @@ class CreatePasswordScreenState extends BaseState {
     var res = RegexValidator(pattern).isValid(confirmPass);
     checkConfirmPasswordConditions = res;
     password == confirmPass ? passwordMatch = true : passwordMatch = false;
+    if (passwordMatch) errorMessage = '';
     return checkConfirmPasswordConditions;
   }
 
-  bool validatePassword(pass, confirmPass) {
+  Future validatePassword() async {
     setState(ViewState.Busy);
     RegExp regex = new RegExp(pattern);
-
-    if (pass.isEmpty) {
+    String pass = passTextController.text;
+    String confirmPass = confirmPassTextController.text;
+    if (pass.isEmpty && isProduction) {
       password = '';
       confirmPassword = '';
       checkPasswordConditions = false;
@@ -93,9 +111,9 @@ class CreatePasswordScreenState extends BaseState {
           Colors.red,
           context);
       setState(ViewState.Idle);
-      return false;
+      return;
     } else {
-      if (!regex.hasMatch(pass)) {
+      if (!regex.hasMatch(pass) && isProduction) {
         password = '';
         confirmPassword = '';
         checkPasswordConditions = false;
@@ -107,8 +125,8 @@ class CreatePasswordScreenState extends BaseState {
             Colors.red,
             context);
         setState(ViewState.Idle);
-        return false;
-      } else if (pass != confirmPass) {
+        return;
+      } else if (pass != confirmPass && isProduction) {
         password = '';
         confirmPassword = '';
         checkPasswordConditions = false;
@@ -120,15 +138,14 @@ class CreatePasswordScreenState extends BaseState {
             Colors.red,
             context);
         setState(ViewState.Idle);
-        return false;
+        return;
       } else {
-        password = '';
-        confirmPassword = '';
-        _vaultService.secureMnemonic(context, pass, randomMnemonicFromRoute);
-        log.w('In else');
-        setState(ViewState.Idle);
-        return true;
+        setState(ViewState.Busy);
+        await createOfflineWallets();
+        passTextController.text = '';
+        confirmPassTextController.text = '';
       }
     }
+    setState(ViewState.Idle);
   }
 }

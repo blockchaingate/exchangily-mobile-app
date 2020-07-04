@@ -14,7 +14,7 @@
 import 'dart:async';
 
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -49,7 +49,7 @@ class WalletDataBaseService {
   }
 
   void _onCreate(Database db, int version) async {
-    log.e('in on create $db');
+    log.i('in on create $db');
     await db.execute(''' CREATE TABLE $tableName
         (
         $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -69,7 +69,7 @@ class WalletDataBaseService {
     //await deleteDb();
     await initDb();
     final Database db = await _database;
-    //  log.w('getall $db');
+    log.w('getall $db');
 
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
@@ -148,8 +148,12 @@ class WalletDataBaseService {
 
   // Delete Database
   Future deleteDb() async {
-    log.w(path);
+    log.i('database path $path');
     await deleteDatabase(path);
+    var databasePath = await getDatabasesPath();
+    var p = join(databasePath, _databaseName);
+    log.w(p);
+    log.w('database path after delete $p');
     _database = null;
   }
 }

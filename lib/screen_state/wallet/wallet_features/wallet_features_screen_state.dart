@@ -14,9 +14,10 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -28,6 +29,7 @@ class WalletFeaturesScreenState extends BaseState {
   WalletInfo walletInfo;
   WalletService walletService = locator<WalletService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+  NavigationService navigationService = locator<NavigationService>();
   DialogService dialogService = locator<DialogService>();
   final double elevation = 5;
   double containerWidth = 150;
@@ -77,7 +79,7 @@ class WalletFeaturesScreenState extends BaseState {
   Future getErrDeposit() async {
     var address = await this.getExgAddress();
     var result = await walletService.getErrDeposit(address);
-    log.w(result);
+    log.i('getErrDeposit $result');
     return result;
   }
 
@@ -87,9 +89,8 @@ class WalletFeaturesScreenState extends BaseState {
         .coinBalanceByAddress(
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
         .then((data) async {
-      setState(ViewState.Idle);
-      log.w(data);
-      log.w(walletBalance);
+      log.e('data $data');
+
       walletBalance = data['balance'];
       double walletLockedBal = data['lockbalance'];
       walletInfo.availableBalance = walletBalance;
@@ -98,9 +99,11 @@ class WalletFeaturesScreenState extends BaseState {
       walletService.calculateCoinUsdBalance(
           currentUsdValue, walletBalance, walletLockedBal);
       walletInfo.usdValue = walletService.coinUsdBalance;
-    }).catchError((onError) {
-      log.e(onError);
+    }).catchError((err) {
+      log.e(err);
       setState(ViewState.Idle);
+      throw Exception(err);
     });
+    setState(ViewState.Idle);
   }
 }

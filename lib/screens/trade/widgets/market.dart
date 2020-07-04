@@ -11,13 +11,13 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/models/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/orders.dart';
+import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
-import '../../../models/orders.dart';
-import '../../../models/trade-model.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 

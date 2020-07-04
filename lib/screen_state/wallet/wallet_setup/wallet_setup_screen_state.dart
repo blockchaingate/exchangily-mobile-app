@@ -14,10 +14,11 @@
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:flutter/material.dart';
-
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import '../../../localizations.dart';
 import '../../../service_locator.dart';
 
@@ -25,11 +26,14 @@ class WalletSetupScreenState extends BaseState {
   final log = getLogger('WalletSetupScreenState');
   SharedService sharedService = locator<SharedService>();
   WalletDataBaseService dataBaseService = locator<WalletDataBaseService>();
+
+  final NavigationService navigationService = locator<NavigationService>();
   BuildContext context;
   bool isWallet = false;
   String errorMessage = '';
 
   Future checkExistingWallet() async {
+    NavigationService navigationService = locator<NavigationService>();
     setState(ViewState.Busy);
     await dataBaseService.getAll().then((res) {
       if (res == null || res == []) {
@@ -39,7 +43,8 @@ class WalletSetupScreenState extends BaseState {
       } else if (res.isNotEmpty) {
         setState(ViewState.Idle);
         isWallet = true;
-        Navigator.of(context).pushNamed('/dashboard');
+        // Navigator.of(context).pushNamed('/mainNav');
+        navigationService.navigateTo('/mainNav',arguments: 0);
       }
     }).timeout(Duration(seconds: 20), onTimeout: () {
       log.e('In time out');

@@ -11,7 +11,10 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
 import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
@@ -24,6 +27,7 @@ import 'package:exchangilymobileapp/screens/otc_campaign/reward_details_screen.d
 import 'package:exchangilymobileapp/screens/otc_campaign/order_details_screen.dart';
 
 import 'package:exchangilymobileapp/screens/otc_campaign/team_reward_details_screen.dart';
+import 'package:exchangilymobileapp/screens/settings/language.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
@@ -36,6 +40,8 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/receive.dart'
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dart';
+import 'package:exchangilymobileapp/widgets/main_nav.dart';
+import 'package:exchangilymobileapp/widgets/main_nav_circle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
@@ -46,6 +52,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit.dar
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings.dart';
 
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'screens/otc_campaign/token_details_screen.dart';
 
 final log = getLogger('Routes');
@@ -58,6 +65,11 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageScreen());
+
+      //main navagation contains several pages
+      case '/mainNav':
+        return MaterialPageRoute(builder: (_) => MainNav(currentPage: args));
+      // return MaterialPageRoute(builder: (_) => MainNavCircle());
       case '/walletSetup':
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
 
@@ -78,8 +90,7 @@ class RouteGenerator {
                 CreatePasswordScreen(randomMnemonicFromRoute: args));
 
       case '/dashboard':
-        return MaterialPageRoute(
-            builder: (_) => WalletDashboardScreen(walletInfo: args));
+        return MaterialPageRoute(builder: (_) => WalletDashboardScreen());
 
       case '/walletFeatures':
         return MaterialPageRoute(
@@ -100,8 +111,19 @@ class RouteGenerator {
       case '/market':
         return MaterialPageRoute(builder: (_) => Market());
 
+      case '/marketsView':
+        return MaterialPageRoute(builder: (_) => MarketsView());
+
       case '/trade':
         return MaterialPageRoute(builder: (_) => Trade('EXG/USDT'));
+
+      case '/exchangeTrade':
+        return MaterialPageRoute(
+            builder: (_) => TradeView(pairPriceByRoute: args));
+
+      case '/myExchangeOrders':
+        return MaterialPageRoute(
+            builder: (_) => MyOrdersView(tickerName: args));
 
       case '/addGas':
         return MaterialPageRoute(builder: (_) => AddGas());
@@ -136,7 +158,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
 
       case '/campaignInstructions':
-        return MaterialPageRoute(builder: (_) => CampaignInstructionScreen());
+        return MaterialPageRoute(
+            builder: (_) => CampaignInstructionScreen(
+                  newPage: args,
+                ));
 
       case '/campaignPayment':
         return MaterialPageRoute(builder: (_) => CampaignPaymentScreen());
@@ -177,19 +202,25 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => CampaignRegisterAccountScreen());
 
+      case '/switchLanguage':
+        return MaterialPageRoute(builder: (_) => LanguageScreen());
+
       default:
         return _errorRoute(settings);
     }
   }
 
   static Route _errorRoute(settings) {
+    BuildContext context;
     return MaterialPageRoute(builder: (_) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Error', style: TextStyle(color: Colors.white)),
+          title: Text(AppLocalizations.of(context).error,
+              style: TextStyle(color: Colors.white)),
         ),
         body: Center(
-          child: Text('No route defined for ${settings.name}',
+          child: Text(
+              AppLocalizations.of(context).noRouteDefined + ' ${settings.name}',
               style: TextStyle(color: Colors.white)),
         ),
       );

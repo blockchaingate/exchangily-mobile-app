@@ -26,11 +26,12 @@ import 'dart:typed_data';
 class AddGas extends StatelessWidget {
   final DialogService _dialogService = locator<DialogService>();
   final WalletService walletService = locator<WalletService>();
-  SharedService sharedService = locator<SharedService>();
+  AddGas({Key key}) : super(key: key);
+
+  final SharedService sharedService = locator<SharedService>();
 
   final log = getLogger('AddGas');
   final myController = TextEditingController();
-  AddGas({Key key}) : super(key: key);
 
   checkPass(double amount, context) async {
     var res = await _dialogService.showDialog(
@@ -47,13 +48,13 @@ class AddGas extends StatelessWidget {
 
       myController.text = '';
       sharedService.alertDialog(
-        (ret["errMsg"] == '')
-            ? AppLocalizations.of(context).addGasTransactionSuccess
-            : AppLocalizations.of(context).addGasTransactionFailed,
-        (ret["errMsg"] == '')
-            ? AppLocalizations.of(context).transactionId + ret['txHash']
-            : ret["errMsg"],
-      );
+          (ret["errMsg"] == '')
+              ? AppLocalizations.of(context).addGasTransactionSuccess
+              : AppLocalizations.of(context).addGasTransactionFailed,
+          (ret["errMsg"] == '')
+              ? AppLocalizations.of(context).transactionId + ret['txHash']
+              : ret["errMsg"],
+          isWarning: false);
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
@@ -96,10 +97,17 @@ class AddGas extends StatelessWidget {
         backgroundColor: Color(0xFF1F2233),
         body: Container(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: ListView(
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Container(
+                    padding: EdgeInsets.all(30),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: globals.primaryColor),
+                    child: Image.asset("assets/images/img/gas.png",
+                        width: 100, height: 100)),
+                SizedBox(height: 30),
                 TextField(
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
@@ -113,42 +121,48 @@ class AddGas extends StatelessWidget {
                   controller: myController,
                   style: TextStyle(fontSize: 16.0, color: Colors.white),
                 ),
-                SizedBox(height: 20),
-                Column(
+                SizedBox(height: 30),
+                Row(
                   children: <Widget>[
-                    MaterialButton(
-                      padding: EdgeInsets.all(15),
-                      color: globals.primaryColor,
-                      textColor: Colors.white,
-                      onPressed: () async {
-                        double amount = 0;
-                        if (myController.text != '') {
-                          amount = double.parse(myController.text);
-                        }
-                        // var res = await AddGasDo(double.parse(myController.text));
-                        myController.text == '' || amount == null
-                            ? sharedService.showInfoFlushbar(
-                                AppLocalizations.of(context).invalidAmount,
-                                AppLocalizations.of(context)
-                                    .pleaseEnterValidNumber,
-                                Icons.cancel,
-                                globals.red,
-                                context)
-                            : checkPass(amount, context);
-                        //   print(res);
-                      },
-                      child: Text(
-                        AppLocalizations.of(context).confirm,
-                        style: Theme.of(context).textTheme.button,
+                    Flexible(
+                      child: MaterialButton(
+                          // borderSide: BorderSide(color: globals.primaryColor),
+                          color: globals.primaryColor,
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(AppLocalizations.of(context).cancel,
+                              style: TextStyle(color: Colors.white))),
+                    ),
+                    SizedBox(width:8),
+                    Flexible(
+                      child: MaterialButton(
+                        padding: EdgeInsets.all(15),
+                        color: globals.primaryColor,
+                        textColor: Colors.white,
+                        onPressed: () async {
+                          double amount = 0;
+                          if (myController.text != '') {
+                            amount = double.parse(myController.text);
+                          }
+                          // var res = await AddGasDo(double.parse(myController.text));
+                          myController.text == '' || amount == null
+                              ? sharedService.showInfoFlushbar(
+                                  AppLocalizations.of(context).invalidAmount,
+                                  AppLocalizations.of(context)
+                                      .pleaseEnterValidNumber,
+                                  Icons.cancel,
+                                  globals.red,
+                                  context)
+                              : checkPass(amount, context);
+                          //   print(res);
+                        },
+                        child: Text(
+                          AppLocalizations.of(context).confirm,
+                          style: Theme.of(context).textTheme.button,
+                        ),
                       ),
                     ),
-                    UIHelper.verticalSpaceSmall,
-                    OutlineButton(
-                        borderSide: BorderSide(color: globals.primaryColor),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Cancel')),
                   ],
                 )
               ],

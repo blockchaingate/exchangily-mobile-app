@@ -8,8 +8,8 @@ import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/team_reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
-import 'package:exchangilymobileapp/models/transaction_history.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:http/http.dart' as http;
@@ -124,7 +124,7 @@ class CampaignService {
     body.addAll({'appId': appId}); // Add another key/pair value
 
     try {
-      log.e(loginUrl);
+      log.i('login url $loginUrl');
       var response = await client.post(loginUrl, body: body);
       var json = jsonDecode(response.body);
       log.w('login $json');

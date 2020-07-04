@@ -66,7 +66,6 @@ class CampaignLoginScreenState extends BaseState {
     } else {
       setErrorMessage('');
       log.w('already in the login');
-      setBusy(false);
     }
     setBusy(false);
   }
@@ -234,6 +233,6 @@ class CampaignLoginScreenState extends BaseState {
   }
 
   onBackButtonPressed() {
-    navigationService.navigateTo('/dashboard');
+    navigationService.navigateTo('/mainNav', arguments: 0);
   }
 }

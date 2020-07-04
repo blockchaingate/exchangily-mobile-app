@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
@@ -43,8 +45,47 @@ class CampaignDashboardScreenState extends BaseState {
   List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
   List<CampaignReward> campaignRewardList = [];
-  initState() async {
-    log.w(' In init');
+
+/*----------------------------------------------------------------------
+                    Init
+----------------------------------------------------------------------*/
+
+  init() async {
+    await campaignService.getSavedLoginToken().then((token) async {
+      if (token != '' || token != null) {
+        await myProfile(userData);
+        await myRewardsByToken();
+        await getCampaignName();
+        tokenCheckTimer();
+      } else {
+        navigationService.navigateTo('/campaignLogin');
+      }
+    });
+  }
+
+/*----------------------------------------------------------------------
+                    Token check timer
+----------------------------------------------------------------------*/
+
+  tokenCheckTimer() {
+    Timer.periodic(Duration(minutes: 1), (t) async {
+      await campaignService.getSavedLoginToken().then((token) async {
+        if (token != '' || token != null) {
+          CampaignUserData userData = new CampaignUserData();
+          userData.token = token;
+          await campaignService.getMemberProfile(userData).then((member) {
+            log.w('get member in timer $member');
+            if (member['ok']) {
+              log.i('timer - login token not expired');
+            } else {
+              navigationService.navigateTo('/campaignLogin');
+              t.cancel();
+              log.e('Timer cancel');
+            }
+          });
+        }
+      });
+    });
   }
 
 /*----------------------------------------------------------------------
@@ -70,7 +111,6 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   logout() async {
-    await initState();
     if (userData != null) {
       await campaignUserDatabaseService.deleteUserData(userData.email);
       log.w('User data deleted successfully.');
@@ -91,7 +131,7 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(true);
     await campaignService.getMemberProfile(userData).then((res) {
       if (res != null) {
-        log.w('myProfile $res');
+        // log.w('myProfile $res');
         String level = res['membership'].toString();
         if (level == 'gold') {
           memberLevelTextColor = 0xffE6BE8A;

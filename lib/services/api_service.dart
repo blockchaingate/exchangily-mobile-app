@@ -13,13 +13,14 @@
 
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/constants.dart';
-import 'package:exchangilymobileapp/models/wallet.dart';
-import 'package:exchangilymobileapp/models/wallet_balance.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
+import 'package:exchangilymobileapp/models/trade/order-model.dart';
 
 /// The service responsible for networking requests
 class ApiService {
@@ -34,6 +35,9 @@ class ApiService {
   static const orders = 'ordersbyaddress/';
   final String walletBalances = 'walletBalances';
   final btcBaseUrl = environment["endpoints"]["btc"];
+  final ltcBaseUrl = environment["endpoints"]["ltc"];
+  final bchBaseUrl = environment["endpoints"]["bch"];
+  final dogeBaseUrl = environment["endpoints"]["doge"];
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
@@ -63,19 +67,19 @@ class ApiService {
   Future<List<WalletBalance>> getWalletBalance(body) async {
     String url = kanbanBaseUrl + walletBalances;
     log.i(url);
-
+    WalletBalanceList balanceList;
     try {
       var response = await client.post(url, body: body);
       bool success = jsonDecode(response.body)['success'];
       if (success == true) {
         print(success);
-      }
-      var jsonList = jsonDecode(response.body)['data'];
-      log.w(' getWalletBalance $jsonList');
-      if (jsonList == null) {
+        var jsonList = jsonDecode(response.body)['data'];
+        log.w(' getWalletBalance $jsonList');
+        balanceList = WalletBalanceList.fromJson(jsonList);
+      } else {
+        log.e('get wallet balances returning null');
         return null;
       }
-      WalletBalanceList balanceList = WalletBalanceList.fromJson(jsonList);
       return balanceList.balanceList;
     } catch (err) {
       log.e('In getWalletBalance catch $err');
@@ -99,14 +103,15 @@ class ApiService {
     }
   }
 
-  // Get Coin Usd Price
-  Future getCoinsUsdValue() async {
-    final res = await http.get(usdCoinPriceUrl);
-    if (res.statusCode == 200 || res.statusCode == 201) {
-      return jsonDecode(res.body);
-    }
-    return log.e('getCoinsUsdValue Failed to load the data from the API');
-  }
+  // Get Coin Usd Price ( OLD way to get the market price)
+
+  // Future getCoinsUsdValue() async {
+  //   final res = await http.get(usdCoinPriceUrl);
+  //   if (res.statusCode == 200 || res.statusCode == 201) {
+  //     return jsonDecode(res.body);
+  //   }
+  //   return log.e('getCoinsUsdValue Failed to load the data from the API');
+  // }
 
   // Get Gas Balance
   Future getGasBalance(String exgAddress) async {
@@ -129,7 +134,7 @@ class ApiService {
         environment['endpoints']['kanban'] + assetsBalance + exgAddress;
     log.w('get assets balance url $url');
     try {
-      final res = await http.get(url);
+      final res = await client.get(url);
 
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
@@ -137,21 +142,53 @@ class ApiService {
     } catch (e) {
       log.e('getAssetsBalance Failed to load the data from the API, $e');
     }
-    return {};
   }
 
-  // Get Orders
-  Future getOrders(String exgAddress) async {
+  // Get Orders by address
+  Future getOrdersTest(String exgAddress) async {
+    String url = environment['endpoints']['kanban'] + orders + exgAddress;
+    log.w('get my orders url $url');
     try {
-      final res = await http
-          .get(environment['endpoints']['kanban'] + orders + exgAddress);
+      throw Exception('Catch Exception');
+    } catch (err) {
+      log.e('getOrders Failed to load the data from the API， $err');
+      throw Exception('Catch Exception $err');
+    }
+  }
+
+  // Get Orders by address
+  Future<List<OrderModel>> getOrders(String exgAddress) async {
+    try {
+      String url = environment['endpoints']['kanban'] + orders + exgAddress;
+      log.w('get my orders url $url');
+      var res = await client.get(url);
+      var jsonList = jsonDecode(res.body) as List;
+      OrderList orderList = OrderList.fromJson(jsonList);
+      return orderList.orders;
+    } catch (err) {
+      log.e('getOrders Failed to load the data from the API， $err');
+      throw Exception('Catch Exception $err');
+    }
+  }
+
+  // Get Orders by tickername
+  Future getMyOrdersByTickerName(String exgAddress, String tickerName) async {
+    String url = environment['endpoints']['kanban'] +
+        'getordersbytickername/' +
+        exgAddress +
+        '/' +
+        tickerName;
+    log.i('getMyOrdersByTickerName url $url');
+    try {
+      final res = await http.get(url);
+      print('after res $res');
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
     } catch (e) {
       log.e('getOrders Failed to load the data from the API， $e');
+      throw Exception;
     }
-    return {};
   }
 
   // Get FabUtxos
@@ -180,6 +217,50 @@ class ApiService {
     return json;
   }
 
+  // Get LtcUtxos
+  Future getLtcUtxos(String address) async {
+    var url = ltcBaseUrl + 'getutxos/' + address;
+    log.w(url);
+
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      return json;
+    } catch (e) {
+      log.e('getLtcUtxos $e');
+      throw Exception('e');
+    }
+  }
+
+  Future getBchUtxos(String address) async {
+    var url = bchBaseUrl + 'getutxos/' + address;
+    log.w(url);
+
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      return json;
+    } catch (e) {
+      log.e('getBchUtxos $e');
+      throw Exception('e');
+    }
+  }
+
+  // Get DogeUtxos
+  Future getDogeUtxos(String address) async {
+    var url = dogeBaseUrl + 'getutxos/' + address;
+    log.w(url);
+
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      return json;
+    } catch (e) {
+      log.e('getDogeUtxos $e');
+      throw Exception('e');
+    }
+  }
+
   // Post Btc Transaction
   Future postBtcTx(String txHex) async {
     var url = btcBaseUrl + 'postrawtransaction';
@@ -204,6 +285,87 @@ class ApiService {
       errMsg = 'invalid json format.';
     }
     return {'txHash': txHash, 'errMsg': errMsg};
+  }
+
+  // Post Ltc Transaction
+  Future postLtcTx(String txHex) async {
+    var url = ltcBaseUrl + 'postrawtransaction';
+    var json;
+    var txHash = '';
+    var errMsg = '';
+    try {
+      var data = {'rawtx': txHex};
+      var response = await client.post(url, body: data);
+
+      json = jsonDecode(response.body);
+      log.w('json= $json');
+      if (json != null) {
+        if (json['txid'] != null) {
+          txHash = '0x' + json['txid'];
+        } else if (json['Error'] != null) {
+          errMsg = json['Error'];
+        }
+      } else {
+        errMsg = 'invalid json format.';
+      }
+      return {'txHash': txHash, 'errMsg': errMsg};
+    } catch (e) {
+      log.e('postLtcTx $e');
+    }
+  }
+
+  // Post Bch Transaction
+  Future postBchTx(String txHex) async {
+    var url = bchBaseUrl + 'postrawtransaction';
+    var json;
+    var txHash = '';
+    var errMsg = '';
+    try {
+      var data = {'rawtx': txHex};
+      var response = await client.post(url, body: data);
+
+      json = jsonDecode(response.body);
+      log.w('json= $json');
+      if (json != null) {
+        if (json['txid'] != null) {
+          txHash = '0x' + json['txid'];
+        } else if (json['Error'] != null) {
+          errMsg = json['Error'];
+        }
+      } else {
+        errMsg = 'invalid json format.';
+      }
+      return {'txHash': txHash, 'errMsg': errMsg};
+    } catch (e) {
+      log.e('postBchTx $e');
+    }
+  }
+
+  // Post Ltc Transaction
+  Future postDogeTx(String txHex) async {
+    var url = dogeBaseUrl + 'postrawtransaction';
+    var json;
+    var txHash = '';
+    var errMsg = '';
+    try {
+      var data = {'rawtx': txHex};
+      var response = await client.post(url, body: data);
+
+      json = jsonDecode(response.body);
+      log.w('json= $json');
+      if (json != null) {
+        if (json['txid'] != null) {
+          txHash = '0x' + json['txid'];
+        } else if (json['Error'] != null) {
+          errMsg = json['Error'];
+        }
+      } else {
+        errMsg = 'invalid json format.';
+      }
+      return {'txHash': txHash, 'errMsg': errMsg};
+    } catch (e) {
+      log.e('postDogeTx $e');
+    }
   }
 
   // Get Fab Transaction

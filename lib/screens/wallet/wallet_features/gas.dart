@@ -23,6 +23,8 @@ class Gas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      // mainAxisAlignment: MainAxisAlignment.center,
+      // mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: 5.0),
@@ -34,7 +36,7 @@ class Gas extends StatelessWidget {
         ),
         UIHelper.horizontalSpaceSmall,
         Text(
-          "${AppLocalizations.of(context).gas}: $gasAmount",
+          "${AppLocalizations.of(context).gas}: ${gasAmount.toStringAsFixed(8)}",
           style:
               Theme.of(context).textTheme.headline5.copyWith(wordSpacing: 1.25),
         ),
