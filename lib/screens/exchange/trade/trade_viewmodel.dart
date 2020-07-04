@@ -66,6 +66,19 @@ class TradeViewModel extends MultipleStreamViewModel {
   // Map<String, StreamData> res =
   //     tradeService.getMultipleStreams(pairPriceByRoute.symbol);
 
+  @override
+  @mustCallSuper
+  void dispose() async {
+    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
+    log.i('Close all IOWebsocket connections');
+    super.dispose();
+  }
+
+  /// Initialize when model ready
+  init() async {
+    await getDecimalPairConfig();
+  }
+
 // Change/update stream data before displaying on UI
   @override
   void onData(String key, data) {}
@@ -142,19 +155,6 @@ class TradeViewModel extends MultipleStreamViewModel {
   void onCancel(String key) {
     log.e('Stream $key closed');
     // getSubscriptionForKey(key).cancel();
-  }
-
-  @override
-  @mustCallSuper
-  void dispose() {
-    tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
-    log.i('Close all IOWebsocket connections');
-    super.dispose();
-  }
-
-  /// Initialize when model ready
-  init() async {
-    await getDecimalPairConfig();
   }
 
   /// Get Decimal Pair Configuration

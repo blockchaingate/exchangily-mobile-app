@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/material.dart';
 import '../shared/globals.dart' as globals;
 
@@ -17,9 +18,9 @@ class Loading extends StatelessWidget {
           width: size,
           height: size,
         ),
-        SizedBox(height:3),
+        SizedBox(height: 3),
         Text(
-          "Loading...",
+          AppLocalizations.of(context).loading,
           style: TextStyle(color: globals.primaryColor),
         )
       ],

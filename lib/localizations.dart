@@ -1370,7 +1370,7 @@ class AppLocalizations {
   }
 
   String get change {
-    return Intl.message('change', name: 'change', desc: 'change_text');
+    return Intl.message('Change', name: 'change', desc: 'change_text');
   }
 
   String get reload {

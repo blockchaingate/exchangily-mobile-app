@@ -60,10 +60,10 @@ class TradeService {
                     Close IOWebSocket Connections
 ----------------------------------------------------------------------*/
 
-  closeIOWebSocketConnections(String pair) {
-    getAllPriceChannel().sink.close();
-    getOrderListChannel(pair).sink.close();
-    getTradeListChannel(pair).sink.close();
+  closeIOWebSocketConnections(String pair) async {
+    await getAllPriceChannel().sink.close();
+    await getOrderListChannel(pair).sink.close();
+    await getTradeListChannel(pair).sink.close();
   }
 
 /*----------------------------------------------------------------------

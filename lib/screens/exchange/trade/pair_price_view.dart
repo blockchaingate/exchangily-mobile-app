@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,10 @@ import 'package:shimmer/shimmer.dart';
 class PairPriceView extends StatelessWidget {
   final Price pairPrice;
   final bool isBusy;
-  const PairPriceView({Key key, this.pairPrice, this.isBusy}) : super(key: key);
+  final DecimalConfig decimalConfig;
+  const PairPriceView(
+      {Key key, this.pairPrice, this.isBusy, this.decimalConfig})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +35,14 @@ class PairPriceView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Text(pairPrice.price.toStringAsFixed(2),
+              Text(pairPrice.price.toStringAsFixed(decimalConfig.priceDecimal),
                   style: TextStyle(fontSize: 40, color: priceColor)),
               Column(
                 children: [
-                  Text("\$" + pairPrice.price.toStringAsFixed(2),
+                  Text(
+                      "\$" +
+                          pairPrice.price
+                              .toStringAsFixed(decimalConfig.priceDecimal),
                       style: Theme.of(context).textTheme.headline3),
                   Row(
                     children: [
@@ -91,17 +98,23 @@ class PairPriceView extends StatelessWidget {
                   UIHelper.horizontalSpaceMedium,
                   Expanded(
                     flex: 2,
-                    child: Text(pairPrice.volume.toString(),
+                    child: Text(
+                        pairPrice.volume
+                            .toStringAsFixed(decimalConfig.priceDecimal),
                         style: Theme.of(context).textTheme.headline6),
                   ),
                   Expanded(
                     flex: 2,
-                    child: Text(pairPrice.low.toString(),
+                    child: Text(
+                        pairPrice.low
+                            .toStringAsFixed(decimalConfig.priceDecimal),
                         style: Theme.of(context).textTheme.headline6),
                   ),
                   Expanded(
                       flex: 2,
-                      child: Text(pairPrice.high.toString(),
+                      child: Text(
+                          pairPrice.high
+                              .toStringAsFixed(decimalConfig.priceDecimal),
                           style: Theme.of(context).textTheme.headline6)),
                 ],
               ),

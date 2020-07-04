@@ -133,11 +133,11 @@ class TradeView extends StatelessWidget {
                       Container(
                         margin: EdgeInsets.only(top: 5.0),
                         child: PairPriceView(
-                          pairPrice: model.dataReady('allPrices')
-                              ? model.currentPairPrice
-                              : model.pairPriceByRoute,
-                          isBusy: !model.dataReady('allPrices'),
-                        ),
+                            pairPrice: model.dataReady('allPrices')
+                                ? model.currentPairPrice
+                                : model.pairPriceByRoute,
+                            isBusy: !model.dataReady('allPrices'),
+                            decimalConfig: model.singlePairDecimalConfig),
                       ),
 
                       //  Below container contains trading view chart in the trade tab
@@ -200,25 +200,15 @@ class TradeView extends StatelessWidget {
                               child: TabBarView(children: [
                                 // order book container
                                 Container(
-                                  child: model
-                                          .hasError(model.orderBookStreamKey)
-                                      ? Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Text(AppLocalizations.of(
-                                                  context)
-                                              .serverTimeoutPleaseTryAgainLater),
+                                  child: !model
+                                          .dataReady(model.orderBookStreamKey)
+                                      ? ShimmerLayout(
+                                          layoutType: 'orderbook',
                                         )
-                                      : !model.dataReady(
-                                                  model.orderBookStreamKey) &&
-                                              model.singlePairDecimalConfig !=
-                                                  null
-                                          ? ShimmerLayout(
-                                              layoutType: 'orderbook',
-                                            )
-                                          : OrderBookView(
-                                              orderBook: model.orderBook,
-                                              decimalConfig: model
-                                                  .singlePairDecimalConfig),
+                                      : OrderBookView(
+                                          orderBook: model.orderBook,
+                                          decimalConfig:
+                                              model.singlePairDecimalConfig),
                                 ),
 
                                 // Market trades container
