@@ -1,5 +1,6 @@
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
@@ -432,7 +433,8 @@ class WalletService {
         t.cancel();
         result = res['message'];
         log.i('Timer cancel');
-        sharedService.alertDialog('${transaction.tickerName} status', '$result',
+        sharedService.alertDialog(
+            '${transaction.tickerName}  status', '$result'.toUpperCase(),
             isWarning: false);
         String date = DateTime.now().toString();
 
@@ -1251,11 +1253,12 @@ class WalletService {
       var amountNum = amount * 1e8;
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
-      final txb = Bitbox.Bitbox.transactionBuilder(testnet: environment["chains"]["BCH"]["testnet"]);
-      final masterNode = Bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
-      final childNode = "m/44'/" +
-          environment["CoinType"]["BCH"].toString() +
-          "'/0'/0/0";
+      final txb = Bitbox.Bitbox.transactionBuilder(
+          testnet: environment["chains"]["BCH"]["testnet"]);
+      final masterNode =
+          Bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
+      final childNode =
+          "m/44'/" + environment["CoinType"]["BCH"].toString() + "'/0'/0/0";
       final accountNode = masterNode.derivePath(childNode);
       final address = accountNode.toCashAddress();
 
@@ -1290,13 +1293,12 @@ class WalletService {
         }
       }
 
-      if(!finished) {
+      if (!finished) {
         return {'txHex': '', 'txHash': '', 'errMsg': 'not enough fund'};
       }
 
-      var transFee =
-          (signatures.length) * bytesPerInput * satoshisPerBytes +
-              (2 * 34 + 10) * satoshisPerBytes;
+      var transFee = (signatures.length) * bytesPerInput * satoshisPerBytes +
+          (2 * 34 + 10) * satoshisPerBytes;
       transFeeDouble = transFee / 1e8;
 
       if (getTransFeeOnly) {
@@ -1331,7 +1333,6 @@ class WalletService {
         txHash = '0x' + tx.getId();
       }
     }
-
 
     // LTC Transaction
     else if (coin == 'LTC') {

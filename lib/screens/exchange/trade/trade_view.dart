@@ -235,9 +235,7 @@ class TradeView extends StatelessWidget {
                                 MyOrdersView(
                                     tickerName: pairPriceByRoute.symbol),
 
-
-
-                                    // My Exchange Asssets
+                                // My Exchange Asssets
                                 model.busy(model.myExchangeAssets)
                                     ? Container(
                                         margin: EdgeInsets.symmetric(
@@ -310,13 +308,16 @@ class TradeView extends StatelessWidget {
                                 padding: EdgeInsets.all(0),
                                 color: buyPrice,
                                 onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BuySell(
-                                            pair: model.currentPairPrice.symbol,
-                                            bidOrAsk: true)),
-                                  );
+                                  if (model.currentPairPrice != null &&
+                                      model.dataReady(model.orderBookStreamKey))
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => BuySell(
+                                              orderbook: model.orderBook,
+                                              pair: model.currentPairPrice,
+                                              bidOrAsk: true)),
+                                    );
                                 },
                                 child: Text(AppLocalizations.of(context).buy,
                                     style:
@@ -333,13 +334,16 @@ class TradeView extends StatelessWidget {
                               shape: StadiumBorder(
                                   side: BorderSide(color: sellPrice, width: 1)),
                               onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => BuySell(
-                                          pair: model.currentPairPrice.symbol,
-                                          bidOrAsk: false)),
-                                );
+                                if (model.currentPairPrice != null &&
+                                    model.dataReady(model.orderBookStreamKey))
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BuySell(
+                                            orderbook: model.orderBook,
+                                            pair: model.currentPairPrice,
+                                            bidOrAsk: false)),
+                                  );
                               },
                               child: Text(AppLocalizations.of(context).sell,
                                   style: TextStyle(

@@ -85,10 +85,7 @@ class SharedService {
                     : Container(
                         color: globals.primaryColor.withOpacity(0.1),
                         padding: EdgeInsets.all(10),
-                        child: Text(
-                          title,
-                          textAlign: TextAlign.center,
-                        ),
+                        child: Text(title),
                       ),
                 titleTextStyle: Theme.of(context).textTheme.headline4,
                 contentTextStyle: TextStyle(color: globals.grey),
