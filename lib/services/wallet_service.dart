@@ -1296,7 +1296,7 @@ class WalletService {
       }
 
       var transFee =
-          (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
+          (signatures.length) * bytesPerInput * satoshisPerBytes +
               (2 * 34 + 10) * satoshisPerBytes;
       transFeeDouble = transFee / 1e8;
 
