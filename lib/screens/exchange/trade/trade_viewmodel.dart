@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
@@ -51,6 +52,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   String marketTradesStreamKey = 'marketTradesList';
 
   List myExchangeAssets = [];
+  DecimalConfig singlePairDecimalConfig = new DecimalConfig();
 
   @override
   Map<String, StreamData> get streamsMap => {
@@ -101,7 +103,9 @@ class TradeViewModel extends MultipleStreamViewModel {
         // Sell orders
         List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
         OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
-        sellOrderBookList = sellOrderList.orders;
+        List sellOrders = sellOrderList.orders.reversed
+            .toList(); // reverse sell orders to show the list ascending
+        sellOrderBookList = sellOrders;
 
         log.w(
             'OrderBook length -- ${buyOrderBookList.length} ${sellOrderList.orders.length}');
@@ -149,16 +153,21 @@ class TradeViewModel extends MultipleStreamViewModel {
   }
 
   /// Initialize when model ready
-  init() {
-    //  getDecimalPairConfig();
+  init() async {
+    await getDecimalPairConfig();
   }
 
   /// Get Decimal Pair Configuration
   getDecimalPairConfig() async {
-    await apiService.getPairDecimalConfig().then((res) {
-      pairDecimalConfigList = res;
+    await tradeService
+        .getDecimalPairConfig(pairPriceByRoute.symbol)
+        .then((decimalValues) {
+      singlePairDecimalConfig = decimalValues;
+      log.i(
+          'decimal values, quantity: ${singlePairDecimalConfig.quantityDecimal} -- price: ${singlePairDecimalConfig.priceDecimal}');
+    }).catchError((err) {
+      log.e('getDecimalPairConfig $err');
     });
-    print(pairDecimalConfigList.length);
   }
 
   /// Bottom sheet to show market pair price

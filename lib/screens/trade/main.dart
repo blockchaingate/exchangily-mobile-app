@@ -77,17 +77,17 @@ class _TradeState extends State<Trade> with TradeService {
     }
   }
 
-  getDecimalPairConfig() async {
-    await apiService.getPairDecimalConfig().then((res) {
-      pairDecimalConfigList = res;
-    });
-    print(pairDecimalConfigList.length);
-  }
+//  getDecimalPairConfig() async {
+//     await apiService.getPairDecimalConfig().then((res) {
+//       pairDecimalConfigList = res;
+//     });
+//     print(pairDecimalConfigList.length);
+//   }
 
   @override
   void initState() {
     super.initState();
-    getDecimalPairConfig();
+    // getDecimalPairConfig();
     pair = widget.pair.replaceAll(RegExp('/'), '');
     allTradesChannel = getTradeListChannel(pair);
     allTradesChannel.stream.listen((trades) {
@@ -174,108 +174,107 @@ class _TradeState extends State<Trade> with TradeService {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CupertinoNavigationBar(
-          padding: EdgeInsetsDirectional.only(top: 5, bottom: 5),
-          leading: CupertinoButton(
-            padding: EdgeInsets.all(0),
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              if (Navigator.canPop(context)) {
-                closeChannels();
-                Navigator.pop(context);
-              }
-            },
+      appBar: CupertinoNavigationBar(
+        padding: EdgeInsetsDirectional.only(top: 5, bottom: 5),
+        leading: CupertinoButton(
+          padding: EdgeInsets.all(0),
+          child: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
           ),
-          middle: Text(
-            widget.pair,
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: globals.walletCardColor,
+          onPressed: () {
+            if (Navigator.canPop(context)) {
+              closeChannels();
+              Navigator.pop(context);
+            }
+          },
         ),
-        //backgroundColor: Color(0xFF1F2233),
-        body: Stack(children: <Widget>[
-          ListView(
-            children: <Widget>[
-              TradePrice(key: _tradePriceState),
-              // Below container contains trading view chart in the trade tab
-              Container(
-                  margin: EdgeInsets.symmetric(horizontal: 9.0),
-                  child: LoadHTMLFileToWEbView(widget.pair)),
-              // Below class contains the order book and market trades
-              Trademarket(key: _tradeMarketState),
-              SizedBox(height: 60)
-            ],
-          ),
-          // Buy Sell Buttons
-          Visibility(
-              visible: (tradeChannelCompleted &&
-                  priceChannelCompleted &&
-                  orderChannelCompleted),
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                    width: 250,
-                    margin:
-                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        // Buy Button
-                        Flexible(
-                            child: Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: FlatButton(
-                            color: globals.buyPrice,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BuySell(
-                                        pair: widget.pair, bidOrAsk: true)),
-                              );
-                            },
-                            child: Text(AppLocalizations.of(context).buy,
-                                style: TextStyle(
-                                    fontSize: 13, color: globals.white)),
-                          ),
-                        )),
-                        // Sell button
-                        Flexible(
-                            child: RaisedButton(
-                          color: globals.sellPrice.withAlpha(175),
-                          shape: StadiumBorder(
-                              side: BorderSide(
-                                  color: globals.sellPrice, width: 2)),
+        middle: Text(
+          widget.pair,
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: globals.walletCardColor,
+      ),
+      //backgroundColor: Color(0xFF1F2233),
+      body: Stack(children: <Widget>[
+        ListView(
+          children: <Widget>[
+            TradePrice(key: _tradePriceState),
+            // Below container contains trading view chart in the trade tab
+            Container(
+                margin: EdgeInsets.symmetric(horizontal: 9.0),
+                child: LoadHTMLFileToWEbView(widget.pair)),
+            // Below class contains the order book and market trades
+            Trademarket(key: _tradeMarketState),
+            SizedBox(height: 60)
+          ],
+        ),
+        // Buy Sell Buttons
+        Visibility(
+            visible: (tradeChannelCompleted &&
+                priceChannelCompleted &&
+                orderChannelCompleted),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Container(
+                  width: 250,
+                  margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      // Buy Button
+                      Flexible(
+                          child: Padding(
+                        padding: const EdgeInsets.only(right: 5.0),
+                        child: FlatButton(
+                          color: globals.buyPrice,
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => BuySell(
-                                      pair: widget.pair, bidOrAsk: false)),
+                                      pair: widget.pair, bidOrAsk: true)),
                             );
                           },
-                          child: Text(AppLocalizations.of(context).sell,
-                              style:
-                                  TextStyle(fontSize: 15, color: Colors.white)),
-                        ))
-                      ],
-                    )),
-              )),
-          Visibility(
-              visible: !(tradeChannelCompleted &&
-                  priceChannelCompleted &&
-                  orderChannelCompleted),
-              child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  color: Color(0xFF2c2c4c),
-                  child: Center(child: CircularProgressIndicator())))
-        ]),
-        // bottomNavigationBar: BottomNavBar(count: 2)
-        );
+                          child: Text(AppLocalizations.of(context).buy,
+                              style: TextStyle(
+                                  fontSize: 13, color: globals.white)),
+                        ),
+                      )),
+                      // Sell button
+                      Flexible(
+                          child: RaisedButton(
+                        color: globals.sellPrice.withAlpha(175),
+                        shape: StadiumBorder(
+                            side:
+                                BorderSide(color: globals.sellPrice, width: 2)),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BuySell(
+                                    pair: widget.pair, bidOrAsk: false)),
+                          );
+                        },
+                        child: Text(AppLocalizations.of(context).sell,
+                            style:
+                                TextStyle(fontSize: 15, color: Colors.white)),
+                      ))
+                    ],
+                  )),
+            )),
+        Visibility(
+            visible: !(tradeChannelCompleted &&
+                priceChannelCompleted &&
+                orderChannelCompleted),
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Color(0xFF2c2c4c),
+                child: Center(child: CircularProgressIndicator())))
+      ]),
+      // bottomNavigationBar: BottomNavBar(count: 2)
+    );
   }
 
   @override

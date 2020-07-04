@@ -37,11 +37,7 @@ class TradeView extends StatelessWidget {
         onModelReady: (model) {
           print('in init trade view');
           model.context = context;
-          // if (model.dataReady(model.allPriceStreamKey)) {
-          //   print('before cancelling stream');
-          //   model.cancelSingleStreamByKey(model.allPriceStreamKey);
-          // }
-          // model.resumeAllStreams();
+          model.init();
         },
         builder: (context, model, _) => WillPopScope(
               onWillPop: () async {
@@ -146,7 +142,6 @@ class TradeView extends StatelessWidget {
 
                       //  Below container contains trading view chart in the trade tab
                       Container(
-                        //margin: EdgeInsets.symmetric(horizontal: 9.0),
                         child: LoadHTMLFileToWEbView(
                             model.updateTickerName(pairPriceByRoute.symbol)),
                       ),
@@ -214,15 +209,19 @@ class TradeView extends StatelessWidget {
                                               .serverTimeoutPleaseTryAgainLater),
                                         )
                                       : !model.dataReady(
-                                              model.orderBookStreamKey)
+                                                  model.orderBookStreamKey) &&
+                                              model.singlePairDecimalConfig !=
+                                                  null
                                           ? ShimmerLayout(
                                               layoutType: 'orderbook',
                                             )
                                           : OrderBookView(
-                                              orderBook: model.orderBook),
+                                              orderBook: model.orderBook,
+                                              decimalConfig: model
+                                                  .singlePairDecimalConfig),
                                 ),
 
-                                // market trades container
+                                // Market trades container
                                 Container(
                                   child: !model.dataReady(
                                           model.marketTradesStreamKey)
@@ -232,7 +231,7 @@ class TradeView extends StatelessWidget {
                                       : MarketTradesView(
                                           marketTrades: model.marketTradesList),
                                 ),
-                                // My Trades view
+                                // My Orders view
                                 MyOrdersView(
                                     tickerName: pairPriceByRoute.symbol),
                                 model.busy(model.myExchangeAssets)
@@ -271,7 +270,7 @@ class TradeView extends StatelessWidget {
                 // floatingActionButton:
                 // bottomNavigationBar: BottomNavBar(count: 1),
                 bottomNavigationBar: Container(
-                    padding: EdgeInsets.symmetric(horizontal:10),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     width: 160,
                     //margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                     child: Row(
@@ -322,7 +321,7 @@ class TradeView extends StatelessWidget {
                               ),
                             )),
                         // Sell button
-                        SizedBox(width:5),
+                        SizedBox(width: 5),
                         Flexible(
                             flex: 1,
                             child: RaisedButton(
