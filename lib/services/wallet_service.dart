@@ -1255,7 +1255,7 @@ class WalletService {
       final txb = Bitbox.Bitbox.transactionBuilder(testnet: environment["chains"]["BCH"]["testnet"]);
       final masterNode = Bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
       final childNode = "m/44'/" +
-          environment["CoinType"]["LTC"].toString() +
+          environment["CoinType"]["BCH"].toString() +
           "'/0'/0/0";
       final accountNode = masterNode.derivePath(childNode);
       final address = accountNode.toCashAddress();
