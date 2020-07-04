@@ -496,17 +496,7 @@ class BuySell extends StatelessWidget {
                                             .headline6))
                               ],
                             ),
-                            Container(
-                                height: 150,
-                                child: ListView.builder(
-                                    reverse: true,
-                                    shrinkWrap: true,
-                                    itemCount: orderbook[1].length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return orderDetail(
-                                          orderbook[1], true, model);
-                                    })),
+                            orderDetail(orderbook[1], true, model),
                             Container(
                                 padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                                 child: Row(
@@ -518,16 +508,7 @@ class BuySell extends StatelessWidget {
                                             .headline4)
                                   ],
                                 )),
-                            Container(
-                                height: 150,
-                                child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemCount: orderbook[0].length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return orderDetail(
-                                          orderbook[0], false, model);
-                                    }))
+                            orderDetail(orderbook[0], false, model)
                           ],
                         ))
                   ],
@@ -543,11 +524,15 @@ class BuySell extends StatelessWidget {
 
   // Using orderDetail here in this buy and sell screen to fill the price and quanity in text fields when user click on the order
   Widget orderDetail(List<OrderModel> orderArray, final bool bidOrAsk, model) {
-    List<OrderModel> sellOrders;
+    List<OrderModel> sellOrders = [];
     if (bidOrAsk) {
       sellOrders = orderArray.reversed.toList();
       orderArray = sellOrders;
     }
+    print('OrderArray length before ${orderArray.length}');
+    orderArray =
+        (orderArray.length > 7) ? (orderArray.sublist(0, 7)) : orderArray;
+    print('OrderArray length after ${orderArray.length}');
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
