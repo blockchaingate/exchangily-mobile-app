@@ -68,14 +68,21 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   tokenCheckTimer() {
-    Timer.periodic(Duration(minutes: 5), (t) async {
+    Timer.periodic(Duration(minutes: 1), (t) async {
       await campaignService.getSavedLoginToken().then((token) async {
         if (token != '' || token != null) {
-          log.i('timer token present');
-        } else {
-          navigationService.navigateTo('/campaignLogin');
-          t.cancel();
-          log.e('Timer cancel');
+          CampaignUserData userData = new CampaignUserData();
+          userData.token = token;
+          await campaignService.getMemberProfile(userData).then((member) {
+            log.w('get member in timer $member');
+            if (member['ok']) {
+              log.i('timer - login token not expired');
+            } else {
+              navigationService.navigateTo('/campaignLogin');
+              t.cancel();
+              log.e('Timer cancel');
+            }
+          });
         }
       });
     });

@@ -83,6 +83,8 @@ class SharedService {
                 title: title == ""
                     ? Container()
                     : Container(
+                        color: globals.primaryColor.withOpacity(0.1),
+                        padding: EdgeInsets.all(10),
                         child: Text(
                           title,
                           textAlign: TextAlign.center,

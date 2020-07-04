@@ -89,6 +89,7 @@ class BuySellScreenState extends BaseState {
   int quantityDecimal = 0;
   ApiService apiService = locator<ApiService>();
   String pair = '';
+  String tickerName = '';
 
   init() async {
     log.e(pair);
@@ -118,6 +119,7 @@ class BuySellScreenState extends BaseState {
     var coinsArray = pair.split("/");
     baseCoinName = coinsArray[1];
     targetCoinName = coinsArray[0];
+    tickerName = targetCoinName + baseCoinName;
   }
 
   // getPairDecimalConfig

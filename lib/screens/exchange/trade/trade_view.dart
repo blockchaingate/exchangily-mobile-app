@@ -234,8 +234,11 @@ class TradeView extends StatelessWidget {
                                 // My Orders view
                                 MyOrdersView(
                                     tickerName: pairPriceByRoute.symbol),
-                                model.busy(model.myExchangeAssets)
+
+
+
                                     // My Exchange Asssets
+                                model.busy(model.myExchangeAssets)
                                     ? Container(
                                         margin: EdgeInsets.symmetric(
                                             horizontal: 5.0, vertical: 5),

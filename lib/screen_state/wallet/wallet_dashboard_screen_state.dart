@@ -328,6 +328,7 @@ class WalletDashboardScreenState extends BaseState {
 
         calcTotalBal();
         await updateWalletDatabase();
+
         if (!isProduction) debugVersionPopup();
       } // if wallet balance list != null ends
 

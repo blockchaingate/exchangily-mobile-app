@@ -54,6 +54,7 @@ class TransactionHistory extends StatelessWidget {
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2),
+                                        // icon
                                         transaction.tag == 'deposit'
                                             ? Icon(
                                                 Icons.arrow_downward,
@@ -65,20 +66,11 @@ class TransactionHistory extends StatelessWidget {
                                                 size: 24,
                                                 color: globals.sellPrice,
                                               ),
-                                        if (transaction.tag == 'moveToExchange')
+
+                                        if (transaction.tag == 'withdraw')
                                           Text(
                                             AppLocalizations.of(context)
-                                                .moveAndTrade,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2,
-                                            textAlign: TextAlign.center,
-                                          )
-                                        else if (transaction.tag ==
-                                            'withdrawToWallet')
-                                          Text(
-                                            AppLocalizations.of(context)
-                                                .withdrawToWallet,
+                                                .withdraw,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .subtitle2,
