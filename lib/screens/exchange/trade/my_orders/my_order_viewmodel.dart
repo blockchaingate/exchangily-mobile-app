@@ -90,16 +90,17 @@ class MyOrdersViewModel extends // BaseViewModel {
   }
 
   void swapSources() {
-    //   setBusy(true);
+    setBusy(true);
     log.w('swap sources show all pairs ${!showCurrentPairOrders}');
     _showCurrentPairOrders = !_showCurrentPairOrders;
     //  _showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
     notifySourceChanged();
-    //  setBusy(false);
+    setBusy(false);
   }
 
   @override
   void onData(List<OrderModel> data) {
+    setBusy(true);
     if (data != null) {
       myAllOrders = data;
       log.e('My order length ${myAllOrders.length}');
@@ -125,6 +126,7 @@ class MyOrdersViewModel extends // BaseViewModel {
       log.w('close orders ${myCloseOrders.length}');
       myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
     }
+    setBusy(false);
   }
 
   @override
