@@ -39,7 +39,7 @@ class SettingsScreenState extends BaseState {
 
   final NavigationService navigationService = locator<NavigationService>();
   List<String> languages = ['English', 'Chinese'];
-  String selectedLanguage;
+  String selectedLanguage = '';
   // bool result = false;
   String errorMessage = '';
   AlertResponse alertResponse;
@@ -50,9 +50,9 @@ class SettingsScreenState extends BaseState {
   final FixedExtentScrollController fixedScrollController =
       FixedExtentScrollController(initialItem: initialLanguageValue);
   bool isDialogDisplay = false;
-  //ScrollController scrollController;
-  bool isDeleting = false;
   ScrollController scrollController;
+  bool isDeleting = false;
+
 
   init() async {
     setBusy(true);
@@ -177,7 +177,7 @@ class SettingsScreenState extends BaseState {
       prefs.setString('lang', 'zh');
     }
     setState(ViewState.Idle);
-    Navigator.pushReplacementNamed(context, '/mainNav', arguments: 0);
+   // Navigator.pushReplacementNamed(context, '/mainNav', arguments: 0);
   }
 
   // Pin code

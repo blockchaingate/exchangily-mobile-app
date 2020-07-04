@@ -166,8 +166,10 @@ class SettingsScreen extends StatelessWidget {
                   child: Container(
                     color: globals.walletCardColor,
                     child: Center(
-                      child: Theme.of(context).platform == TargetPlatform.iOS
-                          ? CupertinoPicker(
+                      child: 
+                     // Theme.of(context).platform == TargetPlatform.iOS
+                     //     ? 
+                          CupertinoPicker(
                               diameterRatio: 1.3,
                               offAxisFraction: 5,
                               scrollController: model.scrollController,
@@ -191,35 +193,39 @@ class SettingsScreen extends StatelessWidget {
                                   ),
                                 );
                               }))
-                          : DropdownButtonHideUnderline(
-                              child: DropdownButton(
-                                iconEnabledColor: globals.primaryColor,
-                                iconSize: 26,
-                                hint: Text(
-                                  AppLocalizations.of(context)
-                                      .changeWalletLanguage,
-                                  textAlign: TextAlign.center,
-                                  style:
-                                      Theme.of(context).textTheme.headline5,
-                                ),
-                                value: model.selectedLanguage,
-                                onChanged: (newValue) {
-                                  model.changeWalletLanguage(newValue);
-                                },
-                                items: model.languages.map((language) {
-                                  return DropdownMenuItem(
-                                    child: Center(
-                                      child: Text(language,
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6),
-                                    ),
-                                    value: language,
-                                  );
-                                }).toList(),
-                              ),
-                            ),
+                          // : Visibility(
+                          //     replacement: Container(),
+                          //     visible: true,
+                          //     child: DropdownButtonHideUnderline(
+                          //       child: DropdownButton(
+                          //         iconEnabledColor: globals.primaryColor,
+                          //         iconSize: 26,
+                          //         hint: Text(
+                          //           AppLocalizations.of(context)
+                          //               .changeWalletLanguage,
+                          //           textAlign: TextAlign.center,
+                          //           style:
+                          //               Theme.of(context).textTheme.headline5,
+                          //         ),
+                          //         value: model.selectedLanguage,
+                          //         onChanged: (newValue) {
+                          //           model.changeWalletLanguage(newValue);
+                          //         },
+                          //         items: model.languages.map((language) {
+                          //           return DropdownMenuItem(
+                          //             child: Center(
+                          //               child: Text(language,
+                          //                   textAlign: TextAlign.center,
+                          //                   style: Theme.of(context)
+                          //                       .textTheme
+                          //                       .headline6),
+                          //             ),
+                          //             value: language,
+                          //           );
+                          //         }).toList(),
+                          //       ),
+                          //     ),
+                          //   ),
                     ),
                   ),
                 ),

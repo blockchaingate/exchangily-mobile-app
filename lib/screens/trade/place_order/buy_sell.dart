@@ -65,10 +65,7 @@ class BuySell extends StatelessWidget {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  if (Navigator.canPop(context)) {
-                    model.closeChannles();
-                    Navigator.pop(context);
-                  }
+                  Navigator.pop(context);
                 },
               ),
               middle: Text(
@@ -217,8 +214,7 @@ class BuySell extends StatelessWidget {
                                   Padding(
                                     padding: const EdgeInsets.only(right: 3.0),
                                     child: Text(
-                                      AppLocalizations.of(context)
-                                          .transactionAmount,
+                                      AppLocalizations.of(context).amount,
                                       style: TextStyle(
                                           color: Colors.grey, fontSize: 12.0),
                                     ),
@@ -252,8 +248,7 @@ class BuySell extends StatelessWidget {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text(
-                                      AppLocalizations.of(context).totalBalance,
+                                  Text(AppLocalizations.of(context).balance,
                                       style: TextStyle(
                                           color: globals.primaryColor,
                                           fontSize: 13.0)),
@@ -506,11 +501,11 @@ class BuySell extends StatelessWidget {
                                 child: ListView.builder(
                                     reverse: true,
                                     shrinkWrap: true,
-                                    itemCount: orderbook[0].length,
+                                    itemCount: orderbook[1].length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return orderDetail(
-                                          orderbook[0], false, model);
+                                          orderbook[1], true, model);
                                     })),
                             Container(
                                 padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
@@ -527,11 +522,11 @@ class BuySell extends StatelessWidget {
                                 height: 150,
                                 child: ListView.builder(
                                     shrinkWrap: true,
-                                    itemCount: orderbook[1].length,
+                                    itemCount: orderbook[0].length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return orderDetail(
-                                          orderbook[1], true, model);
+                                          orderbook[0], false, model);
                                     }))
                           ],
                         ))
@@ -548,10 +543,10 @@ class BuySell extends StatelessWidget {
 
   // Using orderDetail here in this buy and sell screen to fill the price and quanity in text fields when user click on the order
   Widget orderDetail(List<OrderModel> orderArray, final bool bidOrAsk, model) {
-    List<OrderModel> sepOrders;
-    if (!bidOrAsk) {
-      sepOrders = orderArray.reversed.toList();
-      orderArray = sepOrders;
+    List<OrderModel> sellOrders;
+    if (bidOrAsk) {
+      sellOrders = orderArray.reversed.toList();
+      orderArray = sellOrders;
     }
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -569,12 +564,12 @@ class BuySell extends StatelessWidget {
                   children: <Widget>[
                     Text(item.price.toStringAsFixed(model.priceDecimal),
                         style: TextStyle(
-                            color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
+                            color: Color(!bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
                             fontSize: 13.0)),
                     Container(
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                        color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
+                        color: Color(!bidOrAsk ? 0xFF264559 : 0xFF502649),
                         child: Text(
                             item.orderQuantity
                                 .toStringAsFixed(model.quantityDecimal),
