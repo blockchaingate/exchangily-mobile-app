@@ -81,7 +81,9 @@ class TradeViewModel extends MultipleStreamViewModel {
 
 // Change/update stream data before displaying on UI
   @override
-  void onData(String key, data) {}
+  void onData(String key, data) {
+    orderBook = [buyOrderBookList, sellOrderBookList];
+  }
 
   /// Transform stream data before notifying to view modal
   @override
@@ -123,7 +125,7 @@ class TradeViewModel extends MultipleStreamViewModel {
         log.w(
             'OrderBook length -- ${buyOrderBookList.length} ${sellOrderList.orders.length}');
         // Fill orderBook list
-        orderBook = [buyOrderBookList, sellOrderBookList];
+
         // notifyListeners();
       }
 

@@ -36,7 +36,7 @@ class PairPriceView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Text(pairPrice.price.toStringAsFixed(decimalConfig.priceDecimal),
-                  style: TextStyle(fontSize: 40, color: priceColor)),
+                  style: TextStyle(fontSize: 30, color: priceColor)),
               Column(
                 children: [
                   Text(
