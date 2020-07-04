@@ -25,7 +25,7 @@ class CampaignService {
   final String campaignId = '1';
   Campaign campaign;
 
-  static const BASE_URL = isProduction
+  static final BASE_URL = isProduction
       ? EnvironmentConfig.CAMPAIGN_PROD_URL
       : EnvironmentConfig.CAMPAIGN_TEST_URL;
   static final registerUrl = BASE_URL + 'members/create';

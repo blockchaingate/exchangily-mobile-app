@@ -17,6 +17,11 @@ Map devConfig = {
       "satoshisPerBytes": 400,
       "bytesPerInput": 155
     },
+    "BCH": {
+      "testnet": true,
+      "satoshisPerBytes": 9,
+      "bytesPerInput": 155
+    },
     "DOGE": {
       "network": dogeCoinTestnetNetwork,
       "satoshisPerBytes": 800000,
@@ -44,6 +49,7 @@ Map devConfig = {
     'kanban': 'https://kanbantest.fabcoinapi.com/',
     'btc': 'https://btctest.fabcoinapi.com/',
     'ltc': 'https://ltctest.fabcoinapi.com/',
+    'bch': 'https://bchtest.fabcoinapi.com/',
     'doge': 'https://dogetest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
@@ -137,6 +143,11 @@ Map productionConfig = {
       "satoshisPerBytes": 400,
       "bytesPerInput": 152
     },
+    "BCH": {
+      "testnet": false,
+      "satoshisPerBytes": 9,
+      "bytesPerInput": 155
+    },
     "DOGE": {
       "network": dogeCoinMainnetNetwork,
       "satoshisPerBytes": 800000,
@@ -175,6 +186,7 @@ Map productionConfig = {
     'kanban': 'https://kanbanprod.fabcoinapi.com/',
     'btc': 'https://btcprod.fabcoinapi.com/',
     'ltc': 'https://ltcprod.fabcoinapi.com/',
+    'bch': 'https://bchprod.fabcoinapi.com/',
     'doge': 'https://dogeprod.fabcoinapi.com/',
     'fab': 'https://fabprod.fabcoinapi.com/',
     'eth': 'https://ethprod.fabcoinapi.com/',

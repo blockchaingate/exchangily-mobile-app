@@ -1240,6 +1240,99 @@ class WalletService {
       }
     }
 
+    // BCH Transaction
+    else if (coin == 'BCH') {
+      if (bytesPerInput == 0) {
+        bytesPerInput = environment["chains"]["BCH"]["bytesPerInput"];
+      }
+      if (satoshisPerBytes == 0) {
+        satoshisPerBytes = environment["chains"]["BCH"]["satoshisPerBytes"];
+      }
+      var amountNum = amount * 1e8;
+      amountNum += (2 * 34 + 10) * satoshisPerBytes;
+
+      final txb = Bitbox.Bitbox.transactionBuilder(testnet: environment["chains"]["BCH"]["testnet"]);
+      final masterNode = Bitbox.HDNode.fromSeed(seed, environment["chains"]["BCH"]["testnet"]);
+      final childNode = "m/44'/" +
+          environment["CoinType"]["BCH"].toString() +
+          "'/0'/0/0";
+      final accountNode = masterNode.derivePath(childNode);
+      final address = accountNode.toCashAddress();
+
+      final utxos = await _api.getBchUtxos(address);
+
+      if ((utxos == null) || (utxos.length == 0)) {
+        return {'txHex': '', 'txHash': '', 'errMsg': 'not enough fund'};
+      }
+
+      final signatures = <Map>[];
+
+      for (var j = 0; j < utxos.length; j++) {
+        var tx = utxos[j];
+        if (tx['idx'] < 0) {
+          continue;
+        }
+        txb.addInput(tx['txid'], tx['idx']);
+
+        // add a signature to the list to be used later
+        signatures.add({
+          "vin": signatures.length,
+          "key_pair": accountNode.keyPair,
+          "original_amount": tx['value']
+        });
+
+        amountNum -= tx['value'];
+        amountNum += bytesPerInput * satoshisPerBytes;
+        totalInput += tx['value'];
+        if (amountNum <= 0) {
+          finished = true;
+          break;
+        }
+      }
+
+      if(!finished) {
+        return {'txHex': '', 'txHash': '', 'errMsg': 'not enough fund'};
+      }
+
+      var transFee =
+          (signatures.length) * bytesPerInput * satoshisPerBytes +
+              (2 * 34 + 10) * satoshisPerBytes;
+      transFeeDouble = transFee / 1e8;
+
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': '',
+          'amountSent': '',
+          'transFee': transFeeDouble
+        };
+      }
+
+      var output1 = (totalInput - amount * 1e8 - transFee).round();
+      var output2 = (amount * 1e8).round();
+
+      txb.addOutput(address, output1);
+      txb.addOutput(toAddress, output2);
+
+      signatures.forEach((signature) {
+        txb.sign(signature["vin"], signature["key_pair"],
+            signature["original_amount"]);
+      });
+
+      final tx = txb.build();
+      txHex = tx.toHex();
+      if (doSubmit) {
+        var res = await _api.postBchTx(txHex);
+        txHash = res['txHash'];
+        errMsg = res['errMsg'];
+        return {'txHash': txHash, 'errMsg': errMsg};
+      } else {
+        txHash = '0x' + tx.getId();
+      }
+    }
+
+
     // LTC Transaction
     else if (coin == 'LTC') {
       if (bytesPerInput == 0) {
