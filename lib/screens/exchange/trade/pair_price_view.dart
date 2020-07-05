@@ -32,37 +32,49 @@ class PairPriceView extends StatelessWidget {
       child: Column(
         children: <Widget>[
           // Price Row
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Text(pairPrice.price.toStringAsFixed(decimalConfig.priceDecimal),
-                  style: TextStyle(fontSize: 30, color: priceColor)),
-              Column(
-                children: [
-                  Text(
-                      "\$" +
-                          pairPrice.price
-                              .toStringAsFixed(decimalConfig.priceDecimal),
-                      style: Theme.of(context).textTheme.headline3),
-                  Row(
-                    children: [
-                      Text(
-                          (pairPrice.close - pairPrice.open).toStringAsFixed(2),
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Color(pairPrice.close > pairPrice.open
-                                  ? 0XFF0da88b
-                                  : 0XFFe2103c))),
-                      UIHelper.horizontalSpaceSmall,
-                      Text(pairPrice.change.toStringAsFixed(2) + "%",
-                          style: Theme.of(context).textTheme.headline5.copyWith(
-                              color: Color(pairPrice.change >= 0
-                                  ? 0XFF0da88b
-                                  : 0XFFe2103c))),
-                    ],
-                  ),
-                ],
-              )
-            ],
+          Container(
+            margin: EdgeInsets.only(bottom: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text(
+                    pairPrice.price.toStringAsFixed(decimalConfig.priceDecimal),
+                    style: TextStyle(fontSize: 30, color: priceColor)),
+                Column(
+                  children: [
+                    Text(
+                        "\$" +
+                            pairPrice.price
+                                .toStringAsFixed(decimalConfig.priceDecimal),
+                        style: Theme.of(context).textTheme.headline3),
+                    Row(
+                      children: [
+                        Text(
+                            (pairPrice.close - pairPrice.open)
+                                .toStringAsFixed(2),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    color: Color(
+                                        pairPrice.close > pairPrice.open
+                                            ? 0XFF0da88b
+                                            : 0XFFe2103c))),
+                        UIHelper.horizontalSpaceSmall,
+                        Text(pairPrice.change.toStringAsFixed(2) + "%",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(
+                                    color: Color(pairPrice.change >= 0
+                                        ? 0XFF0da88b
+                                        : 0XFFe2103c))),
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
           // Change Price Value Row
           Container(
