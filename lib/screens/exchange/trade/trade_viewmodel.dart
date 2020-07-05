@@ -118,9 +118,10 @@ class TradeViewModel extends MultipleStreamViewModel {
         // Sell orders
         List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
         OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
-        List sellOrders = sellOrderList.orders.reversed
-            .toList(); // reverse sell orders to show the list ascending
-        sellOrderBookList = sellOrders;
+        //  List sellOrders = sellOrderList.orders.reversed
+        //      .toList(); // reverse sell orders to show the list ascending
+        sellOrderBookList = sellOrderList.orders;
+        // sellOrders;
 
         log.w(
             'OrderBook length -- ${buyOrderBookList.length} ${sellOrderList.orders.length}');
