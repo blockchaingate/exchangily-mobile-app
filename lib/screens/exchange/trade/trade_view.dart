@@ -261,6 +261,7 @@ class TradeView extends StatelessWidget {
                 // floatingActionButton:
                 // bottomNavigationBar: BottomNavBar(count: 1),
                 bottomNavigationBar: Container(
+                  margin: EdgeInsets.only(bottom: 10),
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     width: 160,
                     //margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
