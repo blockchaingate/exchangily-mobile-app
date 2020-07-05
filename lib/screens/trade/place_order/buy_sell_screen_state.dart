@@ -147,7 +147,7 @@ class BuySellScreenState extends BaseState {
   selectBuySellTab(bool value) {
     setState(ViewState.Busy);
     bidOrAsk = value;
-    log.w(bidOrAsk);
+    log.w('bid $bidOrAsk');
     setState(ViewState.Idle);
   }
 
@@ -162,16 +162,6 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Busy);
     tradeListChannel =
         tradeService.getTradeListChannel(targetCoinName + baseCoinName);
-    setState(ViewState.Idle);
-  }
-
-  // Close the Web Socket Connection
-
-  closeChannles() {
-    setState(ViewState.Busy);
-    //  orderListChannel.sink.close();
-    //  tradeListChannel.sink.close();
-    log.e('close channels');
     setState(ViewState.Idle);
   }
 
@@ -417,6 +407,15 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
+  // Calculate Transaction Amount
+
+  caculateTransactionAmount() {
+    if (price != null && quantity != null && price >= 0 && quantity >= 0) {
+      transactionAmount = quantity * price;
+    }
+    return transactionAmount;
+  }
+
   // Show Orders
 
   showOrders(Orders orders) async {
@@ -479,9 +478,7 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // Check Pass
-  checkPass(context) async {
-    setState(ViewState.Busy);
+  placeBuySellOrder() async {
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -492,7 +489,9 @@ class BuySellScreenState extends BaseState {
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var txHex = await txHexforPlaceOrder(seed);
+      log.e('txhex $txHex');
       var resKanban = await sendKanbanRawTransaction(txHex);
+      log.e('resKanban $resKanban');
       if (resKanban != null && resKanban['transactionHash'] != null) {
         sharedService.alertDialog(
             AppLocalizations.of(context).placeOrderTransactionSuccessful,
@@ -517,7 +516,51 @@ class BuySellScreenState extends BaseState {
         showNotification(context);
       }
     }
-    setState(ViewState.Idle);
+  }
+
+  // Check Pass
+  checkPass(context) async {
+    setBusy(true);
+
+    var targetCoinbalance =
+        targetCoinWalletData.inExchange; // coin(asset) bal for sell
+    var baseCoinbalance = baseCoinWalletData // usd bal for buy
+        .inExchange;
+
+    if (price == null ||
+        quantity == null ||
+        price.isNegative ||
+        quantity.isNegative) {
+      return;
+    }
+
+    if (!bidOrAsk) {
+      caculateTransactionAmount();
+      log.e(
+          'SELL tx amount $transactionAmount -- targetCoinbalance ${targetCoinbalance * price}');
+      if (transactionAmount > (targetCoinbalance * price)) {
+        sharedService.alertDialog(
+            "", AppLocalizations.of(context).invalidAmount,
+            isWarning: false);
+        return;
+      } else {
+        placeBuySellOrder();
+      }
+    } else {
+      caculateTransactionAmount();
+      log.w(
+          'BUY tx amount $transactionAmount -- baseCoinbalance $baseCoinbalance');
+      if (transactionAmount > baseCoinbalance) {
+        sharedService.alertDialog(
+            "", AppLocalizations.of(context).invalidAmount,
+            isWarning: false);
+        return;
+      } else {
+        placeBuySellOrder();
+      }
+    }
+
+    setBusy(false);
   }
 
 // Handle Text Change
@@ -544,15 +587,6 @@ class BuySellScreenState extends BaseState {
       }
     }
     setState(ViewState.Idle);
-  }
-
-  // Calculate Transaction Amount
-
-  caculateTransactionAmount() {
-    if (price != null && quantity != null && price >= 0 && quantity >= 0) {
-      transactionAmount = quantity * price;
-    }
-    return transactionAmount;
   }
 
   // Slider Onchange

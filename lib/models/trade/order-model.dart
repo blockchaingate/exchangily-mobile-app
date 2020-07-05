@@ -60,6 +60,8 @@ class OrderModel {
   int _time;
   bool _isActive;
   String _pairName;
+  double _totalOrderQuantity;
+  double _filledPercentage;
   OrderModel(
       {bool payWithExg,
       String orderHash,
@@ -73,7 +75,9 @@ class OrderModel {
       double filledQuantity,
       int time,
       bool isActive,
-      String pairName}) {
+      String pairName,
+      double totalOrderQuantity,
+      double filledPercentage}) {
     this._payWithExg = payWithExg;
     this._orderHash = orderHash;
     this._address = address;
@@ -82,11 +86,15 @@ class OrderModel {
     this._orderType = orderType;
     this._bidOrAsk = bidOrAsk;
     this._price = price ?? 0.0;
-    this._orderQuantity = orderQuantity ?? 0.0;
-    this._filledQuantity = filledQuantity ?? 0.0;
+    this._orderQuantity = orderQuantity ??
+        0.0; // how much is left, if i order 10 and filled 3 then oq is 7
+    this._filledQuantity = filledQuantity ??
+        0.0; // how many filled so if order of 10 with 3 filled then 3 is the value
     this._time = time;
     this._isActive = isActive;
     this._pairName = pairName;
+    this._totalOrderQuantity = orderQuantity + filledQuantity;
+    this._filledPercentage = (filledQuantity * 100) / _totalOrderQuantity;
   }
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
@@ -187,6 +195,16 @@ class OrderModel {
   String get pairName => _pairName;
   set pairName(String pairName) {
     this._pairName = pairName;
+  }
+
+  double get totalOrderQuantity => _totalOrderQuantity;
+  set totalOrderQuantity(double totalOrderQuantity) {
+    this._totalOrderQuantity = totalOrderQuantity;
+  }
+
+  double get filledPercentage => _filledPercentage;
+  set filledPercentage(double filledPercentage) {
+    this._filledPercentage = filledPercentage;
   }
 }
 

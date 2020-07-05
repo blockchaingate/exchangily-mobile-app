@@ -43,13 +43,11 @@ class TradeService {
     DecimalConfig singlePairDecimalConfig = new DecimalConfig();
     await _api.getPairDecimalConfig().then((res) {
       pairDecimalConfigList = res;
-      log.w('Current pair name in get decimal config $pairName');
       for (PairDecimalConfig pair in pairDecimalConfigList) {
         if (pair.name == pairName) {
           singlePairDecimalConfig = DecimalConfig(
               priceDecimal: pair.priceDecimal,
               quantityDecimal: pair.qtyDecimal);
-          log.e('Price and quantity decimal $singlePairDecimalConfig');
         }
       }
     });
@@ -73,11 +71,11 @@ class TradeService {
   Stream getAllCoinPriceStream() {
     Stream stream;
     try {
-      String url = basePath + 'allPrices';
+      // String url = basePath + 'allPrices';
       //  log.i(url);
-      IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
-      stream = channel.stream;
-      return stream;
+      // IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
+      stream = getAllPriceChannel().stream;
+      return stream.asBroadcastStream().distinct();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
       throw Exception(err);
@@ -91,11 +89,11 @@ class TradeService {
   Stream getMarketTradesStreamByTickerName(String tickerName) {
     Stream stream;
     try {
-      var wsString = environment['websocket'] + 'trades' + '@' + tickerName;
-      log.w(wsString);
-      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
-      stream = channel.stream;
-      return stream;
+      // var wsString = environment['websocket'] + 'trades' + '@' + tickerName;
+      //  log.w(wsString);
+      // IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
+      stream = getTradeListChannel(tickerName).stream;
+      return stream.asBroadcastStream().distinct();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
       throw Exception(err);
@@ -109,15 +107,16 @@ class TradeService {
   Stream getOrderBookStreamByTickerName(String tickerName) {
     Stream stream;
     try {
-      var wsString = environment['websocket'] + 'orders' + '@' + tickerName;
-      log.w(wsString);
+      // var wsString = environment['websocket'] + 'orders' + '@' + tickerName;
+      // log.w(wsString);
       // log.w('getOrderBookStreamByTickerName $wsString');
       // if not put the IOWebSoketChannel.connect to variable channel and
       // directly returns it then in the multiple stream it doesn't work
-      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
-      stream = channel.stream;
+      //  IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
 
-      return stream;
+      stream = getOrderListChannel(tickerName).stream;
+
+      return stream.asBroadcastStream().distinct();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
       throw Exception(err);

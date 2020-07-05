@@ -180,7 +180,7 @@ class ApiService {
         tickerName;
     log.i('getMyOrdersByTickerName url $url');
     try {
-      final res = await http.get(url);
+      final res = await client.get(url);
       print('after res $res');
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);

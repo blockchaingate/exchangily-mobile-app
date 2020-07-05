@@ -14,7 +14,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
 
   @override
   Widget build(BuildContext context, MyOrdersViewModel model) {
-    return !model.dataReady
+    return model.isBusy
         ? ShimmerLayout(layoutType: 'marketTrades')
         : ListView.builder(
             itemCount: orders.length,
