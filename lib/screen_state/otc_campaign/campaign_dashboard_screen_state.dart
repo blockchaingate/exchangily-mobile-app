@@ -53,7 +53,7 @@ class CampaignDashboardScreenState extends BaseState {
   init() async {
     await campaignService.getSavedLoginToken().then((token) async {
       if (token != '' || token != null) {
-        await myProfile(userData);
+        await myProfile(token);
         await myRewardsByToken();
         await getCampaignName();
       } else {
@@ -126,12 +126,12 @@ class CampaignDashboardScreenState extends BaseState {
                                   Get Member Profile By Token
 -------------------------------------------------------------------------------------*/
 
-  myProfile(CampaignUserData userData) async {
+  myProfile(String token) async {
     setBusy(true);
-    await campaignService.getMemberProfile(userData).then((res) {
+    await campaignService.getMemberProfile(token).then((res) {
       if (res != null) {
         // log.w('myProfile $res');
-        String level = res['membership'].toString();
+        String level = res.membership;
         if (level == 'gold') {
           memberLevelTextColor = 0xffE6BE8A;
           memberLevel = AppLocalizations.of(context).gold;
@@ -143,8 +143,8 @@ class CampaignDashboardScreenState extends BaseState {
           memberLevel = AppLocalizations.of(context).silver;
         }
         //assignColorAccordingToMemberLevel(level);
-        myInvestmentValueWithoutRewards = res['totalValue'].toDouble();
-        myTokensWithoutRewards = res['totalQuantities'].toDouble();
+        myInvestmentValueWithoutRewards = res.totalValue;
+        myTokensWithoutRewards = res.totalQuantities;
         log.w('myTokensWithoutRewards $myTokensWithoutRewards');
       } else {
         log.w(' In myProfile else');

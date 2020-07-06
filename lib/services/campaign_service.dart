@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
+import 'package:exchangilymobileapp/models/campaign/member_profile.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/team_reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
@@ -306,16 +307,17 @@ class CampaignService {
                                 Get Member Profile By Token
 -------------------------------------------------------------------------------------*/
 
-  Future getMemberProfile(CampaignUserData userData) async {
-    Map<String, String> headers = {'x-access-token': userData.token};
+  Future<MemberProfile> getMemberProfile(String token) async {
+    Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(memberProfileUrl, headers: headers);
       var json = jsonDecode(response.body)['_body'];
       log.w('getMemberProfile $json');
-
-      return json;
+      MemberProfile memberProfile = MemberProfile.fromJson(json);
+      return memberProfile;
     } catch (err) {
       log.e('In getMemberProfile catch $err');
+      return null;
     }
   }
 
