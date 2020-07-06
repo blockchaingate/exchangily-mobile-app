@@ -245,7 +245,44 @@ class CampaignInstructionScreen extends StatelessWidget {
                           }
                         }).toList()),
                       ),
+                      Container(
+                        margin: EdgeInsetsDirectional.only(start: 30, end: 30),
+                        padding: EdgeInsets.only(top: 10, bottom: 20),
+                        width: MediaQuery.of(context).size.width - 60,
+                        // width: double.infinity,
+                        // height: 50,
+                        // padding: EdgeInsets.symmetric(
+                        //     horizontal: 30, vertical: 7),
+                        decoration: BoxDecoration(
+                          color: Color(0xff3d3da1),
+                        ),
+                        child: Column(
+                          children: [
+                            CustomSeparator(
+                              color: Color(0xff131359),
+                            ),
+                            SizedBox(height: 30),
+                            Center(
+                              child: InkWell(
+                                child: Text(
+                                  "More information about this campaign",
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 16,
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onTap: (){
+                                  
+                                },
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
                       SizedBox(height: 50),
+
                       SizedBox(height: 50),
                       // Enter button container
 
@@ -327,7 +364,10 @@ class ContentForm extends StatelessWidget {
                 child: Center(
                     child: Text(
                   info["price"],
-                  style: TextStyle(color: Colors.white, fontSize: 18,fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
                 )),
               ),
               SizedBox(height: 20),
@@ -430,7 +470,6 @@ class ContentForm extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 5),
-              
             ]),
       ),
     );

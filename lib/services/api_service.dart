@@ -411,4 +411,18 @@ class ApiService {
       return null;
     }
   }
+
+  Future getSliderImages() async {
+    try {
+      final res = await http
+          .get("https://kanbanprod.fabcoinapi.com/kanban/getadvconfig");
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      log.e('getSliderImages Failed to load the data from the API $e');
+    }
+    return {};
+  }
 }

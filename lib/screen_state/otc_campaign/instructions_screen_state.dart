@@ -114,11 +114,6 @@ class CampaignInstructionsScreenState extends BaseState {
       "text":
           "Every \$100USD purchase of EXG entitles you to 1 FAB, upto a maximum of 5 FAB Purchases of EXG can be made in USDT, ETH and BTC, via the eXchangily exchange or with USD, CAD or RMB via OTC."
     },
-    // {"title":"","text":""},
-    // {"title":"","text":""},
-    // {"title":"","text":""},
-    // {"title":"","text":""},
-    // {"title":"","text":""},
   ];
 
   // Init state
