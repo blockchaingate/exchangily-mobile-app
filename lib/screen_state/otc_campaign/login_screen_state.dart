@@ -42,25 +42,28 @@ class CampaignLoginScreenState extends BaseState {
     var loginToken = prefs.getString('loginToken');
     log.w('login token $loginToken');
     if (loginToken != '' && loginToken != null) {
-      await campaignUserDatabaseService
-          .getUserDataByToken(loginToken)
-          .then((res) {
-        log.w('database response $res');
+      await campaignService
+          .getMemberRewardByToken(loginToken)
+          .then((res) async {
         if (res != null) {
-          userData = res;
-          Timer(Duration(seconds: 1), () {
-            navigationService.navigateTo('/campaignDashboard',
-                arguments: userData);
-            setBusy(false);
-            setErrorMessage('');
+          await campaignUserDatabaseService
+              .getUserDataByToken(loginToken)
+              .then((res) {
+            if (res != null) {
+              userData = res;
+              navigationService.navigateTo('/campaignDashboard',
+                  arguments: userData);
+              setBusy(false);
+              setErrorMessage('');
+            }
           });
         } else {
           setBusy(false);
-          setErrorMessage('');
+          setErrorMessage('Session Expired');
         }
       }).catchError((err) {
         setErrorMessage('');
-        log.w('Fetch user from database failed');
+        log.w('getMemberRewardByToken catch');
         setBusy(false);
       });
     } else {

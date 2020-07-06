@@ -139,8 +139,8 @@ class MoveToWalletScreenState extends BaseState {
         }
         sharedService.alertDialog(
             success
-                ? AppLocalizations.of(context).depositTransactionSuccess
-                : AppLocalizations.of(context).depositTransactionFailed,
+                ? AppLocalizations.of(context).withdrawTransactionSuccessful
+                : AppLocalizations.of(context).withdrawTransactionFailed,
             success ? "" : AppLocalizations.of(context).serverError,
             isWarning: false);
       }).catchError((err) {

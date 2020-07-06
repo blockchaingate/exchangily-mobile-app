@@ -331,6 +331,7 @@ class CampaignService {
       var json = jsonDecode(response.body)['_body']['personal'];
       CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
       log.e('getMemberRewardByToken ${campaignRewardList.rewards.length}');
+
       return campaignRewardList.rewards;
     } catch (err) {
       log.e('In getRewardByToken catch $err');
@@ -346,7 +347,7 @@ class CampaignService {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
-      log.e('getTotalTeamsRewardByToken ${jsonDecode(response.body)['_body']}');
+      log.w('getTotalTeamsRewardByToken ${jsonDecode(response.body)['_body']}');
       var teamsRewardList = jsonDecode(response.body)['_body'];
       return teamsRewardList;
     } catch (err) {

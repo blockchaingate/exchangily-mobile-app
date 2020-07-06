@@ -56,7 +56,6 @@ class CampaignDashboardScreenState extends BaseState {
         await myProfile(userData);
         await myRewardsByToken();
         await getCampaignName();
-        tokenCheckTimer();
       } else {
         navigationService.navigateTo('/campaignLogin');
       }
@@ -68,14 +67,14 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   tokenCheckTimer() {
-    Timer.periodic(Duration(minutes: 1), (t) async {
+    Timer.periodic(Duration(minutes: 5), (t) async {
       await campaignService.getSavedLoginToken().then((token) async {
         if (token != '' || token != null) {
-          CampaignUserData userData = new CampaignUserData();
-          userData.token = token;
-          await campaignService.getMemberProfile(userData).then((member) {
-            log.w('get member in timer $member');
-            if (member['ok']) {
+          await campaignService
+              .getTeamsRewardDetailsByToken(token)
+              .then((reward) {
+            log.w('get member reward $reward');
+            if (reward != null) {
               log.i('timer - login token not expired');
             } else {
               navigationService.navigateTo('/campaignLogin');
@@ -328,7 +327,11 @@ class CampaignDashboardScreenState extends BaseState {
             myTotalAssetQuantity + myTokensWithoutRewards + myTeamsTotalRewards;
         await calcMyTotalAsssetValue();
       } else {
+        log.e('Campaign reward result in else block $res');
         log.w('In myReward else, res is null from api');
+        if (res == null) {
+          navigationService.navigateTo('/campaignLogin');
+        }
         setBusy(false);
       }
     }).catchError((err) {
