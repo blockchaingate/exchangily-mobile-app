@@ -51,8 +51,7 @@ class CampaignInstructionsScreenState extends BaseState {
         if (res != null) {
           userData = res;
           isGuideReady = true;
-          navigationService.navigateTo('/campaignDashboard',
-              arguments: userData);
+          navigationService.navigateTo('/campaignLogin');
         } else {
           setErrorMessage(AppLocalizations.of(context).genericError);
         }

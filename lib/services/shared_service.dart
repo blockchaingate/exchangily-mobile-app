@@ -106,7 +106,9 @@ class SharedService {
                           child: Text(
                             // add here cupertino widget to check in these small widgets first then the entire app
                             message, textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.headline5,
+                            style: title == ""
+                                ? Theme.of(context).textTheme.headline6
+                                : Theme.of(context).textTheme.headline5,
                           ),
                         ),
                         // Do not show checkbox and text does not require to show on all dialogs

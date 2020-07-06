@@ -210,6 +210,19 @@ class WalletDashboardScreenState extends BaseState {
     await getGas();
     //await getDecimalPairConfig();
 
+    /// Check if wallet database coins are same as wallet service list
+    /// if not then call create offline wallet in the wallet service
+    print('${walletService.coinTickers.length} -- ${walletInfoCopy.length}');
+    if (coinTickersLength != walletInfoCopy.length) {
+      print('$coinTickersLength -- ${walletInfoCopy.length}');
+      await walletService.createOfflineWallets(
+          'culture sound obey clean pretty medal churn behind chief cactus alley ready');
+      await walletDatabaseService.getAll().then((walletList) {
+        walletInfoCopy = [];
+        walletInfoCopy = walletList;
+      });
+    }
+
     Map<String, dynamic> walletBalancesBody = {
       'btcAddress': '',
       'ethAddress': '',

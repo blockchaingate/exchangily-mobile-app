@@ -70,10 +70,19 @@ class WalletDataBaseService {
     await initDb();
     final Database db = await _database;
     log.w('getall $db');
-
+    // print("getalldata: ");
+    // print("$db");
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
     log.w('res $res');
+    // print("getresdata: ");
+    // print("$res");
+    // res.forEach((e) {
+    //   print(e["id"]);
+    //   print(e["name"]);
+    // });
+    
+
     List<WalletInfo> list =
         res.isNotEmpty ? res.map((f) => WalletInfo.fromJson(f)).toList() : [];
     return list;

@@ -78,6 +78,7 @@ class WalletService {
     'LTC',
     'DOGE',
     'BNB',
+    'DRGN',
     'INB',
     'HOT',
     'CEL',
@@ -118,6 +119,7 @@ class WalletService {
     'ETH',
     'ETH',
     'ETH',
+    'ETH',
     'ETH'
   ];
 
@@ -132,6 +134,7 @@ class WalletService {
     'litecoin',
     'dogecoin',
     'Binance Coin',
+    'dragon',
     'Insight Chain',
     'Holo',
     'Celsius',
@@ -370,7 +373,8 @@ class WalletService {
 ----------------------------------------------------------------------*/
 
   Future createOfflineWallets(String mnemonic) async {
-    await walletDatabaseService.getAll();
+    await walletDatabaseService.deleteDb();
+    await walletDatabaseService.initDb();
     List<WalletInfo> _walletInfo = [];
     if (_walletInfo != null) {
       _walletInfo.clear();
