@@ -75,7 +75,7 @@ class CampaignDashboardScreenState extends BaseState {
           userData.token = token;
           await campaignService.getMemberProfile(userData).then((member) {
             log.w('get member in timer $member');
-            if (member['ok']) {
+            if (member!=null && member['ok']) {
               log.i('timer - login token not expired');
             } else {
               navigationService.navigateTo('/campaignLogin');

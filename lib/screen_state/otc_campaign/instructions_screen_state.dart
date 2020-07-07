@@ -1,4 +1,3 @@
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -51,10 +50,10 @@ class CampaignInstructionsScreenState extends BaseState {
         if (res != null) {
           userData = res;
           isGuideReady = true;
-          navigationService.navigateTo('/campaignDashboard',
-              arguments: userData);
+          // navigationService.navigateTo('/campaignDashboard',
+          //     arguments: userData);
         } else {
-          setErrorMessage(AppLocalizations.of(context).genericError);
+          setErrorMessage('Entry does not found in database');
         }
       }).catchError((err) {
         log.w('Fetch user from database failed');
