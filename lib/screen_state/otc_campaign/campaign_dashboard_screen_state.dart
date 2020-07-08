@@ -130,7 +130,6 @@ class CampaignDashboardScreenState extends BaseState {
     setBusy(true);
     await campaignService.getMemberProfile(token).then((res) {
       if (res != null) {
-        // log.w('myProfile $res');
         String level = res.membership;
         if (level == 'gold') {
           memberLevelTextColor = 0xffE6BE8A;
@@ -143,9 +142,8 @@ class CampaignDashboardScreenState extends BaseState {
           memberLevel = AppLocalizations.of(context).silver;
         }
         //assignColorAccordingToMemberLevel(level);
-        myInvestmentValueWithoutRewards = res.totalValue;
-        myTokensWithoutRewards = res.totalQuantities;
-        log.w('myTokensWithoutRewards $myTokensWithoutRewards');
+        myInvestmentValueWithoutRewards = res.totalValue.toDouble();
+        myTokensWithoutRewards = res.totalQuantities.toDouble();
       } else {
         log.w(' In myProfile else');
         setBusy(false);

@@ -12,6 +12,7 @@
 */
 
 import 'dart:convert';
+import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
@@ -28,8 +29,7 @@ class ApiService {
   final client = new http.Client();
 
   final kanbanBaseUrl = environment['endpoints']['kanban'];
-  static const usdCoinPriceUrl =
-      'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
+
   static const getBalance = 'kanban/getBalance/';
   static const assetsBalance = 'exchangily/getBalances/';
   static const orders = 'ordersbyaddress/';
@@ -41,6 +41,21 @@ class ApiService {
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
+
+/*----------------------------------------------------------------------
+                    get free fab
+----------------------------------------------------------------------*/
+
+  getFreeFab() async {
+    try {
+      var response = await client.get(freeFabUrl);
+      var json = jsonDecode(response.body);
+      return json;
+    } catch (err) {
+      log.e('getFreeFab $err');
+      throw Exception(err);
+    }
+  }
 
 /*----------------------------------------------------------------------
                 Transaction status

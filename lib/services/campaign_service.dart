@@ -366,9 +366,9 @@ class CampaignService {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
-      log.e(
-          'getTeamsRewardDetailsByToken ${jsonDecode(response.body)['_body']['team']}');
+
       var json = jsonDecode(response.body)['_body']['team'];
+      log.i('getTeamsRewardDetailsByToken $json');
       CampaignTeamRewardList campaignTeamRewardList =
           CampaignTeamRewardList.fromJson(json);
       log.w(
