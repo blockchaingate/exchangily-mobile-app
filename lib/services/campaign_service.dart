@@ -332,7 +332,6 @@ class CampaignService {
       log.w('getMemberRewardByToken ${jsonDecode(response.body)['_body']}');
       var json = jsonDecode(response.body)['_body']['personal'];
       CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
-      log.e('getMemberRewardByToken ${campaignRewardList.rewards.length}');
 
       return campaignRewardList.rewards;
     } catch (err) {

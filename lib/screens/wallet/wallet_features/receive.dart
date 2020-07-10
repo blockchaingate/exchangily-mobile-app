@@ -38,8 +38,6 @@ class ReceiveWalletScreen extends StatefulWidget {
 }
 
 class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
-  String er20Text = 'ERC20';
-  bool isShow = false;
   String convertedToFabAddress = '';
   @override
   void initState() {
@@ -50,11 +48,6 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
       convertedToFabAddress = exgToFabAddress(widget.walletInfo.address);
       log.w(
           'convertedToFabAddress from ${widget.walletInfo.address} to $convertedToFabAddress');
-    }
-
-    if (widget.walletInfo.tickerName == 'USDT' ||
-        widget.walletInfo.tickerName == 'BNB') {
-      isShow = true;
     }
   }
 
@@ -178,12 +171,6 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          isShow
-              ? Container(
-                  child: Text('${widget.walletInfo.tickerName}($er20Text)',
-                      style: Theme.of(context).textTheme.headline4),
-                )
-              : Container(),
           Text(
               convertedToFabAddress == ''
                   ? widget.walletInfo.address

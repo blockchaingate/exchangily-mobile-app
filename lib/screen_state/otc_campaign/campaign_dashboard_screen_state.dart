@@ -46,6 +46,8 @@ class CampaignDashboardScreenState extends BaseState {
   List<String> uiOrderStatusList = [];
   List<CampaignReward> campaignRewardList = [];
 
+  List team = [];
+
 /*----------------------------------------------------------------------
                     Init
 ----------------------------------------------------------------------*/
@@ -299,7 +301,7 @@ class CampaignDashboardScreenState extends BaseState {
       if (res != null) {
         campaignRewardList = res;
         // var res = response['personal'] as List;
-        log.w('res in my rewards by token ${campaignRewardList}');
+
         for (int i = 0; i < res.length; i++) {
           // double totalValueByLevel = campaignRewardList[i].totalValue;
           // double totalTokenQuantityByLevel =
@@ -347,11 +349,29 @@ class CampaignDashboardScreenState extends BaseState {
     await campaignService.getTotalTeamsRewardByToken(token).then((res) {
       myTeamsTotalValue = res['teamsTotalValue'].toDouble();
       myTeamsTotalRewards = res['teamsRewards'].toDouble();
-      teamValueAndRewardWithLoginToken = {
-        "totalValue": myTeamsTotalValue,
-        "totalReward": myTeamsTotalRewards,
-        "token": token
-      };
+
+      log.e(
+          'personal reward view data $myTeamsTotalRewards -- $myTeamsTotalValue');
+      team = res['team'];
+
+      // double totalValue = res['team']['totalValue'].toDouble();
+      // log.w('team totalValue $totalValue');
+      // double totalQuantity = res['team']['totalQuantity'].toDouble();
+      // log.w('team totalQuantity $totalQuantity');
+      // int members = res['team']['members'].length;
+      // log.w('team members $members');
+      // double percentage = res['team']['percentage'].toDouble();
+      // log.w('team percentage $percentage');
+
+      // teamValueAndRewardWithLoginToken = {
+      //   "totalValue": totalValue,
+      //   "totalQuantity": totalQuantity,
+      //   "members": members,
+      //   'percentage': percentage,
+      //   "token": token
+      // };
+
+      log.w('reward view data ${team[0]}');
     });
   }
 

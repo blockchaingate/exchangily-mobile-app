@@ -11,17 +11,6 @@ class TeamRewardDetailsScreenState extends BaseState {
   Map<String, dynamic> teamValueAndRewardWithToken;
 // Init state
   void initState() {
-    getTeamRewardDetails();
-  }
-
-  getTeamRewardDetails() async {
-    setBusy(true);
-    await campaignService
-        .getTeamsRewardDetailsByToken(teamValueAndRewardWithToken['token'])
-        .then((res) {
-      campaignTeamRewardList = res;
-      // log.w(c)
-    });
-    setBusy(false);
+    // getTeamRewardDetails();
   }
 }

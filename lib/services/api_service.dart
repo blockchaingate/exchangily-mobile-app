@@ -177,7 +177,9 @@ class ApiService {
       String url = environment['endpoints']['kanban'] + orders + exgAddress;
       log.w('get my orders url $url');
       var res = await client.get(url);
+      log.e('res $res');
       var jsonList = jsonDecode(res.body) as List;
+      log.i('jsonList $jsonList');
       OrderList orderList = OrderList.fromJson(jsonList);
       return orderList.orders;
     } catch (err) {

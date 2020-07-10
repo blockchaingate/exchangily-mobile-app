@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_market_pairs_layout.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_orderbook_layout.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layouts/shimmer_wallet_dashboard_layout.dart';
@@ -34,7 +35,7 @@ class ShimmerLayout extends StatelessWidget {
               } else if (layoutType == 'orderbook') {
                 layout = Shimmer.fromColors(
                     child: ShimmerOrderbookLayout(),
-                    baseColor: Colors.grey,
+                    baseColor: primaryColor.withAlpha(155),
                     highlightColor: Colors.white);
               } else if (layoutType == 'marketTrades') {
                 layout = Shimmer.fromColors(

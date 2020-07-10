@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,7 @@ class ShimmerOrderbookLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = 14;
+    double height = 20;
     double width = 50;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5.0),
@@ -21,8 +22,8 @@ class ShimmerOrderbookLayout extends StatelessWidget {
               height: height,
               width: width - 10,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(1),
-                color: Colors.grey,
+                borderRadius: BorderRadius.circular(2),
+                color: primaryColor.withAlpha(155),
               ),
             ),
           ),
@@ -33,8 +34,8 @@ class ShimmerOrderbookLayout extends StatelessWidget {
               height: height,
               width: width - 15,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(1),
-                color: Colors.grey,
+                borderRadius: BorderRadius.circular(2),
+                color: primaryColor.withAlpha(155),
               ),
             ),
           ),
