@@ -76,3 +76,4 @@
 android/key.properties
 lib/environments/environment_type.dart
 pubspec.lock
+ios/Podfile.lock
