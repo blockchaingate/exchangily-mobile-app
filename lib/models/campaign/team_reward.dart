@@ -1,10 +1,10 @@
-class CampaignTeamReward {
+class TeamReward {
   String _id;
   List<String> _members;
   double _totalValue;
   double _totalQuantities;
 
-  CampaignTeamReward(
+  TeamReward(
       {String id,
       double totalValue,
       double totalQuantities,
@@ -18,11 +18,11 @@ class CampaignTeamReward {
     this.members = members ?? '';
   }
 
-  factory CampaignTeamReward.fromJson(Map<String, dynamic> json) {
+  factory TeamReward.fromJson(Map<String, dynamic> json) {
     var teamFromJson = json["members"];
 // List<String> teamList = new List<String>.from(teamFromJson);
     List<String> teamList = teamFromJson.cast<String>();
-    return CampaignTeamReward(
+    return TeamReward(
         id: json["id"] as String,
         members: teamList,
         totalValue: json["totalValue"].toDouble(),
@@ -57,13 +57,13 @@ class CampaignTeamReward {
   }
 }
 
-class CampaignTeamRewardList {
-  final List<CampaignTeamReward> rewards;
-  CampaignTeamRewardList({this.rewards});
+class TeamRewardList {
+  final List<TeamReward> rewards;
+  TeamRewardList({this.rewards});
 
-  factory CampaignTeamRewardList.fromJson(List<dynamic> parsedJson) {
-    List<CampaignTeamReward> rewards = new List<CampaignTeamReward>();
-    rewards = parsedJson.map((i) => CampaignTeamReward.fromJson(i)).toList();
-    return new CampaignTeamRewardList(rewards: rewards);
+  factory TeamRewardList.fromJson(List<dynamic> parsedJson) {
+    List<TeamReward> rewards = new List<TeamReward>();
+    rewards = parsedJson.map((i) => TeamReward.fromJson(i)).toList();
+    return new TeamRewardList(rewards: rewards);
   }
 }

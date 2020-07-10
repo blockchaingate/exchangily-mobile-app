@@ -7,21 +7,10 @@ import 'package:exchangilymobileapp/models/campaign/team_reward.dart';
 class TeamRewardDetailsScreenState extends BaseState {
   final log = getLogger('TeamRewardDetailsScreenState');
   CampaignService campaignService = locator<CampaignService>();
-  List<CampaignTeamReward> campaignTeamRewardList = [];
+  List<TeamReward> campaignTeamRewardList = [];
   Map<String, dynamic> teamValueAndRewardWithToken;
 // Init state
   void initState() {
-    getTeamRewardDetails();
-  }
-
-  getTeamRewardDetails() async {
-    setBusy(true);
-    await campaignService
-        .getTeamsRewardDetailsByToken(teamValueAndRewardWithToken['token'])
-        .then((res) {
-      campaignTeamRewardList = res;
-      // log.w(c)
-    });
-    setBusy(false);
+    // getTeamRewardDetails();
   }
 }

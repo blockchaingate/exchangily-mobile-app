@@ -38,7 +38,7 @@ class MemberProfile {
       walletAddress: json['walletAddress'] as String,
       referralCode: json['referralCode'] as int,
       totalValue: json['totalValue'] as double,
-      totalQuantities: json['totalQuantities'] as double,
+      // totalQuantities: json['totalQuantities'],
     );
   }
 

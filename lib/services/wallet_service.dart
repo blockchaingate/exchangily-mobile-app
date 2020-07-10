@@ -77,9 +77,7 @@ class WalletService {
     'DUSD',
     'LTC',
     'DOGE',
-    'BNB',
     'DRGN',
-    'INB',
     'HOT',
     'CEL',
     'MATIC',
@@ -118,8 +116,6 @@ class WalletService {
     'ETH',
     'ETH',
     'ETH',
-    'ETH',
-    'ETH',
     'ETH'
   ];
 
@@ -133,9 +129,7 @@ class WalletService {
     'dusd',
     'litecoin',
     'dogecoin',
-    'Binance Coin',
     'dragon',
-    'Insight Chain',
     'Holo',
     'Celsius',
     'Matic Network',

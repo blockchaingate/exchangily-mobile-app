@@ -30,9 +30,8 @@ class MarketPairPriceDetailView extends ViewModelWidget<MarketsViewModel> {
       Container(
         color: globals.walletCardColor,
         child: FittedBox(
-          // dataTable for trade page
-          child: MarketDataTable(pairList)
-        ),
+            // dataTable for trade page
+            child: MarketDataTable(pairList)),
       )
     ]);
     // if (false)

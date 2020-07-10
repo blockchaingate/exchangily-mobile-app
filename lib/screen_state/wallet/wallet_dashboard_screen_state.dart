@@ -60,6 +60,10 @@ class WalletDashboardScreenState extends BaseState {
 
   var top = 0.0;
 
+/*----------------------------------------------------------------------
+                    INIT
+----------------------------------------------------------------------*/
+
   init() async {
     setBusy(true);
     // await getDecimalPairConfig();
@@ -70,6 +74,12 @@ class WalletDashboardScreenState extends BaseState {
     lang = prefs.getString('lang');
     setBusy(false);
   }
+
+/*----------------------------------------------------------------------
+                    get free fab
+----------------------------------------------------------------------*/
+
+  getFreeFab() {}
 
 /*----------------------------------------------------------------------
                     Get Pair decimal Config

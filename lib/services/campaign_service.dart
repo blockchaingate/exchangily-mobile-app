@@ -332,7 +332,6 @@ class CampaignService {
       log.w('getMemberRewardByToken ${jsonDecode(response.body)['_body']}');
       var json = jsonDecode(response.body)['_body']['personal'];
       CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
-      log.e('getMemberRewardByToken ${campaignRewardList.rewards.length}');
 
       return campaignRewardList.rewards;
     } catch (err) {
@@ -361,16 +360,14 @@ class CampaignService {
                                   Get Teams Details Reward By Token
 -------------------------------------------------------------------------------------*/
 
-  Future<List<CampaignTeamReward>> getTeamsRewardDetailsByToken(
-      String token) async {
+  Future<List<TeamReward>> getTeamsRewardDetailsByToken(String token) async {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
-      log.e(
-          'getTeamsRewardDetailsByToken ${jsonDecode(response.body)['_body']['team']}');
+
       var json = jsonDecode(response.body)['_body']['team'];
-      CampaignTeamRewardList campaignTeamRewardList =
-          CampaignTeamRewardList.fromJson(json);
+      log.i('getTeamsRewardDetailsByToken $json');
+      TeamRewardList campaignTeamRewardList = TeamRewardList.fromJson(json);
       log.w(
           'getTeamsRewardDetailsByToken ${campaignTeamRewardList.rewards.length}');
       return campaignTeamRewardList.rewards;
