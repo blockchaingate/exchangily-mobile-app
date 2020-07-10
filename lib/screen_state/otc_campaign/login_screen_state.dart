@@ -182,9 +182,10 @@ class CampaignLoginScreenState extends BaseState {
       if (res != null && (error == null || error == '')) {
         userData = CampaignUserData.fromJson(res);
         log.i('Test user data object ${userData.toJson()}');
-        navigationService.navigateTo('/campaignDashboard', arguments: userData);
+        // navigationService.navigateTo('/campaignDashboard', arguments: userData);
         await campaignService.saveCampaignUserDataLocally(userData);
         setBusy(false);
+        Navigator.pushReplacementNamed(context, '/mainNav', arguments: 2);
         return '';
       } else {
         setErrorMessage(error);
