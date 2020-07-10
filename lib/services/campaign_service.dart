@@ -361,16 +361,14 @@ class CampaignService {
                                   Get Teams Details Reward By Token
 -------------------------------------------------------------------------------------*/
 
-  Future<List<CampaignTeamReward>> getTeamsRewardDetailsByToken(
-      String token) async {
+  Future<List<TeamReward>> getTeamsRewardDetailsByToken(String token) async {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
 
       var json = jsonDecode(response.body)['_body']['team'];
       log.i('getTeamsRewardDetailsByToken $json');
-      CampaignTeamRewardList campaignTeamRewardList =
-          CampaignTeamRewardList.fromJson(json);
+      TeamRewardList campaignTeamRewardList = TeamRewardList.fromJson(json);
       log.w(
           'getTeamsRewardDetailsByToken ${campaignTeamRewardList.rewards.length}');
       return campaignTeamRewardList.rewards;
