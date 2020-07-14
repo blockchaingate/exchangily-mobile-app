@@ -1047,14 +1047,25 @@ class WalletService {
           (2 * 34 + 10) * satoshisPerBytes;
       print('extraTransactionFee==' + extraTransactionFee.toString());
       print('transFee==' + transFee.toString());
-      transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
-              Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
-          .toDouble();
+
       var output1 =
           (totalInput - amount * 1e8 - extraTransactionFee * 1e8 - transFee)
               .round();
 
-      if (getTransFeeOnly) {}
+      if(output1 < 2730) {
+        transFee += output1;
+      }
+
+      transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
+          Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
+          .toDouble();
+      if (getTransFeeOnly) {
+        return {
+          'txHex': '',
+          'errMsg': '',
+          'transFee': transFeeDouble
+        };
+      }
       var output2 = (amount * 1e8).round();
 
       if (output1 < 0 || output2 < 0) {
@@ -1065,7 +1076,10 @@ class WalletService {
         };
       }
 
-      txb.addOutput(changeAddress, output1);
+      if(output1 >= 2730) {
+        txb.addOutput(changeAddress, output1);
+      }
+
       txb.addOutput(toAddress, output2);
 
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
@@ -1204,8 +1218,15 @@ class WalletService {
       var transFee =
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
               (2 * 34 + 10) * satoshisPerBytes;
-      transFeeDouble = transFee / 1e8;
 
+
+      var output1 = (totalInput - amount * 1e8 - transFee).round();
+
+      if(output1 < 2730) {
+        transFee += output1;
+      }
+
+      transFeeDouble = transFee / 1e8;
       if (getTransFeeOnly) {
         return {
           'txHex': '',
@@ -1216,10 +1237,13 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - amount * 1e8 - transFee).round();
+
       var output2 = (amount * 1e8).round();
 
-      txb.addOutput(changeAddress, output1);
+      if(output1 >= 2730) {
+        txb.addOutput(changeAddress, output1);
+      }
+
       txb.addOutput(toAddress, output2);
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
