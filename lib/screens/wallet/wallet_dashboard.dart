@@ -259,21 +259,30 @@ class WalletDashboardScreen extends StatelessWidget {
                       ),
                     ),
                     // Plus sign container
-                    // Container(
-                    //   margin:
-                    //       EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
-                    //   decoration: BoxDecoration(
-                    //       color: globals.primaryColor,
-                    //       borderRadius: BorderRadius.circular(50)),
-                    //   child: IconButton(
-                    //     onPressed: () {
-                    //       model.walletService.generateDogeAddress(
-                    //           model.walletService.getRandomMnemonic());
-                    //     },
-                    //     icon: Icon(Icons.add),
-                    //     color: globals.white,
-                    //   ),
-                    // )
+                    model.hasFreeFabUsed
+                        ? Container()
+                        : Container(
+                            margin: EdgeInsets.symmetric(vertical: 5.0),
+                            decoration: BoxDecoration(
+                                color: globals.primaryColor,
+                                borderRadius: BorderRadius.circular(30)),
+                            child: SizedBox(
+                              width: 150,
+                              height: 20,
+                              child: OutlineButton.icon(
+                                  padding: EdgeInsets.all(0),
+                                  onPressed: model.getFreeFab,
+                                  icon: Icon(
+                                    Icons.add,
+                                    size: 18,
+                                    color: white,
+                                  ),
+                                  label: Text(
+                                    'Get Free FAB',
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  )),
+                            ))
                   ],
                 ),
               ),

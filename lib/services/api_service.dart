@@ -43,13 +43,32 @@ class ApiService {
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
 
 /*----------------------------------------------------------------------
-                    get free fab
+                    Post free fab
 ----------------------------------------------------------------------*/
 
-  getFreeFab() async {
+  Future postFreeFab(data) async {
     try {
-      var response = await client.get(freeFabUrl);
+      var response = await client.post(postFreeFabUrl, body: data);
       var json = jsonDecode(response.body);
+      log.w(json);
+      return json;
+    } catch (err) {
+      log.e('postFreeFab $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
+                    Get free fab
+----------------------------------------------------------------------*/
+
+  Future getFreeFab(String address) async {
+    String url = getFreeFabUrl + address + '/10.4.5.3';
+    log.i('getFreeFab url $url');
+    try {
+      var response = await client.get(getFreeFabUrl + address + '/10.4.5.3');
+      var json = jsonDecode(response.body);
+      log.w('getFreeFab json $json');
       return json;
     } catch (err) {
       log.e('getFreeFab $err');

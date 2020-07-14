@@ -62,21 +62,8 @@ class CampaignInstructionsScreenState extends BaseState {
         setBusy(false);
       });
 
-      // await campaignService
-      //     .getUserDataFromDatabase()
-      //     .then((res) {
-      //   log.w('database response $res');
-      //   if (res != null) {
-      //     userData = res;
-      //     isGuideReady = true;
-      //     // navigationService.navigateTo('/campaignDashboard',
-      //     //     arguments: userData);
-      //   } else {
-      //     setErrorMessage('Entry does not found in database');
-      //   }
-      // }).catchError((err) {
-      //   log.w('Fetch user from database failed');
-      // });
+      /// if login token is null then
+      /// show the svg images
     } else {
       String lang = '';
       SharedPreferences prefs = await SharedPreferences.getInstance();

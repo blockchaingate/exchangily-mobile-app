@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -18,7 +19,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/utils/string_util.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -26,6 +27,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../environments/coins.dart' as coinList;
 
@@ -59,6 +61,9 @@ class WalletDashboardScreenState extends BaseState {
   var lang;
 
   var top = 0.0;
+  final freeFabAnswerTextController = TextEditingController();
+  String postFreeFabResult = '';
+  bool hasFreeFabUsed = false;
 
 /*----------------------------------------------------------------------
                     INIT
@@ -79,7 +84,200 @@ class WalletDashboardScreenState extends BaseState {
                     get free fab
 ----------------------------------------------------------------------*/
 
-  getFreeFab() {}
+  getFreeFab() async {
+    setBusy(true);
+    String address = await getExgAddressFromWalletDatabase();
+    await apiService.getFreeFab(address).then((res) {
+      if (res != null) {
+        if (res['ok']) {
+          print(res['_body']['question']);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return Center(
+                  child: Container(
+                    height: 250,
+                    child: ListView(
+                      children: [
+                        AlertDialog(
+                          titlePadding: EdgeInsets.symmetric(vertical: 5),
+                          actionsPadding: EdgeInsets.all(0),
+                          elevation: 5,
+                          titleTextStyle: Theme.of(context).textTheme.headline4,
+                          contentTextStyle: TextStyle(color: grey),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          backgroundColor: walletCardColor.withOpacity(0.95),
+                          title: Text(
+                            'Submit your answer',
+                            textAlign: TextAlign.center,
+                          ),
+                          content: Column(
+                            children: <Widget>[
+                              UIHelper.verticalSpaceSmall,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Question:',
+                                    // AppLocalizations.of(context).quantity,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText1,
+                                  ),
+                                  UIHelper.horizontalSpaceSmall,
+                                  Text(
+                                    res['_body']['question'].toString(),
+                                    // AppLocalizations.of(context).quantity,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1
+                                        .copyWith(color: red),
+                                  ),
+                                ],
+                              ),
+                              TextField(
+                                minLines: 1,
+                                style: TextStyle(color: white),
+                                controller: freeFabAnswerTextController,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  icon: Icon(
+                                    Icons.question_answer,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                              ),
+                              UIHelper.verticalSpaceSmall,
+                              postFreeFabResult != ''
+                                  ? Text(postFreeFabResult)
+                                  : Container()
+                            ],
+                          ),
+                          actions: [
+                            Container(
+                                margin: EdgeInsetsDirectional.only(bottom: 10),
+                                child: StatefulBuilder(builder:
+                                    (BuildContext context,
+                                        StateSetter setState) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Cancel
+                                      FlatButton(
+                                          color: primaryColor,
+                                          padding: EdgeInsets.all(0),
+                                          child: Center(
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .close,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                            setState(() =>
+                                                freeFabAnswerTextController
+                                                    .text = '');
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                          }),
+
+                                      // Confirm
+                                      FlatButton(
+                                          color: primaryColor,
+                                          padding: EdgeInsets.all(0),
+                                          child: Center(
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .confirm,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            postFreeFabResult = '';
+                                            Map data = {
+                                              "address": address,
+                                              "questionair_id": res['_body']
+                                                  ['_id'],
+                                              "answer":
+                                                  freeFabAnswerTextController
+                                                      .text
+                                            };
+                                            log.e(data);
+                                            await apiService
+                                                .postFreeFab(data)
+                                                .then(
+                                              (res) {
+                                                if (res != null) {
+                                                  log.w(res['ok']);
+                                                  setState(() =>
+                                                      postFreeFabResult =
+                                                          res['_body']);
+                                                  if (res['ok']) {
+                                                    walletService.showInfoFlushbar(
+                                                        'Free Fab Update',
+                                                        'Your will get your FAB shortly, Thank you',
+                                                        Icons.account_balance,
+                                                        green,
+                                                        context);
+                                                  } else {
+                                                    walletService
+                                                        .showInfoFlushbar(
+                                                            'Free Fab Update',
+                                                            res['_body'],
+                                                            Icons
+                                                                .account_balance,
+                                                            red,
+                                                            context);
+                                                  }
+                                                } else {
+                                                  walletService
+                                                      .showInfoFlushbar(
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .notice,
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .genericError,
+                                                          Icons.cancel,
+                                                          red,
+                                                          context);
+                                                }
+                                              },
+                                            );
+                                            //  navigationService.goBack();
+                                            freeFabAnswerTextController.text =
+                                                '';
+                                            postFreeFabResult = '';
+                                          }),
+                                    ],
+                                  );
+                                })),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        } else {
+          print(hasFreeFabUsed);
+          hasFreeFabUsed = true;
+          print(hasFreeFabUsed);
+          walletService.showInfoFlushbar(
+              AppLocalizations.of(context).notice,
+              'Free FAB feature has been used already',
+              Icons.notification_important,
+              yellow,
+              context);
+        }
+      }
+    });
+    setBusy(false);
+  }
 
 /*----------------------------------------------------------------------
                     Get Pair decimal Config
