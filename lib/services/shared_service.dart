@@ -28,6 +28,28 @@ class SharedService {
   NavigationService navigationService = locator<NavigationService>();
   final log = getLogger('SharedService');
 
+/*-------------------------------------------------------------------------------------
+                          getCurrentRouteName
+-------------------------------------------------------------------------------------*/
+
+  String getCurrentRouteName(BuildContext context) {
+    String routeName = '';
+    routeName = ModalRoute.of(context).settings.name;
+    print('$routeName in bottom Nav');
+    return routeName;
+  }
+
+/*-------------------------------------------------------------------------------------
+                          Physical Back Button pressed
+-------------------------------------------------------------------------------------*/
+
+  onBackButtonPressed(String route) async {
+    log.w(
+        'back button pressed, is final route ${navigationService.isFinalRoute()}');
+
+    navigationService.navigateUsingpopAndPushedNamed(route);
+  }
+
   Future<bool> closeApp() async {
     return showDialog(
             context: context,

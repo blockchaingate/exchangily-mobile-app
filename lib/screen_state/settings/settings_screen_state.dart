@@ -166,7 +166,7 @@ class SettingsScreenState extends BaseState {
       prefs.setString('lang', 'en');
     }
     setState(ViewState.Idle);
-    Navigator.pushReplacementNamed(context, '/mainNav', arguments: 0);
+   // Navigator.pushReplacementNamed(context, '/mainNav', arguments: 0);
   }
 
   // Pin code
@@ -192,7 +192,10 @@ class SettingsScreenState extends BaseState {
     setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                    onBackButtonPressed
+----------------------------------------------------------------------*/
   onBackButtonPressed() async {
-    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+    await sharedService.onBackButtonPressed('/dashboard');
   }
 }

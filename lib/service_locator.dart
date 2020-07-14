@@ -10,8 +10,6 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
-
-import 'package:exchangilymobileapp/screen_state/nav/MainNavState.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/instructions_screen_state.dart';
@@ -97,5 +95,4 @@ Future serviceLocator() async {
   locator.registerFactory(() => TeamRewardDetailsScreenState());
   locator.registerFactory(() => MarketsViewModel());
   locator.registerFactory(() => TradeViewModel());
-  locator.registerFactory(() => MainNavState());
 }

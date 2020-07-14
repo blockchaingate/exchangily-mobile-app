@@ -76,10 +76,10 @@ class WalletFeaturesScreen extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  // Navigator.pop(context);
+                                  Navigator.pop(context);
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
-                                  model.navigationService
-                                      .navigateTo('/mainNav', arguments: 0);
+                                  // model.navigationService
+                                  //     .navigateTo('/mainNav', arguments: 0);
                                 }))
                       ],
                     ),

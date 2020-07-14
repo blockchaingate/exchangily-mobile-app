@@ -15,7 +15,7 @@ class CampaignLoginScreen extends StatelessWidget {
     return BaseScreen<CampaignLoginScreenState>(
       onModelReady: (model) async {
         model.context = context;
-        await model.init();
+        //  await model.init();
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {

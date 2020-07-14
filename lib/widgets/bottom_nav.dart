@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../shared/globals.dart' as globals;
@@ -21,7 +22,9 @@ import '../shared/globals.dart' as globals;
 class BottomNavBar extends StatelessWidget {
   final int count;
   BottomNavBar({Key key, this.count}) : super(key: key);
+
   final NavigationService navigationService = locator<NavigationService>();
+  final SharedService sharedService = locator<SharedService>();
   @override
   Widget build(BuildContext context) {
     final double paddingValue = 4; // change space between icon and title text
@@ -44,11 +47,6 @@ class BottomNavBar extends StatelessWidget {
               padding: EdgeInsets.only(top: paddingValue),
               child: Text(AppLocalizations.of(context).wallet)),
         ),
-        // BottomNavigationBarItem(
-        //     icon: Icon(FontAwesomeIcons.chartBar, size: iconSize),
-        //     title: Padding(
-        //         padding: EdgeInsets.only(top: paddingValue),
-        //         child: Text(AppLocalizations.of(context).market))),
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.coins, size: iconSize),
             title: Padding(
@@ -72,23 +70,32 @@ class BottomNavBar extends StatelessWidget {
                 child: Text(AppLocalizations.of(context).settings))),
       ].toList(),
       onTap: (int idx) {
+        String currentRouteName = sharedService.getCurrentRouteName(context);
+
         switch (idx) {
           case 0:
-            navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+            if (currentRouteName != 'WalletDashboardScreen')
+              navigationService.navigateTo('/dashboard');
             break;
 
           case 1:
-            navigationService.navigateUsingpopAndPushedNamed('/marketsView');
+            if (currentRouteName != 'MarketsView')
+              navigationService.navigateUsingpopAndPushedNamed('/marketsView');
             break;
           // case 2:
+          // if (currentRouteName != 'OtcScreen')
           //   Navigator.pushNamed(context, '/otc');
           //   break;
           case 2:
-            navigationService
-                .navigateUsingpopAndPushedNamed('/campaignInstructions');
+            if (currentRouteName != 'CampaignInstructionScreen')
+              navigationService
+                  .navigateUsingpopAndPushedNamed('/campaignInstructions');
             break;
           case 3:
-            navigationService.navigateUsingpopAndPushedNamed('/settings');
+            if (currentRouteName != 'SettingsScreen')
+              navigationService.navigateTo('/settings');
+            else if (ModalRoute.of(context).settings.name == 'SettingsScreen')
+              return null;
             break;
         }
       },

@@ -1,7 +1,9 @@
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
@@ -26,8 +28,7 @@ class CampaignInstructionsScreenState extends BaseState {
   List<Widget> get tierListSvg => _tierListSvg;
   LocalStorageService localStorageService = locator<LocalStorageService>();
   NavigationService navigationService = locator<NavigationService>();
-  CampaignUserDatabaseService campaignUserDatabaseService =
-      locator<CampaignUserDatabaseService>();
+  CampaignService campaignService = locator<CampaignService>();
   PdfViewerService pdfViewerService = locator<PdfViewerService>();
 
   CampaignUserData userData;
@@ -40,24 +41,42 @@ class CampaignInstructionsScreenState extends BaseState {
     // circular indicator is still not working when page first loads
     setBusy(true);
     log.e(busy);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var loginToken = prefs.getString('loginToken');
+
+    var loginToken = await campaignService.getSavedLoginTokenFromLocalStorage();
+    log.w(loginToken);
     if (loginToken != '' && loginToken != null) {
-      await campaignUserDatabaseService
-          .getUserDataByToken(loginToken)
-          .then((res) {
-        log.w('database response $res');
+      await campaignService.getMemberProfile(loginToken).then((res) async {
         if (res != null) {
-          userData = res;
-          isGuideReady = true;
-          // navigationService.navigateTo('/campaignDashboard',
-          //     arguments: userData);
-        } else {
-          setErrorMessage('Entry does not found in database');
+          await campaignService.getUserDataFromDatabase().then((res) {
+            if (res != null) {
+              userData = res;
+              navigateTo('/campaignDashboard');
+            }
+          });
+        } else if (res == null) {
+          navigateTo('/campaignLogin', errorMessage: 'Session Expired');
         }
       }).catchError((err) {
-        log.w('Fetch user from database failed');
+        log.e('getMemberProfile catch');
+        setErrorMessage(AppLocalizations.of(context).serverError);
+        setBusy(false);
       });
+
+      // await campaignService
+      //     .getUserDataFromDatabase()
+      //     .then((res) {
+      //   log.w('database response $res');
+      //   if (res != null) {
+      //     userData = res;
+      //     isGuideReady = true;
+      //     // navigationService.navigateTo('/campaignDashboard',
+      //     //     arguments: userData);
+      //   } else {
+      //     setErrorMessage('Entry does not found in database');
+      //   }
+      // }).catchError((err) {
+      //   log.w('Fetch user from database failed');
+      // });
     } else {
       String lang = '';
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -82,6 +101,13 @@ class CampaignInstructionsScreenState extends BaseState {
     }
     setBusy(false);
     log.e(busy);
+  }
+
+  navigateTo(String route, {String errorMessage = ''}) {
+    navigationService.navigateUsingpopAndPushedNamed(route,
+        arguments: userData);
+    setErrorMessage(errorMessage);
+    setBusy(false);
   }
 
   onBackButtonPressed() async {

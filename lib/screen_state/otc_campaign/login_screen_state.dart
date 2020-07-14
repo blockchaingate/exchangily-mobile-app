@@ -34,7 +34,10 @@ class CampaignLoginScreenState extends BaseState {
   bool isLogging = false;
   bool isPasswordReset = false;
   String passwordResetMessage = '';
+
   // To check if user already logged in
+
+  // INIT
   init() async {
     setBusy(true);
     setErrorMessage(AppLocalizations.of(context).checkingAccountDetails);
@@ -170,7 +173,7 @@ class CampaignLoginScreenState extends BaseState {
 /*-------------------------------------------------------------------------------------
                                   Login
 -------------------------------------------------------------------------------------*/
-  Future login(User user) async {
+  login(User user) async {
     setBusy(true);
     await campaignService.login(user).then((res) async {
       // json deconde in campaign api let us see the response then its properties
@@ -183,21 +186,19 @@ class CampaignLoginScreenState extends BaseState {
         userData = CampaignUserData.fromJson(res);
         log.i('Test user data object ${userData.toJson()}');
         // navigationService.navigateTo('/campaignDashboard', arguments: userData);
-        await campaignService.saveCampaignUserDataLocally(userData);
-        setBusy(false);
-        Navigator.pushReplacementNamed(context, '/mainNav', arguments: 2);
-        return '';
+        await campaignService.saveCampaignUserDataInLocalDatabase(userData);
+        navigationService.navigateTo('/campaignDashboard');
+        //  Navigator.pushReplacementNamed(context, '/mainNav', arguments: 2);
       } else {
         setErrorMessage(error);
         log.e('In else ${res['message']}');
-        setBusy(false);
-        return '';
       }
     }).catchError((err) {
       setBusy(false);
       setErrorMessage('');
       log.e('In catch $err');
     });
+    setBusy(false);
   }
 
 // Check fields before calling the api
@@ -235,7 +236,10 @@ class CampaignLoginScreenState extends BaseState {
         .then((value) => log.w('delete finish $value'));
   }
 
-  onBackButtonPressed() {
-    navigationService.navigateTo('/mainNav', arguments: 0);
+/*----------------------------------------------------------------------
+                    onBackButtonPressed
+----------------------------------------------------------------------*/
+  onBackButtonPressed() async {
+    await sharedService.onBackButtonPressed('/dashboard');
   }
 }
