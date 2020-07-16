@@ -38,6 +38,7 @@ import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
+import '../utils/number_util.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:bitcoin_flutter/src/models/networks.dart';
@@ -850,7 +851,7 @@ class WalletService {
     var txHex = resST['txHex'];
     var txHash = resST['txHash'];
 
-    var amountInLink = BigInt.from(amount * 1e18);
+    var amountInLink = BigInt.parse(toBigInt(amount));
 
     var coinType = getCoinTypeIdByName(coinName);
 
@@ -1660,10 +1661,10 @@ class WalletService {
         gasLimit = environment["chains"]["FAB"]["gasLimit"];
       }
       var transferAbi = 'a9059cbb';
-      var amountSentInt = BigInt.from(amount * 1e18);
+      var amountSentInt = BigInt.parse(toBigInt(amount));
 
       if (coin == 'DUSD') {
-        amountSentInt = BigInt.from(amount * 1e6);
+        amountSentInt = BigInt.parse(toBigInt(amount, 6));
       }
       print('amountSentIntamountSentInt=');
       print(amountSentInt.toString());
