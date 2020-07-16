@@ -187,9 +187,9 @@ class SendScreenState extends BaseState {
           sendAmountTextController.text = '';
 
           sharedService.alertDialog(
-              AppLocalizations.of(context).sendTransactionComplete,
-              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
-              isWarning: false);
+            AppLocalizations.of(context).sendTransactionComplete,
+            '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+          );
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
               id: null,

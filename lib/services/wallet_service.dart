@@ -154,10 +154,10 @@ class WalletService {
     String randomMnemonic = '';
     if (isLocal == true) {
       randomMnemonic =
-          //    'hidden arch mind decline summer convince voice together pony infant input lunar';
-          // "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
-          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-      //  'group quick salad argue animal rubber wolf close weird school spell agent';
+          //  'hidden arch mind decline summer convince voice together pony infant input lunar';
+          "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
+      // 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+      //'group quick salad argue animal rubber wolf close weird school spell agent';
       return randomMnemonic;
     }
     randomMnemonic = bip39.generateMnemonic();
@@ -1052,19 +1052,15 @@ class WalletService {
           (totalInput - amount * 1e8 - extraTransactionFee * 1e8 - transFee)
               .round();
 
-      if(output1 < 2730) {
+      if (output1 < 2730) {
         transFee += output1;
       }
 
       transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
-          Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
+              Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
           .toDouble();
       if (getTransFeeOnly) {
-        return {
-          'txHex': '',
-          'errMsg': '',
-          'transFee': transFeeDouble
-        };
+        return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
       var output2 = (amount * 1e8).round();
 
@@ -1076,7 +1072,7 @@ class WalletService {
         };
       }
 
-      if(output1 >= 2730) {
+      if (output1 >= 2730) {
         txb.addOutput(changeAddress, output1);
       }
 
@@ -1219,10 +1215,9 @@ class WalletService {
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
               (2 * 34 + 10) * satoshisPerBytes;
 
-
       var output1 = (totalInput - amount * 1e8 - transFee).round();
 
-      if(output1 < 2730) {
+      if (output1 < 2730) {
         transFee += output1;
       }
 
@@ -1237,10 +1232,9 @@ class WalletService {
         };
       }
 
-
       var output2 = (amount * 1e8).round();
 
-      if(output1 >= 2730) {
+      if (output1 >= 2730) {
         txb.addOutput(changeAddress, output1);
       }
 

@@ -258,8 +258,8 @@ class WalletDashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // Plus sign container
-                    model.hasFreeFabUsed
+                    //Add free FAB container
+                    !model.isFreeFabNotUsed
                         ? Container()
                         : Container(
                             margin: EdgeInsets.symmetric(vertical: 5.0),

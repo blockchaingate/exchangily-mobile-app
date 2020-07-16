@@ -63,7 +63,7 @@ class WalletDashboardScreenState extends BaseState {
   var top = 0.0;
   final freeFabAnswerTextController = TextEditingController();
   String postFreeFabResult = '';
-  bool hasFreeFabUsed = false;
+  bool isFreeFabNotUsed = false;
 
 /*----------------------------------------------------------------------
                     INIT
@@ -77,6 +77,12 @@ class WalletDashboardScreenState extends BaseState {
     showDialogWarning();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = prefs.getString('lang');
+    String address = await getExgAddressFromWalletDatabase();
+    await apiService.getFreeFab(address).then((res) {
+      if (res != null) {
+        isFreeFabNotUsed = res['ok'];
+      }
+    });
     setBusy(false);
   }
 
@@ -90,6 +96,7 @@ class WalletDashboardScreenState extends BaseState {
     await apiService.getFreeFab(address).then((res) {
       if (res != null) {
         if (res['ok']) {
+          isFreeFabNotUsed = res['ok'];
           print(res['_body']['question']);
           showDialog(
               context: context,
@@ -162,7 +169,7 @@ class WalletDashboardScreenState extends BaseState {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       // Cancel
-                                      FlatButton(
+                                      OutlineButton(
                                           color: primaryColor,
                                           padding: EdgeInsets.all(0),
                                           child: Center(
@@ -182,7 +189,7 @@ class WalletDashboardScreenState extends BaseState {
                                             FocusScope.of(context)
                                                 .requestFocus(FocusNode());
                                           }),
-
+                                      UIHelper.horizontalSpaceSmall,
                                       // Confirm
                                       FlatButton(
                                           color: primaryColor,
@@ -213,10 +220,13 @@ class WalletDashboardScreenState extends BaseState {
                                               (res) {
                                                 if (res != null) {
                                                   log.w(res['ok']);
-                                                  setState(() =>
-                                                      postFreeFabResult =
-                                                          res['_body']);
+
                                                   if (res['ok']) {
+                                                    Navigator.of(context)
+                                                        .pop(false);
+                                                    setState(() =>
+                                                        isFreeFabNotUsed =
+                                                            false);
                                                     walletService.showInfoFlushbar(
                                                         'Free Fab Update',
                                                         'Your will get your FAB shortly, Thank you',
@@ -252,6 +262,8 @@ class WalletDashboardScreenState extends BaseState {
                                             freeFabAnswerTextController.text =
                                                 '';
                                             postFreeFabResult = '';
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
                                           }),
                                     ],
                                   );
@@ -264,9 +276,11 @@ class WalletDashboardScreenState extends BaseState {
                 );
               });
         } else {
-          print(hasFreeFabUsed);
-          hasFreeFabUsed = true;
-          print(hasFreeFabUsed);
+          print(isFreeFabNotUsed);
+          isFreeFabNotUsed = res['ok'];
+          print(isFreeFabNotUsed);
+
+          print(isFreeFabNotUsed);
           walletService.showInfoFlushbar(
               AppLocalizations.of(context).notice,
               'Free FAB feature has been used already',
