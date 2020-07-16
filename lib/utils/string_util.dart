@@ -17,6 +17,30 @@ import 'package:hex/hex.dart';
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 
+/*
+toBitInt(num, [zeroLength]) {
+  var numString = num.toString();
+  var numStringArray = numString.split('.');
+  zeroLength ??= 18;
+  var val = '';
+  if (numStringArray != null) {
+    val = numStringArray[0];
+    if (numStringArray.length == 2) {
+      zeroLength -= numStringArray[1].length;
+      val += numStringArray[1];
+    }
+  }
+
+  var valInt = int.parse(val);
+  val = valInt.toString();
+  for (var i = 0; i < zeroLength; i++) {
+    val += '0';
+  }
+
+  return val;
+}
+*/
+
 hex2Buffer(hexString) {
   var buffer = new List<int>();
   for (var i = 0; i < hexString.length; i += 2) {

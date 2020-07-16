@@ -49,10 +49,10 @@ class DecimalTextInputFormatter extends TextInputFormatter {
   }
 }
 
-toBigInt(amount) {
+toBigInt(amount, [decimalLength]) {
   var numString = amount.toString();
   var numStringArray = numString.split('.');
-  var decimalLength = 18;
+  decimalLength ??= 18;
   var val = '';
   if (numStringArray != null) {
     val = numStringArray[0];
