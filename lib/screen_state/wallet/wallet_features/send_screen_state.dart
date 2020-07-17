@@ -70,6 +70,7 @@ class SendScreenState extends BaseState {
   // Init State
   initState() {
     setState(ViewState.Busy);
+    sharedService.context = context;
     String coinName = walletInfo.tickerName;
     String tokenType = walletInfo.tokenType;
     if (coinName == 'BTC') {
@@ -204,9 +205,10 @@ class SendScreenState extends BaseState {
           walletService.insertTransactionInDatabase(transactionHistory);
         } else if (txHash == '' && errorMessage == '') {
           log.e('Both TxHash and Error Message are empty $errorMessage');
-          sharedService.alertDialog("",
-              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
-              isWarning: false);
+          sharedService.alertDialog(
+            "",
+            '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+          );
           setState(ViewState.Idle);
         }
         setState(ViewState.Idle);

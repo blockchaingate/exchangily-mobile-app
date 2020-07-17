@@ -188,7 +188,6 @@ class CampaignLoginScreenState extends BaseState {
         // navigationService.navigateTo('/campaignDashboard', arguments: userData);
         await campaignService.saveCampaignUserDataInLocalDatabase(userData);
         navigationService.navigateTo('/campaignDashboard');
-        //  Navigator.pushReplacementNamed(context, '/mainNav', arguments: 2);
       } else {
         setErrorMessage(error);
         log.e('In else ${res['message']}');

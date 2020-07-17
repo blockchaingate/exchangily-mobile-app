@@ -71,9 +71,10 @@ class WalletDashboardScreenState extends BaseState {
 
   init() async {
     setBusy(true);
+    sharedService.context = context;
     // await getDecimalPairConfig();
     await refreshBalance();
-    await getConfirmDepositStatus();
+    getConfirmDepositStatus();
     showDialogWarning();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = prefs.getString('lang');
@@ -395,7 +396,8 @@ class WalletDashboardScreenState extends BaseState {
               AppLocalizations.of(context).pendingConfirmDeposit,
               '${AppLocalizations.of(context).pleaseConfirmYour} ${confirmDepositCoinWallet.tickerName} ${AppLocalizations.of(context).deposit}',
               path: '/walletFeatures',
-              arguments: confirmDepositCoinWallet);
+              arguments: confirmDepositCoinWallet,
+              isWarning: true);
       });
     }
   }
@@ -434,16 +436,16 @@ class WalletDashboardScreenState extends BaseState {
 
     /// Check if wallet database coins are same as wallet service list
     /// if not then call create offline wallet in the wallet service
-    print('${walletService.coinTickers.length} -- ${walletInfoCopy.length}');
-    if (coinTickersLength != walletInfoCopy.length) {
-      print('$coinTickersLength -- ${walletInfoCopy.length}');
-      await walletService.createOfflineWallets(
-          'culture sound obey clean pretty medal churn behind chief cactus alley ready');
-      await walletDatabaseService.getAll().then((walletList) {
-        walletInfoCopy = [];
-        walletInfoCopy = walletList;
-      });
-    }
+    // print('${walletService.coinTickers.length} -- ${walletInfoCopy.length}');
+    // if (coinTickersLength != walletInfoCopy.length) {
+    //   print('$coinTickersLength -- ${walletInfoCopy.length}');
+    //   await walletService.createOfflineWallets(
+    //       'culture sound obey clean pretty medal churn behind chief cactus alley ready');
+    //   await walletDatabaseService.getAll().then((walletList) {
+    //     walletInfoCopy = [];
+    //     walletInfoCopy = walletList;
+    //   });
+    // }
 
     Map<String, dynamic> walletBalancesBody = {
       'btcAddress': '',
@@ -569,7 +571,7 @@ class WalletDashboardScreenState extends BaseState {
 
       // in else if walletBalances is null then check balance with old method
       else if (walletBalanceList == null) {
-        log.e('ELSE old way');
+        log.e('---------------------ELSE old way-----------------------');
         await oldWayToGetBalances(coinTickersLength);
       }
     }).catchError((err) async {

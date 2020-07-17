@@ -91,130 +91,134 @@ class SharedService {
         false;
   }
 
-  alertDialog(String title, String message,
+  Future<bool> alertDialog(String title, String message,
       {bool isWarning = false, String path, dynamic arguments}) async {
     bool checkBoxValue = false;
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            titlePadding: EdgeInsets.all(0),
-            actionsPadding: EdgeInsets.all(0),
-            elevation: 5,
-            backgroundColor: globals.walletCardColor.withOpacity(0.95),
-            title: title == ""
-                ? Container()
-                : Container(
-                    color: globals.primaryColor.withOpacity(0.1),
-                    padding: EdgeInsets.all(10),
-                    child: Text(title),
-                  ),
-            titleTextStyle: Theme.of(context).textTheme.headline4,
-            contentTextStyle: TextStyle(color: globals.grey),
-            contentPadding: EdgeInsets.symmetric(horizontal: 10),
-            content: Visibility(
-              visible: message != '',
-              child: StatefulBuilder(
-                  builder: (BuildContext context, StateSetter setState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    UIHelper.verticalSpaceMedium,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12.0, vertical: 6.0),
-                      child: Text(
-                        // add here cupertino widget to check in these small widgets first then the entire app
-                        message, textAlign: TextAlign.left,
-                        style: title == ""
-                            ? Theme.of(context).textTheme.headline6
-                            : Theme.of(context).textTheme.headline5,
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                titlePadding: EdgeInsets.all(0),
+                actionsPadding: EdgeInsets.all(0),
+                elevation: 5,
+                backgroundColor: globals.walletCardColor.withOpacity(0.95),
+                title: title == ""
+                    ? Container()
+                    : Container(
+                        color: globals.primaryColor.withOpacity(0.1),
+                        padding: EdgeInsets.all(10),
+                        child: Text(title),
                       ),
-                    ),
-                    // Do not show checkbox and text does not require to show on all dialogs
-                    Visibility(
-                      visible: isWarning ?? true,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Checkbox(
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.shrinkWrap,
-                              value: checkBoxValue,
-                              activeColor: globals.primaryColor,
-                              onChanged: (bool value) async {
-                                setState(() => checkBoxValue = value);
-                                print(!checkBoxValue);
-                                // user click on do not show which is negative means false so to make it work it needs to be opposite to the orginal value
-                                await setDialogWarningsStatus(!checkBoxValue);
-                              }),
-                          Text(
-                            AppLocalizations.of(context).doNotShowTheseWarnings,
-                            style: Theme.of(context).textTheme.headline6,
+                titleTextStyle: Theme.of(context).textTheme.headline4,
+                contentTextStyle: TextStyle(color: globals.grey),
+                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                content: Visibility(
+                  visible: message != '',
+                  child: StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        UIHelper.verticalSpaceMedium,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0, vertical: 6.0),
+                          child: Text(
+                            // add here cupertino widget to check in these small widgets first then the entire app
+                            message, textAlign: TextAlign.left,
+                            style: title == ""
+                                ? Theme.of(context).textTheme.headline6
+                                : Theme.of(context).textTheme.headline5,
                           ),
-                        ],
-                      ),
-                    ),
-                    // SizedBox(height: 10),
-                    // Container(
-                    //   margin: EdgeInsetsDirectional.only(bottom: 10),
-                    //   child: FlatButton(
-                    //     // color: globals.primaryColor,
-                    //     padding: EdgeInsets.all(0),
-                    //     child: Text(
-                    //       AppLocalizations.of(context).close,
-                    //       style:
-                    //           TextStyle(color: Colors.white, fontSize: 14),
-                    //     ),
-                    //     onPressed: () {
-                    //       if (path == '' || path == null) {
-                    //         Navigator.of(context).pop(false);
-                    //       } else {
-                    //         navigationService.navigateTo(path,
-                    //             arguments: arguments);
-                    //         Navigator.of(context).pop(false);
-                    //       }
-                    //     },
-                    //   ),
-                    // ),
-                  ],
-                );
-              }),
-            ),
-            // actions: [],
-            actions: <Widget>[
-              Container(
-                margin: EdgeInsetsDirectional.only(bottom: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FlatButton(
-                      color: globals.primaryColor,
-                      padding: EdgeInsets.all(0),
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context).close,
-                          style: TextStyle(color: Colors.white, fontSize: 12),
                         ),
-                      ),
-                      onPressed: () {
-                        if (path == '' || path == null) {
-                          Navigator.of(context).pop(false);
-                        } else {
-                          navigationService.navigateTo(path,
-                              arguments: arguments);
-                          Navigator.of(context).pop(false);
-                        }
-                      },
-                    ),
-                  ],
+                        // Do not show checkbox and text does not require to show on all dialogs
+                        Visibility(
+                          visible: isWarning ?? true,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Checkbox(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  value: checkBoxValue,
+                                  activeColor: globals.primaryColor,
+                                  onChanged: (bool value) async {
+                                    setState(() => checkBoxValue = value);
+                                    print(!checkBoxValue);
+                                    // user click on do not show which is negative means false so to make it work it needs to be opposite to the orginal value
+                                    await setDialogWarningsStatus(
+                                        !checkBoxValue);
+                                  }),
+                              Text(
+                                AppLocalizations.of(context)
+                                    .doNotShowTheseWarnings,
+                                style: Theme.of(context).textTheme.headline6,
+                              ),
+                            ],
+                          ),
+                        ),
+                        // SizedBox(height: 10),
+                        // Container(
+                        //   margin: EdgeInsetsDirectional.only(bottom: 10),
+                        //   child: FlatButton(
+                        //     // color: globals.primaryColor,
+                        //     padding: EdgeInsets.all(0),
+                        //     child: Text(
+                        //       AppLocalizations.of(context).close,
+                        //       style:
+                        //           TextStyle(color: Colors.white, fontSize: 14),
+                        //     ),
+                        //     onPressed: () {
+                        //       if (path == '' || path == null) {
+                        //         Navigator.of(context).pop(false);
+                        //       } else {
+                        //         navigationService.navigateTo(path,
+                        //             arguments: arguments);
+                        //         Navigator.of(context).pop(false);
+                        //       }
+                        //     },
+                        //   ),
+                        // ),
+                      ],
+                    );
+                  }),
                 ),
-              ),
-            ],
-          );
-        });
+                // actions: [],
+                actions: <Widget>[
+                  Container(
+                    margin: EdgeInsetsDirectional.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FlatButton(
+                          color: globals.primaryColor,
+                          padding: EdgeInsets.all(0),
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context).close,
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (path == '' || path == null) {
+                              Navigator.of(context).pop(false);
+                            } else {
+                              navigationService.navigateTo(path,
+                                  arguments: arguments);
+                              Navigator.of(context).pop(false);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }) ??
+        false;
   }
 
   // Language

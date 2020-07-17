@@ -92,6 +92,7 @@ class CampaignPaymentScreenState extends BaseState {
 ----------------------------------------------------------------------*/
   initState() async {
     setBusy(true);
+    sharedService.context = context;
     resetLists();
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];

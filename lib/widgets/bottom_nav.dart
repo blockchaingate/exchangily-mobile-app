@@ -80,7 +80,7 @@ class BottomNavBar extends StatelessWidget {
 
           case 1:
             if (currentRouteName != 'MarketsView')
-              navigationService.navigateUsingpopAndPushedNamed('/marketsView');
+              navigationService.navigateTo('/marketsView');
             break;
           // case 2:
           // if (currentRouteName != 'OtcScreen')
@@ -88,8 +88,7 @@ class BottomNavBar extends StatelessWidget {
           //   break;
           case 2:
             if (currentRouteName != 'CampaignInstructionScreen')
-              navigationService
-                  .navigateUsingpopAndPushedNamed('/campaignInstructions');
+              navigationService.navigateTo('/campaignInstructions');
             break;
           case 3:
             if (currentRouteName != 'SettingsScreen')

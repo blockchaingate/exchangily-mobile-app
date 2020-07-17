@@ -17,6 +17,8 @@ import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,10 +40,11 @@ class BuySell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final log = getLogger('BuySellScreen');
+    SharedService sharedService = locator<SharedService>();
     return BaseScreen<BuySellScreenState>(
       onModelReady: (model) async {
         model.context = context;
+        sharedService.context = context;
         model.splitPair(pair.symbol);
         model.setDefaultGasPrice();
         model.bidOrAsk = bidOrAsk;

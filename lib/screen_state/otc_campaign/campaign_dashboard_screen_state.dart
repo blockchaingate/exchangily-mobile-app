@@ -55,6 +55,7 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   init() async {
+    sharedService.context = context;
     await campaignService
         .getSavedLoginTokenFromLocalStorage()
         .then((token) async {
