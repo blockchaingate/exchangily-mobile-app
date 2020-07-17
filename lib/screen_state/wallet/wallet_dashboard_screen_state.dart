@@ -34,6 +34,7 @@ import '../../environments/coins.dart' as coinList;
 class WalletDashboardScreenState extends BaseState {
   final log = getLogger('WalletDahsboardScreenState');
 
+  BuildContext context;
   List<WalletInfo> walletInfo;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
@@ -49,7 +50,6 @@ class WalletDashboardScreenState extends BaseState {
   String exgAddress = '';
   String wallets;
   List<WalletInfo> walletInfoCopy = [];
-  BuildContext context;
   bool isHideSmallAmountAssets = false;
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
@@ -73,7 +73,9 @@ class WalletDashboardScreenState extends BaseState {
     setBusy(true);
     sharedService.context = context;
     // await getDecimalPairConfig();
+
     await refreshBalance();
+
     getConfirmDepositStatus();
     showDialogWarning();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -83,6 +85,36 @@ class WalletDashboardScreenState extends BaseState {
       if (res != null) {
         isFreeFabNotUsed = res['ok'];
       }
+    });
+    await getAppVersion();
+    setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                    Get app version
+----------------------------------------------------------------------*/
+
+  getAppVersion() async {
+    setBusy(true);
+    String localAppVersion = await sharedService.getLocalAppVersion();
+    String store = '';
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      store = 'App Store';
+    } else {
+      store = 'Google Play Store';
+    }
+    await apiService.getApiAppVersion().then((apiAppVersion) {
+      if (apiAppVersion != null) {
+        log.i(
+            'api app version $apiAppVersion -- local version $localAppVersion');
+        if (localAppVersion != apiAppVersion) {
+          sharedService.alertDialog('App Update Notice',
+              'Please update your app from $localAppVersion to latest $apiAppVersion in $store',
+              isDismissible: false);
+        }
+      }
+    }).catchError((err) {
+      log.e('get app version catch $err');
     });
     setBusy(false);
   }

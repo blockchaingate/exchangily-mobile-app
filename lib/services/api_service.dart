@@ -43,6 +43,24 @@ class ApiService {
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
 
 /*----------------------------------------------------------------------
+                    Get app version
+----------------------------------------------------------------------*/
+
+  Future getApiAppVersion() async {
+    String url = getAppVersionUrl;
+    log.i('getApiAppVersion url $url');
+    try {
+      var response = await client.get(getAppVersionUrl);
+
+      log.w('getApiAppVersion  ${response.body}');
+      return response.body;
+    } catch (err) {
+      log.e('getApiAppVersion $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
                     Post free fab
 ----------------------------------------------------------------------*/
 

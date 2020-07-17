@@ -36,13 +36,10 @@ class WalletDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final key = new GlobalKey<ScaffoldState>();
     return BaseScreen<WalletDashboardScreenState>(
-      onModelReady: (model) {
+      onModelReady: (model) async {
         model.context = context;
-        log.w('Retrieving wallets from local storage');
-        model.retrieveWalletsFromLocalDatabase();
-        model.init();
-
-        model.getGas();
+        await model.retrieveWalletsFromLocalDatabase();
+        await model.init();
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {

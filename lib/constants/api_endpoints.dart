@@ -1,19 +1,24 @@
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
-const String blockchainGateV2BaseUrl = isProduction
+const String baseBlockchainGateV2Url = isProduction
     ? 'https://prod.blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
+
+const String baseKanbanUrl = isProduction
+    ? 'https://kanbanprod.fabcoinapi.com/'
+    : 'https://kanbantest.fabcoinapi.com/';
 
 /*----------------------------------------------------------------------
                         Free Fab
 ----------------------------------------------------------------------*/
-
+/// Url below not in use
 const String freeFabUrl = 'https://kanbanprod.fabcoinapi.com/kanban/getairdrop';
+
 const String getFreeFabUrl =
-    blockchainGateV2BaseUrl + 'airdrop/getQuestionair/';
+    baseBlockchainGateV2Url + 'airdrop/getQuestionair/';
 
 const String postFreeFabUrl =
-    blockchainGateV2BaseUrl + 'airdrop/answerQuestionair/';
+    baseBlockchainGateV2Url + 'airdrop/answerQuestionair/';
 
 /*----------------------------------------------------------------------
                         USD Coin Price
@@ -27,3 +32,5 @@ const String coinCurrencyUsdPriceUrl =
 /*----------------------------------------------------------------------
                             Next
 ----------------------------------------------------------------------*/
+
+const String getAppVersionUrl = baseKanbanUrl + 'getappversion';

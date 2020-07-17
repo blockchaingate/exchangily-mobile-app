@@ -178,8 +178,7 @@ class SettingsScreenState extends BaseState {
 
   getAppVersion() async {
     setState(ViewState.Busy);
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    versionName = packageInfo.version;
+    versionName = await sharedService.getLocalAppVersion();
     setState(ViewState.Idle);
   }
 
