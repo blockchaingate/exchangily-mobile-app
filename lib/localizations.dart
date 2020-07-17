@@ -1430,6 +1430,16 @@ class AppLocalizations {
   String get vol {
     return Intl.message("Vol", name: 'vol', desc: 'vol_text');
   }
+
+  String get percentage {
+    return Intl.message("Percentage",
+        name: 'percentage', desc: 'percentage_text_team_rewards_view');
+  }
+
+  String get teamLeader {
+    return Intl.message("Team Leader",
+        name: 'teamLeader', desc: 'teamLeader_team_rewards_details_view');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

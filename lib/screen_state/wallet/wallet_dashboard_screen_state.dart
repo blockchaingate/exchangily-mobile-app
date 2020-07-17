@@ -86,7 +86,7 @@ class WalletDashboardScreenState extends BaseState {
         isFreeFabNotUsed = res['ok'];
       }
     });
-    await getAppVersion();
+    // await getAppVersion();
     setBusy(false);
   }
 
