@@ -1440,6 +1440,50 @@ class AppLocalizations {
     return Intl.message("Team Leader",
         name: 'teamLeader', desc: 'teamLeader_team_rewards_details_view');
   }
+
+  String get pleaseUpdateYourAppFrom {
+    return Intl.message("Please update your app from",
+        name: 'pleaseUpdateYourAppFrom',
+        desc: 'wallet_dashboard_text_please_update_your_app_from');
+  }
+
+  String get appUpdateNotice {
+    return Intl.message("App Update Notice",
+        name: 'appUpdateNotice',
+        desc: 'wallet_dashboard_text_app_update_notice');
+  }
+
+  String get toLatestBuild {
+    return Intl.message("to latest build",
+        name: 'toLatestBuild', desc: 'wallet_dashboard_text_to_latest_build');
+  }
+
+  // Just translate the word "in" from English to Chinese
+  String get inText {
+    return Intl.message("in",
+        name: 'inText', desc: 'wallet_dashboard_text_in_text');
+  }
+
+  String get submitYourAnswer {
+    return Intl.message("Submit your answer",
+        name: 'submitYourAnswer',
+        desc: 'wallet_dashboard_text_submit_your_answer');
+  }
+
+  String get question {
+    return Intl.message("Question",
+        name: 'question', desc: 'wallet_dashboard_text_question');
+  }
+
+  String get freeFabUpdate {
+    return Intl.message("Free Fab Update",
+        name: 'freeFabUpdate', desc: 'wallet_dashboard_text_free_fab_update');
+  }
+
+  String get freeFabSuccess {
+    return Intl.message("Your will get your FAB shortly, Thank you",
+        name: 'freeFabSuccess', desc: 'wallet_dashboard_text_free_fab_success');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

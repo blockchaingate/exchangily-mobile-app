@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -86,7 +88,7 @@ class WalletDashboardScreenState extends BaseState {
         isFreeFabNotUsed = res['ok'];
       }
     });
-    // await getAppVersion();
+
     setBusy(false);
   }
 
@@ -98,7 +100,7 @@ class WalletDashboardScreenState extends BaseState {
     setBusy(true);
     String localAppVersion = await sharedService.getLocalAppVersion();
     String store = '';
-    if (Theme.of(context).platform == TargetPlatform.iOS) {
+    if (Platform.isIOS) {
       store = 'App Store';
     } else {
       store = 'Google Play Store';
@@ -108,9 +110,10 @@ class WalletDashboardScreenState extends BaseState {
         log.i(
             'api app version $apiAppVersion -- local version $localAppVersion');
         if (localAppVersion != apiAppVersion) {
-          sharedService.alertDialog('App Update Notice',
-              'Please update your app from $localAppVersion to latest $apiAppVersion in $store',
-              isDismissible: false);
+          sharedService.alertDialog(
+              AppLocalizations.of(context).appUpdateNotice,
+              '${AppLocalizations.of(context).pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context).toLatestBuild} $apiAppVersion ${AppLocalizations.of(context).inText} $store',
+              isDismissible: true);
         }
       }
     }).catchError((err) {
@@ -148,7 +151,7 @@ class WalletDashboardScreenState extends BaseState {
                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
                           backgroundColor: walletCardColor.withOpacity(0.95),
                           title: Text(
-                            'Submit your answer',
+                            AppLocalizations.of(context).question,
                             textAlign: TextAlign.center,
                           ),
                           content: Column(
@@ -158,7 +161,7 @@ class WalletDashboardScreenState extends BaseState {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Question:',
+                                    AppLocalizations.of(context).question,
                                     // AppLocalizations.of(context).quantity,
                                     style:
                                         Theme.of(context).textTheme.bodyText1,
@@ -260,12 +263,18 @@ class WalletDashboardScreenState extends BaseState {
                                                     setState(() =>
                                                         isFreeFabNotUsed =
                                                             false);
-                                                    walletService.showInfoFlushbar(
-                                                        'Free Fab Update',
-                                                        'Your will get your FAB shortly, Thank you',
-                                                        Icons.account_balance,
-                                                        green,
-                                                        context);
+                                                    walletService
+                                                        .showInfoFlushbar(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .freeFabUpdate,
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .freeFabSuccess,
+                                                            Icons
+                                                                .account_balance,
+                                                            green,
+                                                            context);
                                                   } else {
                                                     walletService
                                                         .showInfoFlushbar(
@@ -599,6 +608,7 @@ class WalletDashboardScreenState extends BaseState {
         await updateWalletDatabase();
 
         if (!isProduction) debugVersionPopup();
+        await getAppVersion();
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method
