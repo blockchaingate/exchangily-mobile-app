@@ -55,9 +55,9 @@ class CampaignService {
 /*-------------------------------------------------------------------------------------
                           Get user data from database by token
 -------------------------------------------------------------------------------------*/
-  Future<CampaignUserData> getUserDataFromDatabase() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var loginToken = prefs.getString('loginToken');
+  Future<CampaignUserData> getUserDataFromDatabase({String token = ''}) async {
+    var loginToken =
+        token == '' ? await getSavedLoginTokenFromLocalStorage() : token;
     log.w(loginToken);
     if (loginToken != '' && loginToken != null) {
       await campaignUserDatabaseService
@@ -71,6 +71,16 @@ class CampaignService {
       log.e('Token not found');
     }
     return userData;
+  }
+
+/*-------------------------------------------------------------------------------------
+                          Get saved login token
+-------------------------------------------------------------------------------------*/
+
+  Future<String> getSavedLoginTokenFromLocalStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String loginToken = prefs.getString('loginToken');
+    return loginToken;
   }
 
   /*-------------------------------------------------------------------------------------
@@ -233,23 +243,13 @@ class CampaignService {
                           Save user data locally
 -------------------------------------------------------------------------------------*/
 
-  Future saveCampaignUserDataLocally(CampaignUserData userData) async {
+  Future saveCampaignUserDataInLocalDatabase(CampaignUserData userData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('loginToken', userData.token);
     await campaignUserDatabaseService.insert(userData);
     await campaignUserDatabaseService
         .getUserDataByToken(userData.token)
         .then((value) => log.w(value));
-  }
-
-  /*-------------------------------------------------------------------------------------
-                          Get saved login token
--------------------------------------------------------------------------------------*/
-
-  Future<String> getSavedLoginToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String loginToken = prefs.getString('loginToken');
-    return loginToken;
   }
 
 /*-------------------------------------------------------------------------------------

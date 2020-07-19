@@ -11,6 +11,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +21,7 @@ class CampaignDashboardScreenState extends BaseState {
 
   NavigationService navigationService = locator<NavigationService>();
   CampaignService campaignService = locator<CampaignService>();
+  SharedService sharedService = locator<SharedService>();
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
   ApiService _apiService = locator<ApiService>();
@@ -53,8 +55,14 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   init() async {
-    await campaignService.getSavedLoginToken().then((token) async {
+    sharedService.context = context;
+    await campaignService
+        .getSavedLoginTokenFromLocalStorage()
+        .then((token) async {
       if (token != '' || token != null) {
+        await campaignService
+            .getUserDataFromDatabase()
+            .then((res) => userData = res);
         await myProfile(token);
         await myRewardsByToken();
         await getCampaignName();
@@ -65,12 +73,21 @@ class CampaignDashboardScreenState extends BaseState {
   }
 
 /*----------------------------------------------------------------------
+                    onBackButtonPressed
+----------------------------------------------------------------------*/
+  onBackButtonPressed() async {
+    await sharedService.onBackButtonPressed('/dashboard');
+  }
+
+/*----------------------------------------------------------------------
                     Token check timer
 ----------------------------------------------------------------------*/
 
   tokenCheckTimer() {
     Timer.periodic(Duration(minutes: 5), (t) async {
-      await campaignService.getSavedLoginToken().then((token) async {
+      await campaignService
+          .getSavedLoginTokenFromLocalStorage()
+          .then((token) async {
         if (token != '' || token != null) {
           await campaignService
               .getTeamsRewardDetailsByToken(token)
@@ -296,7 +313,7 @@ class CampaignDashboardScreenState extends BaseState {
   myRewardsByToken() async {
     setBusy(true);
     setErrorMessage('fetching your rewards');
-    String token = await campaignService.getSavedLoginToken();
+    String token = await campaignService.getSavedLoginTokenFromLocalStorage();
     await campaignService.getMemberRewardByToken(token).then((res) async {
       if (res != null) {
         campaignRewardList = res;

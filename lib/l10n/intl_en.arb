@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-19T19:02:07.525902",
+  "@@last_modified": "2020-07-19T01:23:12.726289",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1584,7 +1584,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "change": "change",
+  "change": "Change",
   "@change": {
     "description": "change_text",
     "type": "text",
@@ -1593,6 +1593,12 @@
   "reload": "reload",
   "@reload": {
     "description": "reload_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noRouteDefined": "No route defined for",
+  "@noRouteDefined": {
+    "description": "NoRouteDefined_text",
     "type": "text",
     "placeholders": {}
   },
@@ -1649,6 +1655,83 @@
     "description": "vol_text",
     "type": "text",
     "placeholders": {}
+  },
+  "percentage": "Percentage",
+  "@percentage": {
+    "description": "percentage_text_team_rewards_view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamLeader": "Team Leader",
+  "@teamLeader": {
+    "description": "teamLeader_team_rewards_details_view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseUpdateYourAppFrom": "Please update your app from",
+  "@pleaseUpdateYourAppFrom": {
+    "description": "wallet_dashboard_text_please_update_your_app_from",
+    "type": "text",
+    "placeholders": {}
+  },
+  "appUpdateNotice": "App Update Notice",
+  "@appUpdateNotice": {
+    "description": "wallet_dashboard_text_app_update_notice",
+    "type": "text",
+    "placeholders": {}
+  },
+  "toLatestBuild": "to latest build",
+  "@toLatestBuild": {
+    "description": "wallet_dashboard_text_to_latest_build",
+    "type": "text",
+    "placeholders": {}
+  },
+  "inText": "in",
+  "@inText": {
+    "description": "wallet_dashboard_text_in_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "submitYourAnswer": "Submit your answer",
+  "@submitYourAnswer": {
+    "description": "wallet_dashboard_text_submit_your_answer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "question": "Question",
+  "@question": {
+    "description": "wallet_dashboard_text_question",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabUpdate": "Free Fab Update",
+  "@freeFabUpdate": {
+    "description": "wallet_dashboard_text_free_fab_update",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabSuccess": "Your will get your FAB shortly, Thank you",
+  "@freeFabSuccess": {
+    "description": "wallet_dashboard_text_free_fab_success",
+    "type": "text",
+    "placeholders": {}
+  },
+  "getFree": "Get free",
+  "@getFree": {
+    "description": "wallet_dashboard_text_get_free",
+    "type": "text",
+    "placeholders": {}
+  },
+  "incorrectAnswer": "Incorrect Answer",
+  "@incorrectAnswer": {
+    "description": "wallet_dashboard_text_free_fab_incorrect_answer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabUsedAlready": "Free FAB feature has been used already",
+  "@freeFabUsedAlready": {
+    "description": "wallet_dashboard_text_free_fab_used_already",
+    "type": "text",
+    "placeholders": {}
   }
-
 }

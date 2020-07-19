@@ -28,7 +28,6 @@ import 'package:exchangilymobileapp/screens/otc_campaign/order_details_screen.da
 import 'package:exchangilymobileapp/screens/otc_campaign/team/team_reward_details_view.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/team/team_rewards_view.dart';
 
-import 'package:exchangilymobileapp/screens/otc_campaign/team_reward_details_screen.dart';
 import 'package:exchangilymobileapp/screens/settings/language.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
@@ -42,8 +41,6 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/receive.dart'
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dart';
-import 'package:exchangilymobileapp/widgets/main_nav.dart';
-import 'package:exchangilymobileapp/widgets/main_nav_circle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
@@ -64,13 +61,14 @@ class RouteGenerator {
     log.w(
         'generateRoute | name: ${settings.name} arguments:${settings.arguments}');
     final args = settings.arguments;
+
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageScreen());
 
       //main navagation contains several pages
-      case '/mainNav':
-        return MaterialPageRoute(builder: (_) => MainNav(currentPage: args));
+      // case '/mainNav':
+      //   return MaterialPageRoute(builder: (_) => MainNav(currentPage: args));
       // return MaterialPageRoute(builder: (_) => MainNavCircle());
       case '/walletSetup':
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
@@ -91,8 +89,12 @@ class RouteGenerator {
             builder: (_) =>
                 CreatePasswordScreen(randomMnemonicFromRoute: args));
 
+      /// WALLET DASHBOARD
+
       case '/dashboard':
-        return MaterialPageRoute(builder: (_) => WalletDashboardScreen());
+        return MaterialPageRoute(
+            settings: RouteSettings(name: 'WalletDashboardScreen'),
+            builder: (_) => WalletDashboardScreen());
 
       case '/walletFeatures':
         return MaterialPageRoute(
@@ -113,8 +115,12 @@ class RouteGenerator {
       case '/market':
         return MaterialPageRoute(builder: (_) => Market());
 
+      /// MARKET VIEW
+
       case '/marketsView':
-        return MaterialPageRoute(builder: (_) => MarketsView());
+        return MaterialPageRoute(
+            settings: RouteSettings(name: 'MarketsView'),
+            builder: (_) => MarketsView());
 
       case '/trade':
         return MaterialPageRoute(builder: (_) => Trade('EXG/USDT'));
@@ -144,8 +150,12 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => MoveToWalletScreen(walletInfo: args));
 
+      /// SETTINGS
+
       case '/settings':
-        return MaterialPageRoute(builder: (_) => SettingsScreen());
+        return MaterialPageRoute(
+            settings: RouteSettings(name: 'SettingsScreen'),
+            builder: (_) => SettingsScreen());
 
       case '/transactionHistory':
         return MaterialPageRoute(
@@ -153,26 +163,25 @@ class RouteGenerator {
                   tickerName: args,
                 ));
 
+      /// OTC Screen
       case '/otc':
         return MaterialPageRoute(builder: (_) => OtcScreen());
 
       case '/otcDetails':
         return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
 
+      /// CAMPAIGN INSTRUCTIONS
+
       case '/campaignInstructions':
         return MaterialPageRoute(
-            builder: (_) => CampaignInstructionScreen(
-                  newPage: args,
-                ));
+            settings: RouteSettings(name: 'CampaignInstructionScreen'),
+            builder: (_) => CampaignInstructionScreen());
 
       case '/campaignPayment':
         return MaterialPageRoute(builder: (_) => CampaignPaymentScreen());
 
       case '/campaignDashboard':
-        return MaterialPageRoute(
-            builder: (_) => CampaignDashboardScreen(
-                  userData: args,
-                ));
+        return MaterialPageRoute(builder: (_) => CampaignDashboardScreen());
 
       case '/campaignTokenDetails':
         return MaterialPageRoute(

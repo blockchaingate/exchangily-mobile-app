@@ -1618,5 +1618,143 @@
     "description": "transaction_history_pending",
     "type": "text",
     "placeholders": {}
+  },
+  "allOrders": "所有订单",
+  "@allOrders": {
+    "description": "exchange_all_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myOrders": "我的订单",
+  "@myOrders": {
+    "description": "exchange_my_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "change": "更改",
+  "@change": {
+    "description": "change_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "reload": "重新加载",
+  "@reload": {
+    "description": "reload_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myRewardTokens": "我的奖励币",
+  "@myRewardTokens": {
+    "description": "myRewardTokens_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "inputValidation": "输入验证",
+  "@inputValidation": {
+    "description": "inputValidation_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showOnlyCurrentPairOrders": "只显示当前交易对订单",
+  "@showOnlyCurrentPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showAllPairOrders": "显示所有交易对订单",
+  "@showAllPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "symbol": "符号",
+  "@symbol": {
+    "description": "exchange_my_exchange_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMnemonicNoticeTitle": "什么是助记词？为什么备份助记词极为重要？",
+  "@backupMnemonicNoticeTitle": {
+    "description": "backup_mnemonic_notice_title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMnemonicNoticeContent": "助记词是一组12个单词，用它可以生成私钥以控制对应钱包的所有区块链上的资产。通常在用户创建钱包时钱包软件会自动生成一组助记词，并指示用户认真抄写下来，而且需要重新输入一次以验证抄写无误才会真正生成钱包。如果以后用户设备(手机或电脑)损坏或丢失，在新的设备上用该组助记词就可以重建完全相同的钱包，因而助记词极为重要，必须妥善保管，不可丢失，也不可泄露给别人，不要用任何社交软件(如电子邮件、微信、QQ)传送，也不可存贮于云上或录入任何网站，只要任何人拥有这些助记词，就完全拥有了该钱包里的资产。",
+  "@backupMnemonicNoticeContent": {
+    "description": "backup_mnemonic_notice_content",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ticker": "行情",
+  "@ticker": {
+    "description": "ticker_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "vol": "数量",
+  "@vol": {
+    "description": "vol_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "percentage": "百分比",
+  "@percentage": {
+    "description": "percentage_text_team_rewards_view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamLeader": "团队领导",
+  "@teamLeader": {
+    "description": "teamLeader_team_rewards_details_view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseUpdateYourAppFrom": "请更新您的APP",
+  "@pleaseUpdateYourAppFrom": {
+    "description": "wallet_dashboard_text_please_update_your_app_from",
+    "type": "text",
+    "placeholders": {}
+  },
+  "appUpdateNotice": "App更新提示",
+  "@appUpdateNotice": {
+    "description": "wallet_dashboard_text_app_update_notice",
+    "type": "text",
+    "placeholders": {}
+  },
+  "toLatestBuild": "到最新版本",
+  "@toLatestBuild": {
+    "description": "wallet_dashboard_text_to_latest_build",
+    "type": "text",
+    "placeholders": {}
+  },
+  "inText": "于",
+  "@inText": {
+    "description": "wallet_dashboard_text_in_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "submitYourAnswer": "提交您的答案",
+  "@submitYourAnswer": {
+    "description": "wallet_dashboard_text_submit_your_answer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "question": "问题",
+  "@question": {
+    "description": "wallet_dashboard_text_question",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabUpdate": "免费FAB空投",
+  "@freeFabUpdate": {
+    "description": "wallet_dashboard_text_free_fab_update",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabSuccess": "您将很快收到FAB空投",
+  "@freeFabSuccess": {
+    "description": "wallet_dashboard_text_free_fab_success",
+    "type": "text",
+    "placeholders": {}
   }
 }

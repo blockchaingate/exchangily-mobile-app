@@ -4,14 +4,11 @@ import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignInstructionScreen extends StatelessWidget {
-  const CampaignInstructionScreen({Key key, this.newPage = false})
-      : super(key: key);
-  final bool newPage;
+  const CampaignInstructionScreen({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,22 +19,12 @@ class CampaignInstructionScreen extends StatelessWidget {
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
-          print("is newpage: $newPage");
-          if (newPage)
-            // Navigator.pushReplacementNamed(context, '/mainNav', arguments: 1);
-            model.navigationService.goBack();
+          model.navigationService.goBack();
           return new Future(() => true);
         },
         child: Scaffold(
           appBar: AppBar(
               centerTitle: true,
-              leading: newPage
-                  ? IconButton(
-                      icon: Icon(Icons.arrow_back_ios),
-                      onPressed: () {
-                        model.navigationService.goBack();
-                      })
-                  : Container(),
               title: Text(AppLocalizations.of(context).campaignInstructions,
                   style: Theme.of(context).textTheme.headline3)),
           key: key,

@@ -41,7 +41,6 @@ class TradeView extends StatelessWidget {
         },
         builder: (context, model, _) => WillPopScope(
               onWillPop: () async {
-                // Navigator.pushReplacementNamed(context, '/mainNav', arguments: 1);
                 model.navigationService.goBack();
                 return new Future(() => true);
               },

@@ -1,17 +1,14 @@
-import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 class CampaignPaymentScreen extends StatelessWidget {
   const CampaignPaymentScreen({Key key}) : super(key: key);
@@ -235,6 +232,24 @@ class CampaignPaymentScreen extends StatelessWidget {
                               ),
                             ),
 
+                            // On select USDT show fee
+                            model.transportationFee == 0.0
+                                ? Container()
+                                : Container(
+                                    margin: EdgeInsets.all(3),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(AppLocalizations.of(context)
+                                            .gasFee),
+                                        UIHelper.horizontalSpaceSmall,
+                                        Text(
+                                            model.transportationFee.toString() +
+                                                '\ ETH'),
+                                      ],
+                                    )),
+
                             // On USD radio button select show Bank details container
                             Container(
                               // cannot give padding here as it shows empty container when no radio button selected
@@ -334,14 +349,11 @@ class CampaignPaymentScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       Text(
-                                        'USDT ' +
-                                            AppLocalizations.of(context)
-                                                .recieveAddress,
+                                        AppLocalizations.of(context)
+                                            .recieveAddress,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5
-                                            .copyWith(
-                                                fontWeight: FontWeight.bold),
+                                            .headline5,
                                       ),
                                       UIHelper.verticalSpaceSmall,
                                       isProduction
@@ -349,7 +361,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                           : Text(model.testUsdtWalletAddress,
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .bodyText1),
+                                                  .subtitle2),
                                       UIHelper.verticalSpaceSmall,
                                       //Selected Wallet Balance row
                                       model.groupValue != '' &&

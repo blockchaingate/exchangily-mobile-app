@@ -15,11 +15,9 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/widgets/app_drawer.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,14 +38,11 @@ class WalletDashboardScreen extends StatelessWidget {
     return BaseScreen<WalletDashboardScreenState>(
       onModelReady: (model) async {
         model.context = context;
-        log.w('Retrieving wallets from local storage');
         await model.retrieveWalletsFromLocalDatabase();
         await model.init();
-
-        await model.getGas();
       },
       builder: (context, model, child) => WillPopScope(
-        onWillPop: () async {
+        onWillPop: () {
           model.onBackButtonPressed();
           return new Future(() => false);
         },
@@ -162,14 +157,14 @@ class WalletDashboardScreen extends StatelessWidget {
                                                     highlightColor:
                                                         globals.white,
                                                     child: Text(
-                                                      '${model.totalUsdBalance.toStringAsFixed(2)} USD',
+                                                      '${model.totalUsdBalance} USD',
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .subtitle1,
                                                     ),
                                                   )
                                                 : Text(
-                                                    '${model.totalUsdBalance.toStringAsFixed(2)} USD',
+                                                    '${model.totalUsdBalance} USD',
                                                     textAlign: TextAlign.center,
                                                     style: Theme.of(context)
                                                         .textTheme
@@ -263,22 +258,32 @@ class WalletDashboardScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // Plus sign container
-                    // Container(
-                    //   margin:
-                    //       EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
-                    //   decoration: BoxDecoration(
-                    //       color: globals.primaryColor,
-                    //       borderRadius: BorderRadius.circular(50)),
-                    //   child: IconButton(
-                    //     onPressed: () {
-                    //       model.walletService.generateDogeAddress(
-                    //           model.walletService.getRandomMnemonic());
-                    //     },
-                    //     icon: Icon(Icons.add),
-                    //     color: globals.white,
-                    //   ),
-                    // )
+                    //Add free FAB container
+                    !model.isFreeFabNotUsed
+                        ? Container()
+                        : Container(
+                            margin: EdgeInsets.symmetric(vertical: 5.0),
+                            decoration: BoxDecoration(
+                                color: globals.primaryColor,
+                                borderRadius: BorderRadius.circular(30)),
+                            child: SizedBox(
+                              width: 120,
+                              height: 20,
+                              child: OutlineButton.icon(
+                                  padding: EdgeInsets.all(0),
+                                  onPressed: model.getFreeFab,
+                                  icon: Icon(
+                                    Icons.add,
+                                    size: 18,
+                                    color: white,
+                                  ),
+                                  label: Text(
+                                    AppLocalizations.of(context).getFree +
+                                        ' FAB',
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  )),
+                            ))
                   ],
                 ),
               ),
@@ -399,7 +404,7 @@ class WalletDashboardScreen extends StatelessWidget {
                         ))
             ],
           ),
-          // bottomNavigationBar: BottomNavBar(count: 0),
+          bottomNavigationBar: BottomNavBar(count: 0),
         ),
       ),
     );

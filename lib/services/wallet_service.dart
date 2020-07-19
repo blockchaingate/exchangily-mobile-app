@@ -38,6 +38,7 @@ import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
+import '../utils/number_util.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'package:bitcoin_flutter/src/models/networks.dart';
@@ -154,10 +155,10 @@ class WalletService {
     String randomMnemonic = '';
     if (isLocal == true) {
       randomMnemonic =
-          //    'hidden arch mind decline summer convince voice together pony infant input lunar';
-           "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
-          //'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-      //  'group quick salad argue animal rubber wolf close weird school spell agent';
+          //  'hidden arch mind decline summer convince voice together pony infant input lunar';
+          "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
+      // 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+      // 'group quick salad argue animal rubber wolf close weird school spell agent';
       return randomMnemonic;
     }
     randomMnemonic = bip39.generateMnemonic();
@@ -850,7 +851,7 @@ class WalletService {
     var txHex = resST['txHex'];
     var txHash = resST['txHash'];
 
-    var amountInLink = BigInt.from(amount * 1e18);
+    var amountInLink = BigInt.parse(toBigInt(amount));
 
     var coinType = getCoinTypeIdByName(coinName);
 
@@ -1047,14 +1048,21 @@ class WalletService {
           (2 * 34 + 10) * satoshisPerBytes;
       print('extraTransactionFee==' + extraTransactionFee.toString());
       print('transFee==' + transFee.toString());
-      transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
-              Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
-          .toDouble();
+
       var output1 =
           (totalInput - amount * 1e8 - extraTransactionFee * 1e8 - transFee)
               .round();
 
-      if (getTransFeeOnly) {}
+      if (output1 < 2730) {
+        transFee += output1;
+      }
+
+      transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
+              Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
+          .toDouble();
+      if (getTransFeeOnly) {
+        return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
+      }
       var output2 = (amount * 1e8).round();
 
       if (output1 < 0 || output2 < 0) {
@@ -1065,7 +1073,10 @@ class WalletService {
         };
       }
 
-      txb.addOutput(changeAddress, output1);
+      if (output1 >= 2730) {
+        txb.addOutput(changeAddress, output1);
+      }
+
       txb.addOutput(toAddress, output2);
 
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
@@ -1204,8 +1215,14 @@ class WalletService {
       var transFee =
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
               (2 * 34 + 10) * satoshisPerBytes;
-      transFeeDouble = transFee / 1e8;
 
+      var output1 = (totalInput - amount * 1e8 - transFee).round();
+
+      if (output1 < 2730) {
+        transFee += output1;
+      }
+
+      transFeeDouble = transFee / 1e8;
       if (getTransFeeOnly) {
         return {
           'txHex': '',
@@ -1216,10 +1233,12 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - amount * 1e8 - transFee).round();
       var output2 = (amount * 1e8).round();
 
-      txb.addOutput(changeAddress, output1);
+      if (output1 >= 2730) {
+        txb.addOutput(changeAddress, output1);
+      }
+
       txb.addOutput(toAddress, output2);
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
@@ -1642,10 +1661,10 @@ class WalletService {
         gasLimit = environment["chains"]["FAB"]["gasLimit"];
       }
       var transferAbi = 'a9059cbb';
-      var amountSentInt = BigInt.from(amount * 1e18);
+      var amountSentInt = BigInt.parse(toBigInt(amount));
 
       if (coin == 'DUSD') {
-        amountSentInt = BigInt.from(amount * 1e6);
+        amountSentInt = BigInt.parse(toBigInt(amount, 6));
       }
       print('amountSentIntamountSentInt=');
       print(amountSentInt.toString());
