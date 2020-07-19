@@ -1,7 +1,7 @@
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 const String baseBlockchainGateV2Url = isProduction
-    ? 'https://prod.blockchaingate.com/v2/'
+    ? 'https://blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
 
 const String baseKanbanUrl = isProduction

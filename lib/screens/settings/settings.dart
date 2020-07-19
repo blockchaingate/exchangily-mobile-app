@@ -120,6 +120,7 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
+                      FocusNode().requestFocus();
                       model.displayMnemonic();
                     },
                   ),
@@ -134,93 +135,98 @@ class SettingsScreen extends StatelessWidget {
                       )),
                     ),
                   ),
-             
-            
-                Card(
-                  elevation: 5,
-                  child: Container(
-                    color: globals.walletCardColor,
-                    child: Center(
-                      child: 
-                     // Theme.of(context).platform == TargetPlatform.iOS
-                     //     ? 
-                          CupertinoPicker(
-                              diameterRatio: 1.3,
-                              offAxisFraction: 5,
-                              scrollController: model.scrollController,
-                              itemExtent: 50,
-                              onSelectedItemChanged: (int value) {
-                                String lang = '';
-                                if (value == 0) {
-                                  lang = 'en';
-                                } else if (value == 1) {
-                                  lang = 'zh';
-                                }
-                                model.changeWalletLanguage(lang);
-                              },
-                              children: List<Widget>.generate(
-                                  model.languages.length, (int index) {
-                                return Center(
-                                  child: Text(
-                                    model.languages[index],
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                );
-                              }))
-                          // : Visibility(
-                          //     replacement: Container(),
-                          //     visible: true,
-                          //     child: DropdownButtonHideUnderline(
-                          //       child: DropdownButton(
-                          //         iconEnabledColor: globals.primaryColor,
-                          //         iconSize: 26,
-                          //         hint: Text(
-                          //           AppLocalizations.of(context)
-                          //               .changeWalletLanguage,
-                          //           textAlign: TextAlign.center,
-                          //           style:
-                          //               Theme.of(context).textTheme.headline5,
-                          //         ),
-                          //         value: model.selectedLanguage,
-                          //         onChanged: (newValue) {
-                          //           model.changeWalletLanguage(newValue);
-                          //         },
-                          //         items: model.languages.map((language) {
-                          //           return DropdownMenuItem(
-                          //             child: Center(
-                          //               child: Text(language,
-                          //                   textAlign: TextAlign.center,
-                          //                   style: Theme.of(context)
-                          //                       .textTheme
-                          //                       .headline6),
-                          //             ),
-                          //             value: language,
-                          //           );
-                          //         }).toList(),
-                          //       ),
-                          //     ),
-                          //   ),
+
+                  Card(
+                    elevation: 5,
+                    child: Container(
+                      color: globals.walletCardColor,
+                      child: Center(
+                        child:
+                            // Theme.of(context).platform == TargetPlatform.iOS
+                            //     ?
+                            CupertinoPicker(
+                          diameterRatio: 1.3,
+                          offAxisFraction: 5,
+                          scrollController: model.scrollController,
+                          itemExtent: 50,
+                          onSelectedItemChanged: (int value) {
+                            String lang = '';
+                            if (value == 0) {
+                              lang = 'en';
+                            } else if (value == 1) {
+                              lang = 'zh';
+                            }
+                            model.changeWalletLanguage(lang);
+                          },
+                          children: List<Widget>.generate(
+                            model.languages.length,
+                            (int index) {
+                              return Center(
+                                child: Text(
+                                  model.languages[index],
+                                  style: Theme.of(context).textTheme.headline5,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      // : Visibility(
+                      //     replacement: Container(),
+                      //     visible: true,
+                      //     child: DropdownButtonHideUnderline(
+                      //       child: DropdownButton(
+                      //         iconEnabledColor: globals.primaryColor,
+                      //         iconSize: 26,
+                      //         hint: Text(
+                      //           AppLocalizations.of(context)
+                      //               .changeWalletLanguage,
+                      //           textAlign: TextAlign.center,
+                      //           style:
+                      //               Theme.of(context).textTheme.headline5,
+                      //         ),
+                      //         value: model.selectedLanguage,
+                      //         onChanged: (newValue) {
+                      //           model.changeWalletLanguage(newValue);
+                      //         },
+                      //         items: model.languages.map((language) {
+                      //           return DropdownMenuItem(
+                      //             child: Center(
+                      //               child: Text(language,
+                      //                   textAlign: TextAlign.center,
+                      //                   style: Theme.of(context)
+                      //                       .textTheme
+                      //                       .headline6),
+                      //             ),
+                      //             value: language,
+                      //           );
+                      //         }).toList(),
+                      //       ),
+                      //     ),
+                      //   ),
                     ),
                   ),
                   // Show/Hide dialog warning checkbox
-                  Card(
-                      elevation: 5,
-                      color: globals.walletCardColor,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(AppLocalizations.of(context).showDialogWarnings,
-                              style: Theme.of(context).textTheme.headline5,
-                              textAlign: TextAlign.center),
-                          Checkbox(
-                              activeColor: globals.primaryColor,
-                              value: model.isDialogDisplay,
-                              onChanged: (value) {
-                                model.setDialogWarningValue(value);
-                              }),
-                        ],
-                      )),
+                  Container(
+                    child: Card(
+                        elevation: 5,
+                        color: globals.walletCardColor,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                                AppLocalizations.of(context).showDialogWarnings,
+                                style: Theme.of(context).textTheme.headline5,
+                                textAlign: TextAlign.center),
+                            Checkbox(
+                                activeColor: globals.primaryColor,
+                                value: model.isDialogDisplay,
+                                onChanged: (value) {
+                                  model.setDialogWarningValue(value);
+                                }),
+                          ],
+                        )),
+                  ),
 
                   // Version Code
                   Card(
@@ -253,7 +259,7 @@ class SettingsScreen extends StatelessWidget {
                               .bodyText2
                               .copyWith(color: Colors.red)),
                     ),
-                  ),
+                  )
                 ]),
           ),
           bottomNavigationBar: BottomNavBar(count: 3),
