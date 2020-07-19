@@ -279,8 +279,12 @@ class WalletDashboardScreenState extends BaseState {
                                                   } else {
                                                     walletService
                                                         .showInfoFlushbar(
-                                                            'Free Fab Update',
-                                                            res['_body'],
+                                                            AppLocalizations
+                                                                    .of(context)
+                                                                .freeFabUpdate,
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .incorrectAnswer,
                                                             Icons
                                                                 .account_balance,
                                                             red,
@@ -326,7 +330,7 @@ class WalletDashboardScreenState extends BaseState {
           print(isFreeFabNotUsed);
           walletService.showInfoFlushbar(
               AppLocalizations.of(context).notice,
-              'Free FAB feature has been used already',
+              AppLocalizations.of(context).freeFabUsedAlready,
               Icons.notification_important,
               yellow,
               context);
@@ -375,6 +379,7 @@ class WalletDashboardScreenState extends BaseState {
     }
     totalUsdBalance =
         NumberFormat.simpleCurrency(decimalDigits: 2).format(holder);
+    totalUsdBalance = totalUsdBalance.substring(1);
     log.i('Total usd balance $totalUsdBalance');
   }
 

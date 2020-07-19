@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-07-17T20:24:10.005900",
+  "@@last_modified": "2020-07-19T01:23:12.726289",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1596,6 +1596,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "noRouteDefined": "No route defined for",
+  "@noRouteDefined": {
+    "description": "NoRouteDefined_text",
+    "type": "text",
+    "placeholders": {}
+  },
   "myRewardTokens": "My Reward Tokens",
   "@myRewardTokens": {
     "description": "myRewardTokens_text",
@@ -1707,6 +1713,24 @@
   "freeFabSuccess": "Your will get your FAB shortly, Thank you",
   "@freeFabSuccess": {
     "description": "wallet_dashboard_text_free_fab_success",
+    "type": "text",
+    "placeholders": {}
+  },
+  "getFree": "Get free",
+  "@getFree": {
+    "description": "wallet_dashboard_text_get_free",
+    "type": "text",
+    "placeholders": {}
+  },
+  "incorrectAnswer": "Incorrect Answer",
+  "@incorrectAnswer": {
+    "description": "wallet_dashboard_text_free_fab_incorrect_answer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabUsedAlready": "Free FAB feature has been used already",
+  "@freeFabUsedAlready": {
+    "description": "wallet_dashboard_text_free_fab_used_already",
     "type": "text",
     "placeholders": {}
   }

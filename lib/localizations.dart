@@ -1379,7 +1379,7 @@ class AppLocalizations {
 
   String get noRouteDefined {
     return Intl.message('No route defined for',
-        name: 'NoRouteDefined', desc: 'NoRouteDefined_text');
+        name: 'noRouteDefined', desc: 'NoRouteDefined_text');
   }
 
   String get myRewardTokens {
@@ -1483,6 +1483,23 @@ class AppLocalizations {
   String get freeFabSuccess {
     return Intl.message("Your will get your FAB shortly, Thank you",
         name: 'freeFabSuccess', desc: 'wallet_dashboard_text_free_fab_success');
+  }
+
+  String get getFree {
+    return Intl.message("Get free",
+        name: 'getFree', desc: 'wallet_dashboard_text_get_free');
+  }
+
+  String get incorrectAnswer {
+    return Intl.message("Incorrect Answer",
+        name: 'incorrectAnswer',
+        desc: 'wallet_dashboard_text_free_fab_incorrect_answer');
+  }
+
+  String get freeFabUsedAlready {
+    return Intl.message("Free FAB feature has been used already",
+        name: 'freeFabUsedAlready',
+        desc: 'wallet_dashboard_text_free_fab_used_already');
   }
 }
 

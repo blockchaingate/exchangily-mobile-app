@@ -264,7 +264,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                 color: globals.primaryColor,
                                 borderRadius: BorderRadius.circular(30)),
                             child: SizedBox(
-                              width: 150,
+                              width: 120,
                               height: 20,
                               child: OutlineButton.icon(
                                   padding: EdgeInsets.all(0),
@@ -275,7 +275,8 @@ class WalletDashboardScreen extends StatelessWidget {
                                     color: white,
                                   ),
                                   label: Text(
-                                    'Get Free FAB',
+                                    AppLocalizations.of(context).getFree +
+                                        ' FAB',
                                     style:
                                         Theme.of(context).textTheme.headline6,
                                   )),
