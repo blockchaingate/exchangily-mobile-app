@@ -32,6 +32,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../environments/coins.dart' as coinList;
+import 'package:intl/intl.dart';
 
 class WalletDashboardScreenState extends BaseState {
   final log = getLogger('WalletDahsboardScreenState');
@@ -46,7 +47,7 @@ class WalletDashboardScreenState extends BaseState {
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   final double elevation = 5;
-  double totalUsdBalance = 0;
+  String totalUsdBalance = '';
   double coinUsdBalance;
   double gasAmount = 0;
   String exgAddress = '';
@@ -367,10 +368,13 @@ class WalletDashboardScreenState extends BaseState {
 
 // Calculate Total Usd Balance of Coins
   calcTotalBal() {
-    totalUsdBalance = 0;
+    totalUsdBalance = '';
+    double holder = 0.0;
     for (var i = 0; i < walletInfo.length; i++) {
-      totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
+      holder = holder + walletInfo[i].usdValue;
     }
+    totalUsdBalance =
+        NumberFormat.simpleCurrency(decimalDigits: 2).format(holder);
     log.i('Total usd balance $totalUsdBalance');
   }
 

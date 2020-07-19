@@ -157,14 +157,14 @@ class WalletDashboardScreen extends StatelessWidget {
                                                     highlightColor:
                                                         globals.white,
                                                     child: Text(
-                                                      '${model.totalUsdBalance.toStringAsFixed(2)} USD',
+                                                      '${model.totalUsdBalance} USD',
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .subtitle1,
                                                     ),
                                                   )
                                                 : Text(
-                                                    '${model.totalUsdBalance.toStringAsFixed(2)} USD',
+                                                    '${model.totalUsdBalance} USD',
                                                     textAlign: TextAlign.center,
                                                     style: Theme.of(context)
                                                         .textTheme
