@@ -104,6 +104,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "gasLimit" : MessageLookupByLibrary.simpleMessage("燃料限额"),
     "gasPrice" : MessageLookupByLibrary.simpleMessage("燃料价格"),
     "genericError" : MessageLookupByLibrary.simpleMessage("发生错误，请稍候再试。"),
+    "getFree" : MessageLookupByLibrary.simpleMessage("免费"),
     "gold" : MessageLookupByLibrary.simpleMessage("黄金"),
     "hideDialogWarnings" : MessageLookupByLibrary.simpleMessage("隐藏警告信息"),
     "hideMnemonic" : MessageLookupByLibrary.simpleMessage("隐藏助记词"),

@@ -1552,5 +1552,11 @@
     "description": "wallet_dashboard_text_free_fab_success",
     "type": "text",
     "placeholders": {}
+  },
+  "getFree": "免费",
+  "@getFree": {
+    "description": "wallet_dashboard_text_get_free",
+    "type": "text",
+    "placeholders": {}
   }
 }
