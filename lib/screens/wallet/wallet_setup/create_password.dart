@@ -199,7 +199,8 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Widget _buildCreateNewWalletButton(model, BuildContext context) {
+  Widget _buildCreateNewWalletButton(
+      CreatePasswordScreenState model, BuildContext context) {
     return ButtonTheme(
       shape:
           RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30)),
