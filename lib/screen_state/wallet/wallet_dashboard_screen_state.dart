@@ -67,6 +67,7 @@ class WalletDashboardScreenState extends BaseState {
   final freeFabAnswerTextController = TextEditingController();
   String postFreeFabResult = '';
   bool isFreeFabNotUsed = false;
+  double fabBalance = 0.0;
 
 /*----------------------------------------------------------------------
                     INIT
@@ -83,12 +84,6 @@ class WalletDashboardScreenState extends BaseState {
     showDialogWarning();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = prefs.getString('lang');
-    String address = await getExgAddressFromWalletDatabase();
-    await apiService.getFreeFab(address).then((res) {
-      if (res != null) {
-        isFreeFabNotUsed = res['ok'];
-      }
-    });
 
     setBusy(false);
   }
@@ -158,15 +153,13 @@ class WalletDashboardScreenState extends BaseState {
                           content: Column(
                             children: <Widget>[
                               UIHelper.verticalSpaceSmall,
-                           
                               Text(
-                                  res['_body']['question'].toString(),
-                                  // AppLocalizations.of(context).quantity,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyText1
-                                      .copyWith(color: red),
-                                ),
+                                res['_body']['question'].toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(color: red),
+                              ),
                               TextField(
                                 minLines: 1,
                                 style: TextStyle(color: white),
@@ -582,7 +575,10 @@ class WalletDashboardScreenState extends BaseState {
                   name: wallet.name,
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
-
+              if (walletTickerName == 'FAB') {
+                fabBalance = 0.0;
+                fabBalance = wi.availableBalance;
+              }
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
@@ -606,7 +602,17 @@ class WalletDashboardScreenState extends BaseState {
         await updateWalletDatabase();
 
         if (!isProduction) debugVersionPopup();
-      //  await getAppVersion();
+        // await getAppVersion();
+        String address = await getExgAddressFromWalletDatabase();
+        if (gasAmount == 0.0 && fabBalance == 0.0) {
+          await apiService.getFreeFab(address).then((res) {
+            if (res != null) {
+              isFreeFabNotUsed = res['ok'];
+            }
+          });
+        } else {
+          log.i('Fab or gas balance available already');
+        }
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method
