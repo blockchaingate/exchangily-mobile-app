@@ -603,7 +603,11 @@ class WalletDashboardScreenState extends BaseState {
 
         if (!isProduction) debugVersionPopup();
         // await getAppVersion();
+
+        // get exg address to get free fab
         String address = await getExgAddressFromWalletDatabase();
+
+        // check gas and fab balance if 0 then ask for free fab
         if (gasAmount == 0.0 && fabBalance == 0.0) {
           await apiService.getFreeFab(address).then((res) {
             if (res != null) {
