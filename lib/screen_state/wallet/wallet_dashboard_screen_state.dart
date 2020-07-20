@@ -158,25 +158,12 @@ class WalletDashboardScreenState extends BaseState {
                           content: Column(
                             children: <Widget>[
                               UIHelper.verticalSpaceSmall,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context).question,
-                                    // AppLocalizations.of(context).quantity,
-                                    style:
-                                        Theme.of(context).textTheme.bodyText1,
-                                  ),
-                                  UIHelper.horizontalSpaceSmall,
-                                  Text(
-                                    res['_body']['question'].toString(),
-                                    // AppLocalizations.of(context).quantity,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        .copyWith(color: red),
-                                  ),
-                                ],
+                              Text(
+                                res['_body']['question'].toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(color: red),
                               ),
                               TextField(
                                 minLines: 1,
@@ -617,7 +604,7 @@ class WalletDashboardScreenState extends BaseState {
         await updateWalletDatabase();
 
         if (!isProduction) debugVersionPopup();
-        await getAppVersion();
+        // await getAppVersion();
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method
