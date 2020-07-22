@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.2.5+38
+version: 1.2.5+37
 environment:
   sdk: '>=2.3.2 <3.0.0'
 
@@ -138,6 +138,9 @@ dependencies:
 
   # Generate LTC and DOGE coin address
   bitcoin_flutter: ^2.0.1
+
+  # launch the app in the app stores
+  launch_review: ^2.0.0
 
   # Share files
   share:

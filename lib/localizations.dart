@@ -1501,6 +1501,16 @@ class AppLocalizations {
         name: 'freeFabUsedAlready',
         desc: 'wallet_dashboard_text_free_fab_used_already');
   }
+
+  String get updateNow {
+    return Intl.message("Update now",
+        name: 'updateNow', desc: 'wallet_dashboard_text_go_to_app_store');
+  }
+
+  String get later {
+    return Intl.message("Later",
+        name: 'later', desc: 'app_update_popup_button_text_later');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
