@@ -1558,5 +1558,35 @@
     "description": "wallet_dashboard_text_get_free",
     "type": "text",
     "placeholders": {}
+  },
+"getFree": "免費",
+  "@getFree": {
+    "description": "wallet_dashboard_text_get_free",
+    "type": "text",
+    "placeholders": {}
+  },
+  "incorrectAnswer": "回答錯誤",
+  "@incorrectAnswer": {
+    "description": "wallet_dashboard_text_free_fab_incorrect_answer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabUsedAlready": "您已經請求免費FAB空投",
+  "@freeFabUsedAlready": {
+    "description": "wallet_dashboard_text_free_fab_used_already",
+    "type": "text",
+    "placeholders": {}
+  },
+  "updateNow": "立即更新",
+  "@updateNow": {
+    "description": "wallet_dashboard_text_go_to_app_store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "later": "晚些",
+  "@later": {
+    "description": "app_update_popup_button_text_later",
+    "type": "text",
+    "placeholders": {}
   }
-}
+  }
