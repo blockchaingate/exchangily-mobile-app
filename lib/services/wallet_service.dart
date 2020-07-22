@@ -1053,9 +1053,7 @@ class WalletService {
           (totalInput - amount * 1e8 - extraTransactionFee * 1e8 - transFee)
               .round();
 
-      if (output1 < 2730) {
-        transFee += output1;
-      }
+
 
       transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
               Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
@@ -1073,9 +1071,8 @@ class WalletService {
         };
       }
 
-      if (output1 >= 2730) {
-        txb.addOutput(changeAddress, output1);
-      }
+      txb.addOutput(changeAddress, output1);
+
 
       txb.addOutput(toAddress, output2);
 

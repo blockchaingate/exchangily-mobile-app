@@ -1,10 +1,10 @@
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
-const String baseBlockchainGateV2Url = isProduction
+final String baseBlockchainGateV2Url = isProduction
     ? 'https://blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
 
-const String baseKanbanUrl = isProduction
+final String baseKanbanUrl = isProduction
     ? 'https://kanbanprod.fabcoinapi.com/'
     : 'https://kanbantest.fabcoinapi.com/';
 
@@ -14,10 +14,10 @@ const String baseKanbanUrl = isProduction
 /// Url below not in use
 const String freeFabUrl = 'https://kanbanprod.fabcoinapi.com/kanban/getairdrop';
 
-const String getFreeFabUrl =
+final String getFreeFabUrl =
     baseBlockchainGateV2Url + 'airdrop/getQuestionair/';
 
-const String postFreeFabUrl =
+final String postFreeFabUrl =
     baseBlockchainGateV2Url + 'airdrop/answerQuestionair/';
 
 /*----------------------------------------------------------------------
@@ -33,4 +33,4 @@ const String coinCurrencyUsdPriceUrl =
                             Next
 ----------------------------------------------------------------------*/
 
-const String getAppVersionUrl = baseKanbanUrl + 'getappversion';
+final String getAppVersionUrl = baseKanbanUrl + 'getappversion';
