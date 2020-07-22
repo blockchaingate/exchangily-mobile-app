@@ -92,16 +92,16 @@ class MoveToExchangeScreenState extends BaseState {
       setState(ViewState.Idle);
       return;
     }
-    if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).minimumAmountError,
-          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-          Icons.cancel,
-          globals.red,
-          context);
-      setState(ViewState.Idle);
-      return;
-    }
+    // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+    //   sharedService.showInfoFlushbar(
+    //       AppLocalizations.of(context).minimumAmountError,
+    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+    //       Icons.cancel,
+    //       globals.red,
+    //       context);
+    //   setState(ViewState.Idle);
+    //   return;
+    // }
     setMessage('');
 
     var res = await _dialogService.showDialog(

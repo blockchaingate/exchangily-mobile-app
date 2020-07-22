@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -109,7 +110,9 @@ class SharedService {
       {bool isWarning = false,
       String path,
       dynamic arguments,
-      bool isDismissible = true}) async {
+      bool isDismissible = true,
+      bool isUpdate = false,
+      bool isLater = false}) async {
     print(' is dismissible $isDismissible');
     bool checkBoxValue = false;
     showDialog(
@@ -210,12 +213,14 @@ class SharedService {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          FlatButton(
+                          OutlineButton(
                             color: globals.primaryColor,
                             padding: EdgeInsets.all(0),
                             child: Center(
                               child: Text(
-                                AppLocalizations.of(context).close,
+                                isLater
+                                    ? AppLocalizations.of(context).later
+                                    : AppLocalizations.of(context).close,
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 12),
                               ),
@@ -230,6 +235,27 @@ class SharedService {
                               }
                             },
                           ),
+                          UIHelper.horizontalSpaceSmall,
+                          isUpdate
+                              ? FlatButton(
+                                  color: globals.primaryColor,
+                                  padding: EdgeInsets.all(5),
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context).updateNow,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 12),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    LaunchReview.launch(
+                                        androidAppId: "com.exchangily.wallet",
+                                        iOSAppId: "com.exchangily.app",
+                                        writeReview: false);
+                                    Navigator.of(context).pop(false);
+                                  },
+                                )
+                              : Container(),
                         ],
                       ),
                     )

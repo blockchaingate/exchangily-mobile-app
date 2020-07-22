@@ -227,15 +227,13 @@ class CampaignDashboardScreen extends StatelessWidget {
                                         padding:
                                             const EdgeInsets.only(right: 3.0),
                                         child: Icon(Icons.monetization_on,
-                                            color: globals.buyPrice, size: 20),
+                                            color: globals.buyPrice, size: 18),
                                       ),
                                       Flexible(
-                                        child: Text(
-                                            model.myTotalAssetValue
-                                                .toStringAsFixed(2),
+                                        child: Text(model.myTotalAssetValue,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .headline2),
+                                                .headline3),
                                       ),
                                     ],
                                   ),
@@ -383,22 +381,11 @@ class CampaignDashboardScreen extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.attach_money,
-                                            color: globals.white,
-                                            size: 17,
-                                          ),
-                                          Text(
-                                              model
-                                                  .myInvestmentValueWithoutRewards
-                                                  .toStringAsFixed(2),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5),
-                                        ],
-                                      ),
+                                      Text(
+                                          '\$${model.myInvestmentValueWithoutRewards}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5),
                                       Text(
                                           '${model.myTokensWithoutRewards.toStringAsFixed(2)}',
                                           style: Theme.of(context)

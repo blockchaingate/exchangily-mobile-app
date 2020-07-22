@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-07-19T01:23:12.726289",
+  "@@last_modified": "2020-07-22T16:10:50.020908",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1731,6 +1731,18 @@
   "freeFabUsedAlready": "Free FAB feature has been used already",
   "@freeFabUsedAlready": {
     "description": "wallet_dashboard_text_free_fab_used_already",
+    "type": "text",
+    "placeholders": {}
+  },
+  "updateNow": "Update now",
+  "@updateNow": {
+    "description": "wallet_dashboard_text_go_to_app_store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "later": "Later",
+  "@later": {
+    "description": "app_update_popup_button_text_later",
     "type": "text",
     "placeholders": {}
   }
