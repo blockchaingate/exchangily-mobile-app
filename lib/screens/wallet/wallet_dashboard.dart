@@ -504,7 +504,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                 ))
                               : Expanded(
                                   child: Text(
-                                      available == 0 || available.isNegative
+                                      available == 0
                                           ? '0.0'
                                           : available.toStringAsFixed(4),
                                       style: Theme.of(context)
@@ -538,7 +538,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                 ))
                               : Expanded(
                                   child: Text(
-                                      locked == 0 || locked.isNegative
+                                      locked == 0
                                           ? '0.0'
                                           : locked.toStringAsFixed(4),
                                       style: Theme.of(context)

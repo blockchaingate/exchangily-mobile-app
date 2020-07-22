@@ -134,6 +134,9 @@ dependencies:
   # Generate LTC and DOGE coin address
   bitcoin_flutter: ^2.0.1
 
+  # launch the app in the app stores
+  launch_review: ^2.0.0
+
   # Share files
   share:
     git:

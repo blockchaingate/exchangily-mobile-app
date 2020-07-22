@@ -109,7 +109,8 @@ class WalletDashboardScreenState extends BaseState {
           sharedService.alertDialog(
               AppLocalizations.of(context).appUpdateNotice,
               '${AppLocalizations.of(context).pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context).toLatestBuild} $apiAppVersion ${AppLocalizations.of(context).inText} $store',
-              isDismissible: true);
+              isUpdate: true,
+              isLater: true);
         }
       }
     }).catchError((err) {
@@ -528,7 +529,9 @@ class WalletDashboardScreenState extends BaseState {
             // Compare wallet ticker name to wallet balance coin name
             if (walletTickerName == walletBalanceCoinName) {
               double marketPrice = walletBalanceList[j].usdValue.usd ?? 0.0;
-              double availableBal = walletBalanceList[j].balance ?? 0.0;
+              double availableBal = walletBalanceList[j].balance.isNegative
+                  ? 0.0
+                  : walletBalanceList[j].balance;
               double lockedBal = walletBalanceList[j].lockBalance ?? 0.0;
 
               // Check if market price error from api then show the notification with ticker name
@@ -541,9 +544,7 @@ class WalletDashboardScreenState extends BaseState {
 
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
-                  marketPrice,
-                  walletBalanceList[j].balance,
-                  walletBalanceList[j].lockBalance);
+                  marketPrice, availableBal, lockedBal);
               String holder = currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
@@ -569,12 +570,12 @@ class WalletDashboardScreenState extends BaseState {
                   tokenType: wallet.tokenType,
                   address: wallet.address,
                   availableBalance: availableBal,
-                  lockedBalance: walletBalanceList[j].lockBalance,
+                  lockedBalance: lockedBal,
                   usdValue: usdValue,
                   name: wallet.name,
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
-
+              print(wi.toJson());
               if (walletTickerName == 'FAB') {
                 fabBalance = 0.0;
                 fabBalance = wi.availableBalance;
