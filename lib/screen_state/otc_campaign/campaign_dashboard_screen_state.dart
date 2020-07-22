@@ -12,6 +12,7 @@ import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,13 +33,13 @@ class CampaignDashboardScreenState extends BaseState {
   String memberLevel = '';
   int memberLevelTextColor = 0xff696969;
   double myTotalAssetQuantity = 0.0;
-  double myTotalAssetValue = 0.0;
+  String myTotalAssetValue = '';
   double myReferralReward = 0.0;
   int myTotalReferrals = 0;
   double myTeamsTotalRewards = 0.0;
   double myTeamsTotalValue = 0.0;
   BuildContext context;
-  double myInvestmentValueWithoutRewards = 0.0;
+  String myInvestmentValueWithoutRewards = '';
   double myTokensWithoutRewards = 0.0;
   var myTokens;
   Map<String, dynamic> teamValueAndRewardWithLoginToken = {};
@@ -161,7 +162,8 @@ class CampaignDashboardScreenState extends BaseState {
           memberLevel = AppLocalizations.of(context).silver;
         }
         //assignColorAccordingToMemberLevel(level);
-        myInvestmentValueWithoutRewards = res.totalValue.toDouble();
+        double holder = res.totalValue.toDouble();
+        myInvestmentValueWithoutRewards = currencyFormat(holder, 2);
         myTokensWithoutRewards = res.totalQuantities.toDouble();
       } else {
         log.w(' In myProfile else');
@@ -399,7 +401,8 @@ class CampaignDashboardScreenState extends BaseState {
   calcMyTotalAsssetValue() async {
     log.e('calcMyTotalAsssetValue');
     double exgPrice = await getUsdValue();
-    myTotalAssetValue = myTotalAssetQuantity * exgPrice;
+    double holder = myTotalAssetQuantity * exgPrice;
+    myTotalAssetValue = currencyFormat(holder, 2);
     log.e(
         'calcMyTotalAsssetValue $myTotalAssetQuantity, $exgPrice - $myTotalAssetValue');
     return myTotalAssetValue;

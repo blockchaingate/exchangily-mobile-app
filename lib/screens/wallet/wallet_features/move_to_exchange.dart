@@ -74,11 +74,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                   model.updateTransFee();
                 },
                 decoration: InputDecoration(
-                  suffix: Text(
-                      AppLocalizations.of(context).minimumAmount +
-                          ': ' +
-                          environment['minimumWithdraw'][coinName].toString(),
-                      style: Theme.of(context).textTheme.headline6),
+                  // suffix: Text(
+                  //     AppLocalizations.of(context).minimumAmount +
+                  //         ': ' +
+                  //         environment['minimumWithdraw'][coinName].toString(),
+                  //     style: Theme.of(context).textTheme.headline6),
                   enabledBorder: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0XFF871fff), width: 1.0)),

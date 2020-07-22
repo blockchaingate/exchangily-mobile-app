@@ -22,6 +22,7 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -48,7 +49,7 @@ class WalletDashboardScreenState extends BaseState {
       locator<WalletDataBaseService>();
   final double elevation = 5;
   String totalUsdBalance = '';
-  double coinUsdBalance;
+
   double gasAmount = 0;
   String exgAddress = '';
   String wallets;
@@ -68,6 +69,7 @@ class WalletDashboardScreenState extends BaseState {
   String postFreeFabResult = '';
   bool isFreeFabNotUsed = false;
   double fabBalance = 0.0;
+  List<String> formattedUsdValueList = [];
 
 /*----------------------------------------------------------------------
                     INIT
@@ -76,10 +78,8 @@ class WalletDashboardScreenState extends BaseState {
   init() async {
     setBusy(true);
     sharedService.context = context;
-    // await getDecimalPairConfig();
-
+    //  await getDecimalPairConfig();
     await refreshBalance();
-
     getConfirmDepositStatus();
     showDialogWarning();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -359,9 +359,10 @@ class WalletDashboardScreenState extends BaseState {
     for (var i = 0; i < walletInfo.length; i++) {
       holder = holder + walletInfo[i].usdValue;
     }
-    totalUsdBalance =
-        NumberFormat.simpleCurrency(decimalDigits: 2).format(holder);
-    totalUsdBalance = totalUsdBalance.substring(1);
+    totalUsdBalance = currencyFormat(holder, 2);
+    // totalUsdBalance =
+    //     NumberFormat.simpleCurrency(decimalDigits: 2).format(holder);
+    // totalUsdBalance = totalUsdBalance.substring(1);
     log.i('Total usd balance $totalUsdBalance');
   }
 
@@ -458,6 +459,7 @@ class WalletDashboardScreenState extends BaseState {
 
     await walletDatabaseService.getAll().then((walletList) {
       walletInfoCopy = [];
+      formattedUsdValueList = [];
       walletInfoCopy = walletList;
     });
     walletInfo = [];
@@ -537,44 +539,42 @@ class WalletDashboardScreenState extends BaseState {
                 marketPrice = 0.0;
               }
 
-              // // If passing any negative value to UI then that pair won't show up in the list
-              if (availableBal.isNegative) walletBalanceList[j].balance = 0.0;
-              if (lockedBal.isNegative) walletBalanceList[j].lockBalance = 0.0;
-
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
                   marketPrice,
                   walletBalanceList[j].balance,
                   walletBalanceList[j].lockBalance);
+              String holder = currencyFormat(usdValue, 2);
+              formattedUsdValueList.add(holder);
 
+// get Pair decimal config
               // if (pairDecimalConfigList != null ||
               //     pairDecimalConfigList != []) {
-              //   log.e(
-              //       'get pair decimal length, ${pairDecimalConfigList.length}');
               //   for (PairDecimalConfig pair in pairDecimalConfigList) {
-              //     String fullWalletTickerName = walletTickerName + 'USDT';
-
-              //     if (pair.name == fullWalletTickerName) {
-              //       // walletInfo[i].pairDecimalConfig.priceDecimal =
-              //       //     pair.priceDecimal;
-              //       // walletInfo[i].pairDecimalConfig.priceDecimal =
-              //       //     pair.qtyDecimal;
-
-              //       break;
+              //     log.e('pair ${pair.toJson()}');
+              //     if (pair.name == walletTickerName + 'USDT') {
+              //       String holder = walletBalanceList[j]
+              //           .balance
+              //           .toStringAsFixed(pair.qtyDecimal);
+              //       print(holder);
+              //       availableBal = double.parse(holder);
               //     }
+              //     break;
               //   }
               // }
+
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
                   tickerName: walletTickerName,
                   tokenType: wallet.tokenType,
                   address: wallet.address,
-                  availableBalance: walletBalanceList[j].balance,
+                  availableBalance: availableBal,
                   lockedBalance: walletBalanceList[j].lockBalance,
                   usdValue: usdValue,
                   name: wallet.name,
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
+
               if (walletTickerName == 'FAB') {
                 fabBalance = 0.0;
                 fabBalance = wi.availableBalance;
@@ -602,7 +602,7 @@ class WalletDashboardScreenState extends BaseState {
         await updateWalletDatabase();
 
         if (!isProduction) debugVersionPopup();
-        // await getAppVersion();
+        await getAppVersion();
 
         // get exg address to get free fab
         String address = await getExgAddressFromWalletDatabase();
@@ -639,6 +639,7 @@ class WalletDashboardScreenState extends BaseState {
   // Old way to get balances
   oldWayToGetBalances(int walletInfoCopyLength) async {
     walletInfo = [];
+    formattedUsdValueList = [];
     List<String> coinTokenType = walletService.tokenType;
 
     double walletBal = 0.0;
@@ -662,8 +663,10 @@ class WalletDashboardScreenState extends BaseState {
             await walletService.getCoinMarketPriceByTickerName(tickerName);
 
         // Calculate usd balance
-        coinUsdBalance = walletService.calculateCoinUsdBalance(
+        double usdValue = walletService.calculateCoinUsdBalance(
             marketPrice, walletBal, walletLockedBal);
+        String holder = currencyFormat(usdValue, 2);
+        formattedUsdValueList.add(holder);
         // Adding each coin details in the wallet
         WalletInfo wi = WalletInfo(
             id: walletInfoCopy[i].id,
@@ -672,7 +675,7 @@ class WalletDashboardScreenState extends BaseState {
             address: address,
             availableBalance: walletBal,
             lockedBalance: walletLockedBal,
-            usdValue: coinUsdBalance,
+            usdValue: usdValue,
             name: name);
         walletInfo.add(wi);
       }).

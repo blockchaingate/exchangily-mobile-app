@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class NumberUtil {
   static const int DEFAULT_DECIMAL_DIGITS = 2;
@@ -69,4 +70,13 @@ toBigInt(amount, [decimalLength]) {
   }
   print('value $val');
   return val;
+}
+
+// pass value to format with decimal digits needed
+String currencyFormat(double value, int decimalDigits) {
+  String holder = '';
+  holder =
+      NumberFormat.simpleCurrency(decimalDigits: decimalDigits).format(value);
+  holder = holder.substring(1);
+  return holder;
 }
