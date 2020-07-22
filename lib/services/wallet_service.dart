@@ -32,6 +32,7 @@ import 'package:http/http.dart' as http;
 import '../shared/globals.dart' as globals;
 import '../environments/coins.dart' as coinList;
 import '../utils/abi_util.dart';
+import '../utils/number_util.dart';
 import '../utils/string_util.dart' as stringUtils;
 import '../utils/kanban.util.dart';
 import '../utils/keypair_util.dart';
@@ -989,7 +990,8 @@ class WalletService {
     var receivePrivateKeyArr = [];
 
     var totalAmount = amount + extraTransactionFee;
-    var amountNum = totalAmount * 1e8;
+    //var amountNum = totalAmount * 1e8;
+    var amountNum = BigInt.parse(toBigInt(totalAmount, 8)).toInt();
     amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
     var transFeeDouble = 0.0;
@@ -1050,7 +1052,7 @@ class WalletService {
       print('transFee==' + transFee.toString());
 
       var output1 =
-          (totalInput - amount * 1e8 - extraTransactionFee * 1e8 - transFee)
+          (totalInput - BigInt.parse(toBigInt(amount+extraTransactionFee, 8)).toInt() - transFee)
               .round();
 
 
@@ -1159,7 +1161,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["BTC"]["satoshisPerBytes"];
       }
-      var amountNum = amount * 1e8;
+      var amountNum = BigInt.parse(toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
           network: environment["chains"]["BTC"]["network"]);
@@ -1213,7 +1215,7 @@ class WalletService {
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
               (2 * 34 + 10) * satoshisPerBytes;
 
-      var output1 = (totalInput - amount * 1e8 - transFee).round();
+      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
 
       if (output1 < 2730) {
         transFee += output1;
@@ -1230,7 +1232,7 @@ class WalletService {
         };
       }
 
-      var output2 = (amount * 1e8).round();
+      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
 
       if (output1 >= 2730) {
         txb.addOutput(changeAddress, output1);
@@ -1264,7 +1266,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["BCH"]["satoshisPerBytes"];
       }
-      var amountNum = amount * 1e8;
+      var amountNum = BigInt.parse(toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
       final txb = Bitbox.Bitbox.transactionBuilder(
@@ -1325,8 +1327,8 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - amount * 1e8 - transFee).round();
-      var output2 = (amount * 1e8).round();
+      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
 
       txb.addOutput(address, output1);
       txb.addOutput(toAddress, output2);
@@ -1356,7 +1358,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["LTC"]["satoshisPerBytes"];
       }
-      var amountNum = amount * 1e8;
+      var amountNum = BigInt.parse(toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
           network: environment["chains"]["LTC"]["network"]);
@@ -1419,8 +1421,8 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - amount * 1e8 - transFee).round();
-      var output2 = (amount * 1e8).round();
+      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
 
       txb.addOutput(changeAddress, output1);
       txb.addOutput(toAddress, output2);
@@ -1451,7 +1453,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["DOGE"]["satoshisPerBytes"];
       }
-      var amountNum = amount * 1e8;
+      var amountNum = BigInt.parse(toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
           network: environment["chains"]["DOGE"]["network"]);
@@ -1517,8 +1519,8 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - amount * 1e8 - transFee).round();
-      var output2 = (amount * 1e8).round();
+      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
 
       txb.addOutput(changeAddress, output1);
 
@@ -1572,7 +1574,8 @@ class WalletService {
       final ethCoinChild = root.derivePath(
           "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
-      var amountSentInt = BigInt.from(amount * 1e18);
+      var amountSentInt = BigInt.parse(toBigInt(amount, 18));
+
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
       final address = await credentials.extractAddress();
@@ -1766,14 +1769,16 @@ class WalletService {
           coin == 'DRGN') {
         convertedDecimalAmount = BigInt.parse(toBigInt(amount));
         //   (BigInt.from(10).pow(18) * BigInt.from(amount));
+
+        //var amountSentInt = BigInt.parse(toBigInt(amount, 18));
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'FUN' || coin == 'WAX' || coin == 'MTL') {
-        convertedDecimalAmount = (BigInt.from(10).pow(8) * BigInt.from(amount));
+        convertedDecimalAmount =  BigInt.parse(toBigInt(amount, 8));
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'POWR' || coin == 'USDT') {
-        convertedDecimalAmount = (BigInt.from(10).pow(6) * BigInt.from(amount));
+        convertedDecimalAmount = BigInt.parse(toBigInt(amount, 6));
       } else if (coin == 'CEL') {
-        convertedDecimalAmount = (BigInt.from(10).pow(4) * BigInt.from(amount));
+        convertedDecimalAmount = BigInt.parse(toBigInt(amount, 4));
       }
 
       var transferAbi = 'a9059cbb';

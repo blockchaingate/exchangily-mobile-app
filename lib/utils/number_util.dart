@@ -57,16 +57,26 @@ toBigInt(amount, [decimalLength]) {
   if (numStringArray != null) {
     val = numStringArray[0];
     if (numStringArray.length == 2) {
-      decimalLength -= numStringArray[1].length;
-      val += numStringArray[1];
+      var decimalPart = numStringArray[1];
+      if(decimalPart.length > decimalLength) {
+        print('decimalPart before: $decimalPart');
+        print('decimalLength: $decimalLength');
+        decimalPart = decimalPart.substring(0,decimalLength);
+        print('decimalPart after: $decimalPart');
+      }
+      decimalLength -= decimalPart.length;
+      val += decimalPart;
     }
   }
 
   var valInt = int.parse(val);
   val = valInt.toString();
-  for (var i = 0; i < decimalLength; i++) {
-    val += '0';
+  if(decimalLength > 0) {
+    for (var i = 0; i < decimalLength; i++) {
+      val += '0';
+    }
   }
-  print('value $val');
+
+  print('value there we go: $val');
   return val;
 }
