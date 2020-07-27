@@ -41,7 +41,6 @@ class TradeView extends StatelessWidget {
         },
         builder: (context, model, _) => WillPopScope(
               onWillPop: () async {
-                model.navigationService.goBack();
                 return new Future(() => true);
               },
               child: Scaffold(
@@ -54,7 +53,7 @@ class TradeView extends StatelessWidget {
                         // model.pauseAllStreams();
                         // _scaffoldKey.currentState.openDrawer();
                         // model.navigationService.goBack();
-                        model.navigationService.goBack();
+                        model.dispose();
                       },
                     ),
                     title: Text(

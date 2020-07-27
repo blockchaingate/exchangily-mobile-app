@@ -30,7 +30,13 @@ const String coinCurrencyUsdPriceUrl =
     'https://kanbanprod.fabcoinapi.com/USDvalues';
 
 /*----------------------------------------------------------------------
-                            Next
+                            Get app version
 ----------------------------------------------------------------------*/
 
 final String getAppVersionUrl = baseKanbanUrl + 'getappversion';
+
+/*----------------------------------------------------------------------
+                            OTC
+----------------------------------------------------------------------*/
+
+final String getOtcListing = '$baseBlockchainGateV2Url/otc-listing/public/list';

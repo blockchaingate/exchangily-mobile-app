@@ -102,6 +102,7 @@ class WalletDashboardScreenState extends BaseState {
       store = 'Google Play Store';
     }
     await apiService.getApiAppVersion().then((apiAppVersion) {
+      log.w('apiAppVersion $apiAppVersion');
       if (apiAppVersion != null) {
         log.i(
             'api app version $apiAppVersion -- local version $localAppVersion');

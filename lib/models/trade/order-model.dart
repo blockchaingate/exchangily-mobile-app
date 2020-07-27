@@ -93,8 +93,9 @@ class OrderModel {
     this._time = time;
     this._isActive = isActive;
     this._pairName = pairName;
-    this._totalOrderQuantity = orderQuantity + filledQuantity;
-    this._filledPercentage = (filledQuantity * 100) / _totalOrderQuantity;
+    this._totalOrderQuantity = orderQuantity + filledQuantity ?? 0.0;
+    this._filledPercentage =
+        (filledQuantity * 100) / _totalOrderQuantity ?? 0.0;
   }
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
