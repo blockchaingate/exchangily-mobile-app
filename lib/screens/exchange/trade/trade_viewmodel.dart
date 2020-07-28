@@ -71,6 +71,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   void dispose() async {
     await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
     log.i('Close all IOWebsocket connections');
+    //  navigationService.goBack();
     super.dispose();
   }
 
@@ -113,21 +114,18 @@ class TradeViewModel extends MultipleStreamViewModel {
         // Buy order
         List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
         OrderList orderList = OrderList.fromJson(jsonDynamicList);
-        buyOrderBookList = orderList.orders;
+        log.e('orderList.orders.length ${orderList.orders.length}');
+        buyOrderBookList = orderAggregation(orderList.orders);
 
         // Sell orders
         List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
         OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
         //  List sellOrders = sellOrderList.orders.reversed
         //      .toList(); // reverse sell orders to show the list ascending
-        sellOrderBookList = sellOrderList.orders;
-        // sellOrders;
+        sellOrderBookList = orderAggregation(sellOrderList.orders);
 
         log.w(
-            'OrderBook length -- ${buyOrderBookList.length} ${sellOrderList.orders.length}');
-        // Fill orderBook list
-
-        // notifyListeners();
+            'OrderBook length -- ${orderAggregation(buyOrderBookList).length} ${sellOrderList.orders.length}');
       }
 
       /// Market trade list
@@ -158,6 +156,43 @@ class TradeViewModel extends MultipleStreamViewModel {
   void onCancel(String key) {
     log.e('Stream $key closed');
     // getSubscriptionForKey(key).cancel();
+  }
+
+  // Order aggregation
+
+  List<OrderModel> orderAggregation(List<OrderModel> passedOrders) {
+    List<OrderModel> result = [];
+    print('passed orders length ${passedOrders.length}');
+    double prevQuantity = 0.0;
+    List<int> indexArray = [];
+    double prevPrice = 0;
+
+    // for each
+    passedOrders.forEach((currentOrder) {
+      print('single order ${currentOrder.toJson()}');
+      int index = 0;
+      double aggrQty = 0;
+      index = passedOrders.indexOf(currentOrder);
+      if (currentOrder.price == prevPrice) {
+        log.i(
+            'price matched with prev price ${currentOrder.price} -- $prevPrice');
+        log.w(
+            ' currentOrder qty ${currentOrder.orderQuantity} -- prevQuantity $prevQuantity');
+        currentOrder.orderQuantity += prevQuantity;
+        //  aggrQty = currentOrder.orderQuantity + prevQuantity;
+        prevPrice = currentOrder.price;
+        log.e(' currentOrder.orderQuantity  ${currentOrder.orderQuantity}');
+        indexArray.add(passedOrders.indexOf(currentOrder));
+        result.removeWhere((order) => order.price == prevPrice);
+        result.add(currentOrder);
+      } else {
+        prevPrice = currentOrder.price;
+        prevQuantity = currentOrder.orderQuantity;
+        log.w('price NOT matched so prevprice: $prevPrice');
+        result.add(currentOrder);
+      }
+    });
+    return result;
   }
 
   /// Get Decimal Pair Configuration
