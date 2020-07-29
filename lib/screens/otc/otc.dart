@@ -219,7 +219,10 @@ class OtcScreen extends StatelessWidget {
                                                   TargetPlatform.iOS
                                               ? Center(
                                                   child: CupertinoButton(
-                                                      child: Text(AppLocalizations.of(context).buy,
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .buy,
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
@@ -248,7 +251,7 @@ class OtcScreen extends StatelessWidget {
                     })
               ],
             )),
-        // bottomNavigationBar: BottomNavBar(count: 2),
+        bottomNavigationBar: BottomNavBar(count: 2),
       ),
     );
   }

@@ -52,17 +52,16 @@ class BottomNavBar extends StatelessWidget {
             title: Padding(
                 padding: EdgeInsets.only(top: paddingValue),
                 child: Text(AppLocalizations.of(context).trade))),
-        // BottomNavigationBarItem(
-        //     icon: Icon(Icons.branding_watermark, size: iconSize),
-        //     title: Padding(
-        //         padding: EdgeInsets.only(top: paddingValue),
-        //         child: Text('OTC'))),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.branding_watermark, size: iconSize),
+            title: Padding(
+                padding: EdgeInsets.only(top: paddingValue),
+                child: Text('OTC'))),
         BottomNavigationBarItem(
             icon: Icon(Icons.event, size: iconSize),
             title: Padding(
                 padding: EdgeInsets.only(top: paddingValue),
                 child: Text(AppLocalizations.of(context).event))),
-
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.cog, size: iconSize),
             title: Padding(
@@ -82,10 +81,10 @@ class BottomNavBar extends StatelessWidget {
             if (currentRouteName != 'MarketsView')
               navigationService.navigateTo('/marketsView');
             break;
-          // case 2:
-          // if (currentRouteName != 'OtcScreen')
-          //   Navigator.pushNamed(context, '/otc');
-          //   break;
+          case 2:
+            if (currentRouteName != 'OtcScreen')
+              Navigator.pushNamed(context, '/otc');
+            break;
           case 2:
             if (currentRouteName != 'CampaignInstructionScreen')
               navigationService.navigateTo('/campaignInstructions');

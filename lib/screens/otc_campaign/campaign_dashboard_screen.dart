@@ -672,7 +672,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     },
                     child: Text(AppLocalizations.of(context).buy,
                         style: Theme.of(context).textTheme.headline4))),
-            bottomNavigationBar: BottomNavBar(count: 2)),
+            bottomNavigationBar: BottomNavBar(count: 3)),
       ),
     );
   }
