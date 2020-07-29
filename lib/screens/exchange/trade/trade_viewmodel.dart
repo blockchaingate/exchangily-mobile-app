@@ -53,6 +53,7 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   List myExchangeAssets = [];
   DecimalConfig singlePairDecimalConfig = new DecimalConfig();
+  bool isDisposing = false;
 
   @override
   Map<String, StreamData> get streamsMap => {
@@ -68,11 +69,15 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   @override
   @mustCallSuper
-  void dispose() async {
+  dispose() async {
+    setBusy(true);
+    isDisposing = true;
     await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
     log.i('Close all IOWebsocket connections');
     navigationService.goBack();
     super.dispose();
+    isDisposing = false;
+    setBusy(false);
   }
 
   /// Initialize when model ready
