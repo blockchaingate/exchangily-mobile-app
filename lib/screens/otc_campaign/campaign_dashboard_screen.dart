@@ -54,7 +54,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                       color: globals.white54,
                     ),
                     title: Text(
-                      '${model.userData.email}',
+                      '${model.campaignUserData.email}',
                       style: Theme.of(context).textTheme.headline5,
                     ),
                   ),
@@ -72,9 +72,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                   ),
                   UIHelper.divider,
                   ListTile(
-                    title: model.userData.referralCode != null
+                    title: model.campaignUserData.referralCode != null
                         ? Text(
-                            '${AppLocalizations.of(context).myReferralCode} ${model.userData.referralCode.toString()}',
+                            '${AppLocalizations.of(context).myReferralCode} ${model.campaignUserData.referralCode.toString()}',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5
@@ -85,7 +85,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     trailing: Icon(Icons.share, color: globals.white54),
                     onTap: () {
                       Share.share(
-                          'Here is my referral code ${model.userData.referralCode.toString()} for campaign ${model.campaignName}');
+                          'Here is my referral code ${model.campaignUserData.referralCode.toString()} for campaign ${model.campaignName}');
                     },
                   ),
                   UIHelper.divider,
@@ -138,7 +138,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             title: Padding(
                               padding: const EdgeInsets.only(top: 2.0),
                               child: Text(
-                                  '${AppLocalizations.of(context).welcome} ${model.userData.email}',
+                                  '${AppLocalizations.of(context).welcome} ${model.campaignUserData.email}',
                                   style: Theme.of(context).textTheme.headline5),
                             ),
                             trailing: InkWell(
@@ -382,12 +382,12 @@ class CampaignDashboardScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                          '\$${model.myInvestmentValueWithoutRewards}',
+                                          '\$${model.memberProfile.totalValue}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5),
                                       Text(
-                                          '${model.myTokensWithoutRewards.toStringAsFixed(2)}',
+                                          '${model.memberProfile.totalQuantities}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5

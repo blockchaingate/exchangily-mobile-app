@@ -24,134 +24,150 @@ class CampaignTeamRewardsView extends StatelessWidget {
           title: Text(AppLocalizations.of(context).teamDetails,
               style: Theme.of(context).textTheme.headline4),
         ),
-        body: Container(
-            margin: EdgeInsets.all(4.0),
-            child: Column(
-              children: <Widget>[
-                // Static lables row
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                            child: Text(AppLocalizations.of(context).team,
-                                style: Theme.of(context).textTheme.subtitle2))),
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                            child: Text(AppLocalizations.of(context).members,
-                                style: Theme.of(context).textTheme.subtitle2))),
-                    Expanded(
-                        flex: 2,
-                        child: Center(
-                            child: Text(AppLocalizations.of(context).totalValue,
-                                style: Theme.of(context).textTheme.subtitle2))),
-                    Expanded(
-                        flex: 2,
-                        child: Center(
-                            child: Text(
-                                AppLocalizations.of(context).totalQuantity,
-                                style: Theme.of(context).textTheme.subtitle2))),
-                    Expanded(
-                        flex: 1,
-                        child: Center(
-                            child: Text(AppLocalizations.of(context).percentage,
-                                style: Theme.of(context).textTheme.subtitle2)))
-                  ],
-                ),
-                UIHelper.verticalSpaceSmall,
+        body: SingleChildScrollView(
+          child: Container(
+              margin: EdgeInsets.all(4.0),
+              child: Column(
+                children: <Widget>[
+                  // Static lables row
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                          flex: 1,
+                          child: Center(
+                              child: Text(AppLocalizations.of(context).team,
+                                  style:
+                                      Theme.of(context).textTheme.subtitle2))),
+                      Expanded(
+                          flex: 1,
+                          child: Center(
+                              child: Text(AppLocalizations.of(context).members,
+                                  style:
+                                      Theme.of(context).textTheme.subtitle2))),
+                      Expanded(
+                          flex: 2,
+                          child: Center(
+                              child: Text(
+                                  AppLocalizations.of(context).totalValue,
+                                  style:
+                                      Theme.of(context).textTheme.subtitle2))),
+                      Expanded(
+                          flex: 2,
+                          child: Center(
+                              child: Text(
+                                  AppLocalizations.of(context).totalQuantity,
+                                  style:
+                                      Theme.of(context).textTheme.subtitle2))),
+                      Expanded(
+                          flex: 1,
+                          child: Center(
+                              child: Text(
+                                  AppLocalizations.of(context).percentage,
+                                  style:
+                                      Theme.of(context).textTheme.subtitle2)))
+                    ],
+                  ),
+                  UIHelper.verticalSpaceSmall,
 // Reward list builder
-                team == null
-                    ? Shimmer.fromColors(
-                        baseColor: globals.primaryColor,
-                        highlightColor: globals.grey,
-                        child: Text(
-                          (AppLocalizations.of(context).loading),
-                          style: Theme.of(context).textTheme.headline5,
-                        ))
-                    : team != null
-                        ? ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: team.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              int i = index + 1;
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                      '/campaignTeamRewardDetails',
-                                      arguments: team[index]);
-                                },
-                                child: Card(
-                                  elevation: 5,
-                                  color: globals.walletCardColor,
-                                  child: Container(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 15.0),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                            flex: 1,
-                                            child: Center(
-                                                child: Text(
-                                              i.toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5,
-                                            ))),
-                                        Expanded(
-                                            flex: 1,
-                                            child: Center(
-                                                child: Text(
-                                                    team[index]['members']
-                                                        .length
-                                                        .toString(),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5))),
-                                        Expanded(
-                                            flex: 2,
-                                            child: Center(
-                                                child: Text(
-                                                    team[index]['totalValue']
-                                                        .toStringAsFixed(2),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline5))),
-                                        Expanded(
-                                            flex: 2,
-                                            child: Center(
-                                                child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 3.0),
-                                              child: Text(
-                                                  team[index]['totalQuantities']
-                                                      .toStringAsFixed(3),
+                  team == null
+                      ? Shimmer.fromColors(
+                          baseColor: globals.primaryColor,
+                          highlightColor: globals.grey,
+                          child: Text(
+                            (AppLocalizations.of(context).loading),
+                            style: Theme.of(context).textTheme.headline5,
+                          ))
+                      : team != null
+                          ? Container(
+                              height: UIHelper.getScreenFullHeight(context),
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: team.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  int i = index + 1;
+                                  return InkWell(
+                                    onTap: () {
+                                      Navigator.of(context).pushNamed(
+                                          '/campaignTeamRewardDetails',
+                                          arguments: team[index]);
+                                    },
+                                    child: Card(
+                                      elevation: 5,
+                                      color: globals.walletCardColor,
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 15.0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Expanded(
+                                                flex: 1,
+                                                child: Center(
+                                                    child: Text(
+                                                  i.toString(),
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline5),
-                                            ))),
-                                        Expanded(
-                                            flex: 1,
-                                            child: Center(
-                                                child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 3.0),
-                                              child: Text(
-                                                  '${team[index]['percentage'].toStringAsFixed(3)}\%',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline5),
-                                            )))
-                                      ],
+                                                      .headline5,
+                                                ))),
+                                            Expanded(
+                                                flex: 1,
+                                                child: Center(
+                                                    child: Text(
+                                                        team[index]['members']
+                                                            .length
+                                                            .toString(),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline5))),
+                                            Expanded(
+                                                flex: 2,
+                                                child: Center(
+                                                    child: Text(
+                                                        team[index]
+                                                                ['totalValue']
+                                                            .toStringAsFixed(2),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline5))),
+                                            Expanded(
+                                                flex: 2,
+                                                child: Center(
+                                                    child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 3.0),
+                                                  child: Text(
+                                                      team[index][
+                                                              'totalQuantities']
+                                                          .toStringAsFixed(3),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline5),
+                                                ))),
+                                            Expanded(
+                                                flex: 1,
+                                                child: Center(
+                                                    child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 3.0),
+                                                  child: Text(
+                                                      '${team[index]['percentage'].toStringAsFixed(3)}\%',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .headline5),
+                                                )))
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                        : Container()
-              ],
-            )),
+                                  );
+                                },
+                              ),
+                            )
+                          : Container()
+                ],
+              )),
+        ),
       ),
     );
   }

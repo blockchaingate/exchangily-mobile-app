@@ -211,7 +211,10 @@ class RouteGenerator {
                 CampaignTeamRewardDetailsView(teamRewardDetails: args));
 
       case '/campaignLogin':
-        return MaterialPageRoute(builder: (_) => CampaignLoginScreen());
+        return MaterialPageRoute(
+            builder: (_) => CampaignLoginScreen(
+                  errorMessage: args,
+                ));
 
       case '/campaignRegisterAccount':
         return MaterialPageRoute(

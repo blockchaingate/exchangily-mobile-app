@@ -25,7 +25,7 @@ class CampaignTeamRewardDetailsView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(AppLocalizations.of(context).teamDetails,
+          title: Text(AppLocalizations.of(context).memberDetails,
               style: Theme.of(context).textTheme.headline4),
         ),
         body: Container(
@@ -33,17 +33,17 @@ class CampaignTeamRewardDetailsView extends StatelessWidget {
             child: Column(
           children: <Widget>[
             Container(
-              color: green,
+              color: green.withAlpha(150),
               padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   Center(
                       child: Text(AppLocalizations.of(context).teamLeader,
-                          style: Theme.of(context).textTheme.headline4)),
+                          style: Theme.of(context).textTheme.headline5)),
                   Center(
                       child: Text(teamRewardDetails['name']['email'].toString(),
-                          style: Theme.of(context).textTheme.headline4)),
+                          style: Theme.of(context).textTheme.headline5)),
                 ],
               ),
             ),
@@ -65,39 +65,42 @@ class CampaignTeamRewardDetailsView extends StatelessWidget {
             ),
 
             Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: teamRewardDetails['members'].length,
-                itemBuilder: (BuildContext context, int index) {
-                  int i = index + 1;
-                  return Card(
-                    elevation: 5,
-                    color: globals.walletCardColor,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                              child: Center(
-                                  child: Text(
-                            i.toString(),
-                            style: Theme.of(context).textTheme.headline5,
-                          ))),
-                          Expanded(
-                              child: Center(
-                                  child: Text(
-                                      teamRewardDetails['members'][index]
-                                              ['email']
-                                          .toString(),
-                                      textAlign: TextAlign.start,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5))),
-                        ],
+              child: Container(
+                height: UIHelper.getScreenFullHeight(context),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: teamRewardDetails['members'].length,
+                  itemBuilder: (BuildContext context, int index) {
+                    int i = index + 1;
+                    return Card(
+                      elevation: 5,
+                      color: globals.walletCardColor,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                                child: Center(
+                                    child: Text(
+                              i.toString(),
+                              style: Theme.of(context).textTheme.headline5,
+                            ))),
+                            Expanded(
+                                child: Center(
+                                    child: Text(
+                                        teamRewardDetails['members'][index]
+                                                ['email']
+                                            .toString(),
+                                        textAlign: TextAlign.start,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5))),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             )
           ],
