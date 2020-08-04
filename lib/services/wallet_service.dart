@@ -852,7 +852,26 @@ class WalletService {
     var txHex = resST['txHex'];
     var txHash = resST['txHash'];
 
+    var amountInTx = resST['amountInTx'];
     var amountInLink = BigInt.parse(toBigInt(amount));
+
+    var amountInTxString = amountInTx.toString();
+    var amountInLinkString = amountInLink.toString();
+
+    if(amountInLinkString.indexOf(amountInTxString) == -1) {
+      errRes['data'] = 'incorrect amount for two transactions';
+      return errRes;
+    }
+
+    var subString = amountInLinkString.substring(amountInTxString.length);
+
+    if(subString != null && subString != '') {
+      var zero = int.parse(subString);
+      if(zero != 0) {
+        errRes['data'] = 'unequal amount for two transactions';
+        return errRes;
+      }
+    }
 
     var coinType = getCoinTypeIdByName(coinName);
 
@@ -985,6 +1004,7 @@ class WalletService {
         network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);
     var totalInput = 0;
+    var amountInTx = 0;
     var changeAddress = '';
     var finished = false;
     var receivePrivateKeyArr = [];
@@ -1042,14 +1062,13 @@ class WalletService {
         return {
           'txHex': '',
           'errMsg': 'not enough fab coin to make the transaction.',
-          'transFee': transFeeDouble
+          'transFee': transFeeDouble,
+          'amountInTx': amountInTx
         };
       }
 
       var transFee = (receivePrivateKeyArr.length) * feePerInput +
           (2 * 34 + 10) * satoshisPerBytes;
-      print('extraTransactionFee==' + extraTransactionFee.toString());
-      print('transFee==' + transFee.toString());
 
       var output1 = (totalInput -
               BigInt.parse(toBigInt(amount + extraTransactionFee, 8)).toInt() -
@@ -1062,13 +1081,14 @@ class WalletService {
       if (getTransFeeOnly) {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
-      var output2 = (amount * 1e8).round();
-
+      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();;
+      amountInTx = output2;
       if (output1 < 0 || output2 < 0) {
         return {
           'txHex': '',
           'errMsg': 'output1 or output2 should be greater than 0.',
-          'transFee': transFeeDouble
+          'transFee': transFeeDouble,
+          'amountInTx': amountInTx
         };
       }
 
@@ -1086,7 +1106,7 @@ class WalletService {
 
       var txHex = txb.build().toHex();
 
-      return {'txHex': txHex, 'errMsg': '', 'transFee': transFeeDouble};
+      return {'txHex': txHex, 'errMsg': '', 'transFee': transFeeDouble, 'amountInTx': amountInTx};
     }
   }
 
@@ -1120,6 +1140,7 @@ class WalletService {
     var txHex = '';
     var txHash = '';
     var errMsg = '';
+    var amountInTx = 0;
     var transFeeDouble = 0.0;
     var amountSent = 0;
     var receivePrivateKeyArr = [];
@@ -1206,7 +1227,7 @@ class WalletService {
         txHex = '';
         txHash = '';
         errMsg = 'not enough fund.';
-        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
+        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       }
 
       var transFee =
@@ -1238,6 +1259,7 @@ class WalletService {
         txb.addOutput(changeAddress, output1);
       }
 
+      amountInTx = output2;
       txb.addOutput(toAddress, output2);
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
@@ -1252,7 +1274,7 @@ class WalletService {
         var res = await _api.postBtcTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-        return {'txHash': txHash, 'errMsg': errMsg};
+        return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
         txHash = '0x' + tx.getId();
       }
@@ -1281,7 +1303,7 @@ class WalletService {
       final utxos = await _api.getBchUtxos(address);
 
       if ((utxos == null) || (utxos.length == 0)) {
-        return {'txHex': '', 'txHash': '', 'errMsg': 'not enough fund'};
+        return {'txHex': '', 'txHash': '', 'errMsg': 'not enough fund', 'amountInTx': amountInTx};
       }
 
       final signatures = <Map>[];
@@ -1323,7 +1345,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': transFeeDouble
+          'transFee': transFeeDouble,
+          'amountInTx': amountInTx
         };
       }
 
@@ -1332,6 +1355,7 @@ class WalletService {
               .round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
 
+      amountInTx = output2;
       txb.addOutput(address, output1);
       txb.addOutput(toAddress, output2);
 
@@ -1346,7 +1370,7 @@ class WalletService {
         var res = await _api.postBchTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-        return {'txHash': txHash, 'errMsg': errMsg};
+        return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
         txHash = '0x' + tx.getId();
       }
@@ -1405,7 +1429,7 @@ class WalletService {
         txHex = '';
         txHash = '';
         errMsg = 'not enough fund.';
-        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
+        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       }
 
       var transFee =
@@ -1427,7 +1451,7 @@ class WalletService {
           (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
               .round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
-
+      amountInTx = output2;
       txb.addOutput(changeAddress, output1);
       txb.addOutput(toAddress, output2);
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
@@ -1443,7 +1467,7 @@ class WalletService {
         var res = await _api.postLtcTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-        return {'txHash': txHash, 'errMsg': errMsg};
+        return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
         txHash = '0x' + tx.getId();
       }
@@ -1505,7 +1529,7 @@ class WalletService {
         txHex = '';
         txHash = '';
         errMsg = 'not enough fund.';
-        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg};
+        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       }
 
       var transFee =
@@ -1519,7 +1543,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': transFeeDouble
+          'transFee': transFeeDouble,
+          'amountInTx': amountInTx
         };
       }
 
@@ -1527,7 +1552,7 @@ class WalletService {
           (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
               .round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
-
+      amountInTx = output2;
       txb.addOutput(changeAddress, output1);
 
       txb.addOutput(toAddress, output2);
@@ -1545,7 +1570,7 @@ class WalletService {
         var res = await _api.postDogeTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
-        return {'txHash': txHash, 'errMsg': errMsg};
+        return {'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
       } else {
         txHash = '0x' + tx.getId();
       }
@@ -1594,6 +1619,7 @@ class WalletService {
       var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
 
+      amountInTx = amountSentInt.toInt();
       final signed = await ethClient.signTransaction(
           credentials,
           Transaction(
@@ -1633,11 +1659,14 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': res1["transFee"]
+          'transFee': res1["transFee"],
+          'amountInTx': res1["amountInTx"]
         };
       }
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
+      amountInTx = res1["amountInTx"];
+
       if ((errMsg == '') && (txHex != '')) {
         if (doSubmit) {
           var res = await _api.postFabTx(txHex);
@@ -1674,6 +1703,7 @@ class WalletService {
       }
       print('amountSentIntamountSentInt=');
       print(amountSentInt.toString());
+      amountInTx = amountSentInt.toInt();
       var amountSentHex = amountSentInt.toRadixString(16);
 
       var fxnCallHex = transferAbi +
@@ -1708,7 +1738,8 @@ class WalletService {
           'txHash': '',
           'errMsg': '',
           'amountSent': '',
-          'transFee': res1["transFee"]
+          'transFee': res1["transFee"],
+          'amountInTx': amountInTx
         };
       }
 
@@ -1787,6 +1818,7 @@ class WalletService {
         convertedDecimalAmount = BigInt.parse(toBigInt(amount, 4));
       }
 
+      amountInTx = convertedDecimalAmount.toInt();
       var transferAbi = 'a9059cbb';
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
@@ -1828,7 +1860,8 @@ class WalletService {
       'txHash': txHash,
       'errMsg': errMsg,
       'amountSent': amount,
-      'transFee': transFeeDouble
+      'transFee': transFeeDouble,
+      'amountInTx': amountInTx
     };
   }
 
