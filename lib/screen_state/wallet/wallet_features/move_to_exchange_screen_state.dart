@@ -148,6 +148,9 @@ class MoveToExchangeScreenState extends BaseState {
         if (success) {
           myController.text = '';
           String txId = ret['data']['transactionID'];
+
+          var allTxids = ret["txids"];
+          walletService.addTxids(allTxids);
           setMessage(txId);
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(

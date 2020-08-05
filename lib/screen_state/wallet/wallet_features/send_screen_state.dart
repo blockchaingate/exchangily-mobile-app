@@ -182,6 +182,7 @@ class SendScreenState extends BaseState {
         log.w('Result $res');
         txHash = res["txHash"];
         errorMessage = res["errMsg"];
+
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           receiverWalletAddressTextController.text = '';
@@ -191,6 +192,9 @@ class SendScreenState extends BaseState {
             AppLocalizations.of(context).sendTransactionComplete,
             '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
           );
+          var allTxids = res["txids"];
+          walletService.addTxids(allTxids);
+
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
               id: null,

@@ -62,6 +62,7 @@ class WalletService {
   final log = getLogger('Wallet Service');
   ApiService _api = locator<ApiService>();
   double currentUsdValue;
+  var txids = [];
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
@@ -151,6 +152,10 @@ class WalletService {
 /*----------------------------------------------------------------------
                 Get Random Mnemonic
 ----------------------------------------------------------------------*/
+
+  addTxids(allTxids) {
+    txids = [...txids, ...allTxids].toSet().toList();
+  }
 
   String getRandomMnemonic() {
     String randomMnemonic = '';
@@ -852,6 +857,7 @@ class WalletService {
     var txHex = resST['txHex'];
     var txHash = resST['txHash'];
 
+    var txids = resST['txids'];
     var amountInTx = resST['amountInTx'];
     var amountInLink = BigInt.parse(toBigInt(amount));
 
@@ -910,6 +916,7 @@ class WalletService {
 
     var res = await submitDeposit(txHex, txKanbanHex);
 
+    res['txids'] = txids;
     return res;
   }
 
@@ -1005,6 +1012,7 @@ class WalletService {
     final root = bip32.BIP32.fromSeed(seed);
     var totalInput = 0;
     var amountInTx = 0;
+    var allTxids = [];
     var changeAddress = '';
     var finished = false;
     var receivePrivateKeyArr = [];
@@ -1045,6 +1053,30 @@ class WalletService {
             continue;
           }
            */
+
+
+          var txidItem = {
+            'txid': txid,
+            'idx': idx
+          };
+
+          var existed = false;
+          for(var iii = 0; iii < txids.length; iii++) {
+            var ttt = txids[iii];
+            if((ttt['txid'] == txidItem['txid']) && (ttt['idx'] == txidItem['idx'])) {
+              existed = true;
+              break;
+            }
+          }
+
+          if(existed) {
+            continue;
+          }
+
+
+          allTxids.add(txidItem);
+
+
           txb.addInput(txid, idx);
           receivePrivateKeyArr.add(privateKey);
           totalInput += value;
@@ -1108,7 +1140,7 @@ class WalletService {
 
       var txHex = txb.build().toHex();
 
-      return {'txHex': txHex, 'errMsg': '', 'transFee': transFeeDouble, 'amountInTx': amountInTx};
+      return {'txHex': txHex, 'errMsg': '', 'transFee': transFeeDouble, 'amountInTx': amountInTx, 'txids': allTxids};
     }
   }
 
@@ -1138,10 +1170,12 @@ class WalletService {
     var gasLimit = 0;
     var satoshisPerBytes = 0;
     var bytesPerInput = 0;
+    var allTxids = [];
     var getTransFeeOnly = false;
     var txHex = '';
     var txHash = '';
     var errMsg = '';
+    var utxos = [];
     var amountInTx = 0;
     var transFeeDouble = 0.0;
     var amountSent = 0;
@@ -1659,6 +1693,7 @@ class WalletService {
       }
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
+      allTxids = res1['txids'];
       amountInTx = res1["amountInTx"];
 
       if ((errMsg == '') && (txHex != '')) {
@@ -1695,8 +1730,7 @@ class WalletService {
       if (coin == 'DUSD') {
         amountSentInt = BigInt.parse(toBigInt(amount, 6));
       }
-      print('amountSentIntamountSentInt=');
-      print(amountSentInt.toString());
+
       amountInTx = amountSentInt.toInt();
       var amountSentHex = amountSentInt.toRadixString(16);
 
@@ -1739,6 +1773,7 @@ class WalletService {
 
       txHex = res1['txHex'];
       errMsg = res1['errMsg'];
+      allTxids = res1['txids'];
       if (txHex != null && txHex != '') {
         if (doSubmit) {
           var res = await _api.postFabTx(txHex);
@@ -1855,7 +1890,8 @@ class WalletService {
       'errMsg': errMsg,
       'amountSent': amount,
       'transFee': transFeeDouble,
-      'amountInTx': amountInTx
+      'amountInTx': amountInTx,
+      'txids': allTxids
     };
   }
 
