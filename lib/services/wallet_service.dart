@@ -864,6 +864,8 @@ class WalletService {
     var amountInTxString = amountInTx.toString();
     var amountInLinkString = amountInLink.toString();
 
+    print('amountInTxString===' +  amountInTxString);
+    print('amountInLinkString===' +  amountInLinkString);
     if(amountInLinkString.indexOf(amountInTxString) == -1) {
       errRes['data'] = 'incorrect amount for two transactions';
       return errRes;
@@ -1011,7 +1013,7 @@ class WalletService {
         network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);
     var totalInput = 0;
-    var amountInTx = 0;
+    var amountInTx = BigInt.from(0);
     var allTxids = [];
     var changeAddress = '';
     var finished = false;
@@ -1115,7 +1117,7 @@ class WalletService {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();;
-      amountInTx = output2;
+      amountInTx = BigInt.from(output2);
       if (output1 < 0 || output2 < 0) {
         return {
           'txHex': '',
@@ -1176,7 +1178,7 @@ class WalletService {
     var txHash = '';
     var errMsg = '';
     var utxos = [];
-    var amountInTx = 0;
+    var amountInTx = BigInt.from(0);
     var transFeeDouble = 0.0;
     var amountSent = 0;
     var receivePrivateKeyArr = [];
@@ -1293,7 +1295,7 @@ class WalletService {
         txb.addOutput(changeAddress, output1);
       }
 
-      amountInTx = output2;
+      amountInTx = BigInt.from(output2);
       txb.addOutput(toAddress, output2);
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
@@ -1387,7 +1389,7 @@ class WalletService {
       var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
 
-      amountInTx = output2;
+      amountInTx = BigInt.from(output2);
       txb.addOutput(address, output1);
       txb.addOutput(toAddress, output2);
 
@@ -1481,7 +1483,7 @@ class WalletService {
 
       var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
-      amountInTx = output2;
+      amountInTx = BigInt.from(output2);
       txb.addOutput(changeAddress, output1);
       txb.addOutput(toAddress, output2);
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
@@ -1580,7 +1582,7 @@ class WalletService {
 
       var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
-      amountInTx = output2;
+      amountInTx = BigInt.from(output2);
       txb.addOutput(changeAddress, output1);
 
       txb.addOutput(toAddress, output2);
@@ -1647,7 +1649,7 @@ class WalletService {
       var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
 
-      amountInTx = amountSentInt.toInt();
+      amountInTx = amountSentInt;
       final signed = await ethClient.signTransaction(
           credentials,
           Transaction(
@@ -1731,7 +1733,7 @@ class WalletService {
         amountSentInt = BigInt.parse(toBigInt(amount, 6));
       }
 
-      amountInTx = amountSentInt.toInt();
+      amountInTx = amountSentInt;
       var amountSentHex = amountSentInt.toRadixString(16);
 
       var fxnCallHex = transferAbi +
