@@ -415,8 +415,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                         ListTile(
                             onTap: () {
                               model.navigateByRouteName(
-                                  '/campaignRewardDetails',
-                                  model.campaignRewardList);
+                                  '/MyRewardDetails', model.campaignRewardList);
                             },
                             dense: false,
                             leading: Padding(
@@ -462,7 +461,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             onTap: () {
                               if (!model.busy)
                                 model.navigateByRouteName(
-                                    '/campaignTeamRewards', model.team);
+                                    '/teamRewardsDetails', model.team);
                             },
                             dense: false,
                             leading: Padding(

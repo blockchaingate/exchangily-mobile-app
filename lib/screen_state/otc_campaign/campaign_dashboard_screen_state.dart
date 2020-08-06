@@ -328,12 +328,14 @@ class CampaignDashboardScreenState extends BaseState {
     await campaignService.getMemberRewardByToken(token).then((res) async {
       if (res != null) {
         campaignRewardList = res;
+
         // var res = response['personal'] as List;
 
         for (int i = 0; i < res.length; i++) {
           // double totalValueByLevel = campaignRewardList[i].totalValue;
           // double totalTokenQuantityByLevel =
           //     campaignRewardList[i].totalQuantities;
+          log.e('1111111 ${campaignRewardList[i].toJson()}');
           int totalReferralsByLevel = campaignRewardList[i].totalAccounts;
           double totalRewardQuantityByLevel =
               campaignRewardList[i].totalRewardQuantities;

@@ -8,15 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;
 
-class CampaignTeamRewardDetailsView extends StatelessWidget {
-  final teamRewardDetails;
-  const CampaignTeamRewardDetailsView({Key key, this.teamRewardDetails})
-      : super(key: key);
+class MyReferralView extends StatelessWidget {
+  final referralDetails;
+  const MyReferralView({Key key, this.referralDetails}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     print(
-        'teamRewardDetails $teamRewardDetails== members length ${teamRewardDetails['members'].length}');
+        'rewardDetails $referralDetails== members length ${referralDetails['members'].length}');
     return BaseScreen<TeamRewardDetailsScreenState>(
       onModelReady: (model) async {
         //  model.teamValueAndRewardWithToken = teamRewardDetails;
@@ -42,8 +41,11 @@ class CampaignTeamRewardDetailsView extends StatelessWidget {
                       child: Text(AppLocalizations.of(context).teamLeader,
                           style: Theme.of(context).textTheme.headline5)),
                   Center(
-                      child: Text(teamRewardDetails['name']['email'].toString(),
-                          style: Theme.of(context).textTheme.headline5)),
+                      child: referralDetails['name']['email'] == null
+                          ? Text(referralDetails['users']['email'].toString(),
+                              style: Theme.of(context).textTheme.headline5)
+                          : Text(referralDetails['name']['email'].toString(),
+                              style: Theme.of(context).textTheme.headline5)),
                 ],
               ),
             ),
@@ -69,7 +71,7 @@ class CampaignTeamRewardDetailsView extends StatelessWidget {
                 height: UIHelper.getScreenFullHeight(context),
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: teamRewardDetails['members'].length,
+                  itemCount: referralDetails['members'].length,
                   itemBuilder: (BuildContext context, int index) {
                     int i = index + 1;
                     return Card(
@@ -88,7 +90,7 @@ class CampaignTeamRewardDetailsView extends StatelessWidget {
                             Expanded(
                                 child: Center(
                                     child: Text(
-                                        teamRewardDetails['members'][index]
+                                        referralDetails['members'][index]
                                                 ['email']
                                             .toString(),
                                         textAlign: TextAlign.start,

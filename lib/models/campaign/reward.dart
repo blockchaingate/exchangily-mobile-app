@@ -1,5 +1,8 @@
+import 'package:exchangilymobileapp/models/campaign/my_referrals.dart';
+
 class CampaignReward {
   int _level;
+  List<MyReferrals> _users;
   double _totalValue; // my investment value
   double _totalQuantities; // my total tokens bought
   double _totalRewardQuantities;
@@ -9,6 +12,7 @@ class CampaignReward {
 
   CampaignReward(
       {int level,
+      List<MyReferrals> users,
       double totalValue,
       double totalQuantities,
       double totalRewardQuantities,
@@ -22,17 +26,25 @@ class CampaignReward {
     this._totalRewardNextQuantities = totalRewardNextQuantities ?? 0.0;
   }
 
-  factory CampaignReward.fromJson(Map<String, dynamic> json) => CampaignReward(
+  factory CampaignReward.fromJson(Map<String, dynamic> json) {
+    List userFromJson = json["users"];
+    print('2222 $userFromJson');
+    MyReferralsList myReferralsList = MyReferralsList.fromJson(userFromJson);
+    print('333 ${myReferralsList.myReferralsList[0].toJson()}');
+    return CampaignReward(
         level: json["level"] as int,
+        users: myReferralsList.myReferralsList,
         totalValue: json["totalValue"].toDouble(),
         totalQuantities: json["totalQuantities"].toDouble(),
         totalRewardQuantities: json["totalRewardQuantities"].toDouble(),
         totalAccounts: json["totalAccounts"] as int,
-        totalRewardNextQuantities: json["totalRewardNextQuantities"].toDouble(),
-      );
+        totalRewardNextQuantities:
+            json["totalRewardNextQuantities"].toDouble());
+  }
 
   Map<String, dynamic> toJson() => {
         "level": this._level,
+        'users': this._users,
         "totalValue": this._totalValue,
         "totalQuantities": this._totalQuantities,
         "totalRewardQuantities": this._totalRewardQuantities,

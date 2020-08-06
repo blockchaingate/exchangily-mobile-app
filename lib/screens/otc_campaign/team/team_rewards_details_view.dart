@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;
 
-class CampaignTeamRewardsView extends StatelessWidget {
+class TeamRewardDetailsView extends StatelessWidget {
   final List team;
-  const CampaignTeamRewardsView({Key key, this.team}) : super(key: key);
+  const TeamRewardDetailsView({Key key, this.team}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class CampaignTeamRewardsView extends StatelessWidget {
                                   return InkWell(
                                     onTap: () {
                                       Navigator.of(context).pushNamed(
-                                          '/campaignTeamRewardDetails',
+                                          '/teamRewardDetails',
                                           arguments: team[index]);
                                     },
                                     child: Card(
