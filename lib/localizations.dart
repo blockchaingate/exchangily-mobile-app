@@ -1511,6 +1511,16 @@ class AppLocalizations {
     return Intl.message("Later",
         name: 'later', desc: 'app_update_popup_button_text_later');
   }
+
+  String get sessionExpired {
+    return Intl.message("Session Expired",
+        name: 'sessionExpired', desc: 'camapign_login_session_expired');
+  }
+
+  String get memberDetails {
+    return Intl.message("Member Details",
+        name: 'memberDetails', desc: 'camapign_team_reward_member_details');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -17,7 +17,7 @@ class MemberProfile {
     this._id = id;
     this._membership = membership ?? '';
     this._walletAddress = walletAddress ?? '';
-    this._referralCode = referralCode ?? '';
+    this._referralCode = referralCode;
     this._totalValue = totalValue ?? 0.0;
     this._totalQuantities = totalQuantities ?? 0.0;
   }
@@ -37,8 +37,8 @@ class MemberProfile {
       membership: json['membership'] as String,
       walletAddress: json['walletAddress'] as String,
       referralCode: json['referralCode'] as int,
-      totalValue: json['totalValue'] as double,
-      // totalQuantities: json['totalQuantities'],
+      totalValue: json['totalValue'].toDouble(),
+      totalQuantities: json['totalQuantities'].toDouble(),
     );
   }
 

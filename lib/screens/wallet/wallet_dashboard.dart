@@ -440,6 +440,9 @@ class WalletDashboardScreen extends StatelessWidget {
       elevation,
       context,
       WalletDashboardScreenState model) {
+    if (tickerName == 'BCH' || tickerName == 'FAB') {
+      print('AVAILABLE BAL $available');
+    }
     return Card(
       color: globals.walletCardColor,
       elevation: elevation,
@@ -507,7 +510,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                 ))
                               : Expanded(
                                   child: Text(
-                                      available == 0
+                                      available.isNegative
                                           ? '0.0'
                                           : available.toStringAsFixed(4),
                                       style: Theme.of(context)
@@ -541,7 +544,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                 ))
                               : Expanded(
                                   child: Text(
-                                      locked == 0
+                                      locked.isNegative
                                           ? '0.0'
                                           : locked.toStringAsFixed(4),
                                       style: Theme.of(context)

@@ -161,9 +161,9 @@ class WalletService {
     String randomMnemonic = '';
     if (isLocal == true) {
       randomMnemonic =
-          'hidden arch mind decline summer convince voice together pony infant input lunar';
-      //"dune stem onion cliff equip seek kiwi salute area elegant atom injury";
-      // 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+          //  'hidden arch mind decline summer convince voice together pony infant input lunar';
+          //"dune stem onion cliff equip seek kiwi salute area elegant atom injury";
+          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
       // 'group quick salad argue animal rubber wolf close weird school spell agent';
       return randomMnemonic;
     }
@@ -1102,11 +1102,10 @@ class WalletService {
       var transFee = (receivePrivateKeyArr.length) * feePerInput +
           (2 * 34 + 10) * satoshisPerBytes;
 
-      var output1 =
-          (totalInput - BigInt.parse(toBigInt(amount+extraTransactionFee, 8)).toInt() - transFee)
-              .round();
-
-
+      var output1 = (totalInput -
+              BigInt.parse(toBigInt(amount + extraTransactionFee, 8)).toInt() -
+              transFee)
+          .round();
 
       transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
               Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
@@ -1126,7 +1125,6 @@ class WalletService {
       }
 
       txb.addOutput(changeAddress, output1);
-
 
       txb.addOutput(toAddress, output2);
 
@@ -1270,7 +1268,9 @@ class WalletService {
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
               (2 * 34 + 10) * satoshisPerBytes;
 
-      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output1 =
+          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
+              .round();
 
       if (output1 < 2730) {
         transFee += output1;
@@ -1384,7 +1384,9 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output1 =
+          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
+              .round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
 
       amountInTx = output2;
@@ -1479,7 +1481,9 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output1 =
+          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
+              .round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
       amountInTx = output2;
       txb.addOutput(changeAddress, output1);
@@ -1578,7 +1582,9 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output1 =
+          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
+              .round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
       amountInTx = output2;
       txb.addOutput(changeAddress, output1);
@@ -1839,7 +1845,7 @@ class WalletService {
         //var amountSentInt = BigInt.parse(toBigInt(amount, 18));
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'FUN' || coin == 'WAX' || coin == 'MTL') {
-        convertedDecimalAmount =  BigInt.parse(toBigInt(amount, 8));
+        convertedDecimalAmount = BigInt.parse(toBigInt(amount, 8));
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'POWR' || coin == 'USDT') {
         convertedDecimalAmount = BigInt.parse(toBigInt(amount, 6));

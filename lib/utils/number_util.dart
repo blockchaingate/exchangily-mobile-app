@@ -59,10 +59,10 @@ toBigInt(amount, [decimalLength]) {
     val = numStringArray[0];
     if (numStringArray.length == 2) {
       var decimalPart = numStringArray[1];
-      if(decimalPart.length > decimalLength) {
+      if (decimalPart.length > decimalLength) {
         print('decimalPart before: $decimalPart');
         print('decimalLength: $decimalLength');
-        decimalPart = decimalPart.substring(0,decimalLength);
+        decimalPart = decimalPart.substring(0, decimalLength);
         print('decimalPart after: $decimalPart');
       }
       decimalLength -= decimalPart.length;
@@ -72,7 +72,7 @@ toBigInt(amount, [decimalLength]) {
 
   var valInt = int.parse(val);
   val = valInt.toString();
-  if(decimalLength > 0) {
+  if (decimalLength > 0) {
     for (var i = 0; i < decimalLength; i++) {
       val += '0';
     }
@@ -89,4 +89,11 @@ String currencyFormat(double value, int decimalDigits) {
       NumberFormat.simpleCurrency(decimalDigits: decimalDigits).format(value);
   holder = holder.substring(1);
   return holder;
+}
+
+// Check if value is an int
+bool checkIfInt(value) {
+  bool result;
+
+  return result;
 }
