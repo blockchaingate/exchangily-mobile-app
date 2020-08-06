@@ -152,8 +152,8 @@ class CampaignLoginScreen extends StatelessWidget {
                                     .bodyText2
                                     .copyWith(color: Colors.yellow))),
                     Visibility(
-                        visible: errorMessage != null ||
-                            errorMessage != '' ||
+                        visible: errorMessage != null &&
+                            errorMessage != '' &&
                             !model.hasErrorMessage,
                         child: Text(errorMessage == null ? '' : errorMessage,
                             style: Theme.of(context).textTheme.bodyText2)),
