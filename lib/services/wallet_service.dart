@@ -438,6 +438,8 @@ class WalletService {
         t.cancel();
         result = res['message'];
         log.i('Timer cancel');
+
+        /// may add deposit or withdraw in front of status for better understanding
         sharedService.alertDialog(
             '${transaction.tickerName}  status', '$result'.toUpperCase(),
             isWarning: false);
@@ -864,16 +866,16 @@ class WalletService {
     var amountInTxString = amountInTx.toString();
     var amountInLinkString = amountInLink.toString();
 
-    if(amountInLinkString.indexOf(amountInTxString) == -1) {
+    if (amountInLinkString.indexOf(amountInTxString) == -1) {
       errRes['data'] = 'incorrect amount for two transactions';
       return errRes;
     }
 
     var subString = amountInLinkString.substring(amountInTxString.length);
 
-    if(subString != null && subString != '') {
+    if (subString != null && subString != '') {
       var zero = int.parse(subString);
-      if(zero != 0) {
+      if (zero != 0) {
         errRes['data'] = 'unequal amount for two transactions';
         return errRes;
       }
@@ -1054,28 +1056,23 @@ class WalletService {
           }
            */
 
-
-          var txidItem = {
-            'txid': txid,
-            'idx': idx
-          };
+          var txidItem = {'txid': txid, 'idx': idx};
 
           var existed = false;
-          for(var iii = 0; iii < txids.length; iii++) {
+          for (var iii = 0; iii < txids.length; iii++) {
             var ttt = txids[iii];
-            if((ttt['txid'] == txidItem['txid']) && (ttt['idx'] == txidItem['idx'])) {
+            if ((ttt['txid'] == txidItem['txid']) &&
+                (ttt['idx'] == txidItem['idx'])) {
               existed = true;
               break;
             }
           }
 
-          if(existed) {
+          if (existed) {
             continue;
           }
 
-
           allTxids.add(txidItem);
-
 
           txb.addInput(txid, idx);
           receivePrivateKeyArr.add(privateKey);
@@ -1113,7 +1110,8 @@ class WalletService {
       if (getTransFeeOnly) {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
-      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();;
+      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
+      ;
       amountInTx = output2;
       if (output1 < 0 || output2 < 0) {
         return {
@@ -1138,7 +1136,13 @@ class WalletService {
 
       var txHex = txb.build().toHex();
 
-      return {'txHex': txHex, 'errMsg': '', 'transFee': transFeeDouble, 'amountInTx': amountInTx, 'txids': allTxids};
+      return {
+        'txHex': txHex,
+        'errMsg': '',
+        'transFee': transFeeDouble,
+        'amountInTx': amountInTx,
+        'txids': allTxids
+      };
     }
   }
 
@@ -1261,7 +1265,12 @@ class WalletService {
         txHex = '';
         txHash = '';
         errMsg = 'not enough fund.';
-        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+        return {
+          'txHex': txHex,
+          'txHash': txHash,
+          'errMsg': errMsg,
+          'amountInTx': amountInTx
+        };
       }
 
       var transFee =
@@ -1337,7 +1346,12 @@ class WalletService {
       final utxos = await _api.getBchUtxos(address);
 
       if ((utxos == null) || (utxos.length == 0)) {
-        return {'txHex': '', 'txHash': '', 'errMsg': 'not enough fund', 'amountInTx': amountInTx};
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': 'not enough fund',
+          'amountInTx': amountInTx
+        };
       }
 
       final signatures = <Map>[];
@@ -1463,7 +1477,12 @@ class WalletService {
         txHex = '';
         txHash = '';
         errMsg = 'not enough fund.';
-        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+        return {
+          'txHex': txHex,
+          'txHash': txHash,
+          'errMsg': errMsg,
+          'amountInTx': amountInTx
+        };
       }
 
       var transFee =
@@ -1563,7 +1582,12 @@ class WalletService {
         txHex = '';
         txHash = '';
         errMsg = 'not enough fund.';
-        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+        return {
+          'txHex': txHex,
+          'txHash': txHash,
+          'errMsg': errMsg,
+          'amountInTx': amountInTx
+        };
       }
 
       var transFee =
