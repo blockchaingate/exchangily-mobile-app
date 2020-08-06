@@ -461,7 +461,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             onTap: () {
                               if (!model.busy)
                                 model.navigateByRouteName(
-                                    '/teamRewardsDetails', model.team);
+                                    '/teamRewardDetails', model.team);
                             },
                             dense: false,
                             leading: Padding(

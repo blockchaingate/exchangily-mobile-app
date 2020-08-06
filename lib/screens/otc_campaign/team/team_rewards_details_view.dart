@@ -88,7 +88,7 @@ class TeamRewardDetailsView extends StatelessWidget {
                                   return InkWell(
                                     onTap: () {
                                       Navigator.of(context).pushNamed(
-                                          '/teamRewardDetails',
+                                          '/teamReferralView',
                                           arguments: team[index]);
                                     },
                                     child: Card(

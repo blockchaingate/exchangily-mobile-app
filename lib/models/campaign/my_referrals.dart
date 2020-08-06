@@ -22,7 +22,7 @@ class MyReferrals {
   }
 
   factory MyReferrals.fromJson(Map<String, dynamic> json) {
-    return MyReferrals(
+    return new MyReferrals(
       //id: json['id'],
       email: json['memberId']['email'],
       // parentReferMemberId: json['parentReferMemberId'],
