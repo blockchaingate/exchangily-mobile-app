@@ -424,6 +424,7 @@ class WalletService {
       TransactionHistory transaction) async {
     String result = '';
     Timer.periodic(Duration(minutes: 1), (Timer t) async {
+      TransactionHistory transactionHistory = new TransactionHistory();
       var res = await _apiService.getTransactionStatus(transaction.txId);
       log.w(res);
 // 0 is confirmed
@@ -452,7 +453,7 @@ class WalletService {
                 await transactionHistoryDatabaseService
                     .getByTxId(transaction.txId);
 
-            TransactionHistory transactionHistory = new TransactionHistory(
+            transactionHistory = TransactionHistory(
                 id: transactionHistoryByTxId.id,
                 tickerName: transactionHistoryByTxId.tickerName,
                 address: '',
@@ -463,15 +464,13 @@ class WalletService {
                 quantity: transactionHistoryByTxId.quantity,
                 tag: transactionHistoryByTxId.tag);
 
-            await transactionHistoryDatabaseService.update(transactionHistory);
-            await transactionHistoryDatabaseService.getByTxId(transaction.txId);
             // after this method i will test single status update field in the transaciton history
             // await transactionHistoryDatabaseService
             //     .updateStatus(transactionHistoryByTxId);
             // await transactionHistoryDatabaseService.getByTxId(transaction.txId);
           }
         } else if (res['code'] == -1) {
-          TransactionHistory transactionHistory = new TransactionHistory(
+          transactionHistory = TransactionHistory(
               id: null,
               tickerName: transaction.tickerName,
               address: '',
@@ -482,9 +481,9 @@ class WalletService {
               quantity: transaction.amount,
               tag: transaction.tag);
 
-          await transactionHistoryDatabaseService.update(transactionHistory);
+          //  await transactionHistoryDatabaseService.update(transactionHistory);
         } else if (res['code'] == 2) {
-          TransactionHistory transactionHistory = new TransactionHistory(
+          transactionHistory = TransactionHistory(
               id: null,
               tickerName: transaction.tickerName,
               address: '',
@@ -495,9 +494,9 @@ class WalletService {
               quantity: transaction.amount,
               tag: transaction.tag);
 
-          await transactionHistoryDatabaseService.update(transactionHistory);
+          //  await transactionHistoryDatabaseService.update(transactionHistory);
         } else if (res['code'] == 3) {
-          TransactionHistory transactionHistory = new TransactionHistory(
+          transactionHistory = TransactionHistory(
               id: null,
               tickerName: transaction.tickerName,
               address: '',
@@ -508,9 +507,11 @@ class WalletService {
               quantity: transaction.amount,
               tag: transaction.tag);
 
-          await transactionHistoryDatabaseService.update(transactionHistory);
+          // await transactionHistoryDatabaseService.update(transactionHistory);
         }
       }
+      await transactionHistoryDatabaseService.update(transactionHistory);
+      await transactionHistoryDatabaseService.getByTxId(transaction.txId);
     });
     return result;
     //  return _completer.future;

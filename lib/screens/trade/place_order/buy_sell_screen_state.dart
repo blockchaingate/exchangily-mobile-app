@@ -15,7 +15,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -402,7 +401,7 @@ class BuySellScreenState extends BaseState {
       var kanbanTransFeeDouble =
           bigNum2Double(kanbanPriceBig * kanbanGasLimitBig);
       kanbanTransFee = kanbanTransFeeDouble;
-      log.w('$kanbanPrice $kanbanGasLimit $kanbanTransFeeDouble');
+      log.w('fee $kanbanPrice $kanbanGasLimit $kanbanTransFeeDouble');
     }
     setState(ViewState.Idle);
   }

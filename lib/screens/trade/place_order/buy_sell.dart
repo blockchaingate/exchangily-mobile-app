@@ -11,8 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -23,8 +21,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import "./order_detail.dart";
-import "./my_orders.dart";
+
 import 'package:flutter/foundation.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
@@ -72,6 +69,14 @@ class BuySell extends StatelessWidget {
         ),
         backgroundColor: Color(0xFF1F2233),
         body: ListView(children: <Widget>[
+          model.busy
+              ? Stack(children: [
+                  Container(
+                      width: 400,
+                      height: 500,
+                      child: CircularProgressIndicator())
+                ])
+              : Container(),
           // Buy/Sell text row
           Row(
             children: <Widget>[
@@ -536,8 +541,14 @@ class BuySell extends StatelessWidget {
         for (var item in orderArray)
           InkWell(
             onTap: () {
+              model.setBusy(true);
               model.quantityTextController.text = item.orderQuantity.toString();
+              model.quantity = item.orderQuantity;
               model.priceTextController.text = item.price.toString();
+              model.price = item.price;
+              model.transactionAmount = model.quantity * model.price;
+              model.updateTransFee();
+              model.setBusy(false);
             },
             child: Padding(
                 padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
