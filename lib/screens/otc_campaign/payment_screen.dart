@@ -94,8 +94,8 @@ class CampaignPaymentScreen extends StatelessWidget {
                                                 top: 18.0),
                                             child: DropdownButtonHideUnderline(
                                               child: DropdownButton(
-                                                dropdownColor:
-                                                    globals.primaryColor,
+                                                // dropdownColor:
+                                                //     globals.primaryColor,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline6,

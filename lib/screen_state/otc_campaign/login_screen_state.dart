@@ -26,7 +26,6 @@ class CampaignLoginScreenState extends BaseState {
       locator<CampaignUserDatabaseService>();
   NavigationService navigationService = locator<NavigationService>();
   SharedService sharedService = locator<SharedService>();
-  bool error = false;
   User user;
   CampaignUserData userData;
   bool isPasswordTextVisible = false;

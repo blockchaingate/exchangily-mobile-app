@@ -23,6 +23,7 @@ import 'package:exchangilymobileapp/models/trade/orders.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -91,18 +92,18 @@ class BuySellScreenState extends BaseState {
   String tickerName = '';
 
   init() async {
-    log.e(pair);
-    splitPair(pair);
-    setDefaultGasPrice();
-    sell = [];
-    buy = [];
-    bidOrAsk = bidOrAsk;
-    orderListFromTradeService();
-    tradeListFromTradeService();
-    await retrieveWallets();
-    await orderList();
-    await tradeList();
-    await getDecimalPairConfig();
+    // log.e(pair);
+    // splitPair(pair);
+    // setDefaultGasPrice();
+    // sell = [];
+    // buy = [];
+    // bidOrAsk = bidOrAsk;
+    // orderListFromTradeService();
+    // tradeListFromTradeService();
+    // await retrieveWallets();
+    // await orderList();
+    // await tradeList();
+    // await getDecimalPairConfig();
   }
 
   // Set default price for kanban gas price and limit
@@ -477,7 +478,9 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  placeBuySellOrder() async {
+  Future placeBuySellOrder() async {
+    setBusy(true);
+    setState(ViewState.Busy);
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -496,12 +499,6 @@ class BuySellScreenState extends BaseState {
             AppLocalizations.of(context).placeOrderTransactionSuccessful,
             'txid:' + resKanban['transactionHash'],
             isWarning: false);
-        // walletService.showInfoFlushbar(
-        //     AppLocalizations.of(context).placeOrderTransactionSuccessful,
-        //     'txid:' + resKanban['transactionHash'],
-        //     Icons.cancel,
-        //     globals.red,
-        //     context);
       } else {
         walletService.showInfoFlushbar(
             AppLocalizations.of(context).placeOrderTransactionFailed,
@@ -515,6 +512,8 @@ class BuySellScreenState extends BaseState {
         showNotification(context);
       }
     }
+    setBusy(false);
+    setState(ViewState.Idle);
   }
 
   // Check Pass
@@ -530,6 +529,9 @@ class BuySellScreenState extends BaseState {
         quantity == null ||
         price.isNegative ||
         quantity.isNegative) {
+      setBusy(false);
+      sharedService.alertDialog("", AppLocalizations.of(context).invalidAmount,
+          isWarning: false);
       return;
     }
 
@@ -541,9 +543,10 @@ class BuySellScreenState extends BaseState {
         sharedService.alertDialog(
             "", AppLocalizations.of(context).invalidAmount,
             isWarning: false);
+        setBusy(false);
         return;
       } else {
-        placeBuySellOrder();
+        await placeBuySellOrder();
       }
     } else {
       caculateTransactionAmount();
@@ -553,12 +556,15 @@ class BuySellScreenState extends BaseState {
         sharedService.alertDialog(
             "", AppLocalizations.of(context).invalidAmount,
             isWarning: false);
+        setBusy(false);
         return;
       } else {
-        placeBuySellOrder();
+        await placeBuySellOrder();
       }
     }
 
+    /// load orders here after the end of placing order
+    /// MyOrdersView(tickerName: tickerName);
     setBusy(false);
   }
 
@@ -600,19 +606,20 @@ class BuySellScreenState extends BaseState {
         quantity != null &&
         !price.isNegative &&
         !quantity.isNegative) {
-      if (bidOrAsk == false) {
-        var changeBalanceWithSlider = targetCoinbalance * sliderValue / 100;
-        quantity = changeBalanceWithSlider / price;
+      if (!bidOrAsk) {
+        var changeQuantityWithSlider = targetCoinbalance * sliderValue / 100;
+        print('changeQuantityWithSlider $changeQuantityWithSlider');
+        quantity = changeQuantityWithSlider;
         transactionAmount = quantity * price;
-        quantityTextController.text = quantity.toString();
+        quantityTextController.text = quantity.toStringAsFixed(quantityDecimal);
         updateTransFee();
         log.i(transactionAmount);
-        log.e(changeBalanceWithSlider);
+        log.e(changeQuantityWithSlider);
       } else {
         var changeBalanceWithSlider = baseCoinbalance * sliderValue / 100;
         quantity = changeBalanceWithSlider / price;
         transactionAmount = quantity * price;
-        quantityTextController.text = quantity.toString();
+        quantityTextController.text = quantity.toStringAsFixed(quantityDecimal);
         updateTransFee();
         log.i(transactionAmount);
         log.e(changeBalanceWithSlider);
