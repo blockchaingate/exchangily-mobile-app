@@ -1653,10 +1653,11 @@ class WalletService {
       if (gasLimit == 0) {
         gasLimit = environment["chains"]["ETH"]["gasLimit"];
       }
-      transFeeDouble = (Decimal.parse(gasPrice.toString()) *
-              Decimal.parse(gasLimit.toString()) /
-              Decimal.parse('1e18'))
+      transFeeDouble = (BigInt.parse(gasPrice.toString()) *
+          BigInt.parse(gasLimit.toString()) /
+          BigInt.parse('2000000000000000000'))
           .toDouble();
+
       if (getTransFeeOnly) {
         return {
           'txHex': '',
@@ -1831,9 +1832,9 @@ class WalletService {
       if (gasLimit == 0) {
         gasLimit = environment["chains"]["ETH"]["gasLimit"];
       }
-      transFeeDouble = (Decimal.parse(gasPrice.toString()) *
-              Decimal.parse(gasLimit.toString()) /
-              Decimal.parse('1e18'))
+      transFeeDouble = (BigInt.parse(gasPrice.toString()) *
+          BigInt.parse(gasLimit.toString()) /
+          BigInt.parse('2000000000000000000'))
           .toDouble();
       log.w('transFeeDouble===' + transFeeDouble.toString());
       if (getTransFeeOnly) {
@@ -1856,7 +1857,7 @@ class WalletService {
       final addressHex = address.hex;
       final nonce = await _api.getEthNonce(addressHex);
 
-      gasLimit = 100000;
+      //gasLimit = 100000;
       var convertedDecimalAmount;
       if (coin == 'BNB' ||
           coin == 'INB' ||
@@ -1885,7 +1886,7 @@ class WalletService {
         convertedDecimalAmount = BigInt.parse(toBigInt(amount, 4));
       }
 
-      amountInTx = convertedDecimalAmount.toInt();
+      amountInTx = convertedDecimalAmount;
       var transferAbi = 'a9059cbb';
       var fxnCallHex = transferAbi +
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
