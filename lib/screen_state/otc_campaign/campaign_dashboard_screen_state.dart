@@ -167,7 +167,8 @@ class CampaignDashboardScreenState extends BaseState {
         }
         //assignColorAccordingToMemberLevel(level);
 
-        myInvestmentValueWithoutRewards = currencyFormat(member.totalValue, 2);
+        myInvestmentValueWithoutRewards =
+            NumberUtil.currencyFormat(member.totalValue, 2);
         print('TOKENS ${member.totalQuantities}');
         memberProfile = member;
       } else {
@@ -409,7 +410,7 @@ class CampaignDashboardScreenState extends BaseState {
     log.e('calcMyTotalAsssetValue');
     double exgPrice = await getUsdValue();
     double holder = myTotalAssetQuantity * exgPrice;
-    myTotalAssetValue = currencyFormat(holder, 2);
+    myTotalAssetValue = NumberUtil.currencyFormat(holder, 2);
     log.e(
         'calcMyTotalAsssetValue $myTotalAssetQuantity, $exgPrice - $myTotalAssetValue');
     return myTotalAssetValue;

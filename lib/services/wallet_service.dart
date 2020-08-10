@@ -318,7 +318,6 @@ class WalletService {
     return bal;
   }
 
-
   Future getEthGasPrice() async {
     return await _apiService.getEthGasPrice();
   }
@@ -430,6 +429,7 @@ class WalletService {
     String result = '';
     Timer.periodic(Duration(minutes: 1), (Timer t) async {
       TransactionHistory transactionHistory = new TransactionHistory();
+      TransactionHistory transactionHistoryByTxId = new TransactionHistory();
       var res = await _apiService.getTransactionStatus(transaction.txId);
       log.w(res);
 // 0 is confirmed
@@ -451,66 +451,66 @@ class WalletService {
             isWarning: false);
         String date = DateTime.now().toString();
 
+        if (transaction != null) {
+          transactionHistoryByTxId = await transactionHistoryDatabaseService
+              .getByTxId(transaction.txId);
+        }
+
         if (res['code'] == 0) {
           log.e('Transaction history passed arguement ${transaction.toJson()}');
-          if (transaction != null) {
-            TransactionHistory transactionHistoryByTxId =
-                await transactionHistoryDatabaseService
-                    .getByTxId(transaction.txId);
-
-            transactionHistory = TransactionHistory(
-                id: transactionHistoryByTxId.id,
-                tickerName: transactionHistoryByTxId.tickerName,
-                address: '',
-                amount: 0.0,
-                date: date.toString(),
-                txId: transactionHistoryByTxId.txId,
-                status: 'Complete',
-                quantity: transactionHistoryByTxId.quantity,
-                tag: transactionHistoryByTxId.tag);
-
-            // after this method i will test single status update field in the transaciton history
-            // await transactionHistoryDatabaseService
-            //     .updateStatus(transactionHistoryByTxId);
-            // await transactionHistoryDatabaseService.getByTxId(transaction.txId);
-          }
-        } else if (res['code'] == -1) {
           transactionHistory = TransactionHistory(
-              id: null,
-              tickerName: transaction.tickerName,
+              id: transactionHistoryByTxId.id,
+              tickerName: transactionHistoryByTxId.tickerName,
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transaction.txId,
+              txId: transactionHistoryByTxId.txId,
+              status: 'Complete',
+              quantity: transactionHistoryByTxId.quantity,
+              tag: transactionHistoryByTxId.tag);
+
+          // after this method i will test single status update field in the transaciton history
+          // await transactionHistoryDatabaseService
+          //     .updateStatus(transactionHistoryByTxId);
+          // await transactionHistoryDatabaseService.getByTxId(transaction.txId);
+
+        } else if (res['code'] == -1) {
+          transactionHistory = TransactionHistory(
+              id: transactionHistoryByTxId.id,
+              tickerName: transactionHistoryByTxId.tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: transactionHistoryByTxId.txId,
               status: 'Error',
-              quantity: transaction.amount,
-              tag: transaction.tag);
+              quantity: transactionHistoryByTxId.amount,
+              tag: transactionHistoryByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
         } else if (res['code'] == 2) {
           transactionHistory = TransactionHistory(
-              id: null,
-              tickerName: transaction.tickerName,
+              id: transactionHistoryByTxId.id,
+              tickerName: transactionHistoryByTxId.tickerName,
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transaction.txId,
+              txId: transactionHistoryByTxId.txId,
               status: 'Failed',
-              quantity: transaction.amount,
-              tag: transaction.tag);
+              quantity: transactionHistoryByTxId.amount,
+              tag: transactionHistoryByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
         } else if (res['code'] == 3) {
           transactionHistory = TransactionHistory(
-              id: null,
-              tickerName: transaction.tickerName,
+              id: transactionHistoryByTxId.id,
+              tickerName: transactionHistoryByTxId.tickerName,
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transaction.txId,
+              txId: transactionHistoryByTxId.txId,
               status: 'Require redeposit',
-              quantity: transaction.amount,
-              tag: transaction.tag);
+              quantity: transactionHistoryByTxId.amount,
+              tag: transactionHistoryByTxId.tag);
 
           // await transactionHistoryDatabaseService.update(transactionHistory);
         }
@@ -847,10 +847,10 @@ class WalletService {
     */
     var kanbanGasPrice = option['kanbanGasPrice'];
     var kanbanGasLimit = option['kanbanGasLimit'];
-    print('111');
+    log.e('before send transaction');
     var resST = await sendTransaction(
         coinName, seed, [0], [], officalAddress, amount, option, false);
-    print('222');
+    log.i('after send transaction');
     if (resST != null) log.w(resST);
     if (resST['errMsg'] != '') {
       errRes['data'] = resST['errMsg'];
@@ -867,7 +867,7 @@ class WalletService {
 
     var txids = resST['txids'];
     var amountInTx = resST['amountInTx'];
-    var amountInLink = BigInt.parse(toBigInt(amount));
+    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
 
     var amountInTxString = amountInTx.toString();
     var amountInLinkString = amountInLink.toString();
@@ -1029,7 +1029,7 @@ class WalletService {
 
     var totalAmount = amount + extraTransactionFee;
     //var amountNum = totalAmount * 1e8;
-    var amountNum = BigInt.parse(toBigInt(totalAmount, 8)).toInt();
+    var amountNum = BigInt.parse(NumberUtil.toBigInt(totalAmount, 8)).toInt();
     amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
     var transFeeDouble = 0.0;
@@ -1108,7 +1108,8 @@ class WalletService {
           (2 * 34 + 10) * satoshisPerBytes;
 
       var output1 = (totalInput -
-              BigInt.parse(toBigInt(amount + extraTransactionFee, 8)).toInt() -
+              BigInt.parse(NumberUtil.toBigInt(amount + extraTransactionFee, 8))
+                  .toInt() -
               transFee)
           .round();
 
@@ -1118,7 +1119,7 @@ class WalletService {
       if (getTransFeeOnly) {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
-      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       ;
       amountInTx = BigInt.from(output2);
       if (output1 < 0 || output2 < 0) {
@@ -1214,9 +1215,8 @@ class WalletService {
     }
     //print('tokenType=' + tokenType);
 
-    log.w('gasPrice=' + gasPrice.toString());
-    log.w('gasLimit=' + gasLimit.toString());
-    log.w('satoshisPerBytes=' + satoshisPerBytes.toString());
+    log.w(
+        'gasPrice= $gasPrice -- gasLimit =  $gasLimit -- satoshisPerBytes= $satoshisPerBytes');
 
     // BTC
     if (coin == 'BTC') {
@@ -1226,7 +1226,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["BTC"]["satoshisPerBytes"];
       }
-      var amountNum = BigInt.parse(toBigInt(amount, 8)).toInt();
+      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
           network: environment["chains"]["BTC"]["network"]);
@@ -1285,9 +1285,10 @@ class WalletService {
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
               (2 * 34 + 10) * satoshisPerBytes;
 
-      var output1 =
-          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
-              .round();
+      var output1 = (totalInput -
+              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
+              transFee)
+          .round();
 
       if (output1 < 2730) {
         transFee += output1;
@@ -1304,7 +1305,7 @@ class WalletService {
         };
       }
 
-      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
 
       if (output1 >= 2730) {
         txb.addOutput(changeAddress, output1);
@@ -1339,7 +1340,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["BCH"]["satoshisPerBytes"];
       }
-      var amountNum = BigInt.parse(toBigInt(amount, 8)).toInt();
+      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
 
       final txb = Bitbox.Bitbox.transactionBuilder(
@@ -1406,10 +1407,11 @@ class WalletService {
         };
       }
 
-      var output1 =
-          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
-              .round();
-      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
+      var output1 = (totalInput -
+              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
+              transFee)
+          .round();
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
 
       amountInTx = BigInt.from(output2);
       txb.addOutput(address, output1);
@@ -1440,7 +1442,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["LTC"]["satoshisPerBytes"];
       }
-      var amountNum = BigInt.parse(toBigInt(amount, 8)).toInt();
+      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
           network: environment["chains"]["LTC"]["network"]);
@@ -1508,10 +1510,11 @@ class WalletService {
         };
       }
 
-      var output1 =
-          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
-              .round();
-      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
+      var output1 = (totalInput -
+              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
+              transFee)
+          .round();
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountInTx = BigInt.from(output2);
       txb.addOutput(changeAddress, output1);
       txb.addOutput(toAddress, output2);
@@ -1542,7 +1545,7 @@ class WalletService {
       if (satoshisPerBytes == 0) {
         satoshisPerBytes = environment["chains"]["DOGE"]["satoshisPerBytes"];
       }
-      var amountNum = BigInt.parse(toBigInt(amount, 8)).toInt();
+      var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
       final txb = new TransactionBuilder(
           network: environment["chains"]["DOGE"]["network"]);
@@ -1614,10 +1617,11 @@ class WalletService {
         };
       }
 
-      var output1 =
-          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
-              .round();
-      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
+      var output1 = (totalInput -
+              BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt() -
+              transFee)
+          .round();
+      var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountInTx = BigInt.from(output2);
       txb.addOutput(changeAddress, output1);
 
@@ -1671,7 +1675,7 @@ class WalletService {
       final ethCoinChild = root.derivePath(
           "m/44'/" + environment["CoinType"]["ETH"].toString() + "'/0'/0/0");
       final privateKey = HEX.encode(ethCoinChild.privateKey);
-      var amountSentInt = BigInt.parse(toBigInt(amount, 18));
+      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 18));
 
       Credentials credentials = EthPrivateKey.fromHex(privateKey);
 
@@ -1763,10 +1767,10 @@ class WalletService {
         gasLimit = environment["chains"]["FAB"]["gasLimit"];
       }
       var transferAbi = 'a9059cbb';
-      var amountSentInt = BigInt.parse(toBigInt(amount));
+      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount));
 
       if (coin == 'DUSD') {
-        amountSentInt = BigInt.parse(toBigInt(amount, 6));
+        amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 6));
       }
 
       amountInTx = amountSentInt;
@@ -1835,7 +1839,7 @@ class WalletService {
               Decimal.parse(gasLimit.toString()) /
               Decimal.parse('1e18'))
           .toDouble();
-      log.w('transFeeDouble===' + transFeeDouble.toString());
+      log.i('transFeeDouble===' + transFeeDouble.toString());
       if (getTransFeeOnly) {
         return {
           'txHex': '',
@@ -1871,18 +1875,18 @@ class WalletService {
           coin == 'KNC' ||
           coin == 'GVT' ||
           coin == 'DRGN') {
-        convertedDecimalAmount = BigInt.parse(toBigInt(amount));
+        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount));
         //   (BigInt.from(10).pow(18) * BigInt.from(amount));
 
         //var amountSentInt = BigInt.parse(toBigInt(amount, 18));
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'FUN' || coin == 'WAX' || coin == 'MTL') {
-        convertedDecimalAmount = BigInt.parse(toBigInt(amount, 8));
+        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 8));
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'POWR' || coin == 'USDT') {
-        convertedDecimalAmount = BigInt.parse(toBigInt(amount, 6));
+        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 6));
       } else if (coin == 'CEL') {
-        convertedDecimalAmount = BigInt.parse(toBigInt(amount, 4));
+        convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 4));
       }
 
       amountInTx = convertedDecimalAmount.toInt();
