@@ -318,6 +318,11 @@ class WalletService {
     return bal;
   }
 
+
+  Future getEthGasPrice() async {
+    return await _apiService.getEthGasPrice();
+  }
+
 /*----------------------------------------------------------------------
                 Get Coin Price By Web Sockets
 ----------------------------------------------------------------------*/

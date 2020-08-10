@@ -94,6 +94,30 @@ class ApiService {
     }
   }
 
+  Future getEthGasPrice() async {
+    var url =
+        environment['endpoints']['eth'] + 'getgasprice';
+    var ethGasPrice = 0;
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      log.w(' getDepositTransactionStatus $json');
+      ethGasPrice = int.tryParse(json['gasprice']);
+    } catch (err) {
+      log.e('In getDepositTransactionStatus catch $err');
+    }
+
+
+    if(ethGasPrice < environment['chains']['ETH']['gasPrice']) {
+      ethGasPrice = environment['chains']['ETH']['gasPrice'];
+    }
+
+
+    if(ethGasPrice > environment['chains']['ETH']['gasPriceMax']) {
+      ethGasPrice = environment['chains']['ETH']['gasPriceMax'];
+    }
+    return ethGasPrice;
+  }
 /*----------------------------------------------------------------------
                 Transaction status
 ----------------------------------------------------------------------*/
