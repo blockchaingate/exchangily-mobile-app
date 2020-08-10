@@ -138,7 +138,7 @@ class MoveToExchangeScreenState extends BaseState {
         'contractAddress': environment["addresses"]["smartContract"]
             [walletInfo.tickerName]
       };
-      print(
+      log.i(
           '3 - -$seed, -- ${walletInfo.tickerName}, -- ${walletInfo.tokenType}, --   $amount, - - $option');
       await walletService
           .depositDo(

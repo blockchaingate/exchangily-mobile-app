@@ -165,13 +165,18 @@ class _RedepositState extends State<Redeposit> {
           nonce, coinType, transactionID, signedMess);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
-        sharedService.showInfoFlushbar(
-            '${AppLocalizations.of(context).redepositCompleted}',
-            '${AppLocalizations.of(context).transactionId}' +
+        sharedService.alertDialog(
+            AppLocalizations.of(context).redepositCompleted,
+            AppLocalizations.of(context).transactionId +
                 resRedeposit['data']['transactionID'],
-            Icons.cancel,
-            globals.white,
-            context);
+            path: '/dashboard');
+        // sharedService.showInfoFlushbar(
+        //     '${AppLocalizations.of(context).redepositCompleted}',
+        //     '${AppLocalizations.of(context).transactionId}' +
+        //         resRedeposit['data']['transactionID'],
+        //     Icons.cancel,
+        //     globals.white,
+        //     context);
       } else {
         sharedService.showInfoFlushbar(
             AppLocalizations.of(context).redepositFailedError,
@@ -252,7 +257,7 @@ class _RedepositState extends State<Redeposit> {
           ),
           middle: Text(
             '${AppLocalizations.of(context).redeposit}  ${widget.walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
-            style: TextStyle(color: Colors.white),
+            style: Theme.of(context).textTheme.headline4,
           ),
           backgroundColor: Color(0XFF1f2233),
         ),
@@ -265,12 +270,20 @@ class _RedepositState extends State<Redeposit> {
                   children: errDepositList
                       .map((data) => RadioListTile(
                             dense: true,
-                            title: Text(
-                              bigNum2Double(data["amount"]).toString(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.bold),
+                            title: Row(
+                              children: <Widget>[
+                                Text(AppLocalizations.of(context).amount,
+                                    style:
+                                        Theme.of(context).textTheme.headline3),
+                                UIHelper.horizontalSpaceMedium,
+                                Text(
+                                  bigNum2Double(data["amount"]).toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                             value: data['transactionID'],
                             groupValue: errDepositTransactionID,

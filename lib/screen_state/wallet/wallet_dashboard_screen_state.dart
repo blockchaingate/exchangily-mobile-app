@@ -23,6 +23,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -360,7 +361,7 @@ class WalletDashboardScreenState extends BaseState {
     for (var i = 0; i < walletInfo.length; i++) {
       holder = holder + walletInfo[i].usdValue;
     }
-    totalUsdBalance = currencyFormat(holder, 2);
+    totalUsdBalance = NumberUtil.currencyFormat(holder, 2);
     // totalUsdBalance =
     //     NumberFormat.simpleCurrency(decimalDigits: 2).format(holder);
     // totalUsdBalance = totalUsdBalance.substring(1);
@@ -547,7 +548,7 @@ class WalletDashboardScreenState extends BaseState {
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
                   marketPrice, availableBal, lockedBal);
-              String holder = currencyFormat(usdValue, 2);
+              String holder = NumberUtil.currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
 // get Pair decimal config
@@ -669,7 +670,7 @@ class WalletDashboardScreenState extends BaseState {
         // Calculate usd balance
         double usdValue = walletService.calculateCoinUsdBalance(
             marketPrice, walletBal, walletLockedBal);
-        String holder = currencyFormat(usdValue, 2);
+        String holder = NumberUtil.currencyFormat(usdValue, 2);
         formattedUsdValueList.add(holder);
         // Adding each coin details in the wallet
         WalletInfo wi = WalletInfo(
