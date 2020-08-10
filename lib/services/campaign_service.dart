@@ -26,7 +26,7 @@ class CampaignService {
   final String campaignId = '1';
   Campaign campaign;
 
-  static final BASE_URL = isProduction
+  static const BASE_URL = isProduction
       ? EnvironmentConfig.CAMPAIGN_PROD_URL
       : EnvironmentConfig.CAMPAIGN_TEST_URL;
   static final registerUrl = BASE_URL + 'members/create';
@@ -312,8 +312,9 @@ class CampaignService {
     try {
       var response = await client.get(memberProfileUrl, headers: headers);
       var json = jsonDecode(response.body)['_body'];
-      log.w('getMemberProfile $json');
+
       MemberProfile memberProfile = MemberProfile.fromJson(json);
+      log.i('getMemberProfile -- ${memberProfile.toJson()}');
       return memberProfile;
     } catch (err) {
       log.e('In getMemberProfile catch $err');

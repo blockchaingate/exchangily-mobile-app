@@ -12,6 +12,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   BuildContext context;
 
   NavigationService navigationService = locator<NavigationService>();
+  SharedService sharedService = locator<SharedService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
   ApiService apiService = locator<ApiService>();

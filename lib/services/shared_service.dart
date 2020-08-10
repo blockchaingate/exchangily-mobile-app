@@ -11,11 +11,15 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
@@ -29,6 +33,31 @@ class SharedService {
   BuildContext context;
   NavigationService navigationService = locator<NavigationService>();
   final log = getLogger('SharedService');
+
+/* ---------------------------------------------------
+            Full screen Stack loading indicator
+--------------------------------------------------- */
+
+  Widget stackFullScreenLoadingIndicator() {
+    return Container(
+        height: UIHelper.getScreenFullHeight(context),
+        width: UIHelper.getScreenFullWidth(context),
+        color: red.withOpacity(0.25),
+        child: loadingIndicator());
+  }
+
+/* ---------------------------------------------------
+        Loading indicator platform specific
+--------------------------------------------------- */
+  Widget loadingIndicator() {
+    return Center(
+        child: Platform.isIOS
+            ? CupertinoActivityIndicator()
+            : CircularProgressIndicator(
+                semanticsLabel: 'Loading',
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(primaryColor)));
+  }
 
 /* ---------------------------------------------------
                 Get app version Code

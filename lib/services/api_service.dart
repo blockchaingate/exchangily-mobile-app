@@ -264,7 +264,7 @@ class ApiService {
         return jsonDecode(res.body);
       }
     } catch (e) {
-      log.e('getOrders Failed to load the data from the API， $e');
+      log.e('getMyOrdersByTickerName Failed to load the data from the API， $e');
       throw Exception;
     }
   }

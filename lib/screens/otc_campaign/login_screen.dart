@@ -8,10 +8,12 @@ import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignLoginScreen extends StatelessWidget {
-  const CampaignLoginScreen({Key key}) : super(key: key);
+  final String errorMessage;
+  const CampaignLoginScreen({Key key, this.errorMessage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print('ERROR MSG FROM ROUTE $errorMessage');
     return BaseScreen<CampaignLoginScreenState>(
       onModelReady: (model) async {
         model.context = context;
@@ -149,6 +151,12 @@ class CampaignLoginScreen extends StatelessWidget {
                                     .textTheme
                                     .bodyText2
                                     .copyWith(color: Colors.yellow))),
+                    Visibility(
+                        visible: errorMessage != null &&
+                            errorMessage != '' &&
+                            !model.hasErrorMessage,
+                        child: Text(errorMessage == null ? '' : errorMessage,
+                            style: Theme.of(context).textTheme.bodyText2)),
                     UIHelper.verticalSpaceSmall,
                     // Button row
                     Row(

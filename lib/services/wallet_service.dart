@@ -161,9 +161,9 @@ class WalletService {
     String randomMnemonic = '';
     if (isLocal == true) {
       randomMnemonic =
-          'hidden arch mind decline summer convince voice together pony infant input lunar';
-      //"dune stem onion cliff equip seek kiwi salute area elegant atom injury";
-      // 'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+          //  'hidden arch mind decline summer convince voice together pony infant input lunar';
+          //"dune stem onion cliff equip seek kiwi salute area elegant atom injury";
+          'culture sound obey clean pretty medal churn behind chief cactus alley ready';
       // 'group quick salad argue animal rubber wolf close weird school spell agent';
       return randomMnemonic;
     }
@@ -429,6 +429,7 @@ class WalletService {
       TransactionHistory transaction) async {
     String result = '';
     Timer.periodic(Duration(minutes: 1), (Timer t) async {
+      TransactionHistory transactionHistory = new TransactionHistory();
       var res = await _apiService.getTransactionStatus(transaction.txId);
       log.w(res);
 // 0 is confirmed
@@ -443,6 +444,8 @@ class WalletService {
         t.cancel();
         result = res['message'];
         log.i('Timer cancel');
+
+        /// may add deposit or withdraw in front of status for better understanding
         sharedService.alertDialog(
             '${transaction.tickerName}  status', '$result'.toUpperCase(),
             isWarning: false);
@@ -455,7 +458,7 @@ class WalletService {
                 await transactionHistoryDatabaseService
                     .getByTxId(transaction.txId);
 
-            TransactionHistory transactionHistory = new TransactionHistory(
+            transactionHistory = TransactionHistory(
                 id: transactionHistoryByTxId.id,
                 tickerName: transactionHistoryByTxId.tickerName,
                 address: '',
@@ -466,15 +469,13 @@ class WalletService {
                 quantity: transactionHistoryByTxId.quantity,
                 tag: transactionHistoryByTxId.tag);
 
-            await transactionHistoryDatabaseService.update(transactionHistory);
-            await transactionHistoryDatabaseService.getByTxId(transaction.txId);
             // after this method i will test single status update field in the transaciton history
             // await transactionHistoryDatabaseService
             //     .updateStatus(transactionHistoryByTxId);
             // await transactionHistoryDatabaseService.getByTxId(transaction.txId);
           }
         } else if (res['code'] == -1) {
-          TransactionHistory transactionHistory = new TransactionHistory(
+          transactionHistory = TransactionHistory(
               id: null,
               tickerName: transaction.tickerName,
               address: '',
@@ -485,9 +486,9 @@ class WalletService {
               quantity: transaction.amount,
               tag: transaction.tag);
 
-          await transactionHistoryDatabaseService.update(transactionHistory);
+          //  await transactionHistoryDatabaseService.update(transactionHistory);
         } else if (res['code'] == 2) {
-          TransactionHistory transactionHistory = new TransactionHistory(
+          transactionHistory = TransactionHistory(
               id: null,
               tickerName: transaction.tickerName,
               address: '',
@@ -498,9 +499,9 @@ class WalletService {
               quantity: transaction.amount,
               tag: transaction.tag);
 
-          await transactionHistoryDatabaseService.update(transactionHistory);
+          //  await transactionHistoryDatabaseService.update(transactionHistory);
         } else if (res['code'] == 3) {
-          TransactionHistory transactionHistory = new TransactionHistory(
+          transactionHistory = TransactionHistory(
               id: null,
               tickerName: transaction.tickerName,
               address: '',
@@ -511,9 +512,11 @@ class WalletService {
               quantity: transaction.amount,
               tag: transaction.tag);
 
-          await transactionHistoryDatabaseService.update(transactionHistory);
+          // await transactionHistoryDatabaseService.update(transactionHistory);
         }
       }
+      await transactionHistoryDatabaseService.update(transactionHistory);
+      await transactionHistoryDatabaseService.getByTxId(transaction.txId);
     });
     return result;
     //  return _completer.future;
@@ -869,18 +872,18 @@ class WalletService {
     var amountInTxString = amountInTx.toString();
     var amountInLinkString = amountInLink.toString();
 
-    print('amountInTxString===' +  amountInTxString);
-    print('amountInLinkString===' +  amountInLinkString);
-    if(amountInLinkString.indexOf(amountInTxString) == -1) {
+    print('amountInTxString===' + amountInTxString);
+    print('amountInLinkString===' + amountInLinkString);
+    if (amountInLinkString.indexOf(amountInTxString) == -1) {
       errRes['data'] = 'incorrect amount for two transactions';
       return errRes;
     }
 
     var subString = amountInLinkString.substring(amountInTxString.length);
 
-    if(subString != null && subString != '') {
+    if (subString != null && subString != '') {
       var zero = int.parse(subString);
-      if(zero != 0) {
+      if (zero != 0) {
         errRes['data'] = 'unequal amount for two transactions';
         return errRes;
       }
@@ -1061,28 +1064,23 @@ class WalletService {
           }
            */
 
-
-          var txidItem = {
-            'txid': txid,
-            'idx': idx
-          };
+          var txidItem = {'txid': txid, 'idx': idx};
 
           var existed = false;
-          for(var iii = 0; iii < txids.length; iii++) {
+          for (var iii = 0; iii < txids.length; iii++) {
             var ttt = txids[iii];
-            if((ttt['txid'] == txidItem['txid']) && (ttt['idx'] == txidItem['idx'])) {
+            if ((ttt['txid'] == txidItem['txid']) &&
+                (ttt['idx'] == txidItem['idx'])) {
               existed = true;
               break;
             }
           }
 
-          if(existed) {
+          if (existed) {
             continue;
           }
 
-
           allTxids.add(txidItem);
-
 
           txb.addInput(txid, idx);
           receivePrivateKeyArr.add(privateKey);
@@ -1109,11 +1107,10 @@ class WalletService {
       var transFee = (receivePrivateKeyArr.length) * feePerInput +
           (2 * 34 + 10) * satoshisPerBytes;
 
-      var output1 =
-          (totalInput - BigInt.parse(toBigInt(amount+extraTransactionFee, 8)).toInt() - transFee)
-              .round();
-
-
+      var output1 = (totalInput -
+              BigInt.parse(toBigInt(amount + extraTransactionFee, 8)).toInt() -
+              transFee)
+          .round();
 
       transFeeDouble = ((Decimal.parse(extraTransactionFee.toString()) +
               Decimal.parse(transFee.toString()) / Decimal.parse('1e8')))
@@ -1121,7 +1118,8 @@ class WalletService {
       if (getTransFeeOnly) {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
-      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();;
+      var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
+      ;
       amountInTx = BigInt.from(output2);
       if (output1 < 0 || output2 < 0) {
         return {
@@ -1133,7 +1131,6 @@ class WalletService {
       }
 
       txb.addOutput(changeAddress, output1);
-
 
       txb.addOutput(toAddress, output2);
 
@@ -1147,7 +1144,13 @@ class WalletService {
 
       var txHex = txb.build().toHex();
 
-      return {'txHex': txHex, 'errMsg': '', 'transFee': transFeeDouble, 'amountInTx': amountInTx, 'txids': allTxids};
+      return {
+        'txHex': txHex,
+        'errMsg': '',
+        'transFee': transFeeDouble,
+        'amountInTx': amountInTx,
+        'txids': allTxids
+      };
     }
   }
 
@@ -1270,14 +1273,21 @@ class WalletService {
         txHex = '';
         txHash = '';
         errMsg = 'not enough fund.';
-        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+        return {
+          'txHex': txHex,
+          'txHash': txHash,
+          'errMsg': errMsg,
+          'amountInTx': amountInTx
+        };
       }
 
       var transFee =
           (receivePrivateKeyArr.length) * bytesPerInput * satoshisPerBytes +
               (2 * 34 + 10) * satoshisPerBytes;
 
-      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output1 =
+          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
+              .round();
 
       if (output1 < 2730) {
         transFee += output1;
@@ -1344,7 +1354,12 @@ class WalletService {
       final utxos = await _api.getBchUtxos(address);
 
       if ((utxos == null) || (utxos.length == 0)) {
-        return {'txHex': '', 'txHash': '', 'errMsg': 'not enough fund', 'amountInTx': amountInTx};
+        return {
+          'txHex': '',
+          'txHash': '',
+          'errMsg': 'not enough fund',
+          'amountInTx': amountInTx
+        };
       }
 
       final signatures = <Map>[];
@@ -1391,7 +1406,9 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output1 =
+          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
+              .round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
 
       amountInTx = BigInt.from(output2);
@@ -1468,7 +1485,12 @@ class WalletService {
         txHex = '';
         txHash = '';
         errMsg = 'not enough fund.';
-        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+        return {
+          'txHex': txHex,
+          'txHash': txHash,
+          'errMsg': errMsg,
+          'amountInTx': amountInTx
+        };
       }
 
       var transFee =
@@ -1486,7 +1508,9 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output1 =
+          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
+              .round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
       amountInTx = BigInt.from(output2);
       txb.addOutput(changeAddress, output1);
@@ -1566,7 +1590,12 @@ class WalletService {
         txHex = '';
         txHash = '';
         errMsg = 'not enough fund.';
-        return {'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg, 'amountInTx': amountInTx};
+        return {
+          'txHex': txHex,
+          'txHash': txHash,
+          'errMsg': errMsg,
+          'amountInTx': amountInTx
+        };
       }
 
       var transFee =
@@ -1585,7 +1614,9 @@ class WalletService {
         };
       }
 
-      var output1 = (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee).round();
+      var output1 =
+          (totalInput - BigInt.parse(toBigInt(amount, 8)).toInt() - transFee)
+              .round();
       var output2 = BigInt.parse(toBigInt(amount, 8)).toInt();
       amountInTx = BigInt.from(output2);
       txb.addOutput(changeAddress, output1);
@@ -1846,7 +1877,7 @@ class WalletService {
         //var amountSentInt = BigInt.parse(toBigInt(amount, 18));
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'FUN' || coin == 'WAX' || coin == 'MTL') {
-        convertedDecimalAmount =  BigInt.parse(toBigInt(amount, 8));
+        convertedDecimalAmount = BigInt.parse(toBigInt(amount, 8));
         log.e('amount send $convertedDecimalAmount');
       } else if (coin == 'POWR' || coin == 'USDT') {
         convertedDecimalAmount = BigInt.parse(toBigInt(amount, 6));
