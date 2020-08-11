@@ -12,7 +12,9 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,6 +60,8 @@ class _RedepositState extends State<Redeposit> {
   String tokenType = '';
   String errDepositTransactionID;
   List errDepositList = new List();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+      locator<TransactionHistoryDatabaseService>();
 
   @override
   void initState() {
@@ -113,6 +117,7 @@ class _RedepositState extends State<Redeposit> {
   }
 
   checkPass(context) async {
+    TransactionHistory transactionByTxId = new TransactionHistory();
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -165,11 +170,35 @@ class _RedepositState extends State<Redeposit> {
           nonce, coinType, transactionID, signedMess);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
+        var newTransactionId = resRedeposit['data']['transactionID'];
+        print(
+            'NEW REDEPOSIT TXID $newTransactionId --Old txid $transactionID ');
         sharedService.alertDialog(
             AppLocalizations.of(context).redepositCompleted,
-            AppLocalizations.of(context).transactionId +
-                resRedeposit['data']['transactionID'],
+            AppLocalizations.of(context).transactionId + newTransactionId,
             path: '/dashboard');
+
+        // get transaction from database
+        transactionByTxId =
+            await transactionHistoryDatabaseService.getByTxId(transactionID);
+
+        // update transaction history status with new txid
+        String date = DateTime.now().toString();
+        TransactionHistory transactionHistory = new TransactionHistory(
+            id: transactionByTxId.id,
+            tickerName: coinName,
+            address: '',
+            amount: 0.0,
+            date: date.toString(),
+            txId: newTransactionId,
+            status: 'pending',
+            quantity: transactionByTxId.quantity,
+            tag: transactionByTxId.tag);
+
+        await transactionHistoryDatabaseService.update(transactionHistory);
+        await transactionHistoryDatabaseService.getByTxId(newTransactionId);
+        walletService.checkDepositTransactionStatus(transactionHistory);
+
         // sharedService.showInfoFlushbar(
         //     '${AppLocalizations.of(context).redepositCompleted}',
         //     '${AppLocalizations.of(context).transactionId}' +

@@ -280,7 +280,31 @@ class WalletDashboardScreen extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline6,
                                   )),
-                            ))
+                            )),
+                    UIHelper.horizontalSpaceMedium,
+                    Expanded(
+                      // not working rn
+                      flex: 3,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 5),
+                        height: 30,
+                        child: TextField(
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: primaryColor, width: 1.0),
+                              ),
+                              // helperText: 'Search',
+                              // helperStyle:
+                              //     Theme.of(context).textTheme.bodyText1,
+                              suffixIcon: Icon(Icons.search, color: white)),
+                          controller: model.searchCoinTextController,
+                          onChanged: (String value) {
+                            model.searchCoinsByTickerName(value);
+                          },
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

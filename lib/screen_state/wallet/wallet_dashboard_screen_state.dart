@@ -71,6 +71,7 @@ class WalletDashboardScreenState extends BaseState {
   bool isFreeFabNotUsed = false;
   double fabBalance = 0.0;
   List<String> formattedUsdValueList = [];
+  final searchCoinTextController = TextEditingController();
 
 /*----------------------------------------------------------------------
                     INIT
@@ -87,6 +88,56 @@ class WalletDashboardScreenState extends BaseState {
     lang = prefs.getString('lang');
 
     setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                    Get app version
+----------------------------------------------------------------------*/
+
+  searchCoinsByTickerName(String value) async {
+    setBusy(true);
+    // await apiService.getTokenList().then((tokenList) {
+    //   if (tokenList != null) {
+    //     tokenList.forEach((token) {
+    //       log.w('token ${token.toJson()}');
+    //       if (token.name == value) {
+    //         print('name ${token.name}');
+    //       }
+    //     });
+    //   } else {
+    //     log.e('token list null');
+    //   }
+    // }).catchError((err) {
+    //   log.e('SearchCoinsByTickerName Catch $err');
+    // });
+    //value = value.toUpperCase();
+    print('length ${walletInfoCopy.length} -- value $value');
+    for (var i = 0; i < walletInfoCopy.length; i++)
+      if (walletInfoCopy[i].tickerName == value ||
+              walletInfoCopy[i].name == value
+          //||          isFirstCharacterMatched(value, i)
+          ) {
+        setBusy(true);
+        walletInfo = [];
+        walletInfo.add(walletInfoCopy[i]);
+        // print(
+        //     'matched wallet ${walletInfoCopy[i].toJson()} --  wallet info length ${walletInfo.length}');
+        setBusy(false);
+        break;
+      } else {
+        // log.e(
+        //     'in else ${walletInfoCopy[i].tickerName} == ${value.toUpperCase()}');
+        walletInfo = [];
+        walletInfo = walletInfoCopy;
+      }
+    setBusy(false);
+  }
+
+  bool isFirstCharacterMatched(String value, int index) {
+    print(
+        'value 1st char ${value[0]} == first chracter ${walletInfoCopy[index].tickerName[0]}');
+    log.w(value.startsWith(walletInfoCopy[index].tickerName[0]));
+    return value.startsWith(walletInfoCopy[index].tickerName[0]);
   }
 
 /*----------------------------------------------------------------------

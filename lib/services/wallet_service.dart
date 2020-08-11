@@ -483,7 +483,7 @@ class WalletService {
               date: date.toString(),
               txId: transactionHistoryByTxId.txId,
               status: 'Error',
-              quantity: transactionHistoryByTxId.amount,
+              quantity: transactionHistoryByTxId.quantity,
               tag: transactionHistoryByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
@@ -496,7 +496,7 @@ class WalletService {
               date: date.toString(),
               txId: transactionHistoryByTxId.txId,
               status: 'Failed',
-              quantity: transactionHistoryByTxId.amount,
+              quantity: transactionHistoryByTxId.quantity,
               tag: transactionHistoryByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
@@ -509,7 +509,7 @@ class WalletService {
               date: date.toString(),
               txId: transactionHistoryByTxId.txId,
               status: 'Require redeposit',
-              quantity: transactionHistoryByTxId.amount,
+              quantity: transactionHistoryByTxId.quantity,
               tag: transactionHistoryByTxId.tag);
 
           // await transactionHistoryDatabaseService.update(transactionHistory);
@@ -1658,8 +1658,8 @@ class WalletService {
         gasLimit = environment["chains"]["ETH"]["gasLimit"];
       }
       transFeeDouble = (BigInt.parse(gasPrice.toString()) *
-          BigInt.parse(gasLimit.toString()) /
-          BigInt.parse('5000000000000000000'))
+              BigInt.parse(gasLimit.toString()) /
+              BigInt.parse('5000000000000000000'))
           .toDouble();
 
       if (getTransFeeOnly) {
@@ -1837,8 +1837,8 @@ class WalletService {
         gasLimit = environment["chains"]["ETH"]["gasLimit"];
       }
       transFeeDouble = (BigInt.parse(gasPrice.toString()) *
-          BigInt.parse(gasLimit.toString()) /
-          BigInt.parse('5000000000000000000'))
+              BigInt.parse(gasLimit.toString()) /
+              BigInt.parse('5000000000000000000'))
           .toDouble();
       log.i('transFeeDouble===' + transFeeDouble.toString());
       if (getTransFeeOnly) {

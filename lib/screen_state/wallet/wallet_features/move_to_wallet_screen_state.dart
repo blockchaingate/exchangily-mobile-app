@@ -130,6 +130,8 @@ class MoveToWalletScreenState extends BaseState {
               status: 'pending',
               quantity: amount,
               tag: 'withdraw');
+
+          walletService.checkDepositTransactionStatus(transactionHistory);
           walletService.insertTransactionInDatabase(transactionHistory);
         } else {
           var errMsg = ret['data'];
