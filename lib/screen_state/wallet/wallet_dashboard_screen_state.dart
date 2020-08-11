@@ -113,7 +113,7 @@ class WalletDashboardScreenState extends BaseState {
     //value = value.toUpperCase();
     print('length ${walletInfoCopy.length} -- value $value');
     for (var i = 0; i < walletInfoCopy.length; i++)
-      if (walletInfoCopy[i].tickerName == value ||
+      if (walletInfoCopy[i].tickerName == value.toUpperCase() ||
               walletInfoCopy[i].name == value
           //||          isFirstCharacterMatched(value, i)
           ) {
