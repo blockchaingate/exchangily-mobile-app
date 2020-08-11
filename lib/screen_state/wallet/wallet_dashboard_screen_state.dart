@@ -23,6 +23,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -70,6 +71,7 @@ class WalletDashboardScreenState extends BaseState {
   bool isFreeFabNotUsed = false;
   double fabBalance = 0.0;
   List<String> formattedUsdValueList = [];
+  final searchCoinTextController = TextEditingController();
 
 /*----------------------------------------------------------------------
                     INIT
@@ -86,6 +88,56 @@ class WalletDashboardScreenState extends BaseState {
     lang = prefs.getString('lang');
 
     setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                    Get app version
+----------------------------------------------------------------------*/
+
+  searchCoinsByTickerName(String value) async {
+    setBusy(true);
+    // await apiService.getTokenList().then((tokenList) {
+    //   if (tokenList != null) {
+    //     tokenList.forEach((token) {
+    //       log.w('token ${token.toJson()}');
+    //       if (token.name == value) {
+    //         print('name ${token.name}');
+    //       }
+    //     });
+    //   } else {
+    //     log.e('token list null');
+    //   }
+    // }).catchError((err) {
+    //   log.e('SearchCoinsByTickerName Catch $err');
+    // });
+    //value = value.toUpperCase();
+    print('length ${walletInfoCopy.length} -- value $value');
+    for (var i = 0; i < walletInfoCopy.length; i++)
+      if (walletInfoCopy[i].tickerName == value ||
+              walletInfoCopy[i].name == value
+          //||          isFirstCharacterMatched(value, i)
+          ) {
+        setBusy(true);
+        walletInfo = [];
+        walletInfo.add(walletInfoCopy[i]);
+        // print(
+        //     'matched wallet ${walletInfoCopy[i].toJson()} --  wallet info length ${walletInfo.length}');
+        setBusy(false);
+        break;
+      } else {
+        // log.e(
+        //     'in else ${walletInfoCopy[i].tickerName} == ${value.toUpperCase()}');
+        walletInfo = [];
+        walletInfo = walletInfoCopy;
+      }
+    setBusy(false);
+  }
+
+  bool isFirstCharacterMatched(String value, int index) {
+    print(
+        'value 1st char ${value[0]} == first chracter ${walletInfoCopy[index].tickerName[0]}');
+    log.w(value.startsWith(walletInfoCopy[index].tickerName[0]));
+    return value.startsWith(walletInfoCopy[index].tickerName[0]);
   }
 
 /*----------------------------------------------------------------------
@@ -361,7 +413,7 @@ class WalletDashboardScreenState extends BaseState {
     for (var i = 0; i < walletInfo.length; i++) {
       holder = holder + walletInfo[i].usdValue;
     }
-    totalUsdBalance = currencyFormat(holder, 2);
+    totalUsdBalance = NumberUtil.currencyFormat(holder, 2);
     // totalUsdBalance =
     //     NumberFormat.simpleCurrency(decimalDigits: 2).format(holder);
     // totalUsdBalance = totalUsdBalance.substring(1);
@@ -530,9 +582,7 @@ class WalletDashboardScreenState extends BaseState {
             // Compare wallet ticker name to wallet balance coin name
             if (walletTickerName == walletBalanceCoinName) {
               double marketPrice = walletBalanceList[j].usdValue.usd ?? 0.0;
-              double availableBal = walletBalanceList[j].balance.isNegative
-                  ? 0.0
-                  : walletBalanceList[j].balance;
+              double availableBal = walletBalanceList[j].balance ?? 0.0;
               double lockedBal = walletBalanceList[j].lockBalance ?? 0.0;
 
               // Check if market price error from api then show the notification with ticker name
@@ -542,11 +592,15 @@ class WalletDashboardScreenState extends BaseState {
               if (marketPrice.isNegative) {
                 marketPrice = 0.0;
               }
+              if (availableBal.isNegative) {
+                print(availableBal);
+                availableBal = 0.0;
+              }
 
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
                   marketPrice, availableBal, lockedBal);
-              String holder = currencyFormat(usdValue, 2);
+              String holder = NumberUtil.currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
 // get Pair decimal config
@@ -657,8 +711,9 @@ class WalletDashboardScreenState extends BaseState {
           .coinBalanceByAddress(tickerName, address, coinTokenType[i])
           .then((balance) async {
         log.e('bal $balance');
-        walletBal = balance['balance'];
-        walletLockedBal = balance['lockbalance'];
+        walletBal = balance['balance'] == -1 ? 0.0 : balance['balance'];
+        walletLockedBal =
+            balance['lockbalance'] == -1 ? 0.0 : balance['lockbalance'];
 
         // Get coin market price by name
         double marketPrice =
@@ -667,7 +722,7 @@ class WalletDashboardScreenState extends BaseState {
         // Calculate usd balance
         double usdValue = walletService.calculateCoinUsdBalance(
             marketPrice, walletBal, walletLockedBal);
-        String holder = currencyFormat(usdValue, 2);
+        String holder = NumberUtil.currencyFormat(usdValue, 2);
         formattedUsdValueList.add(holder);
         // Adding each coin details in the wallet
         WalletInfo wi = WalletInfo(
@@ -699,36 +754,14 @@ class WalletDashboardScreenState extends BaseState {
       });
     } // For loop ends
 
-    // bool hasDUSD = false;
-    // String exgAddress = '';
-    // String exgTokenType = '';
-
-    // for (var i = 0; i < walletInfo.length; i++) {
-    //   String tickerName = walletInfo[i].tickerName;
-    //   if (tickerName == 'DUSD') {
-    //     hasDUSD = true;
-    //   }
-    //   if (tickerName == 'EXG') {
-    //     exgAddress = walletInfo[i].address;
-    //     exgTokenType = walletInfo[i].tokenType;
-    //   }
-    // }
-    // if (!hasDUSD) {
-    //   var dusdWalletInfo = new WalletInfo(
-    //       tickerName: 'DUSD',
-    //       tokenType: exgTokenType,
-    //       address: exgAddress,
-    //       availableBalance: 0.0,
-    //       lockedBalance: 0.0,
-    //       usdValue: 0.0,
-    //       name: 'dusd',
-    //       inExchange: 0.0);
-    //   walletInfo.add(dusdWalletInfo);
-    // }
     calcTotalBal();
     await getExchangeAssetsBalance();
     await updateWalletDatabase();
     if (!isProduction) debugVersionPopup();
+    if (walletInfo != null) {
+      walletInfoCopy = [];
+      walletInfoCopy = walletInfo.map((element) => element).toList();
+    }
     log.w('Fetched wallet data using old methods');
   }
 

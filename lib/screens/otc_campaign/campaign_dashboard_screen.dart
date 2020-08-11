@@ -54,7 +54,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                       color: globals.white54,
                     ),
                     title: Text(
-                      '${model.userData.email}',
+                      '${model.campaignUserData.email}',
                       style: Theme.of(context).textTheme.headline5,
                     ),
                   ),
@@ -72,9 +72,9 @@ class CampaignDashboardScreen extends StatelessWidget {
                   ),
                   UIHelper.divider,
                   ListTile(
-                    title: model.userData.referralCode != null
+                    title: model.campaignUserData.referralCode != null
                         ? Text(
-                            '${AppLocalizations.of(context).myReferralCode} ${model.userData.referralCode.toString()}',
+                            '${AppLocalizations.of(context).myReferralCode} ${model.campaignUserData.referralCode.toString()}',
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5
@@ -85,7 +85,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                     trailing: Icon(Icons.share, color: globals.white54),
                     onTap: () {
                       Share.share(
-                          'Here is my referral code ${model.userData.referralCode.toString()} for campaign ${model.campaignName}');
+                          'Here is my referral code ${model.campaignUserData.referralCode.toString()} for campaign ${model.campaignName}');
                     },
                   ),
                   UIHelper.divider,
@@ -138,7 +138,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             title: Padding(
                               padding: const EdgeInsets.only(top: 2.0),
                               child: Text(
-                                  '${AppLocalizations.of(context).welcome} ${model.userData.email}',
+                                  '${AppLocalizations.of(context).welcome} ${model.campaignUserData.email}',
                                   style: Theme.of(context).textTheme.headline5),
                             ),
                             trailing: InkWell(
@@ -387,7 +387,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                                               .textTheme
                                               .headline5),
                                       Text(
-                                          '${model.myTokensWithoutRewards.toStringAsFixed(2)}',
+                                          '${model.memberProfile.totalQuantities.toString()}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5
@@ -415,8 +415,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                         ListTile(
                             onTap: () {
                               model.navigateByRouteName(
-                                  '/campaignRewardDetails',
-                                  model.campaignRewardList);
+                                  '/MyRewardDetails', model.campaignRewardList);
                             },
                             dense: false,
                             leading: Padding(
@@ -462,7 +461,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             onTap: () {
                               if (!model.busy)
                                 model.navigateByRouteName(
-                                    '/campaignTeamRewards', model.team);
+                                    '/teamRewardDetails', model.team);
                             },
                             dense: false,
                             leading: Padding(

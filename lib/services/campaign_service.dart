@@ -312,8 +312,9 @@ class CampaignService {
     try {
       var response = await client.get(memberProfileUrl, headers: headers);
       var json = jsonDecode(response.body)['_body'];
-      log.w('getMemberProfile $json');
+
       MemberProfile memberProfile = MemberProfile.fromJson(json);
+      log.i('getMemberProfile -- ${memberProfile.toJson()}');
       return memberProfile;
     } catch (err) {
       log.e('In getMemberProfile catch $err');

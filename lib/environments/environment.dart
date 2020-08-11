@@ -33,7 +33,8 @@ Map devConfig = {
       "chainId": 3,
       "infura": "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
       "gasPrice": 90000000000,
-      "gasLimit": 100000
+      "gasPriceMax": 200000000000,
+      "gasLimit": 200000
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
@@ -159,7 +160,8 @@ Map productionConfig = {
       "chainId": 1,
       "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
       "gasPrice": 90000000000,
-      "gasLimit": 100000
+      "gasPriceMax": 200000000000,
+      "gasLimit": 200000
     },
     "FAB": {
       "chain": {

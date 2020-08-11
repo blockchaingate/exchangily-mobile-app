@@ -331,8 +331,7 @@ Uint8List magicHash(String message, [NetworkType network]) {
   encode(message.length, buffer, messagePrefix.length);
   buffer.setRange(
       messagePrefix.length + messageVISize, length, utf8.encode(message));
-  print('buffer=');
-  print(buffer);
+
   return hash256(buffer);
 }
 
@@ -352,15 +351,12 @@ Uint8List magicHashDoge(String message, [NetworkType network]) {
   encode(message.length, buffer, messagePrefix.length + 1);
   buffer.setRange(
       messagePrefix.length + messageVISize + 1, length, utf8.encode(message));
-  print('buffer=');
-  print(buffer);
+
   return hash256(buffer);
 }
 
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
-  print('originalMessage===' + originalMessage);
-  print('coinName===' + coinName);
-  print('tokenType===' + tokenType);
+
   var r = '';
   var s = '';
   var v = '';

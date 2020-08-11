@@ -125,7 +125,7 @@ class TradeView extends StatelessWidget {
                 body: model.isBusy && model.isDisposing
                     ? Container(
                         child: Center(
-                        child: Expanded(child: CupertinoActivityIndicator()),
+                        child: model.sharedService.loadingIndicator(),
                       ))
                     : Container(
                         child: ListView(

@@ -20,13 +20,14 @@ import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/login_screen.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/my_reward/my_referral_view.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/register_account_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/payment_screen.dart';
-import 'package:exchangilymobileapp/screens/otc_campaign/refferal_deatils_screen.dart';
-import 'package:exchangilymobileapp/screens/otc_campaign/reward_details_screen.dart';
+
+import 'package:exchangilymobileapp/screens/otc_campaign/my_reward/my_reward_details_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/order_details_screen.dart';
-import 'package:exchangilymobileapp/screens/otc_campaign/team/team_reward_details_view.dart';
-import 'package:exchangilymobileapp/screens/otc_campaign/team/team_rewards_view.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/team/team_referral_view.dart';
+import 'package:exchangilymobileapp/screens/otc_campaign/team/team_rewards_details_view.dart';
 
 import 'package:exchangilymobileapp/screens/settings/language.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
@@ -188,30 +189,31 @@ class RouteGenerator {
             builder: (_) =>
                 CampaignTokenDetailsScreen(campaignRewardList: args));
 
-      case '/campaignRewardDetails':
+      case '/MyRewardDetails':
         return MaterialPageRoute(
-            builder: (_) =>
-                CampaignRewardDetailsScreen(campaignRewardList: args));
+            builder: (_) => MyRewardDetailsScreen(campaignRewardList: args));
 
       case '/campaignOrderDetails':
         return MaterialPageRoute(
             builder: (_) => CampaignOrderDetailsScreen(orderInfoList: args));
 
-      case '/campaignRefferalDetails':
+      case '/teamRewardDetails':
         return MaterialPageRoute(
-            builder: (_) => CampaignRefferalDetailsScreen());
+            builder: (_) => TeamRewardDetailsView(team: args));
 
-      case '/campaignTeamRewards':
+      case '/teamReferralView':
         return MaterialPageRoute(
-            builder: (_) => CampaignTeamRewardsView(team: args));
+            builder: (_) => CampaignTeamReferralView(rewardDetails: args));
 
-      case '/campaignTeamRewardDetails':
+      case '/myReferralView':
         return MaterialPageRoute(
-            builder: (_) =>
-                CampaignTeamRewardDetailsView(teamRewardDetails: args));
+            builder: (_) => MyReferralView(referralDetails: args));
 
       case '/campaignLogin':
-        return MaterialPageRoute(builder: (_) => CampaignLoginScreen());
+        return MaterialPageRoute(
+            builder: (_) => CampaignLoginScreen(
+                  errorMessage: args,
+                ));
 
       case '/campaignRegisterAccount':
         return MaterialPageRoute(

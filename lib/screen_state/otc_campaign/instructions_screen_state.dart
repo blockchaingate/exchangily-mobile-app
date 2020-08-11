@@ -43,7 +43,7 @@ class CampaignInstructionsScreenState extends BaseState {
     log.e(busy);
 
     var loginToken = await campaignService.getSavedLoginTokenFromLocalStorage();
-    log.w(loginToken);
+    log.w('token $loginToken');
     if (loginToken != '' && loginToken != null) {
       await campaignService.getMemberProfile(loginToken).then((res) async {
         if (res != null) {
@@ -54,7 +54,8 @@ class CampaignInstructionsScreenState extends BaseState {
             }
           });
         } else if (res == null) {
-          navigateTo('/campaignLogin', errorMessage: 'Session Expired');
+          navigateTo('/campaignLogin',
+              errorMessage: AppLocalizations.of(context).sessionExpired);
         }
       }).catchError((err) {
         log.e('getMemberProfile catch');
@@ -92,9 +93,7 @@ class CampaignInstructionsScreenState extends BaseState {
 
   navigateTo(String route, {String errorMessage = ''}) {
     navigationService.navigateUsingpopAndPushedNamed(route,
-        arguments: userData);
-    setErrorMessage(errorMessage);
-    setBusy(false);
+        arguments: errorMessage);
   }
 
   onBackButtonPressed() async {

@@ -68,7 +68,7 @@ class SendScreenState extends BaseState {
   bool transFeeAdvance = false;
 
   // Init State
-  initState() {
+  initState() async {
     setState(ViewState.Busy);
     sharedService.context = context;
     String coinName = walletInfo.tickerName;
@@ -77,8 +77,8 @@ class SendScreenState extends BaseState {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
-      gasPriceTextController.text =
-          environment["chains"]["ETH"]["gasPrice"].toString();
+      var gasPriceReal = await walletService.getEthGasPrice();
+      gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
     } else if (coinName == 'FAB') {
@@ -182,6 +182,7 @@ class SendScreenState extends BaseState {
         log.w('Result $res');
         txHash = res["txHash"];
         errorMessage = res["errMsg"];
+
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           receiverWalletAddressTextController.text = '';
@@ -191,6 +192,9 @@ class SendScreenState extends BaseState {
             AppLocalizations.of(context).sendTransactionComplete,
             '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
           );
+          var allTxids = res["txids"];
+          walletService.addTxids(allTxids);
+
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
               id: null,

@@ -40,7 +40,7 @@ class MoveToExchangeScreenState extends BaseState {
   final myController = TextEditingController();
   bool isValid = false;
 
-  void initState() {
+  void initState() async {
     setState(ViewState.Busy);
     coinName = walletInfo.tickerName;
     tokenType = walletInfo.tokenType;
@@ -55,8 +55,10 @@ class MoveToExchangeScreenState extends BaseState {
       satoshisPerByteTextController.text =
           environment["chains"]["DOGE"]["satoshisPerBytes"].toString();
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
-      gasPriceTextController.text =
-          environment["chains"]["ETH"]["gasPrice"].toString();
+      //gasPriceTextController.text =
+      //    environment["chains"]["ETH"]["gasPrice"].toString();
+      var gasPriceReal = await walletService.getEthGasPrice();
+      gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
     } else if (coinName == 'FAB') {
@@ -136,7 +138,7 @@ class MoveToExchangeScreenState extends BaseState {
         'contractAddress': environment["addresses"]["smartContract"]
             [walletInfo.tickerName]
       };
-      print(
+      log.i(
           '3 - -$seed, -- ${walletInfo.tickerName}, -- ${walletInfo.tokenType}, --   $amount, - - $option');
       await walletService
           .depositDo(
@@ -148,6 +150,9 @@ class MoveToExchangeScreenState extends BaseState {
         if (success) {
           myController.text = '';
           String txId = ret['data']['transactionID'];
+
+          var allTxids = ret["txids"];
+          walletService.addTxids(allTxids);
           setMessage(txId);
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(

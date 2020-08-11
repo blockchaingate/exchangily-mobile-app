@@ -280,7 +280,31 @@ class WalletDashboardScreen extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.headline6,
                                   )),
-                            ))
+                            )),
+                    UIHelper.horizontalSpaceMedium,
+                    Expanded(
+                      // not working rn
+                      flex: 3,
+                      child: Container(
+                        margin: EdgeInsets.only(top: 5),
+                        height: 30,
+                        child: TextField(
+                          decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: primaryColor, width: 1.0),
+                              ),
+                              // helperText: 'Search',
+                              // helperStyle:
+                              //     Theme.of(context).textTheme.bodyText1,
+                              suffixIcon: Icon(Icons.search, color: white)),
+                          controller: model.searchCoinTextController,
+                          onChanged: (String value) {
+                            model.searchCoinsByTickerName(value);
+                          },
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -437,6 +461,9 @@ class WalletDashboardScreen extends StatelessWidget {
       elevation,
       context,
       WalletDashboardScreenState model) {
+    if (tickerName == 'BCH' || tickerName == 'FAB') {
+      print('AVAILABLE BAL $available');
+    }
     return Card(
       color: globals.walletCardColor,
       elevation: elevation,
@@ -504,7 +531,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                 ))
                               : Expanded(
                                   child: Text(
-                                      available == 0
+                                      available.isNegative
                                           ? '0.0'
                                           : available.toStringAsFixed(4),
                                       style: Theme.of(context)
@@ -538,7 +565,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                 ))
                               : Expanded(
                                   child: Text(
-                                      locked == 0
+                                      locked.isNegative
                                           ? '0.0'
                                           : locked.toStringAsFixed(4),
                                       style: Theme.of(context)
