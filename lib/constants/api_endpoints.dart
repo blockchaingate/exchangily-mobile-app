@@ -36,7 +36,9 @@ const String coinCurrencyUsdPriceUrl =
 final String getAppVersionUrl = baseKanbanUrl + 'getappversion';
 
 /*----------------------------------------------------------------------
-                            Get Token List
+                            Get Coin Token List
 ----------------------------------------------------------------------*/
 
 final String getTokenListUrl = baseKanbanUrl + 'exchangily/getTokenList';
+
+final String otcKycCreate = baseBlockchainGateV2Url + 'kyc/create';
