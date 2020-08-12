@@ -155,9 +155,12 @@ class WalletDashboardScreenState extends BaseState {
     }
     await apiService.getApiAppVersion().then((apiAppVersion) {
       if (apiAppVersion != null) {
+        log.e('condition ${localAppVersion.compareTo(apiAppVersion)}');
+
         log.i(
             'api app version $apiAppVersion -- local version $localAppVersion');
-        if (localAppVersion != apiAppVersion) {
+
+        if (localAppVersion.compareTo(apiAppVersion) == -1) {
           sharedService.alertDialog(
               AppLocalizations.of(context).appUpdateNotice,
               '${AppLocalizations.of(context).pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context).toLatestBuild} $apiAppVersion ${AppLocalizations.of(context).inText} $store',

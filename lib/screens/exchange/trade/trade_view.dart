@@ -72,55 +72,55 @@ class TradeView extends StatelessWidget {
                     // ],
                     centerTitle: true,
                     automaticallyImplyLeading: false),
-                drawer: Container(
-                    margin: EdgeInsets.only(top: 10),
-                    child: Stack(overflow: Overflow.visible, children: [
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: Container(
-                          child: model.dataReady('allPrices')
-                              ? MarketPairsTabView(
-                                  marketPairsTabBarView:
-                                      model.marketPairsTabBar,
-                                  isBusy: false,
-                                )
-                              : Container(
-                                  child: Center(
-                                    child: Text(
-                                        AppLocalizations.of(context).loading),
-                                  ),
-                                ),
-                        ),
-                      ),
-                      // Close button position bottom right
-                      Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color: red,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(90),
-                                    bottomLeft: Radius.circular(1))),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8.0, top: 8.0),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.close,
-                                  color: white,
-                                  size: 30,
-                                ),
-                                onPressed: () {
-                                  model.resumeAllStreams();
-                                  model.navigationService.goBack();
-                                },
-                              ),
-                            ),
-                          )),
-                      // Icon(Icons.access_alarm)
-                    ])),
+                // drawer: Container(
+                //     margin: EdgeInsets.only(top: 10),
+                //     child: Stack(overflow: Overflow.visible, children: [
+                //       Align(
+                //         alignment: Alignment.topCenter,
+                //         child: Container(
+                //           child: model.dataReady('allPrices')
+                //               ? MarketPairsTabView(
+                //                   marketPairsTabBarView:
+                //                       model.marketPairsTabBar,
+                //                   isBusy: false,
+                //                 )
+                //               : Container(
+                //                   child: Center(
+                //                     child: Text(
+                //                         AppLocalizations.of(context).loading),
+                //                   ),
+                //                 ),
+                //         ),
+                //       ),
+                //       // Close button position bottom right
+                //       Positioned(
+                //           bottom: 0,
+                //           right: 0,
+                //           child: Container(
+                //             padding: EdgeInsets.all(5),
+                //             decoration: BoxDecoration(
+                //                 color: red,
+                //                 borderRadius: BorderRadius.only(
+                //                     topLeft: Radius.circular(90),
+                //                     bottomLeft: Radius.circular(1))),
+                //             child: Padding(
+                //               padding:
+                //                   const EdgeInsets.only(left: 8.0, top: 8.0),
+                //               child: IconButton(
+                //                 icon: Icon(
+                //                   Icons.close,
+                //                   color: white,
+                //                   size: 30,
+                //                 ),
+                //                 onPressed: () {
+                //                   model.resumeAllStreams();
+                //                   model.navigationService.goBack();
+                //                 },
+                //               ),
+                //             ),
+                //           )),
+                //       // Icon(Icons.access_alarm)
+                //     ])),
 
                 body: model.isBusy && model.isDisposing
                     ? Container(
