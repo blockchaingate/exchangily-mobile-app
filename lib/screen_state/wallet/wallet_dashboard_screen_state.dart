@@ -41,6 +41,7 @@ class WalletDashboardScreenState extends BaseState {
 
   BuildContext context;
   List<WalletInfo> walletInfo;
+  List<WalletInfo> walletInfoCopy = [];
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
 
@@ -54,7 +55,6 @@ class WalletDashboardScreenState extends BaseState {
   double gasAmount = 0;
   String exgAddress = '';
   String wallets;
-  List<WalletInfo> walletInfoCopy = [];
   bool isHideSmallAmountAssets = false;
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
@@ -71,6 +71,8 @@ class WalletDashboardScreenState extends BaseState {
   bool isFreeFabNotUsed = false;
   double fabBalance = 0.0;
   List<String> formattedUsdValueList = [];
+  List<String> formattedUsdValueListCopy = [];
+
   final searchCoinTextController = TextEditingController();
 
 /*----------------------------------------------------------------------
@@ -88,6 +90,18 @@ class WalletDashboardScreenState extends BaseState {
     lang = prefs.getString('lang');
 
     setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                        On Single Coin Card Click
+----------------------------------------------------------------------*/
+
+  onSingleCoinCardClick(index) {
+    FocusScope.of(context).requestFocus(FocusNode());
+    Navigator.pushNamed(context, '/walletFeatures',
+        arguments: walletInfo[index]);
+    searchCoinTextController.clear();
+    resetWalletInfoObject();
   }
 
 /*----------------------------------------------------------------------
@@ -119,6 +133,12 @@ class WalletDashboardScreenState extends BaseState {
           ) {
         setBusy(true);
         walletInfo = [];
+        formattedUsdValueList = [];
+        log.e('copy ${walletInfoCopy[i].toJson()}');
+
+        String holder =
+            NumberUtil.currencyFormat(walletInfoCopy[i].usdValue, 2);
+        formattedUsdValueList.add(holder);
         walletInfo.add(walletInfoCopy[i]);
         // print(
         //     'matched wallet ${walletInfoCopy[i].toJson()} --  wallet info length ${walletInfo.length}');
@@ -127,10 +147,16 @@ class WalletDashboardScreenState extends BaseState {
       } else {
         // log.e(
         //     'in else ${walletInfoCopy[i].tickerName} == ${value.toUpperCase()}');
-        walletInfo = [];
-        walletInfo = walletInfoCopy;
+        resetWalletInfoObject();
       }
     setBusy(false);
+  }
+
+  resetWalletInfoObject() {
+    walletInfo = [];
+    formattedUsdValueList = [];
+    walletInfo = walletInfoCopy;
+    formattedUsdValueList = formattedUsdValueListCopy;
   }
 
   bool isFirstCharacterMatched(String value, int index) {
@@ -690,6 +716,12 @@ class WalletDashboardScreenState extends BaseState {
     if (walletInfo != null) {
       walletInfoCopy = [];
       walletInfoCopy = walletInfo.map((element) => element).toList();
+    }
+
+    if (formattedUsdValueList != null) {
+      formattedUsdValueListCopy = [];
+      formattedUsdValueListCopy =
+          formattedUsdValueList.map((element) => element).toList();
     }
     setBusy(false);
   }

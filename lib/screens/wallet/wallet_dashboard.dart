@@ -485,9 +485,7 @@ class WalletDashboardScreen extends StatelessWidget {
         splashColor: Colors.blue.withAlpha(30),
         onDoubleTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         onTap: () {
-          FocusScope.of(context).requestFocus(FocusNode());
-          Navigator.pushNamed(context, '/walletFeatures',
-              arguments: model.walletInfo[index]);
+          model.onSingleCoinCardClick(index);
         },
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 10),
