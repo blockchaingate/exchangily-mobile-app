@@ -174,6 +174,8 @@ class WalletDashboardScreenState extends BaseState {
     setBusy(true);
     String localAppVersion = await sharedService.getLocalAppVersion();
     String store = '';
+    String appDownloadLinkOnWebsite =
+        'http://exchangily.com/download/latest.apk';
     if (Platform.isIOS) {
       store = 'App Store';
     } else {
@@ -186,12 +188,14 @@ class WalletDashboardScreenState extends BaseState {
         log.i(
             'api app version $apiAppVersion -- local version $localAppVersion');
 
-        if (localAppVersion.compareTo(apiAppVersion) == -1) {
+        if (localAppVersion.compareTo(apiAppVersion) == 1) {
           sharedService.alertDialog(
               AppLocalizations.of(context).appUpdateNotice,
-              '${AppLocalizations.of(context).pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context).toLatestBuild} $apiAppVersion ${AppLocalizations.of(context).inText} $store',
+              '${AppLocalizations.of(context).pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context).toLatestBuild} $apiAppVersion ${AppLocalizations.of(context).inText} $store ${AppLocalizations.of(context).clickOnWebsiteButton}',
               isUpdate: true,
-              isLater: true);
+              isLater: true,
+              isWebsite: true,
+              stringData: appDownloadLinkOnWebsite);
         }
       }
     }).catchError((err) {
