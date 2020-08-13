@@ -14,16 +14,17 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/orders.dart';
+import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -90,6 +91,7 @@ class BuySellScreenState extends BaseState {
   ApiService apiService = locator<ApiService>();
   String pair = '';
   String tickerName = '';
+  Price passedPair;
 
   init() async {
     // log.e(pair);
@@ -104,6 +106,16 @@ class BuySellScreenState extends BaseState {
     // await orderList();
     // await tradeList();
     // await getDecimalPairConfig();
+    fillPriceAndQuantityTextFields();
+  }
+
+  fillPriceAndQuantityTextFields() {
+    setBusy(true);
+    priceTextController.text = passedPair.price.toString();
+    price = passedPair.price;
+    quantityTextController.text = 1.toString();
+    quantity = 1.0;
+    setBusy(false);
   }
 
   // Set default price for kanban gas price and limit
@@ -114,9 +126,12 @@ class BuySellScreenState extends BaseState {
         environment["chains"]["KANBAN"]["gasPrice"].toString();
   }
 
+/* ---------------------------------------------------
+            Full screen Stack loading indicator
+--------------------------------------------------- */
   // Split Pair Name
   splitPair(String pair) {
-    log.e('pair ${pair}');
+    log.e('pair $pair');
     var coinsArray = pair.split("/");
     baseCoinName = coinsArray[1];
     targetCoinName = coinsArray[0];
@@ -125,7 +140,9 @@ class BuySellScreenState extends BaseState {
   }
 
   // getPairDecimalConfig
-
+/* ---------------------------------------------------
+            Full screen Stack loading indicator
+--------------------------------------------------- */
   getDecimalPairConfig() async {
     setBusy(true);
     await apiService.getPairDecimalConfig().then((res) {
@@ -144,6 +161,9 @@ class BuySellScreenState extends BaseState {
     setBusy(false);
   }
 
+/* ---------------------------------------------------
+            Full screen Stack loading indicator
+--------------------------------------------------- */
   selectBuySellTab(bool value) {
     setState(ViewState.Busy);
     bidOrAsk = value;
@@ -151,6 +171,9 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
+/* ---------------------------------------------------
+            Full screen Stack loading indicator
+--------------------------------------------------- */
   orderListFromTradeService() {
     setState(ViewState.Busy);
     orderListChannel =
@@ -158,6 +181,9 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
+/* ---------------------------------------------------
+            Full screen Stack loading indicator
+--------------------------------------------------- */
   tradeListFromTradeService() {
     setState(ViewState.Busy);
     tradeListChannel =
@@ -165,7 +191,10 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // Order List
+/* ---------------------------------------------------
+            Order List
+--------------------------------------------------- */
+  //
   Future orderList() async {
     setState(ViewState.Busy);
     orderListChannel.stream.listen((ordersString) {
@@ -176,7 +205,10 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // Trade List
+/* ---------------------------------------------------
+            Trade List
+--------------------------------------------------- */
+  //
   tradeList() async {
     setState(ViewState.Busy);
     tradeListChannel.stream.listen((tradesString) {
@@ -190,8 +222,9 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // Retrieve Wallets
-
+/* ---------------------------------------------------
+            Retrieve Wallets
+--------------------------------------------------- */
   retrieveWallets() async {
     setState(ViewState.Busy);
     await databaseService.getAll().then((walletList) {
@@ -220,8 +253,9 @@ class BuySellScreenState extends BaseState {
     });
   }
 
-  // Refresh Balances and Orders
-
+/* ---------------------------------------------------
+            Refresh Balances and Orders
+--------------------------------------------------- */
   refresh(String address) {
     setState(ViewState.Busy);
     if (address == null) {
@@ -294,8 +328,10 @@ class BuySellScreenState extends BaseState {
     });
     setState(ViewState.Idle);
   }
-  // Generate Order Hash
 
+/* ---------------------------------------------------
+          Generate Order Hash
+--------------------------------------------------- */
   generateOrderHash(bidOrAsk, orderType, baseCoin, targetCoin, amount, price,
       timeBeforeExpiration) {
     setState(ViewState.Busy);
@@ -318,6 +354,9 @@ class BuySellScreenState extends BaseState {
     return output;
   }
 
+/* ---------------------------------------------------
+           To Big Int
+--------------------------------------------------- */
   toBitInt(num) {
     var numString = num.toString();
     var numStringArray = numString.split('.');
@@ -340,7 +379,9 @@ class BuySellScreenState extends BaseState {
     return val;
   }
 
-// Tx Hex For Place Order
+/* ---------------------------------------------------
+            Tx Hex For Place Order
+--------------------------------------------------- */
   txHexforPlaceOrder(seed) async {
     setState(ViewState.Busy);
     var timeBeforeExpiration = 423434342432;
@@ -391,7 +432,9 @@ class BuySellScreenState extends BaseState {
     return txKanbanHex;
   }
 
-// Update Transfer Fee
+/* ---------------------------------------------------
+            Update Transfer Fee
+--------------------------------------------------- */
   updateTransFee() async {
     setState(ViewState.Busy);
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
@@ -407,8 +450,9 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // Calculate Transaction Amount
-
+/* ---------------------------------------------------
+            Calculate Transaction Amount
+--------------------------------------------------- */
   caculateTransactionAmount() {
     if (price != null && quantity != null && price >= 0 && quantity >= 0) {
       transactionAmount = quantity * price;
@@ -416,8 +460,9 @@ class BuySellScreenState extends BaseState {
     return transactionAmount;
   }
 
-  // Show Orders
-
+/* ---------------------------------------------------
+            Show Orders
+--------------------------------------------------- */
   showOrders(Orders orders) async {
     setState(ViewState.Busy);
     var newbuy = orders.buy;
@@ -478,6 +523,9 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
+/* ---------------------------------------------------
+            Place Buy/Sell Order
+--------------------------------------------------- */
   Future placeBuySellOrder() async {
     setBusy(true);
     setState(ViewState.Busy);
@@ -495,16 +543,18 @@ class BuySellScreenState extends BaseState {
       var resKanban = await sendKanbanRawTransaction(txHex);
       log.e('resKanban $resKanban');
       if (resKanban != null && resKanban['transactionHash'] != null) {
-        sharedService.alertDialog(
+        sharedService.showInfoFlushbar(
             AppLocalizations.of(context).placeOrderTransactionSuccessful,
             'txid:' + resKanban['transactionHash'],
-            isWarning: false);
+            Icons.check,
+            green,
+            context);
       } else {
         walletService.showInfoFlushbar(
             AppLocalizations.of(context).placeOrderTransactionFailed,
             resKanban.toString(),
             Icons.cancel,
-            globals.red,
+            red,
             context);
       }
     } else {
@@ -516,7 +566,9 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // Check Pass
+/* ---------------------------------------------------
+            Check Pass
+--------------------------------------------------- */
   checkPass(context) async {
     setBusy(true);
 
@@ -568,7 +620,9 @@ class BuySellScreenState extends BaseState {
     setBusy(false);
   }
 
-// Handle Text Change
+/* ---------------------------------------------------
+            Handle Text Change
+--------------------------------------------------- */
   void handleTextChanged(String name, String text) {
     setState(ViewState.Busy);
     if (name == 'price') {
@@ -594,14 +648,16 @@ class BuySellScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // Slider Onchange
+/* ---------------------------------------------------
+            Slider Onchange
+--------------------------------------------------- */
   sliderOnchange(newValue) {
     setState(ViewState.Busy);
-    log.w(quantityTextController.text);
     sliderValue = newValue;
     var targetCoinbalance = targetCoinWalletData.inExchange; // usd bal for buy
     var baseCoinbalance = baseCoinWalletData //coin(asset) bal for sell
         .inExchange;
+    if (quantity.isNaN) quantity = 0.0;
     if (price != null &&
         quantity != null &&
         !price.isNegative &&
@@ -624,12 +680,17 @@ class BuySellScreenState extends BaseState {
         log.i(transactionAmount);
         log.e(changeBalanceWithSlider);
       }
+    } else {
+      log.e(
+          'In sliderOnchange else where quantity $quantity or price $price is null/empty');
     }
     log.w(sliderValue);
     setState(ViewState.Idle);
   }
 
-// Show Notification
+/* ---------------------------------------------------
+            Show Notification
+--------------------------------------------------- */
   showNotification(context) {
     sharedService.showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,

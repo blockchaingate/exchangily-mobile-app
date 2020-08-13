@@ -137,6 +137,9 @@ dependencies:
   # launch the app in the app stores
   launch_review: ^2.0.0
 
+  # To open web url's
+  url_launcher: ^5.5.0
+
   # Share files
   share:
     git:
