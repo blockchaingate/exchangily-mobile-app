@@ -85,11 +85,11 @@ class BottomNavBar extends StatelessWidget {
             if (currentRouteName != 'OtcScreen')
               Navigator.pushNamed(context, '/otc');
             break;
-          case 2:
+          case 3:
             if (currentRouteName != 'CampaignInstructionScreen')
               navigationService.navigateTo('/campaignInstructions');
             break;
-          case 3:
+          case 4:
             if (currentRouteName != 'SettingsScreen')
               navigationService.navigateTo('/settings');
             else if (ModalRoute.of(context).settings.name == 'SettingsScreen')

@@ -166,6 +166,10 @@ class RouteGenerator {
 
       /// OTC Screen
       case '/otc':
+        return MaterialPageRoute(
+            builder: (_) => CampaignLoginScreen(routeName: 'otc'));
+
+      case '/otcView':
         return MaterialPageRoute(builder: (_) => OtcScreen());
 
       case '/otcDetails':

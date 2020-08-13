@@ -9,7 +9,9 @@ import '../../shared/globals.dart' as globals;
 
 class CampaignLoginScreen extends StatelessWidget {
   final String errorMessage;
-  const CampaignLoginScreen({Key key, this.errorMessage}) : super(key: key);
+  final String routeName;
+  const CampaignLoginScreen({Key key, this.errorMessage, this.routeName})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,10 @@ class CampaignLoginScreen extends StatelessWidget {
     return BaseScreen<CampaignLoginScreenState>(
       onModelReady: (model) async {
         model.context = context;
-        //  await model.init();
+        print('ROUTE NAME $routeName');
+        model.passedWRoute = routeName;
+        print('PASSED NAME ${model.passedWRoute}');
+        await model.init();
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {

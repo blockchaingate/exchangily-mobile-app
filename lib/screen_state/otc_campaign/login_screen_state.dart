@@ -33,7 +33,7 @@ class CampaignLoginScreenState extends BaseState {
   bool isLogging = false;
   bool isPasswordReset = false;
   String passwordResetMessage = '';
-
+  String passedWRoute = '';
   // To check if user already logged in
 
   // INIT
@@ -50,6 +50,15 @@ class CampaignLoginScreenState extends BaseState {
               .getUserDataByToken(loginToken)
               .then((res) {
             if (res != null) {
+              if (passedWRoute == 'otc') {
+                log.i('in otc');
+                navigationService.navigateUsingpopAndPushedNamed(
+                  '/otcView',
+                );
+                setBusy(false);
+                setErrorMessage('');
+                return;
+              }
               userData = res;
               navigationService.navigateUsingpopAndPushedNamed(
                   '/campaignDashboard',
@@ -178,7 +187,15 @@ class CampaignLoginScreenState extends BaseState {
       // json deconde in campaign api let us see the response then its properties
       if (res == null) {
         setErrorMessage(AppLocalizations.of(context).serverError);
-        return false;
+        setBusy(false);
+        return;
+      }
+
+      log.e('pass route $passedWRoute');
+      if (passedWRoute == 'otc') {
+        navigationService.navigateTo('/otcView');
+        setBusy(false);
+        return;
       }
       String error = res['message'];
       if (res != null && (error == null || error == '')) {
@@ -186,6 +203,7 @@ class CampaignLoginScreenState extends BaseState {
         log.i('Test user data object ${userData.toJson()}');
         // navigationService.navigateTo('/campaignDashboard', arguments: userData);
         await campaignService.saveCampaignUserDataInLocalDatabase(userData);
+
         navigationService.navigateTo('/campaignDashboard');
       } else {
         setErrorMessage(error);
