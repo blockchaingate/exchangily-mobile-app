@@ -50,6 +50,8 @@ class BuySell extends StatelessWidget {
           model.bidOrAsk = bidOrAsk;
           await model.retrieveWallets();
           await model.getDecimalPairConfig();
+          model.passedPair = pair;
+          model.init();
         },
         builder: (context, model, child) => Scaffold(
             appBar: CupertinoNavigationBar(
