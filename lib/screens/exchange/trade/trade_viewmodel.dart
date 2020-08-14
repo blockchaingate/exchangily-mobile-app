@@ -75,11 +75,11 @@ class TradeViewModel extends MultipleStreamViewModel {
     setBusy(true);
     isDisposing = true;
     await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
-    log.i('Close all IOWebsocket connections');
+    log.i('Closed all IOWebsocket connections');
     navigationService.goBack();
-    super.dispose();
     isDisposing = false;
     setBusy(false);
+    super.dispose();
   }
 
   /// Initialize when model ready
@@ -216,18 +216,21 @@ class TradeViewModel extends MultipleStreamViewModel {
   }
 
   /// Bottom sheet to show market pair price
-  // showBottomSheet() {
-  //   showModalBottomSheet(
-  //       backgroundColor: Colors.white,
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return Container(
-  //             width: 200,
-  //             height: MediaQuery.of(context).size.height - 50,
-  //             child:
-  //                 MarketPairsTabView(marketPairsTabBarView: marketPairsTabBar));
-  //       });
-  // }
+  showBottomSheet() {
+    showModalBottomSheet(
+        backgroundColor: Colors.white,
+        context: context,
+        builder: (BuildContext context) {
+          return Container(
+              width: 200,
+              height: MediaQuery.of(context).size.height - 50,
+              child: MarketPairsTabView(
+                marketPairsTabBarView: marketPairsTabBar,
+                priceList: [],
+                isBusy: isBusy,
+              ));
+        });
+  }
 
 // ----------
 // Not using between this
