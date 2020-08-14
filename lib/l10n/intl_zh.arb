@@ -1780,6 +1780,7 @@
     "description": "app_update_popup_button_text_later",
     "type": "text",
     "placeholders": {}
-  }
+  },
+  
   
 }

@@ -25,6 +25,12 @@ class OtcScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                FlatButton(
+                  child: Text('KYC'),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/kycView');
+                  },
+                ),
                 // Use inkwell to make the card tap and perform something
                 InkWell(
                     splashColor: globals.primaryColor,

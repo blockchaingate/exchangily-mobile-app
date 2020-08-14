@@ -17,6 +17,8 @@ import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
 import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
+import 'package:exchangilymobileapp/screens/otc/kyc/kyc_view.dart';
+
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/login_screen.dart';
@@ -174,6 +176,9 @@ class RouteGenerator {
 
       case '/otcDetails':
         return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
+
+      case '/kycView':
+        return MaterialPageRoute(builder: (_) => KycView());
 
       /// CAMPAIGN INSTRUCTIONS
 
