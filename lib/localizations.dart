@@ -1521,6 +1521,18 @@ class AppLocalizations {
     return Intl.message("Member Details",
         name: 'memberDetails', desc: 'camapign_team_reward_member_details');
   }
+
+  String get website {
+    return Intl.message("Website",
+        name: 'website', desc: 'wallet_dashboard_app_update_popup');
+  }
+
+  String get clickOnWebsiteButton {
+    return Intl.message(
+        "or click on website button to download the latest version from the official Exchangily site",
+        name: 'clickOnWebsiteButton',
+        desc: 'wallet_dashboard_app_update_popup');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

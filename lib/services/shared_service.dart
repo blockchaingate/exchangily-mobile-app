@@ -25,6 +25,7 @@ import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../localizations.dart';
 import '../shared/globals.dart' as globals;
@@ -33,6 +34,19 @@ class SharedService {
   BuildContext context;
   NavigationService navigationService = locator<NavigationService>();
   final log = getLogger('SharedService');
+
+/* ---------------------------------------------------
+            Launch link urls
+--------------------------------------------------- */
+
+  launchURL(String url) async {
+    log.i('launchURL $url');
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
 /* ---------------------------------------------------
             Full screen Stack loading indicator
@@ -141,8 +155,9 @@ class SharedService {
       dynamic arguments,
       bool isDismissible = true,
       bool isUpdate = false,
-      bool isLater = false}) async {
-    print(' is dismissible $isDismissible');
+      bool isLater = false,
+      bool isWebsite = false,
+      String stringData}) async {
     bool checkBoxValue = false;
     showDialog(
         barrierDismissible: isDismissible,
@@ -243,7 +258,7 @@ class SharedService {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           OutlineButton(
-                            color: globals.primaryColor,
+                            color: globals.red,
                             padding: EdgeInsets.all(0),
                             child: Center(
                               child: Text(
@@ -265,9 +280,27 @@ class SharedService {
                             },
                           ),
                           UIHelper.horizontalSpaceSmall,
+                          isWebsite
+                              ? FlatButton(
+                                  color: primaryColor,
+                                  padding: EdgeInsets.all(5),
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context).website,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 12),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    launchURL(stringData);
+                                    Navigator.of(context).pop(false);
+                                  },
+                                )
+                              : Container(),
+                          UIHelper.horizontalSpaceSmall,
                           isUpdate
                               ? FlatButton(
-                                  color: globals.primaryColor,
+                                  color: green,
                                   padding: EdgeInsets.all(5),
                                   child: Center(
                                     child: Text(
