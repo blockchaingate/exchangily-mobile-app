@@ -118,7 +118,7 @@ class ApiService {
   }
 
   Future getEthGasPrice() async {
-    var url = environment['endpoints']['eth'] + 'getgasprice';
+    var url = 'https://ethprod.fabcoinapi.com/getgasprice';
     var ethGasPrice = 0;
     try {
       var response = await client.get(url);
