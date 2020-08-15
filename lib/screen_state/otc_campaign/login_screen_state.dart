@@ -67,12 +67,9 @@ class CampaignLoginScreenState extends BaseState {
               setErrorMessage('');
             }
           });
-        } else if (res == null) {
-          setBusy(false);
-          setErrorMessage('Session Expired');
         }
       }).catchError((err) {
-        log.e('getMemberRewardByToken catch');
+        log.e('getMemberProfile catch $err');
         setErrorMessage(AppLocalizations.of(context).serverError);
         setBusy(false);
       });

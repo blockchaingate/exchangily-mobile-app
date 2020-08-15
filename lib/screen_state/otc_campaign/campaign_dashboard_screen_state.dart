@@ -71,6 +71,7 @@ class CampaignDashboardScreenState extends BaseState {
         await myRewardsByToken();
         await getCampaignName();
       } else {
+        log.e('no login token found');
         navigationService.navigateTo('/campaignLogin');
       }
     });

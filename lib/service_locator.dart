@@ -26,6 +26,7 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_f
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_screen_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/otc/kyc/kyc_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -95,4 +96,5 @@ Future serviceLocator() async {
   locator.registerFactory(() => TeamRewardDetailsScreenState());
   locator.registerFactory(() => MarketsViewModel());
   locator.registerFactory(() => TradeViewModel());
+  locator.registerFactory(() => KycViewModel());
 }

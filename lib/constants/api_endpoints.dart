@@ -41,4 +41,8 @@ final String getAppVersionUrl = baseKanbanUrl + 'getappversion';
 
 final String getTokenListUrl = baseKanbanUrl + 'exchangily/getTokenList';
 
+/*----------------------------------------------------------------------
+                            OTC
+----------------------------------------------------------------------*/
+
 final String otcKycCreate = baseBlockchainGateV2Url + 'kyc/create';

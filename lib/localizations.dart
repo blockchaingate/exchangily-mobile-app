@@ -1533,6 +1533,10 @@ class AppLocalizations {
         name: 'clickOnWebsiteButton',
         desc: 'wallet_dashboard_app_update_popup');
   }
+
+  String get submit {
+    return Intl.message("Submit", name: 'submit', desc: 'otc_kyc_submit');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
