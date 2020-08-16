@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -34,6 +35,15 @@ class SharedService {
   BuildContext context;
   NavigationService navigationService = locator<NavigationService>();
   final log = getLogger('SharedService');
+
+/*-------------------------------------------------------------------------------------
+                                Convert image to base-64
+-------------------------------------------------------------------------------------*/
+  String convertImageToBase64(bytes) {
+    String base46Encode = base64.encode(bytes);
+    log.i('convertImageToBase64 $base46Encode');
+    return base46Encode;
+  }
 
 /* ---------------------------------------------------
             Launch link urls

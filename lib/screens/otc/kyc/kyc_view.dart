@@ -366,8 +366,13 @@ class KycView extends StatelessWidget {
                         // Image picker
                         FlatButton.icon(
                             onPressed: model.getImage,
-                            icon: Icon(Icons.add_a_photo),
-                            label: Text('pick image')),
+                            icon: Icon(
+                              Icons.add_a_photo,
+                              size: 16,
+                              color: primaryColorWithAlpha150,
+                            ),
+                            label: Text('Select Image',
+                                style: Theme.of(context).textTheme.bodyText1)),
                         UIHelper.verticalSpaceSmall,
                         Text(
                             '1. Please take a picture you holding one of your IDs; front and back. For your pictures, make sure:'),
