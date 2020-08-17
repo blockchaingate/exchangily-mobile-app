@@ -1659,7 +1659,7 @@ class WalletService {
       }
       transFeeDouble = (BigInt.parse(gasPrice.toString()) *
               BigInt.parse(gasLimit.toString()) /
-              BigInt.parse('5000000000000000000'))
+              BigInt.parse('4760000000000000000'))
           .toDouble();
 
       if (getTransFeeOnly) {
@@ -1838,7 +1838,7 @@ class WalletService {
       }
       transFeeDouble = (BigInt.parse(gasPrice.toString()) *
               BigInt.parse(gasLimit.toString()) /
-              BigInt.parse('5000000000000000000'))
+              BigInt.parse('2500000000000000000'))
           .toDouble();
       log.i('transFeeDouble===' + transFeeDouble.toString());
       if (getTransFeeOnly) {
