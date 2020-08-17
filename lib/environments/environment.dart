@@ -160,7 +160,7 @@ Map productionConfig = {
       "hardfork": 'byzantium',
       "chainId": 1,
       "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 120,
+      "gasPrice": 90,
       "gasPriceMax": 200,
       "gasLimit": 21000,
       "gasLimitToken": 60000
