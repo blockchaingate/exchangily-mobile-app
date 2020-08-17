@@ -14,6 +14,7 @@
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/models/wallet/token_list.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 
@@ -41,6 +42,28 @@ class ApiService {
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
+
+/*----------------------------------------------------------------------
+                    Get Token List
+----------------------------------------------------------------------*/
+
+  Future<List<Token>> getTokenList() async {
+    String url = getTokenListUrl;
+    log.i('getTokenList url $url');
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      var data = json['data'];
+      var parsedTokenList = data['tokenList'] as List;
+      log.w('getTokenList  $parsedTokenList');
+      TokenList tokenList = TokenList.fromJson(parsedTokenList);
+      if (data['tokenList'] == null) return null;
+      return tokenList.tokens;
+    } catch (err) {
+      log.e('getTokenList $err');
+      throw Exception(err);
+    }
+  }
 
 /*----------------------------------------------------------------------
                     Get app version
@@ -94,6 +117,27 @@ class ApiService {
     }
   }
 
+  Future getEthGasPrice() async {
+    var url = 'https://ethprod.fabcoinapi.com/getgasprice';
+    var ethGasPrice = 0;
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      log.w(' getDepositTransactionStatus $json');
+      ethGasPrice = int.tryParse(json['gasprice']);
+    } catch (err) {
+      log.e('In getDepositTransactionStatus catch $err');
+    }
+
+    if (ethGasPrice < environment['chains']['ETH']['gasPrice']) {
+      ethGasPrice = environment['chains']['ETH']['gasPrice'];
+    }
+
+    if (ethGasPrice > environment['chains']['ETH']['gasPriceMax']) {
+      ethGasPrice = environment['chains']['ETH']['gasPriceMax'];
+    }
+    return ethGasPrice;
+  }
 /*----------------------------------------------------------------------
                 Transaction status
 ----------------------------------------------------------------------*/
@@ -240,7 +284,7 @@ class ApiService {
         return jsonDecode(res.body);
       }
     } catch (e) {
-      log.e('getOrders Failed to load the data from the API， $e');
+      log.e('getMyOrdersByTickerName Failed to load the data from the API， $e');
       throw Exception;
     }
   }

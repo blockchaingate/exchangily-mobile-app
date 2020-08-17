@@ -11,23 +11,16 @@
 *----------------------------------------------------------------------
 */
 
-import 'dart:convert';
-
-import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/utils/decoder.dart';
-import 'package:http/http.dart' as http;
-import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
-import '../utils/string_util.dart' as stringUtils;
 
 class TradeService {
   final log = getLogger('TradeService');

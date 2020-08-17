@@ -23,6 +23,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -40,6 +41,7 @@ class WalletDashboardScreenState extends BaseState {
 
   BuildContext context;
   List<WalletInfo> walletInfo;
+  List<WalletInfo> walletInfoCopy = [];
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
 
@@ -53,7 +55,6 @@ class WalletDashboardScreenState extends BaseState {
   double gasAmount = 0;
   String exgAddress = '';
   String wallets;
-  List<WalletInfo> walletInfoCopy = [];
   bool isHideSmallAmountAssets = false;
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
@@ -70,6 +71,9 @@ class WalletDashboardScreenState extends BaseState {
   bool isFreeFabNotUsed = false;
   double fabBalance = 0.0;
   List<String> formattedUsdValueList = [];
+  List<String> formattedUsdValueListCopy = [];
+
+  final searchCoinTextController = TextEditingController();
 
 /*----------------------------------------------------------------------
                     INIT
@@ -89,6 +93,80 @@ class WalletDashboardScreenState extends BaseState {
   }
 
 /*----------------------------------------------------------------------
+                        On Single Coin Card Click
+----------------------------------------------------------------------*/
+
+  onSingleCoinCardClick(index) {
+    FocusScope.of(context).requestFocus(FocusNode());
+    Navigator.pushNamed(context, '/walletFeatures',
+        arguments: walletInfo[index]);
+    searchCoinTextController.clear();
+    resetWalletInfoObject();
+  }
+
+/*----------------------------------------------------------------------
+                    Get app version
+----------------------------------------------------------------------*/
+
+  searchCoinsByTickerName(String value) async {
+    setBusy(true);
+    // await apiService.getTokenList().then((tokenList) {
+    //   if (tokenList != null) {
+    //     tokenList.forEach((token) {
+    //       log.w('token ${token.toJson()}');
+    //       if (token.name == value) {
+    //         print('name ${token.name}');
+    //       }
+    //     });
+    //   } else {
+    //     log.e('token list null');
+    //   }
+    // }).catchError((err) {
+    //   log.e('SearchCoinsByTickerName Catch $err');
+    // });
+    //value = value.toUpperCase();
+    print('length ${walletInfoCopy.length} -- value $value');
+    for (var i = 0; i < walletInfoCopy.length; i++)
+      if (walletInfoCopy[i].tickerName == value.toUpperCase() ||
+              walletInfoCopy[i].name == value
+          //||          isFirstCharacterMatched(value, i)
+          ) {
+        setBusy(true);
+        walletInfo = [];
+        formattedUsdValueList = [];
+        log.e('copy ${walletInfoCopy[i].toJson()}');
+
+        String holder =
+            NumberUtil.currencyFormat(walletInfoCopy[i].usdValue, 2);
+        formattedUsdValueList.add(holder);
+        walletInfo.add(walletInfoCopy[i]);
+        // print(
+        //     'matched wallet ${walletInfoCopy[i].toJson()} --  wallet info length ${walletInfo.length}');
+        setBusy(false);
+        break;
+      } else {
+        // log.e(
+        //     'in else ${walletInfoCopy[i].tickerName} == ${value.toUpperCase()}');
+        resetWalletInfoObject();
+      }
+    setBusy(false);
+  }
+
+  resetWalletInfoObject() {
+    walletInfo = [];
+    formattedUsdValueList = [];
+    walletInfo = walletInfoCopy;
+    formattedUsdValueList = formattedUsdValueListCopy;
+  }
+
+  bool isFirstCharacterMatched(String value, int index) {
+    print(
+        'value 1st char ${value[0]} == first chracter ${walletInfoCopy[index].tickerName[0]}');
+    log.w(value.startsWith(walletInfoCopy[index].tickerName[0]));
+    return value.startsWith(walletInfoCopy[index].tickerName[0]);
+  }
+
+/*----------------------------------------------------------------------
                     Get app version
 ----------------------------------------------------------------------*/
 
@@ -96,6 +174,8 @@ class WalletDashboardScreenState extends BaseState {
     setBusy(true);
     String localAppVersion = await sharedService.getLocalAppVersion();
     String store = '';
+    String appDownloadLinkOnWebsite =
+        'http://exchangily.com/download/latest.apk';
     if (Platform.isIOS) {
       store = 'App Store';
     } else {
@@ -103,14 +183,19 @@ class WalletDashboardScreenState extends BaseState {
     }
     await apiService.getApiAppVersion().then((apiAppVersion) {
       if (apiAppVersion != null) {
+        log.e('condition ${localAppVersion.compareTo(apiAppVersion)}');
+
         log.i(
             'api app version $apiAppVersion -- local version $localAppVersion');
-        if (localAppVersion != apiAppVersion) {
+
+        if (localAppVersion.compareTo(apiAppVersion) == -1) {
           sharedService.alertDialog(
               AppLocalizations.of(context).appUpdateNotice,
-              '${AppLocalizations.of(context).pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context).toLatestBuild} $apiAppVersion ${AppLocalizations.of(context).inText} $store',
+              '${AppLocalizations.of(context).pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context).toLatestBuild} $apiAppVersion ${AppLocalizations.of(context).inText} $store ${AppLocalizations.of(context).clickOnWebsiteButton}',
               isUpdate: true,
-              isLater: true);
+              isLater: true,
+              isWebsite: true,
+              stringData: appDownloadLinkOnWebsite);
         }
       }
     }).catchError((err) {
@@ -360,7 +445,7 @@ class WalletDashboardScreenState extends BaseState {
     for (var i = 0; i < walletInfo.length; i++) {
       holder = holder + walletInfo[i].usdValue;
     }
-    totalUsdBalance = currencyFormat(holder, 2);
+    totalUsdBalance = NumberUtil.currencyFormat(holder, 2);
     // totalUsdBalance =
     //     NumberFormat.simpleCurrency(decimalDigits: 2).format(holder);
     // totalUsdBalance = totalUsdBalance.substring(1);
@@ -547,7 +632,7 @@ class WalletDashboardScreenState extends BaseState {
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
                   marketPrice, availableBal, lockedBal);
-              String holder = currencyFormat(usdValue, 2);
+              String holder = NumberUtil.currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
 // get Pair decimal config
@@ -636,6 +721,12 @@ class WalletDashboardScreenState extends BaseState {
       walletInfoCopy = [];
       walletInfoCopy = walletInfo.map((element) => element).toList();
     }
+
+    if (formattedUsdValueList != null) {
+      formattedUsdValueListCopy = [];
+      formattedUsdValueListCopy =
+          formattedUsdValueList.map((element) => element).toList();
+    }
     setBusy(false);
   }
 
@@ -669,7 +760,7 @@ class WalletDashboardScreenState extends BaseState {
         // Calculate usd balance
         double usdValue = walletService.calculateCoinUsdBalance(
             marketPrice, walletBal, walletLockedBal);
-        String holder = currencyFormat(usdValue, 2);
+        String holder = NumberUtil.currencyFormat(usdValue, 2);
         formattedUsdValueList.add(holder);
         // Adding each coin details in the wallet
         WalletInfo wi = WalletInfo(

@@ -1,31 +1,29 @@
+import 'package:exchangilymobileapp/utils/number_util.dart';
+
 class MemberProfile {
-  String _id; // this is actually member id
   String _membership;
-  String _walletAddress;
+  String _walletExgAddress;
   int _referralCode;
   double _totalValue;
   double _totalQuantities;
 
   MemberProfile(
-      {String id,
-      String membership,
-      String walletAddress,
+      {String membership,
+      String walletExgAddress,
       int referralCode,
       String dateCreated,
       double totalValue,
       double totalQuantities}) {
-    this._id = id;
     this._membership = membership ?? '';
-    this._walletAddress = walletAddress ?? '';
+    this._walletExgAddress = walletExgAddress ?? '';
     this._referralCode = referralCode;
     this._totalValue = totalValue ?? 0.0;
     this._totalQuantities = totalQuantities ?? 0.0;
   }
 
   Map<String, dynamic> toJson() => {
-        'id': _id,
         'membership': _membership,
-        'walletAddress': _walletAddress,
+        'walletExgAddress': _walletExgAddress,
         'referralCode': _referralCode,
         'totalValue': _totalValue,
         'totalQuantities': _totalQuantities
@@ -33,19 +31,12 @@ class MemberProfile {
 
   factory MemberProfile.fromJson(Map<String, dynamic> json) {
     return new MemberProfile(
-      id: json['id'] as String,
       membership: json['membership'] as String,
-      walletAddress: json['walletAddress'] as String,
+      walletExgAddress: json['walletExgAddress'] as String,
       referralCode: json['referralCode'] as int,
       totalValue: json['totalValue'].toDouble(),
       totalQuantities: json['totalQuantities'].toDouble(),
     );
-  }
-
-  String get id => _id;
-
-  set id(String id) {
-    this._id = id;
   }
 
   String get membership => _membership;
@@ -54,10 +45,10 @@ class MemberProfile {
     this._membership = membership;
   }
 
-  String get walletAddress => _walletAddress;
+  String get walletExgAddress => _walletExgAddress;
 
-  set walletAddress(String walletAddress) {
-    this._walletAddress = walletAddress;
+  set walletExgAddress(String walletExgAddress) {
+    this._walletExgAddress = walletExgAddress;
   }
 
   int get referralCode => _referralCode;

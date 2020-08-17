@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/models/campaign/my_referrals.dart';
 
 class CampaignReward {
   int _level;
-  List<MyReferrals> _users;
+  List<String> _users;
   double _totalValue; // my investment value
   double _totalQuantities; // my total tokens bought
   double _totalRewardQuantities;
@@ -12,7 +12,7 @@ class CampaignReward {
 
   CampaignReward(
       {int level,
-      List<MyReferrals> users,
+      List<String> users,
       double totalValue,
       double totalQuantities,
       double totalRewardQuantities,
@@ -24,16 +24,19 @@ class CampaignReward {
     this._totalRewardQuantities = totalRewardQuantities ?? 0.0;
     this._totalAccounts = totalAccounts ?? 0;
     this._totalRewardNextQuantities = totalRewardNextQuantities ?? 0.0;
+    this._users = users;
   }
 
   factory CampaignReward.fromJson(Map<String, dynamic> json) {
-    List userFromJson = json["users"];
-    print('2222 $userFromJson');
-    MyReferralsList myReferralsList = MyReferralsList.fromJson(userFromJson);
-    print('333 ${myReferralsList.myReferralsList[0].toJson()}');
+    List usersFromJson = json["users"] as List;
+    MyReferralsList myReferralsList = MyReferralsList.fromJson(usersFromJson);
+
     return CampaignReward(
         level: json["level"] as int,
-        users: myReferralsList.myReferralsList,
+
+        /// Currently i need email for referrals but i can return whole user object as
+        /// i mapped it as in MyRefferal model
+        users: myReferralsList.myReferralsList.map((e) => e.email).toList(),
         totalValue: json["totalValue"].toDouble(),
         totalQuantities: json["totalQuantities"].toDouble(),
         totalRewardQuantities: json["totalRewardQuantities"].toDouble(),
@@ -55,6 +58,11 @@ class CampaignReward {
   double get totalValue => _totalValue;
   set totalValue(double totalValue) {
     this._totalValue = totalValue;
+  }
+
+  List<String> get users => _users;
+  set users(List<String> users) {
+    this._users = users;
   }
 
   double get totalQuantities => _totalQuantities;

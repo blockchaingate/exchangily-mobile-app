@@ -382,12 +382,12 @@ class CampaignDashboardScreen extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
-                                          '\$${model.memberProfile.totalValue}',
+                                          '\$${model.myInvestmentValueWithoutRewards}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5),
                                       Text(
-                                          '${model.memberProfile.totalQuantities}',
+                                          '${model.memberProfile.totalQuantities.toString()}',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5
@@ -461,7 +461,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                             onTap: () {
                               if (!model.busy)
                                 model.navigateByRouteName(
-                                    '/teamRewardsDetails', model.team);
+                                    '/teamRewardDetails', model.team);
                             },
                             dense: false,
                             leading: Padding(

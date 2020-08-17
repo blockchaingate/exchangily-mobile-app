@@ -60,26 +60,27 @@ class MoveToWalletScreenState extends BaseState {
   checkPass() async {
     setBusy(true);
     var amount = double.tryParse(amountController.text);
-    // if (amount == null ||
-    //     // amount > walletInfo.availableBalance ||
-    //     // amount == 0 ||
-    //     amount.isNegative) {
-    //   sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-    //       AppLocalizations.of(context).pleaseEnterValidNumber,
-    //       isWarning: false);
-    //   setBusy(false);
-    //   return;
-    // }
+    if (amount == null ||
+        amount > walletInfo.inExchange ||
+        amount == 0 ||
+        amount.isNegative) {
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          isWarning: false);
+      setBusy(false);
+      return;
+    }
 
-    // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-    //   sharedService.showInfoFlushbar(
-    //       AppLocalizations.of(context).minimumAmountError,
-    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-    //       Icons.cancel,
-    //       globals.red,
-    //       context);
-    //   return;
-    // }
+    if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).minimumAmountError,
+          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+          Icons.cancel,
+          globals.red,
+          context);
+      setBusy(false);
+      return;
+    }
     setMessage('');
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -129,6 +130,8 @@ class MoveToWalletScreenState extends BaseState {
               status: 'pending',
               quantity: amount,
               tag: 'withdraw');
+
+          walletService.checkDepositTransactionStatus(transactionHistory);
           walletService.insertTransactionInDatabase(transactionHistory);
         } else {
           var errMsg = ret['data'];

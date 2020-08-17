@@ -66,9 +66,8 @@ class MyRewardDetailsScreen extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () {
-                        Navigator.pushNamed(
-                            context, '/CampaignTeamReferralView',
-                            arguments: campaignRewardList[index]);
+                        Navigator.pushNamed(context, '/myReferralView',
+                            arguments: campaignRewardList[index].users);
                       },
                       child: Card(
                         elevation: 5,

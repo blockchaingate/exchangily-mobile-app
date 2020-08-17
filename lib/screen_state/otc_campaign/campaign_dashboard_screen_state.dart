@@ -51,6 +51,7 @@ class CampaignDashboardScreenState extends BaseState {
   List<CampaignReward> campaignRewardList = [];
   MemberProfile memberProfile;
   List team = [];
+  String currencyFormattedTotalValue = '';
 
 /*----------------------------------------------------------------------
                     Init
@@ -153,7 +154,6 @@ class CampaignDashboardScreenState extends BaseState {
     memberProfile = new MemberProfile();
     await campaignService.getMemberProfile(token).then((member) {
       if (member != null) {
-        log.i('member $member');
         String level = member.membership;
         if (level == 'gold') {
           memberLevelTextColor = 0xffE6BE8A;
@@ -167,13 +167,10 @@ class CampaignDashboardScreenState extends BaseState {
         }
         //assignColorAccordingToMemberLevel(level);
 
-        double holder = member.totalValue;
-        myInvestmentValueWithoutRewards = currencyFormat(holder, 2);
-        myTokensWithoutRewards = member.totalQuantities;
-        memberProfile = new MemberProfile(
-            membership: memberLevel,
-            totalQuantities: myTokensWithoutRewards,
-            totalValue: double.parse(myInvestmentValueWithoutRewards));
+        myInvestmentValueWithoutRewards =
+            NumberUtil.currencyFormat(member.totalValue, 2);
+        print('TOKENS ${member.totalQuantities}');
+        memberProfile = member;
       } else {
         log.w(' In myProfile else');
         setBusy(false);
@@ -413,7 +410,7 @@ class CampaignDashboardScreenState extends BaseState {
     log.e('calcMyTotalAsssetValue');
     double exgPrice = await getUsdValue();
     double holder = myTotalAssetQuantity * exgPrice;
-    myTotalAssetValue = currencyFormat(holder, 2);
+    myTotalAssetValue = NumberUtil.currencyFormat(holder, 2);
     log.e(
         'calcMyTotalAsssetValue $myTotalAssetQuantity, $exgPrice - $myTotalAssetValue');
     return myTotalAssetValue;
