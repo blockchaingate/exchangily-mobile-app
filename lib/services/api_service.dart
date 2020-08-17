@@ -123,8 +123,9 @@ class ApiService {
     try {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
-      log.w(' getDepositTransactionStatus $json');
-      ethGasPrice = int.tryParse(json['gasprice']);
+      log.w(' getDepositTransactionStatus111 $json');
+      print((BigInt.parse(json['gasprice'])/BigInt.parse('1000000000')).toDouble());
+      ethGasPrice = (BigInt.parse(json['gasprice'])/BigInt.parse('1000000000')).toDouble().round();
     } catch (err) {
       log.e('In getDepositTransactionStatus catch $err');
     }
@@ -136,6 +137,8 @@ class ApiService {
     if (ethGasPrice > environment['chains']['ETH']['gasPriceMax']) {
       ethGasPrice = environment['chains']['ETH']['gasPriceMax'];
     }
+    print('ethGasPrice=====');
+    print(ethGasPrice);
     return ethGasPrice;
   }
 /*----------------------------------------------------------------------
