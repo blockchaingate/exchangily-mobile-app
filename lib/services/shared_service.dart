@@ -36,6 +36,8 @@ class SharedService {
   NavigationService navigationService = locator<NavigationService>();
   final log = getLogger('SharedService');
 
+  static String appName = 'eXchangily';
+  static String campaignAppId = '5b6a8688905612106e976a69';
 /*-------------------------------------------------------------------------------------
                                 Convert image to base-64
 -------------------------------------------------------------------------------------*/

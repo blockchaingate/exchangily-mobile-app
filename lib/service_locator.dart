@@ -48,6 +48,7 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_
 import 'package:get_it/get_it.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangilymobileapp/services/otc_service.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
 
 GetIt locator = GetIt();
@@ -66,6 +67,7 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => CampaignService());
   locator.registerLazySingleton(() => CampaignUserDatabaseService());
   locator.registerLazySingleton(() => PdfViewerService());
+  locator.registerLazySingleton(() => OtcService());
 
   // Singelton
   var instance = await LocalStorageService.getInstance();

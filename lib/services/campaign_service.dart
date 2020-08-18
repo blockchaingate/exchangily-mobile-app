@@ -13,6 +13,7 @@ import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,8 +22,6 @@ class CampaignService {
   final log = getLogger('CampaignService');
   final client = new http.Client();
 
-  final String appName = 'eXchangily';
-  final String appId = '5b6a8688905612106e976a69';
   final String campaignId = '1';
   Campaign campaign;
 
@@ -88,7 +87,10 @@ class CampaignService {
 -------------------------------------------------------------------------------------*/
 
   Future resetPassword(String email) async {
-    Map<String, dynamic> body = {"appId": appId, "email": email};
+    Map<String, dynamic> body = {
+      "appId": SharedService.campaignAppId,
+      "email": email
+    };
     try {
       var response = await client.post(resetPasswordUrl, body: body);
       var json = jsonDecode(response.body);
@@ -108,8 +110,8 @@ class CampaignService {
     Map<String, dynamic> body =
         user.toJson(); // Assign user data to Map type json variable
     body.addAll({
-      "app": appName,
-      "appId": appId,
+      "app": SharedService.appName,
+      "appId": SharedService.campaignAppId,
       "referralCode": referralCode,
       "campaignId": "1",
       "walletExgAddress": exgWalletAddress
@@ -132,7 +134,8 @@ class CampaignService {
     // You cannot add key/pair directly to user object
     Map<String, dynamic> body =
         user.toJson(); // Assign user data to Map type json variable
-    body.addAll({'appId': appId}); // Add another key/pair value
+    body.addAll(
+        {'appId': SharedService.campaignAppId}); // Add another key/pair value
 
     try {
       log.i('login url $loginUrl');
