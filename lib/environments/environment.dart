@@ -35,7 +35,7 @@ Map devConfig = {
       "gasPrice": 20,
       "gasPriceMax": 200,
       "gasLimit": 21000,
-      "gasLimitToken": 60000
+      "gasLimitToken": 70000
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
@@ -163,7 +163,7 @@ Map productionConfig = {
       "gasPrice": 90,
       "gasPriceMax": 200,
       "gasLimit": 21000,
-      "gasLimitToken": 60000
+      "gasLimitToken": 70000
     },
     "FAB": {
       "chain": {
