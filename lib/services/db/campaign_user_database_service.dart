@@ -60,7 +60,6 @@ class CampaignUserDatabaseService {
     await initDb();
     final Database db = await _database;
     log.w('getall $db');
-
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
     log.w('res $res');
@@ -80,10 +79,9 @@ class CampaignUserDatabaseService {
   }
 
   // Get User By Id
-  Future getByMemberId(String id) async {
+  Future getMemberById(String id) async {
     final Database db = await _database;
-    List<Map> res =
-        await db.query(tableName, where: 'email= ?', whereArgs: [id]);
+    List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');
     if (res.length > 0) {
       return CampaignUserData.fromJson((res.first));
@@ -92,7 +90,8 @@ class CampaignUserDatabaseService {
   }
 
 // Get User By Email
-  Future getByEmail(String email) async {
+  Future<CampaignUserData> getByEmail(String email) async {
+    log.e(email);
     final Database db = await _database;
     List<Map> res =
         await db.query(tableName, where: 'email= ?', whereArgs: [email]);

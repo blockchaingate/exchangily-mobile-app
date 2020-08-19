@@ -65,11 +65,33 @@ class _KycViewState extends State<KycView> {
                           //   padding: EdgeInsets.all(2),
                           //   decoration: BoxDecoration(
                           //       border: Border(
-                          //           bottom: BorderSide(color: primaryColor, width: 3.0))),
+                          //           bottom: BorderSide(
+                          //               color: primaryColor, width: 3.0))),
                           //   child: Center(
-                          //     child: Text(
-                          //       'KYC',
-                          //       style: Theme.of(context).textTheme.headline2,
+                          //     child: Column(
+                          //       children: <Widget>[
+                          //         Text(
+                          //           'KYC',
+                          //           style:
+                          //               Theme.of(context).textTheme.headline2,
+                          //         ),
+                          //         FlatButton(
+                          //           onPressed: () async {
+                          //             model.campaignUserDatabaseService
+                          //                 .getAll();
+
+                          //             String memberId = '';
+
+                          //             await model.campaignUserDatabaseService
+                          //                 .getByEmail('barry100@exg.com')
+                          //                 .then((res) {
+                          //               memberId = res.id;
+                          //               print('id $memberId');
+                          //             });
+                          //           },
+                          //           child: Text('Test'),
+                          //         )
+                          //       ],
                           //     ),
                           //   ),
                           // ),
@@ -366,11 +388,37 @@ class _KycViewState extends State<KycView> {
                           model.isBusy
                               ? model.sharedService.loadingIndicator()
                               : _countryList('residense', model),
-                          UIHelper.verticalSpaceMedium,
+                          UIHelper.verticalSpaceSmall,
+
+/*----------------------------------------------------------------------
+                      Radio Button Accredited Investor
+ ----------------------------------------------------------------------*/
+
+                          Row(
+                            children: <Widget>[
+                              Text('Are you an accredited investor?',
+                                  style: Theme.of(context).textTheme.headline6),
+                              Checkbox(
+                                  activeColor: primaryColor,
+                                  value: model.accreditedInvestor,
+                                  onChanged: (value) {
+                                    model.setBusy(true);
+                                    model.accreditedInvestor = value;
+                                    print(model.accreditedInvestor);
+                                    model.setBusy(false);
+                                  }),
+                            ],
+                          ),
+                          Text(
+                              'If yes, please provide some documents to help confirm your accredited investor status upon request.',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6
+                                  .copyWith(color: yellow)),
 /*----------------------------------------------------------------------
                       User Photo ID
  ----------------------------------------------------------------------*/
-
+                          UIHelper.verticalSpaceSmall,
                           Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,14 +443,17 @@ class _KycViewState extends State<KycView> {
                                     size: 16,
                                     color: primaryColorWithAlpha150,
                                   ),
+                                  // Image path
+
                                   label: Expanded(
                                     child: Text(
-                                        model.photoIdFile == null
-                                            ? 'Choose photo ID'
-                                            : model.photoIdFile.path
-                                                .split('/')
-                                                .last
-                                                .toString(),
+                                        // model.photoIdFile == null
+                                        //   ?
+                                        'Choose 2 photo ID\'s',
+                                        // : model.photoIdFile.path
+                                        //     .split('/')
+                                        //     .last
+                                        //     .toString(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyText1),
@@ -410,11 +461,21 @@ class _KycViewState extends State<KycView> {
                               Center(
                                 child: model.photoIdFile == null
                                     ? Text('No image selected.')
-                                    : Image.file(
-                                        model.photoIdFile,
-                                        fit: BoxFit.contain,
-                                        width: 100,
-                                        height: 100,
+                                    : Container(
+                                        height:
+                                            model.photoIdFile == null ? 5 : 100,
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: model.photoIdFile.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Image.file(
+                                                model.photoIdFile[index],
+                                                fit: BoxFit.contain,
+                                                width: 100,
+                                                height: 100,
+                                              );
+                                            }),
                                       ),
                               ),
                               UIHelper.verticalSpaceSmall,
@@ -445,26 +506,30 @@ class _KycViewState extends State<KycView> {
                               ),
                               // Image picker
                               FlatButton.icon(
-                                  onPressed: () {
-                                    model.getImage('personalPhoto');
-                                  },
-                                  icon: Icon(
-                                    Icons.add_a_photo,
-                                    size: 16,
-                                    color: primaryColorWithAlpha150,
-                                  ),
-                                  label: Expanded(
-                                    child: Text(
-                                        model.personalPhotoFile == null
-                                            ? 'Choose personal photo'
-                                            : model.personalPhotoFile.path
-                                                .split('/')
-                                                .last
-                                                .toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1),
-                                  )),
+                                onPressed: () {
+                                  model.getImage('personalPhoto');
+                                },
+                                icon: Icon(
+                                  Icons.add_a_photo,
+                                  size: 16,
+                                  color: primaryColorWithAlpha150,
+                                ),
+                                // Image path
+
+                                label: Expanded(
+                                  child: Text(
+                                      // model.personalPhotoFile == null
+                                      //    ?
+                                      'Choose personal photo',
+                                      //     : model.personalPhotoFile.path
+                                      //         .split('/')
+                                      //         .last
+                                      //         .toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText1),
+                                ),
+                              ),
                               Center(
                                 child: model.personalPhotoFile == null
                                     ? Text('No image selected.')
@@ -600,8 +665,10 @@ class _KycViewState extends State<KycView> {
                   (country) {
                     //    print(country);
                     return DropdownMenuItem(
-                        child: Text(country,
-                            style: Theme.of(context).textTheme.headline6),
+                        child: Center(
+                          child: Text(country,
+                              style: Theme.of(context).textTheme.headline6),
+                        ),
                         value: country);
                   },
                 ).toList(),

@@ -20,7 +20,10 @@ class OtcService {
     String loginToken = prefs.getString('loginToken');
     log.w('login token $loginToken');
 
-    Map<String, String> headers = {'x-access-token': loginToken};
+    Map<String, String> headers = {
+      'x-access-token':
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlODdiODY2Yjc1NTFkMzNlNjE3MGNmYSIsImVtYWlsIjoiYmFycnkxMDBAZXhnLmNvbSIsImlhdCI6MTU5Nzg2NDI3OSwiZXhwIjoxNTk3OTUwNjc5LCJpc3MiOiJmYS5iaXoiLCJzdWIiOiI1ZTg3Yjg2NmI3NTUxZDMzZTYxNzBjZmEifQ.l1_Y9WTORizJavt_DyTRJe7UIPhDjXqJ4c_NzHdBZqU'
+    };
     try {
       var response =
           await client.post(otcKycCreateUrl, body: jsonBody, headers: headers);

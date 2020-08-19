@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/otc_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,8 @@ class KycViewModel extends BaseViewModel {
   final log = getLogger('KycViewModel');
 
   SharedService sharedService = locator<SharedService>();
+  CampaignUserDatabaseService campaignUserDatabaseService =
+      locator<CampaignUserDatabaseService>();
 
   ApiService apiService = locator<ApiService>();
   OtcService otcService = locator<OtcService>();
@@ -24,8 +27,8 @@ class KycViewModel extends BaseViewModel {
   final picker = ImagePicker();
   BuildContext context;
 
-  String photoIdBase64Encode = '';
-  File photoIdFile;
+  List<String> photoIdBase64Encode = [];
+  List photoIdFile = [];
   String personalPhotoBase64Encode = '';
   File personalPhotoFile;
   String citizenship;
@@ -42,6 +45,7 @@ class KycViewModel extends BaseViewModel {
   final postalCode = TextEditingController();
   // final countryOfResidense = TextEditingController();
   final List<String> countryList = [];
+  bool accreditedInvestor = false;
 
 /*----------------------------------------------------------------------
                         INIT
@@ -90,14 +94,16 @@ class KycViewModel extends BaseViewModel {
 
     switch (image) {
       case 'photoId':
-        photoIdFile = imageFilePath;
-        Uint8List bytes = photoIdFile.readAsBytesSync();
-        photoIdBase64Encode = sharedService.convertImageToBase64(bytes);
+        Uint8List bytes = imageFilePath.readAsBytesSync();
+        photoIdBase64Encode.add(sharedService.convertImageToBase64(bytes));
+        photoIdFile.add(imageFilePath);
+        print('1111111111111111111111111111111111111111111 $photoIdFile');
         break;
+
       case 'personalPhoto':
-        personalPhotoFile = imageFilePath;
         Uint8List bytes = personalPhotoFile.readAsBytesSync();
         personalPhotoBase64Encode = sharedService.convertImageToBase64(bytes);
+        personalPhotoFile = imageFilePath;
         break;
     }
     setBusy(false);
@@ -111,7 +117,7 @@ class KycViewModel extends BaseViewModel {
     if (value != null) {
       print(value);
       if (value.isEmpty) {
-        return 'Please fill this field';
+        return 'Field is required';
       }
     }
     return null;
@@ -123,14 +129,39 @@ class KycViewModel extends BaseViewModel {
 
   formSubmit() async {
     setBusy(true);
-    if (formKey.currentState.validate()) {
+    log.e(formKey.currentState.validate());
+    if (!formKey.currentState.validate()) {
+      sharedService.alertDialog('Form Validation Failed',
+          'Please fill all the form fields correctly');
+      setBusy(false);
+      return;
+    } else if (photoIdFile == null || photoIdFile.length < 2) {
+      sharedService.showInfoFlushbar(
+          'Form Validation Failed',
+          'Must provide your 2 valid identity photos',
+          Icons.cancel,
+          red,
+          context);
+
+      setBusy(false);
+      return;
+    } else if (personalPhotoFile == null) {
+      sharedService.showInfoFlushbar('Form Validation Failed',
+          'Must provide your selfie photo', Icons.cancel, red, context);
+      setBusy(false);
+      return;
+    } else if (formKey.currentState.validate() && photoIdFile.length >= 2) {
+      String memberId = '';
+      await campaignUserDatabaseService.getByEmail(email.text).then((res) {
+        memberId = res.id;
+      });
       // REFORMAT DATE HERE
       Map<String, dynamic> body = {
         "app": SharedService.appName,
-        "memberId": SharedService.campaignAppId,
+        "memberId": memberId,
         "name": name.text,
         "countryOfBirth": citizenship,
-        "accreditedInvestor": false,
+        "accreditedInvestor": accreditedInvestor,
         "dateOfBirth": dob.text,
         "countryOfResidency": countryOfResidense,
         "homeAddress": address1.text,
@@ -139,12 +170,10 @@ class KycViewModel extends BaseViewModel {
         "province": province.text,
         "postalCode": postalCode.text,
         "email": email.text,
-        "photoUrls": [photoIdBase64Encode, personalPhotoBase64Encode]
+        "photoUrls": photoIdBase64Encode,
+        "selfieUrls": [personalPhotoBase64Encode]
       };
       await kycCreate(body);
-    } else {
-      sharedService.alertDialog(
-          'Form Validated Failed', 'Please try again with correct information');
     }
     setBusy(false);
   }
