@@ -44,6 +44,24 @@ class ApiService {
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
 
 /*----------------------------------------------------------------------
+                    Country List
+----------------------------------------------------------------------*/
+
+  Future getCountryList() async {
+    String url = countryList;
+    log.i('getCountryList url $url');
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body) as List;
+      log.w('getCountryList json $json');
+      return json;
+    } catch (err) {
+      log.e('getCountryList $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
                     Get Token List
 ----------------------------------------------------------------------*/
 

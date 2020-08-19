@@ -45,4 +45,6 @@ final String getTokenListUrl = baseKanbanUrl + 'exchangily/getTokenList';
                             OTC
 ----------------------------------------------------------------------*/
 
-final String otcKycCreate = baseBlockchainGateV2Url + 'kyc/create';
+final String otcKycCreateUrl = baseBlockchainGateV2Url + 'kyc/create';
+
+final String countryList = 'https://exchangily.com/assets/countries.json';

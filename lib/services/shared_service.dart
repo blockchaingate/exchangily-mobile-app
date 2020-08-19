@@ -38,12 +38,34 @@ class SharedService {
 
   static String appName = 'eXchangily';
   static String campaignAppId = '5b6a8688905612106e976a69';
+
+/*-------------------------------------------------------------------------------------
+                                Calendar
+-------------------------------------------------------------------------------------*/
+  Future<DateTime> showCalendar() async {
+    DateTime selectedDate;
+    await showDatePicker(
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(1930),
+            lastDate: DateTime.now())
+        .then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      selectedDate = pickedDate;
+    });
+    log.i('selectedDate $selectedDate');
+    return selectedDate;
+  }
+
 /*-------------------------------------------------------------------------------------
                                 Convert image to base-64
 -------------------------------------------------------------------------------------*/
   String convertImageToBase64(bytes) {
+    log.e('bytes $bytes');
     String base46Encode = base64.encode(bytes);
-    log.i('convertImageToBase64 $base46Encode');
+    log.w('convertImageToBase64 $base46Encode');
     return base46Encode;
   }
 
