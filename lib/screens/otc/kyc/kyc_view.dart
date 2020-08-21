@@ -449,7 +449,7 @@ class _KycViewState extends State<KycView> {
                                     child: Text(
                                         // model.photoIdFile == null
                                         //   ?
-                                        'Choose 2 photo ID\'s',
+                                        'Choose photo ID\'s',
                                         // : model.photoIdFile.path
                                         //     .split('/')
                                         //     .last
@@ -458,26 +458,64 @@ class _KycViewState extends State<KycView> {
                                             .textTheme
                                             .bodyText1),
                                   )),
-                              Center(
-                                child: model.photoIdFile == null
-                                    ? Text('No image selected.')
-                                    : Container(
-                                        height:
-                                            model.photoIdFile == null ? 5 : 100,
-                                        child: ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: model.photoIdFile.length,
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return Image.file(
-                                                model.photoIdFile[index],
-                                                fit: BoxFit.contain,
-                                                width: 100,
-                                                height: 100,
-                                              );
-                                            }),
-                                      ),
-                              ),
+
+                              model.photoIdFile.isEmpty
+                                  ? Center(child: Text('No image selected.'))
+                                  : Container(
+                                      // visible: model.photoIdFile.isNotEmpty,
+                                      height:
+                                          model.photoIdFile.isEmpty ? 5 : 100,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: model.photoIdFile.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Container(
+                                              margin: EdgeInsets.all(2),
+                                              child: Stack(
+                                                  overflow: Overflow.visible,
+                                                  children: [
+                                                    Container(
+                                                      child: Image.file(
+                                                        model
+                                                            .photoIdFile[index],
+                                                        //  fit: BoxFit.contain,
+                                                        //  width: 100,
+                                                        //  height: 100,
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      // alignment:
+                                                      //     Alignment.topRight,
+                                                      right: 0,
+                                                      top: 0,
+                                                      child: Container(
+                                                        width: 20,
+                                                        height: 20,
+                                                        child: IconButton(
+                                                          padding:
+                                                              EdgeInsets.zero,
+                                                          icon: Icon(
+                                                            Icons.cancel,
+                                                            color: red,
+                                                            size: 16,
+                                                          ),
+                                                          onPressed: () {
+                                                            print('222');
+                                                            model.setBusy(true);
+                                                            model.photoIdFile
+                                                                .removeAt(
+                                                                    index);
+                                                            model
+                                                                .setBusy(false);
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ]),
+                                            );
+                                          }),
+                                    ),
                               UIHelper.verticalSpaceSmall,
                               Text(
                                 'Upload photos of the front and back of your ID. The size of eatch photo must be less than 500k, Make sure the pictures are clear. Passport, Driver\'s License or Citizenship Card are examples of acceptable ID. Minimum of 2 photos required.',
@@ -531,13 +569,66 @@ class _KycViewState extends State<KycView> {
                                 ),
                               ),
                               Center(
-                                child: model.personalPhotoFile == null
+                                child: model.personalPhotoFile.isEmpty
                                     ? Text('No image selected.')
-                                    : Image.file(
-                                        model.personalPhotoFile,
-                                        fit: BoxFit.contain,
-                                        width: 100,
-                                        height: 100,
+                                    : Container(
+                                        // visible: model.photoIdFile.isNotEmpty,
+                                        height: model.personalPhotoFile.isEmpty
+                                            ? 5
+                                            : 100,
+                                        child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount:
+                                                model.personalPhotoFile.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Container(
+                                                margin: EdgeInsets.all(2),
+                                                child: Stack(
+                                                    overflow: Overflow.visible,
+                                                    children: [
+                                                      Container(
+                                                        child: Image.file(
+                                                          model.personalPhotoFile[
+                                                              index],
+                                                          //  fit: BoxFit.contain,
+                                                          //  width: 100,
+                                                          //  height: 100,
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        // alignment:
+                                                        //     Alignment.topRight,
+                                                        right: 0,
+                                                        top: 0,
+                                                        child: Container(
+                                                          width: 20,
+                                                          height: 20,
+                                                          child: IconButton(
+                                                            padding:
+                                                                EdgeInsets.zero,
+                                                            icon: Icon(
+                                                              Icons.cancel,
+                                                              color: red,
+                                                              size: 16,
+                                                            ),
+                                                            onPressed: () {
+                                                              print('222');
+                                                              model.setBusy(
+                                                                  true);
+                                                              model
+                                                                  .personalPhotoFile
+                                                                  .removeAt(
+                                                                      index);
+                                                              model.setBusy(
+                                                                  false);
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ]),
+                                              );
+                                            }),
                                       ),
                               ),
 

@@ -29,8 +29,8 @@ class KycViewModel extends BaseViewModel {
 
   List<String> photoIdBase64Encode = [];
   List photoIdFile = [];
-  String personalPhotoBase64Encode = '';
-  File personalPhotoFile;
+  List<String> personalPhotoBase64Encode = [];
+  List personalPhotoFile = [];
   String citizenship;
   String countryOfResidense;
   DateTime selectedDate;
@@ -51,9 +51,21 @@ class KycViewModel extends BaseViewModel {
                         INIT
 ----------------------------------------------------------------------*/
   init() {
+    clearLists();
     getCountryList();
   }
 
+/*----------------------------------------------------------------------
+                        Clear Lists
+----------------------------------------------------------------------*/
+
+  clearLists() {
+    photoIdBase64Encode = [];
+    photoIdFile = [];
+    personalPhotoBase64Encode = [];
+    personalPhotoFile = [];
+    log.i('Lists cleared');
+  }
 /*----------------------------------------------------------------------
                         Show Date Picker
 ----------------------------------------------------------------------*/
@@ -97,13 +109,14 @@ class KycViewModel extends BaseViewModel {
         Uint8List bytes = imageFilePath.readAsBytesSync();
         photoIdBase64Encode.add(sharedService.convertImageToBase64(bytes));
         photoIdFile.add(imageFilePath);
-        print('1111111111111111111111111111111111111111111 $photoIdFile');
+
         break;
 
       case 'personalPhoto':
-        Uint8List bytes = personalPhotoFile.readAsBytesSync();
-        personalPhotoBase64Encode = sharedService.convertImageToBase64(bytes);
-        personalPhotoFile = imageFilePath;
+        Uint8List bytes = imageFilePath.readAsBytesSync();
+        personalPhotoBase64Encode
+            .add(sharedService.convertImageToBase64(bytes));
+        personalPhotoFile.add(imageFilePath);
         break;
     }
     setBusy(false);
@@ -171,7 +184,7 @@ class KycViewModel extends BaseViewModel {
         "postalCode": postalCode.text,
         "email": email.text,
         "photoUrls": photoIdBase64Encode,
-        "selfieUrls": [personalPhotoBase64Encode]
+        "selfieUrls": personalPhotoBase64Encode
       };
       await kycCreate(body);
     }
