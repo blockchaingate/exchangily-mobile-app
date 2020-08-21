@@ -100,7 +100,6 @@ Map devConfig = {
         'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'
       },
     ],
-    'eventInfo':'http://localhost:4000/kanban/getCampaign'
   },
   "websocket": "wss://kanbantest.fabcoinapi.com/ws/",
   "minimumWithdraw": {

@@ -125,8 +125,12 @@ class ApiService {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
       log.w(' getDepositTransactionStatus111 $json');
-      print((BigInt.parse(json['gasprice'])/BigInt.parse('1000000000')).toDouble());
-      ethGasPrice = (BigInt.parse(json['gasprice'])/BigInt.parse('1000000000')).toDouble().round();
+      print((BigInt.parse(json['gasprice']) / BigInt.parse('1000000000'))
+          .toDouble());
+      ethGasPrice =
+          (BigInt.parse(json['gasprice']) / BigInt.parse('1000000000'))
+              .toDouble()
+              .round();
     } catch (err) {
       log.e('In getDepositTransactionStatus catch $err');
     }
@@ -558,8 +562,7 @@ class ApiService {
 
   Future getSliderImages() async {
     try {
-      final res = await http
-          .get("https://kanbanprod.fabcoinapi.com/kanban/getadvconfig");
+      final res = await http.get(kanbanBaseUrl + "/kanban/getadvconfig");
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
@@ -573,9 +576,9 @@ class ApiService {
   Future getEvents() async {
     print("Calling api: getEvents");
     try {
-      final res = await http
-          // .get(eventsUrl);
-          .get("http://192.168.0.12:4000/kanban/getCampaigns");
+      final res = await http.get(
+          // "http://192.168.0.12:4000/kanban/getCampaigns"
+          kanbanBaseUrl + "/kanban/getCampaigns");
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         print("success");
@@ -594,9 +597,9 @@ class ApiService {
   Future postEventSingle(id) async {
     print("Calling api: getEventSingle");
     try {
-      final res = await http
-          .post(
-        "http://192.168.0.12:4000/kanban/getCampaignSingle",
+      final res = await http.post(
+        // "http://192.168.0.12:4000/kanban/getCampaignSingle",
+        kanbanBaseUrl + "/kanban/getCampaignSingle",
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
