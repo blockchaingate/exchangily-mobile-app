@@ -11,9 +11,9 @@ class CampaignUserData {
       int referralCode,
       String dateCreated}) {
     this._id = id;
-    this._email = email;
-    this._token = token;
-    this._referralCode = referralCode ?? '';
+    this._email = email ?? '';
+    this._token = token ?? '';
+    this._referralCode = referralCode ?? -1;
   }
 
   Map<String, dynamic> toJson() => {

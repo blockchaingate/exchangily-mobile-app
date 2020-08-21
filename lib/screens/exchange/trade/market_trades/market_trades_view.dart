@@ -73,7 +73,7 @@ class MarketTradeDetailView extends StatelessWidget {
               /// bidorAsk value is null from the backend
               /// so can't use the color for container
 
-              //    color: marketTrades[index].bidOrAsk ? buyOrders : sellOrders,
+              color: marketTrades[index].bidOrAsk ? buyOrders : sellOrders,
               padding: EdgeInsets.all(4.0),
               margin: EdgeInsets.only(bottom: 1.0),
               child: Row(

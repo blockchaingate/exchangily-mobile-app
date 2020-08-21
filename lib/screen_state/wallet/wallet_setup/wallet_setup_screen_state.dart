@@ -35,7 +35,7 @@ class WalletSetupScreenState extends BaseState {
   Future checkExistingWallet() async {
     NavigationService navigationService = locator<NavigationService>();
     setState(ViewState.Busy);
-    await dataBaseService.getAll().then((res) {
+    await dataBaseService.getAll().then((res) async {
       if (res == null || res == []) {
         log.w('Database is null or empty');
         setState(ViewState.Idle);
@@ -44,7 +44,8 @@ class WalletSetupScreenState extends BaseState {
         setState(ViewState.Idle);
         isWallet = true;
         // Navigator.of(context).pushNamed('/mainNav');
-        navigationService.navigateTo('/mainNav',arguments: 0);
+        //  navigationService.navigateTo('/mainNav',arguments: 0);
+        await sharedService.onBackButtonPressed('/dashboard');
       }
     }).timeout(Duration(seconds: 20), onTimeout: () {
       log.e('In time out');

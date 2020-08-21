@@ -37,7 +37,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
     } else {
       setState(ViewState.Idle);
       setLangauge(lang);
-      navigationService.navigateUsingPushReplacementNamed('/walletSetup');
+      navigationService.navigateTo('/walletSetup');
     }
     setState(ViewState.Idle);
   }

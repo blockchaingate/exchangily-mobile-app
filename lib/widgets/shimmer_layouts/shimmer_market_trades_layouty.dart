@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,7 @@ class ShimmerMarketTradesLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = 14;
+    double height = 20;
     double width = 50;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5.0),
@@ -22,7 +23,7 @@ class ShimmerMarketTradesLayout extends StatelessWidget {
               width: width - 10,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(1),
-                color: Colors.grey,
+                color: primaryColor.withAlpha(155),
               ),
             ),
           ),

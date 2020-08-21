@@ -1,23 +1,23 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignLoginScreen extends StatelessWidget {
-  const CampaignLoginScreen({Key key}) : super(key: key);
+  final String errorMessage;
+  const CampaignLoginScreen({Key key, this.errorMessage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    print('ERROR MSG FROM ROUTE $errorMessage');
     return BaseScreen<CampaignLoginScreenState>(
       onModelReady: (model) async {
         model.context = context;
-        await model.init();
+        //  await model.init();
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {
@@ -151,6 +151,12 @@ class CampaignLoginScreen extends StatelessWidget {
                                     .textTheme
                                     .bodyText2
                                     .copyWith(color: Colors.yellow))),
+                    Visibility(
+                        visible: errorMessage != null &&
+                            errorMessage != '' &&
+                            !model.hasErrorMessage,
+                        child: Text(errorMessage == null ? '' : errorMessage,
+                            style: Theme.of(context).textTheme.bodyText2)),
                     UIHelper.verticalSpaceSmall,
                     // Button row
                     Row(

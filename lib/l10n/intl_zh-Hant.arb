@@ -1414,5 +1414,179 @@
     "description": "transaction_history_pending",
     "type": "text",
     "placeholders": {}
-  }
-}
+  },
+"allOrders": "所有訂單",
+  "@allOrders": {
+    "description": "exchange_all_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myOrders": "我的訂單",
+  "@myOrders": {
+    "description": "exchange_my_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "change": "更改",
+  "@change": {
+    "description": "change_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "reload": "重新加載",
+  "@reload": {
+    "description": "reload_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "myRewardTokens": "我的獎勵幣",
+  "@myRewardTokens": {
+    "description": "myRewardTokens_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "inputValidation": "輸入驗證",
+  "@inputValidation": {
+    "description": "inputValidation_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showOnlyCurrentPairOrders": "只顯示當前交易對訂單",
+  "@showOnlyCurrentPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "showAllPairOrders": "顯示所有交易對訂單",
+  "@showAllPairOrders": {
+    "description": "exchange_my_orders_show_current_pair_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "symbol": "符號",
+  "@symbol": {
+    "description": "exchange_my_exchange_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMnemonicNoticeTitle": "什麼是助記詞？為什麼備份助記詞極為重要？",
+  "@backupMnemonicNoticeTitle": {
+    "description": "backup_mnemonic_notice_title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "backupMnemonicNoticeContent": "助記詞是一組12個單詞，用它可以生成私鑰以控制對應錢包的所有區塊鏈上的資產。通常在用戶創建錢包時錢包軟件會自動生成一組助記詞，並指示用戶認真抄寫下來，而且需要重新輸入一次以驗證抄寫無誤才會真正生成錢包。如果以後用戶設備(手機或電腦)損壞或丟失，在新的設備上用該組助記詞就可以重建完全相同的錢包，因而助記詞極為重要，必須妥善保管，不可丟失，也不可洩露給別人，不要用任何社交軟件(如電子郵件、微信、QQ)傳送，也不可存貯於雲上或錄入任何網站，只要任何人擁有這些助記詞，就完全擁有了該錢包裡的資產。",
+  "@backupMnemonicNoticeContent": {
+    "description": "backup_mnemonic_notice_content",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ticker": "行情",
+  "@ticker": {
+    "description": "ticker_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "vol": "數量",
+  "@vol": {
+    "description": "vol_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "percentage": "百分比",
+  "@percentage": {
+    "description": "percentage_text_team_rewards_view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "teamLeader": "團隊領導",
+  "@teamLeader": {
+    "description": "teamLeader_team_rewards_details_view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseUpdateYourAppFrom": "請更新您的APP",
+  "@pleaseUpdateYourAppFrom": {
+    "description": "wallet_dashboard_text_please_update_your_app_from",
+    "type": "text",
+    "placeholders": {}
+  },
+  "appUpdateNotice": "App更新提示",
+  "@appUpdateNotice": {
+    "description": "wallet_dashboard_text_app_update_notice",
+    "type": "text",
+    "placeholders": {}
+  },
+  "toLatestBuild": "到最新版本",
+  "@toLatestBuild": {
+    "description": "wallet_dashboard_text_to_latest_build",
+    "type": "text",
+    "placeholders": {}
+  },
+  "inText": "於",
+  "@inText": {
+    "description": "wallet_dashboard_text_in_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "submitYourAnswer": "提交您的答案",
+  "@submitYourAnswer": {
+    "description": "wallet_dashboard_text_submit_your_answer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "question": "問題",
+  "@question": {
+    "description": "wallet_dashboard_text_question",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabUpdate": "免費FAB空投",
+  "@freeFabUpdate": {
+    "description": "wallet_dashboard_text_free_fab_update",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabSuccess": "您將很快收到FAB空投",
+  "@freeFabSuccess": {
+    "description": "wallet_dashboard_text_free_fab_success",
+    "type": "text",
+    "placeholders": {}
+  },
+  "getFree": "免费",
+  "@getFree": {
+    "description": "wallet_dashboard_text_get_free",
+    "type": "text",
+    "placeholders": {}
+  },
+"getFree": "免費",
+  "@getFree": {
+    "description": "wallet_dashboard_text_get_free",
+    "type": "text",
+    "placeholders": {}
+  },
+  "incorrectAnswer": "回答錯誤",
+  "@incorrectAnswer": {
+    "description": "wallet_dashboard_text_free_fab_incorrect_answer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "freeFabUsedAlready": "您已經請求免費FAB空投",
+  "@freeFabUsedAlready": {
+    "description": "wallet_dashboard_text_free_fab_used_already",
+    "type": "text",
+    "placeholders": {}
+  },
+  "updateNow": "立即更新",
+  "@updateNow": {
+    "description": "wallet_dashboard_text_go_to_app_store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "later": "晚些",
+  "@later": {
+    "description": "app_update_popup_button_text_later",
+    "type": "text",
+    "placeholders": {}
+  }
+  }

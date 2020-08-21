@@ -74,7 +74,7 @@ Future serviceLocator() async {
   var instance = await LocalStorageService.getInstance();
   locator.registerSingleton<LocalStorageService>(instance);
 
-// factory returns the new instance
+  // factory returns the new instance
   locator.registerFactory(() => ConfirmMnemonicScreenState());
   locator.registerFactory(() => CreatePasswordScreenState());
   locator.registerFactory(() => WalletDashboardScreenState());

@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
@@ -39,7 +40,8 @@ class MyOrdersView extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'An error has occered while fetching orders: ${model.errorMessage}',
+                              AppLocalizations.of(context).serverError +
+                                  ': ${model.errorMessage}',
                               style: TextStyle(color: Colors.white),
                             ),
                             IconButton(
@@ -49,7 +51,7 @@ class MyOrdersView extends StatelessWidget {
                                 model.isFutureError = false;
                                 print(
                                     'Running futures to run again to reset the hasError and try to get the data so that user can see the data with view instead of error screen');
-                                model.futureToRun();
+                                model.getAllMyOrders();
                               },
                             ),
                           ],
@@ -131,7 +133,7 @@ class MyOrdersView extends StatelessWidget {
                                           MediaQuery.of(context).size.height *
                                               0.40,
                                       margin: EdgeInsets.all(5),
-                                      child: !model.dataReady
+                                      child: model.isBusy
                                           ? ShimmerLayout(
                                               layoutType: 'marketTrades')
                                           : TabBarView(
@@ -170,7 +172,7 @@ class MyOrdersView extends StatelessWidget {
             child: Text(AppLocalizations.of(context).pair,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
-            flex: 2,
+            flex: 3,
             child: Text(AppLocalizations.of(context).price,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
@@ -227,23 +229,36 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                       child: Text(order.pairName.toString(),
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
-                      flex: 2,
-                      child: Text(order.price.toString(),
-                          style: Theme.of(context).textTheme.headline6)),
-                  Expanded(
-                      flex: 2,
-                      child: Text(order.orderQuantity.toString(),
+                      flex: 3,
+                      child: Text(
+                          order.price.toStringAsFixed(
+                              model.decimalConfig.priceDecimal),
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 2,
                       child: Text(
-                          '${model.filledAmount.toString()} (${model.filledPercentage.toStringAsFixed(2)}%)',
+                          order.totalOrderQuantity.toStringAsFixed(
+                              model.decimalConfig.quantityDecimal),
                           style: Theme.of(context).textTheme.headline6)),
+                  Expanded(
+                      flex: 2,
+                      child: Column(
+                        children: [
+                          Text(
+                              order.filledQuantity.toStringAsFixed(
+                                  model.decimalConfig.quantityDecimal),
+                              style: Theme.of(context).textTheme.headline6),
+                          Text('${order.filledPercentage.toStringAsFixed(2)}%',
+                              style: Theme.of(context).textTheme.subtitle2)
+                        ],
+                      )),
                   Expanded(
                       flex: 1,
                       child: order.isActive
-                          ? model.isBusy
-                              ? CircularProgressIndicator()
+                          ? model.isBusy &&
+                                  orders[index].orderHash ==
+                                      model.onClickOrderHash
+                              ? CupertinoActivityIndicator()
                               : IconButton(
                                   color: red,
                                   icon: Icon(
@@ -251,7 +266,14 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                                     size: 16,
                                   ),
                                   onPressed: () {
-                                    model.checkPass(context, order.orderHash);
+                                    print(index);
+                                    print(orders.indexOf(order));
+                                    if (index == orders.indexOf(order)) {
+                                      print(
+                                          'inside if ${index == orders.indexOf(order)}');
+
+                                      model.checkPass(context, order.orderHash);
+                                    }
                                   })
                           : IconButton(
                               disabledColor:

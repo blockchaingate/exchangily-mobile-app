@@ -69,9 +69,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
       //Use the theme to change data table sort icon color
       data: ThemeData.dark(),
       child: DataTable(
+          dataRowHeight: 60,
           sortAscending: _sortAsc,
           sortColumnIndex: _sortColumnIndex,
-          horizontalMargin: 15,
+          horizontalMargin: 7,
           columnSpacing: 0,
           columns: [
             DataColumn(
@@ -79,10 +80,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 width: MediaQuery.of(context).size.width * 3 / 11,
                 child: Text(
                   AppLocalizations.of(context).ticker,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(fontSize: 15),
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -107,11 +105,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
-                 AppLocalizations.of(context).price,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(fontSize: 15),
+                  AppLocalizations.of(context).price,
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -137,10 +132,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context).high,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(fontSize: 15),
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -166,10 +158,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context).low,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(fontSize: 15),
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -195,10 +184,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context).change,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(fontSize: 15),
+                  style: Theme.of(context).textTheme.subtitle2,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -252,29 +238,30 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     cells: <DataCell>[
                       DataCell(
                         Container(
-                          width: MediaQuery.of(context).size.width * 3 / 11,
+                          padding: EdgeInsets.symmetric(vertical: 6),
+                          // width: MediaQuery.of(context).size.width * 3 / 11,
                           // color: Colors.green,
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 4.0),
+                              Expanded(
                                 child: Text(
                                   itemRow.symbol.toString(),
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline5
-                                      .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
+                                      .headline4
+                                      .copyWith(
+                                        fontWeight: FontWeight.w400,
+                                      ),
                                 ),
                               ),
-                              Text(
-                                AppLocalizations.of(context).vol +
-                                    ': ${itemRow.volume.toStringAsFixed(2)}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle2
-                                    .copyWith(fontSize: 14),
+                              Expanded(
+                                child: Text(
+                                  AppLocalizations.of(context).vol +
+                                      ': ${itemRow.volume.toStringAsFixed(2)}',
+                                  style: Theme.of(context).textTheme.bodyText1,
+                                ),
                               )
                             ],
                           ),
@@ -292,7 +279,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
-                                  .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
+                                  .copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 16),
                               textAlign: TextAlign.start),
                         ),
                         onTap: () {
@@ -305,10 +294,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                       DataCell(
                         Text(
                           itemRow.high.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                              fontWeight: FontWeight.w400, fontSize: 16),
                         ),
                         onTap: () {
                           itemRow.symbol =
@@ -320,10 +307,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                       DataCell(
                         Text(
                           itemRow.low.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline6
-                              .copyWith(fontWeight: FontWeight.w400,fontSize: 16),
+                          style: Theme.of(context).textTheme.headline6.copyWith(
+                              fontWeight: FontWeight.w400, fontSize: 16),
                         ),
                         onTap: () {
                           itemRow.symbol =
@@ -341,7 +326,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               color: Color(itemRow.change >= 0
                                   ? 0XFF0da88b
                                   : 0XFFe2103c),
-                              fontWeight: FontWeight.w400,fontSize: 16),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16),
                         ),
                         onTap: () {
                           itemRow.symbol =

@@ -51,8 +51,8 @@ class CampaignPaymentScreenState extends BaseState {
   String tickerName = '';
   String tokenType = '';
   var options = {};
-  int gasPrice = 8000000000;
-  int gasLimit = 100000;
+  int gasPrice = environment["chains"]["ETH"]["gasPrice"];
+  int gasLimit = environment["chains"]["ETH"]["gasLimitToken"];
   int satoshisPerBytes = 50;
   bool checkSendAmount = false;
   WalletInfo walletInfo;
@@ -75,6 +75,7 @@ class CampaignPaymentScreenState extends BaseState {
   double price = 0;
   Map<String, dynamic> passOrderList;
   double usdtUnconfirmedOrderQuantity = 0;
+  double transportationFee = 0.0;
 
 /*----------------------------------------------------------------------
                 Reset lists
@@ -90,7 +91,12 @@ class CampaignPaymentScreenState extends BaseState {
                 Initial logic
 ----------------------------------------------------------------------*/
   initState() async {
+    var gasPriceReal = await walletService.getEthGasPrice();
+    if(gasPrice < gasPriceReal) {
+      gasPrice = gasPriceReal;
+    }
     setBusy(true);
+    sharedService.context = context;
     resetLists();
     await getCampaignOrdeList();
     selectedCurrency = currencies[0];
@@ -121,9 +127,11 @@ class CampaignPaymentScreenState extends BaseState {
     setBusy(true);
     print(value);
     orderInfoContainerHeight = 510;
+    transportationFee = 0.0;
     _groupValue = value;
     if (value != 'USD') {
       await getWallet();
+      transportationFee = gasPrice * gasLimit / 1e9;
     }
     FocusScope.of(context).requestFocus(FocusNode());
     setErrorMessage('');

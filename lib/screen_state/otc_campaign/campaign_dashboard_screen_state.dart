@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/campaign/member_profile.dart';
 import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
@@ -9,6 +12,8 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,23 +23,24 @@ class CampaignDashboardScreenState extends BaseState {
 
   NavigationService navigationService = locator<NavigationService>();
   CampaignService campaignService = locator<CampaignService>();
+  SharedService sharedService = locator<SharedService>();
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
   ApiService _apiService = locator<ApiService>();
-  CampaignUserData userData;
+  CampaignUserData campaignUserData;
   String campaignName = '';
 
   final List<int> memberLevelsColorList = [0xff696969, 0xffE6BE8A, 0xffffffff];
   String memberLevel = '';
   int memberLevelTextColor = 0xff696969;
   double myTotalAssetQuantity = 0.0;
-  double myTotalAssetValue = 0.0;
+  String myTotalAssetValue = '';
   double myReferralReward = 0.0;
   int myTotalReferrals = 0;
   double myTeamsTotalRewards = 0.0;
   double myTeamsTotalValue = 0.0;
   BuildContext context;
-  double myInvestmentValueWithoutRewards = 0.0;
+  String myInvestmentValueWithoutRewards = '';
   double myTokensWithoutRewards = 0.0;
   var myTokens;
   Map<String, dynamic> teamValueAndRewardWithLoginToken = {};
@@ -43,8 +49,65 @@ class CampaignDashboardScreenState extends BaseState {
   List<String> orderStatusList = [];
   List<String> uiOrderStatusList = [];
   List<CampaignReward> campaignRewardList = [];
-  initState() async {
-    log.w(' In init');
+  MemberProfile memberProfile;
+  List team = [];
+  String currencyFormattedTotalValue = '';
+
+/*----------------------------------------------------------------------
+                    Init
+----------------------------------------------------------------------*/
+
+  init() async {
+    sharedService.context = context;
+    await campaignService
+        .getSavedLoginTokenFromLocalStorage()
+        .then((token) async {
+      if (token != '' || token != null) {
+        await campaignService.getUserDataFromDatabase().then((res) {
+          campaignUserData = new CampaignUserData();
+          campaignUserData = res;
+        });
+        await myProfile(token);
+        await myRewardsByToken();
+        await getCampaignName();
+      } else {
+        navigationService.navigateTo('/campaignLogin');
+      }
+    });
+  }
+
+/*----------------------------------------------------------------------
+                    onBackButtonPressed
+----------------------------------------------------------------------*/
+  onBackButtonPressed() async {
+    await sharedService.onBackButtonPressed('/dashboard');
+  }
+
+/*----------------------------------------------------------------------
+                    Token check timer(not in use)
+----------------------------------------------------------------------*/
+
+  tokenCheckTimer() {
+    Timer.periodic(Duration(minutes: 5), (t) async {
+      await campaignService
+          .getSavedLoginTokenFromLocalStorage()
+          .then((token) async {
+        if (token != '' || token != null) {
+          await campaignService
+              .getTeamsRewardDetailsByToken(token)
+              .then((reward) {
+            log.w('get member reward $reward');
+            if (reward != null) {
+              log.i('timer - login token not expired');
+            } else {
+              navigationService.navigateTo('/campaignLogin');
+              t.cancel();
+              log.e('Timer cancel');
+            }
+          });
+        }
+      });
+    });
   }
 
 /*----------------------------------------------------------------------
@@ -70,9 +133,8 @@ class CampaignDashboardScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   logout() async {
-    await initState();
-    if (userData != null) {
-      await campaignUserDatabaseService.deleteUserData(userData.email);
+    if (campaignUserData != null) {
+      await campaignUserDatabaseService.deleteUserData(campaignUserData.email);
       log.w('User data deleted successfully.');
     } else {
       log.e('Email not found, deleting user from database failed!!!');
@@ -87,12 +149,12 @@ class CampaignDashboardScreenState extends BaseState {
                                   Get Member Profile By Token
 -------------------------------------------------------------------------------------*/
 
-  myProfile(CampaignUserData userData) async {
+  myProfile(String token) async {
     setBusy(true);
-    await campaignService.getMemberProfile(userData).then((res) {
-      if (res != null) {
-        log.w('myProfile $res');
-        String level = res['membership'].toString();
+    memberProfile = new MemberProfile();
+    await campaignService.getMemberProfile(token).then((member) {
+      if (member != null) {
+        String level = member.membership;
         if (level == 'gold') {
           memberLevelTextColor = 0xffE6BE8A;
           memberLevel = AppLocalizations.of(context).gold;
@@ -104,9 +166,11 @@ class CampaignDashboardScreenState extends BaseState {
           memberLevel = AppLocalizations.of(context).silver;
         }
         //assignColorAccordingToMemberLevel(level);
-        myInvestmentValueWithoutRewards = res['totalValue'].toDouble();
-        myTokensWithoutRewards = res['totalQuantities'].toDouble();
-        log.w('myTokensWithoutRewards $myTokensWithoutRewards');
+
+        myInvestmentValueWithoutRewards =
+            NumberUtil.currencyFormat(member.totalValue, 2);
+        print('TOKENS ${member.totalQuantities}');
+        memberProfile = member;
       } else {
         log.w(' In myProfile else');
         setBusy(false);
@@ -145,9 +209,9 @@ class CampaignDashboardScreenState extends BaseState {
     // await getExgWalletAddr();
     await campaignService
         .getUserDataFromDatabase()
-        .then((res) => userData = res);
-    if (userData == null) return false;
-    await campaignService.getOrdersById(userData.id).then((orderList) {
+        .then((res) => campaignUserData = res);
+    if (campaignUserData == null) return false;
+    await campaignService.getOrdersById(campaignUserData.id).then((orderList) {
       if (orderList != null) {
         orderInfoList = [];
         orderListFromApi = [];
@@ -257,16 +321,18 @@ class CampaignDashboardScreenState extends BaseState {
   myRewardsByToken() async {
     setBusy(true);
     setErrorMessage('fetching your rewards');
-    String token = await campaignService.getSavedLoginToken();
+    String token = await campaignService.getSavedLoginTokenFromLocalStorage();
     await campaignService.getMemberRewardByToken(token).then((res) async {
       if (res != null) {
         campaignRewardList = res;
+
         // var res = response['personal'] as List;
-        log.w('res in my rewards by token ${campaignRewardList}');
+
         for (int i = 0; i < res.length; i++) {
           // double totalValueByLevel = campaignRewardList[i].totalValue;
           // double totalTokenQuantityByLevel =
           //     campaignRewardList[i].totalQuantities;
+          log.e('1111111 ${campaignRewardList[i].toJson()}');
           int totalReferralsByLevel = campaignRewardList[i].totalAccounts;
           double totalRewardQuantityByLevel =
               campaignRewardList[i].totalRewardQuantities;
@@ -288,7 +354,11 @@ class CampaignDashboardScreenState extends BaseState {
             myTotalAssetQuantity + myTokensWithoutRewards + myTeamsTotalRewards;
         await calcMyTotalAsssetValue();
       } else {
+        log.e('Campaign reward result in else block $res');
         log.w('In myReward else, res is null from api');
+        if (res == null) {
+          navigationService.navigateTo('/campaignLogin');
+        }
         setBusy(false);
       }
     }).catchError((err) {
@@ -306,11 +376,29 @@ class CampaignDashboardScreenState extends BaseState {
     await campaignService.getTotalTeamsRewardByToken(token).then((res) {
       myTeamsTotalValue = res['teamsTotalValue'].toDouble();
       myTeamsTotalRewards = res['teamsRewards'].toDouble();
-      teamValueAndRewardWithLoginToken = {
-        "totalValue": myTeamsTotalValue,
-        "totalReward": myTeamsTotalRewards,
-        "token": token
-      };
+
+      log.e(
+          'personal reward view data $myTeamsTotalRewards -- $myTeamsTotalValue');
+      team = res['team'];
+
+      // double totalValue = res['team']['totalValue'].toDouble();
+      // log.w('team totalValue $totalValue');
+      // double totalQuantity = res['team']['totalQuantity'].toDouble();
+      // log.w('team totalQuantity $totalQuantity');
+      // int members = res['team']['members'].length;
+      // log.w('team members $members');
+      // double percentage = res['team']['percentage'].toDouble();
+      // log.w('team percentage $percentage');
+
+      // teamValueAndRewardWithLoginToken = {
+      //   "totalValue": totalValue,
+      //   "totalQuantity": totalQuantity,
+      //   "members": members,
+      //   'percentage': percentage,
+      //   "token": token
+      // };
+
+      log.w('reward view data ${team[0]}');
     });
   }
 
@@ -321,7 +409,8 @@ class CampaignDashboardScreenState extends BaseState {
   calcMyTotalAsssetValue() async {
     log.e('calcMyTotalAsssetValue');
     double exgPrice = await getUsdValue();
-    myTotalAssetValue = myTotalAssetQuantity * exgPrice;
+    double holder = myTotalAssetQuantity * exgPrice;
+    myTotalAssetValue = NumberUtil.currencyFormat(holder, 2);
     log.e(
         'calcMyTotalAsssetValue $myTotalAssetQuantity, $exgPrice - $myTotalAssetValue');
     return myTotalAssetValue;

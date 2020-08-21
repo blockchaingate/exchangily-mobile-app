@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
@@ -11,6 +12,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   BuildContext context;
 
   NavigationService navigationService = locator<NavigationService>();
+  SharedService sharedService = locator<SharedService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
   ApiService apiService = locator<ApiService>();
@@ -51,6 +54,8 @@ class TradeViewModel extends MultipleStreamViewModel {
   String marketTradesStreamKey = 'marketTradesList';
 
   List myExchangeAssets = [];
+  DecimalConfig singlePairDecimalConfig = new DecimalConfig();
+  bool isDisposing = false;
 
   @override
   Map<String, StreamData> get streamsMap => {
@@ -64,9 +69,29 @@ class TradeViewModel extends MultipleStreamViewModel {
   // Map<String, StreamData> res =
   //     tradeService.getMultipleStreams(pairPriceByRoute.symbol);
 
+  @override
+  @mustCallSuper
+  dispose() async {
+    setBusy(true);
+    isDisposing = true;
+    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
+    log.i('Close all IOWebsocket connections');
+    navigationService.goBack();
+    super.dispose();
+    isDisposing = false;
+    setBusy(false);
+  }
+
+  /// Initialize when model ready
+  init() async {
+    await getDecimalPairConfig();
+  }
+
 // Change/update stream data before displaying on UI
   @override
-  void onData(String key, data) {}
+  void onData(String key, data) {
+    orderBook = [buyOrderBookList, sellOrderBookList];
+  }
 
   /// Transform stream data before notifying to view modal
   @override
@@ -96,18 +121,18 @@ class TradeViewModel extends MultipleStreamViewModel {
         // Buy order
         List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
         OrderList orderList = OrderList.fromJson(jsonDynamicList);
-        buyOrderBookList = orderList.orders;
+        log.e('orderList.orders.length ${orderList.orders.length}');
+        buyOrderBookList = orderAggregation(orderList.orders);
 
         // Sell orders
         List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
         OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
-        sellOrderBookList = sellOrderList.orders;
+        //  List sellOrders = sellOrderList.orders.reversed
+        //      .toList(); // reverse sell orders to show the list ascending
+        sellOrderBookList = orderAggregation(sellOrderList.orders);
 
         log.w(
-            'OrderBook length -- ${buyOrderBookList.length} ${sellOrderList.orders.length}');
-        // Fill orderBook list
-        orderBook = [buyOrderBookList, sellOrderBookList];
-        // notifyListeners();
+            'OrderBook length -- ${orderAggregation(buyOrderBookList).length} ${sellOrderList.orders.length}');
       }
 
       /// Market trade list
@@ -140,25 +165,54 @@ class TradeViewModel extends MultipleStreamViewModel {
     // getSubscriptionForKey(key).cancel();
   }
 
-  @override
-  @mustCallSuper
-  void dispose() {
-    tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
-    log.i('Close all IOWebsocket connections');
-    super.dispose();
-  }
+  // Order aggregation
 
-  /// Initialize when model ready
-  init() {
-    //  getDecimalPairConfig();
+  List<OrderModel> orderAggregation(List<OrderModel> passedOrders) {
+    List<OrderModel> result = [];
+    print('passed orders length ${passedOrders.length}');
+    double prevQuantity = 0.0;
+    List<int> indexArray = [];
+    double prevPrice = 0;
+
+    // for each
+    passedOrders.forEach((currentOrder) {
+      print('single order ${currentOrder.toJson()}');
+      int index = 0;
+      double aggrQty = 0;
+      index = passedOrders.indexOf(currentOrder);
+      if (currentOrder.price == prevPrice) {
+        log.i(
+            'price matched with prev price ${currentOrder.price} -- $prevPrice');
+        log.w(
+            ' currentOrder qty ${currentOrder.orderQuantity} -- prevQuantity $prevQuantity');
+        currentOrder.orderQuantity += prevQuantity;
+        //  aggrQty = currentOrder.orderQuantity + prevQuantity;
+        prevPrice = currentOrder.price;
+        log.e(' currentOrder.orderQuantity  ${currentOrder.orderQuantity}');
+        indexArray.add(passedOrders.indexOf(currentOrder));
+        result.removeWhere((order) => order.price == prevPrice);
+        result.add(currentOrder);
+      } else {
+        prevPrice = currentOrder.price;
+        prevQuantity = currentOrder.orderQuantity;
+        log.w('price NOT matched so prevprice: $prevPrice');
+        result.add(currentOrder);
+      }
+    });
+    return result;
   }
 
   /// Get Decimal Pair Configuration
   getDecimalPairConfig() async {
-    await apiService.getPairDecimalConfig().then((res) {
-      pairDecimalConfigList = res;
+    await tradeService
+        .getDecimalPairConfig(pairPriceByRoute.symbol)
+        .then((decimalValues) {
+      singlePairDecimalConfig = decimalValues;
+      log.i(
+          'decimal values, quantity: ${singlePairDecimalConfig.quantityDecimal} -- price: ${singlePairDecimalConfig.priceDecimal}');
+    }).catchError((err) {
+      log.e('getDecimalPairConfig $err');
     });
-    print(pairDecimalConfigList.length);
   }
 
   /// Bottom sheet to show market pair price

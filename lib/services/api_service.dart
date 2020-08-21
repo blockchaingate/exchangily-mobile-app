@@ -12,7 +12,9 @@
 */
 
 import 'dart:convert';
+import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/models/wallet/token_list.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 
@@ -28,20 +30,118 @@ class ApiService {
   final client = new http.Client();
 
   final kanbanBaseUrl = environment['endpoints']['kanban'];
-  static const usdCoinPriceUrl =
-      'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
+
   static const getBalance = 'kanban/getBalance/';
   static const assetsBalance = 'exchangily/getBalances/';
   static const orders = 'ordersbyaddress/';
   final String walletBalances = 'walletBalances';
   final btcBaseUrl = environment["endpoints"]["btc"];
   final ltcBaseUrl = environment["endpoints"]["ltc"];
+  final bchBaseUrl = environment["endpoints"]["bch"];
   final dogeBaseUrl = environment["endpoints"]["doge"];
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
   final eventsUrl = environment["eventInfo"];
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
 
+/*----------------------------------------------------------------------
+                    Get Token List
+----------------------------------------------------------------------*/
+
+  Future<List<Token>> getTokenList() async {
+    String url = getTokenListUrl;
+    log.i('getTokenList url $url');
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      var data = json['data'];
+      var parsedTokenList = data['tokenList'] as List;
+      log.w('getTokenList  $parsedTokenList');
+      TokenList tokenList = TokenList.fromJson(parsedTokenList);
+      if (data['tokenList'] == null) return null;
+      return tokenList.tokens;
+    } catch (err) {
+      log.e('getTokenList $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
+                    Get app version
+----------------------------------------------------------------------*/
+
+  Future getApiAppVersion() async {
+    String url = getAppVersionUrl;
+    log.i('getApiAppVersion url $url');
+    try {
+      var response = await client.get(getAppVersionUrl);
+
+      log.w('getApiAppVersion  ${response.body}');
+      return response.body;
+    } catch (err) {
+      log.e('getApiAppVersion $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
+                    Post free fab
+----------------------------------------------------------------------*/
+
+  Future postFreeFab(data) async {
+    try {
+      var response = await client.post(postFreeFabUrl, body: data);
+      var json = jsonDecode(response.body);
+      log.w(json);
+      return json;
+    } catch (err) {
+      log.e('postFreeFab $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
+                    Get free fab
+----------------------------------------------------------------------*/
+
+  Future getFreeFab(String address) async {
+    String url = getFreeFabUrl + address + '/10.4.5.3';
+    log.i('getFreeFab url $url');
+    try {
+      var response = await client.get(getFreeFabUrl + address + '/10.4.5.3');
+      var json = jsonDecode(response.body);
+      log.w('getFreeFab json $json');
+      return json;
+    } catch (err) {
+      log.e('getFreeFab $err');
+      throw Exception(err);
+    }
+  }
+
+  Future getEthGasPrice() async {
+    var url = 'https://ethprod.fabcoinapi.com/getgasprice';
+    var ethGasPrice = 0;
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      log.w(' getDepositTransactionStatus111 $json');
+      print((BigInt.parse(json['gasprice'])/BigInt.parse('1000000000')).toDouble());
+      ethGasPrice = (BigInt.parse(json['gasprice'])/BigInt.parse('1000000000')).toDouble().round();
+    } catch (err) {
+      log.e('In getDepositTransactionStatus catch $err');
+    }
+
+    if (ethGasPrice < environment['chains']['ETH']['gasPrice']) {
+      ethGasPrice = environment['chains']['ETH']['gasPrice'];
+    }
+
+    if (ethGasPrice > environment['chains']['ETH']['gasPriceMax']) {
+      ethGasPrice = environment['chains']['ETH']['gasPriceMax'];
+    }
+    print('ethGasPrice=====');
+    print(ethGasPrice);
+    return ethGasPrice;
+  }
 /*----------------------------------------------------------------------
                 Transaction status
 ----------------------------------------------------------------------*/
@@ -162,7 +262,9 @@ class ApiService {
       String url = environment['endpoints']['kanban'] + orders + exgAddress;
       log.w('get my orders url $url');
       var res = await client.get(url);
+      log.e('res $res');
       var jsonList = jsonDecode(res.body) as List;
+      log.i('jsonList $jsonList');
       OrderList orderList = OrderList.fromJson(jsonList);
       return orderList.orders;
     } catch (err) {
@@ -180,13 +282,13 @@ class ApiService {
         tickerName;
     log.i('getMyOrdersByTickerName url $url');
     try {
-      final res = await http.get(url);
+      final res = await client.get(url);
       print('after res $res');
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
     } catch (e) {
-      log.e('getOrders Failed to load the data from the API， $e');
+      log.e('getMyOrdersByTickerName Failed to load the data from the API， $e');
       throw Exception;
     }
   }
@@ -228,6 +330,20 @@ class ApiService {
       return json;
     } catch (e) {
       log.e('getLtcUtxos $e');
+      throw Exception('e');
+    }
+  }
+
+  Future getBchUtxos(String address) async {
+    var url = bchBaseUrl + 'getutxos/' + address;
+    log.w(url);
+
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      return json;
+    } catch (e) {
+      log.e('getBchUtxos $e');
       throw Exception('e');
     }
   }
@@ -297,6 +413,33 @@ class ApiService {
       return {'txHash': txHash, 'errMsg': errMsg};
     } catch (e) {
       log.e('postLtcTx $e');
+    }
+  }
+
+  // Post Bch Transaction
+  Future postBchTx(String txHex) async {
+    var url = bchBaseUrl + 'postrawtransaction';
+    var json;
+    var txHash = '';
+    var errMsg = '';
+    try {
+      var data = {'rawtx': txHex};
+      var response = await client.post(url, body: data);
+
+      json = jsonDecode(response.body);
+      log.w('json= $json');
+      if (json != null) {
+        if (json['txid'] != null) {
+          txHash = '0x' + json['txid'];
+        } else if (json['Error'] != null) {
+          errMsg = json['Error'];
+        }
+      } else {
+        errMsg = 'invalid json format.';
+      }
+      return {'txHash': txHash, 'errMsg': errMsg};
+    } catch (e) {
+      log.e('postBchTx $e');
     }
   }
 

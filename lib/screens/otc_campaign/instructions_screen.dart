@@ -15,8 +15,7 @@ import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignInstructionScreen extends StatelessWidget {
-  const CampaignInstructionScreen({Key key, this.newPage = false})
-      : super(key: key);
+  const CampaignInstructionScreen({Key key, this.newPage=true}) : super(key: key);
   final bool newPage;
 
   @override
@@ -28,10 +27,7 @@ class CampaignInstructionScreen extends StatelessWidget {
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
-          print("is newpage: $newPage");
-          if (newPage)
-            // Navigator.pushReplacementNamed(context, '/mainNav', arguments: 1);
-            model.navigationService.goBack();
+          model.navigationService.goBack();
           return new Future(() => true);
         },
         child: SafeArea(

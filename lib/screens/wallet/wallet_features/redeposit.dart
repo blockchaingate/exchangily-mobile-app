@@ -12,7 +12,9 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,6 +60,8 @@ class _RedepositState extends State<Redeposit> {
   String tokenType = '';
   String errDepositTransactionID;
   List errDepositList = new List();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+      locator<TransactionHistoryDatabaseService>();
 
   @override
   void initState() {
@@ -113,6 +117,7 @@ class _RedepositState extends State<Redeposit> {
   }
 
   checkPass(context) async {
+    TransactionHistory transactionByTxId = new TransactionHistory();
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -165,13 +170,42 @@ class _RedepositState extends State<Redeposit> {
           nonce, coinType, transactionID, signedMess);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
-        sharedService.showInfoFlushbar(
-            '${AppLocalizations.of(context).redepositCompleted}',
-            '${AppLocalizations.of(context).transactionId}' +
-                resRedeposit['data']['transactionID'],
-            Icons.cancel,
-            globals.white,
-            context);
+        var newTransactionId = resRedeposit['data']['transactionID'];
+        print(
+            'NEW REDEPOSIT TXID $newTransactionId --Old txid $transactionID ');
+        sharedService.alertDialog(
+            AppLocalizations.of(context).redepositCompleted,
+            AppLocalizations.of(context).transactionId + newTransactionId,
+            path: '/dashboard');
+
+        // get transaction from database
+        transactionByTxId =
+            await transactionHistoryDatabaseService.getByTxId(transactionID);
+
+        // update transaction history status with new txid
+        String date = DateTime.now().toString();
+        TransactionHistory transactionHistory = new TransactionHistory(
+            id: transactionByTxId.id,
+            tickerName: coinName,
+            address: '',
+            amount: 0.0,
+            date: date.toString(),
+            txId: newTransactionId,
+            status: 'pending',
+            quantity: transactionByTxId.quantity,
+            tag: transactionByTxId.tag);
+
+        await transactionHistoryDatabaseService.update(transactionHistory);
+        await transactionHistoryDatabaseService.getByTxId(newTransactionId);
+        walletService.checkDepositTransactionStatus(transactionHistory);
+
+        // sharedService.showInfoFlushbar(
+        //     '${AppLocalizations.of(context).redepositCompleted}',
+        //     '${AppLocalizations.of(context).transactionId}' +
+        //         resRedeposit['data']['transactionID'],
+        //     Icons.cancel,
+        //     globals.white,
+        //     context);
       } else {
         sharedService.showInfoFlushbar(
             AppLocalizations.of(context).redepositFailedError,
@@ -252,7 +286,7 @@ class _RedepositState extends State<Redeposit> {
           ),
           middle: Text(
             '${AppLocalizations.of(context).redeposit}  ${widget.walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
-            style: TextStyle(color: Colors.white),
+            style: Theme.of(context).textTheme.headline4,
           ),
           backgroundColor: Color(0XFF1f2233),
         ),
@@ -265,12 +299,20 @@ class _RedepositState extends State<Redeposit> {
                   children: errDepositList
                       .map((data) => RadioListTile(
                             dense: true,
-                            title: Text(
-                              bigNum2Double(data["amount"]).toString(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.bold),
+                            title: Row(
+                              children: <Widget>[
+                                Text(AppLocalizations.of(context).amount,
+                                    style:
+                                        Theme.of(context).textTheme.headline3),
+                                UIHelper.horizontalSpaceMedium,
+                                Text(
+                                  bigNum2Double(data["amount"]).toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline3
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
                             value: data['transactionID'],
                             groupValue: errDepositTransactionID,

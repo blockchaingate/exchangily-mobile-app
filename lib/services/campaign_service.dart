@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
+import 'package:exchangilymobileapp/models/campaign/member_profile.dart';
 import 'package:exchangilymobileapp/models/campaign/reward.dart';
 import 'package:exchangilymobileapp/models/campaign/team_reward.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
@@ -54,9 +55,9 @@ class CampaignService {
 /*-------------------------------------------------------------------------------------
                           Get user data from database by token
 -------------------------------------------------------------------------------------*/
-  Future<CampaignUserData> getUserDataFromDatabase() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var loginToken = prefs.getString('loginToken');
+  Future<CampaignUserData> getUserDataFromDatabase({String token = ''}) async {
+    var loginToken =
+        token == '' ? await getSavedLoginTokenFromLocalStorage() : token;
     log.w(loginToken);
     if (loginToken != '' && loginToken != null) {
       await campaignUserDatabaseService
@@ -70,6 +71,16 @@ class CampaignService {
       log.e('Token not found');
     }
     return userData;
+  }
+
+/*-------------------------------------------------------------------------------------
+                          Get saved login token
+-------------------------------------------------------------------------------------*/
+
+  Future<String> getSavedLoginTokenFromLocalStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String loginToken = prefs.getString('loginToken');
+    return loginToken;
   }
 
   /*-------------------------------------------------------------------------------------
@@ -124,7 +135,7 @@ class CampaignService {
     body.addAll({'appId': appId}); // Add another key/pair value
 
     try {
-      log.e(loginUrl);
+      log.i('login url $loginUrl');
       var response = await client.post(loginUrl, body: body);
       var json = jsonDecode(response.body);
       log.w('login $json');
@@ -232,23 +243,13 @@ class CampaignService {
                           Save user data locally
 -------------------------------------------------------------------------------------*/
 
-  Future saveCampaignUserDataLocally(CampaignUserData userData) async {
+  Future saveCampaignUserDataInLocalDatabase(CampaignUserData userData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('loginToken', userData.token);
     await campaignUserDatabaseService.insert(userData);
     await campaignUserDatabaseService
         .getUserDataByToken(userData.token)
         .then((value) => log.w(value));
-  }
-
-  /*-------------------------------------------------------------------------------------
-                          Get saved login token
--------------------------------------------------------------------------------------*/
-
-  Future<String> getSavedLoginToken() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String loginToken = prefs.getString('loginToken');
-    return loginToken;
   }
 
 /*-------------------------------------------------------------------------------------
@@ -306,16 +307,18 @@ class CampaignService {
                                 Get Member Profile By Token
 -------------------------------------------------------------------------------------*/
 
-  Future getMemberProfile(CampaignUserData userData) async {
-    Map<String, String> headers = {'x-access-token': userData.token};
+  Future<MemberProfile> getMemberProfile(String token) async {
+    Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(memberProfileUrl, headers: headers);
       var json = jsonDecode(response.body)['_body'];
-      log.w('getMemberProfile $json');
 
-      return json;
+      MemberProfile memberProfile = MemberProfile.fromJson(json);
+      log.i('getMemberProfile -- ${memberProfile.toJson()}');
+      return memberProfile;
     } catch (err) {
       log.e('In getMemberProfile catch $err');
+      return null;
     }
   }
 
@@ -330,7 +333,7 @@ class CampaignService {
       log.w('getMemberRewardByToken ${jsonDecode(response.body)['_body']}');
       var json = jsonDecode(response.body)['_body']['personal'];
       CampaignRewardList campaignRewardList = CampaignRewardList.fromJson(json);
-      log.e('getMemberRewardByToken ${campaignRewardList.rewards.length}');
+
       return campaignRewardList.rewards;
     } catch (err) {
       log.e('In getRewardByToken catch $err');
@@ -346,7 +349,7 @@ class CampaignService {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
-      log.e('getTotalTeamsRewardByToken ${jsonDecode(response.body)['_body']}');
+      log.w('getTotalTeamsRewardByToken ${jsonDecode(response.body)['_body']}');
       var teamsRewardList = jsonDecode(response.body)['_body'];
       return teamsRewardList;
     } catch (err) {
@@ -358,16 +361,14 @@ class CampaignService {
                                   Get Teams Details Reward By Token
 -------------------------------------------------------------------------------------*/
 
-  Future<List<CampaignTeamReward>> getTeamsRewardDetailsByToken(
-      String token) async {
+  Future<List<TeamReward>> getTeamsRewardDetailsByToken(String token) async {
     Map<String, String> headers = {'x-access-token': token};
     try {
       var response = await client.get(rewardsUrl, headers: headers);
-      log.e(
-          'getTeamsRewardDetailsByToken ${jsonDecode(response.body)['_body']['team']}');
+
       var json = jsonDecode(response.body)['_body']['team'];
-      CampaignTeamRewardList campaignTeamRewardList =
-          CampaignTeamRewardList.fromJson(json);
+      log.i('getTeamsRewardDetailsByToken $json');
+      TeamRewardList campaignTeamRewardList = TeamRewardList.fromJson(json);
       log.w(
           'getTeamsRewardDetailsByToken ${campaignTeamRewardList.rewards.length}');
       return campaignTeamRewardList.rewards;
