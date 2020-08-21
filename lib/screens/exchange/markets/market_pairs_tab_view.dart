@@ -12,9 +12,9 @@ class MarketPairsTabView extends StatelessWidget {
   final List<List<Price>> marketPairsTabBarView;
   final List priceList;
   final bool isBusy;
-  final bool showSlider;
+  final bool hideSlider;
   MarketPairsTabView(
-      {Key key, this.marketPairsTabBarView, this.priceList, this.isBusy, this.showSlider=false})
+      {Key key, this.marketPairsTabBarView, this.priceList, this.isBusy, this.hideSlider=true})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class MarketPairsTabView extends StatelessWidget {
                     return <Widget>[
                       SliverToBoxAdapter(
                         child: Offstage(
-                          offstage: showSlider,
+                          offstage: hideSlider,
                           child: Column(
                             children: [
                               Carousel(imageData: images),
