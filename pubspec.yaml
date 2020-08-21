@@ -138,6 +138,9 @@ dependencies:
   #gradient_text
   gradient_text: ^1.0.2
 
+  #drop_cap_text
+  drop_cap_text: ^1.0.7
+
   # Share files
   share:
     git:

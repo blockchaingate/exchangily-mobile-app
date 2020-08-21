@@ -39,6 +39,7 @@ class ApiService {
   final dogeBaseUrl = environment["endpoints"]["doge"];
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
+  final eventsUrl = environment["eventInfo"];
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
 
 /*----------------------------------------------------------------------
@@ -422,6 +423,54 @@ class ApiService {
       }
     } catch (e) {
       log.e('getSliderImages Failed to load the data from the API $e');
+    }
+    return {};
+  }
+
+  Future getEvents() async {
+    print("Calling api: getEvents");
+    try {
+      final res = await http
+          // .get(eventsUrl);
+          .get("http://192.168.0.12:4000/kanban/getCampaigns");
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return "error";
+      }
+    } catch (e) {
+      log.e('getEvents failed to load the data from the API $e');
+      return "error";
+    }
+  }
+
+  //get a single event detailed information
+  Future postEventSingle(id) async {
+    print("Calling api: getEventSingle");
+    try {
+      final res = await http
+          .post(
+        "http://192.168.0.12:4000/kanban/getCampaignSingle",
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'id': id,
+        }),
+      );
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return ["error"];
+      }
+    } catch (e) {
+      log.e('getEventSingle failed to load the data from the API $e');
     }
     return {};
   }
