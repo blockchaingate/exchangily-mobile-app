@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class Carousel extends StatelessWidget {
-  final List<Map> imageData;
+  final List imageData;
   Carousel({this.imageData});
 
   @override
@@ -25,7 +25,7 @@ class Carousel extends StatelessWidget {
               .build(context, config);
         })),
         itemBuilder: (BuildContext context, int index) {
-          String imgUrl = imageData[index]["imgUrl"];
+          String imgUrl = imageData[index]["url"];
           return InkWell(
             onTap: () {},
             child: ClipRRect(
@@ -39,7 +39,7 @@ class Carousel extends StatelessWidget {
                   if (imageData[index].containsKey("route") &&
                       imageData[index]["route"].length > 0) {
                     Navigator.pushNamed(context, imageData[index]["route"],
-                        arguments: true);
+                        arguments: imageData[index]["arguments"]);
                   }
                 },
               ),

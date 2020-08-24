@@ -16,41 +16,29 @@ import '../../service_locator.dart';
 import '../base_state.dart';
 
 class MarketPairsTabViewState extends BaseState {
-  
   final log = getLogger('MarketPairsTabViewState');
-  // DialogService dialogService = locator<DialogService>();
-  // WalletService walletService = locator<WalletService>();
-  // WalletDataBaseService walletDatabaseService =
-  //     locator<WalletDataBaseService>();
-  // SharedService sharedService = locator<SharedService>();
-
-  // final NavigationService navigationService = locator<NavigationService>();
-  // List<String> languages = ['English', 'Chinese'];
-  // String selectedLanguage;
-  // // bool result = false;
-  // String errorMessage = '';
-  // AlertResponse alertResponse;
-  // BuildContext context;
-  // String versionName = '';
-  // String versionCode = '';
-  // bool isDialogDisplay = false;
-  // bool isDeleting = false;
-  // ScrollController scrollController;
-  List<Map> images;
+  List images;
   ApiService apiService = locator<ApiService>();
   BuildContext context;
+  final List imagesLocal = [
+    {
+      "url": "assets/images/slider/campaign2.jpg",
+      "urlzh": "assets/images/slider/campaign2.jpg",
+      "route": ''
+    },
+  ];
 
   init() async {
     setBusy(true);
     var result = await apiService.getSliderImages();
     print("Slider from api:");
     print(result);
-    // result.map((e)=>images.add(e));
-    // print("image list map:");
-    // print(images.toString());
+    if (result == "error") {
+      images = imagesLocal;
+    } else {
+      images = result;
+    }
+
     setBusy(false);
   }
-
- 
-
 }

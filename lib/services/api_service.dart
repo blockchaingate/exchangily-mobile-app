@@ -30,6 +30,8 @@ class ApiService {
   final client = new http.Client();
 
   final kanbanBaseUrl = environment['endpoints']['kanban'];
+  // Please keep this for future test 
+  // final kanbanBaseUrl = environment['endpoints']['JackLocalKanban'];
 
   static const getBalance = 'kanban/getBalance/';
   static const assetsBalance = 'exchangily/getBalances/';
@@ -562,29 +564,31 @@ class ApiService {
 
   Future getSliderImages() async {
     try {
-      final res = await http.get(kanbanBaseUrl + "/kanban/getadvconfig");
+      final res = await http.get(kanbanBaseUrl + "kanban/getadvconfig");
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }
     } catch (e) {
       log.e('getSliderImages Failed to load the data from the API $e');
+      return "error";
     }
-    return {};
+    return "error";
   }
 
   Future getEvents() async {
     print("Calling api: getEvents");
+    print("Url: " + kanbanBaseUrl + "kanban/getCampaigns");
     try {
       final res = await http.get(
           // "http://192.168.0.12:4000/kanban/getCampaigns"
-          kanbanBaseUrl + "/kanban/getCampaigns");
+          kanbanBaseUrl + "kanban/getCampaigns");
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         print("success");
         return jsonDecode(res.body);
       } else {
-        print("error");
+        print("error: " + res.body);
         return "error";
       }
     } catch (e) {
@@ -599,7 +603,7 @@ class ApiService {
     try {
       final res = await http.post(
         // "http://192.168.0.12:4000/kanban/getCampaignSingle",
-        kanbanBaseUrl + "/kanban/getCampaignSingle",
+        kanbanBaseUrl + "kanban/getCampaignSingle",
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
