@@ -141,7 +141,7 @@ class CampaignService {
       log.i('login url $loginUrl');
       var response = await client.post(loginUrl, body: body);
       var json = jsonDecode(response.body);
-      log.w('login $json');
+      log.w('login json res $json');
       return json;
     }
     // when i use then here and return the response variable it was showing output in console for service but not in the login state
@@ -248,6 +248,7 @@ class CampaignService {
 
   Future saveCampaignUserDataInLocalDatabase(CampaignUserData userData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('loginToken');
     prefs.setString('loginToken', userData.token);
     await campaignUserDatabaseService.insert(userData);
     await campaignUserDatabaseService

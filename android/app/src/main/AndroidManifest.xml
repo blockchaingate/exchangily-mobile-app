@@ -19,12 +19,14 @@
         </activity>
         <activity android:name="com.apptreesoftware.barcodescan.BarcodeScannerActivity" />
         <!-- image_picker config for API < 29 -->
-        <activity android:requestLegacyExternalStorage="true"/>
     </application>
+    <!-- <application android:requestLegacyExternalStorage="true"></application> -->
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
+
 </manifest>

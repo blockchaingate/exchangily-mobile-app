@@ -92,6 +92,7 @@ class CampaignUserDatabaseService {
 // Get User By Email
   Future<CampaignUserData> getByEmail(String email) async {
     log.e(email);
+    await initDb();
     final Database db = await _database;
     List<Map> res =
         await db.query(tableName, where: 'email= ?', whereArgs: [email]);
