@@ -111,7 +111,7 @@ dependencies:
   flutter_svg: ^0.18.0
 
   # State Management
-  stacked: ^1.5.8
+  stacked: ^1.7.6
 
   #flutter_beautiful_popup
   flutter_beautiful_popup: ^1.5.0
