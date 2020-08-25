@@ -47,7 +47,7 @@ class MarketPairsTabView extends StatelessWidget {
                                 offstage: hideSlider,
                                 child: Column(
                                   children: [
-                                    Carousel(imageData: model.images),
+                                    Carousel(imageData: model.images, lang:model.lang),
                                     SizedBox(height: 5),
                                   ],
                                 ),

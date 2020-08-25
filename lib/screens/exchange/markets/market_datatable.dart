@@ -84,6 +84,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
+                // print("Sort Datatable");
+                // print("columnIndex: " + columnIndex.toString());
                 setState(() {
                   if (columnIndex == _sortColumnIndex) {
                     _sortAsc = _sortNameAsc = sortAscending;
@@ -110,6 +112,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
+                // print("Sort Datatable");
+                // print("columnIndex: " + columnIndex.toString());
                 setState(() {
                   if (columnIndex == _sortColumnIndex) {
                     _sortAsc = _sortPriceAsc = sortAscending;
@@ -119,10 +123,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
                   }
                   if (sortAscending) {
                     pairList.sort((a, b) =>
-                        a.price.toString().compareTo(b.price.toString()));
+                        a.price.compareTo(b.price));
                   } else {
                     pairList.sort((a, b) =>
-                        b.price.toString().compareTo(a.price.toString()));
+                        b.price.compareTo(a.price));
                   }
                 });
               },
@@ -145,10 +149,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
                   }
                   if (sortAscending) {
                     pairList.sort((a, b) =>
-                        a.high.toString().compareTo(b.high.toString()));
+                        a.high.compareTo(b.high));
                   } else {
                     pairList.sort((a, b) =>
-                        b.high.toString().compareTo(a.high.toString()));
+                        b.high.compareTo(a.high));
                   }
                 });
               },
@@ -171,10 +175,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
                   }
                   if (sortAscending) {
                     pairList.sort(
-                        (a, b) => a.low.toString().compareTo(b.low.toString()));
+                        (a, b) => a.low.compareTo(b.low));
                   } else {
                     pairList.sort(
-                        (a, b) => b.low.toString().compareTo(a.low.toString()));
+                        (a, b) => b.low.compareTo(a.low));
                   }
                 });
               },
@@ -197,10 +201,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
                   }
                   if (sortAscending) {
                     pairList.sort((a, b) =>
-                        a.change.toString().compareTo(b.change.toString()));
+                        a.change.compareTo(b.change));
                   } else {
                     pairList.sort((a, b) =>
-                        b.change.toString().compareTo(a.change.toString()));
+                        b.change.compareTo(a.change));
                   }
                 });
               },
