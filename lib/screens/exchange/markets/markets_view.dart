@@ -22,7 +22,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
 class MarketsView extends StatelessWidget {
-  const MarketsView({Key key}) : super(key: key);
+  const MarketsView({Key key, this.hideSlider=true}) : super(key: key);
+  final bool hideSlider;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +52,7 @@ class MarketsView extends StatelessWidget {
                           marketPairsTabBarView: model.marketPairsTabBar,
                           priceList: model.btcFabExgUsdtPriceList,
                           isBusy: !model.dataReady,
+                          hideSlider:hideSlider,
                         ),
                       ),
                     ],

@@ -24,6 +24,7 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
+
   // Generic Items
   String get title {
     return Intl.message('Exchangily Wallet',
@@ -1532,6 +1533,11 @@ class AppLocalizations {
         "or click on website button to download the latest version from the official Exchangily site",
         name: 'clickOnWebsiteButton',
         desc: 'wallet_dashboard_app_update_popup');
+  }
+
+  String get serverBusy {
+    return Intl.message("Server Busy",
+        name: 'serverBusy', desc: 'campaign_list_serverBusy');
   }
 }
 

@@ -32,9 +32,10 @@ Map devConfig = {
       "hardfork": 'byzantium',
       "chainId": 3,
       "infura": "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 90000000000,
-      "gasPriceMax": 200000000000,
-      "gasLimit": 100000
+      "gasPrice": 20,
+      "gasPriceMax": 200,
+      "gasLimit": 21000,
+      "gasLimitToken": 70000
     },
     "FAB": {
       "chain": {"name": 'test', "networkId": 212, "chainId": 212},
@@ -48,13 +49,14 @@ Map devConfig = {
   "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150, "BCH": 1, "LTC": 1, "DOGE": 1},
   'endpoints': {
     'kanban': 'https://kanbantest.fabcoinapi.com/',
+    'JackLocalKanban':"http://192.168.0.12:4000/",
     'btc': 'https://btctest.fabcoinapi.com/',
     'ltc': 'https://ltctest.fabcoinapi.com/',
     'bch': 'https://bchtest.fabcoinapi.com/',
     'doge': 'https://dogetest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
-    'campaign': 'https://test.blockchaingate.com/v2/'
+    'campaign': 'https://test.blockchaingate.com/v2/',
   },
   "addresses": {
     "smartContract": {
@@ -98,7 +100,7 @@ Map devConfig = {
         'name': 'erc20',
         'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'
       },
-    ]
+    ],
   },
   "websocket": "wss://kanbantest.fabcoinapi.com/ws/",
   "minimumWithdraw": {
@@ -159,9 +161,10 @@ Map productionConfig = {
       "hardfork": 'byzantium',
       "chainId": 1,
       "infura": "https://mainnet.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef",
-      "gasPrice": 120000000000,
-      "gasPriceMax": 200000000000,
-      "gasLimit": 100000
+      "gasPrice": 90,
+      "gasPriceMax": 200,
+      "gasLimit": 21000,
+      "gasLimitToken": 70000
     },
     "FAB": {
       "chain": {

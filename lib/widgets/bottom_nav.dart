@@ -80,7 +80,7 @@ class BottomNavBar extends StatelessWidget {
 
           case 1:
             if (currentRouteName != 'MarketsView')
-              navigationService.navigateTo('/marketsView');
+              navigationService.navigateTo('/marketsView',arguments:false);
             break;
           // case 2:
           // if (currentRouteName != 'OtcScreen')
