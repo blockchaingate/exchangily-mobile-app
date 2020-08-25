@@ -15,7 +15,8 @@ import 'package:shimmer/shimmer.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignInstructionScreen extends StatelessWidget {
-  const CampaignInstructionScreen({Key key, this.newPage=true}) : super(key: key);
+  const CampaignInstructionScreen({Key key, this.newPage = true})
+      : super(key: key);
   final bool newPage;
 
   @override
@@ -87,7 +88,13 @@ class CampaignInstructionScreen extends StatelessWidget {
                   : model.hasApiError
                       ? Container(
                           child: Center(
-                            child: Text("Connection Error"),
+                            child: Text(
+                              AppLocalizations.of(context)
+                                      .serverBusy
+                                      .toString() +
+                                  "...",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         )
                       : ListView.builder(
@@ -108,7 +115,9 @@ class CampaignInstructionScreen extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    CampaignSingle(model.campaignInfoList[index]["id"])));
+                                                    CampaignSingle(
+                                                        model.campaignInfoList[
+                                                            index]["id"])));
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -183,198 +192,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                   ));
                             else
                               return Container();
-                          })
-
-              // ListView(
-              //     children: <Widget>[
-              //       // List of instruction SVG images
-              //       Container(
-              //         height: MediaQuery.of(context).size.width * 370 / 600,
-              //         decoration: BoxDecoration(
-              //             image: DecorationImage(
-              //           alignment: Alignment.topCenter,
-              //           image: AssetImage(
-              //             "assets/images/img/CampaignHeader.png",
-              //           ),
-              //           fit: BoxFit.contain,
-              //         )),
-              //         child: Container(
-              //             margin: EdgeInsets.only(top: 100),
-              //             height: 150,
-              //             width: MediaQuery.of(context).size.width - 60,
-              //             child: Column(
-              //               mainAxisSize: MainAxisSize.max,
-              //               children: [
-              //                 Container(
-              //                   width: MediaQuery.of(context).size.width - 60,
-              //                   child: FittedBox(
-              //                     fit: BoxFit.fitWidth,
-              //                     child: Text(
-              //                       "10 MILLION EQUITY TOKEN GIVE AWAY",
-              //                       style: TextStyle(
-              //                           fontWeight: FontWeight.bold,
-              //                           color: Colors.white),
-              //                     ),
-              //                   ),
-              //                 ),
-              //                 Container(
-              //                   width: MediaQuery.of(context).size.width - 60,
-              //                   child: FittedBox(
-              //                       fit: BoxFit.fitWidth,
-              //                       child: GradientText("INVITATION",
-              //                           style: TextStyle(
-              //                               color: Colors.white,
-              //                               fontWeight: FontWeight.bold,
-              //                               letterSpacing: 1),
-              //                           gradient: LinearGradient(
-              //                               colors: [
-              //                                 Color(0xffffffff),
-              //                                 Color(0xffb7ccfe),
-              //                                 Color(0xffb9a9f9),
-              //                               ],
-              //                               begin: Alignment.topCenter,
-              //                               end: Alignment.bottomCenter),
-              //                           textAlign: TextAlign.center)),
-              //                 ),
-              //                 SizedBox(
-              //                   height: 10,
-              //                 ),
-              //                 Container(
-              //                   padding: EdgeInsets.symmetric(
-              //                       horizontal: 30, vertical: 7),
-              //                   decoration: BoxDecoration(
-              //                       color: Colors.white,
-              //                       borderRadius: BorderRadius.circular(60)),
-              //                   child: Row(
-              //                     mainAxisSize: MainAxisSize.min,
-              //                     children: [
-              //                       Container(
-              //                         width: 8,
-              //                         height: 8,
-              //                         decoration: BoxDecoration(
-              //                             color: Color(0xff000066),
-              //                             shape: BoxShape.circle),
-              //                       ),
-              //                       SizedBox(width: 5),
-              //                       Text(
-              //                         "WAITING FOR YOU",
-              //                         style: TextStyle(
-              //                             color: Color(0xff000066),
-              //                             fontWeight: FontWeight.w800,
-              //                             letterSpacing: 1,
-              //                             fontSize: 16),
-              //                       ),
-              //                       SizedBox(width: 5),
-              //                       Container(
-              //                         width: 8,
-              //                         height: 8,
-              //                         decoration: BoxDecoration(
-              //                             color: Color(0xff000066),
-              //                             shape: BoxShape.circle),
-              //                       ),
-              //                     ],
-              //                   ),
-              //                 )
-              //               ],
-              //             )),
-              //       ),
-              //       //title area
-              //       Container(
-              //         height: 60,
-              //         margin: EdgeInsets.symmetric(horizontal: 30),
-              //         // padding: EdgeInsets.symmetric(horizontal:10),
-              //         child: Stack(children: [
-              //           Container(
-              //             margin: EdgeInsetsDirectional.only(top: 8),
-              //             padding: EdgeInsets.only(
-              //               top: 10,
-              //             ),
-              //             // width: double.infinity,
-              //             // height: 50,
-              //             // padding: EdgeInsets.symmetric(
-              //             //     horizontal: 30, vertical: 7),
-              //             decoration: BoxDecoration(
-              //               color: Color(0xff3d3da1),
-              //             ),
-              //             child: Center(
-              //               child: Text(
-              //                 "About the Campaign",
-              //                 style: TextStyle(
-              //                     fontSize: 16,
-              //                     color: Colors.white,
-              //                     fontWeight: FontWeight.bold),
-              //               ),
-              //             ),
-              //           ),
-              //           Container(
-              //             padding: EdgeInsets.only(left: 20, right: 20),
-              //             child: CustomSeparator(
-              //               color: Color(0xff353487),
-              //               height: 20,
-              //             ),
-              //           ),
-              //         ]),
-              //       ),
-              //       // content rows
-              //       EventMainContent(model.campaignInfo),
-              //       // Container(
-              //       //   margin: EdgeInsetsDirectional.only(start: 30, end: 30),
-              //       //   padding: EdgeInsets.only(top: 10, bottom: 20),
-              //       //   width: MediaQuery.of(context).size.width - 60,
-              //       //   // width: double.infinity,
-              //       //   // height: 50,
-              //       //   // padding: EdgeInsets.symmetric(
-              //       //   //     horizontal: 30, vertical: 7),
-              //       //   decoration: BoxDecoration(
-              //       //     color: Color(0xff3d3da1),
-              //       //   ),
-              //       //   child: Column(
-              //       //     children: [
-              //       //       CustomSeparator(
-              //       //         color: Color(0xff131359),
-              //       //       ),
-              //       //       SizedBox(height: 30),
-              //       //       Center(
-              //       //         child: InkWell(
-              //       //           child: Text(
-              //       //             "More information about this campaign",
-              //       //             style: TextStyle(
-              //       //                 decoration: TextDecoration.underline,
-              //       //                 fontSize: 16,
-              //       //                 color: Colors.blue,
-              //       //                 fontWeight: FontWeight.bold),
-              //       //           ),
-              //       //           onTap: (){
-
-              //       //           },
-              //       //         ),
-              //       //       ),
-              //       //       SizedBox(height: 10),
-              //       //     ],
-              //       //   ),
-              //       // ),
-              //       SizedBox(height: 50),
-
-              //       SizedBox(height: 50),
-              //       // Enter button container
-
-              //       // Container(
-              //       //   width: 250,
-              //       //   child: RaisedButton(
-              //       //     padding: EdgeInsets.all(0),
-              //       //     child: Text(
-              //       //         AppLocalizations.of(context)
-              //       //             .tapHereToEnterInCampaign,
-              //       //         style: Theme.of(context).textTheme.headline4),
-              //       //     onPressed: () {
-              //       //       Navigator.pushNamed(context, '/campaignLogin');
-              //       //     },
-              //       //   ),
-              //       // ),
-              //       // UIHelper.verticalSpaceSmall,
-              //     ],
-              //   ),
-              ),
+                          })),
         ),
       ),
     );

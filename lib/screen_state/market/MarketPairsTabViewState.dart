@@ -20,10 +20,12 @@ class MarketPairsTabViewState extends BaseState {
   List images;
   ApiService apiService = locator<ApiService>();
   BuildContext context;
+  String lang = 'en';
+
   final List imagesLocal = [
     {
       "url": "assets/images/slider/campaign2.jpg",
-      "urlzh": "assets/images/slider/campaign2.jpg",
+      "urlzh": "assets/images/slider/adv2.jpg.jpg",
       "route": ''
     },
   ];
@@ -31,6 +33,8 @@ class MarketPairsTabViewState extends BaseState {
   init() async {
     setBusy(true);
     var result = await apiService.getSliderImages();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    lang = prefs.getString('lang');
     print("Slider from api:");
     print(result);
     if (result == "error") {

@@ -4,7 +4,8 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 
 class Carousel extends StatelessWidget {
   final List imageData;
-  Carousel({this.imageData});
+  final String lang;
+  Carousel({this.imageData, this.lang});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class Carousel extends StatelessWidget {
       child: Swiper(
         loop: true,
         autoplay: imageData.length > 1 ? true : false,
-        autoplayDelay:7000,
+        autoplayDelay: 7000,
         // duration: 600,
         pagination: new SwiperPagination(builder: new SwiperCustomPagination(
             builder: (BuildContext context, SwiperPluginConfig config) {
@@ -25,7 +26,9 @@ class Carousel extends StatelessWidget {
               .build(context, config);
         })),
         itemBuilder: (BuildContext context, int index) {
-          String imgUrl = imageData[index]["url"];
+          String imgUrl = lang == "en"
+              ? imageData[index]["url"]
+              : imageData[index]["urlzh"];
           return InkWell(
             onTap: () {},
             child: ClipRRect(
