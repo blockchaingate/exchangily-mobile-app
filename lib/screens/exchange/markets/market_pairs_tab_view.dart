@@ -14,20 +14,17 @@ class MarketPairsTabView extends StatelessWidget {
   final bool isBusy;
   final bool hideSlider;
   MarketPairsTabView(
-      {Key key, this.marketPairsTabBarView, this.priceList, this.isBusy, this.hideSlider=true})
+      {Key key,
+      this.marketPairsTabBarView,
+      this.priceList,
+      this.isBusy,
+      this.hideSlider = true})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
     List<String> tabNames = [
       // 'FAV.',
       'USDT', 'DUSD', 'BTC', 'ETH', 'EXG'
-    ];
-    final List<Map> images = [
-      {
-        "imgUrl": "assets/images/slider/campaign.jpg",
-        "route": '/campaignInstructions'
-      },
-      {"imgUrl": "assets/images/slider/campaign2.jpg", "route": ''},
     ];
 
     return BaseScreen<MarketPairsTabViewState>(
@@ -43,17 +40,19 @@ class MarketPairsTabView extends StatelessWidget {
                   headerSliverBuilder:
                       (BuildContext context, bool innerBoxIsScrolled) {
                     return <Widget>[
-                      SliverToBoxAdapter(
-                        child: Offstage(
-                          offstage: hideSlider,
-                          child: Column(
-                            children: [
-                              Carousel(imageData: images),
-                              SizedBox(height: 5),
-                            ],
-                          ),
-                        ),
-                      ),
+                      model.busy
+                          ? SliverToBoxAdapter(child: Loading())
+                          : SliverToBoxAdapter(
+                              child: Offstage(
+                                offstage: hideSlider,
+                                child: Column(
+                                  children: [
+                                    Carousel(imageData: model.images),
+                                    SizedBox(height: 5),
+                                  ],
+                                ),
+                              ),
+                            ),
                       SliverToBoxAdapter(
                         child: Offstage(
                           offstage: isBusy,

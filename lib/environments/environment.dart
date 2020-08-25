@@ -49,13 +49,14 @@ Map devConfig = {
   "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150, "BCH": 1, "LTC": 1, "DOGE": 1},
   'endpoints': {
     'kanban': 'https://kanbantest.fabcoinapi.com/',
+    'JackLocalKanban':"http://192.168.0.12:4000/",
     'btc': 'https://btctest.fabcoinapi.com/',
     'ltc': 'https://ltctest.fabcoinapi.com/',
     'bch': 'https://bchtest.fabcoinapi.com/',
     'doge': 'https://dogetest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
-    'campaign': 'https://test.blockchaingate.com/v2/'
+    'campaign': 'https://test.blockchaingate.com/v2/',
   },
   "addresses": {
     "smartContract": {
