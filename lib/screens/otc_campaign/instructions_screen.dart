@@ -36,7 +36,10 @@ class CampaignInstructionScreen extends StatelessWidget {
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: Container(
-                width: 250,
+                constraints: BoxConstraints(
+                  minWidth:250
+                ),
+                margin: EdgeInsets.symmetric(horizontal:30),
                 child: RaisedButton(
                   padding: EdgeInsets.all(0),
                   child: Text(
@@ -97,102 +100,114 @@ class CampaignInstructionScreen extends StatelessWidget {
                             ),
                           ),
                         )
-                      : ListView.builder(
-                          padding: EdgeInsets.fromLTRB(10, 10, 10, 60),
-                          itemCount: model.campaignInfoList.length,
-                          itemBuilder: (context, index) {
-                            if (model.campaignInfoList[index]["status"] ==
-                                "active")
-                              return Container(
-                                  // height: 100,
-                                  width: double.infinity,
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(5),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CampaignSingle(
-                                                        model.campaignInfoList[
+                      : model.campaignInfoList == null
+                          ? Container(
+                              child: model.sharedService.loadingIndicator())
+                          : ListView.builder(
+                              padding: EdgeInsets.fromLTRB(10, 10, 10, 60),
+                              itemCount: model.campaignInfoList.length,
+                              itemBuilder: (context, index) {
+                                if (model.campaignInfoList[index]["status"] ==
+                                    "active")
+                                  return Container(
+                                      // height: 100,
+                                      width: double.infinity,
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: InkWell(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CampaignSingle(model
+                                                                .campaignInfoList[
                                                             index]["id"])));
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: walletCardColor,
-                                        ),
-                                        child: Column(
-                                          children: <Widget>[
-                                            AspectRatio(
-                                              aspectRatio: 2.5 / 1,
-                                              child: CacheImage(
-                                                model.campaignInfoList[index]
-                                                    ["coverImage"],
-                                                fit: BoxFit.contain,
-                                              ),
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: walletCardColor,
                                             ),
-                                            Container(
-                                              padding: EdgeInsets.all(10),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Text(
-                                                      model.campaignInfoList[
-                                                              index][model.lang]
-                                                          ["title"],
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline2
-                                                          .copyWith(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold)),
-                                                  SizedBox(
-                                                    height: 10,
+                                            child: Column(
+                                              children: <Widget>[
+                                                AspectRatio(
+                                                  aspectRatio: 2.5 / 1,
+                                                  child: CacheImage(
+                                                    model.campaignInfoList[
+                                                        index]["coverImage"],
+                                                    fit: BoxFit.contain,
                                                   ),
-                                                  Text(
-                                                      model.campaignInfoList[
-                                                                      index]
-                                                                  [model.lang]
-                                                              ["startDate"] +
-                                                          " - " +
+                                                ),
+                                                Container(
+                                                  padding: EdgeInsets.all(10),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Text(
                                                           model.campaignInfoList[
                                                                       index]
                                                                   [model.lang]
-                                                              ["endDate"],
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                      )),
-                                                  SizedBox(
-                                                    height: 10,
+                                                              ["title"],
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline2
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Text(
+                                                          model.campaignInfoList[
+                                                                          index]
+                                                                      [
+                                                                      model
+                                                                          .lang]
+                                                                  [
+                                                                  "startDate"] +
+                                                              " - " +
+                                                              model.campaignInfoList[
+                                                                          index]
+                                                                      [
+                                                                      model
+                                                                          .lang]
+                                                                  ["endDate"],
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                          )),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Text(
+                                                          model.campaignInfoList[
+                                                                      index]
+                                                                  [model.lang]
+                                                              ["desc"],
+                                                          maxLines: 4,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                            color: Color(
+                                                                0xffeeeeee),
+                                                          )),
+                                                    ],
                                                   ),
-                                                  Text(
-                                                      model.campaignInfoList[
-                                                              index][model.lang]
-                                                          ["desc"],
-                                                      maxLines: 4,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                        color:
-                                                            Color(0xffeeeeee),
-                                                      )),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ));
-                            else
-                              return Container();
-                          })),
+                                      ));
+                                else
+                                  return Container();
+                              })),
         ),
       ),
     );

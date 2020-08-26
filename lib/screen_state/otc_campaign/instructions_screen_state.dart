@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
@@ -18,6 +19,7 @@ class CampaignInstructionsScreenState extends BaseState {
   LocalStorageService localStorageService = locator<LocalStorageService>();
   NavigationService navigationService = locator<NavigationService>();
   CampaignService campaignService = locator<CampaignService>();
+  SharedService sharedService = locator<SharedService>();
   PdfViewerService pdfViewerService = locator<PdfViewerService>();
 
   CampaignUserData userData;
@@ -76,7 +78,6 @@ class CampaignInstructionsScreenState extends BaseState {
     //get campaign info in selected language
 
     setBusy(false);
-    log.e(busy);
   }
 
   navigateTo(String route, {String errorMessage = ''}) {
