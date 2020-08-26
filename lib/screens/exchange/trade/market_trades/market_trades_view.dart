@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart'
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 
 class MarketTradesView extends StatelessWidget {
   final List<TradeModel> marketTrades;
@@ -55,15 +56,6 @@ class MarketTradeDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    timeFormatted(timeStamp) {
-      var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
-      return time.hour.toString() +
-          ':' +
-          time.minute.toString() +
-          ':' +
-          time.second.toString();
-    }
-
     return Container(
       child: ListView.builder(
           shrinkWrap: true,
@@ -90,7 +82,9 @@ class MarketTradeDetailView extends StatelessWidget {
                   Expanded(
                       flex: 2,
                       child: Text(
-                          timeFormatted(marketTrades[index].time).toString(),
+                          NumberUtil()
+                              .timeFormatted(marketTrades[index].time)
+                              .toString(),
                           style: Theme.of(context).textTheme.headline6)),
                 ],
               ),

@@ -246,8 +246,8 @@ class TradeView extends StatelessWidget {
                                               ),
                                             )
                                           : MyExchangeAssetsView(
-                                              // myExchangeAssets: model.myExchangeAssets
-                                              )
+                                              myExchangeAssets:
+                                                  model.myExchangeAssets)
                                     ]
 
                                         //      ordersViewTabBody.map((tabBody) {

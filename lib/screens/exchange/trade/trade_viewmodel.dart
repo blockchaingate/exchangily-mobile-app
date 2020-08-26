@@ -85,6 +85,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   /// Initialize when model ready
   init() async {
     await getDecimalPairConfig();
+    await getExchangeAssets();
   }
 
 // Change/update stream data before displaying on UI
@@ -96,7 +97,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   /// Transform stream data before notifying to view modal
   @override
   dynamic transformData(String key, data) {
-    log.e('checking error ${getError(key)}');
+    log.e('checking error ${error(key)}');
     try {
       /// All prices list
       if (key == allPriceStreamKey) {
@@ -289,7 +290,10 @@ class TradeViewModel extends MultipleStreamViewModel {
   //   log.w('My orders $myOrders');
   // }
 
-  // Get Exchange Assets
+/*-------------------------------------------------------------------------------------
+                                Get Exchange Assets
+-------------------------------------------------------------------------------------*/
+
   getExchangeAssets() async {
     //  setBusy(true);
     //  notifyListeners();

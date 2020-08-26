@@ -19,7 +19,7 @@ class CampaignSingle extends StatelessWidget {
         },
         builder: (context, model, child) => Scaffold(
               body: model.busy
-                  ? Loading()
+                  ? LoadingGif()
                   : model.hasApiError
                       ? Container(
                           child: Center(
@@ -43,13 +43,12 @@ class CampaignSingle extends StatelessWidget {
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
                                       alignment: Alignment.topCenter,
-                                      image: model
-                                              .campaignInfoSingle["setting"]
+                                      image: model.campaignInfoSingle["setting"]
                                                   ["bgImage"]
                                               .startsWith("http")
-                                          ? NetworkImage(
-                                              model.campaignInfoSingle[
-                                                  "setting"]["bgImage"])
+                                          ? NetworkImage(model
+                                                  .campaignInfoSingle["setting"]
+                                              ["bgImage"])
                                           : AssetImage(
                                               model.campaignInfoSingle[
                                                   "setting"]["bgImage"],
@@ -59,10 +58,9 @@ class CampaignSingle extends StatelessWidget {
                                     child: Container(
                                         margin: EdgeInsets.only(top: 100),
                                         height: 150,
-                                        width: MediaQuery.of(context)
-                                                .size
-                                                .width -
-                                            60,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                60,
                                         child: Column(
                                           mainAxisSize: MainAxisSize.max,
                                           children: [
@@ -71,14 +69,13 @@ class CampaignSingle extends StatelessWidget {
                                                       .size
                                                       .width -
                                                   60,
-                                              constraints: BoxConstraints(
-                                                  maxHeight: 30),
+                                              constraints:
+                                                  BoxConstraints(maxHeight: 30),
                                               child: FittedBox(
                                                 fit: BoxFit.contain,
                                                 child: Text(
-                                                  model.campaignInfoSingle[
-                                                          model.lang]
-                                                          ["title"]["up"]
+                                                  model.campaignInfoSingle[model
+                                                          .lang]["title"]["up"]
                                                       .toUpperCase(),
                                                   style: TextStyle(
                                                       fontWeight:
@@ -100,62 +97,53 @@ class CampaignSingle extends StatelessWidget {
                                                               model.lang]
                                                           ["title"]["main"],
                                                       style: TextStyle(
-                                                          color:
-                                                              Colors.white,
+                                                          color: Colors.white,
                                                           fontWeight:
-                                                              FontWeight
-                                                                  .bold,
+                                                              FontWeight.bold,
                                                           letterSpacing: 1),
                                                       gradient: LinearGradient(
                                                           colors: [
-                                                            Color(
-                                                                0xffffffff),
-                                                            Color(
-                                                                0xffb7ccfe),
-                                                            Color(
-                                                                0xffb9a9f9),
+                                                            Color(0xffffffff),
+                                                            Color(0xffb7ccfe),
+                                                            Color(0xffb9a9f9),
                                                           ],
                                                           begin: Alignment
                                                               .topCenter,
                                                           end: Alignment
                                                               .bottomCenter),
-                                                      textAlign: TextAlign
-                                                          .center)),
+                                                      textAlign:
+                                                          TextAlign.center)),
                                             ),
                                             SizedBox(
                                               height: 10,
                                             ),
                                             Container(
                                               padding: EdgeInsets.symmetric(
-                                                  horizontal: 30,
-                                                  vertical: 7),
+                                                  horizontal: 30, vertical: 7),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           60)),
                                               child: Row(
-                                                mainAxisSize:
-                                                    MainAxisSize.min,
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Container(
                                                     width: 8,
                                                     height: 8,
-                                                    decoration:
-                                                        BoxDecoration(
-                                                            color: Color(
-                                                                0xff000066),
-                                                            shape: BoxShape
-                                                                .circle),
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xff000066),
+                                                        shape: BoxShape.circle),
                                                   ),
                                                   SizedBox(width: 5),
                                                   Text(
                                                     model.campaignInfoSingle[
-                                                            model.lang]
-                                                        ["title"]["label"],
+                                                            model.lang]["title"]
+                                                        ["label"],
                                                     style: TextStyle(
-                                                        color: Color(
-                                                            0xff000066),
+                                                        color:
+                                                            Color(0xff000066),
                                                         fontWeight:
                                                             FontWeight.w800,
                                                         letterSpacing: 1,
@@ -165,12 +153,10 @@ class CampaignSingle extends StatelessWidget {
                                                   Container(
                                                     width: 8,
                                                     height: 8,
-                                                    decoration:
-                                                        BoxDecoration(
-                                                            color: Color(
-                                                                0xff000066),
-                                                            shape: BoxShape
-                                                                .circle),
+                                                    decoration: BoxDecoration(
+                                                        color:
+                                                            Color(0xff000066),
+                                                        shape: BoxShape.circle),
                                                   ),
                                                 ],
                                               ),

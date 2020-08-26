@@ -41,13 +41,15 @@ class MarketPairsTabView extends StatelessWidget {
                       (BuildContext context, bool innerBoxIsScrolled) {
                     return <Widget>[
                       model.busy
-                          ? SliverToBoxAdapter(child: Loading())
+                          ? SliverToBoxAdapter(child: LoadingGif())
                           : SliverToBoxAdapter(
                               child: Offstage(
                                 offstage: hideSlider,
                                 child: Column(
                                   children: [
-                                    Carousel(imageData: model.images, lang:model.lang),
+                                    Carousel(
+                                        imageData: model.images,
+                                        lang: model.lang),
                                     SizedBox(height: 5),
                                   ],
                                 ),
@@ -131,7 +133,7 @@ class MarketPairsTabView extends StatelessWidget {
                           child: TabBarView(
                               children: tabNames.map((tab) {
                             return Container(
-                              child: Loading(),
+                              child: model.sharedService.loadingIndicator(),
                               // margin: EdgeInsets.only(top: 10.0),
                               // child: ShimmerLayout(
                               //   layoutType: 'marketPairs',

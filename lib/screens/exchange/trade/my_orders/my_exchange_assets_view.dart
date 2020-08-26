@@ -51,65 +51,64 @@ class MyExchangeAssetsView extends StatelessWidget {
                             style: Theme.of(context).textTheme.subtitle2)),
                   ]),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      //  border: Border.all(color: primaryColor, width: 0.35)
-                      ),
-                  height: UIHelper.getScreenFullHeight(context) / 1.75,
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: model.data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        String tickerName =
-                            model.data[index]["coin"].toString();
-                        return Container(
-                          // color: grey.withAlpha(25),
+                Flexible(
+                  child: Container(
+                    child: ListView.builder(
+                        itemCount: myExchangeAssets.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          String tickerName =
+                              myExchangeAssets[index]["coin"].toString();
+                          return Container(
+                            // color: grey.withAlpha(25),
 
-                          child: Row(
-                            children: [
-                              UIHelper.horizontalSpaceSmall,
-                              // Card logo container
-                              Expanded(
-                                flex: 1,
-                                child: Container(
-                                    padding: EdgeInsets.all(8),
-                                    margin: EdgeInsets.only(right: 10.0),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    child: Image.asset(
-                                        'assets/images/wallet-page/${tickerName.toLowerCase()}.png'),
-                                    width: 35,
-                                    height: 35),
-                              ),
-                              Expanded(
-                                  flex: 2,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: Text(model.data[index]["coin"],
+                            child: Row(
+                              children: [
+                                // UIHelper.horizontalSpaceSmall,
+                                // Card logo container
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                      padding: EdgeInsets.all(8),
+                                      margin: EdgeInsets.only(right: 10.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                      ),
+                                      child: Image.asset(
+                                          'assets/images/wallet-page/${tickerName.toLowerCase()}.png'),
+                                      width: 35,
+                                      height: 35),
+                                ),
+                                Expanded(
+                                    flex: 2,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text(
+                                          myExchangeAssets[index]["coin"],
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                    )),
+                                Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                        myExchangeAssets[index]["amount"]
+                                            .toString(),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline6),
-                                  )),
-                              Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                      model.data[index]["amount"].toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6)),
-                              Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                      model.data[index]["lockedAmount"]
-                                          .toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6))
-                            ],
-                          ),
-                        );
-                      }),
+                                            .headline6)),
+                                Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                        myExchangeAssets[index]["lockedAmount"]
+                                            .toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6))
+                              ],
+                            ),
+                          );
+                        }),
+                  ),
                 )
               ],
             ),
