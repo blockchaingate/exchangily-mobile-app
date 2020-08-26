@@ -68,18 +68,25 @@ class SendScreenState extends BaseState {
   bool transFeeAdvance = false;
 
   // Init State
-  initState() {
+  initState() async {
     setState(ViewState.Busy);
+    sharedService.context = context;
     String coinName = walletInfo.tickerName;
     String tokenType = walletInfo.tokenType;
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
-      gasPriceTextController.text =
-          environment["chains"]["ETH"]["gasPrice"].toString();
+      var gasPriceReal = await walletService.getEthGasPrice();
+      print('gasPriceReal======');
+      print(gasPriceReal);
+      gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
+      if(tokenType == 'ETH') {
+        gasLimitTextController.text =
+            environment["chains"]["ETH"]["gasLimitToken"].toString();
+      }
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -181,15 +188,19 @@ class SendScreenState extends BaseState {
         log.w('Result $res');
         txHash = res["txHash"];
         errorMessage = res["errMsg"];
+
         if (txHash.isNotEmpty) {
           log.w('TXhash $txHash');
           receiverWalletAddressTextController.text = '';
           sendAmountTextController.text = '';
 
           sharedService.alertDialog(
-              AppLocalizations.of(context).sendTransactionComplete,
-              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
-              isWarning: false);
+            AppLocalizations.of(context).sendTransactionComplete,
+            '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+          );
+          var allTxids = res["txids"];
+          walletService.addTxids(allTxids);
+
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
               id: null,
@@ -203,10 +214,11 @@ class SendScreenState extends BaseState {
               tag: 'send');
           walletService.insertTransactionInDatabase(transactionHistory);
         } else if (txHash == '' && errorMessage == '') {
-          log.w('Both TxHash and Error Message are empty $errorMessage');
-          sharedService.alertDialog(AppLocalizations.of(context).genericError,
-              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
-              isWarning: false);
+          log.e('Both TxHash and Error Message are empty $errorMessage');
+          sharedService.alertDialog(
+            "",
+            '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+          );
           setState(ViewState.Idle);
         }
         setState(ViewState.Idle);

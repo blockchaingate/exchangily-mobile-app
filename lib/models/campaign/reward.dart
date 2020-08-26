@@ -1,5 +1,8 @@
+import 'package:exchangilymobileapp/models/campaign/my_referrals.dart';
+
 class CampaignReward {
   int _level;
+  List<String> _users;
   double _totalValue; // my investment value
   double _totalQuantities; // my total tokens bought
   double _totalRewardQuantities;
@@ -9,6 +12,7 @@ class CampaignReward {
 
   CampaignReward(
       {int level,
+      List<String> users,
       double totalValue,
       double totalQuantities,
       double totalRewardQuantities,
@@ -20,19 +24,30 @@ class CampaignReward {
     this._totalRewardQuantities = totalRewardQuantities ?? 0.0;
     this._totalAccounts = totalAccounts ?? 0;
     this._totalRewardNextQuantities = totalRewardNextQuantities ?? 0.0;
+    this._users = users;
   }
 
-  factory CampaignReward.fromJson(Map<String, dynamic> json) => CampaignReward(
+  factory CampaignReward.fromJson(Map<String, dynamic> json) {
+    List usersFromJson = json["users"] as List;
+    MyReferralsList myReferralsList = MyReferralsList.fromJson(usersFromJson);
+
+    return CampaignReward(
         level: json["level"] as int,
+
+        /// Currently i need email for referrals but i can return whole user object as
+        /// i mapped it as in MyRefferal model
+        users: myReferralsList.myReferralsList.map((e) => e.email).toList(),
         totalValue: json["totalValue"].toDouble(),
         totalQuantities: json["totalQuantities"].toDouble(),
         totalRewardQuantities: json["totalRewardQuantities"].toDouble(),
         totalAccounts: json["totalAccounts"] as int,
-        totalRewardNextQuantities: json["totalRewardNextQuantities"].toDouble(),
-      );
+        totalRewardNextQuantities:
+            json["totalRewardNextQuantities"].toDouble());
+  }
 
   Map<String, dynamic> toJson() => {
         "level": this._level,
+        'users': this._users,
         "totalValue": this._totalValue,
         "totalQuantities": this._totalQuantities,
         "totalRewardQuantities": this._totalRewardQuantities,
@@ -43,6 +58,11 @@ class CampaignReward {
   double get totalValue => _totalValue;
   set totalValue(double totalValue) {
     this._totalValue = totalValue;
+  }
+
+  List<String> get users => _users;
+  set users(List<String> users) {
+    this._users = users;
   }
 
   double get totalQuantities => _totalQuantities;

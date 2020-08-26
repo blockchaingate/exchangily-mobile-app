@@ -11,9 +11,11 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/screen_state/market/MarketPairsTabViewState.dart';
 import 'package:exchangilymobileapp/screen_state/nav/MainNavState.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_single_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/instructions_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state.dart';
@@ -72,7 +74,7 @@ Future serviceLocator() async {
   var instance = await LocalStorageService.getInstance();
   locator.registerSingleton<LocalStorageService>(instance);
 
-// factory returns the new instance
+  // factory returns the new instance
   locator.registerFactory(() => ConfirmMnemonicScreenState());
   locator.registerFactory(() => CreatePasswordScreenState());
   locator.registerFactory(() => WalletDashboardScreenState());
@@ -98,4 +100,6 @@ Future serviceLocator() async {
   locator.registerFactory(() => MarketsViewModel());
   locator.registerFactory(() => TradeViewModel());
   locator.registerFactory(() => MainNavState());
+  locator.registerFactory(() => MarketPairsTabViewState());
+  locator.registerFactory(() => CampaignSingleScreenState());
 }

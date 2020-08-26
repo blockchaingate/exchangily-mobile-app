@@ -46,6 +46,11 @@ class MarketPairPriceDetailView extends StatelessWidget {
     //                 pairList[index].symbol.replaceAll('/', '').toString();
     //             navigationService.navigateTo('/exchangeTrade',
     //                 arguments: pairList[index]);
+
+    //             /// pause or cancel the all prices stream here
+    //             /// and then find the way to resume this stream
+    //             /// when user comes back to market view
+    //             //model.pauseStream();
     //           },
     //           child: Container(
     //             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),

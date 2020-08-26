@@ -1,12 +1,15 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
 class OrderBookView extends StatelessWidget {
   final List orderBook;
-  OrderBookView({Key key, this.orderBook}) : super(key: key);
+  final DecimalConfig decimalConfig;
+  OrderBookView({Key key, this.orderBook, this.decimalConfig})
+      : super(key: key);
   // final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {
@@ -64,6 +67,7 @@ class OrderBookView extends StatelessWidget {
                           itemBuilder: (BuildContext context, int index) {
                             int orderTypeByIndex = orderBook.indexOf(orders);
                             return OrderDetailsView(
+                              decimalConfig: decimalConfig,
                               orders: orders,
                               index: index,
                               isBuy: orderTypeByIndex == 0 ? true : false,
@@ -83,9 +87,11 @@ class OrderBookView extends StatelessWidget {
 class OrderDetailsView extends StatelessWidget {
   final int index;
   final bool isBuy;
+  final DecimalConfig decimalConfig;
   final List<OrderModel> orders;
   const OrderDetailsView(
       {Key key,
+      this.decimalConfig,
       @required this.orders,
       @required this.index,
       @required this.isBuy})
@@ -97,28 +103,34 @@ class OrderDetailsView extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 2.0),
         padding: EdgeInsets.all(3.0),
         color: isBuy ? buyOrders : sellOrders,
-        child: Row(
-          //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            // Quantity Container
-            Expanded(
-                child: isBuy
-                    ? Text('${orders[index].orderQuantity.toStringAsFixed(3)}',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 12, color: grey))
-                    : Text('${orders[index].price.toStringAsFixed(3)}',
-                        textAlign: TextAlign.start,
-                        style: TextStyle(fontSize: 12, color: sellPrice))),
-            // Price Container
-            Expanded(
-                child: isBuy
-                    ? Text('${orders[index].price.toStringAsFixed(3)}',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(fontSize: 12, color: buyPrice))
-                    : Text('${orders[index].orderQuantity.toStringAsFixed(3)}',
-                        textAlign: TextAlign.end,
-                        style: TextStyle(fontSize: 12, color: grey))),
-          ],
-        ));
+        child: isBuy
+            ? Row(
+                children: <Widget>[
+                  Expanded(
+                      child: Text(
+                          '${orders[index].orderQuantity.toStringAsFixed(decimalConfig.quantityDecimal)}',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 12, color: grey))),
+                  Expanded(
+                      child: Text(
+                          '${orders[index].price.toStringAsFixed(decimalConfig.priceDecimal)}',
+                          textAlign: TextAlign.end,
+                          style: TextStyle(fontSize: 12, color: buyPrice))),
+                ],
+              )
+            : Row(
+                children: <Widget>[
+                  Expanded(
+                      child: Text(
+                          '${orders[index].price.toStringAsFixed(decimalConfig.priceDecimal)}',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 12, color: sellPrice))),
+                  Expanded(
+                      child: Text(
+                          '${orders[index].orderQuantity.toStringAsFixed(decimalConfig.quantityDecimal)}',
+                          textAlign: TextAlign.end,
+                          style: TextStyle(fontSize: 12, color: grey))),
+                ],
+              ));
   }
 }

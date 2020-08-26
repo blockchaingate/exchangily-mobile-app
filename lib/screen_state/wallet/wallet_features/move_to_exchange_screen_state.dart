@@ -40,7 +40,7 @@ class MoveToExchangeScreenState extends BaseState {
   final myController = TextEditingController();
   bool isValid = false;
 
-  void initState() {
+  void initState() async {
     setState(ViewState.Busy);
     coinName = walletInfo.tickerName;
     tokenType = walletInfo.tokenType;
@@ -55,10 +55,17 @@ class MoveToExchangeScreenState extends BaseState {
       satoshisPerByteTextController.text =
           environment["chains"]["DOGE"]["satoshisPerBytes"].toString();
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
-      gasPriceTextController.text =
-          environment["chains"]["ETH"]["gasPrice"].toString();
+      //gasPriceTextController.text =
+      //    environment["chains"]["ETH"]["gasPrice"].toString();
+      var gasPriceReal = await walletService.getEthGasPrice();
+      gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
+
+      if(tokenType == 'ETH') {
+        gasLimitTextController.text =
+            environment["chains"]["ETH"]["gasLimitToken"].toString();
+      }
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -92,16 +99,16 @@ class MoveToExchangeScreenState extends BaseState {
       setState(ViewState.Idle);
       return;
     }
-    if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).minimumAmountError,
-          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-          Icons.cancel,
-          globals.red,
-          context);
-      setState(ViewState.Idle);
-      return;
-    }
+    // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+    //   sharedService.showInfoFlushbar(
+    //       AppLocalizations.of(context).minimumAmountError,
+    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+    //       Icons.cancel,
+    //       globals.red,
+    //       context);
+    //   setState(ViewState.Idle);
+    //   return;
+    // }
     setMessage('');
 
     var res = await _dialogService.showDialog(
@@ -136,7 +143,7 @@ class MoveToExchangeScreenState extends BaseState {
         'contractAddress': environment["addresses"]["smartContract"]
             [walletInfo.tickerName]
       };
-      print(
+      log.i(
           '3 - -$seed, -- ${walletInfo.tickerName}, -- ${walletInfo.tokenType}, --   $amount, - - $option');
       await walletService
           .depositDo(
@@ -148,6 +155,9 @@ class MoveToExchangeScreenState extends BaseState {
         if (success) {
           myController.text = '';
           String txId = ret['data']['transactionID'];
+
+          var allTxids = ret["txids"];
+          walletService.addTxids(allTxids);
           setMessage(txId);
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(

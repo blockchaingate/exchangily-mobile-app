@@ -11,6 +11,9 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -18,7 +21,9 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/utils/string_util.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
+
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -26,13 +31,17 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../environments/coins.dart' as coinList;
+import 'package:intl/intl.dart';
 
 class WalletDashboardScreenState extends BaseState {
   final log = getLogger('WalletDahsboardScreenState');
 
+  BuildContext context;
   List<WalletInfo> walletInfo;
+  List<WalletInfo> walletInfoCopy = [];
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
 
@@ -41,13 +50,11 @@ class WalletDashboardScreenState extends BaseState {
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   final double elevation = 5;
-  double totalUsdBalance = 0;
-  double coinUsdBalance;
+  String totalUsdBalance = '';
+
   double gasAmount = 0;
   String exgAddress = '';
   String wallets;
-  List<WalletInfo> walletInfoCopy = [];
-  BuildContext context;
   bool isHideSmallAmountAssets = false;
   RefreshController refreshController =
       RefreshController(initialRefresh: false);
@@ -59,15 +66,345 @@ class WalletDashboardScreenState extends BaseState {
   var lang;
 
   var top = 0.0;
+  final freeFabAnswerTextController = TextEditingController();
+  String postFreeFabResult = '';
+  bool isFreeFabNotUsed = false;
+  double fabBalance = 0.0;
+  List<String> formattedUsdValueList = [];
+  List<String> formattedUsdValueListCopy = [];
+
+  final searchCoinTextController = TextEditingController();
+
+/*----------------------------------------------------------------------
+                    INIT
+----------------------------------------------------------------------*/
 
   init() async {
     setBusy(true);
-    // await getDecimalPairConfig();
+    sharedService.context = context;
+    //  await getDecimalPairConfig();
     await refreshBalance();
-    await getConfirmDepositStatus();
+    getConfirmDepositStatus();
     showDialogWarning();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = prefs.getString('lang');
+
+    setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                        On Single Coin Card Click
+----------------------------------------------------------------------*/
+
+  onSingleCoinCardClick(index) {
+    FocusScope.of(context).requestFocus(FocusNode());
+    Navigator.pushNamed(context, '/walletFeatures',
+        arguments: walletInfo[index]);
+    searchCoinTextController.clear();
+    resetWalletInfoObject();
+  }
+
+/*----------------------------------------------------------------------
+                    Get app version
+----------------------------------------------------------------------*/
+
+  searchCoinsByTickerName(String value) async {
+    setBusy(true);
+    // await apiService.getTokenList().then((tokenList) {
+    //   if (tokenList != null) {
+    //     tokenList.forEach((token) {
+    //       log.w('token ${token.toJson()}');
+    //       if (token.name == value) {
+    //         print('name ${token.name}');
+    //       }
+    //     });
+    //   } else {
+    //     log.e('token list null');
+    //   }
+    // }).catchError((err) {
+    //   log.e('SearchCoinsByTickerName Catch $err');
+    // });
+    //value = value.toUpperCase();
+    print('length ${walletInfoCopy.length} -- value $value');
+    for (var i = 0; i < walletInfoCopy.length; i++)
+      if (walletInfoCopy[i].tickerName == value.toUpperCase() ||
+              walletInfoCopy[i].name == value
+          //||          isFirstCharacterMatched(value, i)
+          ) {
+        setBusy(true);
+        walletInfo = [];
+        formattedUsdValueList = [];
+        log.e('copy ${walletInfoCopy[i].toJson()}');
+
+        String holder =
+            NumberUtil.currencyFormat(walletInfoCopy[i].usdValue, 2);
+        formattedUsdValueList.add(holder);
+        walletInfo.add(walletInfoCopy[i]);
+        // print(
+        //     'matched wallet ${walletInfoCopy[i].toJson()} --  wallet info length ${walletInfo.length}');
+        setBusy(false);
+        break;
+      } else {
+        // log.e(
+        //     'in else ${walletInfoCopy[i].tickerName} == ${value.toUpperCase()}');
+        resetWalletInfoObject();
+      }
+    setBusy(false);
+  }
+
+  resetWalletInfoObject() {
+    walletInfo = [];
+    formattedUsdValueList = [];
+    walletInfo = walletInfoCopy;
+    formattedUsdValueList = formattedUsdValueListCopy;
+  }
+
+  bool isFirstCharacterMatched(String value, int index) {
+    print(
+        'value 1st char ${value[0]} == first chracter ${walletInfoCopy[index].tickerName[0]}');
+    log.w(value.startsWith(walletInfoCopy[index].tickerName[0]));
+    return value.startsWith(walletInfoCopy[index].tickerName[0]);
+  }
+
+/*----------------------------------------------------------------------
+                    Get app version
+----------------------------------------------------------------------*/
+
+  getAppVersion() async {
+    setBusy(true);
+    String localAppVersion = await sharedService.getLocalAppVersion();
+    String store = '';
+    String appDownloadLinkOnWebsite =
+        'http://exchangily.com/download/latest.apk';
+    if (Platform.isIOS) {
+      store = 'App Store';
+    } else {
+      store = 'Google Play Store';
+    }
+    await apiService.getApiAppVersion().then((apiAppVersion) {
+      if (apiAppVersion != null) {
+        log.e('condition ${localAppVersion.compareTo(apiAppVersion)}');
+
+        log.i(
+            'api app version $apiAppVersion -- local version $localAppVersion');
+
+        if (localAppVersion.compareTo(apiAppVersion) == -1) {
+          sharedService.alertDialog(
+              AppLocalizations.of(context).appUpdateNotice,
+              '${AppLocalizations.of(context).pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context).toLatestBuild} $apiAppVersion ${AppLocalizations.of(context).inText} $store ${AppLocalizations.of(context).clickOnWebsiteButton}',
+              isUpdate: true,
+              isLater: true,
+              isWebsite: true,
+              stringData: appDownloadLinkOnWebsite);
+        }
+      }
+    }).catchError((err) {
+      log.e('get app version catch $err');
+    });
+    setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                    get free fab
+----------------------------------------------------------------------*/
+
+  getFreeFab() async {
+    setBusy(true);
+    String address = await getExgAddressFromWalletDatabase();
+    await apiService.getFreeFab(address).then((res) {
+      if (res != null) {
+        if (res['ok']) {
+          isFreeFabNotUsed = res['ok'];
+          print(res['_body']['question']);
+          showDialog(
+              context: context,
+              builder: (context) {
+                return Center(
+                  child: Container(
+                    height: 250,
+                    child: ListView(
+                      children: [
+                        AlertDialog(
+                          titlePadding: EdgeInsets.symmetric(vertical: 5),
+                          actionsPadding: EdgeInsets.all(0),
+                          elevation: 5,
+                          titleTextStyle: Theme.of(context).textTheme.headline4,
+                          contentTextStyle: TextStyle(color: grey),
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                          backgroundColor: walletCardColor.withOpacity(0.95),
+                          title: Text(
+                            AppLocalizations.of(context).question,
+                            textAlign: TextAlign.center,
+                          ),
+                          content: Column(
+                            children: <Widget>[
+                              UIHelper.verticalSpaceSmall,
+                              Text(
+                                res['_body']['question'].toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText1
+                                    .copyWith(color: red),
+                              ),
+                              TextField(
+                                minLines: 1,
+                                style: TextStyle(color: white),
+                                controller: freeFabAnswerTextController,
+                                obscureText: false,
+                                decoration: InputDecoration(
+                                  icon: Icon(
+                                    Icons.question_answer,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                              ),
+                              UIHelper.verticalSpaceSmall,
+                              postFreeFabResult != ''
+                                  ? Text(postFreeFabResult)
+                                  : Container()
+                            ],
+                          ),
+                          actions: [
+                            Container(
+                                margin: EdgeInsetsDirectional.only(bottom: 10),
+                                child: StatefulBuilder(builder:
+                                    (BuildContext context,
+                                        StateSetter setState) {
+                                  return Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Cancel
+                                      OutlineButton(
+                                          color: primaryColor,
+                                          padding: EdgeInsets.all(0),
+                                          child: Center(
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .close,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                            setState(() =>
+                                                freeFabAnswerTextController
+                                                    .text = '');
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                          }),
+                                      UIHelper.horizontalSpaceSmall,
+                                      // Confirm
+                                      FlatButton(
+                                          color: primaryColor,
+                                          padding: EdgeInsets.all(0),
+                                          child: Center(
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .confirm,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            postFreeFabResult = '';
+                                            Map data = {
+                                              "address": address,
+                                              "questionair_id": res['_body']
+                                                  ['_id'],
+                                              "answer":
+                                                  freeFabAnswerTextController
+                                                      .text
+                                            };
+                                            log.e(data);
+                                            await apiService
+                                                .postFreeFab(data)
+                                                .then(
+                                              (res) {
+                                                if (res != null) {
+                                                  log.w(res['ok']);
+
+                                                  if (res['ok']) {
+                                                    Navigator.of(context)
+                                                        .pop(false);
+                                                    setState(() =>
+                                                        isFreeFabNotUsed =
+                                                            false);
+                                                    walletService
+                                                        .showInfoFlushbar(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .freeFabUpdate,
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .freeFabSuccess,
+                                                            Icons
+                                                                .account_balance,
+                                                            green,
+                                                            context);
+                                                  } else {
+                                                    walletService
+                                                        .showInfoFlushbar(
+                                                            AppLocalizations
+                                                                    .of(context)
+                                                                .freeFabUpdate,
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .incorrectAnswer,
+                                                            Icons
+                                                                .account_balance,
+                                                            red,
+                                                            context);
+                                                  }
+                                                } else {
+                                                  walletService
+                                                      .showInfoFlushbar(
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .notice,
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .genericError,
+                                                          Icons.cancel,
+                                                          red,
+                                                          context);
+                                                }
+                                              },
+                                            );
+                                            //  navigationService.goBack();
+                                            freeFabAnswerTextController.text =
+                                                '';
+                                            postFreeFabResult = '';
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                          }),
+                                    ],
+                                  );
+                                })),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        } else {
+          print(isFreeFabNotUsed);
+          isFreeFabNotUsed = res['ok'];
+          print(isFreeFabNotUsed);
+
+          print(isFreeFabNotUsed);
+          walletService.showInfoFlushbar(
+              AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).freeFabUsedAlready,
+              Icons.notification_important,
+              yellow,
+              context);
+        }
+      }
+    });
     setBusy(false);
   }
 
@@ -103,10 +440,15 @@ class WalletDashboardScreenState extends BaseState {
 
 // Calculate Total Usd Balance of Coins
   calcTotalBal() {
-    totalUsdBalance = 0;
+    totalUsdBalance = '';
+    double holder = 0.0;
     for (var i = 0; i < walletInfo.length; i++) {
-      totalUsdBalance = totalUsdBalance + walletInfo[i].usdValue;
+      holder = holder + walletInfo[i].usdValue;
     }
+    totalUsdBalance = NumberUtil.currencyFormat(holder, 2);
+    // totalUsdBalance =
+    //     NumberFormat.simpleCurrency(decimalDigits: 2).format(holder);
+    // totalUsdBalance = totalUsdBalance.substring(1);
     log.i('Total usd balance $totalUsdBalance');
   }
 
@@ -173,7 +515,8 @@ class WalletDashboardScreenState extends BaseState {
               AppLocalizations.of(context).pendingConfirmDeposit,
               '${AppLocalizations.of(context).pleaseConfirmYour} ${confirmDepositCoinWallet.tickerName} ${AppLocalizations.of(context).deposit}',
               path: '/walletFeatures',
-              arguments: confirmDepositCoinWallet);
+              arguments: confirmDepositCoinWallet,
+              isWarning: true);
       });
     }
   }
@@ -202,6 +545,7 @@ class WalletDashboardScreenState extends BaseState {
 
     await walletDatabaseService.getAll().then((walletList) {
       walletInfoCopy = [];
+      formattedUsdValueList = [];
       walletInfoCopy = walletList;
     });
     walletInfo = [];
@@ -209,6 +553,19 @@ class WalletDashboardScreenState extends BaseState {
     int coinTickersLength = walletService.coinTickers.length;
     await getGas();
     //await getDecimalPairConfig();
+
+    /// Check if wallet database coins are same as wallet service list
+    /// if not then call create offline wallet in the wallet service
+    // print('${walletService.coinTickers.length} -- ${walletInfoCopy.length}');
+    // if (coinTickersLength != walletInfoCopy.length) {
+    //   print('$coinTickersLength -- ${walletInfoCopy.length}');
+    //   await walletService.createOfflineWallets(
+    //       'culture sound obey clean pretty medal churn behind chief cactus alley ready');
+    //   await walletDatabaseService.getAll().then((walletList) {
+    //     walletInfoCopy = [];
+    //     walletInfoCopy = walletList;
+    //   });
+    // }
 
     Map<String, dynamic> walletBalancesBody = {
       'btcAddress': '',
@@ -267,46 +624,49 @@ class WalletDashboardScreenState extends BaseState {
               if (marketPrice.isNegative) {
                 marketPrice = 0.0;
               }
-
-              // // If passing any negative value to UI then that pair won't show up in the list
-              if (availableBal.isNegative) walletBalanceList[j].balance = 0.0;
-              if (lockedBal.isNegative) walletBalanceList[j].lockBalance = 0.0;
+              if (availableBal.isNegative) {
+                print(availableBal);
+                availableBal = 0.0;
+              }
 
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
-                  marketPrice,
-                  walletBalanceList[j].balance,
-                  walletBalanceList[j].lockBalance);
+                  marketPrice, availableBal, lockedBal);
+              String holder = NumberUtil.currencyFormat(usdValue, 2);
+              formattedUsdValueList.add(holder);
 
+// get Pair decimal config
               // if (pairDecimalConfigList != null ||
               //     pairDecimalConfigList != []) {
-              //   log.e(
-              //       'get pair decimal length, ${pairDecimalConfigList.length}');
               //   for (PairDecimalConfig pair in pairDecimalConfigList) {
-              //     String fullWalletTickerName = walletTickerName + 'USDT';
-
-              //     if (pair.name == fullWalletTickerName) {
-              //       // walletInfo[i].pairDecimalConfig.priceDecimal =
-              //       //     pair.priceDecimal;
-              //       // walletInfo[i].pairDecimalConfig.priceDecimal =
-              //       //     pair.qtyDecimal;
-
-              //       break;
+              //     log.e('pair ${pair.toJson()}');
+              //     if (pair.name == walletTickerName + 'USDT') {
+              //       String holder = walletBalanceList[j]
+              //           .balance
+              //           .toStringAsFixed(pair.qtyDecimal);
+              //       print(holder);
+              //       availableBal = double.parse(holder);
               //     }
+              //     break;
               //   }
               // }
+
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
                   tickerName: walletTickerName,
                   tokenType: wallet.tokenType,
                   address: wallet.address,
-                  availableBalance: walletBalanceList[j].balance,
-                  lockedBalance: walletBalanceList[j].lockBalance,
+                  availableBalance: availableBal,
+                  lockedBalance: lockedBal,
                   usdValue: usdValue,
                   name: wallet.name,
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
-
+              print(wi.toJson());
+              if (walletTickerName == 'FAB') {
+                fabBalance = 0.0;
+                fabBalance = wi.availableBalance;
+              }
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
@@ -328,12 +688,28 @@ class WalletDashboardScreenState extends BaseState {
 
         calcTotalBal();
         await updateWalletDatabase();
+
         if (!isProduction) debugVersionPopup();
+        await getAppVersion();
+
+        // get exg address to get free fab
+        String address = await getExgAddressFromWalletDatabase();
+
+        // check gas and fab balance if 0 then ask for free fab
+        if (gasAmount == 0.0 && fabBalance == 0.0) {
+          await apiService.getFreeFab(address).then((res) {
+            if (res != null) {
+              isFreeFabNotUsed = res['ok'];
+            }
+          });
+        } else {
+          log.i('Fab or gas balance available already');
+        }
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method
       else if (walletBalanceList == null) {
-        log.e('ELSE old way');
+        log.e('---------------------ELSE old way-----------------------');
         await oldWayToGetBalances(coinTickersLength);
       }
     }).catchError((err) async {
@@ -345,12 +721,19 @@ class WalletDashboardScreenState extends BaseState {
       walletInfoCopy = [];
       walletInfoCopy = walletInfo.map((element) => element).toList();
     }
+
+    if (formattedUsdValueList != null) {
+      formattedUsdValueListCopy = [];
+      formattedUsdValueListCopy =
+          formattedUsdValueList.map((element) => element).toList();
+    }
     setBusy(false);
   }
 
   // Old way to get balances
   oldWayToGetBalances(int walletInfoCopyLength) async {
     walletInfo = [];
+    formattedUsdValueList = [];
     List<String> coinTokenType = walletService.tokenType;
 
     double walletBal = 0.0;
@@ -366,16 +749,19 @@ class WalletDashboardScreenState extends BaseState {
           .coinBalanceByAddress(tickerName, address, coinTokenType[i])
           .then((balance) async {
         log.e('bal $balance');
-        walletBal = balance['balance'];
-        walletLockedBal = balance['lockbalance'];
+        walletBal = balance['balance'] == -1 ? 0.0 : balance['balance'];
+        walletLockedBal =
+            balance['lockbalance'] == -1 ? 0.0 : balance['lockbalance'];
 
         // Get coin market price by name
         double marketPrice =
             await walletService.getCoinMarketPriceByTickerName(tickerName);
 
         // Calculate usd balance
-        coinUsdBalance = walletService.calculateCoinUsdBalance(
+        double usdValue = walletService.calculateCoinUsdBalance(
             marketPrice, walletBal, walletLockedBal);
+        String holder = NumberUtil.currencyFormat(usdValue, 2);
+        formattedUsdValueList.add(holder);
         // Adding each coin details in the wallet
         WalletInfo wi = WalletInfo(
             id: walletInfoCopy[i].id,
@@ -384,7 +770,7 @@ class WalletDashboardScreenState extends BaseState {
             address: address,
             availableBalance: walletBal,
             lockedBalance: walletLockedBal,
-            usdValue: coinUsdBalance,
+            usdValue: usdValue,
             name: name);
         walletInfo.add(wi);
       }).
@@ -406,36 +792,14 @@ class WalletDashboardScreenState extends BaseState {
       });
     } // For loop ends
 
-    // bool hasDUSD = false;
-    // String exgAddress = '';
-    // String exgTokenType = '';
-
-    // for (var i = 0; i < walletInfo.length; i++) {
-    //   String tickerName = walletInfo[i].tickerName;
-    //   if (tickerName == 'DUSD') {
-    //     hasDUSD = true;
-    //   }
-    //   if (tickerName == 'EXG') {
-    //     exgAddress = walletInfo[i].address;
-    //     exgTokenType = walletInfo[i].tokenType;
-    //   }
-    // }
-    // if (!hasDUSD) {
-    //   var dusdWalletInfo = new WalletInfo(
-    //       tickerName: 'DUSD',
-    //       tokenType: exgTokenType,
-    //       address: exgAddress,
-    //       availableBalance: 0.0,
-    //       lockedBalance: 0.0,
-    //       usdValue: 0.0,
-    //       name: 'dusd',
-    //       inExchange: 0.0);
-    //   walletInfo.add(dusdWalletInfo);
-    // }
     calcTotalBal();
     await getExchangeAssetsBalance();
     await updateWalletDatabase();
     if (!isProduction) debugVersionPopup();
+    if (walletInfo != null) {
+      walletInfoCopy = [];
+      walletInfoCopy = walletInfo.map((element) => element).toList();
+    }
     log.w('Fetched wallet data using old methods');
   }
 

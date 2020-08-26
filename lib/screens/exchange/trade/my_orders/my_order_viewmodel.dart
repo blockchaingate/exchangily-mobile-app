@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -22,8 +23,8 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 
 import 'package:exchangilymobileapp/models/trade/price.dart';
 
-class MyOrdersViewModel extends // BaseViewModel {
-    FutureViewModel<List<OrderModel>> {
+class MyOrdersViewModel extends BaseViewModel {
+  // FutureViewModel<List<OrderModel>> {
   final String tickerName;
   MyOrdersViewModel({this.tickerName});
 
@@ -36,6 +37,7 @@ class MyOrdersViewModel extends // BaseViewModel {
   WalletService walletService = locator<WalletService>();
   NavigationService navigationService = locator<NavigationService>();
   ApiService apiService = locator<ApiService>();
+
   double filledAmount = 0;
   double filledPercentage = 0;
   String errorMessage = '';
@@ -43,51 +45,118 @@ class MyOrdersViewModel extends // BaseViewModel {
   List<OrderModel> myOpenOrders = [];
   List<OrderModel> myCloseOrders = [];
   List<List<OrderModel>> myOrdersTabBarView = [];
+
   bool isFutureError = false;
   bool _showCurrentPairOrders = false;
+  String onClickOrderHash = '';
+  DecimalConfig decimalConfig = new DecimalConfig();
   bool get showCurrentPairOrders => _showCurrentPairOrders;
 
   init() {
-    //  getAllMyOrders();
+    getMyOrdersByTickerName();
+    tradeService
+        .getDecimalPairConfig(tickerName)
+        .then((decimalConfig) => decimalConfig = decimalConfig);
+    //futureToRun();
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
+  // @override
+  // Future<List<OrderModel>> futureToRun() =>
+  //     !_showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
 
-    super.dispose();
-  }
-
-  @override
-  Future<List<OrderModel>> futureToRun() =>
-      !_showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
-
-  Future<List<OrderModel>> getAllMyOrders() async {
+  getAllMyOrders() async {
+    setBusy(true);
+    isFutureError = false;
     String exgAddress = await getExgAddress();
-    log.e('error state $hasError');
-    //  myAllOrders =
-    return await apiService.getOrders(exgAddress);
+    // log.e('error state $hasError');
+    clearOrderLists();
+    //  return
+    await apiService.getOrders(exgAddress).then((data) {
+      if (data != null) {
+        myAllOrders = data;
+        log.e('My order length ${myAllOrders.length}');
+        data.forEach((element) {
+          /// 'amount' = orderQuantity,
+          /// 'filledAmount' = filledQuantity
+          // filledAmount =
+          //     doubleAdd(element.orderQuantity, element.filledQuantity);
+          // filledPercentage = (element.filledQuantity *
+          //     100 /
+          //     doubleAdd(element.filledQuantity, element.orderQuantity));
+
+          if (element.isActive) {
+            myOpenOrders.add(element);
+          } else if (!element.isActive) {
+            myCloseOrders.add(element);
+          }
+        });
+        log.w('open orders ${myOpenOrders.length}');
+        log.w('close orders ${myCloseOrders.length}');
+        // Add order lists to orders tab bar view
+        myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
+      }
+    }).catchError((err) {
+      isFutureError = true;
+      log.e('getAllMyOrders $err');
+    });
+
     //.then((value) => onData(value));
     // setBusy(false);
     //  return myAllOrders;
+    setBusy(false);
   }
 
-  Future<List<OrderModel>> test() async {
-    isFutureError = false;
-    String exgAddress = await getExgAddress();
-    //  myAllOrders =
-    return await apiService.getOrdersTest(exgAddress);
-    //.then((value) => onData(value));
-    // setBusy(false);
-    //  return myAllOrders;
+  // Clear order lists
+  clearOrderLists() {
+    myAllOrders = [];
+    myOpenOrders = [];
+    myCloseOrders = [];
+    myOrdersTabBarView = [];
   }
 
-  Future<List<OrderModel>> getMyOrdersByTickerName() async {
-    String exgAddress = await getExgAddress();
+  getMyOrdersByTickerName() async {
+    setBusy(true);
+    clearOrderLists();
     isFutureError = false;
-    return await tradeService.getMyOrdersByTickerName(exgAddress, tickerName);
+    String exgAddress = await getExgAddress();
+
+    //return
+    await tradeService
+        .getMyOrdersByTickerName(exgAddress, tickerName)
+        .then((data) {
+      if (data != null) {
+        myAllOrders = data;
+        log.e('My order length ${myAllOrders.length}');
+        data.forEach((element) {
+          /// 'amount' = orderQuantity,
+          /// 'filledAmount' = filledQuantity
+          // filledAmount =
+          //     doubleAdd(element.orderQuantity, element.filledQuantity);
+          // filledPercentage = (element.filledQuantity *
+          //     100 /
+          //     doubleAdd(element.filledQuantity, element.orderQuantity));
+
+          if (element.isActive) {
+            myOpenOrders.add(element);
+            //  log.e('Close orders ${myOpenOrders.length}');
+          } else if (!element.isActive) {
+            myCloseOrders.add(element);
+            //  log.w('Close orders ${myCloseOrders.length}');
+          }
+
+          // Add order lists to orders tab bar view
+        });
+        log.w('open orders ${myOpenOrders.length}');
+        log.w('close orders ${myCloseOrders.length}');
+        myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
+      }
+    }).catchError((err) {
+      isFutureError = true;
+      log.e('getMyOrdersByTickerName $err');
+    });
     // .then((value) => onData(value));
     //return myAllOrders;
+    setBusy(false);
   }
 
   // Get Exg address from wallet database
@@ -96,17 +165,20 @@ class MyOrdersViewModel extends // BaseViewModel {
     return exgWallet.address;
   }
 
-  void swapSources() {
-    //   setBusy(true);
+  void swapSources() async {
+    setBusy(true);
     log.w('swap sources show all pairs ${!showCurrentPairOrders}');
     _showCurrentPairOrders = !_showCurrentPairOrders;
-    //  _showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
-    notifySourceChanged();
-    //  setBusy(false);
+    !_showCurrentPairOrders
+        ? await getMyOrdersByTickerName()
+        : await getAllMyOrders();
+    // notifySourceChanged();
+    setBusy(false);
   }
 
   @override
   void onData(List<OrderModel> data) {
+    setBusy(true);
     if (data != null) {
       myAllOrders = data;
       log.e('My order length ${myAllOrders.length}');
@@ -132,6 +204,7 @@ class MyOrdersViewModel extends // BaseViewModel {
       log.w('close orders ${myCloseOrders.length}');
       myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
     }
+    setBusy(false);
   }
 
   @override
@@ -152,6 +225,8 @@ class MyOrdersViewModel extends // BaseViewModel {
 
   checkPass(context, orderHash) async {
     setBusy(true);
+
+    onClickOrderHash = orderHash;
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -163,23 +238,25 @@ class MyOrdersViewModel extends // BaseViewModel {
 
       var txHex = await txHexforCancelOrder(seed, orderHash);
       var resKanban = await sendKanbanRawTransaction(txHex);
-      print('resKanban===');
       if (resKanban != null && resKanban["transactionHash"] != null) {
-        // futureToRun();
+        print('resKanban===');
+        print(resKanban);
         walletService.showInfoFlushbar(
             'Your cancel order transaction was successfull',
             'txid:' + resKanban["transactionHash"],
             Icons.info,
             green,
             context);
+        getAllMyOrders();
       }
-      print(resKanban);
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
       }
     }
+
     setBusy(false);
+    onClickOrderHash = '';
   }
 
   // Cancel order

@@ -5986,12 +5986,12 @@
             var volumeArray = [];
             for (var i = 0; i < obj.length; i++) {
                 var item = obj[i];
-                var high = parseFloat(item.high) / 1e18;
-                var low = parseFloat(item.low) / 1e18;
-                var open = parseFloat(item.open) / 1e18;
-                var close = parseFloat(item.close) / 1e18;
-                var volume = parseFloat(item.volume) / 1e18;
-                var time = item.time;
+                var high = item.h;
+                var low = item.l;
+                var open = item.o;
+                var close = item.c;
+                var volume = item.v;
+                var time = item.t;
                 var candlestickItem = {
                     time: time,
                     open: open,
@@ -6056,14 +6056,44 @@
                 },
             });
 
-            httpGetAsync('https://kanbantest.fabcoinapi.com/klinedata/' + pairLeft + pairRight + '/' + interval, candlestickSeries, volumeSeries, handleTiker);
+            httpGetAsync('https://kanbantest.fabcoinapi.com/v2/klinedata/' + pairLeft + pairRight + '/' + interval, candlestickSeries, volumeSeries, handleTiker);
             // set data
 
+
+            var tickerSocket = new WebSocket("wss://kanbantest.fabcoinapi.com/ws/ticker@" + pairLeft + pairRight + "@" + interval);
+            tickerSocket.onmessage = function (event) {
+
+               var item = JSON.parse(event.data);
+                var high = item.h;
+                var low = item.l;
+                var open = item.o;
+                var close = item.c;
+                var volume = item.v;
+                var time = item.t;
+                console.log('time in here====', time);
+                var candlestickItem = {
+                    time: time,
+                    open: open,
+                    high: high,
+                    low: low,
+                    close: close
+                };
+                candlestickSeries.update(candlestickItem);
+
+
+                var volumeItem = {
+                    time: time,
+                    value: volume,
+                    color: open < close ? 'rgba(0, 150, 136, 0.8)' : 'rgba(255,82,82, 0.8)'
+                };
+                volumeSeries.update(volumeItem);
+
+            }
         }
     </script>
 </head>
 
-<body onload="showChart('BTC', 'USDT', '1m')" style="margin:0">
+<body onload="showChart('BTC', 'USDT', '30m')" style="margin:0">
 <div id="price">
 
 </div>

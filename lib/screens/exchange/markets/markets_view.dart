@@ -11,18 +11,16 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
-import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
 class MarketsView extends StatelessWidget {
-  const MarketsView({Key key}) : super(key: key);
+  const MarketsView({Key key, this.hideSlider = true}) : super(key: key);
+  final bool hideSlider;
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +48,38 @@ class MarketsView extends StatelessWidget {
                           marketPairsTabBarView: model.marketPairsTabBar,
                           priceList: model.btcFabExgUsdtPriceList,
                           isBusy: !model.dataReady,
+                          hideSlider: hideSlider,
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                // bottomNavigationBar: BottomNavBar(count: 1),
+                // floatingActionButtonLocation:
+                //     FloatingActionButtonLocation.centerFloat,
+                // floatingActionButton: !model.dataReady
+                //     ? Container()
+                //     : Container(
+                //         height: 70,
+                //         child: Row(
+                //           children: [
+                //             for (var pair in model.btcFabExgUsdtPriceList)
+                //               Expanded(
+                //                 child: Card(
+                //                   margin: EdgeInsets.all(1),
+                //                   elevation: 3,
+                //                   child: Column(
+                //                       mainAxisAlignment:
+                //                           MainAxisAlignment.center,
+                //                       children: [
+                //                         Text(pair.symbol.toString()),
+                //                         Text(pair.price.toStringAsFixed(2))
+                //                       ]),
+                //                 ),
+                //               )
+                //           ],
+                //         ),
+                //       ),
+                bottomNavigationBar: BottomNavBar(count: 1),
               ),
             ),
         viewModelBuilder: () => MarketsViewModel());

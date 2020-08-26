@@ -43,4 +43,16 @@ class UIHelper {
     color: Colors.grey,
     height: 0.5,
   );
+
+  static double getScreenFullHeight(BuildContext context) {
+    double result = 0.0;
+    result = MediaQuery.of(context).size.height;
+    return result;
+  }
+
+  static double getScreenFullWidth(BuildContext context) {
+    double result = 0.0;
+    result = MediaQuery.of(context).size.width;
+    return result;
+  }
 }

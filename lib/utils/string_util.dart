@@ -17,6 +17,30 @@ import 'package:hex/hex.dart';
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
 
+/*
+toBitInt(num, [zeroLength]) {
+  var numString = num.toString();
+  var numStringArray = numString.split('.');
+  zeroLength ??= 18;
+  var val = '';
+  if (numStringArray != null) {
+    val = numStringArray[0];
+    if (numStringArray.length == 2) {
+      zeroLength -= numStringArray[1].length;
+      val += numStringArray[1];
+    }
+  }
+
+  var valInt = int.parse(val);
+  val = valInt.toString();
+  for (var i = 0; i < zeroLength; i++) {
+    val += '0';
+  }
+
+  return val;
+}
+*/
+
 hex2Buffer(hexString) {
   var buffer = new List<int>();
   for (var i = 0; i < hexString.length; i += 2) {
@@ -97,6 +121,13 @@ bigNum2Double(bigNum) {
   }
   var str = dec.toString();
   var s = str;
+  var d = dec.toDouble();
+  if (str.length > 8) {
+    s = str.substring(0, 8);
+
+    d = double.parse(s);
+  }
+  return d;
   // if (str.length > 6) {
   //   s = str.substring(0, 6);
   // }
@@ -109,13 +140,6 @@ bigNum2Double(bigNum) {
   //   d = double.parse(s);
   // }
 
-  var d = dec.toDouble();
-  if (str.length > 8) {
-    s = str.substring(0, 8);
-
-    d = double.parse(s);
-  }
-  return d;
   //double d = (BigInt.parse(bigNum.toString()) / BigInt.parse('1000000000000')).round() / 1000000;
   //return d;
 }
