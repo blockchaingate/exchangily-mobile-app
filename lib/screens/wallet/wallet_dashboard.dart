@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -182,27 +184,23 @@ class WalletDashboardScreen extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                      ),
-                                      InkWell(
-                                          onTap: () async {
-                                            await model.refreshBalance();
-                                          },
-                                          child: model.busy
-                                              ? SizedBox(
-                                                  child: Theme.of(context)
-                                                              .platform ==
-                                                          TargetPlatform.iOS
-                                                      ? CupertinoActivityIndicator()
-                                                      : CircularProgressIndicator(),
-                                                  width: 18,
-                                                  height: 18,
-                                                )
-                                              : Icon(
-                                                  Icons.refresh,
-                                                  color: globals.white,
-                                                  size: 28,
-                                                ))
-                                    ],
+                                        InkWell(
+                                            onTap: () async {
+                                              await model.refreshBalance();
+                                            },
+                                            child: model.busy
+                                                ? SizedBox(
+                                                    child: model.sharedService.loadingIndicator(),
+                                                    width: 18,
+                                                    height: 18,
+                                                  )
+                                                : Icon(
+                                                    Icons.refresh,
+                                                    color: globals.white,
+                                                    size: 28,
+                                                  ))
+                                      ],
+                                    ),
                                   ),
                                 ),
                               )

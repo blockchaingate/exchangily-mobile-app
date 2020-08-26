@@ -77,3 +77,4 @@ android/key.properties
 lib/environments/environment_type.dart
 pubspec.lock
 ios/Podfile.lock
+ios/flutter/.last_build_id
