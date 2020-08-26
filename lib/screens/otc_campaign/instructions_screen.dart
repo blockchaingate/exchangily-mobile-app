@@ -36,7 +36,10 @@ class CampaignInstructionScreen extends StatelessWidget {
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: Container(
-                width: 250,
+                constraints: BoxConstraints(
+                  minWidth:250
+                ),
+                margin: EdgeInsets.symmetric(horizontal:30),
                 child: RaisedButton(
                   padding: EdgeInsets.all(0),
                   child: Text(

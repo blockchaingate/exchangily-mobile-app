@@ -36,10 +36,10 @@ class CampaignSingle extends StatelessWidget {
                                 children: [
                                   Container(
                                     width: MediaQuery.of(context).size.width,
-                                    height:
-                                        MediaQuery.of(context).size.width *
-                                            370 /
-                                            600,
+                                    // height:
+                                    //     MediaQuery.of(context).size.width *
+                                    //         370 /
+                                    //         600,
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
                                       alignment: Alignment.topCenter,
