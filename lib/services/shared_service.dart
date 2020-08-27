@@ -66,7 +66,13 @@ class SharedService {
   Widget loadingIndicator() {
     return Center(
         child: Platform.isIOS
-            ? CupertinoActivityIndicator()
+            ? Container(
+                decoration: BoxDecoration(
+                color: grey.withAlpha(125),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                width: 30,
+                height: 30,
+                child: CupertinoActivityIndicator())
             : CircularProgressIndicator(
                 semanticsLabel: 'Loading',
                 strokeWidth: 2,
