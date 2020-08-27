@@ -50,10 +50,47 @@ class OrderBookView extends StatelessWidget {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(AppLocalizations.of(context).quantity,
-                                  style: TextStyle(fontSize: 9, color: grey)),
-                              Text(AppLocalizations.of(context).price,
-                                  style: TextStyle(fontSize: 9, color: grey))
+                              orderBook.indexOf(orders) == 0
+                                  ? Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          2.2,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                              AppLocalizations.of(context)
+                                                  .quantity,
+                                              style: TextStyle(
+                                                  fontSize: 9, color: grey)),
+                                          Text(
+                                              AppLocalizations.of(context)
+                                                  .price,
+                                              style: TextStyle(
+                                                  fontSize: 9, color: grey))
+                                        ],
+                                      ),
+                                    )
+                                  : Container(
+                                      width: MediaQuery.of(context).size.width /
+                                          2.2,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Text(
+                                              AppLocalizations.of(context)
+                                                  .price,
+                                              style: TextStyle(
+                                                  fontSize: 9, color: grey)),
+                                          Text(
+                                              AppLocalizations.of(context)
+                                                  .quantity,
+                                              style: TextStyle(
+                                                  fontSize: 9, color: grey)),
+                                        ],
+                                      ),
+                                    )
                             ]),
                       ),
 
