@@ -62,9 +62,7 @@ class MarketTradeDetailView extends StatelessWidget {
           itemCount: marketTrades.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              /// bidorAsk value is null from the backend
-              /// so can't use the color for container
-
+             
               color: marketTrades[index].bidOrAsk ? buyOrders : sellOrders,
               padding: EdgeInsets.all(4.0),
               margin: EdgeInsets.only(bottom: 1.0),
@@ -77,7 +75,7 @@ class MarketTradeDetailView extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 3,
-                      child: Text(marketTrades[index].amount.toString(),
+                      child: Text(marketTrades[index].amount.toStringAsFixed(6),
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 2,

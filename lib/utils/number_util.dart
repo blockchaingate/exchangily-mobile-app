@@ -73,21 +73,21 @@ class NumberUtil {
 // Time Format
   timeFormatted(timeStamp) {
     var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
-    return time.hour.toString() +
+    return addZeroInFrontForSingleDigit(time.hour.toString()) +
         ':' +
-        time.minute.toString() +
+        addZeroInFrontForSingleDigit(time.minute.toString()) +
         ':' +
-        checkTimeDigits(time.second.toString());
+        addZeroInFrontForSingleDigit(time.second.toString());
   }
 
-  String checkTimeDigits(String value) {
+  String addZeroInFrontForSingleDigit(String value) {
     String holder = '';
     if (value.length == 1) {
       holder = '0$value';
     } else {
       holder = value;
     }
-    print('holder $holder');
+   
     return holder;
   }
 }
