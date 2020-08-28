@@ -319,8 +319,7 @@ class WalletService {
   }
 
   Future getEthGasPrice() async {
-    var gasPrice = await _apiService.getEthGasPrice();
-    return gasPrice;
+    return await _apiService.getEthGasPrice();
   }
 
 /*----------------------------------------------------------------------
@@ -1660,7 +1659,7 @@ class WalletService {
       }
       transFeeDouble = (BigInt.parse(gasPrice.toString()) *
               BigInt.parse(gasLimit.toString()) /
-              BigInt.parse('1000000000'))
+              BigInt.parse('5000000000000000000'))
           .toDouble();
 
       if (getTransFeeOnly) {
@@ -1698,7 +1697,7 @@ class WalletService {
             nonce: nonce,
             to: EthereumAddress.fromHex(toAddress),
             gasPrice:
-                EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+                EtherAmount.fromUnitAndValue(EtherUnit.wei, gasPrice.round()),
             maxGas: gasLimit,
             value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
           ),
@@ -1835,11 +1834,11 @@ class WalletService {
         gasPrice = environment["chains"]["ETH"]["gasPrice"];
       }
       if (gasLimit == 0) {
-        gasLimit = environment["chains"]["ETH"]["gasLimitToken"];
+        gasLimit = environment["chains"]["ETH"]["gasLimit"];
       }
       transFeeDouble = (BigInt.parse(gasPrice.toString()) *
               BigInt.parse(gasLimit.toString()) /
-              BigInt.parse('1000000000'))
+              BigInt.parse('5000000000000000000'))
           .toDouble();
       log.i('transFeeDouble===' + transFeeDouble.toString());
       if (getTransFeeOnly) {
@@ -1911,7 +1910,7 @@ class WalletService {
               nonce: nonce,
               to: EthereumAddress.fromHex(contractAddress),
               gasPrice:
-                  EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+                  EtherAmount.fromUnitAndValue(EtherUnit.wei, gasPrice.round()),
               maxGas: gasLimit,
               value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
               data: Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex))),

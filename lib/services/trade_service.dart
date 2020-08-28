@@ -178,6 +178,18 @@ class TradeService {
     }
   }
 
+// Remove this function when implment new architecture
+  // Get all my orders
+  Future getOrders(String exgAddress) async {
+    try {
+      var data = await _api.getOrders(exgAddress);
+      return data;
+    } catch (err) {
+      log.e('getOrders Catch $err');
+      throw Exception('Catch Exception $err');
+    }
+  }
+
   // Get my orders by tickername
   Future<List<OrderModel>> getMyOrdersByTickerName(
       String exgAddress, String tickerName) async {

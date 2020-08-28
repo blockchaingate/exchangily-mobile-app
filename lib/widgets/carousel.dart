@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class Carousel extends StatelessWidget {
-  final List imageData;
-  final String lang;
-  Carousel({this.imageData, this.lang});
+  final List<Map> imageData;
+  Carousel({this.imageData});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +13,7 @@ class Carousel extends StatelessWidget {
       child: Swiper(
         loop: true,
         autoplay: imageData.length > 1 ? true : false,
-        autoplayDelay: 7000,
+        autoplayDelay:7000,
         // duration: 600,
         pagination: new SwiperPagination(builder: new SwiperCustomPagination(
             builder: (BuildContext context, SwiperPluginConfig config) {
@@ -26,9 +25,7 @@ class Carousel extends StatelessWidget {
               .build(context, config);
         })),
         itemBuilder: (BuildContext context, int index) {
-          String imgUrl = lang == "en"
-              ? imageData[index]["url"]
-              : imageData[index]["urlzh"];
+          String imgUrl = imageData[index]["imgUrl"];
           return InkWell(
             onTap: () {},
             child: ClipRRect(
@@ -42,7 +39,7 @@ class Carousel extends StatelessWidget {
                   if (imageData[index].containsKey("route") &&
                       imageData[index]["route"].length > 0) {
                     Navigator.pushNamed(context, imageData[index]["route"],
-                        arguments: imageData[index]["arguments"]);
+                        arguments: true);
                   }
                 },
               ),

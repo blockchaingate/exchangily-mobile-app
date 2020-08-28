@@ -78,15 +78,9 @@ class SendScreenState extends BaseState {
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await walletService.getEthGasPrice();
-      print('gasPriceReal======');
-      print(gasPriceReal);
       gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
-      if(tokenType == 'ETH') {
-        gasLimitTextController.text =
-            environment["chains"]["ETH"]["gasLimitToken"].toString();
-      }
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();

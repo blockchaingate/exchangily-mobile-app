@@ -29,18 +29,9 @@ class _MarketState extends State<Market> with TradeService {
 
   //temp use for test
   final List<Map> images = [
-    {
-      "imgUrl":
-          "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1052&q=80"
-    },
-    {
-      "imgUrl":
-          "https://images.unsplash.com/photo-1561451213-d5c9f0951fdf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-    },
-    {
-      "imgUrl":
-          "https://images.unsplash.com/photo-1516245834210-c4c142787335?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"
-    },
+    {"imgUrl": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1052&q=80"},
+    {"imgUrl": "https://images.unsplash.com/photo-1561451213-d5c9f0951fdf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
+    {"imgUrl": "https://images.unsplash.com/photo-1516245834210-c4c142787335?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
   ];
 
   @override
@@ -76,9 +67,9 @@ class _MarketState extends State<Market> with TradeService {
           return snapshot.hasData
               ? ListView(
                   children: <Widget>[
-                    SizedBox(height: 10),
-                    Carousel(imageData: images),
-                    SizedBox(height: 10),
+                    SizedBox(height:10),
+                    Carousel(imageData:images),
+                    SizedBox(height:10),
                     MarketOverview(
                         key: _marketOverviewState,
                         data: _updatePrice(snapshot.data)),
@@ -87,7 +78,7 @@ class _MarketState extends State<Market> with TradeService {
                         data: _updatePrice(snapshot.data))
                   ],
                 )
-              : LoadingGif();
+              : Loading();
         },
       ),
       // bottomNavigationBar: BottomNavBar(count: 1),

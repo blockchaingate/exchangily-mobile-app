@@ -5,7 +5,6 @@ import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart'
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:exchangilymobileapp/utils/number_util.dart';
 
 class MarketTradesView extends StatelessWidget {
   final List<TradeModel> marketTrades;
@@ -56,13 +55,24 @@ class MarketTradeDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    timeFormatted(timeStamp) {
+      var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
+      return time.hour.toString() +
+          ':' +
+          time.minute.toString() +
+          ':' +
+          time.second.toString();
+    }
+
     return Container(
       child: ListView.builder(
           shrinkWrap: true,
           itemCount: marketTrades.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-             
+              /// bidorAsk value is null from the backend
+              /// so can't use the color for container
+
               color: marketTrades[index].bidOrAsk ? buyOrders : sellOrders,
               padding: EdgeInsets.all(4.0),
               margin: EdgeInsets.only(bottom: 1.0),
@@ -75,14 +85,12 @@ class MarketTradeDetailView extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 3,
-                      child: Text(marketTrades[index].amount.toStringAsFixed(6),
+                      child: Text(marketTrades[index].amount.toString(),
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 2,
                       child: Text(
-                          NumberUtil()
-                              .timeFormatted(marketTrades[index].time)
-                              .toString(),
+                          timeFormatted(marketTrades[index].time).toString(),
                           style: Theme.of(context).textTheme.headline6)),
                 ],
               ),

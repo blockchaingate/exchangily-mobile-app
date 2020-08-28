@@ -1534,9 +1534,8 @@ class AppLocalizations {
         desc: 'wallet_dashboard_app_update_popup');
   }
 
-  String get serverBusy {
-    return Intl.message("Server Busy",
-        name: 'serverBusy', desc: 'campaign_list_serverBusy');
+  String get submit {
+    return Intl.message("Submit", name: 'submit', desc: 'otc_kyc_submit');
   }
 }
 

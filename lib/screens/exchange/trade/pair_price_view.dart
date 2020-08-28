@@ -85,21 +85,27 @@ class PairPriceView extends StatelessWidget {
 
             child: Column(children: <Widget>[
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(AppLocalizations.of(context).volume,
-                      style: Theme.of(context).textTheme.subtitle2),
-                  Text(AppLocalizations.of(context).low.toString(),
-                      style: Theme.of(context).textTheme.subtitle2),
-                  Text(AppLocalizations.of(context).high.toString(),
-                      style: Theme.of(context).textTheme.subtitle2),
+                  UIHelper.horizontalSpaceMedium,
+                  Expanded(
+                    flex: 2,
+                    child: Text(AppLocalizations.of(context).volume,
+                        style: Theme.of(context).textTheme.subtitle2),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(AppLocalizations.of(context).low.toString(),
+                        style: Theme.of(context).textTheme.subtitle2),
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Text(AppLocalizations.of(context).high.toString(),
+                        style: Theme.of(context).textTheme.subtitle2),
+                  ),
                 ],
               ),
               // Low Volume High Row
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   UIHelper.horizontalSpaceMedium,
                   Expanded(

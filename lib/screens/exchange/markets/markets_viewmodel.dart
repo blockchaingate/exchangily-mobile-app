@@ -38,14 +38,19 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   final NavigationService navigationService = locator<NavigationService>();
   BuildContext context;
   List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];
+  Price price;
+  final List<Map> images = [
+    {
+      "imgUrl": "assets/images/slider/campaign.jpg",
+      "route": '/campaignInstructions'
+    },
+    {"imgUrl": "assets/images/slider/campaign2.jpg", "route": ''},
+    // {"imgUrl": "https://images.unsplash.com/photo-1561451213-d5c9f0951fdf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
+    // {"imgUrl": "https://images.unsplash.com/photo-1516245834210-c4c142787335?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60"},
+  ];
 
   @override
-  Stream<dynamic> get stream {
-    Stream<dynamic> res;
-
-    res = tradeService.getAllCoinPriceStream();
-    return res;
-  }
+  Stream<dynamic> get stream => tradeService.getAllCoinPriceStream();
 
   @override
   void onData(data) {
@@ -68,8 +73,8 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
       });
     } catch (err) {
       log.e('transformData Catch error $err');
-      print('Cancelling Stream Subsciption');
-      streamSubscription.cancel();
+      //  print('Cancelling Stream Subsciption');
+      //streamSubscription.cancel();
     }
   }
 
@@ -89,6 +94,13 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   }
 
   onBackButtonPressed() async {
+    log.w(
+        'back button pressed, is final route ${navigationService.isFinalRoute()}');
+
     navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+  }
+
+  pauseStream() {
+    if (!streamSubscription.isPaused) streamSubscription.pause();
   }
 }
