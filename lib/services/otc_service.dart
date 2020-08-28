@@ -12,21 +12,13 @@ class OtcService {
 /*----------------------------------------------------------------------
                           KYC
 ----------------------------------------------------------------------*/
-  Future kycCreate(Map<String, dynamic> body) async {
+  Future kycCreate(Map<String, dynamic> body, String loginToken) async {
     log.w('otcKycCreateUrl $otcKycCreateUrl');
-    var jsonBody = jsonEncode(body);
-    log.i('kyc body $jsonBody');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String loginToken = prefs.getString('loginToken');
-    log.w('login token $loginToken');
 
-    Map<String, String> headers = {
-      'x-access-token':
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlODdiODY2Yjc1NTFkMzNlNjE3MGNmYSIsImVtYWlsIjoiYmFycnkxMDBAZXhnLmNvbSIsImlhdCI6MTU5Nzg2NDI3OSwiZXhwIjoxNTk3OTUwNjc5LCJpc3MiOiJmYS5iaXoiLCJzdWIiOiI1ZTg3Yjg2NmI3NTUxZDMzZTYxNzBjZmEifQ.l1_Y9WTORizJavt_DyTRJe7UIPhDjXqJ4c_NzHdBZqU'
-    };
+    Map<String, String> headers = {'x-access-token': loginToken};
     try {
       var response =
-          await client.post(otcKycCreateUrl, body: jsonBody, headers: headers);
+          await client.post(otcKycCreateUrl, body: body, headers: headers);
       var json = jsonDecode(response.body);
       log.w('kycCreate $json');
       return json;
