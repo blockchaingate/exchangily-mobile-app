@@ -193,16 +193,16 @@ class CampaignLoginScreenState extends BaseState {
 
       log.e('pass route $passedWRoute');
       if (passedWRoute == 'otc') {
-        await saveUserData(res);
         navigationService.navigateTo('/otcView');
         setBusy(false);
         return;
       }
       String error = res['message'];
       if (res != null && (error == null || error == '')) {
-        await saveUserData(res);
-
+        userData = CampaignUserData.fromJson(res);
+        log.i('Test user data object ${userData.toJson()}');
         // navigationService.navigateTo('/campaignDashboard', arguments: userData);
+        await campaignService.saveCampaignUserDataInLocalDatabase(userData);
 
         navigationService.navigateTo('/campaignDashboard');
       } else {
@@ -215,14 +215,6 @@ class CampaignLoginScreenState extends BaseState {
       log.e('In catch $err');
     });
     setBusy(false);
-  }
-
-  // Save userdata object in local database
-  saveUserData(res) async {
-    userData = CampaignUserData.fromJson(res);
-    log.i('user data object ${userData.toJson()}');
-    // navigationService.navigateTo('/campaignDashboard', arguments: userData);
-    await campaignService.saveCampaignUserDataInLocalDatabase(userData);
   }
 
 // Check fields before calling the api

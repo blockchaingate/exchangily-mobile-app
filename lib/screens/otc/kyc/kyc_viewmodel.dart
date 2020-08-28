@@ -102,11 +102,6 @@ class KycViewModel extends BaseViewModel {
   Future getImage(String image) async {
     setBusy(true);
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
-    if (pickedFile == null) {
-      sharedService.showInfoFlushbar(
-          'Notice', 'Image selection failed', Icons.cancel, red, context);
-      return;
-    }
     File imageFilePath = File(pickedFile.path);
 
     switch (image) {
@@ -163,29 +158,23 @@ class KycViewModel extends BaseViewModel {
 
       setBusy(false);
       return;
-    } else if (personalPhotoFile == null || personalPhotoFile.length < 1) {
+    } else if (personalPhotoFile == null) {
       sharedService.showInfoFlushbar('Form Validation Failed',
           'Must provide your selfie photo', Icons.cancel, red, context);
       setBusy(false);
       return;
     } else if (formKey.currentState.validate() && photoIdFile.length >= 2) {
-      // Get member ID from campaign database which saved after campaign login
       String memberId = '';
-      String loginToken = '';
       await campaignUserDatabaseService.getByEmail(email.text).then((res) {
-        if (res != null) {
-          memberId = res.id;
-          loginToken = res.token;
-        }
+        memberId = res.id;
       });
-      print('memberId $memberId');
-
+      // REFORMAT DATE HERE
       Map<String, dynamic> body = {
         "app": SharedService.appName,
         "memberId": memberId,
         "name": name.text,
         "countryOfBirth": citizenship,
-        "accreditedInvestor": accreditedInvestor.toString(),
+        "accreditedInvestor": accreditedInvestor,
         "dateOfBirth": dob.text,
         "countryOfResidency": countryOfResidense,
         "homeAddress": address1.text,
@@ -194,28 +183,22 @@ class KycViewModel extends BaseViewModel {
         "province": province.text,
         "postalCode": postalCode.text,
         "email": email.text,
-        "photoUrls": photoIdBase64Encode.join(' '),
-        "selfieUrls": personalPhotoBase64Encode.join(' ')
+        "photoUrls": photoIdBase64Encode,
+        "selfieUrls": personalPhotoBase64Encode
       };
-      await kycCreate(body, loginToken);
+      await kycCreate(body);
     }
     setBusy(false);
   }
 
   // kyc create call to service
-  kycCreate(body, loginToken) async {
-    await otcService.kycCreate(body, loginToken).then((res) {
+  kycCreate(body) async {
+    await otcService.kycCreate(body).then((res) {
       if (res != null) {
         if (res['errors'] != null) {
           sharedService.alertDialog(
               'Form Notice', 'Please fill the form correctly and try again');
           log.e(res['errors']);
-          return;
-        }
-        if (res['name'] == 'TokenExpiredError') {
-          sharedService.alertDialog(
-              'Notice', 'Login session expired, Please login again');
-
           return;
         }
         sharedService.showInfoFlushbar(
