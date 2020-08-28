@@ -74,7 +74,6 @@ class CampaignInstructionsScreenState extends BaseState {
           _tierListSvg.add(SvgPicture.asset(
             assetName,
             fit: BoxFit.contain,
-            semanticsLabel: 'Tier 1,2,3 instruction',
           ));
         }
       } else {
@@ -82,7 +81,6 @@ class CampaignInstructionsScreenState extends BaseState {
           _tierListSvg.add(SvgPicture.asset(
             assetName,
             fit: BoxFit.contain,
-            semanticsLabel: 'Tier 1,2,3 instruction',
           ));
         }
       }

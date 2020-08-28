@@ -30,6 +30,8 @@ class ApiService {
   final client = new http.Client();
 
   final kanbanBaseUrl = environment['endpoints']['kanban'];
+  // Please keep this for future test
+  // final kanbanBaseUrl = environment['endpoints']['JackLocalKanban'];
 
   static const getBalance = 'kanban/getBalance/';
   static const assetsBalance = 'exchangily/getBalances/';
@@ -41,6 +43,7 @@ class ApiService {
   final dogeBaseUrl = environment["endpoints"]["doge"];
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
+  final eventsUrl = environment["eventInfo"];
   final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
 
 /*----------------------------------------------------------------------
@@ -141,8 +144,13 @@ class ApiService {
     try {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
-      log.w(' getDepositTransactionStatus $json');
-      ethGasPrice = int.tryParse(json['gasprice']);
+      log.w(' getDepositTransactionStatus111 $json');
+      print((BigInt.parse(json['gasprice']) / BigInt.parse('1000000000'))
+          .toDouble());
+      ethGasPrice =
+          (BigInt.parse(json['gasprice']) / BigInt.parse('1000000000'))
+              .toDouble()
+              .round();
     } catch (err) {
       log.e('In getDepositTransactionStatus catch $err');
     }
@@ -154,6 +162,8 @@ class ApiService {
     if (ethGasPrice > environment['chains']['ETH']['gasPriceMax']) {
       ethGasPrice = environment['chains']['ETH']['gasPriceMax'];
     }
+    print('ethGasPrice=====');
+    print(ethGasPrice);
     return ethGasPrice;
   }
 /*----------------------------------------------------------------------
@@ -201,9 +211,9 @@ class ApiService {
     }
   }
 
-  /*-------------------------------------------------------------------------------------
-                                        Get coin currency Usd Prices
-      -------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------
+                                  Get coin currency Usd Prices
+-------------------------------------------------------------------------------------*/
 
   Future getCoinCurrencyUsdPrice() async {
     log.w('url $coinCurrencyUsdPriceUrl');
@@ -275,11 +285,14 @@ class ApiService {
     try {
       String url = environment['endpoints']['kanban'] + orders + exgAddress;
       log.w('get my orders url $url');
+      print('in try');
       var res = await client.get(url);
       log.e('res $res');
       var jsonList = jsonDecode(res.body) as List;
       log.i('jsonList $jsonList');
       OrderList orderList = OrderList.fromJson(jsonList);
+      print('after order list ${orderList.orders.length}');
+      //  throw Exception('Catch Exception');
       return orderList.orders;
     } catch (err) {
       log.e('getOrders Failed to load the data from the API， $err');
@@ -568,5 +581,68 @@ class ApiService {
       log.e('In getPairDecimalConfig catch $err');
       return null;
     }
+  }
+
+  Future getSliderImages() async {
+    try {
+      final res = await http.get(kanbanBaseUrl + "kanban/getadvconfig");
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      log.e('getSliderImages Failed to load the data from the API $e');
+      return "error";
+    }
+    return "error";
+  }
+
+  Future getEvents() async {
+    print("Calling api: getEvents");
+    print("Url: " + kanbanBaseUrl + "kanban/getCampaigns");
+    try {
+      final res = await http.get(
+          // "http://192.168.0.12:4000/kanban/getCampaigns"
+          kanbanBaseUrl + "kanban/getCampaigns");
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error: " + res.body);
+        return "error";
+      }
+    } catch (e) {
+      log.e('getEvents failed to load the data from the API $e');
+      return "error";
+    }
+  }
+
+  //get a single event detailed information
+  Future postEventSingle(id) async {
+    print("Calling api: getEventSingle");
+    try {
+      final res = await http.post(
+        // "http://192.168.0.12:4000/kanban/getCampaignSingle",
+        kanbanBaseUrl + "kanban/getCampaignSingle",
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'id': id,
+        }),
+      );
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return ["error"];
+      }
+    } catch (e) {
+      log.e('getEventSingle failed to load the data from the API $e');
+    }
+    return {};
   }
 }
