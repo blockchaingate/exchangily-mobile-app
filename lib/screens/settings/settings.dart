@@ -134,102 +134,109 @@ class SettingsScreen extends StatelessWidget {
                       )),
                     ),
                   ),
-                  //language switch
-                  // InkWell(
-                  //   child: Card(
-                  //     elevation: 4,
-                  //     child: Container(
-                  //       alignment: Alignment.center,
-                  //       color: globals.walletCardColor,
-                  //       padding: EdgeInsets.all(20),
-                  //       // height: 100,
-                  //       child: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           Padding(
-                  //             padding: const EdgeInsets.only(right: 3.0),
-                  //             child: Icon(
-                  //               Icons.language,
-                  //               color: Colors.deepOrange,
-                  //               size: 18,
-                  //             ),
-                  //           ),
-                  //           Text(
-                  //             AppLocalizations.of(context).changeWalletLanguage,
-                  //             textAlign: TextAlign.center,
-                  //             style: Theme.of(context).textTheme.headline5,
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   onTap: () {
-                  //     Navigator.pushNamed(context, '/switchLanguage');
-                  //   },
-                  // ),
 
                   Card(
-                    elevation: 5,
-                    child: Container(
-                      color: globals.walletCardColor,
-                      child: Center(
-                        child: Theme.of(context).platform == TargetPlatform.iOS
-                            ? CupertinoPicker(
-                                diameterRatio: 1.3,
-                                offAxisFraction: 5,
-                                scrollController: model.scrollController,
-                                itemExtent: 50,
-                                onSelectedItemChanged: (int value) {
-                                  String lang = '';
-                                  if (value == 0) {
-                                    lang = 'en';
-                                  } else if (value == 1) {
-                                    lang = 'zh';
-                                  }
-                                  model.changeWalletLanguage(lang);
-                                },
-                                children: List<Widget>.generate(
-                                    model.languages.length, (int index) {
-                                  return Center(
-                                    child: Text(
-                                      model.languages[index],
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ),
-                                  );
-                                }))
-                            : DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  iconEnabledColor: globals.primaryColor,
-                                  iconSize: 26,
-                                  hint: Text(
-                                    AppLocalizations.of(context)
-                                        .changeWalletLanguage,
-                                    textAlign: TextAlign.center,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                  value: model.selectedLanguage,
-                                  onChanged: (newValue) {
-                                    model.changeWalletLanguage(newValue);
+                      elevation: 5,
+                      child: Container(
+                        color: globals.walletCardColor,
+                        child: Center(
+                          child: Theme.of(context).platform ==
+                                  TargetPlatform.iOS
+                              ? CupertinoPicker(
+                                  diameterRatio: 1.3,
+                                  offAxisFraction: 5,
+                                  scrollController: model.scrollController,
+                                  itemExtent: 50,
+                                  onSelectedItemChanged: (int value) {
+                                    String lang = '';
+                                    if (value == 0) {
+                                      lang = 'en';
+                                    } else if (value == 1) {
+                                      lang = 'zh';
+                                    }
+                                    model.changeWalletLanguage(lang);
                                   },
-                                  items: model.languages.map((language) {
-                                    return DropdownMenuItem(
-                                      child: Center(
-                                        child: Text(language,
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6),
+                                  children: [
+                                      Center(
+                                        child: Text(
+                                          "English",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ),
                                       ),
-                                      value: language,
-                                    );
-                                  }).toList(),
+                                      Center(
+                                        child: Text(
+                                          "简体中文",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ),
+                                      ),
+                                    ])
+                              : DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                      iconEnabledColor: globals.primaryColor,
+                                      iconSize: 26,
+                                      hint: Text(
+                                        AppLocalizations.of(context)
+                                            .changeWalletLanguage,
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                      ),
+                                      value: model.selectedLanguage,
+                                      onChanged: (newValue) {
+                                        model.changeWalletLanguage(newValue);
+                                      },
+                                      items: [
+                                        DropdownMenuItem(
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                "assets/images/img/flagEn.png",
+                                                width: 20,
+                                                height: 20,
+                                              ),
+                                              SizedBox(width: 15),
+                                              Text("English",
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6),
+                                            ],
+                                          ),
+                                          value: model.languages[0],
+                                        ),
+                                        DropdownMenuItem(
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                "assets/images/img/flagChina.png",
+                                                width: 20,
+                                                height: 20,
+                                              ),
+                                              SizedBox(width: 15),
+                                              Text("简体中文",
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6),
+                                            ],
+                                          ),
+                                          value: model.languages[1],
+                                        ),
+                                      ]),
                                 ),
-                              ),
-                      ),
-                    ),
-                  ),
+                        ),
+                      )),
                   // Show/Hide dialog warning checkbox
                   Card(
                       elevation: 5,
@@ -289,3 +296,39 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+// OLD language switch, KEEP IT 
+// InkWell(
+//   child: Card(
+//     elevation: 4,
+//     child: Container(
+//       alignment: Alignment.center,
+//       color: globals.walletCardColor,
+//       padding: EdgeInsets.all(20),
+//       // height: 100,
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Padding(
+//             padding: const EdgeInsets.only(right: 3.0),
+//             child: Icon(
+//               Icons.language,
+//               color: Colors.deepOrange,
+//               size: 18,
+//             ),
+//           ),
+//           Text(
+//             AppLocalizations.of(context).changeWalletLanguage,
+//             textAlign: TextAlign.center,
+//             style: Theme.of(context).textTheme.headline5,
+//           ),
+//         ],
+//       ),
+//     ),
+//   ),
+//   onTap: () {
+//     Navigator.pushNamed(context, '/switchLanguage');
+//   },
+// ),

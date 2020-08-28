@@ -2,9 +2,9 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/material.dart';
 import '../shared/globals.dart' as globals;
 
-class Loading extends StatelessWidget {
+class LoadingGif extends StatelessWidget {
   final double size;
-  Loading({this.size: 60});
+  LoadingGif({this.size: 60});
 
   @override
   Widget build(BuildContext context) {

@@ -42,9 +42,11 @@ final String getAppVersionUrl = baseKanbanUrl + 'getappversion';
 final String getTokenListUrl = baseKanbanUrl + 'exchangily/getTokenList';
 
 /*----------------------------------------------------------------------
-                            OTC
+                            Exchange
+
+          /ordersbyaddresspaged/:address/:start?/:count?/:status?
 ----------------------------------------------------------------------*/
 
-final String otcKycCreateUrl = baseBlockchainGateV2Url + 'kyc/create';
-
-final String countryList = 'https://exchangily.com/assets/countries.json';
+final String getOrdersPaged = baseKanbanUrl + '/ordersbyaddresspaged/';
+final String getOrdersPagedByTickerName =
+    baseKanbanUrl + '/getordersbytickernamepaged/';

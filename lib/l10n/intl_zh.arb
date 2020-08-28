@@ -1781,6 +1781,35 @@
     "type": "text",
     "placeholders": {}
   },
-  
+  "sessionExpired": "会话超时",
+  "@sessionExpired": {
+    "description": "camapign_login_session_expired",
+    "type": "text",
+    "placeholders": {}
+  },
+  "memberDetails": "会员资料",
+  "@memberDetails": {
+    "description": "camapign_team_reward_member_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "website": "网站",
+  "@website": {
+    "description": "wallet_dashboard_app_update_popup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clickOnWebsiteButton": "或单击网站按钮以从亿币官方站点下载最新版本",
+  "@clickOnWebsiteButton": {
+    "description": "wallet_dashboard_app_update_popup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "serverBusy": "服务器正忙",
+  "@serverBusy": {
+    "description": "campaign_list_serverBusy",
+    "type": "text",
+    "placeholders": {}
+  }
   
 }

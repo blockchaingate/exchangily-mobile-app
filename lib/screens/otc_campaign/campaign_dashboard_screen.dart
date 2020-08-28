@@ -53,10 +53,12 @@ class CampaignDashboardScreen extends StatelessWidget {
                       Icons.person,
                       color: globals.white54,
                     ),
-                    title: Text(
-                      '${model.campaignUserData.email}',
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
+                    title: model.campaignUserData == null
+                        ? Text('')
+                        : Text(
+                            '${model.campaignUserData.email}',
+                            style: Theme.of(context).textTheme.headline5,
+                          ),
                   ),
                   UIHelper.divider,
                   ListTile(
@@ -72,7 +74,7 @@ class CampaignDashboardScreen extends StatelessWidget {
                   ),
                   UIHelper.divider,
                   ListTile(
-                    title: model.campaignUserData.referralCode != null
+                    title: model.campaignUserData != null
                         ? Text(
                             '${AppLocalizations.of(context).myReferralCode} ${model.campaignUserData.referralCode.toString()}',
                             style: Theme.of(context)
@@ -137,9 +139,13 @@ class CampaignDashboardScreen extends StatelessWidget {
                             ),
                             title: Padding(
                               padding: const EdgeInsets.only(top: 2.0),
-                              child: Text(
-                                  '${AppLocalizations.of(context).welcome} ${model.campaignUserData.email}',
-                                  style: Theme.of(context).textTheme.headline5),
+                              child: model.campaignUserData == null
+                                  ? Text('')
+                                  : Text(
+                                      '${AppLocalizations.of(context).welcome} ${model.campaignUserData.email}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
                             ),
                             trailing: InkWell(
                                 onTap: () {
@@ -386,15 +392,18 @@ class CampaignDashboardScreen extends StatelessWidget {
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline5),
-                                      Text(
-                                          '${model.memberProfile.totalQuantities.toString()}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Color(model
-                                                      .memberLevelTextColor)))
+                                      model.memberProfile == null
+                                          ? Text('')
+                                          : Text(
+                                              '${model.memberProfile.totalQuantities.toString()}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Color(model
+                                                          .memberLevelTextColor)))
                                     ],
                                   ),
                             trailing: Icon(

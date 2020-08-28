@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell.dart/buy_sell_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange_assets_view.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
@@ -18,7 +18,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
 import 'market_trades/market_trades_view.dart';
-import 'my_exchange_assets/my_exchange_assets_view.dart';
 import 'my_orders/my_orders_view.dart';
 import 'orderbook/orders_book_view.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
@@ -247,8 +246,8 @@ class TradeView extends StatelessWidget {
                                               ),
                                             )
                                           : MyExchangeAssetsView(
-                                              // myExchangeAssets: model.myExchangeAssets
-                                              )
+                                              myExchangeAssets:
+                                                  model.myExchangeAssets)
                                     ]
 
                                         //      ordersViewTabBody.map((tabBody) {

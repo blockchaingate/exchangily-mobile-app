@@ -1745,5 +1745,35 @@
     "description": "app_update_popup_button_text_later",
     "type": "text",
     "placeholders": {}
+  },
+  "sessionExpired": "Session Expired",
+  "@sessionExpired": {
+    "description": "camapign_login_session_expired",
+    "type": "text",
+    "placeholders": {}
+  },
+  "memberDetails": "Member Details",
+  "@memberDetails": {
+    "description": "camapign_team_reward_member_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "website": "Website",
+  "@website": {
+    "description": "wallet_dashboard_app_update_popup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clickOnWebsiteButton": "or click on website button to download the latest version from the official Exchangily site",
+  "@clickOnWebsiteButton": {
+    "description": "wallet_dashboard_app_update_popup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "serverBusy": "Server Busy",
+  "@serverBusy": {
+    "description": "campaign_list_serverBusy",
+    "type": "text",
+    "placeholders": {}
   }
 }
