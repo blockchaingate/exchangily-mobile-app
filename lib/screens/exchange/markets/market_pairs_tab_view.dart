@@ -41,7 +41,7 @@ class MarketPairsTabView extends StatelessWidget {
                       (BuildContext context, bool innerBoxIsScrolled) {
                     return <Widget>[
                       model.busy
-                          ? SliverToBoxAdapter(child: Loading())
+                          ? SliverToBoxAdapter(child: LoadingGif())
                           : SliverToBoxAdapter(
                               child: Offstage(
                                 offstage: hideSlider,
