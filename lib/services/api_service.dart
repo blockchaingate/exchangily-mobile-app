@@ -29,9 +29,9 @@ class ApiService {
   final log = getLogger('ApiService');
   final client = new http.Client();
 
-  final kanbanBaseUrl = environment['endpoints']['kanban'];
+  // final kanbanBaseUrl = environment['endpoints']['kanban'];
   // Please keep this for future test 
-  // final kanbanBaseUrl = environment['endpoints']['JackLocalKanban'];
+  final kanbanBaseUrl = environment['endpoints']['JackLocalKanban'];
 
   static const getBalance = 'kanban/getBalance/';
   static const assetsBalance = 'exchangily/getBalances/';

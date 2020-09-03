@@ -84,6 +84,8 @@ dependencies:
 
   # Device Preview
   device_preview:
+
+  #webview_flutter
   webview_flutter: ^0.3.19+4
 
   # rflutter Alert
@@ -144,6 +146,14 @@ dependencies:
 
   # To open web url's
   url_launcher: ^5.5.0
+
+  # video_player
+  fijkplayer:
+
+  #youtube_player
+  youtube_player_flutter: ^7.0.0+7
+
+  flutter_local_notifications: ^1.4.4+4
 
   # Share files
   share:

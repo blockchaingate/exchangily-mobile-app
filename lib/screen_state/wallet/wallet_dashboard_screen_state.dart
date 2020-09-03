@@ -30,6 +30,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,6 +75,8 @@ class WalletDashboardScreenState extends BaseState {
   List<String> formattedUsdValueListCopy = [];
 
   final searchCoinTextController = TextEditingController();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
 /*----------------------------------------------------------------------
                     INIT
@@ -674,6 +677,18 @@ class WalletDashboardScreenState extends BaseState {
           } // For loop j ends
         }); // wallet info copy for each ends
 
+        var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+            'your channel id', 'your channel name', 'your channel description',
+            importance: Importance.Max,
+            priority: Priority.High,
+            ticker: 'ticker');
+        var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+        var platformChannelSpecifics = NotificationDetails(
+            androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+        await flutterLocalNotificationsPlugin.show(0, 'Test Server Warning',
+            'You are using Test Server!', platformChannelSpecifics,
+            payload: 'item x');
+
         // Test to find unique wallet objects
         final seen = Set<WalletInfo>();
         //   walletInfo = walletInfo.where((wallet) => seen.add(wallet)).toList();
@@ -834,7 +849,9 @@ class WalletDashboardScreenState extends BaseState {
   }
 
 // test version pop up
-  debugVersionPopup() {
+  debugVersionPopup() async {
+    // await _showNotification();
+
     sharedService.alertDialog(AppLocalizations.of(context).notice,
         AppLocalizations.of(context).testVersion,
         isWarning: false);
@@ -852,4 +869,19 @@ class WalletDashboardScreenState extends BaseState {
   getAppbarHeight() {
     return top;
   }
+}
+
+Future<void> _showNotification() async {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'your channel id', 'your channel name', 'your channel description',
+      importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+  var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+  var platformChannelSpecifics = NotificationDetails(
+      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+  await flutterLocalNotificationsPlugin.show(0, 'Test Server Warning',
+      'You are using Test Server!', platformChannelSpecifics,
+      payload: 'item x');
 }
