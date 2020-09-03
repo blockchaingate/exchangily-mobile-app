@@ -59,11 +59,13 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   transformData(data) {
     try {
       List<dynamic> jsonDynamicList = jsonDecode(data) as List;
+      print(jsonDynamicList);
 
       PriceList priceList = PriceList.fromJson(jsonDynamicList);
       pairPriceList = priceList.prices;
       log.w('pair price list length ${pairPriceList.length}');
       pairPriceList.forEach((element) {
+        print(element.toJson());
         if (element.change.isNaN) element.change = 0.0;
       });
     } catch (err) {

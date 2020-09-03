@@ -49,6 +49,11 @@ class _MarketDataTableState extends State<MarketDataTable> {
 
   @override
   Widget build(BuildContext context) {
+    onRowTap(Price itemRow) {
+      itemRow.symbol = itemRow.symbol.replaceAll('/', '').toString();
+      navigationService.navigateTo('/exchangeTrade', arguments: itemRow);
+    }
+
     return Theme(
       //Use the theme to change data table sort icon color
       data: ThemeData.dark(),
@@ -220,10 +225,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           ),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                       DataCell(
@@ -238,10 +240,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               textAlign: TextAlign.start),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                       DataCell(
@@ -251,10 +250,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               fontWeight: FontWeight.w400, fontSize: 16),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                       DataCell(
@@ -264,10 +260,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               fontWeight: FontWeight.w400, fontSize: 16),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                       DataCell(
@@ -283,10 +276,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               fontSize: 16),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                     ],
