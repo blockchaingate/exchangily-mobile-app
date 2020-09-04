@@ -32,8 +32,9 @@ class MyExchangeAssetsView extends StatelessWidget {
                             style: Theme.of(context).textTheme.subtitle2),
                       ),
                     ),
+                    UIHelper.horizontalSpaceSmall,
                     Expanded(
-                      flex: 2,
+                      flex: 1,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: Text(AppLocalizations.of(context).coin,
@@ -63,7 +64,7 @@ class MyExchangeAssetsView extends StatelessWidget {
 
                             child: Row(
                               children: [
-                                // UIHelper.horizontalSpaceSmall,
+                                UIHelper.horizontalSpaceSmall,
                                 // Card logo container
                                 Expanded(
                                   flex: 1,
@@ -78,8 +79,9 @@ class MyExchangeAssetsView extends StatelessWidget {
                                       width: 35,
                                       height: 35),
                                 ),
+                                UIHelper.horizontalSpaceSmall,
                                 Expanded(
-                                    flex: 2,
+                                    flex: 1,
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 10),
                                       child: Text(
@@ -88,6 +90,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                                               .textTheme
                                               .headline6),
                                     )),
+                                UIHelper.horizontalSpaceSmall,
                                 Expanded(
                                     flex: 2,
                                     child: Text(

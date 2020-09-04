@@ -36,16 +36,27 @@ const String coinCurrencyUsdPriceUrl =
 final String getAppVersionUrl = baseKanbanUrl + 'getappversion';
 
 /*----------------------------------------------------------------------
-                            Get Token List
+                            Get Coin Token List
 ----------------------------------------------------------------------*/
 
 final String getTokenListUrl = baseKanbanUrl + 'exchangily/getTokenList';
 
 /*----------------------------------------------------------------------
-                            Exchange
-
-          /ordersbyaddresspaged/:address/:start?/:count?/:status?
+                            OTC
 ----------------------------------------------------------------------*/
 
-final String getOrdersPaged = baseKanbanUrl + '/ordersbyaddresspaged/';
-final String getOrdersPagedByTickerName = baseKanbanUrl + '/getordersbytickernamepaged/';
+final String otcKycCreateUrl = baseBlockchainGateV2Url + 'kyc/create';
+
+final String countryList = 'https://exchangily.com/assets/countries.json';
+
+final String otcListingUrl = baseBlockchainGateV2Url + 'otc-listing/';
+
+final String getOtcPublicListingUrl =
+    baseBlockchainGateV2Url + otcListingUrl + 'public/list';
+
+final String getPrivateMemberOrdersUrl =
+    baseBlockchainGateV2Url + 'orders/private/member-orders';
+
+// Buy/Sell url with token = otcListingUrl/address/add-order
+
+// Change orders status url = orders/5f18a49fc55b4d633ddb71e9/changePaymentStatus

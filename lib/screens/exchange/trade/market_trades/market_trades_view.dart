@@ -23,19 +23,26 @@ class MarketTradesView extends StatelessWidget {
                 height: 20,
                 child: Row(
                   children: <Widget>[
+                    UIHelper.horizontalSpaceSmall,
+                    UIHelper.horizontalSpaceSmall,
+                    Expanded(
+                        flex: 1,
+                        child: Text(AppLocalizations.of(context).price,
+                            textAlign: TextAlign.right,
+                            style: Theme.of(context).textTheme.subtitle2)),
                     UIHelper.horizontalSpaceMedium,
                     Expanded(
-                        flex: 3,
-                        child: Text(AppLocalizations.of(context).price,
-                            style: Theme.of(context).textTheme.subtitle2)),
-                    Expanded(
-                        flex: 3,
+                        flex: 2,
                         child: Text(AppLocalizations.of(context).quantity,
+                            textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle2)),
+                    UIHelper.horizontalSpaceSmall,
                     Expanded(
                         flex: 2,
                         child: Text(AppLocalizations.of(context).date,
-                            style: Theme.of(context).textTheme.subtitle2))
+                            textAlign: TextAlign.right,
+                            style: Theme.of(context).textTheme.subtitle2)),
+                    UIHelper.horizontalSpaceMedium,
                   ],
                 ),
               ),
@@ -62,20 +69,24 @@ class MarketTradeDetailView extends StatelessWidget {
           itemCount: marketTrades.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-             
               color: marketTrades[index].bidOrAsk ? buyOrders : sellOrders,
               padding: EdgeInsets.all(4.0),
               margin: EdgeInsets.only(bottom: 1.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   UIHelper.horizontalSpaceSmall,
+                  UIHelper.horizontalSpaceSmall,
                   Expanded(
-                      flex: 3,
+                      flex: 1,
                       child: Text(marketTrades[index].price.toStringAsFixed(5),
+                          textAlign: TextAlign.right,
                           style: Theme.of(context).textTheme.headline6)),
+                  UIHelper.horizontalSpaceMedium,
                   Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Text(marketTrades[index].amount.toStringAsFixed(6),
+                          textAlign: TextAlign.right,
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 2,
@@ -83,7 +94,9 @@ class MarketTradeDetailView extends StatelessWidget {
                           NumberUtil()
                               .timeFormatted(marketTrades[index].time)
                               .toString(),
+                          textAlign: TextAlign.right,
                           style: Theme.of(context).textTheme.headline6)),
+                  UIHelper.verticalSpaceMedium
                 ],
               ),
             );
