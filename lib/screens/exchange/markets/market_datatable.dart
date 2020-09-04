@@ -20,15 +20,6 @@ class _MarketDataTableState extends State<MarketDataTable> {
   List<Price> cpPairList;
 
   final NavigationService navigationService = locator<NavigationService>();
-  final List titles = [
-    'Ticker',
-    'Price',
-    'High',
-    'Low',
-    'Change',
-  ];
-
-  // List titles;
 
   bool _sortNameAsc = true;
   bool _sortPriceAsc = true;
@@ -41,13 +32,6 @@ class _MarketDataTableState extends State<MarketDataTable> {
 
   @override
   void initState() {
-    // titles = [
-    //   AppLocalizations.of(context).ticker,
-    //   AppLocalizations.of(context).price,
-    //   AppLocalizations.of(context).high,
-    //   AppLocalizations.of(context).low,
-    //   AppLocalizations.of(context).change,
-    // ];
     super.initState();
   }
 
@@ -122,11 +106,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     _sortAsc = _sortPriceAsc;
                   }
                   if (sortAscending) {
-                    pairList.sort((a, b) =>
-                        a.price.compareTo(b.price));
+                    pairList.sort((a, b) => a.price.compareTo(b.price));
                   } else {
-                    pairList.sort((a, b) =>
-                        b.price.compareTo(a.price));
+                    pairList.sort((a, b) => b.price.compareTo(a.price));
                   }
                 });
               },
@@ -148,11 +130,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     _sortAsc = _sortHighAsc;
                   }
                   if (sortAscending) {
-                    pairList.sort((a, b) =>
-                        a.high.compareTo(b.high));
+                    pairList.sort((a, b) => a.high.compareTo(b.high));
                   } else {
-                    pairList.sort((a, b) =>
-                        b.high.compareTo(a.high));
+                    pairList.sort((a, b) => b.high.compareTo(a.high));
                   }
                 });
               },
@@ -174,11 +154,9 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     _sortAsc = _sortLowAsc;
                   }
                   if (sortAscending) {
-                    pairList.sort(
-                        (a, b) => a.low.compareTo(b.low));
+                    pairList.sort((a, b) => a.low.compareTo(b.low));
                   } else {
-                    pairList.sort(
-                        (a, b) => b.low.compareTo(a.low));
+                    pairList.sort((a, b) => b.low.compareTo(a.low));
                   }
                 });
               },
@@ -200,43 +178,14 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     _sortAsc = _sortChangeAsc;
                   }
                   if (sortAscending) {
-                    pairList.sort((a, b) =>
-                        a.change.compareTo(b.change));
+                    pairList.sort((a, b) => a.change.compareTo(b.change));
                   } else {
-                    pairList.sort((a, b) =>
-                        b.change.compareTo(a.change));
+                    pairList.sort((a, b) => b.change.compareTo(a.change));
                   }
                 });
               },
             ),
           ],
-
-          // titles
-          //     .map(
-          //       (e) => DataColumn(
-          //         label: Container(
-          //           width: titles[0] == e
-          //               ? MediaQuery.of(context).size.width * 3 / 11
-          //               : MediaQuery.of(context).size.width * 2 / 11,
-          //           child: Text(
-          //             e,
-          //             style: Theme.of(context).textTheme.subtitle2.copyWith(fontSize:14),
-          //           ),
-          //         ),
-          //         onSort: (columnIndex, ascending) {
-          //           if(){
-
-          //           }
-          //           setState(() {
-          //             sort.map((e) => {e == false});
-          //             sort[columnIndex] = true;
-          //             _sortColumnIndex = columnIndex;
-          //           });
-          //           onSortColum(columnIndex, ascending);
-          //         },
-          //       ),
-          //     )
-          //     .toList(),
           rows: pairList
               .map((itemRow) => DataRow(
                     cells: <DataCell>[
@@ -346,79 +295,3 @@ class _MarketDataTableState extends State<MarketDataTable> {
     );
   }
 }
-
-// DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 3 / 11,
-//               child: Text(
-//                 titles[0],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),
-//           DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 2 / 11,
-//               child: Text(
-//                 titles[1],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),
-//           DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 2 / 11,
-//               child: Text(
-//                 titles[2],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),
-//           DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 2 / 11,
-//               child: Text(
-//                 titles[3],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),
-//           DataColumn(
-//             label: Container(
-//               width: MediaQuery.of(context).size.width * 2 / 11,
-//               child: Text(
-//                 titles[0],
-//                 style: Theme.of(context).textTheme.subtitle2,
-//               ),
-//             ),
-//             onSort: (columnIndex, ascending) {
-//               setState(() {
-//                 sort = !sort;
-//               });
-//               onSortColum(columnIndex, ascending);
-//             },
-//           ),

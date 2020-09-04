@@ -69,6 +69,30 @@ class NumberUtil {
 
     return result;
   }
+
+// Time Format
+  timeFormatted(timeStamp) {
+    var time = DateTime.fromMillisecondsSinceEpoch(timeStamp * 1000);
+    return addZeroInFrontForSingleDigit(time.hour.toString()) +
+        ':' +
+        addZeroInFrontForSingleDigit(time.minute.toString()) +
+        ':' +
+        addZeroInFrontForSingleDigit(time.second.toString());
+  }
+
+  String addZeroInFrontForSingleDigit(String value) {
+    String holder = '';
+    if (value.length == 1) {
+      holder = '0$value';
+    } else {
+      holder = value;
+    }
+
+    return holder;
+  }
+
+  // check decimal places more than 6
+  checkDecimal(double value) {}
 }
 
 class DecimalTextInputFormatter extends TextInputFormatter {
