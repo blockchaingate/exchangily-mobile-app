@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import "package:flutter/material.dart";
 import 'package:exchangilymobileapp/localizations.dart';
 import '../../../shared/globals.dart' as globals;
@@ -59,6 +60,7 @@ class AssetssList extends StatelessWidget {
                 itemBuilder: (BuildContext context, int index) {
                   return Row(
                     children: [
+                      UIHelper.horizontalSpaceSmall,
                       Expanded(
                         flex: 2,
                         child: Padding(
@@ -90,55 +92,5 @@ class AssetssList extends StatelessWidget {
         ],
       ),
     );
-
-    // Row(
-    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-    //   children: <Widget>[
-    //     Column(
-    //       children: <Widget>[
-    //         Text(AppLocalizations.of(context).coin,
-    //             style: TextStyle(
-    //               color: globals.grey,
-    //               fontSize: 12.0,
-    //             )),
-    //         for (var item in assetsArray)
-    //           Padding(
-    //               padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-    //               child: Text(item["coin"],
-    //                   style: TextStyle(color: Colors.white70, fontSize: 14.0)))
-    //       ],
-    //     ),
-    //     Column(
-    //       children: <Widget>[
-    //         Text(AppLocalizations.of(context).amount,
-    //             style: TextStyle(
-    //               color: globals.grey,
-    //               fontSize: 12.0,
-    //             )),
-    //         for (var item in assetsArray)
-    //           Padding(
-    //               padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-    //               child: Text(item["amount"].toString(),
-    //                   style:
-    //                       new TextStyle(color: Colors.white70, fontSize: 14.0)))
-    //       ],
-    //     ),
-    //     Column(
-    //       children: <Widget>[
-    //         Text(AppLocalizations.of(context).lockedAmount,
-    //             style: TextStyle(
-    //               color: globals.grey,
-    //               fontSize: 12.0,
-    //             )),
-    //         for (var item in assetsArray)
-    //           Padding(
-    //               padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-    //               child: Text(item["lockedAmount"].toString(),
-    //                   style:
-    //                       new TextStyle(color: Colors.white70, fontSize: 14.0)))
-    //       ],
-    //     )
-    //   ],
-    // );
   }
 }

@@ -142,6 +142,7 @@ class OrderDetailsView extends StatelessWidget {
         color: isBuy ? buyOrders : sellOrders,
         child: isBuy
             ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
                       child: Text(
