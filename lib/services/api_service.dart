@@ -149,7 +149,7 @@ class ApiService {
     return ethGasPrice;
   }
 /*----------------------------------------------------------------------
-                Transaction status
+                      Transaction status
 ----------------------------------------------------------------------*/
 
   Future getTransactionStatus(String transactionId) async {
@@ -167,7 +167,7 @@ class ApiService {
   }
 
 /*-------------------------------------------------------------------------------------
-                                  Get all wallet balance
+                      Get all wallet balance
 -------------------------------------------------------------------------------------*/
 
   Future<List<WalletBalance>> getWalletBalance(body) async {
@@ -193,8 +193,25 @@ class ApiService {
     }
   }
 
+/*----------------------------------------------------------------------
+                Get Current Market Price For The Coin By Name
+----------------------------------------------------------------------*/
+
+  Future<double> getCoinMarketPriceByTickerName(String tickerName) async {
+    double currentTickerUsdValue = 0;
+    if (tickerName == 'DUSD') {
+      return currentTickerUsdValue = 1.0;
+    }
+    await getCoinCurrencyUsdPrice().then((res) {
+      if (res != null) {
+        currentTickerUsdValue = res['data'][tickerName]['USD'].toDouble();
+      }
+    });
+    return currentTickerUsdValue;
+  }
+
 /*-------------------------------------------------------------------------------------
-                                    Get coin currency Usd Prices
+                      Get coin currency Usd Prices
 -------------------------------------------------------------------------------------*/
 
   Future getCoinCurrencyUsdPrice() async {
