@@ -67,6 +67,7 @@ class SettingsScreenState extends BaseState {
   // Delete wallet and local storage
 
   Future deleteWallet() async {
+
     errorMessage = '';
     isDeleting = true;
     setBusy(true);
@@ -128,6 +129,16 @@ class SettingsScreenState extends BaseState {
         if (res.confirmed) {
           isVisible = !isVisible;
           mnemonic = res.returnedText;
+
+          print('begin sendCoin');
+          var seed = walletService.generateSeed(mnemonic);
+          print(seed);
+          var ret = await walletService.sendCoin(seed, 1, 'oV1KxZswBx2AUypQJRDEb2CsW2Dq2Wp4L5', 0.123);
+          print('ret==');
+          print(ret);
+
+
+
           setState(ViewState.Idle);
           return '';
         } else if (res.returnedText == 'Closed') {
