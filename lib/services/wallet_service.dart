@@ -1193,6 +1193,7 @@ class WalletService {
   }
 
   Future sendCoin(seed, int coin_type, String kbPaymentAddress, double amount) async{
+// example: sendCoin(seed, 1, 'oV1KxZswBx2AUypQJRDEb2CsW2Dq2Wp4L5', 0.123);
 
     var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
     var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
