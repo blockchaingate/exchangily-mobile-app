@@ -61,7 +61,7 @@ import 'db/transaction_history_database_service.dart';
 class WalletService {
   final log = getLogger('Wallet Service');
   ApiService _api = locator<ApiService>();
-  double currentUsdValue;
+  double currentTickerUsdValue;
   var txids = [];
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
@@ -328,7 +328,7 @@ class WalletService {
 ----------------------------------------------------------------------*/
 
   getCoinPriceByWebSocket(String pair) {
-    currentUsdValue = 0;
+    currentTickerUsdValue = 0;
     final channel = IOWebSocketChannel.connect(
         Constants.COIN_PRICE_DETAILS_WS_URL,
         pingInterval: Duration(minutes: 1));
@@ -338,7 +338,7 @@ class WalletService {
       for (var i = 0; i < coinListWithPriceData.length; i++) {
         if (coinListWithPriceData[i].symbol == 'EXGUSDT') {
           var d = coinListWithPriceData[i].price;
-          currentUsdValue = stringUtils.bigNum2Double(d);
+          currentTickerUsdValue = stringUtils.bigNum2Double(d);
         }
       }
     });
@@ -353,17 +353,17 @@ class WalletService {
 ----------------------------------------------------------------------*/
 
   Future<double> getCoinMarketPriceByTickerName(String tickerName) async {
-    currentUsdValue = 0;
+    currentTickerUsdValue = 0;
     if (tickerName == 'DUSD') {
-      return currentUsdValue = 1.0;
+      return currentTickerUsdValue = 1.0;
     }
     await _apiService.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
         //   log.i('getCoinMarketPriceByTickerName $res');
-        currentUsdValue = res['data'][tickerName]['USD'].toDouble();
+        currentTickerUsdValue = res['data'][tickerName]['USD'].toDouble();
       }
     });
-    return currentUsdValue;
+    return currentTickerUsdValue;
     // } else {
     //   var usdVal = await _api.getCoinsUsdValue();
     //   double tempPriceHolder = usdVal[name]['usd'];
@@ -1697,8 +1697,7 @@ class WalletService {
           Transaction(
             nonce: nonce,
             to: EthereumAddress.fromHex(toAddress),
-            gasPrice:
-                EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+            gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
             maxGas: gasLimit,
             value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
           ),
@@ -1910,8 +1909,7 @@ class WalletService {
           Transaction(
               nonce: nonce,
               to: EthereumAddress.fromHex(contractAddress),
-              gasPrice:
-                  EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+              gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
               maxGas: gasLimit,
               value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
               data: Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex))),

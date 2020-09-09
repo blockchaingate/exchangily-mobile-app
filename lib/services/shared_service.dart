@@ -35,7 +35,7 @@ class SharedService {
   NavigationService navigationService = locator<NavigationService>();
   final log = getLogger('SharedService');
 
-/* ---------------------------------------------------
+/*---------------------------------------------------
             Launch link urls
 --------------------------------------------------- */
 
@@ -68,7 +68,7 @@ class SharedService {
         child: Platform.isIOS
             ? Container(
                 decoration: BoxDecoration(
-                color: grey.withAlpha(125),
+                    color: grey.withAlpha(125),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 width: 30,
                 height: 30,
