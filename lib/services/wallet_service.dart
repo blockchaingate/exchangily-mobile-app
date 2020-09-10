@@ -1197,7 +1197,8 @@ class WalletService {
 
     var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
     var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
-    var amountInLink = BigInt.from(amount * 1e18);
+    //var amountInLink = BigInt.from(amount * 1e18);
+    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount, 18));
     var txHex = await txHexforSendCoin(seed, coin_type, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
     log.e('txhex $txHex');
     var resKanban = await sendKanbanRawTransaction(txHex);
