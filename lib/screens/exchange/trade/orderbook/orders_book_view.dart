@@ -53,7 +53,7 @@ class OrderBookView extends StatelessWidget {
                               orderBook.indexOf(orders) == 0
                                   ? Container(
                                       width: MediaQuery.of(context).size.width /
-                                          2.2,
+                                          2.25,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -73,7 +73,7 @@ class OrderBookView extends StatelessWidget {
                                     )
                                   : Container(
                                       width: MediaQuery.of(context).size.width /
-                                          2.2,
+                                          2.25,
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
