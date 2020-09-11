@@ -13,7 +13,7 @@
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/screens/bindpay/bindpay_dashboard.dart';
+import 'package:exchangilymobileapp/screens/bindpay/bindpay_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
@@ -223,7 +223,7 @@ class RouteGenerator {
       case '/switchLanguage':
         return MaterialPageRoute(builder: (_) => LanguageScreen());
       case '/bindpay':
-        return MaterialPageRoute(builder: (_) => BindpayDashboardView());
+        return MaterialPageRoute(builder: (_) => BindpayView());
 
       default:
         return _errorRoute(settings);

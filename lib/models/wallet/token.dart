@@ -11,25 +11,23 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:flutter/material.dart';
-
 class Token {
   int _decimal;
   String _name;
   String _tickerName;
-  String _tokenType;
+  int _tokenType;
   String _contract;
-  int _minWithdraw;
-  int _feeWithdraw;
+  String _minWithdraw;
+  String _feeWithdraw;
 
   Token(
       {int decimal,
       String name,
       String tickerName,
-      String tokenType,
+      int tokenType,
       String contract,
-      int minwithdraw,
-      int feewithdraw}) {
+      String minwithdraw,
+      String feewithdraw}) {
     this._decimal = decimal;
     this._name = name;
     this._tickerName = tickerName;
@@ -51,7 +49,7 @@ class Token {
     return new Token(
         decimal: json['decimal'] as int,
         tickerName: json['tickerName'] as String,
-        tokenType: json['tokenType'] as String,
+        tokenType: json['type'] as int,
         contract: json['contract'] as String,
         minwithdraw: json['minwithdraw'],
         feewithdraw: json['feeWithdraw']);
@@ -63,7 +61,7 @@ class Token {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['decimal'] = this._decimal;
     data['tickerName'] = this._tickerName;
-    data['tokenType'] = this._tokenType;
+    data['type'] = this._tokenType;
     data['contract'] = this._contract;
     data['minwithdraw'] = this._minWithdraw;
     data['feeWithdraw'] = this._feeWithdraw;
@@ -88,9 +86,9 @@ class Token {
     this._tickerName = tickerName;
   }
 
-  String get tokenType => _tokenType;
+  int get tokenType => _tokenType;
 
-  set tokenType(String tokenType) {
+  set tokenType(int tokenType) {
     this._tokenType = tokenType;
   }
 
@@ -100,15 +98,15 @@ class Token {
     this._contract = contract;
   }
 
-  int get minwithdraw => minwithdraw;
+  String get minwithdraw => minwithdraw;
 
-  set minwithdraw(int minwithdraw) {
+  set minwithdraw(String minwithdraw) {
     this.minwithdraw = minwithdraw;
   }
 
-  int get feeWithdraw => feeWithdraw;
+  String get feeWithdraw => feeWithdraw;
 
-  set feeWithdraw(int feeWithdraw) {
+  set feeWithdraw(String feeWithdraw) {
     this.feeWithdraw = feeWithdraw;
   }
 }

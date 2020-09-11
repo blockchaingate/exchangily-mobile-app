@@ -14,7 +14,7 @@
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
-import 'package:exchangilymobileapp/models/wallet/token_list.dart';
+import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 
@@ -60,10 +60,9 @@ class ApiService {
       var parsedTokenList = data['tokenList'] as List;
       log.w('getTokenList  $parsedTokenList');
       TokenList tokenList = TokenList.fromJson(parsedTokenList);
-      if (data['tokenList'] == null) return null;
       return tokenList.tokens;
     } catch (err) {
-      log.e('getTokenList $err');
+      log.e('getTokenList CATCH $err');
       throw Exception(err);
     }
   }

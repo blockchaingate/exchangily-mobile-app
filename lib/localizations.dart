@@ -24,7 +24,6 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-
   // Generic Items
   String get title {
     return Intl.message('Exchangily Wallet',
@@ -1540,9 +1539,13 @@ class AppLocalizations {
         name: 'serverBusy', desc: 'campaign_list_serverBusy');
   }
 
-    String get flashPay {
-    return Intl.message("Flash Pay",
-        name: 'flashPay', desc: 'flash_pay');
+  String get flashPay {
+    return Intl.message("Flash Pay", name: 'flashPay', desc: 'flash_pay');
+  }
+
+  String get tranfser {
+    return Intl.message("Tranfser",
+        name: 'tranfser', desc: 'flash_pay_tranfser');
   }
 }
 
