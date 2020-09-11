@@ -1539,6 +1539,11 @@ class AppLocalizations {
     return Intl.message("Server Busy",
         name: 'serverBusy', desc: 'campaign_list_serverBusy');
   }
+
+    String get flashPay {
+    return Intl.message("Flash Pay",
+        name: 'flashPay', desc: 'flash_pay');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
