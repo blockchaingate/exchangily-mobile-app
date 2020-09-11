@@ -10,6 +10,7 @@ class BindpayViewmodel extends FutureViewModel {
   final log = getLogger('BindpayViewmodel');
 
   final amountController = TextEditingController();
+  final addressController = TextEditingController();
   ApiService apiService = locator<ApiService>();
   NavigationService navigationService = locator<NavigationService>();
   String tickerName = '';
@@ -22,21 +23,23 @@ class BindpayViewmodel extends FutureViewModel {
 
   @override
   void onData(data) {
-    log.e(data);
+    tickerNameList = [];
     List<Token> tokenList = data as List<Token>;
     tokenList.forEach((token) {
       log.i('token ${token.toJson()}');
       tickerNameList.add(token.tickerName);
     });
-    log.w('tickerNameList $tickerNameList');
-    tickerName = tickerNameList[0];
+    updateSelectedTickername('EXG');
+
+    log.w('tickerNameList $tickerNameList ---- tickerName $tickerName');
   }
 
   checkPass() {}
 
-  updateSelectedTickername(String tickerName) {
+  updateSelectedTickername(String name) {
     setBusy(true);
-    tickerName = tickerName;
+    tickerName = name;
+    print('tickerName $tickerName');
     setBusy(false);
   }
 }

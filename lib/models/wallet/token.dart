@@ -26,15 +26,15 @@ class Token {
       String tickerName,
       int tokenType,
       String contract,
-      String minwithdraw,
-      String feewithdraw}) {
+      String minWithdraw,
+      String feeWithdraw}) {
     this._decimal = decimal;
     this._name = name;
     this._tickerName = tickerName;
     this._tokenType = tokenType;
     this._contract = contract;
-    this._minWithdraw = _minWithdraw;
-    this._feeWithdraw = feewithdraw;
+    this._minWithdraw = minWithdraw;
+    this._feeWithdraw = feeWithdraw;
   }
 
   factory Token.fromJson(Map<String, dynamic> json) {
@@ -51,8 +51,8 @@ class Token {
         tickerName: json['tickerName'] as String,
         tokenType: json['type'] as int,
         contract: json['contract'] as String,
-        minwithdraw: json['minwithdraw'],
-        feewithdraw: json['feeWithdraw']);
+        minWithdraw: json['minWithdraw'],
+        feeWithdraw: json['feeWithdraw']);
   }
 
   // To json
@@ -63,7 +63,7 @@ class Token {
     data['tickerName'] = this._tickerName;
     data['type'] = this._tokenType;
     data['contract'] = this._contract;
-    data['minwithdraw'] = this._minWithdraw;
+    data['minWithdraw'] = this._minWithdraw;
     data['feeWithdraw'] = this._feeWithdraw;
     return data;
   }
@@ -98,10 +98,10 @@ class Token {
     this._contract = contract;
   }
 
-  String get minwithdraw => minwithdraw;
+  String get minWithdraw => minWithdraw;
 
-  set minwithdraw(String minwithdraw) {
-    this.minwithdraw = minwithdraw;
+  set minWithdraw(String minWithdraw) {
+    this.minWithdraw = minWithdraw;
   }
 
   String get feeWithdraw => feeWithdraw;

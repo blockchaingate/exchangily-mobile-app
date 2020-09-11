@@ -32,47 +32,54 @@ class BindpayView extends StatelessWidget {
                                 ))
                               :
                               // Coin list dropdown
-                              DropdownButtonHideUnderline(
-                                  child: model.tickerNameList == null
-                                      ? Center(
-                                          child: CircularProgressIndicator(
-                                          backgroundColor: yellow,
-                                        ))
-                                      : DropdownButton(
-                                          iconEnabledColor: primaryColor,
-                                          iconSize: 26,
-                                          hint: Text(
-                                            AppLocalizations.of(context)
-                                                .changeWalletLanguage,
-                                            textAlign: TextAlign.center,
+                              Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: primaryColor,
+                                    ),
+                                  ),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                        elevation: 5,
+                                        isExpanded: true,
+                                        icon: Icon(Icons.arrow_drop_down),
+                                        iconEnabledColor: primaryColor,
+                                        iconSize: 22,
+                                        hint: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: Text(
+                                            AppLocalizations.of(context).coin,
+                                            textAlign: TextAlign.start,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5,
                                           ),
-                                          value: model.tickerName,
-                                          onChanged: (newValue) {
-                                            model.updateSelectedTickername(
-                                                newValue);
+                                        ),
+                                        value: model.tickerName,
+                                        onChanged: (newValue) {
+                                          model.updateSelectedTickername(
+                                              newValue);
+                                        },
+                                        items: model.tickerNameList.map(
+                                          (tickerName) {
+                                            return DropdownMenuItem(
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10.0),
+                                                child: Text(
+                                                    tickerName.toString(),
+                                                    textAlign: TextAlign.center,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6),
+                                              ),
+                                              value: tickerName,
+                                            );
                                           },
-                                          items: [
-                                              for (var i;
-                                                  i <
-                                                      model.tickerNameList
-                                                          .length;
-                                                  i++)
-                                                DropdownMenuItem(
-                                                  child: Text(
-                                                      model.tickerNameList[i]
-                                                          .toString(),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6),
-                                                  value:
-                                                      model.tickerNameList[0],
-                                                )
-                                            ]),
+                                        ).toList()),
+                                  ),
                                 ),
                           // Receiver Address textfield
                           UIHelper.verticalSpaceSmall,
@@ -80,20 +87,15 @@ class BindpayView extends StatelessWidget {
                               keyboardType: TextInputType.text,
                               decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                      borderSide: new BorderSide(
+                                      borderSide: BorderSide(
                                           color: Color(0XFF871fff),
                                           width: 1.0)),
                                   hintText: AppLocalizations.of(context)
                                       .recieveAddress,
-                                  hintStyle: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(fontWeight: FontWeight.w300)),
-                              controller: model.amountController,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.w300)),
+                                  hintStyle:
+                                      Theme.of(context).textTheme.headline5),
+                              controller: model.addressController,
+                              style: Theme.of(context).textTheme.headline5),
                           // Transfer amount textfield
                           UIHelper.verticalSpaceSmall,
                           TextField(
@@ -101,20 +103,15 @@ class BindpayView extends StatelessWidget {
                                   decimal: true),
                               decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
-                                      borderSide: new BorderSide(
+                                      borderSide: BorderSide(
                                           color: Color(0XFF871fff),
                                           width: 1.0)),
                                   hintText:
                                       AppLocalizations.of(context).enterAmount,
-                                  hintStyle: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(fontWeight: FontWeight.w300)),
+                                  hintStyle:
+                                      Theme.of(context).textTheme.headline5),
                               controller: model.amountController,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.w300)),
+                              style: Theme.of(context).textTheme.headline5),
 
                           UIHelper.verticalSpaceMedium,
 
