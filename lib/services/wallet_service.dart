@@ -57,6 +57,8 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'db/transaction_history_database_service.dart';
+import 'package:exchangilymobileapp/utils/exaddr.dart';
+import 'package:http/http.dart' as http;
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -1162,6 +1164,47 @@ class WalletService {
 ----------------------------------------------------------------------*/
   Future getErrDeposit(String address) {
     return getKanbanErrDeposit(address);
+  }
+
+  toKbPaymentAddress(String fabAddress) {
+    return toKbpayAddress(fabAddress);
+  }
+
+
+  Future txHexforSendCoin(seed, coin_type, kbPaymentAddress, amount, kanbanGasPrice, kanbanGasLimit) async {
+
+    var abiHex = getSendCoinFuncABI(
+        coin_type, kbPaymentAddress, amount);
+
+    var keyPairKanban = getExgKeyPair(seed);
+    var address = keyPairKanban['address'];
+    var nonce = await getNonce(address);
+
+    var coinpoolAddress = await getCoinPoolAddress();
+
+    var txKanbanHex = await signAbiHexWithPrivateKey(
+        abiHex,
+        HEX.encode(keyPairKanban["privateKey"]),
+        coinpoolAddress,
+        nonce,
+        kanbanGasPrice,
+        kanbanGasLimit);
+    print('end txHexforSendCoin');
+    return txKanbanHex;
+  }
+
+  Future sendCoin(seed, int coin_type, String kbPaymentAddress, double amount) async{
+// example: sendCoin(seed, 1, 'oV1KxZswBx2AUypQJRDEb2CsW2Dq2Wp4L5', 0.123);
+
+    var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
+    var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
+    //var amountInLink = BigInt.from(amount * 1e18);
+    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount, 18));
+    var txHex = await txHexforSendCoin(seed, coin_type, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
+    log.e('txhex $txHex');
+    var resKanban = await sendKanbanRawTransaction(txHex);
+    print('resKanban=');
+    print(resKanban);
   }
 
 /*----------------------------------------------------------------------

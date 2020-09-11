@@ -67,6 +67,7 @@ class SettingsScreenState extends BaseState {
   // Delete wallet and local storage
 
   Future deleteWallet() async {
+
     errorMessage = '';
     isDeleting = true;
     setBusy(true);
@@ -128,6 +129,7 @@ class SettingsScreenState extends BaseState {
         if (res.confirmed) {
           isVisible = !isVisible;
           mnemonic = res.returnedText;
+
           setState(ViewState.Idle);
           return '';
         } else if (res.returnedText == 'Closed') {
