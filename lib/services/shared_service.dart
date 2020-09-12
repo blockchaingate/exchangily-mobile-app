@@ -389,10 +389,18 @@ class SharedService {
                 Copy Address
 --------------------------------------------------- */
 
-  void copyAddress(context, text) {
+  copyAddress(context, text) {
     Clipboard.setData(new ClipboardData(text: text));
-    alertDialog(AppLocalizations.of(context).transactionId,
-        AppLocalizations.of(context).copiedSuccessfully,
-        isWarning: false);
+    Flushbar(
+      backgroundColor: globals.secondaryColor.withOpacity(0.75),
+      message: AppLocalizations.of(context).addressCopied,
+      icon: Icon(
+        Icons.done,
+        size: 24,
+        color: globals.primaryColor,
+      ),
+      leftBarIndicatorColor: globals.green,
+      duration: Duration(seconds: 4),
+    ).show(context);
   }
 }

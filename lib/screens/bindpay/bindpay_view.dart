@@ -12,7 +12,9 @@ class BindpayView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<BindpayViewmodel>.reactive(
         viewModelBuilder: () => BindpayViewmodel(),
-        onModelReady: (model) {},
+        onModelReady: (model) {
+          model.context = context;
+        },
         builder: (context, model, _) => Scaffold(
               appBar: AppBar(title: Text('Bindpay'), centerTitle: true),
               body: Container(
@@ -25,21 +27,20 @@ class BindpayView extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          !model.dataReady
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                  backgroundColor: red,
-                                ))
-                              :
-                              // Coin list dropdown
-                              Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: primaryColor,
-                                    ),
-                                  ),
-                                  width: MediaQuery.of(context).size.width,
-                                  child: DropdownButtonHideUnderline(
+                          // Coin list dropdown
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: primaryColor,
+                              ),
+                            ),
+                            width: MediaQuery.of(context).size.width,
+                            child: !model.dataReady
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                    backgroundColor: yellow,
+                                  ))
+                                : DropdownButtonHideUnderline(
                                     child: DropdownButton(
                                         elevation: 5,
                                         isExpanded: true,
@@ -80,7 +81,7 @@ class BindpayView extends StatelessWidget {
                                           },
                                         ).toList()),
                                   ),
-                                ),
+                          ),
                           // Receiver Address textfield
                           UIHelper.verticalSpaceSmall,
                           TextField(
@@ -124,7 +125,9 @@ class BindpayView extends StatelessWidget {
                                   color: primaryColor,
                                   textColor: Colors.white,
                                   onPressed: () {
-                                    model.checkPass();
+                                    model.isBusy
+                                        ? print('busy')
+                                        : model.checkPass();
                                   },
                                   child: model.isBusy
                                       ? SizedBox(
@@ -149,22 +152,15 @@ class BindpayView extends StatelessWidget {
                                   color: primaryColor,
                                   textColor: Colors.white,
                                   onPressed: () {
-                                    model.navigationService.navigateTo(
-                                        '/receive',
-                                        arguments: model.tickerName);
+                                    model.isBusy
+                                        ? print('busy')
+                                        : model.showBarcode();
                                   },
-                                  child: model.isBusy
-                                      ? SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 1,
-                                          ))
-                                      : Text(
-                                          AppLocalizations.of(context).receive,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4),
+                                  child: Text(
+                                      AppLocalizations.of(context).receive,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline4),
                                 ),
                               ),
                             ],
