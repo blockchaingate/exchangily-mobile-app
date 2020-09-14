@@ -1,4 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/environments/coins.dart' as coinList;
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
@@ -6,11 +11,13 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
 class BindpayViewmodel extends FutureViewModel {
@@ -21,6 +28,7 @@ class BindpayViewmodel extends FutureViewModel {
   ApiService apiService = locator<ApiService>();
   NavigationService navigationService = locator<NavigationService>();
   SharedService sharedService = locator<SharedService>();
+  DialogService dialogService = locator<DialogService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
   WalletService walletService = locator<WalletService>();
@@ -28,7 +36,7 @@ class BindpayViewmodel extends FutureViewModel {
   List<String> tickerNameList = [];
   BuildContext context;
   double quantity = 0.0;
-  List<Map<String, dynamic>> coins =[];
+  List<Map<String, dynamic>> coins = [];
 /*----------------------------------------------------------------------
                     Default Future to Run
 ----------------------------------------------------------------------*/
@@ -58,10 +66,6 @@ class BindpayViewmodel extends FutureViewModel {
 /*----------------------------------------------------------------------
                     Check password
 ----------------------------------------------------------------------*/
-
-  checkPass() {
-    log.i('check Pass');
-  }
 
 /*----------------------------------------------------------------------
                     Update Selected Tickername
@@ -129,5 +133,60 @@ class BindpayViewmodel extends FutureViewModel {
       );
     });
     setBusy(false);
+  }
+
+  transfer() async {
+    if (addressController.text.startsWith('o')) {
+      int coinType = walletService.getCoinTypeIdByName(tickerName);
+      print(coinType);
+      await dialogService
+          .showDialog(
+              title: AppLocalizations.of(context).enterPassword,
+              description: AppLocalizations.of(context)
+                  .dialogManagerTypeSamePasswordNote,
+              buttonTitle: AppLocalizations.of(context).confirm)
+          .then((res) async {
+        if (res.confirmed) {
+          String mnemonic = res.returnedText;
+          Uint8List seed = walletService.generateSeed(mnemonic);
+          await walletService
+              .txHexforSendCoin(
+                  seed,
+                  coinType,
+                  addressController.text,
+                  amountController.text,
+                  Constants.kanbanGasPrice,
+                  Constants.kanbanGasLimit)
+              .then((res) {
+            print('RES $res');
+          });
+        } else if (res.returnedText == 'Closed') {
+          log.e('Dialog Closed By User');
+          setBusy(false);
+        } else {
+          log.e('Wrong pass');
+          setBusy(false);
+          // return error =
+          //     AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+        }
+      }).catchError((error) {
+        log.e(error);
+        setBusy(false);
+        return false;
+      });
+    } else {
+      sharedService.alertDialog(
+          'Validation Error', 'Please enter the correct receive address');
+    }
+  }
+
+/*----------------------------------------------------------------------
+                    Content Paste
+----------------------------------------------------------------------*/
+
+  Future contentPaste() async {
+    await Clipboard.getData('text/plain')
+        .then((res) => addressController.text = res.text);
+    // sharedService.
   }
 }

@@ -1172,9 +1172,9 @@ class WalletService {
     return toKbpayAddress(fabAddress);
   }
 
-  Future txHexforSendCoin(seed, coin_type, kbPaymentAddress, amount,
+  Future txHexforSendCoin(seed, coinType, kbPaymentAddress, amount,
       kanbanGasPrice, kanbanGasLimit) async {
-    var abiHex = getSendCoinFuncABI(coin_type, kbPaymentAddress, amount);
+    var abiHex = getSendCoinFuncABI(coinType, kbPaymentAddress, amount);
 
     var keyPairKanban = getExgKeyPair(seed);
     var address = keyPairKanban['address'];

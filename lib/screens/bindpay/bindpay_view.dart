@@ -83,9 +83,15 @@ class BindpayView extends StatelessWidget {
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline6),
-                                                            UIHelper.horizontalSpaceSmall,
-                                                    Text(coin['quantity']
-                                                        .toString(),style: Theme.of(context).textTheme.bodyText1,)
+                                                    UIHelper
+                                                        .horizontalSpaceSmall,
+                                                    Text(
+                                                      coin['quantity']
+                                                          .toString(),
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyText1,
+                                                    )
                                                   ],
                                                 ),
                                               ),
@@ -100,6 +106,9 @@ class BindpayView extends StatelessWidget {
                           TextField(
                               keyboardType: TextInputType.text,
                               decoration: InputDecoration(
+                                  suffix: IconButton(
+                                      icon: Icon(Icons.content_paste,color: green,),
+                                      onPressed: () => model.contentPaste()),
                                   enabledBorder: OutlineInputBorder(
                                       borderSide: BorderSide(
                                           color: Color(0XFF871fff),
@@ -140,7 +149,7 @@ class BindpayView extends StatelessWidget {
                                   onPressed: () {
                                     model.isBusy
                                         ? print('busy')
-                                        : model.checkPass();
+                                        : model.transfer();
                                   },
                                   child: model.isBusy
                                       ? SizedBox(
