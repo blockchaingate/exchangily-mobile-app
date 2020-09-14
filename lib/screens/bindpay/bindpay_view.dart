@@ -44,9 +44,13 @@ class BindpayView extends StatelessWidget {
                                     child: DropdownButton(
                                         elevation: 5,
                                         isExpanded: true,
-                                        icon: Icon(Icons.arrow_drop_down),
+                                        icon: Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 8.0),
+                                          child: Icon(Icons.arrow_drop_down),
+                                        ),
                                         iconEnabledColor: primaryColor,
-                                        iconSize: 22,
+                                        iconSize: 30,
                                         hint: Padding(
                                           padding:
                                               const EdgeInsets.only(left: 10.0),
@@ -63,20 +67,29 @@ class BindpayView extends StatelessWidget {
                                           model.updateSelectedTickername(
                                               newValue);
                                         },
-                                        items: model.tickerNameList.map(
-                                          (tickerName) {
+                                        items: model.coins.map(
+                                          (coin) {
                                             return DropdownMenuItem(
                                               child: Padding(
                                                 padding: const EdgeInsets.only(
                                                     left: 10.0),
-                                                child: Text(
-                                                    tickerName.toString(),
-                                                    textAlign: TextAlign.center,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                        coin['tickerName']
+                                                            .toString(),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline6),
+                                                            UIHelper.horizontalSpaceSmall,
+                                                    Text(coin['quantity']
+                                                        .toString(),style: Theme.of(context).textTheme.bodyText1,)
+                                                  ],
+                                                ),
                                               ),
-                                              value: tickerName,
+                                              value: coin['tickerName'],
                                             );
                                           },
                                         ).toList()),

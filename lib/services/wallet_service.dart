@@ -435,7 +435,7 @@ class WalletService {
       TransactionHistory transactionHistory = new TransactionHistory();
       TransactionHistory transactionHistoryByTxId = new TransactionHistory();
       var res = await _apiService.getTransactionStatus(transaction.txId);
-      log.w(res);
+      log.w('checkDepositTransactionStatus $res');
 // 0 is confirmed
 // 1 is pending
 // 2 is failed (tx 1 failed),
@@ -444,7 +444,9 @@ class WalletService {
       if (res['code'] == -1 ||
           res['code'] == 0 ||
           res['code'] == 2 ||
-          res['code'] == 3) {
+          res['code'] == -2 ||
+          res['code'] == 3 ||
+          res['code'] == -3) {
         t.cancel();
         result = res['message'];
         log.i('Timer cancel');
@@ -491,7 +493,7 @@ class WalletService {
               tag: transactionHistoryByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
-        } else if (res['code'] == 2) {
+        } else if (res['code'] == 2 || res['code'] == 2) {
           transactionHistory = TransactionHistory(
               id: transactionHistoryByTxId.id,
               tickerName: transactionHistoryByTxId.tickerName,
@@ -504,7 +506,7 @@ class WalletService {
               tag: transactionHistoryByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
-        } else if (res['code'] == 3) {
+        } else if (res['code'] == -3 || res['code'] == 3) {
           transactionHistory = TransactionHistory(
               id: transactionHistoryByTxId.id,
               tickerName: transactionHistoryByTxId.tickerName,
@@ -1170,11 +1172,9 @@ class WalletService {
     return toKbpayAddress(fabAddress);
   }
 
-
-  Future txHexforSendCoin(seed, coin_type, kbPaymentAddress, amount, kanbanGasPrice, kanbanGasLimit) async {
-
-    var abiHex = getSendCoinFuncABI(
-        coin_type, kbPaymentAddress, amount);
+  Future txHexforSendCoin(seed, coin_type, kbPaymentAddress, amount,
+      kanbanGasPrice, kanbanGasLimit) async {
+    var abiHex = getSendCoinFuncABI(coin_type, kbPaymentAddress, amount);
 
     var keyPairKanban = getExgKeyPair(seed);
     var address = keyPairKanban['address'];
@@ -1193,14 +1193,16 @@ class WalletService {
     return txKanbanHex;
   }
 
-  Future sendCoin(seed, int coin_type, String kbPaymentAddress, double amount) async{
+  Future sendCoin(
+      seed, int coin_type, String kbPaymentAddress, double amount) async {
 // example: sendCoin(seed, 1, 'oV1KxZswBx2AUypQJRDEb2CsW2Dq2Wp4L5', 0.123);
 
     var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
     var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
     //var amountInLink = BigInt.from(amount * 1e18);
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount, 18));
-    var txHex = await txHexforSendCoin(seed, coin_type, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
+    var txHex = await txHexforSendCoin(
+        seed, coin_type, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
     log.e('txhex $txHex');
     var resKanban = await sendKanbanRawTransaction(txHex);
     print('resKanban=');

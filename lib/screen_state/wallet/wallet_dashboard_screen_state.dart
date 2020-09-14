@@ -592,7 +592,7 @@ class WalletDashboardScreenState extends BaseState {
       }
     });
 
-    log.i('Coin address $walletBalancesBody');
+    log.i('Coin address body $walletBalancesBody');
 
     // ----------------------------------------
     // Calling walletBalances in wallet service

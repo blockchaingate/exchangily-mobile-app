@@ -79,3 +79,5 @@ pubspec.lock
 assets/images/wallet-page/dusd.png
 .vscode/settings.json
 .vscode/launch.json
+ios/Flutter/.last_build_id
+ios/Podfile.lock

@@ -170,7 +170,7 @@ class ApiService {
 
   Future<List<WalletBalance>> getWalletBalance(body) async {
     String url = kanbanBaseUrl + walletBalances;
-    log.i(url);
+    log.i('getWalletBalance URL $url');
     WalletBalanceList balanceList;
     try {
       var response = await client.post(url, body: body);

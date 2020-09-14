@@ -2,6 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -26,12 +27,15 @@ class BindpayViewmodel extends FutureViewModel {
   String tickerName = '';
   List<String> tickerNameList = [];
   BuildContext context;
+  double quantity = 0.0;
+  List<Map<String, dynamic>> coins =[];
 /*----------------------------------------------------------------------
                     Default Future to Run
 ----------------------------------------------------------------------*/
   @override
   Future futureToRun() async {
-    return await apiService.getTokenList();
+    return await walletDataBaseService.getAll();
+    //apiService.getTokenList();
   }
 
 /*----------------------------------------------------------------------
@@ -40,11 +44,14 @@ class BindpayViewmodel extends FutureViewModel {
   @override
   void onData(data) {
     tickerNameList = [];
-    List<Token> tokenList = data as List<Token>;
-    tokenList.forEach((token) {
+    List<WalletInfo> tokenList = data as List<WalletInfo>;
+    tokenList.forEach((wallet) {
       // log.i('token ${token.toJson()}');
-      tickerNameList.add(token.tickerName);
+      coins.add(
+          {"tickerName": wallet.tickerName, "quantity": wallet.inExchange});
+      tickerNameList.add(wallet.tickerName);
     });
+    print(coins);
     updateSelectedTickername('EXG');
   }
 
@@ -56,6 +63,9 @@ class BindpayViewmodel extends FutureViewModel {
     log.i('check Pass');
   }
 
+/*----------------------------------------------------------------------
+                    Update Selected Tickername
+----------------------------------------------------------------------*/
   updateSelectedTickername(String name) {
     setBusy(true);
     tickerName = name;
@@ -67,8 +77,10 @@ class BindpayViewmodel extends FutureViewModel {
               Show dialog popup for receive address and barcode
 ----------------------------------------------------------------------*/
   showBarcode() {
-    walletDataBaseService.getBytickerName(tickerName).then((coin) {
+    setBusy(true);
+    walletDataBaseService.getBytickerName('FAB').then((coin) {
       String kbAddress = walletService.toKbPaymentAddress(coin.address);
+      print('KBADDRESS $kbAddress');
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -93,7 +105,7 @@ class BindpayViewmodel extends FutureViewModel {
                       ),
                     ),
                     IconButton(
-                        icon: Icon(Icons.copy),
+                        icon: Icon(Icons.copyright),
                         onPressed: () {
                           sharedService.copyAddress(context, kbAddress)();
                         })
@@ -116,5 +128,6 @@ class BindpayViewmodel extends FutureViewModel {
         },
       );
     });
+    setBusy(false);
   }
 }
