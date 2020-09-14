@@ -70,18 +70,18 @@ class TradeViewModel extends MultipleStreamViewModel {
   // Map<String, StreamData> res =
   //     tradeService.getMultipleStreams(pairPriceByRoute.symbol);
 
-  @override
-  @mustCallSuper
-  dispose() async {
-    setBusy(true);
-    isDisposing = true;
-    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
-    log.i('Close all IOWebsocket connections');
-    isDisposing = false;
-    setBusy(false);
-    navigationService.goBack();
-    super.dispose();
-  }
+  // @override
+  // @mustCallSuper
+  // dispose() async {
+  //   setBusy(true);
+  //   isDisposing = true;
+  //   await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
+  //   log.i('Close all IOWebsocket connections');
+  //   isDisposing = false;
+  //   setBusy(false);
+  //   navigationService.goBack();
+  //   super.dispose();
+  // }
 
   closeConnections() async {
     setBusy(true);
@@ -98,8 +98,14 @@ class TradeViewModel extends MultipleStreamViewModel {
     await getExchangeAssets();
     String holder = updateTickerName(pairPriceByRoute.symbol);
     String tickerWithoutBasePair = holder.split('/')[0];
-    usdValue =
-        await apiService.getCoinMarketPriceByTickerName(tickerWithoutBasePair);
+    if (holder.split('/')[1] == 'USDT' || holder.split('/')[1] == 'DUSD') {
+      usdValue = dataReady('allPrices')
+          ? currentPairPrice.price
+          : pairPriceByRoute.price;
+    } else {
+      usdValue = await apiService
+          .getCoinMarketPriceByTickerName(tickerWithoutBasePair);
+    }
   }
 
 // Change/update stream data before displaying on UI
@@ -175,7 +181,6 @@ class TradeViewModel extends MultipleStreamViewModel {
   @override
   void onCancel(String key) {
     log.e('Stream $key closed');
-    // getSubscriptionForKey(key).cancel();
   }
 
   // Order aggregation

@@ -43,7 +43,8 @@ class TradeView extends StatelessWidget {
                   leading: IconButton(
                     icon: Icon(Icons.arrow_back_ios),
                     onPressed: () {
-                      model.dispose();
+                      model.setBusy(true);
+                      Navigator.pop(context);
                     },
                   ),
                   title: Text(
@@ -300,7 +301,8 @@ class TradeView extends StatelessWidget {
                               color: buyPrice,
                               onPressed: () {
                                 if (model.currentPairPrice != null &&
-                                    model.dataReady(model.orderBookStreamKey))
+                                    model.dataReady(model.orderBookStreamKey) &&
+                                    !model.isBusy)
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -325,7 +327,8 @@ class TradeView extends StatelessWidget {
                                 side: BorderSide(color: sellPrice, width: 1)),
                             onPressed: () {
                               if (model.currentPairPrice != null &&
-                                  model.dataReady(model.orderBookStreamKey))
+                                  model.dataReady(model.orderBookStreamKey) &&
+                                  !model.isBusy)
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(

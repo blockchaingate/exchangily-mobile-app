@@ -44,7 +44,6 @@ class ApiService {
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
   final eventsUrl = environment["eventInfo"];
-  final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
 
 /*----------------------------------------------------------------------
                     Get Token List
