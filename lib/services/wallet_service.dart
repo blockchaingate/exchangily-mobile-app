@@ -1193,6 +1193,14 @@ class WalletService {
     return txKanbanHex;
   }
 
+  isValidKbAddress(String kbPaymentAddress) {
+    var fabAddress = '';
+    try {
+      fabAddress = toLegacyAddress(kbPaymentAddress);
+    } catch(e) {};
+    return (fabAddress != '');
+  }
+
   Future sendCoin(
       seed, int coin_type, String kbPaymentAddress, double amount) async {
 // example: sendCoin(seed, 1, 'oV1KxZswBx2AUypQJRDEb2CsW2Dq2Wp4L5', 0.123);
