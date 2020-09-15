@@ -150,13 +150,11 @@ class BindpayViewmodel extends FutureViewModel {
           String mnemonic = res.returnedText;
           Uint8List seed = walletService.generateSeed(mnemonic);
           await walletService
-              .txHexforSendCoin(
+              .sendCoin(
                   seed,
                   coinType,
                   addressController.text,
-                  amountController.text,
-                  Constants.kanbanGasPrice,
-                  Constants.kanbanGasLimit)
+                  double.parse(amountController.text))
               .then((res) {
             print('RES $res');
           });
