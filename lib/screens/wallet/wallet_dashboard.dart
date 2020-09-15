@@ -297,13 +297,15 @@ class WalletDashboardScreen extends StatelessWidget {
                             height: 30,
                             child: TextField(
                               decoration: InputDecoration(
+                                labelStyle: Theme.of(context).textTheme.subtitle2,
+                                labelText: 'Search tickername',
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: primaryColor, width: 1.0),
+                                        color: primaryColor, width: 0.55),
                                   ),
-                                  // helperText: 'Search',
-                                  // helperStyle:
-                                  //     Theme.of(context).textTheme.bodyText1,
+                                  helperText: 'Search',
+                                  helperStyle:
+                                      Theme.of(context).textTheme.bodyText1,
                                   suffixIcon: Icon(Icons.search, color: white)),
                               controller: model.searchCoinTextController,
                               onChanged: (String value) {
