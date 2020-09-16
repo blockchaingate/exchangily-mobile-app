@@ -59,14 +59,14 @@ dependencies:
   web_socket_channel: ^1.1.0
 
   # Json Serialization
-  json_serializable: ^2.2.1
+  # json_serializable: ^2.2.1
 
   # Generate QR Code Image
   qr_flutter: ^3.1.0
   qr: 1.2.0
 
   # Barcode Scan
-  barcode_scan: 1.0.0
+  barcode_scan: 3.0.1
 
   # Material icons
   material_design_icons_flutter: ^4.0.5345

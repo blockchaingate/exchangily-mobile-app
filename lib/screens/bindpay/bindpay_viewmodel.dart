@@ -136,6 +136,7 @@ class BindpayViewmodel extends FutureViewModel {
   }
 
   transfer() async {
+    setBusy(true);
     if (addressController.text.startsWith('o')) {
       int coinType = walletService.getCoinTypeIdByName(tickerName);
       print(coinType);
@@ -150,10 +151,7 @@ class BindpayViewmodel extends FutureViewModel {
           String mnemonic = res.returnedText;
           Uint8List seed = walletService.generateSeed(mnemonic);
           await walletService
-              .sendCoin(
-                  seed,
-                  coinType,
-                  addressController.text,
+              .sendCoin(seed, coinType, addressController.text,
                   double.parse(amountController.text))
               .then((res) {
             print('RES $res');
@@ -175,9 +173,10 @@ class BindpayViewmodel extends FutureViewModel {
     } else {
       sharedService.alertDialog(
           'Validation Error', 'Please enter the correct receive address');
+      setBusy(false);
     }
+    setBusy(false);
   }
-
 /*----------------------------------------------------------------------
                     Content Paste
 ----------------------------------------------------------------------*/

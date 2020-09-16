@@ -297,9 +297,10 @@ class WalletDashboardScreen extends StatelessWidget {
                             height: 30,
                             child: TextField(
                               decoration: InputDecoration(
+                               
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: primaryColor, width: 1.0),
+                                        color: primaryColor, width: 1),
                                   ),
                                   // helperText: 'Search',
                                   // helperStyle:

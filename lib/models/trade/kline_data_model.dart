@@ -7,9 +7,9 @@
  */
 
 // kline_package:lib/
-import 'package:json_annotation/json_annotation.dart';
+// import 'package:json_annotation/json_annotation.dart';
 
-@JsonSerializable()
+//@JsonSerializable()
 class MarketModel {
   MarketModel(this.open, this.high, this.low, this.close, this.vol, this.id);
   double open;
@@ -25,10 +25,10 @@ class MarketModel {
   Map<String, dynamic> toJson() => _marketModelToJson(this);
 }
 
-@JsonSerializable()
+//@JsonSerializable()
 class MarketData {
   MarketData(this.data);
-  @JsonKey(name: 'data')
+  //@JsonKey(name: 'data')
   List<MarketModel> data;
   factory MarketData.fromJson(json) =>
       _marketDataFromJson(json);
