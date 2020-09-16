@@ -40,58 +40,55 @@ class OrderBookView extends StatelessWidget {
                 // Buy/Sell Orders Column
                 for (var orders in orderBook)
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                   
                     children: <Widget>[
                       Container(
-                        color: walletCardColor,
-                        width: MediaQuery.of(context).size.width * 0.48,
+                    
                         padding: EdgeInsets.all(5.0),
                         // Quantity/Price headers row
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              orderBook.indexOf(orders) == 0
-                                  ? Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          2.2,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                              AppLocalizations.of(context)
-                                                  .quantity,
-                                              style: TextStyle(
-                                                  fontSize: 9, color: grey)),
-                                          Text(
-                                              AppLocalizations.of(context)
-                                                  .price,
-                                              style: TextStyle(
-                                                  fontSize: 9, color: grey))
-                                        ],
-                                      ),
-                                    )
-                                  : Container(
-                                      width: MediaQuery.of(context).size.width /
-                                          2.2,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                              AppLocalizations.of(context)
-                                                  .price,
-                                              style: TextStyle(
-                                                  fontSize: 9, color: grey)),
-                                          Text(
-                                              AppLocalizations.of(context)
-                                                  .quantity,
-                                              style: TextStyle(
-                                                  fontSize: 9, color: grey)),
-                                        ],
-                                      ),
-                                    )
-                            ]),
+                        child: orderBook.indexOf(orders) == 0
+                            ? Container(
+                              padding: EdgeInsets.symmetric(horizontal:7),
+                                width: MediaQuery.of(context).size.width /
+                                    2.2,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                        AppLocalizations.of(context)
+                                            .quantity,
+                                        style: TextStyle(
+                                            fontSize: 9, color: grey)),
+                                    Text(
+                                        AppLocalizations.of(context)
+                                            .price,
+                                        style: TextStyle(
+                                            fontSize: 9, color: grey))
+                                  ],
+                                ),
+                              )
+                            : Container(
+                              padding: EdgeInsets.symmetric(horizontal:7),
+                                width: MediaQuery.of(context).size.width /
+                                    2.2,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                        AppLocalizations.of(context)
+                                            .price,
+                                        style: TextStyle(
+                                            fontSize: 9, color: grey)),
+                                    Text(
+                                        AppLocalizations.of(context)
+                                            .quantity,
+                                        style: TextStyle(
+                                            fontSize: 9, color: grey)),
+                                  ],
+                                ),
+                              ),
                       ),
 
                       // Buy/Sell Orders List View

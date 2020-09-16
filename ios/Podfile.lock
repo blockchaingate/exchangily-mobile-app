@@ -38,7 +38,7 @@ DEPENDENCIES:
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - FMDB
     - MTBBarcodeScanner
 
@@ -80,4 +80,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.9.2
+COCOAPODS: 1.9.3
