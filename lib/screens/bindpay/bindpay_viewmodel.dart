@@ -140,46 +140,42 @@ class BindpayViewmodel extends FutureViewModel {
     if (addressController.text.startsWith('o')) {
       int coinType = walletService.getCoinTypeIdByName(tickerName);
       print(coinType);
-    //   await dialogService
-    //       .showDialog(
-    //           title: AppLocalizations.of(context).enterPassword,
-    //           description: AppLocalizations.of(context)
-    //               .dialogManagerTypeSamePasswordNote,
-    //           buttonTitle: AppLocalizations.of(context).confirm)
-    //       .then((res) async {
-    //     if (res.confirmed) {
-    //       String mnemonic = res.returnedText;
-    //       Uint8List seed = walletService.generateSeed(mnemonic);
-    //       await walletService
-    //           .sendCoin(
-    //               seed,
-    //               coinType,
-    //               addressController.text,
-    //               double.parse(amountController.text))
-    //           .then((res) {
-    //         print('RES $res');
-    //       });
-    //     } else if (res.returnedText == 'Closed') {
-    //       log.e('Dialog Closed By User');
-    //       setBusy(false);
-    //     } else {
-    //       log.e('Wrong pass');
-    //       setBusy(false);
-    //       // return error =
-    //       //     AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
-    //     }
-    //   }).catchError((error) {
-    //     log.e(error);
-    //     setBusy(false);
-    //     return false;
-    //   });
-    // } else {
-    //   sharedService.alertDialog(
-    //       'Validation Error', 'Please enter the correct receive address');
-    //       setBusy(false);
-    // }
-    // setBusy(false);
-  }
+      await dialogService
+          .showDialog(
+              title: AppLocalizations.of(context).enterPassword,
+              description: AppLocalizations.of(context)
+                  .dialogManagerTypeSamePasswordNote,
+              buttonTitle: AppLocalizations.of(context).confirm)
+          .then((res) async {
+        if (res.confirmed) {
+          String mnemonic = res.returnedText;
+          Uint8List seed = walletService.generateSeed(mnemonic);
+          await walletService
+              .sendCoin(seed, coinType, addressController.text,
+                  double.parse(amountController.text))
+              .then((res) {
+            print('RES $res');
+          });
+        } else if (res.returnedText == 'Closed') {
+          log.e('Dialog Closed By User');
+          setBusy(false);
+        } else {
+          log.e('Wrong pass');
+          setBusy(false);
+          // return error =
+          //     AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+        }
+      }).catchError((error) {
+        log.e(error);
+        setBusy(false);
+        return false;
+      });
+    } else {
+      sharedService.alertDialog(
+          'Validation Error', 'Please enter the correct receive address');
+      setBusy(false);
+    }
+    setBusy(false);
   }
 /*----------------------------------------------------------------------
                     Content Paste

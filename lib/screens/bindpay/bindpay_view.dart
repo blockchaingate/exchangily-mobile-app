@@ -3,7 +3,6 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:json_serializable/type_helper.dart';
 import 'package:stacked/stacked.dart';
 
 class BindpayView extends StatelessWidget {
