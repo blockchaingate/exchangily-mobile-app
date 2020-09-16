@@ -39,7 +39,7 @@ class SettingsScreenState extends BaseState {
 
   final NavigationService navigationService = locator<NavigationService>();
   List<String> languages = ['English', 'Chinese'];
-  String selectedLanguage;
+  String selectedLanguage = '';
   // bool result = false;
   String errorMessage = '';
   AlertResponse alertResponse;
@@ -50,12 +50,15 @@ class SettingsScreenState extends BaseState {
   bool isDeleting = false;
   ScrollController scrollController;
 
-  init() {
+
+  init() async{
     setBusy(true);
     sharedService.getDialogWarningsStatus().then((res) {
       if (res != null) isDialogDisplay = res;
     });
     getAppVersion();
+    selectedLanguage = await getStoredDataByKeys('lang');
+    print('ssss $selectedLanguage');
     setBusy(false);
   }
 
@@ -150,24 +153,31 @@ class SettingsScreenState extends BaseState {
     }
   }
 
+  getStoredDataByKeys(String key) async{
+SharedPreferences prefs = await SharedPreferences.getInstance();
+return prefs.get(key);
+  }
+
   // Change wallet language
 
-  changeWalletLanguage(newValue) async {
+  changeWalletLanguage(lang) async {
     setState(ViewState.Busy);
+    setBusy(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    selectedLanguage = newValue;
+    selectedLanguage = lang;
     log.w('Selec $selectedLanguage');
-    if (newValue == 'Chinese') {
+    if (lang == 'Chinese' || lang == 'zh') {
       log.e('in zh');
-
       AppLocalizations.load(Locale('zh', 'ZH'));
       prefs.setString('lang', 'zh');
-    } else if (newValue == 'English') {
+     
+    } else if (lang == 'English' || lang == 'en') {
       log.e('in en');
       AppLocalizations.load(Locale('en', 'EN'));
       prefs.setString('lang', 'en');
     }
     setState(ViewState.Idle);
+    setBusy(false);
   }
 
   // Pin code
