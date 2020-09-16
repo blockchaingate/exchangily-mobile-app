@@ -14,23 +14,26 @@ class BindpayView extends StatelessWidget {
         viewModelBuilder: () => BindpayViewmodel(),
         onModelReady: (model) {
           model.context = context;
+          model.init();
         },
         builder: (context, model, _) => Scaffold(
               appBar: AppBar(title: Text('Bindpay'), centerTitle: true),
               body: Container(
-               
                 child: model.hasError
                     ? Container(
                         child: Center(child: Text('Ticker data fetch failed')),
                       )
                     : Stack(children: [
                         Container(
-                           margin: EdgeInsets.all(10.0),
+                          margin: EdgeInsets.all(10.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // Coin list dropdown
+/*----------------------------------------------------------------------------------------------------
+                                    Coin list dropdown
+----------------------------------------------------------------------------------------------------*/
+
                               Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(
@@ -50,7 +53,8 @@ class BindpayView extends StatelessWidget {
                                             icon: Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 8.0),
-                                              child: Icon(Icons.arrow_drop_down),
+                                              child:
+                                                  Icon(Icons.arrow_drop_down),
                                             ),
                                             iconEnabledColor: primaryColor,
                                             iconSize: 30,
@@ -58,7 +62,8 @@ class BindpayView extends StatelessWidget {
                                               padding: const EdgeInsets.only(
                                                   left: 10.0),
                                               child: Text(
-                                                AppLocalizations.of(context).coin,
+                                                AppLocalizations.of(context)
+                                                    .coin,
                                                 textAlign: TextAlign.start,
                                                 style: Theme.of(context)
                                                     .textTheme
@@ -82,20 +87,21 @@ class BindpayView extends StatelessWidget {
                                                         Text(
                                                             coin['tickerName']
                                                                 .toString(),
-                                                            textAlign:
-                                                                TextAlign.center,
-                                                            style:
-                                                                Theme.of(context)
-                                                                    .textTheme
-                                                                    .headline6),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline6),
                                                         UIHelper
                                                             .horizontalSpaceSmall,
                                                         Text(
                                                           coin['quantity']
                                                               .toString(),
-                                                          style: Theme.of(context)
-                                                              .textTheme
-                                                              .bodyText1,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyText1,
                                                         )
                                                       ],
                                                     ),
@@ -106,7 +112,11 @@ class BindpayView extends StatelessWidget {
                                             ).toList()),
                                       ),
                               ),
-                              // Receiver Address textfield
+
+/*----------------------------------------------------------------------------------------------------
+                                    Receiver Address textfield
+----------------------------------------------------------------------------------------------------*/
+
                               UIHelper.verticalSpaceSmall,
                               TextField(
                                   keyboardType: TextInputType.text,
@@ -117,18 +127,24 @@ class BindpayView extends StatelessWidget {
                                             Icons.content_paste,
                                             color: green,
                                           ),
-                                          onPressed: () => model.contentPaste()),
+                                          onPressed: () =>
+                                              model.contentPaste()),
                                       enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
                                               color: Color(0XFF871fff),
-                                              width: 1.0)),
+                                              width: 0.5)),
                                       hintText: AppLocalizations.of(context)
                                           .recieveAddress,
-                                      hintStyle:
-                                          Theme.of(context).textTheme.headline5),
+                                      hintStyle: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
                                   controller: model.addressController,
                                   style: Theme.of(context).textTheme.headline5),
-                              // Transfer amount textfield
+
+/*----------------------------------------------------------------------------------------------------
+                                    Transfer amount textfield
+----------------------------------------------------------------------------------------------------*/
+
                               UIHelper.verticalSpaceSmall,
                               TextField(
                                   keyboardType: TextInputType.numberWithOptions(
@@ -140,20 +156,23 @@ class BindpayView extends StatelessWidget {
                                               width: 1.0)),
                                       hintText: AppLocalizations.of(context)
                                           .enterAmount,
-                                      hintStyle:
-                                          Theme.of(context).textTheme.headline5),
+                                      hintStyle: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
                                   controller: model.amountController,
                                   style: Theme.of(context).textTheme.headline5),
-
                               UIHelper.verticalSpaceMedium,
+/*----------------------------------------------------------------------------------------------------
+                                    Transfer - Receive Button Row
+----------------------------------------------------------------------------------------------------*/
 
-                              // Transfer - Receive Button Row
                               Row(
                                 children: [
                                   Expanded(
-                                    child: MaterialButton(
+                                    child: RaisedButton(
                                       padding: EdgeInsets.all(15),
-                                      color: primaryColor,
+                                      disabledColor: grey,
+                                      color: Color.lerp(green, yellow, .25),
                                       textColor: Colors.white,
                                       onPressed: () {
                                         model.isBusy
@@ -161,18 +180,22 @@ class BindpayView extends StatelessWidget {
                                             : model.transfer();
                                       },
                                       child: Text(
-                                              AppLocalizations.of(context)
-                                                  .tranfser,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4),
+                                          AppLocalizations.of(context).tranfser,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4),
                                     ),
                                   ),
                                   UIHelper.horizontalSpaceSmall,
-                                  // Receive Button
+
+/*----------------------------------------------------------------------------------------------------
+                                    Receive Button
+----------------------------------------------------------------------------------------------------*/
+
                                   Expanded(
                                     child: OutlineButton(
-                                      borderSide: BorderSide(color: primaryColor),
+                                      borderSide:
+                                          BorderSide(color: primaryColor),
                                       padding: EdgeInsets.all(15),
                                       color: primaryColor,
                                       textColor: Colors.white,
@@ -193,19 +216,16 @@ class BindpayView extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // Stack loading container
+
+/*----------------------------------------------------------------------------------------------------
+                                    Stack loading container
+----------------------------------------------------------------------------------------------------*/
+
                         model.isBusy
                             ? Align(
-                              alignment: Alignment.center,
-                                                          child: Container(
-                                  height: UIHelper.getScreenFullHeight(context),
-                                  color: primaryColor.withOpacity(.22),
-                                  child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child:
-                                          model.sharedService.loadingIndicator()),
-                                ),
-                            )
+                                alignment: Alignment.center,
+                                child: model.sharedService
+                                    .stackFullScreenLoadingIndicator())
                             : Container()
                       ]),
               ),

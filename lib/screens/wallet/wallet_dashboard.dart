@@ -187,11 +187,15 @@ class WalletDashboardScreen extends StatelessWidget {
                                               await model.refreshBalance();
                                             },
                                             child: model.busy
-                                                ? SizedBox(
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                    width: 18,
-                                                    height: 18,
+                                                ? Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 3.0),
+                                                    child: SizedBox(
+                                                      child: model.sharedService
+                                                          .loadingIndicator(),
+                                                      width: 16,
+                                                      height: 16,
+                                                    ),
                                                   )
                                                 : Icon(
                                                     Icons.refresh,
@@ -297,7 +301,6 @@ class WalletDashboardScreen extends StatelessWidget {
                             height: 30,
                             child: TextField(
                               decoration: InputDecoration(
-                               
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                         color: primaryColor, width: 1),

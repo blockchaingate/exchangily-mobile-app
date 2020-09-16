@@ -12,6 +12,8 @@
 */
 
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -21,6 +23,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
@@ -56,7 +59,7 @@ class SharedService {
     return Container(
         height: UIHelper.getScreenFullHeight(context),
         width: UIHelper.getScreenFullWidth(context),
-        color: red.withOpacity(0.25),
+        color: primaryColor.withOpacity(0.5),
         child: loadingIndicator());
   }
 
@@ -76,7 +79,7 @@ class SharedService {
             : CircularProgressIndicator(
                 semanticsLabel: 'Loading',
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(primaryColor)));
+                valueColor: AlwaysStoppedAnimation<Color>(secondaryColor)));
   }
 
 /* ---------------------------------------------------
@@ -402,5 +405,22 @@ class SharedService {
       leftBarIndicatorColor: globals.green,
       duration: Duration(seconds: 4),
     ).show(context);
+  }
+
+  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+                  Save and Share PNG
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+  Future<Uint8List> capturePng({GlobalKey globalKey}) async {
+    try {
+      RenderRepaintBoundary boundary =
+          globalKey.currentContext.findRenderObject();
+      var image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+      Uint8List pngBytes = byteData.buffer.asUint8List();
+      return pngBytes;
+    } catch (e) {
+      return null;
+    }
   }
 }

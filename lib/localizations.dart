@@ -1547,6 +1547,11 @@ class AppLocalizations {
     return Intl.message("Tranfser",
         name: 'tranfser', desc: 'flash_pay_tranfser');
   }
+
+  String get share {
+    return Intl.message("Share",
+        name: 'share', desc: 'flash_pay_tranfser_share_address');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

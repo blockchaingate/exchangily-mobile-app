@@ -1,12 +1,9 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/constants/constants.dart';
-import 'package:exchangilymobileapp/environments/coins.dart' as coinList;
-import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -15,9 +12,13 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share/share.dart';
 import 'package:stacked/stacked.dart';
 
 class BindpayViewmodel extends FutureViewModel {
@@ -37,6 +38,16 @@ class BindpayViewmodel extends FutureViewModel {
   BuildContext context;
   double quantity = 0.0;
   List<Map<String, dynamic>> coins = [];
+  GlobalKey globalKey = new GlobalKey();
+
+/*----------------------------------------------------------------------
+                          INIT
+----------------------------------------------------------------------*/
+
+  init() {
+    sharedService.context = context;
+  }
+
 /*----------------------------------------------------------------------
                     Default Future to Run
 ----------------------------------------------------------------------*/
@@ -82,6 +93,7 @@ class BindpayViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   showBarcode() {
     setBusy(true);
+
     walletDataBaseService.getBytickerName('FAB').then((coin) {
       String kbAddress = walletService.toKbPaymentAddress(coin.address);
       print('KBADDRESS $kbAddress');
@@ -89,39 +101,112 @@ class BindpayViewmodel extends FutureViewModel {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            elevation: 10,
+            titlePadding: EdgeInsets.zero,
+            contentPadding: EdgeInsets.zero,
+            insetPadding: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+            elevation: 5,
             backgroundColor: walletCardColor.withOpacity(0.85),
-            title: Text('${AppLocalizations.of(context).recieveAddress}'),
+            title: Container(
+              padding: EdgeInsets.all(10.0),
+              color: secondaryColor.withOpacity(0.5),
+              child: Center(
+                  child:
+                      Text('${AppLocalizations.of(context).recieveAddress}')),
+            ),
             titleTextStyle: Theme.of(context)
                 .textTheme
-                .headline5
+                .headline4
                 .copyWith(fontWeight: FontWeight.bold),
             contentTextStyle: TextStyle(color: grey),
             content: Column(
               children: [
+                UIHelper.verticalSpaceLarge,
                 Row(
                   children: [
+                    UIHelper.horizontalSpaceSmall,
                     Expanded(
-                      child: Text(
-                        // add here cupertino widget to check in these small widgets first then the entire app
-                        kbAddress,
-                        style: TextStyle(fontSize: 14),
+                      child: Center(
+                        child: Text(
+                            // add here cupertino widget to check in these small widgets first then the entire app
+                            kbAddress,
+                            style: Theme.of(context).textTheme.headline6),
                       ),
                     ),
                     IconButton(
-                        icon: Icon(Icons.copyright),
+                        icon: Icon(
+                          Icons.content_copy,
+                          color: primaryColor,
+                          size: 16,
+                        ),
                         onPressed: () {
                           sharedService.copyAddress(context, kbAddress)();
                         })
                   ],
                 ),
+                // UIHelper.verticalSpaceLarge,
+                Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    width: 250,
+                    height: 250,
+                    child: Center(
+                      child: Container(
+                        child: RepaintBoundary(
+                          key: globalKey,
+                          child: QrImage(
+                              backgroundColor: white,
+                              data: kbAddress,
+                              version: QrVersions.auto,
+                              size: 300,
+                              gapless: true,
+                              errorStateBuilder: (context, err) {
+                                return Container(
+                                  child: Center(
+                                    child: Text(
+                                        AppLocalizations.of(context)
+                                            .somethingWentWrong,
+                                        textAlign: TextAlign.center),
+                                  ),
+                                );
+                              }),
+                        ),
+                      ),
+                    )),
               ],
             ),
             actions: <Widget>[
-              FlatButton(
+              // QR image share button
+
+              Container(
+                padding: EdgeInsets.all(10.0),
+                child: RaisedButton(
+                    child: Text(AppLocalizations.of(context).saveAndShareQrCode,
+                        style: Theme.of(context).textTheme.headline6),
+                    onPressed: () {
+                      String receiveFileName =
+                          'bindpay-kanban-receive-address.png';
+                      getApplicationDocumentsDirectory().then((dir) {
+                        String filePath = "${dir.path}/$receiveFileName";
+                        File file = File(filePath);
+
+                        Future.delayed(new Duration(milliseconds: 30), () {
+                          sharedService
+                              .capturePng(globalKey: globalKey)
+                              .then((byteData) {
+                            file.writeAsBytes(byteData).then((onFile) {
+                              Share.shareFile(onFile, text: kbAddress);
+                            });
+                          });
+                        });
+                      });
+                    }),
+              ),
+              OutlineButton(
+                borderSide: BorderSide(color: primaryColor),
+                color: primaryColor,
+                textColor: Colors.white,
                 child: Text(
                   AppLocalizations.of(context).close,
-                  style: TextStyle(color: white, fontSize: 12),
+                  style: Theme.of(context).textTheme.headline6,
                 ),
                 onPressed: () {
                   Navigator.of(context).pop(false);
@@ -135,8 +220,13 @@ class BindpayViewmodel extends FutureViewModel {
     setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                            Transfer
+----------------------------------------------------------------------*/
+
   transfer() async {
     setBusy(true);
+    print(isBusy);
     if (addressController.text.startsWith('o')) {
       int coinType = walletService.getCoinTypeIdByName(tickerName);
       print(coinType);
@@ -177,13 +267,13 @@ class BindpayViewmodel extends FutureViewModel {
     }
     setBusy(false);
   }
+
 /*----------------------------------------------------------------------
-                    Content Paste
+              Content Paste Button in receiver address textfield
 ----------------------------------------------------------------------*/
 
   Future contentPaste() async {
     await Clipboard.getData('text/plain')
         .then((res) => addressController.text = res.text);
-    // sharedService.
   }
 }
