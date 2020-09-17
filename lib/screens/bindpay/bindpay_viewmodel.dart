@@ -66,8 +66,9 @@ class BindpayViewmodel extends FutureViewModel {
     List<WalletInfo> tokenList = data as List<WalletInfo>;
     tokenList.forEach((wallet) {
       // log.i('token ${token.toJson()}');
-      coins.add(
-          {"tickerName": wallet.tickerName, "quantity": wallet.inExchange});
+      if (wallet.inExchange != 0.0)
+        coins.add(
+            {"tickerName": wallet.tickerName, "quantity": wallet.inExchange});
       tickerNameList.add(wallet.tickerName);
     });
     print(coins);

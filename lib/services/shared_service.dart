@@ -39,6 +39,21 @@ class SharedService {
   final log = getLogger('SharedService');
 
 /*---------------------------------------------------
+      Rounded gradient button box decoration
+--------------------------------------------------- */
+
+  Decoration gradientBoxDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(25)),
+      gradient: LinearGradient(
+        colors: [Colors.redAccent, Colors.yellow],
+        begin: FractionalOffset.topLeft,
+        end: FractionalOffset.bottomRight,
+      ),
+    );
+  }
+
+/*---------------------------------------------------
             Launch link urls
 --------------------------------------------------- */
 

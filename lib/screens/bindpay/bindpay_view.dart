@@ -46,8 +46,17 @@ class BindpayView extends StatelessWidget {
                                         child: CircularProgressIndicator(
                                         backgroundColor: yellow,
                                       ))
-                                    : DropdownButtonHideUnderline(
+                                    : Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                          border: Border.all(
+                                              color: primaryColor,
+                                              style: BorderStyle.solid,
+                                              width: 0.50),
+                                        ),
                                         child: DropdownButton(
+                                            underline: SizedBox.shrink(),
                                             elevation: 5,
                                             isExpanded: true,
                                             icon: Padding(
@@ -92,7 +101,7 @@ class BindpayView extends StatelessWidget {
                                                             style: Theme.of(
                                                                     context)
                                                                 .textTheme
-                                                                .headline6),
+                                                                .headline5),
                                                         UIHelper
                                                             .horizontalSpaceSmall,
                                                         Text(
@@ -101,7 +110,10 @@ class BindpayView extends StatelessWidget {
                                                           style:
                                                               Theme.of(context)
                                                                   .textTheme
-                                                                  .bodyText1,
+                                                                  .headline5
+                                                                  .copyWith(
+                                                                      color:
+                                                                          grey),
                                                         )
                                                       ],
                                                     ),
@@ -121,11 +133,12 @@ class BindpayView extends StatelessWidget {
                               TextField(
                                   keyboardType: TextInputType.text,
                                   decoration: InputDecoration(
-                                      suffix: IconButton(
+                                      suffixIcon: IconButton(
                                           padding: EdgeInsets.zero,
                                           icon: Icon(
                                             Icons.content_paste,
                                             color: green,
+                                            size: 18,
                                           ),
                                           onPressed: () =>
                                               model.contentPaste()),
@@ -153,7 +166,7 @@ class BindpayView extends StatelessWidget {
                                       enabledBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
                                               color: Color(0XFF871fff),
-                                              width: 1.0)),
+                                              width: 0.5)),
                                       hintText: AppLocalizations.of(context)
                                           .enterAmount,
                                       hintStyle: Theme.of(context)
@@ -169,27 +182,29 @@ class BindpayView extends StatelessWidget {
                               Row(
                                 children: [
                                   Expanded(
-                                    child: RaisedButton(
-                                      padding: EdgeInsets.all(15),
-                                      disabledColor: grey,
-                                      color: Color.lerp(green, yellow, .25),
-                                      textColor: Colors.white,
-                                      onPressed: () {
-                                        model.isBusy
-                                            ? print('busy')
-                                            : model.transfer();
-                                      },
-                                      child: Text(
-                                          AppLocalizations.of(context).tranfser,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4),
+                                    child: Container(
+                                      decoration: model.sharedService
+                                          .gradientBoxDecoration(),
+                                      child: FlatButton(
+                                        textColor: Colors.white,
+                                        onPressed: () {
+                                          model.isBusy
+                                              ? print('busy')
+                                              : model.transfer();
+                                        },
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .tranfser,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4),
+                                      ),
                                     ),
                                   ),
                                   UIHelper.horizontalSpaceSmall,
 
 /*----------------------------------------------------------------------------------------------------
-                                    Receive Button
+                                        Receive Button
 ----------------------------------------------------------------------------------------------------*/
 
                                   Expanded(
