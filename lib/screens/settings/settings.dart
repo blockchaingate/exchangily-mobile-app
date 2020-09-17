@@ -149,14 +149,18 @@ class SettingsScreen extends StatelessWidget {
                                   itemExtent: 50,
                                   onSelectedItemChanged: (int value) {
                                     String lang = '';
-                                    if (value == 0) {
+                                    if (value == 1) {
                                       lang = 'en';
-                                    } else if (value == 1) {
+                                    } else if (value == 2) {
                                       lang = 'zh';
                                     }
                                     model.changeWalletLanguage(lang);
                                   },
                                   children: [
+                                    Center(child: Text(AppLocalizations.of(context).changeWalletLanguage,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,),),
                                       Center(
                                         child: Text(
                                           "English",
