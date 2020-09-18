@@ -1557,6 +1557,18 @@ class AppLocalizations {
     return Intl.message("Validation Error",
         name: 'validationError', desc: 'flash_pay_tranfser_validationError');
   }
+
+  String get pleaseTryAgainLater {
+    return Intl.message("Please try again later",
+        name: 'pleaseTryAgainLater',
+        desc: 'flash_pay_tranfser_please_try_again_later');
+  }
+
+  String get pleaseCorrectTheFormatOfReceiveAddress {
+    return Intl.message("Please correct the format of receive address",
+        name: 'pleaseCorrectTheFormatOfReceiveAddress',
+        desc: 'flash_pay_tranfser_correct_format_of_receive_address');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

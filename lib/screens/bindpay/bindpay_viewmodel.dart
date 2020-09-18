@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -174,7 +173,7 @@ class BindpayViewmodel extends FutureViewModel {
               Container(
                 padding: EdgeInsets.all(10.0),
                 child: RaisedButton(
-                    child: Text(AppLocalizations.of(context).saveAndShareQrCode,
+                    child: Text(AppLocalizations.of(context).share,
                         style: Theme.of(context).textTheme.headline6),
                     onPressed: () {
                       String receiveFileName =
@@ -245,16 +244,29 @@ class BindpayViewmodel extends FutureViewModel {
               .sendCoin(seed, coinType, addressController.text,
                   double.parse(amountController.text))
               .then((res) {
-            print('RES $res');
+            log.w('RES $res');
+            if (res['transactionHash'] != null ||
+                res['transactionHash'] != '') {
+              sharedService.alertDialog(
+                  "", AppLocalizations.of(context).sendTransactionComplete);
+            } else {
+              sharedService.alertDialog(
+                  AppLocalizations.of(context).transanctionFailed,
+                  AppLocalizations.of(context).pleaseTryAgainLater);
+            }
           });
         } else if (res.returnedText == 'Closed') {
           log.e('Dialog Closed By User');
           setBusy(false);
         } else {
           log.e('Wrong pass');
+          sharedService.showInfoFlushbar(
+              AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+              Icons.cancel,
+              red,
+              context);
           setBusy(false);
-          // return error =
-          //     AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
         }
       }).catchError((error) {
         log.e(error);
@@ -262,8 +274,8 @@ class BindpayViewmodel extends FutureViewModel {
         return false;
       });
     } else {
-      sharedService.alertDialog(
-          'Validation Error', 'Please enter the correct receive address');
+      sharedService.alertDialog(AppLocalizations.of(context).validationError,
+          AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress);
       setBusy(false);
     }
     setBusy(false);
