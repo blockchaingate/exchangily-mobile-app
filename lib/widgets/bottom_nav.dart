@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -53,10 +54,15 @@ class BottomNavBar extends StatelessWidget {
                 padding: EdgeInsets.only(top: paddingValue),
                 child: Text(AppLocalizations.of(context).trade))),
         BottomNavigationBarItem(
-            icon: Icon(FontAwesomeIcons.paypal, size: iconSize),
-            title: Padding(
-                padding: EdgeInsets.only(top: paddingValue),
-                child: Text(AppLocalizations.of(context).flashPay))),
+            icon: Image.asset(
+              'assets/images/bindpay/bindpay.png',
+              width: 40,
+              height: 30,
+              color: grey,
+            ),
+            title: Text(
+              AppLocalizations.of(context).bindpay,
+            )),
         // BottomNavigationBarItem(
         //     icon: Icon(Icons.branding_watermark, size: iconSize),
         //     title: Padding(

@@ -182,6 +182,7 @@ flutter:
     - assets/pages/index.html
     - assets/images/shared/
     - assets/images/slider/
+    - assets/images/bindpay/
 flutter_icons:
   image_path: 'assets/images/launcher/mobile-icon.png'
   android: true

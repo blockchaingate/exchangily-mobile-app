@@ -461,6 +461,10 @@ class WalletDashboardScreenState extends BaseState {
     return address;
   }
 
+/*---------------------------------------------------
+                      Get gas
+--------------------------------------------------- */
+
   getGas() async {
     String address = await getExgAddressFromWalletDatabase();
     await walletService

@@ -1539,8 +1539,8 @@ class AppLocalizations {
         name: 'serverBusy', desc: 'campaign_list_serverBusy');
   }
 
-  String get flashPay {
-    return Intl.message("Flash Pay", name: 'flashPay', desc: 'flash_pay');
+  String get bindpay {
+    return Intl.message("Bindpay", name: 'bindpay', desc: 'bindpay');
   }
 
   String get tranfser {
@@ -1551,6 +1551,11 @@ class AppLocalizations {
   String get share {
     return Intl.message("Share",
         name: 'share', desc: 'flash_pay_tranfser_share_address');
+  }
+
+  String get validationError {
+    return Intl.message("Validation Error",
+        name: 'validationError', desc: 'flash_pay_tranfser_validationError');
   }
 }
 

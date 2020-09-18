@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -39,6 +40,7 @@ class MoveToExchangeScreenState extends BaseState {
   String tokenType = '';
   final myController = TextEditingController();
   bool isValid = false;
+  double gasAmount = 0.0;
 
   void initState() async {
     setState(ViewState.Busy);
@@ -62,7 +64,7 @@ class MoveToExchangeScreenState extends BaseState {
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
 
-      if(tokenType == 'ETH') {
+      if (tokenType == 'ETH') {
         gasLimitTextController.text =
             environment["chains"]["ETH"]["gasLimitToken"].toString();
       }
@@ -81,14 +83,46 @@ class MoveToExchangeScreenState extends BaseState {
         environment["chains"]["KANBAN"]["gasPrice"].toString();
     kanbanGasLimitTextController.text =
         environment["chains"]["KANBAN"]["gasLimit"].toString();
+
+    await getGas();
     setState(ViewState.Idle);
   }
 
-// Check Pass
+/*---------------------------------------------------
+                      Get gas
+--------------------------------------------------- */
+
+  getGas() async {
+    String address = await sharedService.getExgAddressFromWalletDatabase();
+    await walletService.gasBalance(address).then((data) {
+      gasAmount = data;
+      if (gasAmount < 0.5) {
+        sharedService.alertDialog(
+          AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).insufficientGasAmount,
+        );
+      }
+    }).catchError((onError) => log.e(onError));
+    log.w('gas amount $gasAmount');
+    return gasAmount;
+  }
+
+/*---------------------------------------------------
+                      Check Pass
+--------------------------------------------------- */
+
   checkPass() async {
     setState(ViewState.Busy);
+    if (gasAmount == 0.0 || gasAmount < 0.5) {
+      sharedService.alertDialog(
+        AppLocalizations.of(context).notice,
+        AppLocalizations.of(context).insufficientGasAmount,
+      );
+      setState(ViewState.Idle);
+      return;
+    }
     var amount = double.tryParse(myController.text);
-    log.i(amount);
+
     if (amount == null ||
         amount > walletInfo.availableBalance ||
         amount == 0 ||
@@ -217,6 +251,10 @@ class MoveToExchangeScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
+/*----------------------------------------------------------------------
+                    ShowNotification
+----------------------------------------------------------------------*/
+
   showNotification(context) {
     setState(ViewState.Busy);
     sharedService.showInfoFlushbar(
@@ -228,8 +266,9 @@ class MoveToExchangeScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // update Transaction Fee
-
+/*----------------------------------------------------------------------
+                    Update Transaction Fee
+----------------------------------------------------------------------*/
   updateTransFee() async {
     setState(ViewState.Busy);
     var to = getOfficalAddress(coinName);

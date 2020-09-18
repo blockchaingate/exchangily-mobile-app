@@ -41,7 +41,7 @@ class BindpayView extends StatelessWidget {
                                   ),
                                 ),
                                 width: MediaQuery.of(context).size.width,
-                                child: !model.dataReady
+                                child: !model.dataReady || model.isBusy
                                     ? Center(
                                         child: CircularProgressIndicator(
                                         backgroundColor: yellow,

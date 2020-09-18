@@ -18,6 +18,7 @@ import 'dart:ui';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flushbar/flushbar.dart';
@@ -36,7 +37,21 @@ import '../shared/globals.dart' as globals;
 class SharedService {
   BuildContext context;
   NavigationService navigationService = locator<NavigationService>();
+  WalletDataBaseService walletDataBaseService =
+      locator<WalletDataBaseService>();
   final log = getLogger('SharedService');
+
+/*---------------------------------------------------
+      Get EXG address from wallet database
+--------------------------------------------------- */
+
+  Future<String> getExgAddressFromWalletDatabase() async {
+    String address = '';
+    await walletDataBaseService
+        .getBytickerName('EXG')
+        .then((res) => address = res.address);
+    return address;
+  }
 
 /*---------------------------------------------------
       Rounded gradient button box decoration

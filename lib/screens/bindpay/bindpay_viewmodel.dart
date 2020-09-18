@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -34,7 +35,6 @@ class BindpayViewmodel extends FutureViewModel {
       locator<WalletDataBaseService>();
   WalletService walletService = locator<WalletService>();
   String tickerName = '';
-  List<String> tickerNameList = [];
   BuildContext context;
   double quantity = 0.0;
   List<Map<String, dynamic>> coins = [];
@@ -62,22 +62,16 @@ class BindpayViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   @override
   void onData(data) {
-    tickerNameList = [];
     List<WalletInfo> tokenList = data as List<WalletInfo>;
     tokenList.forEach((wallet) {
-      // log.i('token ${token.toJson()}');
       if (wallet.inExchange != 0.0)
         coins.add(
             {"tickerName": wallet.tickerName, "quantity": wallet.inExchange});
-      tickerNameList.add(wallet.tickerName);
     });
-    print(coins);
-    updateSelectedTickername('EXG');
+    coins != null ? tickerName = coins[0]['tickerName'] : tickerName = '';
+    print(' coins $coins');
+    //  updateSelectedTickername('EXG');
   }
-
-/*----------------------------------------------------------------------
-                    Check password
-----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
                     Update Selected Tickername
@@ -227,8 +221,14 @@ class BindpayViewmodel extends FutureViewModel {
 
   transfer() async {
     setBusy(true);
-    print(isBusy);
-    if (addressController.text.startsWith('o')) {
+    print(walletService.isValidKbAddress(addressController.text));
+    if (walletService.isValidKbAddress(addressController.text)) {
+      if (amountController.text == '') {
+        sharedService.alertDialog(AppLocalizations.of(context).validationError,
+            AppLocalizations.of(context).amountMissing);
+        setBusy(false);
+        return;
+      }
       int coinType = walletService.getCoinTypeIdByName(tickerName);
       print(coinType);
       await dialogService
