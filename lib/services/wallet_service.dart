@@ -1197,9 +1197,14 @@ class WalletService {
     var fabAddress = '';
     try {
       fabAddress = toLegacyAddress(kbPaymentAddress);
-    } catch(e) {};
+    } catch (e) {}
+    ;
     return (fabAddress != '');
   }
+
+/*----------------------------------------------------------------------
+                Send Coin
+----------------------------------------------------------------------*/
 
   Future sendCoin(
       seed, int coin_type, String kbPaymentAddress, double amount) async {
@@ -1215,6 +1220,7 @@ class WalletService {
     var resKanban = await sendKanbanRawTransaction(txHex);
     print('resKanban=');
     print(resKanban);
+    return resKanban;
   }
 
 /*----------------------------------------------------------------------

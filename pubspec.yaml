@@ -84,6 +84,10 @@ dependencies:
 
   # Device Preview
   device_preview:
+
+  # ERROR
+  # utter\.pub-cache\hosted\pub.dartlang.org\webview_flutter-0.3.22+1\android\src\main\java\io\flutter\plugins\
+  # webviewflutter\FlutterWebView.java uses unchecked or unsafe operations.
   webview_flutter: ^0.3.19+4
 
   # rflutter Alert
@@ -143,7 +147,10 @@ dependencies:
   launch_review: ^2.0.0
 
   # To open web url's
-  url_launcher: ^5.5.2
+  # ERROR
+  # Flutter\.pub-cache\hosted\pub.dartlang.org\url_launcher-5.5.2\android\src\main\java\io\flutter\plugins\
+  # urllauncher\WebViewActivity.java uses or overrides a deprecated API
+  url_launcher: ^5.6.0
 
   # Share files
   share:
@@ -175,6 +182,7 @@ flutter:
     - assets/pages/index.html
     - assets/images/shared/
     - assets/images/slider/
+    - assets/images/bindpay/
 flutter_icons:
   image_path: 'assets/images/launcher/mobile-icon.png'
   android: true

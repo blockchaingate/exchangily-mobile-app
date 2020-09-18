@@ -12,15 +12,19 @@
 */
 
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
@@ -33,7 +37,36 @@ import '../shared/globals.dart' as globals;
 class SharedService {
   BuildContext context;
   NavigationService navigationService = locator<NavigationService>();
+  WalletDataBaseService walletDataBaseService =
+      locator<WalletDataBaseService>();
   final log = getLogger('SharedService');
+
+/*---------------------------------------------------
+      Get EXG address from wallet database
+--------------------------------------------------- */
+
+  Future<String> getExgAddressFromWalletDatabase() async {
+    String address = '';
+    await walletDataBaseService
+        .getBytickerName('EXG')
+        .then((res) => address = res.address);
+    return address;
+  }
+
+/*---------------------------------------------------
+      Rounded gradient button box decoration
+--------------------------------------------------- */
+
+  Decoration gradientBoxDecoration() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(25)),
+      gradient: LinearGradient(
+        colors: [Colors.redAccent, Colors.yellow],
+        begin: FractionalOffset.topLeft,
+        end: FractionalOffset.bottomRight,
+      ),
+    );
+  }
 
 /*---------------------------------------------------
             Launch link urls
@@ -56,7 +89,7 @@ class SharedService {
     return Container(
         height: UIHelper.getScreenFullHeight(context),
         width: UIHelper.getScreenFullWidth(context),
-        color: red.withOpacity(0.25),
+        color: primaryColor.withOpacity(0.5),
         child: loadingIndicator());
   }
 
@@ -76,7 +109,7 @@ class SharedService {
             : CircularProgressIndicator(
                 semanticsLabel: 'Loading',
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(primaryColor)));
+                valueColor: AlwaysStoppedAnimation<Color>(secondaryColor)));
   }
 
 /* ---------------------------------------------------
@@ -198,12 +231,10 @@ class SharedService {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12.0, vertical: 6.0),
                       child: Text(
-                        // add here cupertino widget to check in these small widgets first then the entire app
-                        message, textAlign: TextAlign.left,
-                        style: title == ""
-                            ? Theme.of(context).textTheme.headline6
-                            : Theme.of(context).textTheme.headline5,
-                      ),
+                          // add here cupertino widget to check in these small widgets first then the entire app
+                          message,
+                          textAlign: TextAlign.left,
+                          style: Theme.of(context).textTheme.headline5),
                     ),
                     // Do not show checkbox and text does not require to show on all dialogs
                     Visibility(
@@ -402,5 +433,22 @@ class SharedService {
       leftBarIndicatorColor: globals.green,
       duration: Duration(seconds: 4),
     ).show(context);
+  }
+
+  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+                  Save and Share PNG
+  --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+  Future<Uint8List> capturePng({GlobalKey globalKey}) async {
+    try {
+      RenderRepaintBoundary boundary =
+          globalKey.currentContext.findRenderObject();
+      var image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
+      Uint8List pngBytes = byteData.buffer.asUint8List();
+      return pngBytes;
+    } catch (e) {
+      return null;
+    }
   }
 }

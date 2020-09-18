@@ -125,6 +125,6 @@ Future<Map<String, dynamic>> sendKanbanRawTransaction(
     return res;
   } catch (e) {
     //return e;
-    return {'success': false, 'data': 'error'};
+    return {'success': false, 'data': 'error $e'};
   }
 }
