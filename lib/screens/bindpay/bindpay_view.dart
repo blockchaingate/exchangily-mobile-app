@@ -22,6 +22,31 @@ class BindpayView extends StatelessWidget {
                   centerTitle: true),
               body: Container(
                 child: Stack(children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                        height: 105,
+                        width: 105,
+                        decoration: BoxDecoration(
+                            border: Border(
+                                bottom: BorderSide(
+                                  color: primaryColor.withAlpha(175),
+                                  width: 5.0,
+                                ),
+                                left: BorderSide(
+                                    color: secondaryColor.withAlpha(175),
+                                    width: 15.0),
+                                right: BorderSide(
+                                    color: secondaryColor.withAlpha(175),
+                                    width: 15.0))),
+                        alignment: Alignment.topCenter,
+                        child: Image.asset(
+                          'assets/images/bindpay/bindpay.png',
+                          width: 100,
+                          height: 100,
+                          color: white,
+                        )),
+                  ),
                   Container(
                     margin: EdgeInsets.all(10.0),
                     child: Column(
@@ -32,86 +57,77 @@ class BindpayView extends StatelessWidget {
                                     Coin list dropdown
 ----------------------------------------------------------------------------------------------------*/
 
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: primaryColor,
-                            ),
-                          ),
-                          width: MediaQuery.of(context).size.width,
-                          child: !model.dataReady
-                              ? Center(
-                                  child: CircularProgressIndicator(
-                                  backgroundColor: yellow,
-                                ))
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5.0),
-                                    border: Border.all(
-                                        color: primaryColor,
-                                        style: BorderStyle.solid,
-                                        width: 0.50),
-                                  ),
-                                  child: DropdownButton(
-                                      underline: SizedBox.shrink(),
-                                      elevation: 5,
-                                      isExpanded: true,
-                                      icon: Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: Icon(Icons.arrow_drop_down),
+                        !model.dataReady
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                backgroundColor: yellow,
+                              ))
+                            : Container(
+                                height: 55,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  border: Border.all(
+                                      color: primaryColor,
+                                      style: BorderStyle.solid,
+                                      width: 0.50),
+                                ),
+                                child: DropdownButton(
+                                    underline: SizedBox.shrink(),
+                                    elevation: 5,
+                                    isExpanded: true,
+                                    icon: Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Icon(Icons.arrow_drop_down),
+                                    ),
+                                    iconEnabledColor: primaryColor,
+                                    iconSize: 30,
+                                    hint: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        AppLocalizations.of(context).coin,
+                                        textAlign: TextAlign.start,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
                                       ),
-                                      iconEnabledColor: primaryColor,
-                                      iconSize: 30,
-                                      hint: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10.0),
-                                        child: Text(
-                                          AppLocalizations.of(context).coin,
-                                          textAlign: TextAlign.start,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5,
-                                        ),
-                                      ),
-                                      value: model.tickerName,
-                                      onChanged: (newValue) {
-                                        model
-                                            .updateSelectedTickername(newValue);
-                                      },
-                                      items: model.coins.map(
-                                        (coin) {
-                                          return DropdownMenuItem(
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10.0),
-                                              child: Row(
-                                                children: [
-                                                  Text(
-                                                      coin['tickerName']
-                                                          .toString(),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline5),
-                                                  UIHelper.horizontalSpaceSmall,
-                                                  Text(
-                                                    coin['quantity'].toString(),
+                                    ),
+                                    value: model.tickerName,
+                                    onChanged: (newValue) {
+                                      model.updateSelectedTickername(newValue);
+                                    },
+                                    items: model.coins.map(
+                                      (coin) {
+                                        return DropdownMenuItem(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                    coin['tickerName']
+                                                        .toString(),
+                                                    textAlign: TextAlign.center,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline5
-                                                        .copyWith(color: grey),
-                                                  )
-                                                ],
-                                              ),
+                                                        .headline5),
+                                                UIHelper.horizontalSpaceSmall,
+                                                Text(
+                                                  coin['quantity'].toString(),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5
+                                                      .copyWith(color: grey),
+                                                )
+                                              ],
                                             ),
-                                            value: coin['tickerName'],
-                                          );
-                                        },
-                                      ).toList()),
-                                ),
-                        ),
+                                          ),
+                                          value: coin['tickerName'],
+                                        );
+                                      },
+                                    ).toList()),
+                              ),
 
 /*----------------------------------------------------------------------------------------------------
                                     Receiver Address textfield
