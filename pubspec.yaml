@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.3.1+44
+version: 1.3.4+47
 environment:
   sdk: '>=2.3.2 <3.0.0'
 
@@ -62,16 +62,14 @@ dependencies:
   web_socket_channel: ^1.1.0
 
   # Json Serialization
-  json_serializable: ^2.2.1
+  # json_serializable: ^2.2.1
 
   # Generate QR Code Image
   qr_flutter: ^3.1.0
   qr: 1.2.0
 
   # Barcode Scan
-  barcode_scan: 1.0.0
-  # barcode_scan:
-  #  git: git://github.com/apptreesoftware/flutter_barcode_reader.git
+  barcode_scan: 3.0.1
 
   # Material icons
   material_design_icons_flutter: ^4.0.5345
@@ -89,7 +87,11 @@ dependencies:
 
   # Device Preview
   device_preview:
-  webview_flutter: ^0.3.14
+
+  # ERROR
+  # utter\.pub-cache\hosted\pub.dartlang.org\webview_flutter-0.3.22+1\android\src\main\java\io\flutter\plugins\
+  # webviewflutter\FlutterWebView.java uses unchecked or unsafe operations.
+  webview_flutter: ^0.3.19+4
 
   # rflutter Alert
   rflutter_alert: ^1.0.3
@@ -148,7 +150,10 @@ dependencies:
   launch_review: ^2.0.0
 
   # To open web url's
-  url_launcher: ^5.5.2
+  # ERROR
+  # Flutter\.pub-cache\hosted\pub.dartlang.org\url_launcher-5.5.2\android\src\main\java\io\flutter\plugins\
+  # urllauncher\WebViewActivity.java uses or overrides a deprecated API
+  url_launcher: ^5.6.0
 
   # Share files
   share:
@@ -180,6 +185,7 @@ flutter:
     - assets/pages/index.html
     - assets/images/shared/
     - assets/images/slider/
+    - assets/images/bindpay/
 flutter_icons:
   image_path: "assets/images/launcher/mobile-icon-ios.png"
 

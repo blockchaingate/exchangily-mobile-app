@@ -189,10 +189,15 @@ class WalletDashboardScreen extends StatelessWidget {
                                               await model.refreshBalance();
                                             },
                                             child: model.busy
-                                                ? SizedBox(
-                                                    child: model.sharedService.loadingIndicator(),
-                                                    width: 18,
-                                                    height: 18,
+                                                ? Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 3.0),
+                                                    child: SizedBox(
+                                                      child: model.sharedService
+                                                          .loadingIndicator(),
+                                                      width: 16,
+                                                      height: 16,
+                                                    ),
                                                   )
                                                 : Icon(
                                                     Icons.refresh,
@@ -300,7 +305,7 @@ class WalletDashboardScreen extends StatelessWidget {
                               decoration: InputDecoration(
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
-                                        color: primaryColor, width: 1.0),
+                                        color: primaryColor, width: 1),
                                   ),
                                   // helperText: 'Search',
                                   // helperStyle:

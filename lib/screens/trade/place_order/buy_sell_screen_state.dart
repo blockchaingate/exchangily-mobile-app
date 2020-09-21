@@ -560,6 +560,7 @@ class BuySellScreenState extends BaseState {
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
+        setBusy(false);
       }
     }
     setBusy(false);
@@ -591,7 +592,7 @@ class BuySellScreenState extends BaseState {
       caculateTransactionAmount();
       log.e(
           'SELL tx amount $transactionAmount -- targetCoinbalance ${targetCoinbalance * price}');
-      if (transactionAmount > (targetCoinbalance * price)) {
+      if (caculateTransactionAmount() > (targetCoinbalance * price)) {
         sharedService.alertDialog(
             "", AppLocalizations.of(context).invalidAmount,
             isWarning: false);
@@ -601,10 +602,9 @@ class BuySellScreenState extends BaseState {
         await placeBuySellOrder();
       }
     } else {
-      caculateTransactionAmount();
       log.w(
-          'BUY tx amount $transactionAmount -- baseCoinbalance $baseCoinbalance');
-      if (transactionAmount > baseCoinbalance) {
+          'BUY tx amount ${caculateTransactionAmount()} -- baseCoinbalance $baseCoinbalance');
+      if (caculateTransactionAmount() > baseCoinbalance) {
         sharedService.alertDialog(
             "", AppLocalizations.of(context).invalidAmount,
             isWarning: false);

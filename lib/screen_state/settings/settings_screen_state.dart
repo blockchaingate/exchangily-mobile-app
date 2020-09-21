@@ -19,7 +19,6 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../localizations.dart';
@@ -60,7 +59,9 @@ class SettingsScreenState extends BaseState {
       if (res != null) isDialogDisplay = res;
     });
     getAppVersion();
-    await checkLanguage();
+    if (selectedLanguage == '')
+      selectedLanguage = await getStoredDataByKeys('lang');
+    print('ssss $selectedLanguage');
     setBusy(false);
   }
 
@@ -133,6 +134,7 @@ class SettingsScreenState extends BaseState {
         if (res.confirmed) {
           isVisible = !isVisible;
           mnemonic = res.returnedText;
+
           setState(ViewState.Idle);
           return '';
         } else if (res.returnedText == 'Closed') {
@@ -153,30 +155,30 @@ class SettingsScreenState extends BaseState {
     }
   }
 
-  checkLanguage() async {
+  getStoredDataByKeys(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var lang = prefs.getString('lang');
-    log.w('lang $lang');
-    changeWalletLanguage(lang);
+    return prefs.get(key);
   }
 
   // Change wallet language
 
-  changeWalletLanguage(newValue) async {
+  changeWalletLanguage(lang) async {
     setState(ViewState.Busy);
+    setBusy(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    selectedLanguage = newValue;
+    selectedLanguage = lang;
     log.w('Selec $selectedLanguage');
-    if (newValue == 'English' || newValue == 'en') {
-      initialLanguageValue = 0;
-      AppLocalizations.load(Locale('en', 'EN'));
-      prefs.setString('lang', 'en');
-    } else if (newValue == 'Chinese' || newValue == 'zh') {
-      initialLanguageValue = 1;
+    if (lang == 'Chinese' || lang == 'zh') {
+      log.e('in zh');
       AppLocalizations.load(Locale('zh', 'ZH'));
       prefs.setString('lang', 'zh');
-    }
+    } else if (lang == 'English' || lang == 'en') {
+      log.e('in en');
+      AppLocalizations.load(Locale('en', 'EN'));
+      prefs.setString('lang', 'en');
+    } 
     setState(ViewState.Idle);
+    setBusy(false);
   }
 
   // Pin code

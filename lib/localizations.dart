@@ -24,7 +24,6 @@ class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-
   // Generic Items
   String get title {
     return Intl.message('Exchangily Wallet',
@@ -1538,6 +1537,37 @@ class AppLocalizations {
   String get serverBusy {
     return Intl.message("Server Busy",
         name: 'serverBusy', desc: 'campaign_list_serverBusy');
+  }
+
+  String get bindpay {
+    return Intl.message("Bindpay", name: 'bindpay', desc: 'bindpay');
+  }
+
+  String get tranfser {
+    return Intl.message("Tranfser",
+        name: 'tranfser', desc: 'flash_pay_tranfser');
+  }
+
+  String get share {
+    return Intl.message("Share",
+        name: 'share', desc: 'flash_pay_tranfser_share_address');
+  }
+
+  String get validationError {
+    return Intl.message("Validation Error",
+        name: 'validationError', desc: 'flash_pay_tranfser_validationError');
+  }
+
+  String get pleaseTryAgainLater {
+    return Intl.message("Please try again later",
+        name: 'pleaseTryAgainLater',
+        desc: 'flash_pay_tranfser_please_try_again_later');
+  }
+
+  String get pleaseCorrectTheFormatOfReceiveAddress {
+    return Intl.message("Please correct the format of receive address",
+        name: 'pleaseCorrectTheFormatOfReceiveAddress',
+        desc: 'flash_pay_tranfser_correct_format_of_receive_address');
   }
 }
 
