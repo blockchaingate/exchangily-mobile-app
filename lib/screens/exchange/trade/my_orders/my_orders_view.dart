@@ -194,7 +194,7 @@ class MyOrdersView extends StatelessWidget {
 }
 
 class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
-  final List<OrderModel> orders;
+  final List<Order> orders;
   const MyOrderDetailsView({Key key, this.orders}) : super(key: key);
 
   @override

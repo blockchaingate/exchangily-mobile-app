@@ -30,9 +30,9 @@ class Trademarket extends StatefulWidget {
 
 class TrademarketState extends State<Trademarket> {
   String tabName;
-  List<OrderModel> sell;
-  List<OrderModel> buy;
-  List<TradeModel> trade;
+  List<Order> sell;
+  List<Order> buy;
+  List<Trade> trade;
   @override
   void initState() {
     super.initState();
@@ -49,7 +49,7 @@ class TrademarketState extends State<Trademarket> {
     }
   }
 
-  updateTrades(List<TradeModel> trades) {
+  updateTrades(List<Trade> trades) {
     if (!listEquals(this.trade, trades)) {
       setState(() => {this.trade = trades});
     }

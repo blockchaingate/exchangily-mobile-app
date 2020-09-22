@@ -43,9 +43,28 @@ final String getTokenListUrl = baseKanbanUrl + 'exchangily/getTokenList';
 
 /*----------------------------------------------------------------------
                             Exchange
-
-          /ordersbyaddresspaged/:address/:start?/:count?/:status?
 ----------------------------------------------------------------------*/
 
+// /ordersbyaddresspaged/:address/:start?/:count?/:status?
+// /getordersbytickernamepaged/:address/:tickerName/:start?/:count?/:status?
 final String getOrdersPaged = baseKanbanUrl + '/ordersbyaddresspaged/';
-final String getOrdersPagedByTickerName = baseKanbanUrl + '/getordersbytickernamepaged/';
+final String getOrdersPagedByTickerName =
+    baseKanbanUrl + '/getordersbytickernamepaged/';
+
+final String kanbanBaseWSUrl = isProduction
+    ? 'wss://kanbanprod.fabcoinapi.com/ws/'
+    : 'wss://kanbantest.fabcoinapi.com/ws/';
+final String coinPricesWSUrl = kanbanBaseWSUrl + 'allprices';
+// Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
+final String coinCurrencyUsdValueUrl = baseKanbanUrl + 'USDvalues';
+final String pairDecimalConfigUrl = baseKanbanUrl + 'kanban/getpairconfig';
+final String redepositStatusUrl = baseKanbanUrl + 'checkstatus/';
+
+/*----------------------------------------------------------------------
+                        Campaign
+----------------------------------------------------------------------*/
+final String testUsdtWalletAddress =
+    '0x7bfbfaf1d3f81827e1642114c7905de413d83321';
+
+final String prodUsdtWalletAddress =
+    '0x4e93c47b42d09f61a31f798877329890791077b2';

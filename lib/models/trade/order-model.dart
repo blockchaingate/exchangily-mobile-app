@@ -46,7 +46,7 @@ var jsonStructure = [
 ];
 
 /// PENDING - Change the name to Order from OrderModel once new architecture fully working
-class OrderModel {
+class Order {
   bool _payWithExg;
   String _orderHash;
   String _address;
@@ -62,7 +62,7 @@ class OrderModel {
   String _pairName;
   double _totalOrderQuantity;
   double _filledPercentage;
-  OrderModel(
+  Order(
       {bool payWithExg,
       String orderHash,
       String address,
@@ -97,19 +97,19 @@ class OrderModel {
     this._filledPercentage = (filledQuantity * 100) / _totalOrderQuantity;
   }
 
-  factory OrderModel.fromJson(Map<String, dynamic> json) {
-    return OrderModel(
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
         payWithExg: json['payWithExg'],
         orderHash: json['orderHash'],
         address: json['address'],
         pairLeft: json['pairLeft'],
         pairRight: json['pairRight'],
         orderType: json['orderType'],
-        bidOrAsk: json['bidOrAsk'],
-        price: bigNum2Double(json['price']),
+        bidOrAsk: json['b'],
+        price: bigNum2Double(json['p']),
         orderQuantity: bigNum2Double(json['orderQuantity']),
         filledQuantity: bigNum2Double(json['filledQuantity']),
-        time: json['time'],
+        time: json['t'],
         isActive: json['isActive'],
         pairName: json['pairName']);
   }
@@ -209,14 +209,14 @@ class OrderModel {
 }
 
 class OrderList {
-  final List<OrderModel> orders;
+  final List<Order> orders;
   OrderList({this.orders});
 
   factory OrderList.fromJson(List<dynamic> parsedJson) {
-    List<OrderModel> orders = new List<OrderModel>();
+    List<Order> orders = new List<Order>();
     parsedJson.forEach((i) {
       // print('raw orders ${i}');
-      OrderModel order = OrderModel.fromJson(i);
+      Order order = Order.fromJson(i);
       //  print('ready for ui orders ${order.toJson()}');
       orders.add(order);
     });

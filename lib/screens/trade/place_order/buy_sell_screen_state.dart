@@ -70,8 +70,8 @@ class BuySellScreenState extends BaseState {
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
-  List<OrderModel> sell;
-  List<OrderModel> buy;
+  List<Order> sell;
+  List<Order> buy;
   DialogService _dialogService = locator<DialogService>();
   double currentPrice = 0;
   double currentQuantity = 0;
@@ -212,10 +212,10 @@ class BuySellScreenState extends BaseState {
   tradeList() async {
     setState(ViewState.Busy);
     tradeListChannel.stream.listen((tradesString) {
-      List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
+      List<Trade> trades = Decoder.fromTradesJsonArray(tradesString);
 
       if (trades != null && trades.length > 0) {
-        TradeModel latestTrade = trades[0];
+        Trade latestTrade = trades[0];
         currentPrice = latestTrade.price;
       }
     });

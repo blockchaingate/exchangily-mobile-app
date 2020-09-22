@@ -1,13 +1,10 @@
 import 'dart:convert';
-
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -36,13 +33,13 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   List<PairDecimalConfig> pairDecimalConfigList = [];
 
-  List<OrderModel> buyOrderBookList = [];
-  List<OrderModel> sellOrderBookList = [];
+  List<Order> buyOrderBookList = [];
+  List<Order> sellOrderBookList = [];
   List orderBook = [];
 
-  List<TradeModel> marketTradesList = [];
+  List<Trade> marketTradesList = [];
 
-  List<OrderModel> myOrders = [];
+  List<Order> myOrders = [];
 
   Price currentPairPrice;
   List<dynamic> ordersViewTabBody = [];
@@ -166,8 +163,8 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   // Order aggregation
 
-  List<OrderModel> orderAggregation(List<OrderModel> passedOrders) {
-    List<OrderModel> result = [];
+  List<Order> orderAggregation(List<Order> passedOrders) {
+    List<Order> result = [];
     print('passed orders length ${passedOrders.length}');
     double prevQuantity = 0.0;
     List<int> indexArray = [];

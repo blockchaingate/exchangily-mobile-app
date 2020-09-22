@@ -165,7 +165,7 @@ class TradeService {
   }
 
 // Get all my orders
-  Future<List<OrderModel>> getMyOrders(String exgAddress) async {
+  Future<List<Order>> getMyOrders(String exgAddress) async {
     OrderList orderList;
     try {
       var data = await _api.getOrders(exgAddress);
@@ -179,7 +179,7 @@ class TradeService {
   }
 
   // Get my orders by tickername
-  Future<List<OrderModel>> getMyOrdersByTickerName(
+  Future<List<Order>> getMyOrdersByTickerName(
       String exgAddress, String tickerName) async {
     OrderList orderList;
     try {

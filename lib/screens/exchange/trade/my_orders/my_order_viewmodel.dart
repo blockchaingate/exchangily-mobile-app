@@ -21,8 +21,6 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 
-import 'package:exchangilymobileapp/models/trade/price.dart';
-
 class MyOrdersViewModel extends BaseViewModel {
   // FutureViewModel<List<OrderModel>> {
   final String tickerName;
@@ -41,10 +39,10 @@ class MyOrdersViewModel extends BaseViewModel {
   double filledAmount = 0;
   double filledPercentage = 0;
   String errorMessage = '';
-  List<OrderModel> myAllOrders = [];
-  List<OrderModel> myOpenOrders = [];
-  List<OrderModel> myCloseOrders = [];
-  List<List<OrderModel>> myOrdersTabBarView = [];
+  List<Order> myAllOrders = [];
+  List<Order> myOpenOrders = [];
+  List<Order> myCloseOrders = [];
+  List<List<Order>> myOrdersTabBarView = [];
 
   bool isFutureError = false;
   bool _showCurrentPairOrders = false;
@@ -176,8 +174,7 @@ class MyOrdersViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  @override
-  void onData(List<OrderModel> data) {
+  void onData(List<Order> data) {
     setBusy(true);
     if (data != null) {
       myAllOrders = data;
@@ -207,7 +204,6 @@ class MyOrdersViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  @override
   void onError(error) {
     isFutureError = true;
     log.e('Future error $error');

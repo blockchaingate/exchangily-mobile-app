@@ -15,7 +15,7 @@ import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import "package:flutter/material.dart";
 
 class OrderDetail extends StatelessWidget {
-  final List<OrderModel> orderArray;
+  final List<Order> orderArray;
   final bool bidOrAsk;
 
   OrderDetail(this.orderArray, this.bidOrAsk);

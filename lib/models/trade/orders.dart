@@ -16,6 +16,6 @@ import 'order-model.dart';
 // Update Orders name to OrderType so that OrderModel can be updated to Order
 class Orders {
   /// instead of buy and sell it should be buyOrder, sellOrder
-  List<OrderModel> buy;
-  List<OrderModel> sell;
+  List<Order> buy;
+  List<Order> sell;
 }

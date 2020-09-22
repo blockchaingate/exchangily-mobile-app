@@ -45,7 +45,7 @@ class Decoder {
     return s;
   }
 
-  static TradeModel fromTradeJsonMap(Map<String, dynamic> json) {
+  static Trade fromTradeJsonMap(Map<String, dynamic> json) {
     String orderHash1 = json['orderHash1'];
     String orderHash2 = json['orderHash2'];
     double price = bigNum2Double(json['price'].toString());
@@ -53,7 +53,7 @@ class Decoder {
     int blockNumber = json['blockNumber'];
     int time = json['time'];
     bool bidOrAsk = json['bidOrAsk'];
-    TradeModel s = new TradeModel(
+    Trade s = new Trade(
         orderHash1: orderHash1,
         orderHash2: orderHash2,
         price: price,
@@ -64,7 +64,7 @@ class Decoder {
     return s;
   }
 
-  static OrderModel fromOrderJsonMap(Map<String, dynamic> json) {
+  static Order fromOrderJsonMap(Map<String, dynamic> json) {
     bool payWithExg = json['payWithExg'];
     String orderHash = json['orderHash'];
     String address = json['address'];
@@ -77,7 +77,7 @@ class Decoder {
     double filledQuantity = bigNum2Double(json['filledQuantity']);
     int time = json['time'];
     bool isActive = json['isActive'];
-    OrderModel s = new OrderModel(
+    Order s = new Order(
         payWithExg: payWithExg,
         orderHash: orderHash,
         address: address,
@@ -93,12 +93,12 @@ class Decoder {
     return s;
   }
 
-  static List<TradeModel> fromTradesJsonArray(String jsonString) {
+  static List<Trade> fromTradesJsonArray(String jsonString) {
     // Map<String, dynamic> decodedMap = jsonDecode(jsonString);
     List<dynamic> dynamicList = jsonDecode(jsonString);
-    List<TradeModel> trades = new List<TradeModel>();
+    List<Trade> trades = new List<Trade>();
     dynamicList.forEach((f) {
-      TradeModel s = fromTradeJsonMap(f);
+      Trade s = fromTradeJsonMap(f);
       trades.add(s);
     });
 
@@ -120,17 +120,17 @@ class Decoder {
 
   static Orders fromOrdersJsonArray(String jsonString) {
     var dynamicList = jsonDecode(jsonString);
-    List<OrderModel> buy = new List<OrderModel>();
-    List<OrderModel> sell = new List<OrderModel>();
+    List<Order> buy = new List<Order>();
+    List<Order> sell = new List<Order>();
 
     dynamicList['buy'].forEach((f) {
-      OrderModel s = fromOrderJsonMap(f);
+      Order s = fromOrderJsonMap(f);
       buy.add(s);
     });
 
     for (var i = dynamicList['sell'].length - 1; i >= 0; i--) {
       var f = dynamicList['sell'][i];
-      OrderModel s = fromOrderJsonMap(f);
+      Order s = fromOrderJsonMap(f);
       sell.add(s);
     }
 

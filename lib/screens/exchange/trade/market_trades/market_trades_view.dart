@@ -8,7 +8,7 @@ import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 class MarketTradesView extends StatelessWidget {
-  final List<TradeModel> marketTrades;
+  final List<Trade> marketTrades;
   const MarketTradesView({Key key, this.marketTrades}) : super(key: key);
 
   @override
@@ -52,7 +52,7 @@ class MarketTradeDetailView extends StatelessWidget {
     @required this.marketTrades,
   }) : super(key: key);
 
-  final List<TradeModel> marketTrades;
+  final List<Trade> marketTrades;
 
   @override
   Widget build(BuildContext context) {

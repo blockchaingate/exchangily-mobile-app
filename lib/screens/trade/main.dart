@@ -62,10 +62,10 @@ class _TradeState extends State<Trade> with TradeService {
   void _updateTrades(tradesString) {
     // _klinePageState.currentState.updateTrades(trades);
 
-    List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
+    // List<Trade> trades = Decoder.fromTradesJsonArray(tradesString);
     if ((this._tradeMarketState != null) &&
         (this._tradeMarketState.currentState != null)) {
-      this._tradeMarketState.currentState.updateTrades(trades);
+      // this._tradeMarketState.currentState.updateTrades(trades);
     }
   }
 

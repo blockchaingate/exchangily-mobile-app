@@ -598,8 +598,8 @@ class BuySell extends StatelessWidget {
   }
 
   // Using orderDetail here in this buy and sell screen to fill the price and quanity in text fields when user click on the order
-  Widget orderDetail(List<OrderModel> orderArray, final bool bidOrAsk, model) {
-    List<OrderModel> sellOrders = [];
+  Widget orderDetail(List<Order> orderArray, final bool bidOrAsk, model) {
+    List<Order> sellOrders = [];
     print('OrderArray length before ${orderArray.length}');
     orderArray = (orderArray.length > 7)
         ? orderArray = (orderArray.sublist(0, 7))

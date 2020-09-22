@@ -263,7 +263,7 @@ class ApiService {
   }
 
   // Get Orders by address
-  Future<List<OrderModel>> getOrders(String exgAddress) async {
+  Future<List<Order>> getOrders(String exgAddress) async {
     try {
       String url = environment['endpoints']['kanban'] + orders + exgAddress;
       log.w('get my orders url $url');
