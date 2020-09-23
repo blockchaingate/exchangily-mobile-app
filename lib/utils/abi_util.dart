@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/utils/exaddr.dart';
+import 'package:exchangilymobileapp/utils/fab_util.dart';
 import './string_util.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -31,6 +33,20 @@ getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
   abiHex += fixLength(trimHexPrefix(addressInWallet), 64);
   return abiHex;
 }
+
+getSendCoinFuncABI(coinType, kbPaymentAddress, amount) {
+  var abiHex = "10c43d65";
+  var fabAddress = toLegacyAddress(kbPaymentAddress);
+
+  var exAddress = fabToExgAddress(fabAddress);
+  abiHex += fixLength(trimHexPrefix(exAddress), 64);
+  abiHex += fixLength(coinType.toRadixString(16), 64);
+  var amountHex = amount.toRadixString(16);
+  abiHex += fixLength(trimHexPrefix(amountHex), 64);
+  return abiHex;
+}
+
+//0x10c43d65000000000000000000000000dcd0f23125f74ef621dfa3310625f8af0dcd971b0000000000000000000000000000000000000000000000000000000000000005000000000000000000000000000000000000000000000000a688906bd8b00000
 
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
     String addressInKanban, signedMessage) {

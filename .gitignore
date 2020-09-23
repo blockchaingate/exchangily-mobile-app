@@ -76,6 +76,9 @@
 android/key.properties
 lib/environments/environment_type.dart
 pubspec.lock
+ios/Flutter/.last_build_id
 assets/images/wallet-page/dusd.png
 .vscode/settings.json
 .vscode/launch.json
+ios/Flutter/.last_build_id
+ios/Podfile.lock

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-08-25T15:27:50.371866",
+  "@@last_modified": "2020-09-18T15:59:28.744154",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1773,6 +1773,42 @@
   "serverBusy": "Server Busy",
   "@serverBusy": {
     "description": "campaign_list_serverBusy",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bindpay": "Bindpay",
+  "@bindpay": {
+    "description": "bindpay",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tranfser": "Tranfser",
+  "@tranfser": {
+    "description": "flash_pay_tranfser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share": "Share",
+  "@share": {
+    "description": "flash_pay_tranfser_share_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "validationError": "Validation Error",
+  "@validationError": {
+    "description": "flash_pay_tranfser_validationError",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseTryAgainLater": "Please try again later",
+  "@pleaseTryAgainLater": {
+    "description": "flash_pay_tranfser_please_try_again_later",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseCorrectTheFormatOfReceiveAddress": "Please correct the format of receive address",
+  "@pleaseCorrectTheFormatOfReceiveAddress": {
+    "description": "flash_pay_tranfser_correct_format_of_receive_address",
     "type": "text",
     "placeholders": {}
   }

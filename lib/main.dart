@@ -95,20 +95,20 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.25),
             headline2: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 color: globals.white,
                 fontWeight: FontWeight.w300),
-            headline3: TextStyle(fontSize: 18, color: globals.white),
+            headline3: TextStyle(fontSize: 16, color: globals.white),
             headline4: TextStyle(
-                fontSize: 16,
-                color: globals.white,
-                fontWeight: FontWeight.w400),
-            subtitle1: TextStyle(
                 fontSize: 15,
                 color: globals.white,
                 fontWeight: FontWeight.w300),
-            headline5: TextStyle(
+            subtitle1: TextStyle(
                 fontSize: 14,
+                color: globals.white,
+                fontWeight: FontWeight.w300),
+            headline5: TextStyle(
+                fontSize: 12,
                 color: globals.white,
                 fontWeight: FontWeight.w300),
             subtitle2: TextStyle(
@@ -120,7 +120,7 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(fontSize: 13, color: globals.red),
             headline6: TextStyle(
                 decorationThickness: 2,
-                fontSize: 12,
+                fontSize: 10,
                 color: globals.white,
                 fontWeight: FontWeight.w400)),
       ),

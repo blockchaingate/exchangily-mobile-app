@@ -398,11 +398,12 @@ class SendScreenState extends BaseState {
   Future scan() async {
     setState(ViewState.Busy);
     try {
-      String barcode = await BarcodeScanner.scan();
+      String barcode = '';
+      await BarcodeScanner.scan().then((res) => barcode = res.rawContent);
       receiverWalletAddressTextController.text = barcode;
       setState(ViewState.Idle);
     } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
+      if (e.code == BarcodeScanner.cameraAccessDenied) {
         setState(ViewState.Idle);
         sharedService.alertDialog(
             '', AppLocalizations.of(context).userAccessDenied,

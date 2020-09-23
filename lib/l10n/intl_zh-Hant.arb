@@ -1588,5 +1588,71 @@
     "description": "app_update_popup_button_text_later",
     "type": "text",
     "placeholders": {}
+  },
+  "sessionExpired": "会话超时",
+  "@sessionExpired": {
+    "description": "camapign_login_session_expired",
+    "type": "text",
+    "placeholders": {}
+  },
+  "memberDetails": "会员资料",
+  "@memberDetails": {
+    "description": "camapign_team_reward_member_details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "website": "网站",
+  "@website": {
+    "description": "wallet_dashboard_app_update_popup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "clickOnWebsiteButton": "或单击网站按钮以从亿币官方站点下载最新版本",
+  "@clickOnWebsiteButton": {
+    "description": "wallet_dashboard_app_update_popup",
+    "type": "text",
+    "placeholders": {}
+  },
+  "serverBusy": "服务器正忙",
+  "@serverBusy": {
+    "description": "campaign_list_serverBusy",
+    "type": "text",
+    "placeholders": {}
+  },
+  "bindpay": "Bindpay",
+  "@bindpay": {
+    "description": "bindpay",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tranfser": "转账",
+  "@tranfser": {
+    "description": "flash_pay_tranfser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "share": "分享",
+  "@share": {
+    "description": "flash_pay_tranfser_share_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "validationError": "验证错误",
+  "@validationError": {
+    "description": "flash_pay_tranfser_validationError",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseTryAgainLater": "请稍后再试",
+  "@pleaseTryAgainLater": {
+    "description": "flash_pay_tranfser_please_try_again_later",
+    "type": "text",
+    "placeholders": {}
+  },
+  "wrongPassword": "请输入正确的密码",
+  "@wrongPassword": {
+    "description": "flash_pay_tranfser_wrong_password",
+    "type": "text",
+    "placeholders": {}
   }
   }
