@@ -19,6 +19,7 @@ class MarketPairsTabViewState extends BaseState {
   final log = getLogger('MarketPairsTabViewState');
   List images;
   ApiService apiService = locator<ApiService>();
+  SharedService sharedService = locator<SharedService>();
   BuildContext context;
   String lang = 'en';
 

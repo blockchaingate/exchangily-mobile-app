@@ -30,7 +30,7 @@ class ApiService {
   final client = new http.Client();
 
   // final kanbanBaseUrl = environment['endpoints']['kanban'];
-  // Please keep this for future test 
+  // Please keep this for future test
   final kanbanBaseUrl = environment['endpoints']['JackLocalKanban'];
 
   static const getBalance = 'kanban/getBalance/';
@@ -193,9 +193,9 @@ class ApiService {
     }
   }
 
-  /*-------------------------------------------------------------------------------------
-                                        Get coin currency Usd Prices
-      -------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------
+                                    Get coin currency Usd Prices
+-------------------------------------------------------------------------------------*/
 
   Future getCoinCurrencyUsdPrice() async {
     log.w('url $coinCurrencyUsdPriceUrl');
@@ -267,11 +267,14 @@ class ApiService {
     try {
       String url = environment['endpoints']['kanban'] + orders + exgAddress;
       log.w('get my orders url $url');
+      print('in try');
       var res = await client.get(url);
       log.e('res $res');
       var jsonList = jsonDecode(res.body) as List;
       log.i('jsonList $jsonList');
       OrderList orderList = OrderList.fromJson(jsonList);
+      print('after order list ${orderList.orders.length}');
+      //  throw Exception('Catch Exception');
       return orderList.orders;
     } catch (err) {
       log.e('getOrders Failed to load the data from the API， $err');
@@ -565,6 +568,20 @@ class ApiService {
   Future getSliderImages() async {
     try {
       final res = await http.get(kanbanBaseUrl + "kanban/getadvconfig");
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      log.e('getSliderImages Failed to load the data from the API $e');
+      return "error";
+    }
+    return "error";
+  }
+
+  Future getAnnouncement() async {
+    try {
+      final res = await http.get(kanbanBaseUrl + "kanban/getAnnouncement");
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);

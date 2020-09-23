@@ -10,21 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
 
-class MarketPairPriceDetailView extends ViewModelWidget<MarketsViewModel> {
+class MarketPairPriceDetailView extends StatelessWidget {
   final List<Price> pairList;
   MarketPairPriceDetailView({Key key, this.pairList}) : super(key: key);
   final NavigationService navigationService = locator<NavigationService>();
 
-  final List titles = [
-    'Ticker',
-    'Price',
-    'High',
-    'Low',
-    'Change',
-  ];
-
   @override
-  Widget build(BuildContext context, MarketsViewModel model) {
+  Widget build(BuildContext context) {
     // if (false)
     return ListView(children: [
       Container(

@@ -40,3 +40,12 @@ final String getAppVersionUrl = baseKanbanUrl + 'getappversion';
 ----------------------------------------------------------------------*/
 
 final String getTokenListUrl = baseKanbanUrl + 'exchangily/getTokenList';
+
+/*----------------------------------------------------------------------
+                            Exchange
+
+          /ordersbyaddresspaged/:address/:start?/:count?/:status?
+----------------------------------------------------------------------*/
+
+final String getOrdersPaged = baseKanbanUrl + '/ordersbyaddresspaged/';
+final String getOrdersPagedByTickerName = baseKanbanUrl + '/getordersbytickernamepaged/';

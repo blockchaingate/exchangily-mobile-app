@@ -109,6 +109,7 @@ MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
   }
 
   final publicKey = bytesToInt(privateKeyBytesToPublic(privateKey));
+  print("publicKey: " + publicKey.toString());
 
   //Implementation for calculating v naively taken from there, I don't understand
   //any of this.

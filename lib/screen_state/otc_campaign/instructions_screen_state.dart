@@ -6,11 +6,9 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

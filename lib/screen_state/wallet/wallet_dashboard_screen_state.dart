@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
@@ -35,6 +36,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../environments/coins.dart' as coinList;
+import '../../shared/globals.dart' as globals;
 import 'package:intl/intl.dart';
 
 class WalletDashboardScreenState extends BaseState {
@@ -78,6 +80,9 @@ class WalletDashboardScreenState extends BaseState {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  //vars for announcement
+  bool hasApiError = false;
+  List announceList;
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -91,6 +96,19 @@ class WalletDashboardScreenState extends BaseState {
     showDialogWarning();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = prefs.getString('lang');
+    setlangGlobal(lang);
+    log.w('langGlobal: ' + getlangGlobal());
+
+    var announceContent;
+
+    announceContent = await apiService.getAnnouncement();
+
+    if (announceContent == "error") {
+      hasApiError = true;
+    } else {
+      print(announceContent.toString());
+      announceList = announceContent;
+    }
 
     setBusy(false);
   }

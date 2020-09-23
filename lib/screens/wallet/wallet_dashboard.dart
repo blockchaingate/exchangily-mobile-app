@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -117,7 +118,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                 bottom: -20,
                                 child: Card(
                                   elevation: model.elevation,
-                                  color: isProduction
+                                  color: !isProduction
                                       ? globals.walletCardColor
                                       : globals.red.withAlpha(200),
                                   child: Container(
@@ -125,20 +126,92 @@ class WalletDashboardScreen extends StatelessWidget {
                                     padding: EdgeInsets.all(10),
                                     child: Row(
                                       children: <Widget>[
-                                        Container(
-                                          padding: EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(30)),
-                                          child: Image.asset(
-                                            'assets/images/wallet-page/dollar-sign.png',
-                                            width: 40,
-                                            height: 40,
-                                            color: globals
-                                                .iconBackgroundColor, // image background color
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
+                                        //Announcement Widget
+                                        model.announceList == null
+                                            ? Image.asset(
+                                                'assets/images/wallet-page/dollar-sign.png',
+                                                width: 40,
+                                                height: 40,
+                                                color: globals
+                                                    .iconBackgroundColor, // image background color
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Stack(
+                                                children: [
+                                                  Container(
+                                                    width: 60,
+                                                    height: 60,
+                                                    child: Center(
+                                                      child: Container(
+                                                          padding:
+                                                              EdgeInsets.all(8),
+                                                          decoration: BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          30)),
+                                                          child: InkWell(
+                                                            onTap: () {
+                                                              if (!model
+                                                                  .hasApiError)
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                AnnouncementList(model.announceList)));
+                                                              else
+                                                                print(
+                                                                    "API has error");
+                                                            },
+                                                            child: Container(
+                                                                width: 40,
+                                                                height: 40,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  shape: BoxShape
+                                                                      .circle,
+                                                                  color: globals
+                                                                      .iconBackgroundColor,
+                                                                ),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .mail_outline,
+                                                                  color: !isProduction
+                                                                      ? globals
+                                                                          .walletCardColor
+                                                                      : globals
+                                                                          .red
+                                                                          .withAlpha(
+                                                                              200),
+                                                                )),
+                                                          )),
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                      top: 8,
+                                                      left: 8,
+                                                      child: Container(
+                                                        width: 15,
+                                                        height: 15,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                                color:
+                                                                    Colors.red),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "2",
+                                                            style: TextStyle(
+                                                                fontSize: 10,
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        ),
+                                                      ))
+                                                ],
+                                              ), //Announcement Widget end
                                         UIHelper.horizontalSpaceSmall,
                                         Expanded(
                                           child: Column(
