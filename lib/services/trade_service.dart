@@ -13,7 +13,7 @@
 
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/orderbook_model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:web_socket_channel/io.dart';

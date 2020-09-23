@@ -208,11 +208,11 @@ class Order {
   }
 }
 
-class OrderList {
+class Orders {
   final List<Order> orders;
-  OrderList({this.orders});
+  Orders({this.orders});
 
-  factory OrderList.fromJson(List<dynamic> parsedJson) {
+  factory Orders.fromJson(List<dynamic> parsedJson) {
     List<Order> orders = new List<Order>();
     parsedJson.forEach((i) {
       // print('raw orders ${i}');
@@ -220,6 +220,6 @@ class OrderList {
       //  print('ready for ui orders ${order.toJson()}');
       orders.add(order);
     });
-    return new OrderList(orders: orders);
+    return new Orders(orders: orders);
   }
 }

@@ -12,7 +12,7 @@
 */
 
 import 'dart:convert';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/orderbook_model.dart';
 import 'package:exchangilymobileapp/models/trade/orders.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
@@ -64,34 +64,34 @@ class Decoder {
     return s;
   }
 
-  static Order fromOrderJsonMap(Map<String, dynamic> json) {
-    bool payWithExg = json['payWithExg'];
-    String orderHash = json['orderHash'];
-    String address = json['address'];
-    int pairLeft = json['pairLeft'];
-    int pairRight = json['pairRight'];
-    int orderType = json['orderType'];
-    bool bidOrAsk = json['bidOrAsk'];
-    double price = bigNum2Double(json['price']);
-    double orderQuantity = bigNum2Double(json['orderQuantity']);
-    double filledQuantity = bigNum2Double(json['filledQuantity']);
-    int time = json['time'];
-    bool isActive = json['isActive'];
-    Order s = new Order(
-        payWithExg: payWithExg,
-        orderHash: orderHash,
-        address: address,
-        pairLeft: pairLeft,
-        pairRight: pairRight,
-        orderType: orderType,
-        bidOrAsk: bidOrAsk,
-        price: price,
-        orderQuantity: orderQuantity,
-        filledQuantity: filledQuantity,
-        time: time,
-        isActive: isActive);
-    return s;
-  }
+  // static Order fromOrderJsonMap(Map<String, dynamic> json) {
+  //   bool payWithExg = json['payWithExg'];
+  //   String orderHash = json['orderHash'];
+  //   String address = json['address'];
+  //   int pairLeft = json['pairLeft'];
+  //   int pairRight = json['pairRight'];
+  //   int orderType = json['orderType'];
+  //   bool bidOrAsk = json['bidOrAsk'];
+  //   double price = bigNum2Double(json['price']);
+  //   double orderQuantity = bigNum2Double(json['orderQuantity']);
+  //   double filledQuantity = bigNum2Double(json['filledQuantity']);
+  //   int time = json['time'];
+  //   bool isActive = json['isActive'];
+  //   Order s = new Order(
+  //       payWithExg: payWithExg,
+  //       orderHash: orderHash,
+  //       address: address,
+  //       pairLeft: pairLeft,
+  //       pairRight: pairRight,
+  //       orderType: orderType,
+  //       bidOrAsk: bidOrAsk,
+  //       price: price,
+  //       orderQuantity: orderQuantity,
+  //       filledQuantity: filledQuantity,
+  //       time: time,
+  //       isActive: isActive);
+  //   return s;
+  // }
 
   static List<Trade> fromTradesJsonArray(String jsonString) {
     // Map<String, dynamic> decodedMap = jsonDecode(jsonString);
@@ -118,25 +118,25 @@ class Decoder {
     return students;
   }
 
-  static Orders fromOrdersJsonArray(String jsonString) {
-    var dynamicList = jsonDecode(jsonString);
-    List<Order> buy = new List<Order>();
-    List<Order> sell = new List<Order>();
+  // static Orders fromOrdersJsonArray(String jsonString) {
+  //   var dynamicList = jsonDecode(jsonString);
+  //   List<Order> buy = new List<Order>();
+  //   List<Order> sell = new List<Order>();
 
-    dynamicList['buy'].forEach((f) {
-      Order s = fromOrderJsonMap(f);
-      buy.add(s);
-    });
+  //   dynamicList['buy'].forEach((f) {
+  //     Order s = fromOrderJsonMap(f);
+  //     buy.add(s);
+  //   });
 
-    for (var i = dynamicList['sell'].length - 1; i >= 0; i--) {
-      var f = dynamicList['sell'][i];
-      Order s = fromOrderJsonMap(f);
-      sell.add(s);
-    }
+  //   for (var i = dynamicList['sell'].length - 1; i >= 0; i--) {
+  //     var f = dynamicList['sell'][i];
+  //     Order s = fromOrderJsonMap(f);
+  //     sell.add(s);
+  //   }
 
-    Orders orders = new Orders();
-    orders.buy = buy;
-    orders.sell = sell;
-    return orders;
-  }
+  //   Orders orders = new Orders();
+  //   orders.buy = buy;
+  //   orders.sell = sell;
+  //   return orders;
+  // }
 }

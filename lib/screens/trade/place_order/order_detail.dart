@@ -11,11 +11,11 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/orderbook_model.dart';
 import "package:flutter/material.dart";
 
 class OrderDetail extends StatelessWidget {
-  final List<Order> orderArray;
+  final List<OrderType> orderArray;
   final bool bidOrAsk;
 
   OrderDetail(this.orderArray, this.bidOrAsk);
@@ -39,7 +39,7 @@ class OrderDetail extends StatelessWidget {
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
-                      child: Text(item.orderQuantity.toString(),
+                      child: Text(item.quantity.toString(),
                           style:
                               TextStyle(color: Colors.white, fontSize: 13.0)))
                 ],

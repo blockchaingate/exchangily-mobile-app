@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/orderbook_model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -33,13 +33,13 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   List<PairDecimalConfig> pairDecimalConfigList = [];
 
-  List<Order> buyOrderBookList = [];
-  List<Order> sellOrderBookList = [];
-  List orderBook = [];
+  //List<Order> buyOrderBookList = [];
+  //List<Order> sellOrderBookList = [];
+  Orderbook orderbook;
 
   List<Trade> marketTradesList = [];
 
-  List<Order> myOrders = [];
+  // List<Order> myOrders = [];
 
   Price currentPairPrice;
   List<dynamic> ordersViewTabBody = [];
@@ -88,7 +88,7 @@ class TradeViewModel extends MultipleStreamViewModel {
 // Change/update stream data before displaying on UI
   @override
   void onData(String key, data) {
-    orderBook = [buyOrderBookList, sellOrderBookList];
+    // orderBook = [buyOrderBookList, sellOrderBookList];
   }
 
   /// Transform stream data before notifying to view modal
@@ -116,20 +116,21 @@ class TradeViewModel extends MultipleStreamViewModel {
       /// Order list
       else if (key == orderBookStreamKey) {
         // Buy order
-        List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
-        OrderList orderList = OrderList.fromJson(jsonDynamicList);
-        log.e('orderList.orders.length ${orderList.orders.length}');
-        buyOrderBookList = orderAggregation(orderList.orders);
+        var jsonDynamic = jsonDecode(data);
+        orderbook = Orderbook.fromJson(jsonDynamic);
+        //  OrderList orderList = OrderList.fromJson(jsonDynamicList);
+        //  log.e('orderList.orders.length ${orderList.orders.length}');
+        //  buyOrderBookList = orderAggregation(orderList.orders);
 
         // Sell orders
-        List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
-        OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
+        //  List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
+        // OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
         //  List sellOrders = sellOrderList.orders.reversed
         //      .toList(); // reverse sell orders to show the list ascending
-        sellOrderBookList = orderAggregation(sellOrderList.orders);
 
-        log.w(
-            'OrderBook length -- ${orderAggregation(buyOrderBookList).length} ${sellOrderList.orders.length}');
+        //  sellOrderBookList = orderAggregation(sellOrderList.orders);
+
+        log.w('OrderBook  -- ${orderbook.toJson()}');
       }
 
       /// Market trade list
@@ -163,8 +164,8 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   // Order aggregation
 
-  List<Order> orderAggregation(List<Order> passedOrders) {
-    List<Order> result = [];
+  List<Orderbook> orderAggregation(List<Orderbook> passedOrders) {
+    List<Orderbook> result = [];
     print('passed orders length ${passedOrders.length}');
     double prevQuantity = 0.0;
     List<int> indexArray = [];

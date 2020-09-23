@@ -6,7 +6,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
 class OrderBookView extends StatelessWidget {
-  final List orderBook;
+  final orderBook;
   final DecimalConfig decimalConfig;
   OrderBookView({Key key, this.orderBook, this.decimalConfig})
       : super(key: key);

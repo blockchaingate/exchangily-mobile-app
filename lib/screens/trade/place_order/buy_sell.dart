@@ -14,7 +14,7 @@
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
+import 'package:exchangilymobileapp/models/trade/orderbook_model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
@@ -36,7 +36,7 @@ class BuySell extends StatelessWidget {
       : super(key: key);
   final bool bidOrAsk;
   final Price pair;
-  final List orderbook;
+  final Orderbook orderbook;
 
   @override
   Widget build(BuildContext context) {
@@ -569,7 +569,7 @@ class BuySell extends StatelessWidget {
                                                   .headline6))
                                     ],
                                   ),
-                                  orderDetail(orderbook[1], true, model),
+                                  orderDetail(orderbook.buyOrders, true, model),
                                   Container(
                                       padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                                       child: Row(
@@ -582,7 +582,8 @@ class BuySell extends StatelessWidget {
                                                   .headline4)
                                         ],
                                       )),
-                                  orderDetail(orderbook[0], false, model)
+                                  orderDetail(
+                                      orderbook.sellOrders, false, model)
                                 ],
                               ))
                         ],
@@ -598,8 +599,8 @@ class BuySell extends StatelessWidget {
   }
 
   // Using orderDetail here in this buy and sell screen to fill the price and quanity in text fields when user click on the order
-  Widget orderDetail(List<Order> orderArray, final bool bidOrAsk, model) {
-    List<Order> sellOrders = [];
+  Widget orderDetail(List<OrderType> orderArray, final bool bidOrAsk, model) {
+    List<OrderType> sellOrders = [];
     print('OrderArray length before ${orderArray.length}');
     orderArray = (orderArray.length > 7)
         ? orderArray = (orderArray.sublist(0, 7))
@@ -616,8 +617,8 @@ class BuySell extends StatelessWidget {
           InkWell(
             onTap: () {
               model.setBusy(true);
-              model.quantityTextController.text = item.orderQuantity.toString();
-              model.quantity = item.orderQuantity;
+              model.quantityTextController.text = item.quantity.toString();
+              model.quantity = item.quantity;
               model.priceTextController.text = item.price.toString();
               model.price = item.price;
               model.transactionAmount = model.quantity * model.price;
@@ -638,7 +639,7 @@ class BuySell extends StatelessWidget {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                         color: Color(!bidOrAsk ? 0xFF264559 : 0xFF502649),
                         child: Text(
-                            item.orderQuantity
+                            item.quantity
                                 .toStringAsFixed(model.quantityDecimal),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 13.0)))
