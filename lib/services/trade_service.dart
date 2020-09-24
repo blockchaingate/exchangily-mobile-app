@@ -11,21 +11,41 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:bs58check/bs58check.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/models/trade/orderbook_model.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import "package:hex/hex.dart";
 
 class TradeService {
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
   static String basePath = environment['websocket'];
+
+/*----------------------------------------------------------------------
+                    Convert fab to hex
+----------------------------------------------------------------------*/
+
+  String convertFabAddressToHex(String fabAddress) {
+    var decoded = base58.decode(fabAddress);
+    String hexString = HEX.encode(decoded);
+    return hexString;
+  }
+
+// store the trimmed hex value as kanban address won't change so
+// no need to convert everytime
+  String trimHexString(String hexString) {
+    int length = hexString.length;
+    String trimmedString = '0x' + hexString.substring(2, 42);
+    return trimmedString;
+  }
 
 /*----------------------------------------------------------------------
                     getPairDecimalConfig

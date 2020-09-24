@@ -235,7 +235,7 @@ exgToFabAddress(String address) {
 
    */
   address = bs58check.encode(HEX.decode(address));
-  // log.w('address after encode=' + address);
+  log.w('address after encode=' + address);
 
   /*
   var decoded = bs58check.decode('mvLuZXGYMxpRM65kgzbfoKqs3FPcisM6ri');

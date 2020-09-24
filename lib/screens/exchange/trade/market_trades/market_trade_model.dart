@@ -13,7 +13,7 @@
 
 import 'package:exchangilymobileapp/utils/string_util.dart';
 
-class Trade {
+class MarketTrade {
   String _orderHash1;
   String _orderHash2;
   double _price;
@@ -22,7 +22,7 @@ class Trade {
   int _time;
   bool _bidOrAsk;
 
-  Trade(
+  MarketTrade(
       {String orderHash1,
       String orderHash2,
       double price,
@@ -39,8 +39,8 @@ class Trade {
     this._bidOrAsk = bidOrAsk;
   }
 
-  factory Trade.fromJson(Map<String, dynamic> json) {
-    return Trade(
+  factory MarketTrade.fromJson(Map<String, dynamic> json) {
+    return MarketTrade(
       orderHash1: json['orderHash1'],
       orderHash2: json['orderHash2'],
       price: bigNum2Double(json['price'].toString()),
@@ -99,17 +99,17 @@ class Trade {
   }
 }
 
-class TradeList {
-  final List<Trade> trades;
-  TradeList({this.trades});
-  factory TradeList.fromJson(List<dynamic> parsedJson) {
+class MarketTradeList {
+  final List<MarketTrade> trades;
+  MarketTradeList({this.trades});
+  factory MarketTradeList.fromJson(List<dynamic> parsedJson) {
     // print(parsedJson);
-    List<Trade> trades = new List<Trade>();
+    List<MarketTrade> trades = new List<MarketTrade>();
     parsedJson.forEach((i) {
-      Trade trade = Trade.fromJson(i);
+      MarketTrade trade = MarketTrade.fromJson(i);
 
       trades.add(trade);
     });
-    return new TradeList(trades: trades);
+    return new MarketTradeList(trades: trades);
   }
 }

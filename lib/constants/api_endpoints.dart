@@ -26,8 +26,10 @@ final String postFreeFabUrl =
 
 const String usdCoinPriceUrl =
     'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
-const String coinCurrencyUsdPriceUrl =
-    'https://kanbanprod.fabcoinapi.com/USDvalues';
+
+final String coinPricesWSUrl = kanbanBaseWSUrl + 'allprices';
+// Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
+final String coinCurrencyUsdValueUrl = baseKanbanUrl + 'USDvalues';
 
 /*----------------------------------------------------------------------
                             Get App Version
@@ -36,30 +38,36 @@ const String coinCurrencyUsdPriceUrl =
 final String getAppVersionUrl = baseKanbanUrl + 'getappversion';
 
 /*----------------------------------------------------------------------
-                            Get Token List
+                Get Token List, Decimal config, checkstatus
 ----------------------------------------------------------------------*/
 
 final String getTokenListUrl = baseKanbanUrl + 'exchangily/getTokenList';
 
+final String pairDecimalConfigUrl = baseKanbanUrl + 'kanban/getpairconfig';
+final String redepositStatusUrl = baseKanbanUrl + 'checkstatus/';
 /*----------------------------------------------------------------------
                             Exchange
 ----------------------------------------------------------------------*/
 
 // /ordersbyaddresspaged/:address/:start?/:count?/:status?
 // /getordersbytickernamepaged/:address/:tickerName/:start?/:count?/:status?
-final String getOrdersPaged = baseKanbanUrl + '/ordersbyaddresspaged/';
-final String getOrdersPagedByTickerName =
+
+// Below is the address type which is used in ordersPaged
+// convert base58 fab address to hex. trim the first two and last 8 chars.
+// then put a 0x in front
+
+final String getOrdersPagedByFabHexAddress = baseKanbanUrl + '/ordersbyaddresspaged/';
+final String getOrdersPagedByFabHexAddressAndTickerName =
     baseKanbanUrl + '/getordersbytickernamepaged/';
 
 final String kanbanBaseWSUrl = isProduction
     ? 'wss://kanbanprod.fabcoinapi.com/ws/'
     : 'wss://kanbantest.fabcoinapi.com/ws/';
-final String coinPricesWSUrl = kanbanBaseWSUrl + 'allprices';
-// Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
-final String coinCurrencyUsdValueUrl = baseKanbanUrl + 'USDvalues';
-final String pairDecimalConfigUrl = baseKanbanUrl + 'kanban/getpairconfig';
-final String redepositStatusUrl = baseKanbanUrl + 'checkstatus/';
-
+    
+final String allPricesWSUrl = kanbanBaseWSUrl + 'allPrices';
+final String tradesWSUrl = kanbanBaseWSUrl + 'trades@';
+final String ordersWSUrl = kanbanBaseWSUrl + 'orders@';
+final String tickersWSUrl = kanbanBaseWSUrl + 'tickers@';
 /*----------------------------------------------------------------------
                         Campaign
 ----------------------------------------------------------------------*/

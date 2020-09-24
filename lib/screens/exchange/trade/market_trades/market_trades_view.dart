@@ -1,10 +1,8 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/trade/trade-model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/trade-model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 class MarketTradesView extends StatelessWidget {
@@ -62,7 +60,6 @@ class MarketTradeDetailView extends StatelessWidget {
           itemCount: marketTrades.length,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-             
               color: marketTrades[index].bidOrAsk ? buyOrders : sellOrders,
               padding: EdgeInsets.all(4.0),
               margin: EdgeInsets.only(bottom: 1.0),
