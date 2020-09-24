@@ -1,5 +1,9 @@
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
+/*----------------------------------------------------------------------
+                        Base Url's
+----------------------------------------------------------------------*/
+
 final String baseBlockchainGateV2Url = isProduction
     ? 'https://blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
@@ -24,7 +28,7 @@ final String postFreeFabUrl =
                         USD Coin Price
 ----------------------------------------------------------------------*/
 
-const String usdCoinPriceUrl =
+final String usdCoinPriceUrl =
     'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
 
 final String coinPricesWSUrl = kanbanBaseWSUrl + 'allprices';

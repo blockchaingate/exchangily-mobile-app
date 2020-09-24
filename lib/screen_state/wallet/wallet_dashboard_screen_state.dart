@@ -461,6 +461,10 @@ class WalletDashboardScreenState extends BaseState {
     return address;
   }
 
+/*---------------------------------------------------
+                      Get gas
+--------------------------------------------------- */
+
   getGas() async {
     String address = await getExgAddressFromWalletDatabase();
     await walletService
@@ -592,7 +596,7 @@ class WalletDashboardScreenState extends BaseState {
       }
     });
 
-    log.i('Coin address $walletBalancesBody');
+    log.i('Coin address body $walletBalancesBody');
 
     // ----------------------------------------
     // Calling walletBalances in wallet service

@@ -14,7 +14,7 @@
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
-import 'package:exchangilymobileapp/models/wallet/token_list.dart';
+import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
@@ -44,7 +44,6 @@ class ApiService {
   final fabBaseUrl = environment["endpoints"]["fab"];
   final ethBaseUrl = environment["endpoints"]["eth"];
   final eventsUrl = environment["eventInfo"];
-  final String coinCurrencyUsdPriceUrl = Constants.COIN_CURRENCY_USD_PRICE_URL;
 
 /*----------------------------------------------------------------------
                     Get Token List
@@ -60,10 +59,9 @@ class ApiService {
       var parsedTokenList = data['tokenList'] as List;
       log.w('getTokenList  $parsedTokenList');
       TokenList tokenList = TokenList.fromJson(parsedTokenList);
-      if (data['tokenList'] == null) return null;
       return tokenList.tokens;
     } catch (err) {
-      log.e('getTokenList $err');
+      log.e('getTokenList CATCH $err');
       throw Exception(err);
     }
   }
@@ -149,7 +147,7 @@ class ApiService {
     return ethGasPrice;
   }
 /*----------------------------------------------------------------------
-                Transaction status
+                      Transaction status
 ----------------------------------------------------------------------*/
 
   Future getTransactionStatus(String transactionId) async {
@@ -167,12 +165,12 @@ class ApiService {
   }
 
 /*-------------------------------------------------------------------------------------
-                                  Get all wallet balance
+                      Get all wallet balance
 -------------------------------------------------------------------------------------*/
 
   Future<List<WalletBalance>> getWalletBalance(body) async {
     String url = kanbanBaseUrl + walletBalances;
-    log.i(url);
+    log.i('getWalletBalance URL $url');
     WalletBalanceList balanceList;
     try {
       var response = await client.post(url, body: body);
@@ -193,8 +191,25 @@ class ApiService {
     }
   }
 
+/*----------------------------------------------------------------------
+                Get Current Market Price For The Coin By Name
+----------------------------------------------------------------------*/
+
+  Future<double> getCoinMarketPriceByTickerName(String tickerName) async {
+    double currentTickerUsdValue = 0;
+    if (tickerName == 'DUSD') {
+      return currentTickerUsdValue = 1.0;
+    }
+    await getCoinCurrencyUsdPrice().then((res) {
+      if (res != null) {
+        currentTickerUsdValue = res['data'][tickerName]['USD'].toDouble();
+      }
+    });
+    return currentTickerUsdValue;
+  }
+
 /*-------------------------------------------------------------------------------------
-                                    Get coin currency Usd Prices
+                      Get coin currency Usd Prices
 -------------------------------------------------------------------------------------*/
 
   Future getCoinCurrencyUsdPrice() async {

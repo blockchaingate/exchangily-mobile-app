@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -52,6 +53,16 @@ class BottomNavBar extends StatelessWidget {
             title: Padding(
                 padding: EdgeInsets.only(top: paddingValue),
                 child: Text(AppLocalizations.of(context).trade))),
+        BottomNavigationBarItem(
+            icon: Image.asset(
+              'assets/images/bindpay/bindpay.png',
+              width: 40,
+              height: 30,
+              color: grey,
+            ),
+            title: Text(
+              AppLocalizations.of(context).bindpay,
+            )),
         // BottomNavigationBarItem(
         //     icon: Icon(Icons.branding_watermark, size: iconSize),
         //     title: Padding(
@@ -82,15 +93,19 @@ class BottomNavBar extends StatelessWidget {
             if (currentRouteName != 'MarketsView')
               navigationService.navigateTo('/marketsView', arguments: false);
             break;
+          case 2:
+            if (currentRouteName != 'BindpayView')
+              Navigator.pushNamed(context, '/bindpay');
+            break;
           // case 2:
           // if (currentRouteName != 'OtcScreen')
           //   Navigator.pushNamed(context, '/otc');
           //   break;
-          case 2:
+          case 3:
             if (currentRouteName != 'CampaignInstructionScreen')
               navigationService.navigateTo('/campaignInstructions');
             break;
-          case 3:
+          case 4:
             if (currentRouteName != 'SettingsScreen')
               navigationService.navigateTo('/settings');
             else if (ModalRoute.of(context).settings.name == 'SettingsScreen')

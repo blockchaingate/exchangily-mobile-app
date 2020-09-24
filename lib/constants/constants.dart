@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
 class Constants {
@@ -22,4 +23,7 @@ class Constants {
       BASE_KANBAN_PROD_URL + 'kanban/getpairconfig';
   static const REDEPOSIT_STATUS_URL =
       'https://kanbantest.fabcoinapi.com/checkstatus/';
+
+  static int kanbanGasPrice = environment['chains']['KANBAN']['gasPrice'];
+  static int kanbanGasLimit = environment['chains']['KANBAN']['gasLimit'];
 }

@@ -56,11 +56,13 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'db/transaction_history_database_service.dart';
+import 'package:exchangilymobileapp/utils/exaddr.dart';
+import 'package:http/http.dart' as http;
 
 class WalletService {
   final log = getLogger('Wallet Service');
   ApiService _api = locator<ApiService>();
-  double currentUsdValue;
+  double currentTickerUsdValue;
   var txids = [];
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
@@ -148,6 +150,7 @@ class WalletService {
   ];
 
   Completer<AlertResponse> _completer;
+
 /*----------------------------------------------------------------------
                 Get Random Mnemonic
 ----------------------------------------------------------------------*/
@@ -352,17 +355,17 @@ class WalletService {
 ----------------------------------------------------------------------*/
 
   Future<double> getCoinMarketPriceByTickerName(String tickerName) async {
-    currentUsdValue = 0;
+    currentTickerUsdValue = 0;
     if (tickerName == 'DUSD') {
-      return currentUsdValue = 1.0;
+      return currentTickerUsdValue = 1.0;
     }
     await _apiService.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
         //   log.i('getCoinMarketPriceByTickerName $res');
-        currentUsdValue = res['data'][tickerName]['USD'].toDouble();
+        currentTickerUsdValue = res['data'][tickerName]['USD'].toDouble();
       }
     });
-    return currentUsdValue;
+    return currentTickerUsdValue;
     // } else {
     //   var usdVal = await _api.getCoinsUsdValue();
     //   double tempPriceHolder = usdVal[name]['usd'];
@@ -431,7 +434,7 @@ class WalletService {
       TransactionHistory transactionHistory = new TransactionHistory();
       TransactionHistory transactionHistoryByTxId = new TransactionHistory();
       var res = await _apiService.getTransactionStatus(transaction.txId);
-      log.w(res);
+      log.w('checkDepositTransactionStatus $res');
 // 0 is confirmed
 // 1 is pending
 // 2 is failed (tx 1 failed),
@@ -440,7 +443,9 @@ class WalletService {
       if (res['code'] == -1 ||
           res['code'] == 0 ||
           res['code'] == 2 ||
-          res['code'] == 3) {
+          res['code'] == -2 ||
+          res['code'] == 3 ||
+          res['code'] == -3) {
         t.cancel();
         result = res['message'];
         log.i('Timer cancel');
@@ -487,7 +492,7 @@ class WalletService {
               tag: transactionHistoryByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
-        } else if (res['code'] == 2) {
+        } else if (res['code'] == 2 || res['code'] == 2) {
           transactionHistory = TransactionHistory(
               id: transactionHistoryByTxId.id,
               tickerName: transactionHistoryByTxId.tickerName,
@@ -500,7 +505,7 @@ class WalletService {
               tag: transactionHistoryByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
-        } else if (res['code'] == 3) {
+        } else if (res['code'] == -3 || res['code'] == 3) {
           transactionHistory = TransactionHistory(
               id: transactionHistoryByTxId.id,
               tickerName: transactionHistoryByTxId.tickerName,
@@ -1160,6 +1165,61 @@ class WalletService {
 ----------------------------------------------------------------------*/
   Future getErrDeposit(String address) {
     return getKanbanErrDeposit(address);
+  }
+
+  toKbPaymentAddress(String fabAddress) {
+    return toKbpayAddress(fabAddress);
+  }
+
+  Future txHexforSendCoin(seed, coinType, kbPaymentAddress, amount,
+      kanbanGasPrice, kanbanGasLimit) async {
+    var abiHex = getSendCoinFuncABI(coinType, kbPaymentAddress, amount);
+
+    var keyPairKanban = getExgKeyPair(seed);
+    var address = keyPairKanban['address'];
+    var nonce = await getNonce(address);
+
+    var coinpoolAddress = await getCoinPoolAddress();
+
+    var txKanbanHex = await signAbiHexWithPrivateKey(
+        abiHex,
+        HEX.encode(keyPairKanban["privateKey"]),
+        coinpoolAddress,
+        nonce,
+        kanbanGasPrice,
+        kanbanGasLimit);
+    print('end txHexforSendCoin');
+    return txKanbanHex;
+  }
+
+  isValidKbAddress(String kbPaymentAddress) {
+    var fabAddress = '';
+    try {
+      fabAddress = toLegacyAddress(kbPaymentAddress);
+    } catch (e) {}
+    ;
+    return (fabAddress != '');
+  }
+
+/*----------------------------------------------------------------------
+                Send Coin
+----------------------------------------------------------------------*/
+
+  Future sendCoin(
+      seed, int coin_type, String kbPaymentAddress, double amount) async {
+// example: sendCoin(seed, 1, 'oV1KxZswBx2AUypQJRDEb2CsW2Dq2Wp4L5', 0.123);
+
+    var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
+    var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
+    //var amountInLink = BigInt.from(amount * 1e18);
+    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount, 18));
+    var txHex = await txHexforSendCoin(
+        seed, coin_type, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
+    log.e('txhex $txHex');
+    var resKanban = await sendKanbanRawTransaction(txHex);
+    print('resKanban=');
+    print(resKanban);
+    return resKanban;
   }
 
 /*----------------------------------------------------------------------

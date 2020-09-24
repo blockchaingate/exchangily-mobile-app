@@ -87,9 +87,12 @@ class NumberUtil {
     } else {
       holder = value;
     }
-   
+
     return holder;
   }
+
+  // check decimal places more than 6
+  checkDecimal(double value) {}
 }
 
 class DecimalTextInputFormatter extends TextInputFormatter {

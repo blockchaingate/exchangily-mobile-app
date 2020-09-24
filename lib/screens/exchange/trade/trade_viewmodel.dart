@@ -53,6 +53,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   List myExchangeAssets = [];
   DecimalConfig singlePairDecimalConfig = new DecimalConfig();
   bool isDisposing = false;
+  double usdValue = 0.0;
 
   @override
   Map<String, StreamData> get streamsMap => {
@@ -66,23 +67,42 @@ class TradeViewModel extends MultipleStreamViewModel {
   // Map<String, StreamData> res =
   //     tradeService.getMultipleStreams(pairPriceByRoute.symbol);
 
-  @override
-  @mustCallSuper
-  dispose() async {
+  // @override
+  // @mustCallSuper
+  // dispose() async {
+  //   setBusy(true);
+  //   isDisposing = true;
+  //   await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
+  //   log.i('Close all IOWebsocket connections');
+  //   isDisposing = false;
+  //   setBusy(false);
+  //   navigationService.goBack();
+  //   super.dispose();
+  // }
+
+  closeConnections() async {
     setBusy(true);
     isDisposing = true;
     await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
-    log.i('Close all IOWebsocket connections');
-    navigationService.goBack();
-    super.dispose();
-    isDisposing = false;
-    setBusy(false);
+    // log.i('Close all IOWebsocket connections');
+    // isDisposing = false;
+    // setBusy(false);
   }
 
   /// Initialize when model ready
   init() async {
     await getDecimalPairConfig();
     await getExchangeAssets();
+    String holder = updateTickerName(pairPriceByRoute.symbol);
+    String tickerWithoutBasePair = holder.split('/')[0];
+    if (holder.split('/')[1] == 'USDT' || holder.split('/')[1] == 'DUSD') {
+      usdValue = dataReady('allPrices')
+          ? currentPairPrice.price
+          : pairPriceByRoute.price;
+    } else {
+      usdValue = await apiService
+          .getCoinMarketPriceByTickerName(tickerWithoutBasePair);
+    }
   }
 
 // Change/update stream data before displaying on UI
@@ -159,7 +179,6 @@ class TradeViewModel extends MultipleStreamViewModel {
   @override
   void onCancel(String key) {
     log.e('Stream $key closed');
-    // getSubscriptionForKey(key).cancel();
   }
 
   // Order aggregation

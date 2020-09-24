@@ -84,21 +84,21 @@ Map devConfig = {
       "DRGN": '0xbbdd7a557a0d8a9bf166dcc2730ae3ccec7df05c'
     },
     'exchangilyOfficial': [
-      {'name': 'EXG', 'address': '0xdcd0f23125f74ef621dfa3310625f8af0dcd971b'},
-      {'name': 'FAB', 'address': 'n1eXG5oe6wJ6h43akutyGfphqQsY1UfAUR'},
-      {'name': 'BTC', 'address': 'muQDw5hVmFgD1GrrWvUt6kjrzauC4Msaki'},
-      {'name': 'ETH', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
-      {'name': 'USDT', 'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'},
-      {'name': 'DUSD', 'address': '0xdcd0f23125f74ef621dfa3310625f8af0dcd971b'},
+      {'name': 'EXG', 'address': '0xed76be271bb47a6df055bbc2039733c26fdecc82'},
+      {'name': 'FAB', 'address': 'n3AYguoFtN7SqsfAJPx6Ky8FTTZUkeKbvc'},
+      {'name': 'BTC', 'address': 'n3AYguoFtN7SqsfAJPx6Ky8FTTZUkeKbvc'},
+      {'name': 'ETH', 'address': '0x450C53c50F8c0413a5829B0A9ab9Fa7e38f3eD2E'},
+      {'name': 'USDT', 'address': '0x450C53c50F8c0413a5829B0A9ab9Fa7e38f3eD2E'},
+      {'name': 'DUSD', 'address': '0xed76be271bb47a6df055bbc2039733c26fdecc82'},
       {
         'name': 'BCH',
-        'address': 'bchtest:qzvyhe6dn2hz7tgu624shm80js6knj2vj57l54rl6w',
+        'address': 'bchtest:qrkhd038rw685m0s2kauyquhx0pxlhkvsg6dydtwn9 ',
       },
-      {'name': 'LTC', 'address': 'muQDw5hVmFgD1GrrWvUt6kjrzauC4Msaki'},
-      {'name': 'DOGE', 'address': 'ni5RuJJ5Bcbxe992Zm9X51HSFbR5UR44Hh'},
+      {'name': 'LTC', 'address': 'n3AYguoFtN7SqsfAJPx6Ky8FTTZUkeKbvc'},
+      {'name': 'DOGE', 'address': 'nqqkf8PqJj3CUjwLMEcjJDfpiU5NDcMUrB'},
       {
         'name': 'erc20',
-        'address': '0x02c55515e62a0b25d2447c6d70369186b8f10359'
+        'address': '0x450C53c50F8c0413a5829B0A9ab9Fa7e38f3eD2E'
       },
     ],
   },
@@ -223,19 +223,19 @@ Map productionConfig = {
       "DRGN": '0x419c4db4b9e25d6db2ad9691ccb832c8d9fda05e'
     },
     'exchangilyOfficial': [
-      {'name': 'EXG', 'address': '0x9d95ee21e4f1b05bbfd0094daf4ce110deb00931'},
-      {'name': 'FAB', 'address': '1FNEhT8uTmrEMvHGCGohnEFv6Q1z4qRhQu'},
-      {'name': 'BTC', 'address': '1CKg6irbGXHxBHuTx7MeqYQUuMZ8aEok8z'},
-      {'name': 'ETH', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'},
-      {'name': 'USDT', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'},
-      {'name': 'DUSD', 'address': '0x9d95ee21e4f1b05bbfd0094daf4ce110deb00931'},
+      {'name': 'EXG', 'address': '0xfd46d4292e1f89c78e9e700a4976c8960d785f8b'},
+      {'name': 'FAB', 'address': '1Q6CooU5zjy5qXdEaNw3u2Rhm3J6Mb5hap'},
+      {'name': 'BTC', 'address': '1Q6CooU5zjy5qXdEaNw3u2Rhm3J6Mb5hap'},
+      {'name': 'ETH', 'address': '0x0dF198C80893c1373a11AdE9ad6454181aE18E73'},
+      {'name': 'USDT', 'address': '0x0dF198C80893c1373a11AdE9ad6454181aE18E73'},
+      {'name': 'DUSD', 'address': '0xfd46d4292e1f89c78e9e700a4976c8960d785f8b'},
       {
         'name': 'BCH',
-        'address': 'bitcoincash:qq7zkgp2vz3v5m38vy5cwf26k27y4rvkdy0fam589r'
+        'address': 'bitcoincash:qr75d4pf9c0cn3uwnecq5jtkeztq67zl3v3enf6wh0'
       },
-      {'name': 'LTC', 'address': 'LXgK78jxrVk9wVn1KJiU7SGawi6tJxv2tw'},
-      {'name': 'DOGE', 'address': 'DM3aQpvSLDnFm6iYiNHZzTs4juRUSwb4ji'},
-      {'name': 'erc20', 'address': '0xe7721493eea554b122dfd2c6243ef1c6f2fe0a06'}
+      {'name': 'LTC', 'address': 'LiKA51mv5QD96LKPkWvMB3VTyFfNVKjFVv'},
+      {'name': 'DOGE', 'address': 'DUEJM4QjJ9sNNXoqJxvcSnbJeB2PgbPCa9'},
+      {'name': 'erc20', 'address': '0x0dF198C80893c1373a11AdE9ad6454181aE18E73'}
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },
@@ -244,30 +244,30 @@ Map productionConfig = {
     "EXG": 50,
     "BTC": 0.01,
     "FAB": 50,
-    "ETH": 0.1,
-    "USDT": 20,
+    "ETH": 0.1 * 2,
+    "USDT": 20 * 2,
     "DUSD": 20,
     "BCH": 0.002,
     "LTC": 0.02,
     "DOGE": 20,
-    "BNB": 0.6,
-    "INB": 20,
-    "REP": 0.8,
-    "HOT": 16000,
-    "CEL": 40,
-    "MATIC": 500,
-    "IOST": 2000,
-    "MANA": 240,
-    "FUN": 3000,
-    "WAX": 200,
-    "ELF": 100,
-    "GNO": 0.4,
-    "POWR": 100,
-    "WINGS": 200,
-    "MTL": 40,
-    "KNC": 10,
-    "GVT": 10,
-    "DRGN": 100
+    "BNB": 0.6 * 2,
+    "INB": 20 * 2,
+    "REP": 0.8 * 2,
+    "HOT": 16000 * 2,
+    "CEL": 40 * 2,
+    "MATIC": 500 * 2,
+    "IOST": 2000 * 2,
+    "MANA": 240 * 2,
+    "FUN": 3000 * 2,
+    "WAX": 200 * 2,
+    "ELF": 100 * 2,
+    "GNO": 0.4 * 2,
+    "POWR": 100 * 2,
+    "WINGS": 200 * 2,
+    "MTL": 40 * 2,
+    "KNC": 10 * 2,
+    "GVT": 10 * 2,
+    "DRGN": 100 * 2
   }
 };
 

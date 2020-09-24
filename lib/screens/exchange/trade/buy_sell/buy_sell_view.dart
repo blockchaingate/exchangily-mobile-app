@@ -63,7 +63,7 @@ class BuySellView extends StatelessWidget {
                 },
               ),
               middle: Text(
-                pair.symbol ?? 'Test',
+                pair.symbol ?? '',
                 style: Theme.of(context).textTheme.headline3,
               ),
               backgroundColor: Color(0XFF1f2233),
