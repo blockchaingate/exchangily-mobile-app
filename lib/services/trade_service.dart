@@ -14,8 +14,9 @@
 import 'package:bs58check/bs58check.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -183,26 +184,27 @@ class TradeService {
     return currentUsdValue;
   }
 
-// Get all my orders
-  Future<List<Order>> getMyOrders(String exgAddress) async {
-    OrderList orderList;
-    try {
-      var data = await _api.getOrders(exgAddress);
-      orderList = OrderList.fromJson(data);
-      // throw Exception('Catch Exception');
-      return orderList.orders;
-    } catch (err) {
-      log.e('getMyOrders Catch $err');
-      throw Exception('Catch Exception $err');
-    }
-  }
+// // Get all my orders
+//   Future<List<Order>> getMyOrders(String exgAddress) async {
+//     OrderList orderList;
+//     try {
+//       var data = await _api.getOrders(exgAddress);
+//       orderList = OrderList.fromJson(data);
+//       // throw Exception('Catch Exception');
+//       return orderList.orders;
+//     } catch (err) {
+//       log.e('getMyOrders Catch $err');
+//       throw Exception('Catch Exception $err');
+//     }
+//   }
 
   // Get my orders by tickername
   Future<List<Order>> getMyOrdersByTickerName(
       String exgAddress, String tickerName) async {
     OrderList orderList;
     try {
-      var data = await _api.getMyOrdersByTickerName(exgAddress, tickerName);
+      var data = await _api.getMyOrdersPagedByFabHexAddressAndTickerName(
+          exgAddress, tickerName);
       orderList = OrderList.fromJson(data);
       return orderList.orders;
     } catch (err) {

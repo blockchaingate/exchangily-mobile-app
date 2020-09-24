@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/models/wallet/token_list.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
@@ -262,32 +263,38 @@ class ApiService {
   }
 
   // Get Orders by address
-  // Future<List<Order>> getOrders(String exgAddress) async {
-  //   try {
-  //     String url = environment['endpoints']['kanban'] + orders + exgAddress;
-  //     log.w('get my orders url $url');
-  //     print('in try');
-  //     var res = await client.get(url);
-  //     log.e('res $res');
-  //     var jsonList = jsonDecode(res.body) as List;
-  //     log.i('jsonList $jsonList');
-  //     OrderList orderList = OrderList.fromJson(jsonList);
-  //     print('after order list ${orderList.orders.length}');
-  //     //  throw Exception('Catch Exception');
-  //     return orderList.orders;
-  //   } catch (err) {
-  //     log.e('getOrders Failed to load the data from the API， $err');
-  //     throw Exception('Catch Exception $err');
-  //   }
-  // }
+  //Future<Order>
+  Future getMyOrders(String exgAddress) async {
+    try {
+      String url = getOrdersPagedByFabHexAddressURL + exgAddress;
+      log.w('get my orders url $url');
+      var res = await client.get(url);
+      log.e('res $res');
+      var jsonList = jsonDecode(res.body) as List;
+      log.i('jsonList $jsonList');
+      //  OrderList orderList = OrderList.fromJson(jsonList);
+      //  print('after order list ${orderList.orders.length}');
+      //  throw Exception('Catch Exception');
+      return jsonList;
+      //orderList.orders;
+    } catch (err) {
+      log.e('getOrders Failed to load the data from the API， $err');
+      throw Exception('Catch Exception $err');
+    }
+  }
 
   // Get Orders by tickername
-  Future getMyOrdersByTickerName(String exgAddress, String tickerName) async {
-    String url = environment['endpoints']['kanban'] +
-        'getordersbytickername/' +
+  Future getMyOrdersPagedByFabHexAddressAndTickerName(
+      String exgAddress, String tickerName) async {
+    String url = getOrdersPagedByFabHexAddressAndTickerNameURL +
         exgAddress +
         '/' +
         tickerName;
+    // String url = environment['endpoints']['kanban'] +
+    //     'getordersbytickername/' +
+    //     exgAddress +
+    //     '/' +
+    //     tickerName;
     log.i('getMyOrdersByTickerName url $url');
     try {
       final res = await client.get(url);

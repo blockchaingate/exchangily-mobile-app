@@ -67,7 +67,7 @@ class MyOrdersViewModel extends BaseViewModel {
     isFutureError = false;
     String exgAddress = await getExgAddress();
     clearOrderLists();
-    await apiService.getOrders(exgAddress).then((data) {
+    await apiService.getMyOrders(exgAddress).then((data) {
       if (data != null) {
         myAllOrders = data;
         log.e('My order length ${myAllOrders.length}');
@@ -127,7 +127,6 @@ class MyOrdersViewModel extends BaseViewModel {
           // filledPercentage = (element.filledQuantity *
           //     100 /
           //     doubleAdd(element.filledQuantity, element.orderQuantity));
-
           if (element.isActive) {
             myOpenOrders.add(element);
             //  log.e('Close orders ${myOpenOrders.length}');

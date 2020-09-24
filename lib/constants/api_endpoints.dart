@@ -56,14 +56,15 @@ final String redepositStatusUrl = baseKanbanUrl + 'checkstatus/';
 // convert base58 fab address to hex. trim the first two and last 8 chars.
 // then put a 0x in front
 
-final String getOrdersPagedByFabHexAddress = baseKanbanUrl + '/ordersbyaddresspaged/';
-final String getOrdersPagedByFabHexAddressAndTickerName =
+final String getOrdersPagedByFabHexAddressURL =
+    baseKanbanUrl + '/ordersbyaddresspaged/';
+final String getOrdersPagedByFabHexAddressAndTickerNameURL =
     baseKanbanUrl + '/getordersbytickernamepaged/';
 
 final String kanbanBaseWSUrl = isProduction
     ? 'wss://kanbanprod.fabcoinapi.com/ws/'
     : 'wss://kanbantest.fabcoinapi.com/ws/';
-    
+
 final String allPricesWSUrl = kanbanBaseWSUrl + 'allPrices';
 final String tradesWSUrl = kanbanBaseWSUrl + 'trades@';
 final String ordersWSUrl = kanbanBaseWSUrl + 'orders@';
