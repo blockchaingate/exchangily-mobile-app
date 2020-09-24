@@ -3,7 +3,6 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -327,26 +326,26 @@ class WalletService {
                 Get Coin Price By Web Sockets
 ----------------------------------------------------------------------*/
 
-  getCoinPriceByWebSocket(String pair) {
-    currentUsdValue = 0;
-    final channel = IOWebSocketChannel.connect(
-        Constants.COIN_PRICE_DETAILS_WS_URL,
-        pingInterval: Duration(minutes: 1));
+  // getCoinPriceByWebSocket(String pair) {
+  //   currentUsdValue = 0;
+  //   final channel = IOWebSocketChannel.connect(
+  //       Constants.COIN_PRICE_DETAILS_WS_URL,
+  //       pingInterval: Duration(minutes: 1));
 
-    channel.stream.listen((prices) async {
-      List<Price> coinListWithPriceData = Decoder.fromJsonArray(prices);
-      for (var i = 0; i < coinListWithPriceData.length; i++) {
-        if (coinListWithPriceData[i].symbol == 'EXGUSDT') {
-          var d = coinListWithPriceData[i].price;
-          currentUsdValue = stringUtils.bigNum2Double(d);
-        }
-      }
-    });
-    Future.delayed(Duration(seconds: 2), () {
-      channel.sink.close();
-      log.i('Channel closed');
-    });
-  }
+  //   channel.stream.listen((prices) async {
+  //     List<Price> coinListWithPriceData = Decoder.fromJsonArray(prices);
+  //     for (var i = 0; i < coinListWithPriceData.length; i++) {
+  //       if (coinListWithPriceData[i].symbol == 'EXGUSDT') {
+  //         var d = coinListWithPriceData[i].price;
+  //         currentUsdValue = stringUtils.bigNum2Double(d);
+  //       }
+  //     }
+  //   });
+  //   Future.delayed(Duration(seconds: 2), () {
+  //     channel.sink.close();
+  //     log.i('Channel closed');
+  //   });
+  // }
 
 /*----------------------------------------------------------------------
                 Get Current Market Price For The Coin By Name
@@ -1697,8 +1696,7 @@ class WalletService {
           Transaction(
             nonce: nonce,
             to: EthereumAddress.fromHex(toAddress),
-            gasPrice:
-                EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+            gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
             maxGas: gasLimit,
             value: EtherAmount.fromUnitAndValue(EtherUnit.wei, amountSentInt),
           ),
@@ -1910,8 +1908,7 @@ class WalletService {
           Transaction(
               nonce: nonce,
               to: EthereumAddress.fromHex(contractAddress),
-              gasPrice:
-                  EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
+              gasPrice: EtherAmount.fromUnitAndValue(EtherUnit.gwei, gasPrice),
               maxGas: gasLimit,
               value: EtherAmount.fromUnitAndValue(EtherUnit.wei, 0),
               data: Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex))),

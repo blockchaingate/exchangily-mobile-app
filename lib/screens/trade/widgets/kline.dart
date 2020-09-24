@@ -12,7 +12,6 @@
 */
 
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/models/trade/kline_data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../packages/bloc/klineBloc.dart';
@@ -130,34 +129,34 @@ class KlinePageBloc extends KlineBloc with TradeService {
           new BigInt.from(1e18);
     }
     var parseJsonData = parseJson;
-    MarketData marketData = MarketData.fromJson(parseJsonData);
+    //  MarketData marketData = MarketData.fromJson(parseJsonData);
 
-    List<Market> list = List<Market>();
-    i = 0;
-    for (var item in marketData.data) {
-      i++;
-      // print('i=' + i.toString());
-      /*
-        if (i > 78) {
-          break;
-        }
-        if(i > 75) {
-          print('i=' + i.toString());
-          print(item.open);
-          print(item.high);
-          print(item.low);
-          print(item.close);
-          print(item.vol);
-          print(item.id);
-        }
+    // List<Market> list = List<Market>();
+    // i = 0;
+    // for (var item in marketData.data) {
+    //   i++;
+    //   // print('i=' + i.toString());
+    //   /*
+    //     if (i > 78) {
+    //       break;
+    //     }
+    //     if(i > 75) {
+    //       print('i=' + i.toString());
+    //       print(item.open);
+    //       print(item.high);
+    //       print(item.low);
+    //       print(item.close);
+    //       print(item.vol);
+    //       print(item.id);
+    //     }
 
-         */
-      Market market =
-          Market(item.open, item.high, item.low, item.close, item.vol, item.id);
-      list.add(market);
-    }
+    //      */
+    //   Market market =
+    //       Market(item.open, item.high, item.low, item.close, item.vol, item.id);
+    //   list.add(market);
+    // }
     this.showLoadingSinkAdd(false);
-    this.updateDataList(list);
+    //  this.updateDataList(list);
     this.getDataFromStream();
     //});
   }

@@ -113,8 +113,8 @@ class RouteGenerator {
                   walletInfo: args,
                 ));
 
-      case '/market':
-        return MaterialPageRoute(builder: (_) => Market());
+      // case '/market':
+      //   return MaterialPageRoute(builder: (_) => Market());
 
       /// MARKET VIEW
 
@@ -123,8 +123,8 @@ class RouteGenerator {
             settings: RouteSettings(name: 'MarketsView'),
             builder: (_) => MarketsView(hideSlider: args));
 
-      case '/trade':
-        return MaterialPageRoute(builder: (_) => Trade('EXG/USDT'));
+      // case '/trade':
+      //   return MaterialPageRoute(builder: (_) => Trade('EXG/USDT'));
 
       case '/exchangeTrade':
         return MaterialPageRoute(

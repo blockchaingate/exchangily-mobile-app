@@ -1,12 +1,12 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/trade-model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 class MarketTradesView extends StatelessWidget {
-  final List<Trade> marketTrades;
+  final List<MarketTrades> marketTrades;
   const MarketTradesView({Key key, this.marketTrades}) : super(key: key);
 
   @override
@@ -50,7 +50,7 @@ class MarketTradeDetailView extends StatelessWidget {
     @required this.marketTrades,
   }) : super(key: key);
 
-  final List<Trade> marketTrades;
+  final List<MarketTrades> marketTrades;
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +72,8 @@ class MarketTradeDetailView extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 3,
-                      child: Text(marketTrades[index].amount.toStringAsFixed(6),
+                      child: Text(
+                          marketTrades[index].quantity.toStringAsFixed(6),
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
                       flex: 2,

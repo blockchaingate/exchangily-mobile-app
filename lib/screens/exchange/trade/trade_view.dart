@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange_assets_view.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
@@ -9,18 +8,14 @@ import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart'
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 
 import 'market_trades/market_trades_view.dart';
 import 'my_orders/my_orders_view.dart';
 import 'orderbook/orders_book_view.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:flutter/cupertino.dart';
 
 class TradeView extends StatelessWidget {
@@ -215,7 +210,7 @@ class TradeView extends StatelessWidget {
                                                 layoutType: 'orderbook',
                                               )
                                             : OrderBookView(
-                                                orderBook: model.orderBook,
+                                                orderBook: model.orderbook,
                                                 decimalConfig: model
                                                     .singlePairDecimalConfig),
                                       ),
@@ -314,7 +309,7 @@ class TradeView extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => BuySell(
-                                              orderbook: model.orderBook,
+                                              orderbook: model.orderbook,
                                               pair: model.currentPairPrice,
                                               bidOrAsk: true)),
                                     );
@@ -340,7 +335,7 @@ class TradeView extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => BuySell(
-                                            orderbook: model.orderBook,
+                                            orderbook: model.orderbook,
                                             pair: model.currentPairPrice,
                                             bidOrAsk: false)),
                                   );

@@ -28,7 +28,7 @@ class OrdersTabView extends
     // print(' ordersViewTabBody.length ${ordersViewTabBody.length}');
     return !model.dataReady('orderBookList')
         ? Center(
-            child: Text(AppLocalizations.of(context).loading+'...'),
+            child: Text(AppLocalizations.of(context).loading + '...'),
           )
         : DefaultTabController(
             length: 3,
@@ -57,7 +57,7 @@ class OrdersTabView extends
                   height: screenHeight * 0.70,
                   color: Theme.of(context).accentColor,
                   child: TabBarView(children: [
-                    Expanded(child: OrderBookView(orderBook: model.orderBook)),
+                    Expanded(child: OrderBookView(orderBook: model.orderbook)),
                     Expanded(
                         child: MarketTradesView(
                             marketTrades: model.marketTradesList)),

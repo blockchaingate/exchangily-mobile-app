@@ -22,7 +22,6 @@ import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
 
 /// The service responsible for networking requests
 class ApiService {
@@ -263,24 +262,24 @@ class ApiService {
   }
 
   // Get Orders by address
-  Future<List<Order>> getOrders(String exgAddress) async {
-    try {
-      String url = environment['endpoints']['kanban'] + orders + exgAddress;
-      log.w('get my orders url $url');
-      print('in try');
-      var res = await client.get(url);
-      log.e('res $res');
-      var jsonList = jsonDecode(res.body) as List;
-      log.i('jsonList $jsonList');
-      OrderList orderList = OrderList.fromJson(jsonList);
-      print('after order list ${orderList.orders.length}');
-      //  throw Exception('Catch Exception');
-      return orderList.orders;
-    } catch (err) {
-      log.e('getOrders Failed to load the data from the API， $err');
-      throw Exception('Catch Exception $err');
-    }
-  }
+  // Future<List<Order>> getOrders(String exgAddress) async {
+  //   try {
+  //     String url = environment['endpoints']['kanban'] + orders + exgAddress;
+  //     log.w('get my orders url $url');
+  //     print('in try');
+  //     var res = await client.get(url);
+  //     log.e('res $res');
+  //     var jsonList = jsonDecode(res.body) as List;
+  //     log.i('jsonList $jsonList');
+  //     OrderList orderList = OrderList.fromJson(jsonList);
+  //     print('after order list ${orderList.orders.length}');
+  //     //  throw Exception('Catch Exception');
+  //     return orderList.orders;
+  //   } catch (err) {
+  //     log.e('getOrders Failed to load the data from the API， $err');
+  //     throw Exception('Catch Exception $err');
+  //   }
+  // }
 
   // Get Orders by tickername
   Future getMyOrdersByTickerName(String exgAddress, String tickerName) async {

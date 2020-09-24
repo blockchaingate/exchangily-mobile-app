@@ -1,7 +1,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
@@ -110,7 +110,7 @@ class OrderDetailsView extends StatelessWidget {
   final int index;
   final bool isBuy;
   final DecimalConfig decimalConfig;
-  final List<Order> orders;
+  final List<Orderbook> orders;
   const OrderDetailsView(
       {Key key,
       this.decimalConfig,

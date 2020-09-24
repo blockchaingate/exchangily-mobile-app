@@ -1,13 +1,9 @@
-import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_datatable.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MarketPairPriceDetailView extends StatelessWidget {

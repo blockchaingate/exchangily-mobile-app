@@ -19,12 +19,11 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
-import 'package:exchangilymobileapp/models/trade/orders.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
-import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -83,7 +82,7 @@ class BuySellScreenState extends BaseState {
   String exgAddress;
   WalletInfo coin;
   final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
-  Orders orders;
+  List<Order> orderList;
   double transactionAmount = 0;
   List<PairDecimalConfig> pairDecimalConfigList = [];
   int priceDecimal = 0;
@@ -194,33 +193,33 @@ class BuySellScreenState extends BaseState {
 /* ---------------------------------------------------
             Order List
 --------------------------------------------------- */
-  //
-  Future orderList() async {
-    setState(ViewState.Busy);
-    orderListChannel.stream.listen((ordersString) {
-      orders = Decoder.fromOrdersJsonArray(ordersString);
-      //  log.w(orders);
-      showOrders(orders);
-    });
-    setState(ViewState.Idle);
-  }
+//   //
+//   Future orderList() async {
+//     setState(ViewState.Busy);
+//     orderListChannel.stream.listen((ordersString) {
+//       orders = Decoder.fromOrdersJsonArray(ordersString);
+//       //  log.w(orders);
+//       showOrders(orders);
+//     });
+//     setState(ViewState.Idle);
+//   }
 
-/* ---------------------------------------------------
-            Trade List
---------------------------------------------------- */
-  //
-  tradeList() async {
-    setState(ViewState.Busy);
-    tradeListChannel.stream.listen((tradesString) {
-      List<Trade> trades = Decoder.fromTradesJsonArray(tradesString);
+// /* ---------------------------------------------------
+//             Trade List
+// --------------------------------------------------- */
+//   //
+//   tradeList() async {
+//     setState(ViewState.Busy);
+//     tradeListChannel.stream.listen((tradesString) {
+//       List<MarketTrades> trades = Decoder.fromTradesJsonArray(tradesString);
 
-      if (trades != null && trades.length > 0) {
-        Trade latestTrade = trades[0];
-        currentPrice = latestTrade.price;
-      }
-    });
-    setState(ViewState.Idle);
-  }
+//       if (trades != null && trades.length > 0) {
+//         MarketTrades latestTrade = trades[0];
+//         currentPrice = latestTrade.price;
+//       }
+//     });
+//     setState(ViewState.Idle);
+//   }
 
 /* ---------------------------------------------------
             Retrieve Wallets
@@ -463,65 +462,65 @@ class BuySellScreenState extends BaseState {
 /* ---------------------------------------------------
             Show Orders
 --------------------------------------------------- */
-  showOrders(Orders orders) async {
-    setState(ViewState.Busy);
-    var newbuy = orders.buy;
-    var newsell = orders.sell;
-    var preItem;
-    for (var i = 0; i < newbuy.length; i++) {
-      var item = newbuy[i];
-      var price = item.price;
-      var orderQuantity = item.orderQuantity;
+  // showOrders(Order order) async {
+  //   setState(ViewState.Busy);
+  //   var newbuy = order. .buy;
+  //   var newsell = orders.sell;
+  //   var preItem;
+  //   for (var i = 0; i < newbuy.length; i++) {
+  //     var item = newbuy[i];
+  //     var price = item.price;
+  //     var orderQuantity = item.orderQuantity;
 
-      var filledQuantity = item.filledQuantity;
-      if (preItem != null) {
-        if (preItem.price == price) {
-          preItem.orderQuantity =
-              doubleAdd(preItem.orderQuantity, orderQuantity);
-          preItem.filledQuantity =
-              doubleAdd(preItem.filledQuantity, filledQuantity);
-          newbuy.removeAt(i);
-          i--;
-        } else {
-          preItem = item;
-        }
-      } else {
-        preItem = item;
-      }
-    }
+  //     var filledQuantity = item.filledQuantity;
+  //     if (preItem != null) {
+  //       if (preItem.price == price) {
+  //         preItem.orderQuantity =
+  //             doubleAdd(preItem.orderQuantity, orderQuantity);
+  //         preItem.filledQuantity =
+  //             doubleAdd(preItem.filledQuantity, filledQuantity);
+  //         newbuy.removeAt(i);
+  //         i--;
+  //       } else {
+  //         preItem = item;
+  //       }
+  //     } else {
+  //       preItem = item;
+  //     }
+  //   }
 
-    preItem = null;
-    for (var i = 0; i < newsell.length; i++) {
-      var item = newsell[i];
-      var price = item.price;
-      var orderQuantity = item.orderQuantity;
-      var filledQuantity = item.filledQuantity;
-      if (preItem != null) {
-        if (preItem.price == price) {
-          preItem.orderQuantity =
-              doubleAdd(preItem.orderQuantity, orderQuantity);
-          preItem.filledQuantity =
-              doubleAdd(preItem.filledQuantity, filledQuantity);
-          newsell.removeAt(i);
-          i--;
-        } else {
-          preItem = item;
-        }
-      } else {
-        preItem = item;
-      }
-    }
+  //   preItem = null;
+  //   for (var i = 0; i < newsell.length; i++) {
+  //     var item = newsell[i];
+  //     var price = item.price;
+  //     var orderQuantity = item.orderQuantity;
+  //     var filledQuantity = item.filledQuantity;
+  //     if (preItem != null) {
+  //       if (preItem.price == price) {
+  //         preItem.orderQuantity =
+  //             doubleAdd(preItem.orderQuantity, orderQuantity);
+  //         preItem.filledQuantity =
+  //             doubleAdd(preItem.filledQuantity, filledQuantity);
+  //         newsell.removeAt(i);
+  //         i--;
+  //       } else {
+  //         preItem = item;
+  //       }
+  //     } else {
+  //       preItem = item;
+  //     }
+  //   }
 
-    if (!listEquals(newbuy, this.buy) || !listEquals(newsell, this.sell)) {
-      setState(ViewState.Busy);
-      this.sell = (newsell.length > 5)
-          ? (newsell.sublist(newsell.length - 5))
-          : newsell;
-      this.buy = (newbuy.length > 5) ? (newbuy.sublist(0, 5)) : newbuy;
-      setState(ViewState.Idle);
-    }
-    setState(ViewState.Idle);
-  }
+  //   if (!listEquals(newbuy, this.buy) || !listEquals(newsell, this.sell)) {
+  //     setState(ViewState.Busy);
+  //     this.sell = (newsell.length > 5)
+  //         ? (newsell.sublist(newsell.length - 5))
+  //         : newsell;
+  //     this.buy = (newbuy.length > 5) ? (newbuy.sublist(0, 5)) : newbuy;
+  //     setState(ViewState.Idle);
+  //   }
+  //   setState(ViewState.Idle);
+  // }
 
 /* ---------------------------------------------------
             Place Buy/Sell Order

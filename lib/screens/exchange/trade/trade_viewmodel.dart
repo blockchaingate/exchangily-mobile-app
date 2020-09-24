@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/models/trade/orderbook_model.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
-import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -37,7 +37,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   //List<Order> sellOrderBookList = [];
   Orderbook orderbook;
 
-  List<Trade> marketTradesList = [];
+  List<MarketTrades> marketTradesList = [];
 
   // List<Order> myOrders = [];
 
@@ -136,7 +136,7 @@ class TradeViewModel extends MultipleStreamViewModel {
       /// Market trade list
       else if (key == marketTradesStreamKey) {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-        TradeList tradeList = TradeList.fromJson(jsonDynamicList);
+        MarketTradeList tradeList = MarketTradeList.fromJson(jsonDynamicList);
         log.w('trades length ${tradeList.trades.length}');
         marketTradesList = tradeList.trades;
         marketTradesList.forEach((element) {
