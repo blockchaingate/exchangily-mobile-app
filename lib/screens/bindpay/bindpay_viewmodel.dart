@@ -40,6 +40,7 @@ class BindpayViewmodel extends FutureViewModel {
   List<Map<String, dynamic>> coins = [];
   GlobalKey globalKey = new GlobalKey();
   ScrollController scrollController;
+  bool isExchangeBalanceEmpty = false;
 
 /*----------------------------------------------------------------------
                           INIT
@@ -63,14 +64,24 @@ class BindpayViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   @override
   void onData(data) {
+    isExchangeBalanceEmpty = false;
     List<WalletInfo> tokenList = data as List<WalletInfo>;
+    log.e(tokenList.length);
     tokenList.forEach((wallet) {
+      log.i(wallet.toJson());
       if (wallet.inExchange != 0.0)
         coins.add(
             {"tickerName": wallet.tickerName, "quantity": wallet.inExchange});
     });
-    coins != null ? tickerName = coins[0]['tickerName'] : tickerName = '';
-    print(' coins $coins');
+    if (coins.isNotEmpty) {
+      tickerName = coins[0]['tickerName'];
+      print(' coins $coins');
+    } else {
+      tickerName = '';
+      isExchangeBalanceEmpty = true;
+      coins = [];
+      print('coins empty $coins');
+    }
   }
 
 /*----------------------------------------------------------------------
@@ -102,27 +113,26 @@ class BindpayViewmodel extends FutureViewModel {
           return Platform.isIOS
               ? CupertinoAlertDialog(
                   title: Container(
-                   
                     child: Center(
                         child: Text(
                             '${AppLocalizations.of(context).recieveAddress}')),
                   ),
                   content: Column(
                     children: [
-                   
                       Row(
                         children: [
                           UIHelper.horizontalSpaceSmall,
                           Expanded(
                             child: Text(
                                 // add here cupertino widget to check in these small widgets first then the entire app
-                                kbAddress,textAlign: TextAlign.left,
+                                kbAddress,
+                                textAlign: TextAlign.left,
                                 style: Theme.of(context).textTheme.headline6),
                           ),
                           CupertinoButton(
                               child: Icon(
                                 FontAwesomeIcons.copy,
-                              //  CupertinoIcons.,
+                                //  CupertinoIcons.,
                                 color: primaryColor,
                                 size: 16,
                               ),
@@ -168,14 +178,17 @@ class BindpayViewmodel extends FutureViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          
                           CupertinoButton(
-                             
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4)),
                               child: Center(
-                                  child: Text(AppLocalizations.of(context).share,style: Theme.of(context)
-                                  .textTheme.headline5.copyWith(color:primaryColor),)),
+                                  child: Text(
+                                AppLocalizations.of(context).share,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(color: primaryColor),
+                              )),
                               onPressed: () {
                                 String receiveFileName =
                                     'bindpay-kanban-receive-address.png';
@@ -199,7 +212,6 @@ class BindpayViewmodel extends FutureViewModel {
                                 });
                               }),
                           CupertinoButton(
-                           
                             padding: EdgeInsets.only(left: 5),
                             borderRadius: BorderRadius.all(Radius.circular(4)),
                             child: Text(

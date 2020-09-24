@@ -213,9 +213,9 @@ class ApiService {
 -------------------------------------------------------------------------------------*/
 
   Future getCoinCurrencyUsdPrice() async {
-    log.w('url $coinCurrencyUsdPriceUrl');
+    log.w('url $coinCurrencyUsdValueUrl');
     try {
-      var response = await client.get(coinCurrencyUsdPriceUrl);
+      var response = await client.get(coinCurrencyUsdValueUrl);
       var json = jsonDecode(response.body);
       log.w('getCoinCurrencyUsdPrice $json');
       return json;
