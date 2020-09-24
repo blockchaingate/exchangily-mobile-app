@@ -66,9 +66,7 @@ class MyOrdersViewModel extends BaseViewModel {
     setBusy(true);
     isFutureError = false;
     String exgAddress = await getExgAddress();
-    // log.e('error state $hasError');
     clearOrderLists();
-    //  return
     await apiService.getOrders(exgAddress).then((data) {
       if (data != null) {
         myAllOrders = data;
@@ -97,10 +95,6 @@ class MyOrdersViewModel extends BaseViewModel {
       isFutureError = true;
       log.e('getAllMyOrders $err');
     });
-
-    //.then((value) => onData(value));
-    // setBusy(false);
-    //  return myAllOrders;
     setBusy(false);
   }
 

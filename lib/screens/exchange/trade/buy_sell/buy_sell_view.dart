@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -26,10 +27,8 @@ import 'package:flutter/foundation.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
 
-import '../../exchange/trade/buy_sell/buy_sell_screen_state.dart';
-
-class BuySell extends StatelessWidget {
-  BuySell({Key key, this.bidOrAsk, this.pair, this.orderbook})
+class BuySellView extends StatelessWidget {
+  BuySellView({Key key, this.bidOrAsk, this.pair, this.orderbook})
       : super(key: key);
   final bool bidOrAsk;
   final Price pair;

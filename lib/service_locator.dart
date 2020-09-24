@@ -29,8 +29,8 @@ import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_screen_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';

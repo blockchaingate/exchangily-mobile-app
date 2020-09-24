@@ -1,11 +1,11 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange_assets_view.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
@@ -308,7 +308,7 @@ class TradeView extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => BuySell(
+                                          builder: (context) => BuySellView(
                                               orderbook: model.orderbook,
                                               pair: model.currentPairPrice,
                                               bidOrAsk: true)),
@@ -334,7 +334,7 @@ class TradeView extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => BuySell(
+                                        builder: (context) => BuySellView(
                                             orderbook: model.orderbook,
                                             pair: model.currentPairPrice,
                                             bidOrAsk: false)),

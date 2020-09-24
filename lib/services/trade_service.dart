@@ -14,9 +14,8 @@
 import 'package:bs58check/bs58check.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/price.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:exchangilymobileapp/environments/environment.dart';
