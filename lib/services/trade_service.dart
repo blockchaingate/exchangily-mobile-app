@@ -12,6 +12,7 @@
 */
 
 import 'package:bs58check/bs58check.dart';
+import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
@@ -95,6 +96,12 @@ class TradeService {
     }
   }
 
+  IOWebSocketChannel getAllPriceChannel() {
+    log.i('allPricesWSUrl $allPricesWSUrl');
+    IOWebSocketChannel channel = IOWebSocketChannel.connect(allPricesWSUrl);
+    return channel;
+  }
+
 /*----------------------------------------------------------------------
                     Market Trade Orders 
 ----------------------------------------------------------------------*/
@@ -137,12 +144,6 @@ class TradeService {
   }
 
   /// IOWebSockets
-
-  IOWebSocketChannel getAllPriceChannel() {
-    String url = basePath + 'allPrices';
-    IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
-    return channel;
-  }
 
   IOWebSocketChannel getOrderListChannel(String pair) {
     try {

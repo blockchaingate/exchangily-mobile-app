@@ -46,7 +46,7 @@ class _MainNavState extends State<MainNav> {
             WalletDashboardScreen(),
             MarketsView(hideSlider: false),
             CampaignInstructionScreen(),
-            SettingsScreen()
+            SettingsView()
           ],
           controller: _pageController,
           onPageChanged: onPageChanged,
@@ -131,5 +131,4 @@ class _MainNavState extends State<MainNav> {
   }
 }
 
-class MarketView {
-}
+class MarketView {}

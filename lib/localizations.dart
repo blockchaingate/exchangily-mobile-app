@@ -1569,6 +1569,11 @@ class AppLocalizations {
         name: 'pleaseCorrectTheFormatOfReceiveAddress',
         desc: 'flash_pay_tranfser_correct_format_of_receive_address');
   }
+
+  String get deletingWallet {
+    return Intl.message("Deleting wallet",
+        name: 'deletingWallet', desc: 'settings_view_deleting_wallet');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -157,7 +157,7 @@ class RouteGenerator {
       case '/settings':
         return MaterialPageRoute(
             settings: RouteSettings(name: 'SettingsScreen'),
-            builder: (_) => SettingsScreen());
+            builder: (_) => SettingsView());
 
       case '/transactionHistory':
         return MaterialPageRoute(

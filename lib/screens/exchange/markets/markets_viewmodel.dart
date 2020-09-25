@@ -21,7 +21,6 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
-import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -65,7 +64,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
       pairPriceList = priceList.prices;
       log.w('pair price list length ${pairPriceList.length}');
       pairPriceList.forEach((element) {
-        print(element.toJson());
+        //  print(element.toJson());
         if (element.change.isNaN) element.change = 0.0;
       });
     } catch (err) {
@@ -88,6 +87,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   @override
   void onCancel() {
     log.e('Stream closed');
+    streamSubscription.cancel().then((value) => print('CANCEL'));
   }
 
   onBackButtonPressed() async {

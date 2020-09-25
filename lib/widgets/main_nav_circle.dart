@@ -72,7 +72,7 @@ class _MainNavCircleState extends State<MainNavCircle> {
       case 2:
         return CampaignInstructionScreen();
       case 3:
-        return SettingsScreen();
+        return SettingsView();
       default:
         return WalletDashboardScreen();
     }
