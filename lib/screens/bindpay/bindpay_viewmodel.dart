@@ -50,12 +50,18 @@ class BindpayViewmodel extends FutureViewModel {
     sharedService.context = context;
   }
 
+/*----------------------------------------------------------------------
+                    onBackButtonPressed
+----------------------------------------------------------------------*/
+  onBackButtonPressed() async {
+    await sharedService.onBackButtonPressed('/dashboard');
+  }
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
                                     Barcode Scan
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Future scanBarcode() async {
-   setBusy(true);
+    setBusy(true);
     try {
       String barcode = '';
       await BarcodeScanner.scan().then((res) => barcode = res.rawContent);
@@ -63,7 +69,7 @@ class BindpayViewmodel extends FutureViewModel {
       setBusy(false);
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.cameraAccessDenied) {
-       setBusy(true);
+        setBusy(true);
         sharedService.alertDialog(
             '', AppLocalizations.of(context).userAccessDenied,
             isWarning: false);
@@ -77,12 +83,12 @@ class BindpayViewmodel extends FutureViewModel {
         //     '${AppLocalizations.of(context).unknownError}: $e';
       }
     } on FormatException {
-     setBusy(true);
+      setBusy(true);
       sharedService.alertDialog(AppLocalizations.of(context).scanCancelled,
           AppLocalizations.of(context).userReturnedByPressingBackButton,
           isWarning: false);
     } catch (e) {
-     setBusy(true);
+      setBusy(true);
       sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
           isWarning: false);
       // receiverWalletAddressTextController.text =
@@ -143,27 +149,26 @@ class BindpayViewmodel extends FutureViewModel {
           return Platform.isIOS
               ? CupertinoAlertDialog(
                   title: Container(
-                   
                     child: Center(
                         child: Text(
                             '${AppLocalizations.of(context).recieveAddress}')),
                   ),
                   content: Column(
                     children: [
-                   
                       Row(
                         children: [
                           UIHelper.horizontalSpaceSmall,
                           Expanded(
                             child: Text(
                                 // add here cupertino widget to check in these small widgets first then the entire app
-                                kbAddress,textAlign: TextAlign.left,
+                                kbAddress,
+                                textAlign: TextAlign.left,
                                 style: Theme.of(context).textTheme.headline6),
                           ),
                           CupertinoButton(
                               child: Icon(
                                 FontAwesomeIcons.copy,
-                              //  CupertinoIcons.,
+                                //  CupertinoIcons.,
                                 color: primaryColor,
                                 size: 16,
                               ),
@@ -209,14 +214,17 @@ class BindpayViewmodel extends FutureViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          
                           CupertinoButton(
-                             
                               borderRadius:
                                   BorderRadius.all(Radius.circular(4)),
                               child: Center(
-                                  child: Text(AppLocalizations.of(context).share,style: Theme.of(context)
-                                  .textTheme.headline5.copyWith(color:primaryColor),)),
+                                  child: Text(
+                                AppLocalizations.of(context).share,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(color: primaryColor),
+                              )),
                               onPressed: () {
                                 String receiveFileName =
                                     'bindpay-kanban-receive-address.png';
@@ -240,7 +248,6 @@ class BindpayViewmodel extends FutureViewModel {
                                 });
                               }),
                           CupertinoButton(
-                           
                             padding: EdgeInsets.only(left: 5),
                             borderRadius: BorderRadius.all(Radius.circular(4)),
                             child: Text(
