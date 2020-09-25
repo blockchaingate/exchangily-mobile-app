@@ -60,35 +60,37 @@ class BindpayViewmodel extends FutureViewModel {
                                     Barcode Scan
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Future scanBarcode() async {
-    setBusy(true);
+  void scanBarcode() async {
     try {
+      var res = await BarcodeScanner.scan();
+      setBusy(true);
       String barcode = '';
-      await BarcodeScanner.scan().then((res) => barcode = res.rawContent);
+      barcode = res.rawContent;
+      print(barcode);
+      sharedService.alertDialog(res.rawContent, barcode);
       addressController.text = barcode;
       setBusy(false);
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.cameraAccessDenied) {
-        setBusy(true);
         sharedService.alertDialog(
             '', AppLocalizations.of(context).userAccessDenied,
             isWarning: false);
         // receiverWalletAddressTextController.text =
         //     AppLocalizations.of(context).userAccessDenied;
       } else {
-        setBusy(true);
+        // setBusy(true);
         sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
             isWarning: false);
         // receiverWalletAddressTextController.text =
         //     '${AppLocalizations.of(context).unknownError}: $e';
       }
     } on FormatException {
-      setBusy(true);
+      //  setBusy(true);
       sharedService.alertDialog(AppLocalizations.of(context).scanCancelled,
           AppLocalizations.of(context).userReturnedByPressingBackButton,
           isWarning: false);
     } catch (e) {
-      setBusy(true);
+      //  setBusy(true);
       sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
           isWarning: false);
       // receiverWalletAddressTextController.text =

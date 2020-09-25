@@ -196,6 +196,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "pleaseAddGasToTrade" : MessageLookupByLibrary.simpleMessage("Please add gas to trade"),
     "pleaseCheckYourEmailToActivateYourAccount" : MessageLookupByLibrary.simpleMessage("Please check your email to activate your account"),
     "pleaseConfirmYour" : MessageLookupByLibrary.simpleMessage("Please confirm your"),
+    "pleaseCorrectTheFormatOfReceiveAddress" : MessageLookupByLibrary.simpleMessage("Please correct the format of receive address"),
     "pleaseEnterAmountLessThanYourWallet" : MessageLookupByLibrary.simpleMessage("Please enter the amount equals or less than your available wallet balance"),
     "pleaseEnterAnAddress" : MessageLookupByLibrary.simpleMessage("Please enter an address"),
     "pleaseEnterTheCorrectEmail" : MessageLookupByLibrary.simpleMessage("Please enter the correct email"),
