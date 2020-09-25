@@ -41,7 +41,6 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   @override
   Stream<dynamic> get stream {
     Stream<dynamic> res;
-
     res = tradeService.getAllCoinPriceStream();
     return res;
   }

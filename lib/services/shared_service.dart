@@ -109,7 +109,8 @@ class SharedService {
             : CircularProgressIndicator(
                 semanticsLabel: 'Loading',
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(secondaryColor)));
+                //  valueColor: AlwaysStoppedAnimation<Color>(secondaryColor)
+              ));
   }
 
 /* ---------------------------------------------------
