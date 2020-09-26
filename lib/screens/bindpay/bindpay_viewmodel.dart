@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -41,6 +42,8 @@ class BindpayViewmodel extends FutureViewModel {
   List<Map<String, dynamic>> coins = [];
   GlobalKey globalKey = new GlobalKey();
   ScrollController scrollController;
+  String barcodeRes='';
+  String barcodeRes2='';
 
 /*----------------------------------------------------------------------
                           INIT
@@ -59,15 +62,27 @@ class BindpayViewmodel extends FutureViewModel {
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
                                     Barcode Scan
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+Future scanBarcode2() async{
+  String barcodeScanRes;
 
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          "#ff6666", "Cancel", true, ScanMode.QR);
+      print(barcodeScanRes);
+
+   setBusy(true);
+      barcodeRes2 = barcodeScanRes;
+   setBusy(false);
+
+   sharedService.alertDialog('Barcode res 2', barcodeRes2);
+}
   void scanBarcode() async {
     try {
       var res = await BarcodeScanner.scan();
       setBusy(true);
       String barcode = '';
-      barcode = res.rawContent;
-      print(barcode);
-      sharedService.alertDialog(res.rawContent, barcode);
+      barcodeRes = res.rawContent;
+      print(barcodeRes);
+      sharedService.alertDialog(res.rawContent, barcodeRes);
       addressController.text = barcode;
       setBusy(false);
     } on PlatformException catch (e) {
