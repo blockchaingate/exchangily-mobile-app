@@ -111,6 +111,7 @@ class BindpayViewmodel extends FutureViewModel {
       // receiverWalletAddressTextController.text =
       //     '${AppLocalizations.of(context).unknownError}: $e';
     }
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
