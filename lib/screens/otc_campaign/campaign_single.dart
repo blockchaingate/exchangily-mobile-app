@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_single_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
+import 'package:exchangilymobileapp/screens/share/share.dart';
 import 'package:exchangilymobileapp/widgets/customSeparator.dart';
 import 'package:exchangilymobileapp/widgets/eventMainContent.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
@@ -172,6 +173,16 @@ class CampaignSingle extends StatelessWidget {
                                             color: Colors.white),
                                         onPressed: () {
                                           Navigator.pop(context);
+                                        }),
+                                  ),
+                                  Positioned(
+                                    top: 5,
+                                    right: 5,
+                                    child: IconButton(
+                                        icon: Icon(Icons.share,
+                                            color: Colors.white),
+                                        onPressed: () {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Share()));
                                         }),
                                   )
                                 ],

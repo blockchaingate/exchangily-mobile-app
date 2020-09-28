@@ -162,6 +162,9 @@ dependencies:
   #flutter_local_notifications
   flutter_local_notifications: ^1.4.4+4
 
+  # #share
+  # share: ^0.6.5+2
+
   # Share files
   share:
     git:
