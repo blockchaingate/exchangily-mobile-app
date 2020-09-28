@@ -1619,7 +1619,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "bindpay": "Bindpay",
+  "bindpay": "閃付",
   "@bindpay": {
     "description": "bindpay",
     "type": "text",

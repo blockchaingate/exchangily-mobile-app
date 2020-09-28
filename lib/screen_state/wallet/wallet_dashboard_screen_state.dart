@@ -727,7 +727,7 @@ class WalletDashboardScreenState extends BaseState {
         await updateWalletDatabase();
 
         if (!isProduction) debugVersionPopup();
-        await getAppVersion();
+        // await getAppVersion();
 
         // get exg address to get free fab
         String address = await getExgAddressFromWalletDatabase();

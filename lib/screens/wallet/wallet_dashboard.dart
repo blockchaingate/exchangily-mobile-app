@@ -118,7 +118,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                 bottom: -20,
                                 child: Card(
                                   elevation: model.elevation,
-                                  color: !isProduction
+                                  color: isProduction
                                       ? globals.walletCardColor
                                       : globals.red.withAlpha(200),
                                   child: Container(
