@@ -66,7 +66,8 @@ dependencies:
   qr: 1.2.0
 
   # Barcode Scan
-  barcode_scan: 3.0.1
+  # barcode_scan: 3.0.1
+  barcode_scan: ^2.0.2
 
   # Material icons
   material_design_icons_flutter: ^4.0.5345

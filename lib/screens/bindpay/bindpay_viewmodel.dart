@@ -58,11 +58,12 @@ class BindpayViewmodel extends FutureViewModel {
    setBusy(true);
     try {
       String barcode = '';
-      await BarcodeScanner.scan().then((res) => barcode = res.rawContent);
+      // await BarcodeScanner.scan().then((res) => barcode = res);
+      barcode = await BarcodeScanner.scan();
       addressController.text = barcode;
       setBusy(false);
     } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.cameraAccessDenied) {
+      if (e.code == "PERMISSION_NOT_GRANTED") {
        setBusy(true);
         sharedService.alertDialog(
             '', AppLocalizations.of(context).userAccessDenied,
