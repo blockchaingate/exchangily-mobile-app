@@ -195,6 +195,10 @@ class BindpayView extends StatelessWidget {
                         TextField(
                             keyboardType: TextInputType.text,
                             decoration: InputDecoration(
+                              prefixIcon: IconButton(icon: Icon(Icons.camera_alt,color: white,
+                                      size: 18,), onPressed: (){
+                                model.scanBarcode();
+                              }),
                                 suffixIcon: IconButton(
                                     padding: EdgeInsets.zero,
                                     icon: Icon(

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -47,6 +48,46 @@ class BindpayViewmodel extends FutureViewModel {
 
   init() {
     sharedService.context = context;
+  }
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                    Barcode Scan
+--------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+  Future scanBarcode() async {
+   setBusy(true);
+    try {
+      String barcode = '';
+      await BarcodeScanner.scan().then((res) => barcode = res.rawContent);
+      addressController.text = barcode;
+      setBusy(false);
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.cameraAccessDenied) {
+       setBusy(true);
+        sharedService.alertDialog(
+            '', AppLocalizations.of(context).userAccessDenied,
+            isWarning: false);
+        // receiverWalletAddressTextController.text =
+        //     AppLocalizations.of(context).userAccessDenied;
+      } else {
+        setBusy(true);
+        sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
+            isWarning: false);
+        // receiverWalletAddressTextController.text =
+        //     '${AppLocalizations.of(context).unknownError}: $e';
+      }
+    } on FormatException {
+     setBusy(true);
+      sharedService.alertDialog(AppLocalizations.of(context).scanCancelled,
+          AppLocalizations.of(context).userReturnedByPressingBackButton,
+          isWarning: false);
+    } catch (e) {
+     setBusy(true);
+      sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
+          isWarning: false);
+      // receiverWalletAddressTextController.text =
+      //     '${AppLocalizations.of(context).unknownError}: $e';
+    }
   }
 
 /*----------------------------------------------------------------------
