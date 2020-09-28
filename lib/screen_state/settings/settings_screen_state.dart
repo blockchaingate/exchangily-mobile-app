@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -164,6 +165,7 @@ class SettingsScreenState extends BaseState {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     selectedLanguage = lang;
     log.w('Selec $selectedLanguage');
+
     if (lang == 'Chinese' || lang == 'zh') {
       log.e('in zh');
       AppLocalizations.load(Locale('zh', 'ZH'));
@@ -172,7 +174,10 @@ class SettingsScreenState extends BaseState {
       log.e('in en');
       AppLocalizations.load(Locale('en', 'EN'));
       prefs.setString('lang', 'en');
+      setlangGlobal('en');
     }
+  
+    log.w('langGlobal: ' + getlangGlobal());
     setState(ViewState.Idle);
     setBusy(false);
   }

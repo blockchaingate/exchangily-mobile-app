@@ -29,9 +29,9 @@ class ApiService {
   final log = getLogger('ApiService');
   final client = new http.Client();
 
-  final kanbanBaseUrl = environment['endpoints']['kanban'];
+  // final kanbanBaseUrl = environment['endpoints']['kanban'];
   // Please keep this for future test
-  // final kanbanBaseUrl = environment['endpoints']['JackLocalKanban'];
+  final kanbanBaseUrl = environment['endpoints']['JackLocalKanban'];
 
   static const getBalance = 'kanban/getBalance/';
   static const assetsBalance = 'exchangily/getBalances/';
@@ -583,6 +583,20 @@ class ApiService {
   Future getSliderImages() async {
     try {
       final res = await http.get(kanbanBaseUrl + "kanban/getadvconfig");
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      log.e('getSliderImages Failed to load the data from the API $e');
+      return "error";
+    }
+    return "error";
+  }
+
+  Future getAnnouncement() async {
+    try {
+      final res = await http.get(kanbanBaseUrl + "kanban/getAnnouncement");
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
