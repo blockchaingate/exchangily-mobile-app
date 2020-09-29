@@ -600,6 +600,20 @@ class ApiService {
     return "error";
   }
 
+  Future getAnnouncement() async {
+    try {
+      final res = await http.get(kanbanBaseUrl + "kanban/getAnnouncement");
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      log.e('getSliderImages Failed to load the data from the API $e');
+      return "error";
+    }
+    return "error";
+  }
+
   Future getEvents() async {
     print("Calling api: getEvents");
     print("Url: " + kanbanBaseUrl + "kanban/getCampaigns");

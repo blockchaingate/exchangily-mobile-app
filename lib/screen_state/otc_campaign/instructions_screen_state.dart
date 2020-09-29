@@ -34,7 +34,7 @@ class CampaignInstructionsScreenState extends BaseState {
     // circular indicator is still not working when page first loads
     setBusy(true);
     log.e(busy);
-
+    sharedService.context = context;
     var loginToken = await campaignService.getSavedLoginTokenFromLocalStorage();
     log.w('token $loginToken');
     if (loginToken != '' && loginToken != null) {

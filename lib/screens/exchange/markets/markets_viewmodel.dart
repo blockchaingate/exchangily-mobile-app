@@ -56,6 +56,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   @override
   transformData(data) {
     try {
+      print('data $data');
       List<dynamic> jsonDynamicList = jsonDecode(data) as List;
       print(jsonDynamicList);
 

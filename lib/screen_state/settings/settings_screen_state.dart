@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -214,6 +215,8 @@ class SettingsScreenState extends BaseState {
       AppLocalizations.load(Locale('en', 'EN'));
       prefs.setString('lang', key);
     }
+
+    log.w('langGlobal: ' + getlangGlobal());
     setState(ViewState.Idle);
     setBusy(false);
   }

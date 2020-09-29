@@ -3,12 +3,17 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/instructions_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_single.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/cache_image.dart';
 import 'package:exchangilymobileapp/widgets/customSeparator.dart';
 import 'package:exchangilymobileapp/widgets/eventMainContent.dart';
+import 'package:exchangilymobileapp/widgets/video_page.dart';
+import 'package:exchangilymobileapp/widgets/web_page.dart';
+import 'package:exchangilymobileapp/widgets/youtube.dart';
+import 'package:exchangilymobileapp/widgets/youtube_list_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:gradient_text/gradient_text.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
@@ -24,48 +29,41 @@ class CampaignInstructionScreen extends StatelessWidget {
     return BaseScreen<CampaignInstructionsScreenState>(
       onModelReady: (model) async {
         model.context = context;
+
         await model.initState();
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () async {
-          model.navigationService.goBack();
-          return new Future(() => true);
+          model.onBackButtonPressed();
+          return new Future(() => false);
         },
         child: SafeArea(
           child: Scaffold(
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.centerDocked,
               floatingActionButton: Container(
-                constraints: BoxConstraints(
-                  minWidth:250
-                ),
-                margin: EdgeInsets.symmetric(horizontal:30),
-                child: RaisedButton(
+                decoration: BoxDecoration(
+                    color: white.withOpacity(.90),
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(
+                        color: primaryColor.withAlpha(145), width: 1.5)),
+                constraints: BoxConstraints(minWidth: 250),
+                margin: EdgeInsets.symmetric(horizontal: 60, vertical: 80),
+                child: FlatButton(
+                  //   borderSide: BorderSide(color: primaryColor),
+                  // color: primaryColor,
                   padding: EdgeInsets.all(0),
                   child: Text(
                       AppLocalizations.of(context).tapHereToEnterInCampaign,
-                      style: Theme.of(context).textTheme.headline4),
+                      style: Theme.of(context).textTheme.headline5.copyWith(
+                          color: primaryColor, fontWeight: FontWeight.bold)),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/campaignLogin');
+                    model.busy
+                        ? print('loading...')
+                        : Navigator.pushNamed(context, '/campaignLogin');
                   },
                 ),
               ),
-              // backgroundColor: Color(0xff000066),
-              // backgroundColor: Color(0xff000000),
-              appBar: newPage
-                  ? AppBar(
-                      centerTitle: true,
-                      leading: newPage
-                          ? IconButton(
-                              icon: Icon(Icons.arrow_back_ios),
-                              onPressed: () {
-                                model.navigationService.goBack();
-                              })
-                          : Container(),
-                      title: Text(
-                          AppLocalizations.of(context).campaignInstructions,
-                          style: Theme.of(context).textTheme.headline3))
-                  : null,
               key: key,
               body: model.busy
                   ? Column(
@@ -108,7 +106,9 @@ class CampaignInstructionScreen extends StatelessWidget {
                               itemCount: model.campaignInfoList.length,
                               itemBuilder: (context, index) {
                                 if (model.campaignInfoList[index]["status"] ==
-                                    "active")
+                                        "active" &&
+                                    model.campaignInfoList[index]
+                                        .containsKey("type"))
                                   return Container(
                                       // height: 100,
                                       width: double.infinity,
@@ -117,13 +117,79 @@ class CampaignInstructionScreen extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(5),
                                         child: InkWell(
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        CampaignSingle(model
-                                                                .campaignInfoList[
-                                                            index]["id"])));
+                                            print("Event type: " +
+                                                model.campaignInfoList[index]
+                                                    ["type"]);
+
+                                            switch (
+                                                model.campaignInfoList[index]
+                                                    ["type"]) {
+                                              case "flutterPage":
+                                                return Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            CampaignSingle(model
+                                                                    .campaignInfoList[
+                                                                index]["id"])));
+                                                break;
+                                              case "webPage":
+                                                return Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder:
+                                                            (context) =>
+                                                                WebViewPage(
+                                                                  url: model.campaignInfoList[
+                                                                          index]
+                                                                      [model
+                                                                          .lang]["url"],
+                                                                  title: model.campaignInfoList[
+                                                                              index]
+                                                                          [model
+                                                                              .lang]
+                                                                      ["title"],
+                                                                )));
+                                                break;
+                                              case "video":
+                                                return Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            VideoPage(
+                                                                videoObj: model
+                                                                            .campaignInfoList[
+                                                                        index][
+                                                                    model
+                                                                        .lang])));
+                                                break;
+                                              case "youtube":
+                                                return Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            YoutubePage(
+                                                                videoObj: model
+                                                                            .campaignInfoList[
+                                                                        index][
+                                                                    model
+                                                                        .lang])));
+                                                break;
+                                              case "youtubeList":
+                                                return Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            YoutubeListPage(
+                                                                videoObj: model
+                                                                            .campaignInfoList[
+                                                                        index][
+                                                                    model
+                                                                        .lang])));
+                                                break;
+                                              default:
+                                                return null;
+                                            }
                                           },
                                           child: Container(
                                             decoration: BoxDecoration(
@@ -136,7 +202,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                   child: CacheImage(
                                                     model.campaignInfoList[
                                                         index]["coverImage"],
-                                                    fit: BoxFit.contain,
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
                                                 Container(
@@ -207,7 +273,9 @@ class CampaignInstructionScreen extends StatelessWidget {
                                       ));
                                 else
                                   return Container();
-                              })),
+                              },
+                            ),
+              bottomNavigationBar: BottomNavBar(count: 3)),
         ),
       ),
     );

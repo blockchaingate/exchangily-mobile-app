@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -16,6 +17,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -41,6 +43,8 @@ class BindpayViewmodel extends FutureViewModel {
   GlobalKey globalKey = new GlobalKey();
   ScrollController scrollController;
   bool isExchangeBalanceEmpty = false;
+  String barcodeRes = '';
+  String barcodeRes2 = '';
 
 /*----------------------------------------------------------------------
                           INIT
@@ -48,6 +52,46 @@ class BindpayViewmodel extends FutureViewModel {
 
   init() {
     sharedService.context = context;
+  }
+
+/*----------------------------------------------------------------------
+                    onBackButtonPressed
+----------------------------------------------------------------------*/
+  onBackButtonPressed() async {
+    await sharedService.onBackButtonPressed('/dashboard');
+  }
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                    Barcode Scan
+--------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+  void scanBarcode() async {
+    try {
+      setBusy(true);
+      String barcode = '';
+      barcode = await BarcodeScanner.scan();
+      addressController.text = barcode;
+      setBusy(false);
+    } on PlatformException catch (e) {
+      if (e.code == "PERMISSION_NOT_GRANTED") {
+        setBusy(true);
+        sharedService.alertDialog(
+            '', AppLocalizations.of(context).userAccessDenied,
+            isWarning: false);
+        // receiverWalletAddressTextController.text =
+        //     AppLocalizations.of(context).userAccessDenied;
+      } else {
+        // setBusy(true);
+        sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
+            isWarning: false);
+      }
+    } on FormatException {
+      sharedService.alertDialog('', AppLocalizations.of(context).scanCancelled,
+          isWarning: false);
+    } catch (e) {
+      sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
+          isWarning: false);
+    }
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------

@@ -106,10 +106,15 @@ class SharedService {
                 width: 30,
                 height: 30,
                 child: CupertinoActivityIndicator())
-            : CircularProgressIndicator(
-                semanticsLabel: 'Loading',
-                strokeWidth: 2,
-                //  valueColor: AlwaysStoppedAnimation<Color>(secondaryColor)
+            : SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  backgroundColor: primaryColor,
+                  semanticsLabel: 'Loading',
+                  strokeWidth: 1.5,
+                  //  valueColor: AlwaysStoppedAnimation<Color>(secondaryColor)
+                ),
               ));
   }
 
