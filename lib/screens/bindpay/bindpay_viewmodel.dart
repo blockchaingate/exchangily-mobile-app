@@ -62,25 +62,11 @@ class BindpayViewmodel extends FutureViewModel {
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
                                     Barcode Scan
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-// Future scanBarcode2() async{
-//   String barcodeScanRes;
 
-//       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-//           "#ff6666", "Cancel", true, ScanMode.QR);
-//       print(barcodeScanRes);
-
-//    setBusy(true);
-//       barcodeRes2 = barcodeScanRes;
-//    setBusy(false);
-
-//    sharedService.alertDialog('Barcode res 2', barcodeRes2);
-// }
   void scanBarcode() async {
     try {
-      //  var res = await BarcodeScanner.scan();
       setBusy(true);
       String barcode = '';
-      // await BarcodeScanner.scan().then((res) => barcode = res);
       barcode = await BarcodeScanner.scan();
       addressController.text = barcode;
       setBusy(false);
@@ -96,20 +82,13 @@ class BindpayViewmodel extends FutureViewModel {
         // setBusy(true);
         sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
             isWarning: false);
-        // receiverWalletAddressTextController.text =
-        //     '${AppLocalizations.of(context).unknownError}: $e';
       }
     } on FormatException {
-      //  setBusy(true);
-      sharedService.alertDialog(AppLocalizations.of(context).scanCancelled,
-          AppLocalizations.of(context).userReturnedByPressingBackButton,
+      sharedService.alertDialog('', AppLocalizations.of(context).scanCancelled,
           isWarning: false);
     } catch (e) {
-      //  setBusy(true);
       sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
           isWarning: false);
-      // receiverWalletAddressTextController.text =
-      //     '${AppLocalizations.of(context).unknownError}: $e';
     }
     setBusy(false);
   }
