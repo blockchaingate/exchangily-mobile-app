@@ -52,9 +52,17 @@ class Carousel extends StatelessWidget {
                           fit: BoxFit.fill,
                         ),
                         onTap: () {
-                          print("Event type: " + imageData[index]["type"]);
+                          // print("Event type: " + imageData[index]["type"]);
 
-                          switch (imageData[index]["type"]) {
+                          if(!imageData[index].containsKey("type")){
+                            imageData[index].containsKey("route") &&
+                                      imageData[index]["route"].length > 0
+                                  ? Navigator.pushNamed(
+                                      context, imageData[index]["route"],
+                                      arguments: imageData[index]["arguments"])
+                                  : null;
+                          }else{
+                            switch (imageData[index]["type"]) {
                             case "flutterPage":
                               return imageData[index].containsKey("route") &&
                                       imageData[index]["route"].length > 0
@@ -101,6 +109,9 @@ class Carousel extends StatelessWidget {
                             default:
                               return null;
                           }
+                          }
+
+                          
                         },
                       ),
                     ),

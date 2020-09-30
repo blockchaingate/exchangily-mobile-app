@@ -66,15 +66,20 @@ class CampaignInstructionsScreenState extends BaseState {
 
       eventContent = await apiService.getEvents();
 
+      log.i("Got Event!!!");
       if (eventContent == "error") {
+        log.wtf("Got API Error!!!");
         hasApiError = true;
       } else {
+        log.i("no issue");
         print(eventContent.toString());
         campaignInfoList = eventContent;
       }
+
+      log.i("Got Event End!!!");
     }
     //get campaign info in selected language
-
+    log.i("setBusy(false);!!!");
     setBusy(false);
   }
 
