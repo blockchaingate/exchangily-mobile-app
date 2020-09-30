@@ -93,7 +93,7 @@ dependencies:
   rflutter_alert: ^1.0.3
 
   # Shared Preferences
-  shared_preferences: ^0.5.6+1
+  shared_preferences: ^0.5.12
 
   # Loading animation
   shimmer: ^1.0.1
@@ -172,6 +172,12 @@ dependencies:
       url: https://github.com/bbedward/plugins.git
       path: packages/share
       ref: master
+  
+  json_diff:
+      git:
+        url: https://github.com/google/dart-json_diff.git
+        ref: master
+  
 
 dev_dependencies:
   intl_translation: '^0.17.0'

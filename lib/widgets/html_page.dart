@@ -13,7 +13,7 @@ class HtmlPage extends StatelessWidget {
 
       appBar: AppBar(
         title: Text(
-          htmlData[getlangGlobal()]["title"],
+          htmlData["title"],
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -21,7 +21,7 @@ class HtmlPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Html(
-          data: htmlData[getlangGlobal()]["body"],
+          data: htmlData["content"],
           //Optional parameters:
           style: {
             "html": Style(

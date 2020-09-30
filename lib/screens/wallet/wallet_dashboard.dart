@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_state.dart';
+import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
@@ -127,7 +128,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                     child: Row(
                                       children: <Widget>[
                                         //Announcement Widget
-                                        model.announceList == null
+                                        model.announceList == null || model.announceList.length < 1
                                             ? Image.asset(
                                                 'assets/images/wallet-page/dollar-sign.png',
                                                 width: 40,
@@ -159,7 +160,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                                                     MaterialPageRoute(
                                                                         builder:
                                                                             (context) =>
-                                                                                AnnouncementList(model.announceList)));
+                                                                                AnnouncementList()));
                                                               else
                                                                 print(
                                                                     "API has error");
@@ -188,28 +189,35 @@ class WalletDashboardScreen extends StatelessWidget {
                                                           )),
                                                     ),
                                                   ),
-                                                  Positioned(
-                                                      top: 8,
-                                                      left: 8,
-                                                      child: Container(
-                                                        width: 15,
-                                                        height: 15,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                shape: BoxShape
-                                                                    .circle,
-                                                                color:
-                                                                    Colors.red),
-                                                        child: Center(
-                                                          child: Text(
-                                                            "2",
-                                                            style: TextStyle(
-                                                                fontSize: 10,
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        ),
-                                                      ))
+                                                  getunReadAnnouncement() < 1
+                                                      ? Container()
+                                                      : Positioned(
+                                                          top: 8,
+                                                          left: 8,
+                                                          child: Container(
+                                                            width: 15,
+                                                            height: 15,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                                    shape: BoxShape
+                                                                        .circle,
+                                                                    color: Colors
+                                                                        .red),
+                                                            child: Center(
+                                                              child: Text(
+                                                                // model
+                                                                //     .announceList
+                                                                //     .length
+                                                                //     .toString(),
+                                                                getunReadAnnouncement().toString(),
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        10,
+                                                                    color: Colors
+                                                                        .white),
+                                                              ),
+                                                            ),
+                                                          ))
                                                 ],
                                               ), //Announcement Widget end
                                         UIHelper.horizontalSpaceSmall,
