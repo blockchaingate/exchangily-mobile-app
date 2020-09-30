@@ -11,8 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/utils/string_util.dart';
-
 class MarketTrades {
   double _price;
   double _quantity;
@@ -28,8 +26,8 @@ class MarketTrades {
 
   factory MarketTrades.fromJson(Map<String, dynamic> json) {
     return MarketTrades(
-      price: bigNum2Double(json['p'].toString()),
-      quantity: bigNum2Double(json['q'].toString()),
+      price: json['p'].toDouble(),
+      quantity: json['q'].toDouble(),
       time: json['t'],
       bidOrAsk: json['b'],
     );

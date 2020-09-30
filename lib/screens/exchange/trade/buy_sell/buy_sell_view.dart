@@ -28,25 +28,27 @@ import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
 
 class BuySellView extends StatelessWidget {
-  BuySellView({Key key, this.bidOrAsk, this.pair, this.orderbook})
+  BuySellView(
+      {Key key, this.bidOrAsk, this.pairSymbolWithSlash, this.orderbook})
       : super(key: key);
   final bool bidOrAsk;
-  final Price pair;
+  final String pairSymbolWithSlash;
   final Orderbook orderbook;
 
   @override
   Widget build(BuildContext context) {
+    print('1 $bidOrAsk');
     SharedService sharedService = locator<SharedService>();
     return BaseScreen<BuySellScreenState>(
         onModelReady: (model) async {
           model.context = context;
           sharedService.context = context;
-          model.splitPair(pair.symbol);
+          model.splitPair(pairSymbolWithSlash);
           model.setDefaultGasPrice();
           model.bidOrAsk = bidOrAsk;
           await model.retrieveWallets();
           await model.getDecimalPairConfig();
-          model.passedPair = pair;
+          model.orderbook = orderbook;
           model.init();
         },
         builder: (context, model, child) => Scaffold(
@@ -63,7 +65,7 @@ class BuySellView extends StatelessWidget {
                 },
               ),
               middle: Text(
-                pair.symbol ?? '',
+                pairSymbolWithSlash ?? '',
                 style: Theme.of(context).textTheme.headline3,
               ),
               backgroundColor: Color(0XFF1f2233),
@@ -565,21 +567,23 @@ class BuySellView extends StatelessWidget {
                                                   .headline6))
                                     ],
                                   ),
-                                  orderDetail(orderbook.buyOrders, true, model),
+                                  orderDetail(
+                                      orderbook.sellOrders.reversed.toList(),
+                                      false,
+                                      model),
                                   Container(
                                       padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: <Widget>[
-                                          Text('${pair.price.toString()}',
+                                          Text('${orderbook.price.toString()}',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline4)
                                         ],
                                       )),
-                                  orderDetail(
-                                      orderbook.sellOrders, false, model)
+                                  orderDetail(orderbook.buyOrders, true, model),
                                 ],
                               ))
                         ],
@@ -596,27 +600,29 @@ class BuySellView extends StatelessWidget {
 
   // Using orderDetail here in this buy and sell screen to fill the price and quanity in text fields when user click on the order
   Widget orderDetail(List<OrderType> orderArray, final bool bidOrAsk, model) {
-    List<OrderType> sellOrders = [];
+    // List<OrderType> sellOrders = [];
     print('OrderArray length before ${orderArray.length}');
     orderArray = (orderArray.length > 7)
         ? orderArray = (orderArray.sublist(0, 7))
         : orderArray;
-    if (bidOrAsk) {
-      sellOrders = orderArray.reversed.toList();
-      orderArray = sellOrders;
-    }
+    // if (bidOrAsk) {
+    //   sellOrders = orderArray.reversed.toList();
+    //   orderArray = sellOrders;
+    // }
     print('OrderArray length after ${orderArray.length}');
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        for (var item in orderArray)
+        for (var order in orderArray)
           InkWell(
             onTap: () {
               model.setBusy(true);
-              model.quantityTextController.text = item.quantity.toString();
-              model.quantity = item.quantity;
-              model.priceTextController.text = item.price.toString();
-              model.price = item.price;
+              model.quantityTextController.text =
+                  order.quantity.toStringAsFixed(model.quantityDecimal);
+              model.quantity = order.quantity;
+              model.priceTextController.text =
+                  order.price.toStringAsFixed(model.priceDecimal);
+              model.price = order.price;
               model.transactionAmount = model.quantity * model.price;
               model.updateTransFee();
               model.setBusy(false);
@@ -626,16 +632,16 @@ class BuySellView extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(item.price.toStringAsFixed(model.priceDecimal),
+                    Text(order.price.toStringAsFixed(model.priceDecimal),
                         style: TextStyle(
-                            color: Color(!bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
+                            color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
                             fontSize: 13.0)),
                     Container(
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                        color: Color(!bidOrAsk ? 0xFF264559 : 0xFF502649),
+                        color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                         child: Text(
-                            item.quantity
+                            order.quantity
                                 .toStringAsFixed(model.quantityDecimal),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 13.0)))

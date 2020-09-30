@@ -72,7 +72,7 @@ final String kanbanBaseWSUrl = isProduction
 final String allPricesWSUrl = kanbanBaseWSUrl + 'allPrices';
 final String tradesWSUrl = kanbanBaseWSUrl + 'trades@';
 final String ordersWSUrl = kanbanBaseWSUrl + 'orders@';
-final String tickersWSUrl = kanbanBaseWSUrl + 'tickers@';
+final String tickerWSUrl = kanbanBaseWSUrl + 'ticker@';
 /*----------------------------------------------------------------------
                         Campaign
 ----------------------------------------------------------------------*/

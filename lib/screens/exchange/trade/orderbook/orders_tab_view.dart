@@ -57,7 +57,7 @@ class OrdersTabView extends
                   height: screenHeight * 0.70,
                   color: Theme.of(context).accentColor,
                   child: TabBarView(children: [
-                    Expanded(child: OrderBookView(orderBook: model.orderbook)),
+                    Expanded(child: OrderBookView(orderbook: model.orderbook)),
                     Expanded(
                         child: MarketTradesView(
                             marketTrades: model.marketTradesList)),
@@ -92,7 +92,7 @@ class SelectedTabWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
       if (index == 0)
-        Expanded(child: OrderBookView(orderBook: tabBody))
+        Expanded(child: OrderBookView(orderbook: tabBody))
       else if (index == 1)
         Expanded(child: MarketTradesView(marketTrades: tabBody))
       else if (index == 2)

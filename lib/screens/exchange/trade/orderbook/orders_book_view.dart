@@ -6,103 +6,110 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 
 class OrderBookView extends StatelessWidget {
-  final orderBook;
+  final Orderbook orderbook;
   final DecimalConfig decimalConfig;
-  OrderBookView({Key key, this.orderBook, this.decimalConfig})
+  OrderBookView({Key key, this.orderbook, this.decimalConfig})
       : super(key: key);
   // final NavigationService navigationService = locator<NavigationService>();
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(5.0),
-        child: Column(
-          children: <Widget>[
-            // Heading Buy Sell Orders Row
-            Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-              Container(
-                child: Text(AppLocalizations.of(context).buyOrders,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline6),
-              ),
-              Container(
-                child: Text(AppLocalizations.of(context).sellOrders,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline6),
-              ),
-            ]),
+      padding: EdgeInsets.all(5.0),
+      child: Column(
+        children: <Widget>[
+          // Heading Buy Sell Orders Row
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            Container(
+              child: Text(AppLocalizations.of(context).buyOrders,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline6),
+            ),
+            Container(
+              child: Text(AppLocalizations.of(context).sellOrders,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headline6),
+            ),
+          ]),
+          UIHelper.verticalSpaceSmall,
+          // quanity/price text Row
 
-            // Buy/Sell Row
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                // Buy/Sell Orders Column
-                for (var orders in orderBook)
-                  Column(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Flexible(
+                flex: 1,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 7),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.all(5.0),
-                        // Quantity/Price headers row
-                        child: orderBook.indexOf(orders) == 0
-                            ? Container(
-                                padding: EdgeInsets.symmetric(horizontal: 7),
-                                width: MediaQuery.of(context).size.width / 2.2,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(AppLocalizations.of(context).quantity,
-                                        style: TextStyle(
-                                            fontSize: 9, color: grey)),
-                                    Text(AppLocalizations.of(context).price,
-                                        style:
-                                            TextStyle(fontSize: 9, color: grey))
-                                  ],
-                                ),
-                              )
-                            : Container(
-                                padding: EdgeInsets.symmetric(horizontal: 7),
-                                width: MediaQuery.of(context).size.width / 2.2,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(AppLocalizations.of(context).price,
-                                        style: TextStyle(
-                                            fontSize: 9, color: grey)),
-                                    Text(AppLocalizations.of(context).quantity,
-                                        style: TextStyle(
-                                            fontSize: 9, color: grey)),
-                                  ],
-                                ),
-                              ),
-                      ),
-
-                      // Buy/Sell Orders List View
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.48,
-                        height: MediaQuery.of(context).size.height * 0.46,
-                        child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: orders.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            int orderTypeByIndex = orderBook.indexOf(orders);
-                            return OrderDetailsView(
-                              decimalConfig: decimalConfig,
-                              orders: orders,
-                              index: index,
-                              isBuy: orderTypeByIndex == 0 ? true : false,
-                            );
-                          },
-                        ),
-                      )
+                      Text(AppLocalizations.of(context).quantity,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontSize: 9, color: grey)),
+                      Text(AppLocalizations.of(context).price,
+                          style: TextStyle(fontSize: 9, color: grey))
                     ],
                   ),
-              ],
-            )
-          ],
-        ));
+                ),
+              ),
+              Flexible(
+                flex: 1,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 7),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(AppLocalizations.of(context).price,
+                          style: TextStyle(fontSize: 9, color: grey)),
+                      Text(AppLocalizations.of(context).quantity,
+                          style: TextStyle(fontSize: 9, color: grey)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // Buy/Sell Orders List View
+          Row(
+            children: [
+              // Buy orders
+              Flexible(
+                flex: 1,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: orderbook.buyOrders.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return OrderDetailsView(
+                      decimalConfig: decimalConfig,
+                      orders: orderbook.buyOrders,
+                      index: index,
+                      isBuy: true,
+                    );
+                  },
+                ),
+              ),
+
+              // Sell Orders
+              Flexible(
+                flex: 1,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: orderbook.sellOrders.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return OrderDetailsView(
+                      decimalConfig: decimalConfig,
+                      orders: orderbook.sellOrders,
+                      index: index,
+                      isBuy: false,
+                    );
+                  },
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -110,7 +117,7 @@ class OrderDetailsView extends StatelessWidget {
   final int index;
   final bool isBuy;
   final DecimalConfig decimalConfig;
-  final List<Orderbook> orders;
+  final List<OrderType> orders;
   const OrderDetailsView(
       {Key key,
       this.decimalConfig,
@@ -129,31 +136,42 @@ class OrderDetailsView extends StatelessWidget {
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Expanded(
-                      child: Text(
-                          '${orders[index].orderQuantity.toStringAsFixed(decimalConfig.quantityDecimal)}',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 12, color: grey))),
-                  Expanded(
-                      child: Text(
-                          '${orders[index].price.toStringAsFixed(decimalConfig.priceDecimal)}',
-                          textAlign: TextAlign.end,
-                          style: TextStyle(fontSize: 12, color: buyPrice))),
+                  orderRow(
+                      orders[index]
+                          .quantity
+                          .toStringAsFixed(decimalConfig.quantityDecimal),
+                      TextAlign.start,
+                      grey),
+                  orderRow(
+                      orders[index]
+                          .price
+                          .toStringAsFixed(decimalConfig.priceDecimal),
+                      TextAlign.end,
+                      buyPrice),
                 ],
               )
             : Row(
                 children: <Widget>[
-                  Expanded(
-                      child: Text(
-                          '${orders[index].price.toStringAsFixed(decimalConfig.priceDecimal)}',
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 12, color: sellPrice))),
-                  Expanded(
-                      child: Text(
-                          '${orders[index].orderQuantity.toStringAsFixed(decimalConfig.quantityDecimal)}',
-                          textAlign: TextAlign.end,
-                          style: TextStyle(fontSize: 12, color: grey))),
+                  orderRow(
+                      orders[index]
+                          .price
+                          .toStringAsFixed(decimalConfig.priceDecimal),
+                      TextAlign.start,
+                      sellPrice),
+                  orderRow(
+                      orders[index]
+                          .quantity
+                          .toStringAsFixed(decimalConfig.quantityDecimal),
+                      TextAlign.end,
+                      grey),
                 ],
               ));
+  }
+
+  Widget orderRow(String textValue, TextAlign textAlign, Color colorValue) {
+    return Expanded(
+        child: Text(textValue,
+            textAlign: textAlign,
+            style: TextStyle(fontSize: 12, color: colorValue)));
   }
 }

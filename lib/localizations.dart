@@ -1574,6 +1574,14 @@ class AppLocalizations {
     return Intl.message("Deleting wallet",
         name: 'deletingWallet', desc: 'settings_view_deleting_wallet');
   }
+
+  String get pleaseTransferFundsToExchangeWalletToUseBindpay {
+    return Intl.message(
+        "Please transfer funds to exchange wallet to use bindpay",
+        name: 'pleaseTransferFundsToExchangeWalletToUseBindpay',
+        desc:
+            'bindpay_please_transfer_funds_to_exchange_wallet_to_use_bindpay');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

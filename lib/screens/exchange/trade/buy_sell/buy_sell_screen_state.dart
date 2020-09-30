@@ -24,6 +24,7 @@ import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -33,11 +34,9 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/abi_util.dart';
-import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:keccak/keccak.dart';
 import 'package:random_string/random_string.dart';
@@ -90,7 +89,7 @@ class BuySellScreenState extends BaseState {
   ApiService apiService = locator<ApiService>();
   String pair = '';
   String tickerName = '';
-  Price passedPair;
+  Orderbook orderbook;
 
   init() async {
     // log.e(pair);
@@ -110,10 +109,10 @@ class BuySellScreenState extends BaseState {
 
   fillPriceAndQuantityTextFields() {
     setBusy(true);
-    priceTextController.text = passedPair.price.toString();
-    price = passedPair.price;
-    quantityTextController.text = 1.toString();
-    quantity = 1.0;
+    priceTextController.text = orderbook.price.toString();
+    price = orderbook.price;
+    quantityTextController.text = orderbook.quantity.toString();
+    quantity = orderbook.quantity;
     setBusy(false);
   }
 

@@ -58,6 +58,13 @@ class BindpayView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Center(
+                    //   child: RaisedButton(
+                    //       child: Text('Save Data Locally'),
+                    //       onPressed: () {
+                    //         model.saveDataLocally();
+                    //       }),
+                    // ),
 /*----------------------------------------------------------------------------------------------------
                                       Coin list dropdown
 ----------------------------------------------------------------------------------------------------*/

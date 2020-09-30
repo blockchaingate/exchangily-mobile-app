@@ -79,15 +79,36 @@ class TradeService {
   }
 
 /*----------------------------------------------------------------------
+                    Get single pair WS data
+----------------------------------------------------------------------*/
+// Values based on that time interval
+
+  Stream getTickerDataStream(String pair, {String interval = '24h'}) {
+    Stream stream;
+    try {
+      stream = getTickerDataChannel(pair, interval).stream;
+      return stream.asBroadcastStream().distinct();
+    } catch (err) {
+      log.e(
+          'getTickerDataStream CATCH $err'); // Error thrown here will go to onError in them view model
+      throw Exception(err);
+    }
+  }
+
+  IOWebSocketChannel getTickerDataChannel(String pair, String interval) {
+    var wsStringUrl = tickerWSUrl + pair + '@' + interval;
+    log.i('getTickerDataUrl $wsStringUrl');
+    final channel = IOWebSocketChannel.connect(wsStringUrl);
+    return channel;
+  }
+
+/*----------------------------------------------------------------------
           Get Coin Price Details Using allPrices Web Sockets
 ----------------------------------------------------------------------*/
 
   Stream getAllCoinPriceStream() {
     Stream stream;
     try {
-      // String url = basePath + 'allPrices';
-      //  log.i(url);
-      // IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
       stream = getAllPriceChannel().stream;
       return stream.asBroadcastStream().distinct();
     } catch (err) {
@@ -120,6 +141,17 @@ class TradeService {
     }
   }
 
+  IOWebSocketChannel getTradeListChannel(String pair) {
+    try {
+      var wsString = environment['websocket'] + 'trades' + '@' + pair;
+      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
+      return channel;
+    } catch (err) {
+      throw Exception(
+          '$err'); // Error thrown here will go to onError in them view model
+    }
+  }
+
 /*----------------------------------------------------------------------
                       Orders
 ----------------------------------------------------------------------*/
@@ -143,8 +175,6 @@ class TradeService {
     }
   }
 
-  /// IOWebSockets
-
   IOWebSocketChannel getOrderListChannel(String pair) {
     try {
       var wsString = environment['websocket'] + 'orders' + '@' + pair;
@@ -156,24 +186,6 @@ class TradeService {
       throw Exception(
           '$err'); // Error thrown here will go to onError in them view model
     }
-  }
-
-  IOWebSocketChannel getTradeListChannel(String pair) {
-    try {
-      var wsString = environment['websocket'] + 'trades' + '@' + pair;
-      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
-      return channel;
-    } catch (err) {
-      throw Exception(
-          '$err'); // Error thrown here will go to onError in them view model
-    }
-  }
-
-  getTickerChannel(String pair, String interval) {
-    var wsString =
-        environment['websocket'] + 'ticker' + '@' + pair + '@' + interval;
-    final channel = IOWebSocketChannel.connect(wsString);
-    return channel;
   }
 
   Future<double> getCoinMarketPrice(String name) async {
