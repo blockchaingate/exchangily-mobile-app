@@ -200,14 +200,34 @@ class WalletDashboardScreenState extends BaseState {
 
         tempAnnounceData = announceContent;
 
-        tempAnnounceData.asMap().entries.map((announ) {
-          int idx = announ.key;
-          var val = announ.value;
-          // tempAnnounceData[idx]['isRead']=false;
-          // var tempString = val.toString();
-          // tempString = tempString.substring(0, tempString.length - 1) + 'isRead:false';
-          tempAnnounceData[idx]['isRead'] = false;
-        }).toList();
+        if (tempAnnounceData.length != 0) {
+          tempAnnounceData.asMap().entries.map((announ) {
+            int idx = announ.key;
+            var val = announ.value;
+            // tempAnnounceData[idx]['isRead']=false;
+            // var tempString = val.toString();
+            // tempString = tempString.substring(0, tempString.length - 1) + 'isRead:false';
+            tempAnnounceData[idx]['isRead'] = false;
+          }).toList();
+
+          prefs.remove("announceData");
+          List<String> jsonData = [];
+          int readedNum = 0;
+          tempAnnounceData.forEach((element) {
+            element["isRead"] == false ? readedNum++ : readedNum = readedNum;
+            jsonData.add(jsonEncode(element));
+            print('jsonData $jsonData');
+          });
+          setunReadAnnouncement(readedNum);
+
+          print(
+              "check status: " + prefs.containsKey('announceData').toString());
+          prefs.setStringList('announceData', jsonData);
+          print("prefs saved");
+          print("check status saved: " +
+              prefs.containsKey('announceData').toString());
+          // print("prefs announcement data: " + prefs.getString('announceData'));
+        }
         // tempAnnounceData.map((announ) {
         //   // announ.add["isRead"] = false;
         //   announ.addAll({'isRead':false});
@@ -220,22 +240,6 @@ class WalletDashboardScreenState extends BaseState {
 
         // log.i("tempAnnounceData[0]['isRead']: " +
         //     tempAnnounceData[0]['isRead'].toString());
-        prefs.remove("announceData");
-        List<String> jsonData = [];
-        int readedNum = 0;
-        tempAnnounceData.forEach((element) {
-          element["isRead"] == false ? readedNum++ : readedNum = readedNum;
-          jsonData.add(jsonEncode(element));
-          print('jsonData $jsonData');
-        });
-        setunReadAnnouncement(readedNum);
-
-        print("check status: " + prefs.containsKey('announceData').toString());
-        prefs.setStringList('announceData', jsonData);
-        print("prefs saved");
-        print("check status saved: " +
-            prefs.containsKey('announceData').toString());
-        // print("prefs announcement data: " + prefs.getString('announceData'));
 
         announceList = tempAnnounceData;
         log.i("announcement: exit!!!");
