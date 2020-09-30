@@ -128,7 +128,8 @@ class WalletDashboardScreen extends StatelessWidget {
                                     child: Row(
                                       children: <Widget>[
                                         //Announcement Widget
-                                        model.announceList == null || model.announceList.length < 1
+                                        model.announceList == null ||
+                                                model.announceList.length < 1
                                             ? Image.asset(
                                                 'assets/images/wallet-page/dollar-sign.png',
                                                 width: 40,
@@ -176,16 +177,10 @@ class WalletDashboardScreen extends StatelessWidget {
                                                                       .iconBackgroundColor,
                                                                 ),
                                                                 child: Icon(
-                                                                  Icons
-                                                                      .mail_outline,
-                                                                  color: !isProduction
-                                                                      ? globals
-                                                                          .walletCardColor
-                                                                      : globals
-                                                                          .red
-                                                                          .withAlpha(
-                                                                              200),
-                                                                )),
+                                                                    Icons
+                                                                        .mail_outline,
+                                                                    color: globals
+                                                                        .walletCardColor)),
                                                           )),
                                                     ),
                                                   ),
@@ -209,7 +204,8 @@ class WalletDashboardScreen extends StatelessWidget {
                                                                 //     .announceList
                                                                 //     .length
                                                                 //     .toString(),
-                                                                getunReadAnnouncement().toString(),
+                                                                getunReadAnnouncement()
+                                                                    .toString(),
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         10,

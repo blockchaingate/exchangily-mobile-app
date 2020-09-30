@@ -137,48 +137,52 @@ class WalletDashboardScreenState extends BaseState {
         print(tempAnnounceData[0]['_id']);
 
         // tempAnnounceData = tempdata;
+        if (announceContent.length != 0) {
+          log.i("Data from api: ");
+          print(announceContent);
+          log.i("Data 0: ");
+          print(announceContent[0].toString());
+          log.w("Going to map!!");
+          announceContent.map((annNew) {
+            print("Start map");
+            bool hasId = false;
+            // log.i("annNew['_id']: " + annNew['_id']);
+            tempAnnounceData.asMap().entries.map((tempAnn) {
+              int idx = tempAnn.key;
+              var val = tempAnn.value;
+              // log.i("val['_id']: " + val['_id']);
+              if (val['_id'].toString() == annNew['_id'].toString()) {
+                // log.i('has id!!!!');
+                // log.i('Ann id: ' + val['_id']);
+                hasId = true;
+                final differ = JsonDiffer.fromJson(val, annNew);
+                DiffNode diff = differ.diff();
+                print(diff.changed);
+                print("Lenght: " + diff.changed.toString().length.toString());
 
-        log.i("Data from api: ");
-        print(announceContent);
-        log.i("Data 0: ");
-        print(announceContent[0].toString());
-        log.w("Going to map!!");
-        announceContent.map((annNew) {
-          print("Start map");
-          bool hasId = false;
-          // log.i("annNew['_id']: " + annNew['_id']);
-          tempAnnounceData.asMap().entries.map((tempAnn) {
-            int idx = tempAnn.key;
-            var val = tempAnn.value;
-            // log.i("val['_id']: " + val['_id']);
-            if (val['_id'].toString() == annNew['_id'].toString()) {
-              // log.i('has id!!!!');
-              // log.i('Ann id: ' + val['_id']);
-              hasId = true;
-              final differ = JsonDiffer.fromJson(val, annNew);
-              DiffNode diff = differ.diff();
-              print(diff.changed);
-              print("Lenght: " + diff.changed.toString().length.toString());
-
-              if (diff.changed != null && diff.changed.toString().length > 3) {
-                log.w('ann data diff!!!!');
-                tempAnnounceData[idx] = annNew;
-                tempAnnounceData[idx]['isRead'] = false;
+                if (diff.changed != null &&
+                    diff.changed.toString().length > 3) {
+                  log.w('ann data diff!!!!');
+                  tempAnnounceData[idx] = annNew;
+                  tempAnnounceData[idx]['isRead'] = false;
+                }
               }
+            }).toList();
+            if (!hasId) {
+              log.i('no id!!!!');
+              log.i('Ann id: ' + annNew['_id']);
+              annNew['isRead'] = false;
+              tempAnnounceData.insert(0, annNew);
             }
           }).toList();
-          if (!hasId) {
-            log.i('no id!!!!');
-            log.i('Ann id: ' + annNew['_id']);
-            annNew['isRead'] = false;
-            tempAnnounceData.insert(0, annNew);
-          }
-        }).toList();
 
-        List tempAnnounceData2 = json.decode(json.encode(tempAnnounceData));
-        log.w("tempAnnounceData(from cache): ");
-        log.i(tempAnnounceData2);
+          log.w("tempAnnounceData(from cache): ");
+          // List tempAnnounceData2 = json.decode(json.encode(tempAnnounceData));
+          // log.i(tempAnnounceData2);
 
+        }
+
+        // prefs.setString('announceData', tempAnnounceData.toString());
         List<String> jsonData = [];
         int readedNum = 0;
         tempAnnounceData.forEach((element) {
@@ -189,8 +193,6 @@ class WalletDashboardScreenState extends BaseState {
         setunReadAnnouncement(readedNum);
         print("check status: " + prefs.containsKey('announceData').toString());
         prefs.setStringList('announceData', jsonData);
-
-        // prefs.setString('announceData', tempAnnounceData.toString());
 
         announceList = tempAnnounceData;
       } else {
