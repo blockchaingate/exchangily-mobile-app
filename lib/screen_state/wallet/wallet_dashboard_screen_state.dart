@@ -755,6 +755,9 @@ class WalletDashboardScreenState extends BaseState {
 
     log.i('Coin address body $walletBalancesBody');
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('walletBalancesBody', walletBalancesBody.toString());
+
     // ----------------------------------------
     // Calling walletBalances in wallet service
     // ----------------------------------------
@@ -796,22 +799,6 @@ class WalletDashboardScreenState extends BaseState {
               String holder = NumberUtil.currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
-// get Pair decimal config
-              // if (pairDecimalConfigList != null ||
-              //     pairDecimalConfigList != []) {
-              //   for (PairDecimalConfig pair in pairDecimalConfigList) {
-              //     log.e('pair ${pair.toJson()}');
-              //     if (pair.name == walletTickerName + 'USDT') {
-              //       String holder = walletBalanceList[j]
-              //           .balance
-              //           .toStringAsFixed(pair.qtyDecimal);
-              //       print(holder);
-              //       availableBal = double.parse(holder);
-              //     }
-              //     break;
-              //   }
-              // }
-
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
                   tickerName: walletTickerName,
@@ -835,35 +822,10 @@ class WalletDashboardScreenState extends BaseState {
           } // For loop j ends
         }); // wallet info copy for each ends
 
-        var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-            'your channel id', 'your channel name', 'your channel description',
-            importance: Importance.Max,
-            priority: Priority.High,
-            ticker: 'ticker');
-        var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-        var platformChannelSpecifics = NotificationDetails(
-            androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-        await flutterLocalNotificationsPlugin.show(0, 'Test Server Warning',
-            'You are using Test Server!', platformChannelSpecifics,
-            payload: 'item x');
-
-        // Test to find unique wallet objects
-        final seen = Set<WalletInfo>();
-        //   walletInfo = walletInfo.where((wallet) => seen.add(wallet)).toList();
-
-        //  walletInfo = Set.of(wallets).toList();
-
-        // Observable.fromIterable(walletInfo).distinct().doOnData((event) {
-        //   log.e('DISTINCT ${event.tickerName}');
-        //   walletInfo.add(event);
-        // });
-        // walletInfo = wallets.toSet().toList();
-
         calcTotalBal();
         await updateWalletDatabase();
 
         if (!isProduction) debugVersionPopup();
-        // await getAppVersion();
 
         // get exg address to get free fab
         String address = await getExgAddressFromWalletDatabase();

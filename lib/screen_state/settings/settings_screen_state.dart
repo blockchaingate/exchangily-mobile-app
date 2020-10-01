@@ -176,7 +176,7 @@ class SettingsScreenState extends BaseState {
       prefs.setString('lang', 'en');
       setlangGlobal('en');
     }
-  
+
     log.w('langGlobal: ' + getlangGlobal());
     setState(ViewState.Idle);
     setBusy(false);
