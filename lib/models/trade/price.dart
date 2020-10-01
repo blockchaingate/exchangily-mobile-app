@@ -48,24 +48,24 @@ class Price {
 
   factory Price.fromJson(Map<String, dynamic> json) {
     return Price(
-        symbol: json['symbol'].toString(),
-        price: bigNum2Double(json['price']),
-        high: bigNum2Double(json['24h_high']),
-        low: bigNum2Double(json['24h_low']),
-        open: bigNum2Double(json['24h_open']),
-        close: bigNum2Double(json['24h_close']),
-        volume: bigNum2Double(json['24h_volume']));
+        symbol: json['s'].toString(),
+        price: json['p'].toDouble(),
+        high: json['h'].toDouble(),
+        low: json['l'].toDouble(),
+        open: json['o'].toDouble(),
+        close: json['c'].toDouble(),
+        volume: json['v'].toDouble());
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['symbol'] = this._symbol;
-    data['price'] = this._price;
-    data['24h_high'] = this._high;
-    data['24h_low'] = this._low;
-    data['24h_open'] = this._open;
-    data['24h_close'] = this._close;
-    data['24h_volume'] = this._volume;
+    data['s'] = this._symbol;
+    data['p'] = this._price;
+    data['h'] = this._high;
+    data['l'] = this._low;
+    data['o'] = this._open;
+    data['c'] = this._close;
+    data['v'] = this._volume;
     return data;
   }
 

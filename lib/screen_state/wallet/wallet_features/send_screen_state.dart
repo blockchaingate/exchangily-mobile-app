@@ -83,7 +83,7 @@ class SendScreenState extends BaseState {
       gasPriceTextController.text = gasPriceReal.toString();
       gasLimitTextController.text =
           environment["chains"]["ETH"]["gasLimit"].toString();
-      if(tokenType == 'ETH') {
+      if (tokenType == 'ETH') {
         gasLimitTextController.text =
             environment["chains"]["ETH"]["gasLimitToken"].toString();
       }
@@ -396,14 +396,24 @@ class SendScreenState extends BaseState {
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
   Future scan() async {
+    log.i("Barcode: going to scan");
     setState(ViewState.Busy);
+    log.i("Barcode: set busy");
     try {
+      log.i("Barcode: will try");
       String barcode = '';
-      await BarcodeScanner.scan().then((res) => barcode = res.rawContent);
+      log.i("Barcode: will get result");
+      var result = await BarcodeScanner.scan();
+      barcode = result;
+      log.i("Barcode Res: ");
+      log.i(result);
+
       receiverWalletAddressTextController.text = barcode;
       setState(ViewState.Idle);
     } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.cameraAccessDenied) {
+      log.i("Barcode PlatformException : ");
+      log.i(e.toString());
+      if (e.code == "PERMISSION_NOT_GRANTED") {
         setState(ViewState.Idle);
         sharedService.alertDialog(
             '', AppLocalizations.of(context).userAccessDenied,
@@ -418,11 +428,15 @@ class SendScreenState extends BaseState {
         //     '${AppLocalizations.of(context).unknownError}: $e';
       }
     } on FormatException {
+      log.i("Barcode FormatException : ");
+      // log.i(e.toString());
       setState(ViewState.Idle);
       sharedService.alertDialog(AppLocalizations.of(context).scanCancelled,
           AppLocalizations.of(context).userReturnedByPressingBackButton,
           isWarning: false);
     } catch (e) {
+      log.i("Barcode error : ");
+      log.i(e.toString());
       setState(ViewState.Idle);
       sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
           isWarning: false);

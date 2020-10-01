@@ -30,8 +30,11 @@ class ApiService {
   final client = new http.Client();
 
   final kanbanBaseUrl = environment['endpoints']['kanban'];
+  final blockchaingateUrl =  environment['endpoints']['blockchaingate'];
+
   // Please keep this for future test
-  // final kanbanBaseUrl = environment['endpoints']['JackLocalKanban'];
+  // final kanbanBaseUrl = environment['endpoints']['LocalKanban'];
+  // final blockchaingateUrl = environment['endpoints']['blockchaingateLocal'];
 
   static const getBalance = 'kanban/getBalance/';
   static const assetsBalance = 'exchangily/getBalances/';
@@ -589,6 +592,25 @@ class ApiService {
       }
     } catch (e) {
       log.e('getSliderImages Failed to load the data from the API $e');
+      return "error";
+    }
+    return "error";
+  }
+
+  Future getAnnouncement(lang) async {
+    final langcode = lang == "en" ? "en" : "cn";
+    final url = blockchaingateUrl + "announcements/" + langcode;
+
+    print("Calling api: getAnnouncement " + lang);
+    print("url: " + url);
+    try {
+      final res = await http.get(url);
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        return jsonDecode(res.body)['body'];
+      }
+    } catch (e) {
+      log.e('getAnnouncement Failed to load the data from the API $e');
       return "error";
     }
     return "error";

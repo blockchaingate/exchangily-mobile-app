@@ -34,7 +34,7 @@ class CampaignInstructionsScreenState extends BaseState {
     // circular indicator is still not working when page first loads
     setBusy(true);
     log.e(busy);
-
+    sharedService.context = context;
     var loginToken = await campaignService.getSavedLoginTokenFromLocalStorage();
     log.w('token $loginToken');
     if (loginToken != '' && loginToken != null) {
@@ -66,15 +66,20 @@ class CampaignInstructionsScreenState extends BaseState {
 
       eventContent = await apiService.getEvents();
 
+      log.i("Got Event!!!");
       if (eventContent == "error") {
+        log.wtf("Got API Error!!!");
         hasApiError = true;
       } else {
+        log.i("no issue");
         print(eventContent.toString());
         campaignInfoList = eventContent;
       }
+
+      log.i("Got Event End!!!");
     }
     //get campaign info in selected language
-
+    log.i("setBusy(false);!!!");
     setBusy(false);
   }
 

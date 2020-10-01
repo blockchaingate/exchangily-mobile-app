@@ -44,3 +44,4 @@ final Widget svgLogo = SvgPicture.asset(
 final Widget pngLogo = Image.asset(
   "assets/images/wallet-page/exlogo.png",
 );
+
