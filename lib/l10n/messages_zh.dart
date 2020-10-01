@@ -44,7 +44,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "bankAccount" : MessageLookupByLibrary.simpleMessage("银行账户"),
     "bankName" : MessageLookupByLibrary.simpleMessage("银行名称"),
     "bankWireDetails" : MessageLookupByLibrary.simpleMessage("银行电汇信息"),
-    "bindpay" : MessageLookupByLibrary.simpleMessage("Bindpay"),
+    "bindpay" : MessageLookupByLibrary.simpleMessage("闪付"),
     "bothPasswordFieldsShouldMatch" : MessageLookupByLibrary.simpleMessage("密码不匹配"),
     "buy" : MessageLookupByLibrary.simpleMessage("买入"),
     "buyOrders" : MessageLookupByLibrary.simpleMessage("买单"),

@@ -86,16 +86,17 @@ class BottomNavBar extends StatelessWidget {
         switch (idx) {
           case 0:
             if (currentRouteName != 'WalletDashboardScreen')
-              navigationService.navigateTo('/dashboard');
+              navigationService.navigateUsingpopAndPushedNamed('/dashboard');
             break;
 
           case 1:
             if (currentRouteName != 'MarketsView')
-              navigationService.navigateTo('/marketsView', arguments: false);
+              navigationService.navigateUsingpopAndPushedNamed('/marketsView',
+                  arguments: false);
             break;
           case 2:
             if (currentRouteName != 'BindpayView')
-              Navigator.pushNamed(context, '/bindpay');
+              navigationService.navigateUsingPushReplacementNamed('/bindpay');
             break;
           // case 2:
           // if (currentRouteName != 'OtcScreen')
@@ -103,11 +104,12 @@ class BottomNavBar extends StatelessWidget {
           //   break;
           case 3:
             if (currentRouteName != 'CampaignInstructionScreen')
-              navigationService.navigateTo('/campaignInstructions');
+              navigationService
+                  .navigateUsingPushReplacementNamed('/campaignInstructions');
             break;
           case 4:
             if (currentRouteName != 'SettingsScreen')
-              navigationService.navigateTo('/settings');
+              navigationService.navigateUsingpopAndPushedNamed('/settings');
             else if (ModalRoute.of(context).settings.name == 'SettingsScreen')
               return null;
             break;

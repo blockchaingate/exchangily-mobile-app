@@ -1817,7 +1817,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "bindpay": "Bindpay",
+  "bindpay": "闪付",
   "@bindpay": {
     "description": "bindpay",
     "type": "text",
