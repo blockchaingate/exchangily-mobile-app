@@ -1569,6 +1569,12 @@ class AppLocalizations {
         name: 'pleaseCorrectTheFormatOfReceiveAddress',
         desc: 'flash_pay_tranfser_correct_format_of_receive_address');
   }
+
+    String get important {
+    return Intl.message("Important",
+        name: 'important',
+        desc: 'backup_mnemonic_important');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

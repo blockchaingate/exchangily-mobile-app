@@ -63,38 +63,31 @@ class BindpayView extends StatelessWidget {
 ----------------------------------------------------------------------------------------------------*/
 
                     Platform.isIOS
-                        ? CupertinoPicker(
-                            diameterRatio: 1.3,
-                            offAxisFraction: 5,
-                            scrollController: model.scrollController,
-                            itemExtent: 50,
-                            onSelectedItemChanged: (int newValue) {
-                              model.updateSelectedTickernameIOS(newValue);
-                            },
-                            children: [
-                                for (var i = 0; i < model.coins.length; i++)
-                                  Container(
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(4),
-                                        border: Border.all(
-                                            color: primaryColor.withAlpha(175),
-                                            width: 1)),
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
+                        ? Container(
+                            color: walletCardColor,
+                            child: CupertinoPicker(
+                                diameterRatio: 1.3,
+                                offAxisFraction: 5,
+                                scrollController: model.scrollController,
+                                itemExtent: 50,
+                                onSelectedItemChanged: (int newValue) {
+                                  model.updateSelectedTickernameIOS(newValue);
+                                },
+                                children: [
+                                  for (var i = 0; i < model.coins.length; i++)
+                                    Container(
+                                      margin: EdgeInsets.only(left:10),
                                       child: Row(
                                         children: [
                                           Text(
                                               model.coins[i]['tickerName']
                                                   .toString(),
-                                              textAlign: TextAlign.center,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5),
                                           UIHelper.horizontalSpaceSmall,
                                           Text(
-                                            model.coins[i]['quantity']
-                                                .toString(),
+                                            model.coins[i]['quantity'].toString(),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5
@@ -103,8 +96,23 @@ class BindpayView extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                  ),
-                              ])
+                                  //    })
+                                  model.coins.length > 0
+                                      ? Container()
+                                      : SizedBox(
+                                          width: double.infinity,
+                                          child: Center(
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .insufficientBalance,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2,
+                                            ),
+                                          ),
+                                        ),
+                                ]),
+                          )
                         : Container(
                             height: 55,
                             decoration: BoxDecoration(

@@ -75,7 +75,7 @@ class VerifyMnemonicWalletScreen extends StatelessWidget {
         return Container(
             child: TextField(
           inputFormatters: <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'([a-z]{0,})$'))
+           // FilteringTextInputFormatter.allow(RegExp(r'([a-z]{0,})$'))
           ],
           style: TextStyle(color: globals.white),
           controller: controller[i],

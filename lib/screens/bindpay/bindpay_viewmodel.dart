@@ -109,13 +109,15 @@ class BindpayViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   @override
   void onData(data) {
+
     List<WalletInfo> tokenList = data as List<WalletInfo>;
     tokenList.forEach((wallet) {
-      if (wallet.inExchange != 0.0)
+   
+     if (wallet.inExchange != 0.0) 
         coins.add(
             {"tickerName": wallet.tickerName, "quantity": wallet.inExchange});
     });
-    coins != null ? tickerName = coins[0]['tickerName'] : tickerName = '';
+    coins != null || coins.isNotEmpty ? tickerName = coins[0]['tickerName'] : tickerName = '';
     print(' coins $coins');
   }
 
@@ -130,8 +132,12 @@ class BindpayViewmodel extends FutureViewModel {
   }
 
   updateSelectedTickernameIOS(int index) {
+     setBusy(true);
+    print('INDEX ${index+1} ---- coins length ${coins.length}');
+    if(index+1 <= coins.length)
     tickerName = coins.elementAt(index)['tickerName'];
     print('IOS tickerName $tickerName');
+     setBusy(false);
   }
 
 /*----------------------------------------------------------------------

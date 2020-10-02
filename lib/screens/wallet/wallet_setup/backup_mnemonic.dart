@@ -62,111 +62,109 @@ class _BackupMnemonicWalletScreenState
                     builder: (BuildContext context) {
                       return ListView(
                         padding: const EdgeInsets.symmetric(
-                                      vertical: 32.0, horizontal: 20),
+                            vertical: 32.0, horizontal: 20),
                         children: [
                           Container(
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .backupMnemonicNoticeTitle,
-                                // textAlign: TextAlign.center,
-                                style:
-                                    Theme.of(context).textTheme.headline3,
-                              )),
-                          SizedBox(height:20),
+                            AppLocalizations.of(context)
+                                .backupMnemonicNoticeTitle,
+                            // textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline3,
+                          )),
+                          SizedBox(height: 20),
                           Container(
                               // padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Text(
-                                AppLocalizations.of(context)
-                                    .backupMnemonicNoticeContent,
-                                style: Theme.of(context).textTheme.headline5,
-                              ))
+                            AppLocalizations.of(context)
+                                .backupMnemonicNoticeContent,
+                            style: Theme.of(context).textTheme.headline5,
+                          ))
                         ],
                       );
                     });
               }),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: MediaQuery.of(context).size.height - 100,
-          padding: EdgeInsets.all(10),
-          child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              UIHelper.verticalSpaceMedium,
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                decoration: BoxDecoration(
-                    color: globals.primaryColor,
-                    borderRadius: BorderRadius.circular(30)
-                    // shape: BoxShape.circle
-                    ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      MdiIcons.information,
-                      color: globals.white,
-                      size: 25,
-                    ),
-                    SizedBox(width: 5),
-                    Text(
-                      "Important",
+      body: Container(
+        padding: EdgeInsets.all(10),
+        child: ListView(
+         // mainAxisSize: MainAxisSize.min,
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            UIHelper.verticalSpaceMedium,
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+              decoration: BoxDecoration(
+                  color: globals.primaryColor,
+                  borderRadius: BorderRadius.circular(30)
+                  // shape: BoxShape.circle
+                  ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    MdiIcons.information,
+                    color: globals.white,
+                    size: 25,
+                  ),
+                  SizedBox(width: 5),
+                  Text(
+                    AppLocalizations.of(context).important,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1,
+                        fontSize: 16),
+                  )
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                    child: Text(
+                  AppLocalizations.of(context).warningBackupMnemonic,
+                  style: Theme.of(context).textTheme.headline5,
+                )),
+              ],
+            ),
+            UIHelper.verticalSpaceSmall,
+            Container(
+              margin: EdgeInsets.symmetric(
+                vertical: 10,
+              ),
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+              child: _buttonGrid(),
+            ),
+            // UIHelper.verticalSpaceSmall,
+            Expanded(
+              child: Center(
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  child: MaterialButton(
+                    color: globals.btnColor,
+                    child: Text(
+                      AppLocalizations.of(context).confirm,
+                      // style: Theme.of(context).textTheme.headline4,
                       style: TextStyle(
-                          color: Colors.white,
                           fontWeight: FontWeight.w800,
                           letterSpacing: 1,
                           fontSize: 16),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                      child: Text(
-                    AppLocalizations.of(context).warningBackupMnemonic,
-                    style: Theme.of(context).textTheme.headline5,
-                  )),
-                ],
-              ),
-              UIHelper.verticalSpaceSmall,
-              Container(
-                margin: EdgeInsets.symmetric(
-                  vertical: 10,
-                ),
-                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-                child: _buttonGrid(),
-              ),
-              // UIHelper.verticalSpaceSmall,
-              Expanded(
-                child: Center(
-                  child: Container(
-                    padding: EdgeInsets.all(15),
-                    child: MaterialButton(
-                      color: globals.btnColor,
-                      child: Text(
-                        AppLocalizations.of(context).confirm,
-                        // style: Theme.of(context).textTheme.headline4,
-                        style: TextStyle(
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1,
-                            fontSize: 16),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pushNamed('/confirmMnemonic',
-                            arguments:
-                                BackupMnemonicWalletScreen.randomMnemonicList);
-                      },
                     ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/confirmMnemonic',
+                          arguments:
+                              BackupMnemonicWalletScreen.randomMnemonicList);
+                    },
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );
