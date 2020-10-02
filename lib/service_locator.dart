@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/screen_state/announcement/announcement_list_state.dart';
 import 'package:exchangilymobileapp/screen_state/market/MarketPairsTabViewState.dart';
 import 'package:exchangilymobileapp/screen_state/nav/MainNavState.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
@@ -77,6 +78,7 @@ Future serviceLocator() async {
   locator.registerSingleton<LocalStorageService>(instance);
 
   // factory returns the new instance
+  locator.registerFactory(() => AnnouncementListScreenState());
   locator.registerFactory(() => ConfirmMnemonicScreenState());
   locator.registerFactory(() => CreatePasswordScreenState());
   locator.registerFactory(() => WalletDashboardScreenState());

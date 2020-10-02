@@ -17,11 +17,7 @@ Map devConfig = {
       "satoshisPerBytes": 400,
       "bytesPerInput": 155
     },
-    "BCH": {
-      "testnet": true,
-      "satoshisPerBytes": 9,
-      "bytesPerInput": 155
-    },
+    "BCH": {"testnet": true, "satoshisPerBytes": 9, "bytesPerInput": 155},
     "DOGE": {
       "network": dogeCoinTestnetNetwork,
       "satoshisPerBytes": 800000,
@@ -48,8 +44,12 @@ Map devConfig = {
   },
   "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150, "BCH": 1, "LTC": 1, "DOGE": 1},
   'endpoints': {
+    //for local test
+    'blockchaingateLocal': 'http://192.168.0.12:3002/v2/',
+    'localKanban': "http://192.168.0.12:4000/",
+    //for server
+    'blockchaingate': 'https://test.blockchaingate.com/v2/',
     'kanban': 'https://kanbantest.fabcoinapi.com/',
-    'JackLocalKanban':"http://192.168.0.12:4000/",
     'btc': 'https://btctest.fabcoinapi.com/',
     'ltc': 'https://ltctest.fabcoinapi.com/',
     'bch': 'https://bchtest.fabcoinapi.com/',
@@ -146,11 +146,7 @@ Map productionConfig = {
       "satoshisPerBytes": 400,
       "bytesPerInput": 152
     },
-    "BCH": {
-      "testnet": false,
-      "satoshisPerBytes": 9,
-      "bytesPerInput": 155
-    },
+    "BCH": {"testnet": false, "satoshisPerBytes": 9, "bytesPerInput": 155},
     "DOGE": {
       "network": dogeCoinMainnetNetwork,
       "satoshisPerBytes": 800000,
@@ -188,6 +184,7 @@ Map productionConfig = {
     "DOGE": 3
   },
   'endpoints': {
+    'blockchaingate': 'https://www.blockchaingate.com/v2/',
     'kanban': 'https://kanbanprod.fabcoinapi.com/',
     'btc': 'https://btcprod.fabcoinapi.com/',
     'ltc': 'https://ltcprod.fabcoinapi.com/',

@@ -47,6 +47,7 @@ class BindpayViewmodel extends FutureViewModel {
   bool isExchangeBalanceEmpty = false;
   String barcodeRes = '';
   String barcodeRes2 = '';
+  var walletBalancesBody;
 
 /*----------------------------------------------------------------------
                           INIT
@@ -212,8 +213,40 @@ class BindpayViewmodel extends FutureViewModel {
 /*----------------------------------------------------------------------
               Show dialog popup for receive address and barcode
 ----------------------------------------------------------------------*/
+
+  refreshBalance() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    walletBalancesBody = sharedPreferences.get('walletBalancesBody');
+
+    await this
+        .apiService
+        .getWalletBalance(walletBalancesBody)
+        .then((walletBalanceList) async {
+      if (walletBalanceList != null) {
+        double exchangeBal = 0.0;
+        walletBalanceList.forEach(
+          (wallet) async {
+            // Compare wallet ticker name to wallet balance coin name
+            if (wallet.coin == tickerName) {
+              exchangeBal = wallet.unlockedExchangeBalance;
+            } // If ends
+          },
+        );
+        coins.firstWhere((element) {
+          if (element['tickerName'] == tickerName)
+            exchangeBal = element['quantity'];
+          return true;
+        });
+      }
+    }).catchError((err) async {
+      log.e('Wallet balance CATCH $err');
+      setBusy(false);
+    });
+  }
+
   showBarcode() {
     setBusy(true);
+
     walletDataBaseService.getBytickerName('FAB').then((coin) {
       String kbAddress = walletService.toKbPaymentAddress(coin.address);
       print('KBADDRESS $kbAddress');

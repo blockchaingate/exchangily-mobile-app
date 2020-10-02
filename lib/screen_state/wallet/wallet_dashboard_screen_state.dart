@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -38,6 +39,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../environments/coins.dart' as coinList;
 import '../../shared/globals.dart' as globals;
 import 'package:intl/intl.dart';
+import 'package:json_diff/json_diff.dart';
 
 class WalletDashboardScreenState extends BaseState {
   final log = getLogger('WalletDahsboardScreenState');
@@ -101,13 +103,147 @@ class WalletDashboardScreenState extends BaseState {
 
     var announceContent;
 
-    announceContent = await apiService.getAnnouncement();
+    announceContent = await apiService.getAnnouncement(lang);
 
     if (announceContent == "error") {
       hasApiError = true;
     } else {
-      print(announceContent.toString());
-      announceList = announceContent;
+      // test code///////////////////////////////
+      // prefs.remove("announceData");
+      // log.wtf("announcement: remove cache!!!!");
+      // test code end///////////////////////////////
+      // test code end///////////////////////////////
+
+      bool checkValue = prefs.containsKey('announceData');
+      List tempAnnounceData = [];
+      if (checkValue) {
+        log.i("announcement: has cache!!!");
+        // var x = prefs.getStringList('announceData');
+        List tempdata = prefs.getStringList('announceData');
+        // tempdata.forEach((e) {
+        //   e = json.decode(e);
+        // });
+
+        tempdata.forEach((element) {
+          tempAnnounceData.add(jsonDecode(element));
+          print('jsonData $tempAnnounceData');
+        });
+        log.i("announceData from prefs: ");
+
+        print(tempAnnounceData);
+        log.i("prefs 0: ");
+        print(tempAnnounceData[0].toString());
+        log.i("prefs 0 id: ");
+        print(tempAnnounceData[0]['_id']);
+
+        // tempAnnounceData = tempdata;
+        if (announceContent.length != 0) {
+          log.i("Data from api: ");
+          print(announceContent);
+          log.i("Data 0: ");
+          print(announceContent[0].toString());
+          log.w("Going to map!!");
+          announceContent.map((annNew) {
+            print("Start map");
+            bool hasId = false;
+            // log.i("annNew['_id']: " + annNew['_id']);
+            tempAnnounceData.asMap().entries.map((tempAnn) {
+              int idx = tempAnn.key;
+              var val = tempAnn.value;
+              // log.i("val['_id']: " + val['_id']);
+              if (val['_id'].toString() == annNew['_id'].toString()) {
+                // log.i('has id!!!!');
+                // log.i('Ann id: ' + val['_id']);
+                hasId = true;
+                final differ = JsonDiffer.fromJson(val, annNew);
+                DiffNode diff = differ.diff();
+                print(diff.changed);
+                print("Lenght: " + diff.changed.toString().length.toString());
+
+                if (diff.changed != null &&
+                    diff.changed.toString().length > 3) {
+                  log.w('ann data diff!!!!');
+                  tempAnnounceData[idx] = annNew;
+                  tempAnnounceData[idx]['isRead'] = false;
+                }
+              }
+            }).toList();
+            if (!hasId) {
+              log.i('no id!!!!');
+              log.i('Ann id: ' + annNew['_id']);
+              annNew['isRead'] = false;
+              tempAnnounceData.insert(0, annNew);
+            }
+          }).toList();
+
+          log.w("tempAnnounceData(from cache): ");
+          // List tempAnnounceData2 = json.decode(json.encode(tempAnnounceData));
+          // log.i(tempAnnounceData2);
+
+        }
+
+        // prefs.setString('announceData', tempAnnounceData.toString());
+        List<String> jsonData = [];
+        int readedNum = 0;
+        tempAnnounceData.forEach((element) {
+          element["isRead"] == false ? readedNum++ : readedNum = readedNum;
+          jsonData.add(jsonEncode(element));
+          print('jsonData $jsonData');
+        });
+        setunReadAnnouncement(readedNum);
+        print("check status: " + prefs.containsKey('announceData').toString());
+        prefs.setStringList('announceData', jsonData);
+
+        announceList = tempAnnounceData;
+      } else {
+        log.i("announcement: no cache!!!");
+
+        tempAnnounceData = announceContent;
+
+        if (tempAnnounceData.length != 0) {
+          tempAnnounceData.asMap().entries.map((announ) {
+            int idx = announ.key;
+            var val = announ.value;
+            // tempAnnounceData[idx]['isRead']=false;
+            // var tempString = val.toString();
+            // tempString = tempString.substring(0, tempString.length - 1) + 'isRead:false';
+            tempAnnounceData[idx]['isRead'] = false;
+          }).toList();
+
+          prefs.remove("announceData");
+          List<String> jsonData = [];
+          int readedNum = 0;
+          tempAnnounceData.forEach((element) {
+            element["isRead"] == false ? readedNum++ : readedNum = readedNum;
+            jsonData.add(jsonEncode(element));
+            print('jsonData $jsonData');
+          });
+          setunReadAnnouncement(readedNum);
+
+          print(
+              "check status: " + prefs.containsKey('announceData').toString());
+          prefs.setStringList('announceData', jsonData);
+          print("prefs saved");
+          print("check status saved: " +
+              prefs.containsKey('announceData').toString());
+          // print("prefs announcement data: " + prefs.getString('announceData'));
+        }
+        // tempAnnounceData.map((announ) {
+        //   // announ.add["isRead"] = false;
+        //   announ.addAll({'isRead':false});
+        // });
+
+        // //test code
+        // tempAnnounceData[0]['isRead']=true;
+        // tempAnnounceData[1]['isRead']=false;
+        // tempAnnounceData[2]['isRead']=true;
+
+        // log.i("tempAnnounceData[0]['isRead']: " +
+        //     tempAnnounceData[0]['isRead'].toString());
+
+        announceList = tempAnnounceData;
+        log.i("announcement: exit!!!");
+      }
     }
 
     setBusy(false);
@@ -619,6 +755,9 @@ class WalletDashboardScreenState extends BaseState {
 
     log.i('Coin address body $walletBalancesBody');
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('walletBalancesBody', walletBalancesBody.toString());
+
     // ----------------------------------------
     // Calling walletBalances in wallet service
     // ----------------------------------------
@@ -660,22 +799,6 @@ class WalletDashboardScreenState extends BaseState {
               String holder = NumberUtil.currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
-// get Pair decimal config
-              // if (pairDecimalConfigList != null ||
-              //     pairDecimalConfigList != []) {
-              //   for (PairDecimalConfig pair in pairDecimalConfigList) {
-              //     log.e('pair ${pair.toJson()}');
-              //     if (pair.name == walletTickerName + 'USDT') {
-              //       String holder = walletBalanceList[j]
-              //           .balance
-              //           .toStringAsFixed(pair.qtyDecimal);
-              //       print(holder);
-              //       availableBal = double.parse(holder);
-              //     }
-              //     break;
-              //   }
-              // }
-
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
                   tickerName: walletTickerName,
@@ -699,35 +822,10 @@ class WalletDashboardScreenState extends BaseState {
           } // For loop j ends
         }); // wallet info copy for each ends
 
-        var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-            'your channel id', 'your channel name', 'your channel description',
-            importance: Importance.Max,
-            priority: Priority.High,
-            ticker: 'ticker');
-        var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-        var platformChannelSpecifics = NotificationDetails(
-            androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-        await flutterLocalNotificationsPlugin.show(0, 'Test Server Warning',
-            'You are using Test Server!', platformChannelSpecifics,
-            payload: 'item x');
-
-        // Test to find unique wallet objects
-        final seen = Set<WalletInfo>();
-        //   walletInfo = walletInfo.where((wallet) => seen.add(wallet)).toList();
-
-        //  walletInfo = Set.of(wallets).toList();
-
-        // Observable.fromIterable(walletInfo).distinct().doOnData((event) {
-        //   log.e('DISTINCT ${event.tickerName}');
-        //   walletInfo.add(event);
-        // });
-        // walletInfo = wallets.toSet().toList();
-
         calcTotalBal();
         await updateWalletDatabase();
 
         if (!isProduction) debugVersionPopup();
-        // await getAppVersion();
 
         // get exg address to get free fab
         String address = await getExgAddressFromWalletDatabase();
