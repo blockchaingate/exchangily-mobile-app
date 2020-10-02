@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/globals.dart' as globals;
 import '../../../environments/coins.dart';

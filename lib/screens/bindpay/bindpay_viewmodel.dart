@@ -175,24 +175,17 @@ class BindpayViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   @override
   void onData(data) {
-    isExchangeBalanceEmpty = false;
     List<WalletInfo> tokenList = data as List<WalletInfo>;
     log.e(tokenList.length);
     tokenList.forEach((wallet) {
-      log.i(wallet.toJson());
       if (wallet.inExchange != 0.0)
         coins.add(
             {"tickerName": wallet.tickerName, "quantity": wallet.inExchange});
     });
-    if (coins.isNotEmpty) {
-      tickerName = coins[0]['tickerName'];
-      print(' coins $coins');
-    } else {
-      tickerName = '';
-      isExchangeBalanceEmpty = true;
-      coins = [];
-      print('coins empty $coins');
-    }
+    coins != null || coins.isNotEmpty
+        ? tickerName = coins[0]['tickerName']
+        : tickerName = '';
+    print(' coins $coins');
   }
 
 /*----------------------------------------------------------------------
@@ -206,8 +199,12 @@ class BindpayViewmodel extends FutureViewModel {
   }
 
   updateSelectedTickernameIOS(int index) {
-    tickerName = coins.elementAt(index)['tickerName'];
+    setBusy(true);
+    print('INDEX ${index + 1} ---- coins length ${coins.length}');
+    if (index + 1 <= coins.length)
+      tickerName = coins.elementAt(index)['tickerName'];
     print('IOS tickerName $tickerName');
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------

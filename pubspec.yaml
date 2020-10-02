@@ -51,7 +51,10 @@ dependencies:
 
   # Path Provider
   path_provider: 1.4.2
+
+  # Random String
   random_string: ^2.0.1
+
   # Keccak
   keccak: ^1.0.3
 
@@ -93,13 +96,13 @@ dependencies:
   rflutter_alert: ^1.0.3
 
   # Shared Preferences
-  shared_preferences: ^0.5.12
+  shared_preferences: ^0.5.4+1
 
   # Loading animation
   shimmer: ^1.0.1
 
-  # Local DB
-  sqflite: ^1.3.0
+  # Sqflite
+  sqflite: ^1.1.7
 
   # Path
   path: ^1.6.4
@@ -203,7 +206,8 @@ flutter:
     - assets/images/slider/
     - assets/images/bindpay/
 flutter_icons:
-  image_path: 'assets/images/launcher/mobile-icon.png'
+  image_path: "assets/images/launcher/mobile-icon-ios.png"
+
   android: true
   ios: true
 

@@ -120,6 +120,7 @@ class SettingsView extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
+                      FocusNode().requestFocus();
                       model.displayMnemonic();
                     },
                   ),
@@ -285,23 +286,26 @@ class SettingsView extends StatelessWidget {
                         ),
                       )),
                   // Show/Hide dialog warning checkbox
-                  Card(
-                      elevation: 5,
-                      color: globals.walletCardColor,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(AppLocalizations.of(context).showDialogWarnings,
-                              style: Theme.of(context).textTheme.headline5,
-                              textAlign: TextAlign.center),
-                          Checkbox(
-                              activeColor: globals.primaryColor,
-                              value: model.isDialogDisplay,
-                              onChanged: (value) {
-                                model.setDialogWarningValue(value);
-                              }),
-                        ],
-                      )),
+                  Container(
+                    child: Card(
+                        elevation: 5,
+                        color: globals.walletCardColor,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                                AppLocalizations.of(context).showDialogWarnings,
+                                style: Theme.of(context).textTheme.headline5,
+                                textAlign: TextAlign.center),
+                            Checkbox(
+                                activeColor: globals.primaryColor,
+                                value: model.isDialogDisplay,
+                                onChanged: (value) {
+                                  model.setDialogWarningValue(value);
+                                }),
+                          ],
+                        )),
+                  ),
 
                   // Version Code
                   Card(
@@ -334,7 +338,7 @@ class SettingsView extends StatelessWidget {
                               .bodyText2
                               .copyWith(color: Colors.red)),
                     ),
-                  ),
+                  )
                 ]),
           ),
           bottomNavigationBar: BottomNavBar(count: 4),

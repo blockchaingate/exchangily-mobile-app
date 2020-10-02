@@ -263,7 +263,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "warningBackupMnemonic": "下面的12个助记词，是您钱包的安全生命线，必需妥善备份，安全保管，不可丢失、遗忘或泄露给别人，不要截屏保存在手机里，不要通过任何社交软件(如Email、微信、QQ等)发送，只要有了这些助记词，就完全拥有了您钱包的控制权，请切记之，务必妥善抄写，认真保存，永远不可丢失。",
+    "warningBackupMnemonic": "请仔细记录并妥善保管下列十二个助记词，不可丢失，不能让其他任何要知道，不要通过微信、QQ、电子邮件等任何工具发送，否则你将失去钱包中的全部资产。",
     "@warningBackupMnemonic": {
         "description": "warning_backup_mnemonic",
         "type": "text",
@@ -917,6 +917,12 @@
         "type": "text",
         "placeholders": {}
     },
+    "continueText": "继续",
+    "@continueText": {
+      "description": "continue_text",
+      "type": "text",
+      "placeholders": {}
+    }
     "placeOrderTransactionFailed": "下单失败",
     "@placeOrderTransactionFailed": {
         "description": "place_order_transaction_failed",

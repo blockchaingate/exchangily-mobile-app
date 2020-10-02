@@ -48,7 +48,7 @@ class _ConfirmMnemonictWalletScreenState
         appBar: AppBar(
             centerTitle: true,
             title: Text(
-              AppLocalizations.of(context).confirm +
+              AppLocalizations.of(context).confirm+ ' ' +
                   AppLocalizations.of(context).mnemonic,
               style: Theme.of(context).textTheme.headline3,
             ),

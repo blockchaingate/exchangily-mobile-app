@@ -46,9 +46,12 @@ class SettingsScreenState extends BaseState {
   BuildContext context;
   String versionName = '';
   String versionCode = '';
+  static int initialLanguageValue = 0;
+  final FixedExtentScrollController fixedScrollController =
+      FixedExtentScrollController(initialItem: initialLanguageValue);
   bool isDialogDisplay = false;
-  bool isDeleting = false;
   ScrollController scrollController;
+  bool isDeleting = false;
 
   init() async {
     setBusy(true);

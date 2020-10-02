@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';

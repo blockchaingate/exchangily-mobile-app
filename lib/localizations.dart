@@ -249,7 +249,7 @@ class AppLocalizations {
 
   String get warningBackupMnemonic {
     return Intl.message(
-        'Below are the 12 words mnemonic to help you recover your wallet. Please make sure that your password is safely stored and write down this mnemonics on the paper, as this is the only way to recover your phone wallet',
+        'Please accurately record and securely store the following twelve word mnemonic, do not disclose the mnemonic anybody else. Disclosure of your mnemonic will result in your account being compromised and you will lose all of your funds.',
         name: 'warningBackupMnemonic',
         desc: 'warning_backup_mnemonic');
   }
@@ -1570,17 +1570,9 @@ class AppLocalizations {
         desc: 'flash_pay_tranfser_correct_format_of_receive_address');
   }
 
-  String get deletingWallet {
-    return Intl.message("Deleting wallet",
-        name: 'deletingWallet', desc: 'settings_view_deleting_wallet');
-  }
-
-  String get pleaseTransferFundsToExchangeWalletToUseBindpay {
-    return Intl.message(
-        "Please transfer funds to exchange wallet to use bindpay",
-        name: 'pleaseTransferFundsToExchangeWalletToUseBindpay',
-        desc:
-            'bindpay_please_transfer_funds_to_exchange_wallet_to_use_bindpay');
+  String get important {
+    return Intl.message("Important",
+        name: 'important', desc: 'backup_mnemonic_important');
   }
 }
 

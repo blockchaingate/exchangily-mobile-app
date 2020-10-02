@@ -475,38 +475,40 @@ class SendWalletScreen extends StatelessWidget {
                                     Send Button Container
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-                  Container(
-                    // height:
-                    //     100, // alignment was not working without the height so ;)
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    // alignment: Alignment(0.0, 1.0),
-                    child: model.state == ViewState.Busy
-                        ? Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: CircularProgressIndicator(),
-                          )
-                        : RaisedButton(
-                            disabledColor: model.checkSendAmount
-                                ? globals.grey
-                                : globals.green,
-                            child: Text(AppLocalizations.of(context).send,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline4
-                                    .copyWith(fontWeight: FontWeight.w400)),
-                            onPressed: () async {
-                              print('Send pressed');
-                              model.checkFields(context);
-                            },
-                          ),
-                  ),
-                  UIHelper.verticalSpaceMedium
-                ],
-              ),
+                Container(
+                  // height:
+                  //     100, // alignment was not working without the height so ;)
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  // alignment: Alignment(0.0, 1.0),
+                  child: model.state == ViewState.Busy
+                      ? Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Theme.of(context)
+                                                              .platform ==
+                                                          TargetPlatform.iOS
+                                                      ? CupertinoActivityIndicator() : CircularProgressIndicator(),
+                        )
+                      : RaisedButton(
+                          disabledColor: model.checkSendAmount
+                              ? globals.grey
+                              : globals.green,
+                          child: Text(AppLocalizations.of(context).send,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline4
+                                  .copyWith(fontWeight: FontWeight.w400)),
+                          onPressed: () async {
+                            print('Send pressed');
+                            model.checkFields(context);
+                          },
+                        ),
+                ),
+                UIHelper.verticalSpaceMedium
+              ],
             ),
           ),
         ),
       ),
-    );
+    ));
   }
 }
