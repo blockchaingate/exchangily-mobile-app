@@ -21,8 +21,6 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';

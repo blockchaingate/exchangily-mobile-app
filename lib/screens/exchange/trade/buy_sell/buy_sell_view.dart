@@ -12,7 +12,6 @@
 */
 
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
@@ -520,9 +519,10 @@ class BuySellView extends StatelessWidget {
                                   ],
                                 ),
                               )),
-                          //------------------------------------
-                          // Price and Quantity orderbook side
-                          //------------------------------------
+
+/*----------------------------------------------------------
+                Price and Quantity orderbook side
+ -----------------------------------------------------------*/
                           Expanded(
                               flex: 5,
                               child: Column(

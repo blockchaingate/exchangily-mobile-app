@@ -217,11 +217,11 @@ class SettingsView extends StatelessWidget {
                                                               .center,
                                                       children: [
                                                         Image.asset(
-                                                          "assets/images/img/flag$key.png",
+                                                          "assets/images/img/flag_$key.png",
                                                           width: 20,
                                                           height: 20,
                                                         ),
-                                                        SizedBox(width: 15),
+                                                        SizedBox(width: 10),
                                                         Text(value,
                                                             textAlign: TextAlign
                                                                 .center,
