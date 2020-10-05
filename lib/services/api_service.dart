@@ -30,7 +30,7 @@ class ApiService {
   final client = new http.Client();
 
   final kanbanBaseUrl = environment['endpoints']['kanban'];
-  final blockchaingateUrl =  environment['endpoints']['blockchaingate'];
+  final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
   // Please keep this for future test
   // final kanbanBaseUrl = environment['endpoints']['LocalKanban'];
@@ -287,7 +287,7 @@ class ApiService {
       String url = getOrdersPagedByFabHexAddressURL + exgAddress;
       log.w('get my orders url $url');
       var res = await client.get(url);
-      log.e('res $res');
+      log.e('res ${res.body}');
       var jsonList = jsonDecode(res.body) as List;
       log.i('jsonList $jsonList');
       //  OrderList orderList = OrderList.fromJson(jsonList);
@@ -316,7 +316,7 @@ class ApiService {
     log.i('getMyOrdersByTickerName url $url');
     try {
       final res = await client.get(url);
-      print('after res $res');
+      print('after res ${res.body}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }

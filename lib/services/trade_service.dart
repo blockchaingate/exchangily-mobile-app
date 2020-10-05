@@ -218,8 +218,13 @@ class TradeService {
     try {
       var data = await _api.getMyOrdersPagedByFabHexAddressAndTickerName(
           exgAddress, tickerName);
-      orderList = OrderList.fromJson(data);
-      return orderList.orders;
+      print(data);
+      if (data != null) {
+        orderList = OrderList.fromJson(data);
+        return orderList.orders;
+      } else {
+        return null;
+      }
     } catch (err) {
       log.e('getMyOrdersByTickerName Catch $err');
       throw Exception;

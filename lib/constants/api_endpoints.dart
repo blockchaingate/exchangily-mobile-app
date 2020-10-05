@@ -61,9 +61,9 @@ final String redepositStatusUrl = baseKanbanUrl + 'checkstatus/';
 // then put a 0x in front
 
 final String getOrdersPagedByFabHexAddressURL =
-    baseKanbanUrl + '/ordersbyaddresspaged/';
+    baseKanbanUrl + 'ordersbyaddresspaged/';
 final String getOrdersPagedByFabHexAddressAndTickerNameURL =
-    baseKanbanUrl + '/getordersbytickernamepaged/';
+    baseKanbanUrl + 'getordersbytickernamepaged/';
 
 final String kanbanBaseWSUrl = isProduction
     ? 'wss://kanbanprod.fabcoinapi.com/ws/'
