@@ -180,6 +180,8 @@ dependencies:
     git:
       url: https://github.com/google/dart-json_diff.git
       ref: master
+  # To highlight new feature or how to use tuts
+  showcaseview: ^0.1.6
 
 dev_dependencies:
   intl_translation: '^0.17.0'
@@ -206,7 +208,7 @@ flutter:
     - assets/images/slider/
     - assets/images/bindpay/
 flutter_icons:
-  image_path: "assets/images/launcher/mobile-icon-ios.png"
+  image_path: 'assets/images/launcher/mobile-icon-ios.png'
 
   android: true
   ios: true
