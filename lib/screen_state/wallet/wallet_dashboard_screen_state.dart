@@ -847,6 +847,12 @@ class WalletDashboardScreenState extends BaseState {
         log.e('---------------------ELSE old way-----------------------');
         await oldWayToGetBalances(coinTickersLength);
       }
+    }).timeout(Duration(seconds: 25), onTimeout: () {
+      log.e('In coin send time out');
+      setBusy(false);
+
+      setErrorMessage(
+          AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
     }).catchError((err) async {
       log.e('Wallet balance CATCH $err');
       setBusy(false);
