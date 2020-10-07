@@ -180,6 +180,7 @@ dependencies:
 
   # To highlight new feature or how to use tuts
   showcaseview: ^0.1.6
+  bubble_showcase: ^0.2.0+4
 
 dev_dependencies:
   intl_translation: '^0.17.0'
