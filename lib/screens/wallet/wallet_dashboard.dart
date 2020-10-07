@@ -33,8 +33,6 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 class WalletDashboardScreen extends StatelessWidget {
   WalletDashboardScreen({Key key}) : super(key: key);
 
-  final log = getLogger('Dashboard');
-
   Widget build(BuildContext context) {
     final key = new GlobalKey<ScaffoldState>();
     return BaseScreen<WalletDashboardScreenState>(
