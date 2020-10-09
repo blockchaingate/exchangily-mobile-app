@@ -29,7 +29,7 @@ import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher/url_launcher.dart';
 
 import '../localizations.dart';
 import '../shared/globals.dart' as globals;
@@ -72,14 +72,14 @@ class SharedService {
             Launch link urls
 --------------------------------------------------- */
 
-  launchURL(String url) async {
-    log.i('launchURL $url');
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  // launchURL(String url) async {
+  //   log.i('launchURL $url');
+  //   if (await canLaunch(url)) {
+  //     await launch(url);
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
 
 /* ---------------------------------------------------
             Full screen Stack loading indicator
@@ -335,7 +335,7 @@ class SharedService {
                                     ),
                                   ),
                                   onPressed: () {
-                                    launchURL(stringData);
+                                   // launchURL(stringData);
                                     Navigator.of(context).pop(false);
                                   },
                                 )

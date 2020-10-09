@@ -84,7 +84,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => WalletDashboardScreenState());
   locator.registerFactory(() => WalletFeaturesScreenState());
   locator.registerFactory(() => SendScreenState());
-  locator.registerFactory(() => SettingsScreenState());
+  locator.registerFactory(() => SettingsScreenViewmodel());
   locator.registerFactory(() => LanguageScreenState());
   locator.registerFactory(() => WalletSetupScreenState());
   locator.registerFactory(() => ChooseWalletLanguageScreenState());

@@ -152,7 +152,7 @@ dependencies:
   # ERROR
   # Flutter\.pub-cache\hosted\pub.dartlang.org\url_launcher-5.5.2\android\src\main\java\io\flutter\plugins\
   # urllauncher\WebViewActivity.java uses or overrides a deprecated API
-  url_launcher: ^5.6.0
+  #url_launcher: ^5.6.0
 
   # video_player
   fijkplayer:
