@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -34,17 +35,6 @@ class SettingsScreen extends StatelessWidget {
         print('11111 ${model.isShowCaseOnce}');
         model.context = context;
         await model.init();
-        // model.sharedService.getDialogWarningsStatus().then((res) {
-        //   if (res != null) model.isDialogDisplay = res;
-        // });
-        // model.getAppVersion();
-        // if (model.selectedLanguage == '')
-        //   model.selectedLanguage = await model.getStoredDataByKeys('lang');
-        // model.isShowCaseOnce =
-        //     await model.getStoredDataByKeys('isShowCaseOnce');
-        // model.log.i('isShow ${model.isShowCaseOnce}');
-        // await Future.delayed(new Duration(seconds: 2), () {});
-        // print('22222 ${model.isShowCaseOnce}');
       },
       viewModelBuilder: () => SettingsScreenViewmodel(),
       builder: (context, model, _) => WillPopScope(
@@ -62,26 +52,29 @@ class SettingsScreen extends StatelessWidget {
             backgroundColor: globals.secondaryColor,
             leading: Container(),
           ),
-          body: model.isShowCaseOnce == false
-              ? ShowCaseWidget(
-                  onStart: (index, key) {
-                    print('onStart: $index, $key');
-                  },
-                  onComplete: (index, key) {
-                    print('onComplete: $index, $key');
-                  },
-                  onFinish: () async {
-                    await model.getStoredDataByKeys('isShowCaseOnce',
-                        isSetData: true, value: true);
-                  },
-                  // autoPlay: true,
-                  // autoPlayDelay: Duration(seconds: 3),
-                  // autoPlayLockEnable: true,
-                  builder: Builder(
-                    builder: (context) => SettingsWidget(model: model),
-                  ),
-                )
-              : Container(child: Center(child: Text('text'))),
+          body: model.isBusy
+              ? model.sharedService.loadingIndicator()
+              : model.isShowCaseOnce == false
+                  ? ShowCaseWidget(
+                      onStart: (index, key) {
+                        print('onStart: $index, $key');
+                      },
+                      onComplete: (index, key) {
+                        print('onComplete: $index, $key');
+                      },
+                      onFinish: () async {
+                        // print('FINISH, set isShowCaseOnce to true as we have shown user the showcase dialogs');
+                        // await model.getStoredDataByKeys('isShowCaseOnce',
+                        //     isSetData: true, value: true);
+                      },
+                      // autoPlay: true,
+                      // autoPlayDelay: Duration(seconds: 3),
+                      // autoPlayLockEnable: true,
+                      builder: Builder(
+                        builder: (context) => SettingsWidget(model: model),
+                      ),
+                    )
+                  : SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
         ),
       ),
@@ -110,6 +103,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     widget.model.one = _one;
     widget.model.two = _two;
     print('isShow _SettingsWidgetState ${widget.model.isShowCaseOnce}');
+    //if (widget.model.isShowCaseOnce == false)
     widget.model.showcaseEvent(context);
     // ShowCaseWidget.of(context).startShowCase([widget.model.one, widget.model.two])
     //       );
@@ -120,6 +114,19 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   Widget build(BuildContext context) {
     // WidgetsBinding.instance
     //   .addPostFrameCallback((_) => widget.model.showcaseEvent(context));
+    return SettingsContainer(
+      model: widget.model,
+    );
+  }
+}
+
+class SettingsContainer extends StatelessWidget {
+  const SettingsContainer({Key key, this.model}) : super(key: key);
+
+  final SettingsScreenViewmodel model;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(10),
       child: ListView(
@@ -134,82 +141,43 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   color: globals.walletCardColor,
                   padding: EdgeInsets.all(20),
                   // height: 100,
-                  child: Showcase(
-                    key: widget.model.one,
-                    description: '1) Click here to see menu options',
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 3.0),
-                          child: Icon(
-                            Icons.delete,
-                            color: globals.sellPrice,
-                            size: 18,
-                          ),
-                        ),
-                        widget.model.isDeleting
-                            ? Text('Deleting wallet...')
-                            : Text(
-                                AppLocalizations.of(context).deleteWallet,
-                                textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.headline5,
-                              ),
-                      ],
-                    ),
-                  ),
+                  child: !model.isShowCaseOnce
+                      ? Showcase(
+                          key: model.one,
+                          description: '1) Click here to see menu options',
+                          child: deleteWalletRow(context),
+                        )
+                      : deleteWalletRow(context),
                 ),
               ),
               onTap: () async {
-                await widget.model.deleteWallet();
+                await model.deleteWallet();
               },
             ),
             InkWell(
               splashColor: globals.primaryColor,
               child: Card(
                 elevation: 5,
-                child: Showcase(
-                  key: widget.model.two,
-                  title: 'Display',
-                  description: 'Enter password to see ',
-                  child: Container(
-                    color: globals.walletCardColor,
-                    padding: EdgeInsets.all(20),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 3.0),
-                            child: Icon(
-                              !widget.model.isVisible
-                                  ? Icons.enhanced_encryption
-                                  : Icons.remove_red_eye,
-                              color: globals.primaryColor,
-                              size: 18,
-                            ),
-                          ),
-                          Text(
-                            !widget.model.isVisible
-                                ? AppLocalizations.of(context).displayMnemonic
-                                : AppLocalizations.of(context).hideMnemonic,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline5,
-                          ),
-                        ]),
-                  ),
-                ),
+                child: !model.isShowCaseOnce
+                    ? Showcase(
+                        key: model.two,
+                        title: 'Show/Hide mnemonic',
+                        description: 'Enter password to see mnemonic',
+                        child: showMnemonicContainer(context),
+                      )
+                    : showMnemonicContainer(context),
               ),
               onTap: () {
-                widget.model.displayMnemonic();
+                model.displayMnemonic();
               },
             ),
             Visibility(
-              visible: widget.model.isVisible,
+              visible: model.isVisible,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
                     child: Text(
-                  widget.model.mnemonic,
+                  model.mnemonic,
                   style: Theme.of(context).textTheme.bodyText1,
                 )),
               ),
@@ -224,7 +192,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         ? CupertinoPicker(
                             diameterRatio: 1.3,
                             offAxisFraction: 5,
-                            scrollController: widget.model.scrollController,
+                            scrollController: model.scrollController,
                             itemExtent: 50,
                             onSelectedItemChanged: (int value) {
                               String lang = '';
@@ -233,7 +201,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                               } else if (value == 2) {
                                 lang = 'zh';
                               }
-                              widget.model.changeWalletLanguage(lang);
+                              model.changeWalletLanguage(lang);
                             },
                             children: [
                                 Center(
@@ -269,9 +237,9 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                   textAlign: TextAlign.center,
                                   style: Theme.of(context).textTheme.headline5,
                                 ),
-                                value: widget.model.selectedLanguage,
+                                value: model.selectedLanguage,
                                 onChanged: (newValue) {
-                                  widget.model.changeWalletLanguage(newValue);
+                                  model.changeWalletLanguage(newValue);
                                 },
                                 items: [
                                   DropdownMenuItem(
@@ -293,7 +261,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                                 .headline6),
                                       ],
                                     ),
-                                    value: widget.model.languages[0],
+                                    value: model.languages[0],
                                   ),
                                   DropdownMenuItem(
                                     child: Row(
@@ -314,7 +282,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                                                 .headline6),
                                       ],
                                     ),
-                                    value: widget.model.languages[1],
+                                    value: model.languages[1],
                                   ),
                                 ]),
                           ),
@@ -332,9 +300,32 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         textAlign: TextAlign.center),
                     Checkbox(
                         activeColor: globals.primaryColor,
-                        value: widget.model.isDialogDisplay,
+                        value: model.isDialogDisplay,
                         onChanged: (value) {
-                          widget.model.setDialogWarningValue(value);
+                          model.setDialogWarningValue(value);
+                        }),
+                  ],
+                )),
+
+            // Showcase ON/OFF
+            Card(
+                elevation: 5,
+                color: globals.walletCardColor,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Showcase instructions for features',
+                        style: Theme.of(context).textTheme.headline5,
+                        textAlign: TextAlign.center),
+                    Checkbox(
+                        activeColor: globals.primaryColor,
+                        value: !model.isShowCaseOnce,
+                        onChanged: (value) {
+                          print(model.isShowCaseOnce);
+                          print(value);
+                          model.getStoredDataByKeys(Constants.isShowCaseOnceKey,
+                              isSetData: true, value: !value);
+                          print(model.isShowCaseOnce);
                         }),
                   ],
                 )),
@@ -351,7 +342,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'v ${widget.model.versionName}',
+                      'v ${model.versionName}',
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     if (!isProduction)
@@ -363,7 +354,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
             Container(
               padding: EdgeInsets.all(5),
               child: Center(
-                child: Text(widget.model.errorMessage,
+                child: Text(model.errorMessage,
                     style: Theme.of(context)
                         .textTheme
                         .bodyText2
@@ -371,6 +362,53 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               ),
             ),
           ]),
+    );
+  }
+
+  Container showMnemonicContainer(BuildContext context) {
+    return Container(
+      color: globals.walletCardColor,
+      padding: EdgeInsets.all(20),
+      child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 3.0),
+          child: Icon(
+            !model.isVisible ? Icons.enhanced_encryption : Icons.remove_red_eye,
+            color: globals.primaryColor,
+            size: 18,
+          ),
+        ),
+        Text(
+          !model.isVisible
+              ? AppLocalizations.of(context).displayMnemonic
+              : AppLocalizations.of(context).hideMnemonic,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headline5,
+        ),
+      ]),
+    );
+  }
+
+  Row deleteWalletRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 3.0),
+          child: Icon(
+            Icons.delete,
+            color: globals.sellPrice,
+            size: 18,
+          ),
+        ),
+        model.isDeleting
+            ? Text('Deleting wallet...')
+            : Text(
+                AppLocalizations.of(context).deleteWallet,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headline5,
+              ),
+      ],
     );
   }
 }

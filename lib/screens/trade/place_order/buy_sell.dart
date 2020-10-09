@@ -11,9 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'dart:io';
-
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';

@@ -60,11 +60,11 @@ class SettingsScreenViewmodel extends BaseViewModel {
 
   init() async {
     setBusy(true);
-   // await getStoredDataByKeys('isShowCaseOnce', isSetData: true, value: false);
-   isShowCaseOnce = await getStoredDataByKeys('isShowCaseOnce');
-    await Future.delayed(Duration(seconds: 2), () {
-      log.i('waited 2 seconds');
-    });
+    // await getStoredDataByKeys('isShowCaseOnce', isSetData: true, value: false);
+    isShowCaseOnce = await getStoredDataByKeys('isShowCaseOnce');
+    // await Future.delayed(Duration(seconds: 2), () {
+    //   log.i('waited 2 seconds');
+    // });
     log.i('isShow $isShowCaseOnce');
     sharedService.getDialogWarningsStatus().then((res) {
       if (res != null) isDialogDisplay = res;
@@ -181,18 +181,19 @@ class SettingsScreenViewmodel extends BaseViewModel {
   Future getStoredDataByKeys(String key,
       {bool isSetData = false, dynamic value}) async {
     print('key $key -- isData $isSetData -- value $value');
+    setBusy(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (isSetData)
-      prefs.setBool(key, value);
-    
+    if (isSetData) prefs.setBool(key, value);
+
     log.e('value of get key ${prefs.get(key)}');
-    return prefs.get(key);
+    isShowCaseOnce = prefs.get(key);
+    setBusy(false);
+    if (!isSetData) return prefs.get(key);
   }
 
   // Change wallet language
 
   changeWalletLanguage(lang) async {
-    setBusy(true);
     setBusy(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     selectedLanguage = lang;
