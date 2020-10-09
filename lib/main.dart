@@ -24,23 +24,27 @@ import './shared/globals.dart' as globals;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localizations.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
-  serviceLocator();
-  Logger.level = Level.info;
-  SystemChannels.textInput
-      .invokeMethod('TextInput.hide'); // Hides keyboard initially
-  // Force user to use only portrait mode until the development of other screen size design
+  try {
+    await serviceLocator();
+    Logger.level = Level.info;
+    SystemChannels.textInput
+        .invokeMethod('TextInput.hide'); // Hides keyboard initially
+    // Force user to use only portrait mode until the development of other screen size design
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
-    (_) {
-      runApp(
-          //  DevicePreview(builder: (context) =>
-          MyApp());
-      // ));
-    },
-  );
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
+      (_) {
+        runApp(
+            //  DevicePreview(builder: (context) =>
+            MyApp());
+        // ));
+      },
+    );
+  } catch (err) {
+    print('main.dart (Catch) Locator setup has failed $err');
+  }
 }
 
 class MyApp extends StatelessWidget {

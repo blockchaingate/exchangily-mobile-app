@@ -73,7 +73,7 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => CampaignUserDatabaseService());
   locator.registerLazySingleton(() => PdfViewerService());
 
-  // Singelton
+  // LocalStorageService Singelton
   var instance = await LocalStorageService.getInstance();
   locator.registerSingleton<LocalStorageService>(instance);
 

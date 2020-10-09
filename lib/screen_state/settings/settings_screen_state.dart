@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -38,7 +39,7 @@ class SettingsScreenViewmodel extends BaseViewModel {
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
-
+  var storageService = locator<LocalStorageService>();
   final NavigationService navigationService = locator<NavigationService>();
   List<String> languages = ['English', 'Chinese'];
   String selectedLanguage;
@@ -60,12 +61,11 @@ class SettingsScreenViewmodel extends BaseViewModel {
 
   init() async {
     setBusy(true);
-    // await getStoredDataByKeys('isShowCaseOnce', isSetData: true, value: false);
-    isShowCaseOnce = await getStoredDataByKeys('isShowCaseOnce');
-    // await Future.delayed(Duration(seconds: 2), () {
-    //   log.i('waited 2 seconds');
-    // });
-    log.i('isShow $isShowCaseOnce');
+
+    storageService.showCaseView == null
+        ? isShowCaseOnce = false
+        : isShowCaseOnce = storageService.showCaseView;
+
     sharedService.getDialogWarningsStatus().then((res) {
       if (res != null) isDialogDisplay = res;
     });
@@ -80,11 +80,6 @@ class SettingsScreenViewmodel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ShowCaseWidget.of(test).startShowCase([one, two]);
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // isShowCaseOnce = true;
-    // prefs.setBool('isShowCaseOnce', isShowCaseOnce);
-    // isShowCaseOnce = prefs.getBool('isShowCaseOnce');
-    // log.e('isShow $isShowCaseOnce');
     setBusy(false);
   }
 

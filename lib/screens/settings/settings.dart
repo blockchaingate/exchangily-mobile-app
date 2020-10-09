@@ -11,10 +11,8 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +21,6 @@ import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
 import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
-import '../base_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key key}) : super(key: key);
@@ -32,7 +29,6 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<SettingsScreenViewmodel>.reactive(
       onModelReady: (model) async {
-        print('11111 ${model.isShowCaseOnce}');
         model.context = context;
         await model.init();
       },
@@ -53,7 +49,7 @@ class SettingsScreen extends StatelessWidget {
             leading: Container(),
           ),
           body: model.isBusy
-              ? model.sharedService.loadingIndicator()
+              ? Center(child: model.sharedService.loadingIndicator())
               : model.isShowCaseOnce == false
                   ? ShowCaseWidget(
                       onStart: (index, key) {
@@ -71,7 +67,8 @@ class SettingsScreen extends StatelessWidget {
                       // autoPlayDelay: Duration(seconds: 3),
                       // autoPlayLockEnable: true,
                       builder: Builder(
-                        builder: (context) => SettingsWidget(model: model),
+                        builder: (context) =>
+                            SettingsStatefulWidget(model: model),
                       ),
                     )
                   : SettingsContainer(model: model),
@@ -82,18 +79,18 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
-class SettingsWidget extends StatefulWidget {
+class SettingsStatefulWidget extends StatefulWidget {
   final SettingsScreenViewmodel model;
-  const SettingsWidget({
+  const SettingsStatefulWidget({
     Key key,
     this.model,
   }) : super(key: key);
 
   @override
-  _SettingsWidgetState createState() => _SettingsWidgetState();
+  _SettingsStatefulWidgetState createState() => _SettingsStatefulWidgetState();
 }
 
-class _SettingsWidgetState extends State<SettingsWidget> {
+class _SettingsStatefulWidgetState extends State<SettingsStatefulWidget> {
   BuildContext myContext;
   GlobalKey _one = GlobalKey();
   GlobalKey _two = GlobalKey();
@@ -103,11 +100,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     widget.model.one = _one;
     widget.model.two = _two;
     print('isShow _SettingsWidgetState ${widget.model.isShowCaseOnce}');
-    //if (widget.model.isShowCaseOnce == false)
     widget.model.showcaseEvent(context);
-    // ShowCaseWidget.of(context).startShowCase([widget.model.one, widget.model.two])
-    //       );
-    // you can use this.widget.foo here
   }
 
   @override
@@ -321,10 +314,14 @@ class SettingsContainer extends StatelessWidget {
                         activeColor: globals.primaryColor,
                         value: !model.isShowCaseOnce,
                         onChanged: (value) {
-                          print(model.isShowCaseOnce);
-                          print(value);
-                          model.getStoredDataByKeys(Constants.isShowCaseOnceKey,
-                              isSetData: true, value: !value);
+                          // set updated value
+                          model.storageService.showCaseView = !value;
+
+                          model.setBusy(true);
+                          // get new value and assign it to the viewmodel variable
+                          model.isShowCaseOnce =
+                              model.storageService.showCaseView;
+                          model.setBusy(false);
                           print(model.isShowCaseOnce);
                         }),
                   ],

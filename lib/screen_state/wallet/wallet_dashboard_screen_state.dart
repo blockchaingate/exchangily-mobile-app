@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
@@ -36,6 +37,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import '../../environments/coins.dart' as coinList;
 import '../../shared/globals.dart' as globals;
 import 'package:intl/intl.dart';
@@ -85,6 +87,9 @@ class WalletDashboardScreenState extends BaseState {
   //vars for announcement
   bool hasApiError = false;
   List announceList;
+  GlobalKey globalKeyOne = GlobalKey();
+  GlobalKey globalKeyTwo = GlobalKey();
+  var storageService = locator<LocalStorageService>();
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -247,6 +252,13 @@ class WalletDashboardScreenState extends BaseState {
     }
 
     setBusy(false);
+  }
+
+  showcaseEvent(BuildContext test) async {
+    if (!storageService.showCaseView)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
+      });
   }
 
 /*----------------------------------------------------------------------
