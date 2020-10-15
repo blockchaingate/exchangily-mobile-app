@@ -837,7 +837,7 @@ class WalletDashboardScreen extends StatelessWidget {
   }
 }
 
-class DepositWidget extends StatelessWidget {
+class DepositWidget extends StatefulWidget {
   const DepositWidget({Key key, this.model, this.index, this.tickerName})
       : super(key: key);
 
@@ -846,44 +846,86 @@ class DepositWidget extends StatelessWidget {
   final String tickerName;
 
   @override
+  _DepositWidgetState createState() => _DepositWidgetState();
+}
+
+class _DepositWidgetState extends State<DepositWidget> {
+  BuildContext myContext;
+
+  GlobalKey _two = GlobalKey();
+  @override
+  void initState() {
+    super.initState();
+
+    widget.model.globalKeyTwo = _two;
+
+    widget.model.showcaseEvent(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     // if (tickerName == 'FAB') {
     //   model.showcaseEvent(context);
     // }
     return InkWell(
-        child: Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 5.0, left: 2.0),
-            child: Column(
-              children: [
-                Text(
-                  AppLocalizations.of(context).deposit,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle2
-                      .copyWith(fontSize: 8),
-                ),
-                Icon(Icons.arrow_downward, color: globals.green, size: 16),
-              ],
-            )),
+        child: widget.tickerName == 'FAB'
+            ? Showcase(
+                key: widget.model.globalKeyTwo,
+                description: 'Test',
+                child: buildPaddingDeposit(context),
+              )
+            : buildPaddingDeposit(context),
         onTap: () {
           Navigator.pushNamed(context, '/deposit',
-              arguments: model.walletInfo[index]);
+              arguments: widget.model.walletInfo[widget.index]);
         });
+  }
+
+  Padding buildPaddingDeposit(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(top: 8.0, right: 5.0, left: 2.0),
+        child: Column(
+          children: [
+            Text(
+              AppLocalizations.of(context).deposit,
+              style:
+                  Theme.of(context).textTheme.subtitle2.copyWith(fontSize: 8),
+            ),
+            Icon(Icons.arrow_downward, color: globals.green, size: 16),
+          ],
+        ));
   }
 }
 
-class AddGasRow extends StatelessWidget {
+class AddGasRow extends StatefulWidget {
   const AddGasRow({Key key, this.model}) : super(key: key);
   final WalletDashboardScreenState model;
+
+  @override
+  _AddGasRowState createState() => _AddGasRowState();
+}
+
+class _AddGasRowState extends State<AddGasRow> {
+  BuildContext myContext;
+  GlobalKey _one = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.model.globalKeyOne = _one;
+
+    widget.model.showcaseEvent(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    model.showcaseEvent(context);
+    // model.showcaseEvent(context);
     return Showcase(
-      key: model.globalKeyOne,
+      key: widget.model.globalKeyOne,
       title: 'Note:',
       description:
           'Please add gas by using FAB coin to use wallet and exchange features',
-      child: Gas(gasAmount: model.gasAmount),
+      child: Gas(gasAmount: widget.model.gasAmount),
     );
   }
 }

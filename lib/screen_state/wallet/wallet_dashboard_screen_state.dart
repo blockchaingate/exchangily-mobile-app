@@ -87,8 +87,8 @@ class WalletDashboardScreenState extends BaseState {
   //vars for announcement
   bool hasApiError = false;
   List announceList;
-  GlobalKey globalKeyOne = GlobalKey();
-  GlobalKey globalKeyTwo = GlobalKey();
+  GlobalKey globalKeyOne;
+  GlobalKey globalKeyTwo;
   var storageService = locator<LocalStorageService>();
 /*----------------------------------------------------------------------
                     INIT
