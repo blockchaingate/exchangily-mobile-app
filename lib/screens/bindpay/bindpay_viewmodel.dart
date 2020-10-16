@@ -46,6 +46,13 @@ class BindpayViewmodel extends FutureViewModel {
   String barcodeRes = '';
   String barcodeRes2 = '';
   var walletBalancesBody;
+  bool isShowBottomSheet = false;
+  List<Map<String, dynamic>> test = [
+    {'tickerName': 'BTC', 'quantity': '10'},
+    {'tickerName': 'ETH', 'quantity': '50'},
+    {'tickerName': 'LTC', 'quantity': '10'},
+    {'tickerName': 'ETC', 'quantity': '50'}
+  ];
 
 /*----------------------------------------------------------------------
                           INIT
@@ -53,6 +60,69 @@ class BindpayViewmodel extends FutureViewModel {
 
   init() {
     sharedService.context = context;
+  }
+
+/*----------------------------------------------------------------------
+                    Show bottom sheet for coin list
+----------------------------------------------------------------------*/
+  coinListBottomSheet(BuildContext context) {
+    showBottomSheet(
+        context: context,
+        builder: (context) => Container(
+              //   color: Colors.grey[900],
+              width: double.infinity,
+              height: 75,
+              decoration: BoxDecoration(
+                  color: secondaryColor,
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 5, color: Colors.grey[300], spreadRadius: 2)
+                  ]),
+              child: ListView.builder(
+                  itemCount: test.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    //  mainAxisSize: MainAxisSize.max,
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    // children: [
+
+                    return InkWell(
+                      onTap: () {
+                        Platform.isIOS
+                            ? updateSelectedTickernameIOS(index)
+                            : updateSelectedTickername(
+                                test[index]['tickerName']);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(test[index]['tickerName'].toString(),
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline5),
+                            UIHelper.horizontalSpaceSmall,
+                            Text(
+                              test[index]['quantity'].toString(),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(color: grey),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  // TextField(
+                  //   decoration: InputDecoration.collapsed(
+                  //     hintText: 'Enter your reference number',
+                  //   ),
+                  // )
+                  //   ]
+                  ),
+            ));
   }
 
 /*----------------------------------------------------------------------
@@ -109,15 +179,15 @@ class BindpayViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   @override
   void onData(data) {
-
     List<WalletInfo> tokenList = data as List<WalletInfo>;
     tokenList.forEach((wallet) {
-   
-     if (wallet.inExchange != 0.0) 
+      if (wallet.inExchange != 0.0)
         coins.add(
             {"tickerName": wallet.tickerName, "quantity": wallet.inExchange});
     });
-    coins != null || coins.isNotEmpty ? tickerName = coins[0]['tickerName'] : tickerName = '';
+    coins != null || coins.isNotEmpty
+        ? tickerName = coins[0]['tickerName']
+        : tickerName = '';
     print(' coins $coins');
   }
 
@@ -132,12 +202,12 @@ class BindpayViewmodel extends FutureViewModel {
   }
 
   updateSelectedTickernameIOS(int index) {
-     setBusy(true);
-    print('INDEX ${index+1} ---- coins length ${coins.length}');
-    if(index+1 <= coins.length)
-    tickerName = coins.elementAt(index)['tickerName'];
+    setBusy(true);
+    print('INDEX ${index + 1} ---- coins length ${coins.length}');
+    if (index + 1 <= coins.length)
+      tickerName = coins.elementAt(index)['tickerName'];
     print('IOS tickerName $tickerName');
-     setBusy(false);
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------

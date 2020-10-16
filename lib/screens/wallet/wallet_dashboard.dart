@@ -846,6 +846,31 @@ class WalletDashboardScreen extends StatelessWidget {
   }
 }
 
+class AddGasRow extends StatelessWidget {
+  const AddGasRow({Key key, this.model}) : super(key: key);
+  final WalletDashboardScreenState model;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   widget.model.globalKeyOne = _one;
+
+  //   widget.model.showcaseEvent(context);
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    model.showcaseEvent(context);
+    return Showcase(
+      key: model.globalKeyOne,
+      title: 'Note:',
+      description:
+          'Please add gas by using FAB coin to use wallet and exchange features',
+      child: Gas(gasAmount: model.gasAmount),
+    );
+  }
+}
+
 class DepositWidget extends StatelessWidget {
   const DepositWidget({Key key, this.model, this.index, this.tickerName})
       : super(key: key);
@@ -856,11 +881,6 @@ class DepositWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'TICKERNAME TICKERNAME TICKERNAME TICKERNAME ${tickerName.toUpperCase()}');
-    // if (tickerName == 'FAB') {
-    //   model.showcaseEvent(context);
-    // }
     model.showcaseEvent(context);
     return InkWell(
         child: tickerName.toUpperCase() == 'FAB'
@@ -890,30 +910,5 @@ class DepositWidget extends StatelessWidget {
             Icon(Icons.arrow_downward, color: globals.green, size: 16),
           ],
         ));
-  }
-}
-
-class AddGasRow extends StatelessWidget {
-  const AddGasRow({Key key, this.model}) : super(key: key);
-  final WalletDashboardScreenState model;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   widget.model.globalKeyOne = _one;
-
-  //   widget.model.showcaseEvent(context);
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    model.showcaseEvent(context);
-    return Showcase(
-      key: model.globalKeyOne,
-      title: 'Note:',
-      description:
-          'Please add gas by using FAB coin to use wallet and exchange features 1',
-      child: Gas(gasAmount: model.gasAmount),
-    );
   }
 }

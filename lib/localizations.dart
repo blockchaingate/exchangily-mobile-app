@@ -1577,9 +1577,23 @@ class AppLocalizations {
 
   String get noInternetWarning {
     return Intl.message(
-        "Cannot load the data as your device is not to the internet",
+        "Cannot load the content as your device is not to the internet",
         name: 'noInternetWarning',
         desc: 'no_internet_warning');
+  }
+
+  String get walletInstruction1 {
+    return Intl.message(
+        "Please add gas by using FAB coin to use wallet and exchange features",
+        name: 'walletInstruction1',
+        desc: 'wallet_instruction_1');
+  }
+
+  String get walletInstruction2 {
+    return Intl.message(
+        "Transfer funds from wallet to exchange to trade and use bindpay",
+        name: 'walletInstruction2',
+        desc: 'wallet_instruction_2');
   }
 }
 
