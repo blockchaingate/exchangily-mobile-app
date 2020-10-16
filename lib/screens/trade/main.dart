@@ -232,7 +232,7 @@ class _TradeState extends State<Trade> with TradeService {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => BuySell(
+                                  builder: (context) => BuySellView(
                                       pair: widget.pair, bidOrAsk: true)),
                             );
                           },
@@ -252,7 +252,7 @@ class _TradeState extends State<Trade> with TradeService {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BuySell(
+                                builder: (context) => BuySellView(
                                     pair: widget.pair, bidOrAsk: false)),
                           );
                         },

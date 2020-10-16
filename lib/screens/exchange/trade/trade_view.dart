@@ -306,7 +306,7 @@ class TradeView extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => BuySell(
+                                        builder: (context) => BuySellView(
                                             orderbook: model.orderBook,
                                             pair: model.currentPairPrice,
                                             bidOrAsk: true)),
@@ -332,7 +332,7 @@ class TradeView extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => BuySell(
+                                      builder: (context) => BuySellView(
                                           orderbook: model.orderBook,
                                           pair: model.currentPairPrice,
                                           bidOrAsk: false)),

@@ -30,6 +30,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -42,6 +43,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:keccak/keccak.dart';
 import 'package:random_string/random_string.dart';
+import 'package:showcaseview/showcase_widget.dart';
 import 'package:web_socket_channel/io.dart';
 
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
@@ -92,6 +94,9 @@ class BuySellScreenState extends BaseState {
   String pair = '';
   String tickerName = '';
   Price passedPair;
+  GlobalKey globalKeyOne;
+  GlobalKey globalKeyTwo;
+  var storageService = locator<LocalStorageService>();
 
   init() async {
     // log.e(pair);
@@ -107,6 +112,16 @@ class BuySellScreenState extends BaseState {
     // await tradeList();
     // await getDecimalPairConfig();
     fillPriceAndQuantityTextFields();
+  }
+
+  /*----------------------------------------------------------------------
+                        Showcase Feature
+----------------------------------------------------------------------*/
+  showcaseEvent(BuildContext test) async {
+    if (!storageService.showCaseView)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
+      });
   }
 
   fillPriceAndQuantityTextFields() {

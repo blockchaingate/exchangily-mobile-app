@@ -90,6 +90,7 @@ class MyOrdersView extends StatelessWidget {
                               Column(
                                 children: <Widget>[
                                   TabBar(
+                                    labelPadding: EdgeInsets.all(3),
                                     onTap: (int i) {},
                                     indicatorSize: TabBarIndicatorSize
                                         .tab, // model.showOrdersInTabView(i);
@@ -248,7 +249,10 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                               order.filledQuantity.toStringAsFixed(
                                   model.decimalConfig.quantityDecimal),
                               style: Theme.of(context).textTheme.headline6),
-                          Text('${order.filledPercentage.toStringAsFixed(2)}%',
+                          Text(
+                              order.filledPercentage.isNaN
+                                  ? '0.0%'
+                                  : '${order.filledPercentage.toStringAsFixed(2)}%',
                               style: Theme.of(context).textTheme.subtitle2)
                         ],
                       )),
