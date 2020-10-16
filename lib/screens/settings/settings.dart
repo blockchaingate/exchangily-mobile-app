@@ -409,37 +409,3 @@ class SettingsContainer extends StatelessWidget {
     );
   }
 }
-
-// OLD language switch, KEEP IT
-// InkWell(
-//   child: Card(
-//     elevation: 4,
-//     child: Container(
-//       alignment: Alignment.center,
-//       color: globals.walletCardColor,
-//       padding: EdgeInsets.all(20),
-//       // height: 100,
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Padding(
-//             padding: const EdgeInsets.only(right: 3.0),
-//             child: Icon(
-//               Icons.language,
-//               color: Colors.deepOrange,
-//               size: 18,
-//             ),
-//           ),
-//           Text(
-//             AppLocalizations.of(context).changeWalletLanguage,
-//             textAlign: TextAlign.center,
-//             style: Theme.of(context).textTheme.headline5,
-//           ),
-//         ],
-//       ),
-//     ),
-//   ),
-//   onTap: () {
-//     Navigator.pushNamed(context, '/switchLanguage');
-//   },
-// ),

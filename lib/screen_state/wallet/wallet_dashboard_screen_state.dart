@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -34,6 +35,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,12 +92,14 @@ class WalletDashboardScreenState extends BaseState {
   GlobalKey globalKeyOne;
   GlobalKey globalKeyTwo;
   var storageService = locator<LocalStorageService>();
+
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
 
   init() async {
     setBusy(true);
+
     sharedService.context = context;
     //  await getDecimalPairConfig();
     await refreshBalance();
