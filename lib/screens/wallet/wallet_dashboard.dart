@@ -801,7 +801,6 @@ class WalletDashboardScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          // Text('$index'),
                           DepositWidget(
                               model: model,
                               index: index,
@@ -867,7 +866,8 @@ class DepositWidget extends StatelessWidget {
         child: tickerName.toUpperCase() == 'FAB'
             ? Showcase(
                 key: model.globalKeyTwo,
-                description: 'Test',
+                description:
+                    'Transfer funds from wallet to exchange to trade and use bindpay',
                 child: buildPaddingDeposit(context),
               )
             : buildPaddingDeposit(context),
