@@ -40,15 +40,19 @@ class WalletDashboardScreen extends StatelessWidget {
   final log = getLogger('Dashboard');
 
   Widget build(BuildContext context) {
+    GlobalKey _one = GlobalKey();
+    GlobalKey _two = GlobalKey();
     final key = new GlobalKey<ScaffoldState>();
     return BaseScreen<WalletDashboardScreenState>(onModelReady: (model) async {
       model.context = context;
+      model.globalKeyOne = _one;
+      model.globalKeyTwo = _two;
       await model.retrieveWalletsFromLocalDatabase();
       await model.init();
     }, builder: (context, model, child) {
       var connectionStatus = Provider.of<ConnectivityStatus>(context);
       if (connectionStatus == ConnectivityStatus.Offline)
-        return NetworkStaus();
+        return NetworkStausView();
       else
         return WillPopScope(
           onWillPop: () {
@@ -57,10 +61,8 @@ class WalletDashboardScreen extends StatelessWidget {
           },
           child: Scaffold(
             key: key,
-            //  drawer: AppDrawer(),
             body: GestureDetector(
               onTap: () {
-                // Focus.of(context).unfocus();
                 FocusScope.of(context).requestFocus(FocusNode());
               },
               child: ShowCaseWidget(
@@ -799,6 +801,7 @@ class WalletDashboardScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
+                          // Text('$index'),
                           DepositWidget(
                               model: model,
                               index: index,
@@ -844,7 +847,7 @@ class WalletDashboardScreen extends StatelessWidget {
   }
 }
 
-class DepositWidget extends StatefulWidget {
+class DepositWidget extends StatelessWidget {
   const DepositWidget({Key key, this.model, this.index, this.tickerName})
       : super(key: key);
 
@@ -853,38 +856,24 @@ class DepositWidget extends StatefulWidget {
   final String tickerName;
 
   @override
-  _DepositWidgetState createState() => _DepositWidgetState();
-}
-
-class _DepositWidgetState extends State<DepositWidget> {
-  BuildContext myContext;
-
-  GlobalKey _two = GlobalKey();
-  @override
-  void initState() {
-    super.initState();
-
-    widget.model.globalKeyTwo = _two;
-
-    widget.model.showcaseEvent(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    print(
+        'TICKERNAME TICKERNAME TICKERNAME TICKERNAME ${tickerName.toUpperCase()}');
     // if (tickerName == 'FAB') {
     //   model.showcaseEvent(context);
     // }
+    model.showcaseEvent(context);
     return InkWell(
-        child: widget.tickerName == 'FAB'
+        child: tickerName.toUpperCase() == 'FAB'
             ? Showcase(
-                key: widget.model.globalKeyTwo,
+                key: model.globalKeyTwo,
                 description: 'Test',
                 child: buildPaddingDeposit(context),
               )
             : buildPaddingDeposit(context),
         onTap: () {
           Navigator.pushNamed(context, '/deposit',
-              arguments: widget.model.walletInfo[widget.index]);
+              arguments: model.walletInfo[index]);
         });
   }
 
@@ -904,35 +893,27 @@ class _DepositWidgetState extends State<DepositWidget> {
   }
 }
 
-class AddGasRow extends StatefulWidget {
+class AddGasRow extends StatelessWidget {
   const AddGasRow({Key key, this.model}) : super(key: key);
   final WalletDashboardScreenState model;
 
-  @override
-  _AddGasRowState createState() => _AddGasRowState();
-}
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   widget.model.globalKeyOne = _one;
 
-class _AddGasRowState extends State<AddGasRow> {
-  BuildContext myContext;
-  GlobalKey _one = GlobalKey();
-
-  @override
-  void initState() {
-    super.initState();
-    widget.model.globalKeyOne = _one;
-
-    widget.model.showcaseEvent(context);
-  }
+  //   widget.model.showcaseEvent(context);
+  // }
 
   @override
   Widget build(BuildContext context) {
-    // model.showcaseEvent(context);
+    model.showcaseEvent(context);
     return Showcase(
-      key: widget.model.globalKeyOne,
+      key: model.globalKeyOne,
       title: 'Note:',
       description:
-          'Please add gas by using FAB coin to use wallet and exchange features',
-      child: Gas(gasAmount: widget.model.gasAmount),
+          'Please add gas by using FAB coin to use wallet and exchange features 1',
+      child: Gas(gasAmount: model.gasAmount),
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:flutter/material.dart';
 
-class NetworkStaus extends StatelessWidget {
+class NetworkStausView extends StatelessWidget {
   // final Widget child;
 
   @override

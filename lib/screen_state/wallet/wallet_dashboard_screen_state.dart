@@ -258,6 +258,9 @@ class WalletDashboardScreenState extends BaseState {
     setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                        Showcase Feature
+----------------------------------------------------------------------*/
   showcaseEvent(BuildContext test) async {
     if (!storageService.showCaseView)
       WidgetsBinding.instance.addPostFrameCallback((_) {
