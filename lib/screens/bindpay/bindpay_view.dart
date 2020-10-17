@@ -27,8 +27,6 @@ class BindpayView extends StatelessWidget {
           return new Future(() => false);
         },
         child: Scaffold(
-          floatingActionButton:
-              CoinListBottomSheetFloatingActionButton(model: model),
           body: GestureDetector(
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
@@ -79,17 +77,20 @@ class BindpayView extends StatelessWidget {
 /*----------------------------------------------------------------------------------------------------
                                         Coin list dropdown
 ----------------------------------------------------------------------------------------------------*/
-                      InkWell(
-                        onTap: () {
-                          model.coinListBottomSheet(context);
-                        },
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Choose Coin'),
-                              Icon(Icons.arrow_drop_down)
-                            ]),
-                      ),
+
+                      CoinListBottomSheetFloatingActionButton(model: model),
+
+                      // InkWell(
+                      //   onTap: () {
+
+                      //   },
+                      //   child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //       children: [
+                      //         Text('Choose Coin'),
+                      //         Icon(Icons.arrow_drop_down)
+                      //       ]),
+                      // ),
                       // Platform.isIOS
                       //     ? Container(
                       //         color: walletCardColor,
@@ -337,76 +338,33 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-        backgroundColor: yellow,
-        onPressed: () {
-          model.setBusy(true);
-          model.isShowBottomSheet = true;
-          model.setBusy(false);
-          //  model.coinListBottomSheet();
-          // showBottomSheet(
-          //     context: context,
-          //     builder: (context) => Container(
-          //           //   color: Colors.grey[900],
-          //           width: double.infinity,
-          //           height: 75,
-          //           decoration: BoxDecoration(
-          //               color: secondaryColor,
-          //               borderRadius: BorderRadius.all(Radius.circular(15)),
-          //               boxShadow: [
-          //                 BoxShadow(
-          //                     blurRadius: 5,
-          //                     color: Colors.grey[300],
-          //                     spreadRadius: 2)
-          //               ]),
-          //           child: ListView.builder(
-          //               itemCount: model.test.length,
-          //               itemBuilder: (BuildContext context, int index) {
-          //                 //  mainAxisSize: MainAxisSize.max,
-          //                 //mainAxisAlignment: MainAxisAlignment.center,
-          //                 // children: [
-
-          //                 return InkWell(
-          //                   onTap: () {
-          //                     Platform.isIOS
-          //                         ? model.updateSelectedTickernameIOS(index)
-          //                         : model.updateSelectedTickername(
-          //                             model.test[index]['tickerName']);
-          //                   },
-          //                   child: Padding(
-          //                     padding: const EdgeInsets.all(10.0),
-          //                     child: Row(
-          //                       mainAxisAlignment: MainAxisAlignment.center,
-          //                       children: [
-          //                         Text(
-          //                             model.test[index]['tickerName']
-          //                                 .toString(),
-          //                             textAlign: TextAlign.center,
-          //                             style: Theme.of(context)
-          //                                 .textTheme
-          //                                 .headline5),
-          //                         UIHelper.horizontalSpaceSmall,
-          //                         Text(
-          //                           model.test[index]['quantity'].toString(),
-          //                           style: Theme.of(context)
-          //                               .textTheme
-          //                               .headline5
-          //                               .copyWith(color: grey),
-          //                         )
-          //                       ],
-          //                     ),
-          //                   ),
-          //                 );
-          //               }
-
-          //               // TextField(
-          //               //   decoration: InputDecoration.collapsed(
-          //               //     hintText: 'Enter your reference number',
-          //               //   ),
-          //               // )
-          //               //   ]
-          //               ),
-          //         ));
-        });
+    return Container(
+      // padding: EdgeInsets.all(10.0),
+      width: double.infinity,
+      child: FloatingActionButton(
+          backgroundColor: secondaryColor,
+          child: Container(
+            decoration: BoxDecoration(
+              color: primaryColor,
+              border: Border.all(width: 1),
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+            ),
+            width: 400,
+            height: 220,
+            //  color: secondaryColor,
+            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 5.0),
+                child: Text(
+                    model.tickerName == '' ? 'Choose Coin' : model.tickerName),
+              ),
+              Text(model.quantity == 0.0 ? '' : model.quantity.toString()),
+              Icon(Icons.arrow_drop_down)
+            ]),
+          ),
+          onPressed: () {
+            model.coinListBottomSheet(context);
+          }),
+    );
   }
 }
