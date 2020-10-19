@@ -867,13 +867,16 @@ class WalletDashboardScreenState extends BaseState {
         await oldWayToGetBalances(coinTickersLength);
       }
     }).timeout(Duration(seconds: 25), onTimeout: () {
-      log.e('In coin send time out');
-      setBusy(false);
-
-      setErrorMessage(
+      log.e('time out');
+      walletInfo = walletInfoCopy;
+      sharedService.alertDialog(AppLocalizations.of(context).notice,
           AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+      setBusy(false);
+      return;
     }).catchError((err) async {
       log.e('Wallet balance CATCH $err');
+      sharedService.alertDialog(AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).serverError);
       setBusy(false);
     });
 

@@ -103,10 +103,11 @@ class BindpayViewmodel extends FutureViewModel {
 
                 return InkWell(
                   onTap: () {
-                    Platform.isIOS
-                        ? updateSelectedTickernameIOS(index)
-                        : updateSelectedTickername(coins[index]['tickerName'],
-                            coins[index]['quantity'].toDouble());
+                    //  Platform.isIOS
+                    updateSelectedTickernameIOS(
+                        index, coins[index]['quantity'].toDouble());
+                    // : updateSelectedTickername(coins[index]['tickerName'],
+                    //     coins[index]['quantity'].toDouble());
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -216,23 +217,28 @@ class BindpayViewmodel extends FutureViewModel {
 /*----------------------------------------------------------------------
                     Update Selected Tickername
 ----------------------------------------------------------------------*/
-  updateSelectedTickername(String name, double updatedQuantity) {
+  updateSelectedTickername(
+    String name,
+  ) {
     setBusy(true);
     tickerName = name;
-    quantity = updatedQuantity;
-    print('tickerName $tickerName--- quantity $quantity');
+
+    print('tickerName $tickerName');
     setBusy(false);
-    if (isShowBottomSheet) navigationService.goBack();
-    changeBottomSheetStatus();
+    // if (isShowBottomSheet) navigationService.goBack();
+    // changeBottomSheetStatus();
   }
 
-  updateSelectedTickernameIOS(int index) {
+  updateSelectedTickernameIOS(int index, double updatedQuantity) {
     setBusy(true);
     print('INDEX ${index + 1} ---- coins length ${coins.length}');
     if (index + 1 <= coins.length)
       tickerName = coins.elementAt(index)['tickerName'];
-    print('IOS tickerName $tickerName');
+    quantity = updatedQuantity;
+    print('IOS tickerName $tickerName --- quantity $quantity');
     setBusy(false);
+    if (isShowBottomSheet) navigationService.goBack();
+    changeBottomSheetStatus();
   }
 
 /*----------------------------------------------------------------------

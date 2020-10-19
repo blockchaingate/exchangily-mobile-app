@@ -78,8 +78,6 @@ class BindpayView extends StatelessWidget {
                                         Coin list dropdown
 ----------------------------------------------------------------------------------------------------*/
 
-                      CoinListBottomSheetFloatingActionButton(model: model),
-
                       // InkWell(
                       //   onTap: () {
 
@@ -91,120 +89,122 @@ class BindpayView extends StatelessWidget {
                       //         Icon(Icons.arrow_drop_down)
                       //       ]),
                       // ),
-                      // Platform.isIOS
-                      //     ? Container(
-                      //         color: walletCardColor,
-                      //         child: CupertinoPicker(
-                      //             diameterRatio: 1.3,
-                      //             offAxisFraction: 5,
-                      //             scrollController: model.scrollController,
-                      //             itemExtent: 50,
-                      //             onSelectedItemChanged: (int newValue) {
-                      //               model.updateSelectedTickernameIOS(newValue);
-                      //             },
-                      //             children: [
-                      //               for (var i = 0; i < model.coins.length; i++)
-                      //                 Container(
-                      //                   margin: EdgeInsets.only(left: 10),
-                      //                   child: Row(
-                      //                     children: [
-                      //                       Text(
-                      //                           model.coins[i]['tickerName']
-                      //                               .toString(),
-                      //                           style: Theme.of(context)
-                      //                               .textTheme
-                      //                               .headline5),
-                      //                       UIHelper.horizontalSpaceSmall,
-                      //                       Text(
-                      //                         model.coins[i]['quantity']
-                      //                             .toString(),
-                      //                         style: Theme.of(context)
-                      //                             .textTheme
-                      //                             .headline5
-                      //                             .copyWith(color: grey),
-                      //                       )
-                      //                     ],
-                      //                   ),
-                      //                 ),
-                      //               //    })
-                      //               model.coins.length > 0
-                      //                   ? Container()
-                      //                   : SizedBox(
-                      //                       width: double.infinity,
-                      //                       child: Center(
-                      //                         child: Text(
-                      //                           AppLocalizations.of(context)
-                      //                               .insufficientBalance,
-                      //                           style: Theme.of(context)
-                      //                               .textTheme
-                      //                               .bodyText2,
-                      //                         ),
-                      //                       ),
-                      //                     ),
-                      //             ]),
-                      //       )
-                      //     : Container(
-                      //         height: 55,
-                      //         decoration: BoxDecoration(
-                      //           borderRadius: BorderRadius.circular(4.0),
-                      //           border: Border.all(
-                      //               color: primaryColor,
-                      //               style: BorderStyle.solid,
-                      //               width: 0.50),
-                      //         ),
-                      //         child: DropdownButton(
-                      //             underline: SizedBox.shrink(),
-                      //             elevation: 5,
-                      //             isExpanded: true,
-                      //             icon: Padding(
-                      //               padding: const EdgeInsets.only(right: 8.0),
-                      //               child: Icon(Icons.arrow_drop_down),
-                      //             ),
-                      //             iconEnabledColor: primaryColor,
-                      //             iconSize: 30,
-                      //             hint: Padding(
-                      //               padding: const EdgeInsets.only(left: 10.0),
-                      //               child: Text(
-                      //                 AppLocalizations.of(context).coin,
-                      //                 textAlign: TextAlign.start,
-                      //                 style:
-                      //                     Theme.of(context).textTheme.headline5,
-                      //               ),
-                      //             ),
-                      //             value: model.tickerName,
-                      //             onChanged: (newValue) {
-                      //               model.updateSelectedTickername(newValue);
-                      //             },
-                      //             items: model.coins.map(
-                      //               (coin) {
-                      //                 return DropdownMenuItem(
-                      //                   child: Padding(
-                      //                     padding:
-                      //                         const EdgeInsets.only(left: 10.0),
-                      //                     child: Row(
-                      //                       children: [
-                      //                         Text(
-                      //                             coin['tickerName'].toString(),
-                      //                             textAlign: TextAlign.center,
-                      //                             style: Theme.of(context)
-                      //                                 .textTheme
-                      //                                 .headline5),
-                      //                         UIHelper.horizontalSpaceSmall,
-                      //                         Text(
-                      //                           coin['quantity'].toString(),
-                      //                           style: Theme.of(context)
-                      //                               .textTheme
-                      //                               .headline5
-                      //                               .copyWith(color: grey),
-                      //                         )
-                      //                       ],
-                      //                     ),
-                      //                   ),
-                      //                   value: coin['tickerName'],
-                      //                 );
-                      //               },
-                      //             ).toList()),
-                      //       ),
+                      Platform.isIOS
+                          ? CoinListBottomSheetFloatingActionButton(
+                              model: model)
+                          // Container(
+                          //     color: walletCardColor,
+                          //     child: CupertinoPicker(
+                          //         diameterRatio: 1.3,
+                          //         offAxisFraction: 5,
+                          //         scrollController: model.scrollController,
+                          //         itemExtent: 50,
+                          //         onSelectedItemChanged: (int newValue) {
+                          //           model.updateSelectedTickernameIOS(newValue);
+                          //         },
+                          //         children: [
+                          //           for (var i = 0; i < model.coins.length; i++)
+                          //             Container(
+                          //               margin: EdgeInsets.only(left: 10),
+                          //               child: Row(
+                          //                 children: [
+                          //                   Text(
+                          //                       model.coins[i]['tickerName']
+                          //                           .toString(),
+                          //                       style: Theme.of(context)
+                          //                           .textTheme
+                          //                           .headline5),
+                          //                   UIHelper.horizontalSpaceSmall,
+                          //                   Text(
+                          //                     model.coins[i]['quantity']
+                          //                         .toString(),
+                          //                     style: Theme.of(context)
+                          //                         .textTheme
+                          //                         .headline5
+                          //                         .copyWith(color: grey),
+                          //                   )
+                          //                 ],
+                          //               ),
+                          //             ),
+                          //           //    })
+                          //           model.coins.length > 0
+                          //               ? Container()
+                          //               : SizedBox(
+                          //                   width: double.infinity,
+                          //                   child: Center(
+                          //                     child: Text(
+                          //                       AppLocalizations.of(context)
+                          //                           .insufficientBalance,
+                          //                       style: Theme.of(context)
+                          //                           .textTheme
+                          //                           .bodyText2,
+                          //                     ),
+                          //                   ),
+                          //                 ),
+                          //         ]),
+                          //   )
+                          : Container(
+                              height: 55,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.0),
+                                border: Border.all(
+                                    color: primaryColor,
+                                    style: BorderStyle.solid,
+                                    width: 0.50),
+                              ),
+                              child: DropdownButton(
+                                  underline: SizedBox.shrink(),
+                                  elevation: 5,
+                                  isExpanded: true,
+                                  icon: Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Icon(Icons.arrow_drop_down),
+                                  ),
+                                  iconEnabledColor: primaryColor,
+                                  iconSize: 30,
+                                  hint: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Text(
+                                      AppLocalizations.of(context).coin,
+                                      textAlign: TextAlign.start,
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
+                                    ),
+                                  ),
+                                  value: model.tickerName,
+                                  onChanged: (newValue) {
+                                    model.updateSelectedTickername(newValue);
+                                  },
+                                  items: model.coins.map(
+                                    (coin) {
+                                      return DropdownMenuItem(
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10.0),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                  coin['tickerName'].toString(),
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline5),
+                                              UIHelper.horizontalSpaceSmall,
+                                              Text(
+                                                coin['quantity'].toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline5
+                                                    .copyWith(color: grey),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        value: coin['tickerName'],
+                                      );
+                                    },
+                                  ).toList()),
+                            ),
 
 /*----------------------------------------------------------------------------------------------------
                                         Receiver Address textfield
