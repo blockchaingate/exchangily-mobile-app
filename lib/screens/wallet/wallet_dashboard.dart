@@ -71,6 +71,8 @@ class WalletDashboardScreen extends StatelessWidget {
                 },
                 onComplete: (index, key) {
                   print('onComplete: $index, $key');
+                },onFinish: (){
+                  model.storageService.showCaseView = true;
                 },
                 builder: Builder(
                   builder: (context) => Column(

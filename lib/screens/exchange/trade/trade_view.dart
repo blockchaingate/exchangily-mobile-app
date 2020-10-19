@@ -6,6 +6,8 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/settings/settings.dart';
+import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -37,8 +39,21 @@ class TradeView extends StatelessWidget {
           model.init();
         },
         builder: (context, model, _) => Scaffold(
+              endDrawerEnableOpenDragGesture: true,
+              endDrawer: Drawer(child: Container(child: SettingsPortableView())),
               key: _scaffoldKey,
               appBar: AppBar(
+                  actions: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.settings,
+                        color: Colors.yellow,
+                      ),
+                      onPressed: () {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      },
+                    ),
+                  ],
                   backgroundColor: primaryColor.withOpacity(0.25),
                   leading: IconButton(
                     icon: Icon(Icons.arrow_back_ios),
