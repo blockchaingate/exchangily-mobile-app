@@ -65,7 +65,7 @@ class BuySellView extends StatelessWidget {
               trailing: IconButton(
                 icon: Icon(
                   Icons.settings,
-                  color: Colors.yellow,
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   _scaffoldKey.currentState.openEndDrawer();

@@ -48,7 +48,7 @@ class TradeView extends StatelessWidget {
                     IconButton(
                       icon: Icon(
                         Icons.settings,
-                        color: Colors.yellow,
+                        color: Colors.white,
                       ),
                       onPressed: () {
                         _scaffoldKey.currentState.openEndDrawer();

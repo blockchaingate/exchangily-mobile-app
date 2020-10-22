@@ -13,7 +13,6 @@
 
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
-import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -72,8 +71,7 @@ class SettingsScreen extends StatelessWidget {
                             SettingsStatefulWidget(model: model),
                       ),
                     )
-                  : SettingsPortableContainer(model: model),
-          // SettingsContainer(model: model),
+                  : SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
         ),
       ),
@@ -132,17 +130,19 @@ class SettingsContainer extends StatelessWidget {
               child: Card(
                 elevation: 4,
                 child: Container(
-                  alignment: Alignment.center,
+                  alignment: Alignment.centerLeft,
                   color: globals.walletCardColor,
                   padding: EdgeInsets.all(20),
                   // height: 100,
-                  child: !model.isShowCaseOnce
-                      ? Showcase(
-                          key: model.one,
-                          description: '1) Click here to see menu options',
-                          child: deleteWalletRow(context),
-                        )
-                      : deleteWalletRow(context),
+                  child:
+                      // !model.isShowCaseOnce
+                      //     ? Showcase(
+                      //         key: model.one,
+                      //         description: 'Delete wallet from this device',
+                      //         child: deleteWalletRow(context),
+                      //       )
+                      //     :
+                      deleteWalletRow(context),
                 ),
               ),
               onTap: () async {
@@ -153,14 +153,16 @@ class SettingsContainer extends StatelessWidget {
               splashColor: globals.primaryColor,
               child: Card(
                 elevation: 5,
-                child: !model.isShowCaseOnce
-                    ? Showcase(
-                        key: model.two,
-                        title: 'Show/Hide mnemonic',
-                        description: 'Enter password to see mnemonic',
-                        child: showMnemonicContainer(context),
-                      )
-                    : showMnemonicContainer(context),
+                child:
+                    //  !model.isShowCaseOnce
+                    //     ? Showcase(
+                    //         key: model.two,
+                    //         title: 'Show/Hide mnemonic',
+                    //         description: 'Enter password to see mnemonic',
+                    //         child: showMnemonicContainer(context),
+                    //       )
+                    //     :
+                    showMnemonicContainer(context),
               ),
               onTap: () {
                 model.displayMnemonic();
