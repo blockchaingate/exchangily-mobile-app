@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/models/trade/order-model.dart';
 import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
+import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -36,7 +37,7 @@ class BuySellView extends StatelessWidget {
   final bool bidOrAsk;
   final Price pair;
   final List orderbook;
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     SharedService sharedService = locator<SharedService>();
@@ -57,7 +58,19 @@ class BuySellView extends StatelessWidget {
           model.init();
         },
         builder: (context, model, child) => Scaffold(
+            key: _scaffoldKey,
+            endDrawerEnableOpenDragGesture: true,
+            endDrawer: Drawer(child: Container(child: SettingsPortableView())),
             appBar: CupertinoNavigationBar(
+              trailing: IconButton(
+                icon: Icon(
+                  Icons.settings,
+                  color: Colors.yellow,
+                ),
+                onPressed: () {
+                  _scaffoldKey.currentState.openEndDrawer();
+                },
+              ),
               padding: EdgeInsetsDirectional.only(start: 0),
               leading: CupertinoButton(
                 padding: EdgeInsets.all(0),

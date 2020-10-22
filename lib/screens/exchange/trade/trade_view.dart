@@ -40,7 +40,8 @@ class TradeView extends StatelessWidget {
         },
         builder: (context, model, _) => Scaffold(
               endDrawerEnableOpenDragGesture: true,
-              endDrawer: Drawer(child: Container(child: SettingsPortableView())),
+              endDrawer:
+                  Drawer(child: Container(child: SettingsPortableView())),
               key: _scaffoldKey,
               appBar: AppBar(
                   actions: [

@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
+import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,8 @@ class SettingsScreen extends StatelessWidget {
                             SettingsStatefulWidget(model: model),
                       ),
                     )
-                  : SettingsContainer(model: model),
+                  : SettingsPortableContainer(model: model),
+          // SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
         ),
       ),

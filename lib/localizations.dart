@@ -1595,11 +1595,16 @@ class AppLocalizations {
         name: 'walletInstruction2',
         desc: 'wallet_instruction_2');
   }
-    String get buySellInstruction1 {
-    return Intl.message(
-        "Make sure you have coin balance to trade",
-        name: 'buySellInstruction1',
-        desc: 'buy_Sell_instruction_1');
+
+  String get buySellInstruction1 {
+    return Intl.message("Make sure you have coin balance to trade",
+        name: 'buySellInstruction1', desc: 'buy_Sell_instruction_1');
+  }
+
+  String get settingsShowcaseInstructions {
+    return Intl.message("Show instructions for how to use certain app features",
+        name: 'settingsShowcaseInstructions',
+        desc: 'settings_showcase_instructions');
   }
 }
 
