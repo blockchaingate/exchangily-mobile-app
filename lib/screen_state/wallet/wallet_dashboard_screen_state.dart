@@ -92,6 +92,7 @@ class WalletDashboardScreenState extends BaseState {
   GlobalKey globalKeyOne;
   GlobalKey globalKeyTwo;
   var storageService = locator<LocalStorageService>();
+  double totalBalanceContainerWidth = 100.0;
 
 /*----------------------------------------------------------------------
                     INIT
@@ -254,7 +255,7 @@ class WalletDashboardScreenState extends BaseState {
         log.i("announcement: exit!!!");
       }
     }
-
+totalBalanceContainerWidth=270.0;
     setBusy(false);
   }
 

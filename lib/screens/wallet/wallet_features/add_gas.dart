@@ -11,10 +11,12 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/globals.dart' as globals;
@@ -45,16 +47,19 @@ class AddGas extends StatelessWidget {
       var ret = await walletService.addGasDo(seed, amount);
 
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
+      String errorMsg = ret["errMsg"];
+    
+      String formattedErrorMsg = firstCharToUppercase(errorMsg);
 
       myController.text = '';
       sharedService.alertDialog(
           (ret["errMsg"] == '')
               ? AppLocalizations.of(context).addGasTransactionSuccess
               : AppLocalizations.of(context).addGasTransactionFailed,
-          (ret["errMsg"] == '')
-              ? AppLocalizations.of(context).transactionId + ret['txHash']
-              : ret["errMsg"],
-          isWarning: false);
+          (ret["errMsg"] == '') ? ret['txHash'] : formattedErrorMsg,
+          isWarning: false,
+          isCopyTxId: ret["errMsg"] == '' ? true : false,
+          path: (ret["errMsg"] == '') ? 'dashboard' : '');
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
@@ -134,11 +139,12 @@ class AddGas extends StatelessWidget {
                           child: Text(AppLocalizations.of(context).cancel,
                               style: TextStyle(color: Colors.white))),
                     ),
-                    SizedBox(width:8),
+                    SizedBox(width: 8),
                     Flexible(
-                      child: MaterialButton(
+                      child: OutlineButton(
+                        borderSide: BorderSide(color: primaryColor),
                         padding: EdgeInsets.all(15),
-                        color: globals.primaryColor,
+                        color: primaryColor,
                         textColor: Colors.white,
                         onPressed: () async {
                           double amount = 0;

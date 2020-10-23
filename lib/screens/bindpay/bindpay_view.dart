@@ -355,7 +355,8 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Padding(
                 padding: const EdgeInsets.only(right: 5.0),
-                child: Text(
+                child: model.coins.isEmpty ? Text(
+                    'No Coin Exchange Balance Available'): Text(
                     model.tickerName == '' ? 'Choose Coin' : model.tickerName),
               ),
               Text(model.quantity == 0.0 ? '' : model.quantity.toString()),

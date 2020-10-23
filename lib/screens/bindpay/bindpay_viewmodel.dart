@@ -87,8 +87,8 @@ class BindpayViewmodel extends FutureViewModel {
           height: 100,
           margin: EdgeInsets.symmetric(horizontal: 10.0),
           decoration: BoxDecoration(
-            color: Colors.grey[900],
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: grey.withAlpha(300),
+            borderRadius: BorderRadius.vertical(top:Radius.circular(10)),
             // boxShadow: [
             //   BoxShadow(
             //       blurRadius: 3, color: Colors.grey[600], spreadRadius: 2)
@@ -101,35 +101,38 @@ class BindpayViewmodel extends FutureViewModel {
                 //mainAxisAlignment: MainAxisAlignment.center,
                 // children: [
 
-                return InkWell(
-                  onTap: () {
-                    //  Platform.isIOS
-                    updateSelectedTickernameIOS(
-                        index, coins[index]['quantity'].toDouble());
-                    // : updateSelectedTickername(coins[index]['tickerName'],
-                    //     coins[index]['quantity'].toDouble());
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(coins[index]['tickerName'].toString(),
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline5),
-                        UIHelper.horizontalSpaceSmall,
-                        Text(
-                          coins[index]['quantity'].toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline5
-                              .copyWith(color: grey),
-                        ),
-                        Divider(
-                          color: Colors.white,
-                          height: 1,
-                        )
-                      ],
+                return Container(
+                  color: tickerName == coins[index]['tickerName']? primaryColor:Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      //  Platform.isIOS
+                      updateSelectedTickernameIOS(
+                          index, coins[index]['quantity'].toDouble());
+                      // : updateSelectedTickername(coins[index]['tickerName'],
+                      //     coins[index]['quantity'].toDouble());
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(coins[index]['tickerName'].toString(),
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline5),
+                          UIHelper.horizontalSpaceSmall,
+                          Text(
+                            coins[index]['quantity'].toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                
+                          ),
+                          Divider(
+                            color: Colors.white,
+                            height: 1,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 );
