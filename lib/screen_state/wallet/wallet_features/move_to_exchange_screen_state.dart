@@ -17,7 +17,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../logger.dart';
 import '../../../shared/globals.dart' as globals;
-import 'package:flutter_beautiful_popup/main.dart';
 
 class MoveToExchangeScreenState extends BaseState {
   final log = getLogger('MoveToExchangeScreenState');

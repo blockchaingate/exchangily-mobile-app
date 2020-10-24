@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
@@ -25,82 +26,106 @@ class TradeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TradeViewModel>.reactive(
-      disposeViewModel: true,
-      // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
-      // which is required override
-      viewModelBuilder: () =>
-          TradeViewModel(pairPriceByRoute: pairPriceByRoute),
-      onModelReady: (model) {
-        print('in init trade view');
-        model.context = context;
-        model.init();
-      },
-      builder: (context, model, _) => Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-            backgroundColor: primaryColor.withOpacity(0.25),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                model.setBusy(true);
-                Navigator.pop(context);
-              },
-            ),
-            title: Text(
-              model.updateTickerName(pairPriceByRoute.symbol),
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            centerTitle: true,
-            automaticallyImplyLeading: false),
-        // drawer: Container(
-        //     margin: EdgeInsets.only(top: 10),
-        //     child: Stack(overflow: Overflow.visible, children: [
-        //       Align(
-        //         alignment: Alignment.topCenter,
-        //         child: Container(
-        //           child: model.dataReady('allPrices')
-        //               ? MarketPairsTabView(
-        //                   marketPairsTabBarView:
-        //                       model.marketPairsTabBar,
-        //                   isBusy: false,
-        //                 )
-        //               : Container(
-        //                   child: Center(
-        //                     child: Text(
-        //                         AppLocalizations.of(context).loading),
-        //                   ),
-        //                 ),
-        //         ),
-        //       ),
-        //       // Close button position bottom right
-        //       Positioned(
-        //           bottom: 0,
-        //           right: 0,
-        //           child: Container(
-        //             padding: EdgeInsets.all(5),
-        //             decoration: BoxDecoration(
-        //                 color: red,
-        //                 borderRadius: BorderRadius.only(
-        //                     topLeft: Radius.circular(90),
-        //                     bottomLeft: Radius.circular(1))),
-        //             child: Padding(
-        //               padding:
-        //                   const EdgeInsets.only(left: 8.0, top: 8.0),
-        //               child: IconButton(
-        //                 icon: Icon(
-        //                   Icons.close,
-        //                   color: white,
-        //                   size: 30,
-        //                 ),
-        //                 onPressed: () {
-        //                   model.resumeAllStreams();
-        //                   model.navigationService.goBack();
-        //                 },
-        //               ),
-        //             ),
-        //           )),
-        //       // Icon(Icons.access_alarm)
-        //     ])),
+        disposeViewModel: true,
+        // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
+        // which is required override
+        viewModelBuilder: () =>
+            TradeViewModel(pairPriceByRoute: pairPriceByRoute),
+        onModelReady: (model) {
+          print('in init trade view');
+          model.context = context;
+          model.init();
+        },
+        builder: (context, model, _) => Scaffold(
+              endDrawerEnableOpenDragGesture: true,
+              endDrawer:
+                  Drawer(child: Container(child: SettingsPortableView())),
+              key: _scaffoldKey,
+              appBar: AppBar(
+                  actions: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.settings,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      },
+                    ),
+                  ],
+                  backgroundColor: primaryColor.withOpacity(0.25),
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      model.setBusy(true);
+                      Navigator.pop(context);
+                    },
+                  ),
+                  title: Text(
+                    model.updateTickerName(pairPriceByRoute.symbol),
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                  // actions: [
+                  //   IconButton(
+                  //     icon: Icon(Icons.close),
+                  //     onPressed: () {
+                  //       // Navigator.pushReplacementNamed(context, '/mainNav',
+                  //       //     arguments: 1);
+                  //       model.navigationService.goBack();
+                  //     },
+                  //   )
+                  // ],
+                  centerTitle: true,
+                  automaticallyImplyLeading: false),
+              // drawer: Container(
+              //     margin: EdgeInsets.only(top: 10),
+              //     child: Stack(overflow: Overflow.visible, children: [
+              //       Align(
+              //         alignment: Alignment.topCenter,
+              //         child: Container(
+              //           child: model.dataReady('allPrices')
+              //               ? MarketPairsTabView(
+              //                   marketPairsTabBarView:
+              //                       model.marketPairsTabBar,
+              //                   isBusy: false,
+              //                 )
+              //               : Container(
+              //                   child: Center(
+              //                     child: Text(
+              //                         AppLocalizations.of(context).loading),
+              //                   ),
+              //                 ),
+              //         ),
+              //       ),
+              //       // Close button position bottom right
+              //       Positioned(
+              //           bottom: 0,
+              //           right: 0,
+              //           child: Container(
+              //             padding: EdgeInsets.all(5),
+              //             decoration: BoxDecoration(
+              //                 color: red,
+              //                 borderRadius: BorderRadius.only(
+              //                     topLeft: Radius.circular(90),
+              //                     bottomLeft: Radius.circular(1))),
+              //             child: Padding(
+              //               padding:
+              //                   const EdgeInsets.only(left: 8.0, top: 8.0),
+              //               child: IconButton(
+              //                 icon: Icon(
+              //                   Icons.close,
+              //                   color: white,
+              //                   size: 30,
+              //                 ),
+              //                 onPressed: () {
+              //                   model.resumeAllStreams();
+              //                   model.navigationService.goBack();
+              //                 },
+              //               ),
+              //             ),
+              //           )),
+              //       // Icon(Icons.access_alarm)
+              //     ])),
 
         body: model.isBusy && model.isDisposing
             ? Container(

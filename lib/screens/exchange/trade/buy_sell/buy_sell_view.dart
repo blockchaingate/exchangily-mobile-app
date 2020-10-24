@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
+import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -25,6 +26,8 @@ import "package:flutter/material.dart";
 import 'package:flutter/foundation.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:showcaseview/showcase_widget.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class BuySellView extends StatelessWidget {
   BuySellView(
@@ -33,14 +36,18 @@ class BuySellView extends StatelessWidget {
   final bool bidOrAsk;
   final String pairSymbolWithSlash;
   final Orderbook orderbook;
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     print('1 $bidOrAsk');
     SharedService sharedService = locator<SharedService>();
+    GlobalKey _one = GlobalKey();
+    GlobalKey _two = GlobalKey();
     return BaseScreen<BuySellScreenState>(
         onModelReady: (model) async {
           model.context = context;
+          model.globalKeyOne = _one;
+          model.globalKeyTwo = _two;
           sharedService.context = context;
           model.splitPair(pairSymbolWithSlash);
           model.setDefaultGasPrice();
@@ -51,7 +58,19 @@ class BuySellView extends StatelessWidget {
           model.init();
         },
         builder: (context, model, child) => Scaffold(
+            key: _scaffoldKey,
+            endDrawerEnableOpenDragGesture: true,
+            endDrawer: Drawer(child: Container(child: SettingsPortableView())),
             appBar: CupertinoNavigationBar(
+              trailing: IconButton(
+                icon: Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  _scaffoldKey.currentState.openEndDrawer();
+                },
+              ),
               padding: EdgeInsetsDirectional.only(start: 0),
               leading: CupertinoButton(
                 padding: EdgeInsets.all(0),
@@ -70,317 +89,184 @@ class BuySellView extends StatelessWidget {
               backgroundColor: Color(0XFF1f2233),
             ),
             backgroundColor: Color(0xFF1F2233),
-            body:
-                //   model.busy
-                //   ?
-                Stack(
-                    fit: StackFit.loose,
-                    overflow: Overflow.visible,
-                    alignment: Alignment.center,
-                    children: [
-                  ListView(children: <Widget>[
-                    //    : Container(),
-                    // Buy/Sell text row
-
-                    Row(
+            body: ShowCaseWidget(
+              onStart: (index, key) {
+                print('onStart: $index, $key');
+              },
+              onComplete: (index, key) {
+                print('onComplete: $index, $key');
+              },
+              builder: Builder(
+                builder: (context) => Stack(
+                  fit: StackFit.loose,
+                  overflow: Overflow.visible,
+                  alignment: Alignment.center,
+                  children: [
+                    ListView(
                       children: <Widget>[
+                        //    : Container(),
+                        // Buy/Sell text row
+
+                        buildBuySellTextRow(model, context),
+                        // Price and quantity text
                         Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: model.bidOrAsk
-                                      ? BorderSide(
-                                          width: 2.0,
-                                          color: globals.primaryColor)
-                                      : BorderSide.none),
-                            ),
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: GestureDetector(
-                                onTap: () {
-                                  model.selectBuySellTab(true);
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context).buy,
-                                  style: TextStyle(
-                                      color: model.bidOrAsk
-                                          ? Color(0XFF871fff)
-                                          : Colors.white,
-                                      fontSize: 14.0),
-                                ))),
-                        Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                  bottom: model.bidOrAsk
-                                      ? BorderSide.none
-                                      : BorderSide(
-                                          width: 2.0,
-                                          color: Color(0XFF871fff))),
-                            ),
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: GestureDetector(
-                                onTap: () {
-                                  model.selectBuySellTab(false);
-                                },
-                                child: Text(
-                                  AppLocalizations.of(context).sell,
-                                  style: TextStyle(
-                                      color: model.bidOrAsk
-                                          ? Colors.white
-                                          : Color(0XFF871fff),
-                                      fontSize: 14.0),
-                                )))
-                      ],
-                    ),
-                    // Price and quantity text
-                    Container(
-                      margin: EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF2c2c4c),
-                        border: Border(
-                            top: BorderSide(width: 1.0, color: Colors.white10),
-                            bottom:
-                                BorderSide(width: 1.0, color: Colors.white10)),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                              flex: 5,
-                              child: Container(
-                                padding: EdgeInsets.only(right: 2, left: 1),
-                                child: Column(
-                                  children: <Widget>[
-                                    // price text input
-                                    Padding(
-                                      padding: EdgeInsets.all(5),
-                                      child: TextField(
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                                decimal: true),
-                                        inputFormatters: [
-                                          DecimalTextInputFormatter(
-                                              decimalRange: model.priceDecimal,
-                                              activatedNegativeValues: false)
-                                        ],
-                                        onChanged: (value) {
-                                          model.handleTextChanged(
-                                              'price', value);
-                                        },
-                                        maxLines: 1,
-                                        controller: model.priceTextController,
-                                        decoration: InputDecoration(
-                                            labelText:
-                                                AppLocalizations.of(context)
-                                                    .price,
-                                            labelStyle: Theme.of(context)
-                                                .textTheme
-                                                .headline6),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
+                          margin: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF2c2c4c),
+                            border: Border(
+                                top: BorderSide(
+                                    width: 1.0, color: Colors.white10),
+                                bottom: BorderSide(
+                                    width: 1.0, color: Colors.white10)),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 5,
+                                child: Container(
+                                  padding: EdgeInsets.only(right: 2, left: 1),
+                                  child: Column(
+                                    children: <Widget>[
+                                      // price text input
+                                      buildPriceInputPaddingWidget(
+                                          model, context),
+                                      // quantity text input
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: TextField(
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(
+                                                  decimal: true),
+                                          inputFormatters: [
+                                            DecimalTextInputFormatter(
+                                                decimalRange:
+                                                    model.quantityDecimal,
+                                                activatedNegativeValues: false)
+                                          ],
+                                          onChanged: (value) {
+                                            model.handleTextChanged(
+                                                'quantity', value);
+                                          },
+                                          maxLines: 1,
+                                          controller:
+                                              model.quantityTextController,
+                                          decoration: InputDecoration(
+                                              labelText:
+                                                  AppLocalizations.of(context)
+                                                      .quantity,
+                                              labelStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ),
                                       ),
-                                    ),
-                                    // quantity text input
-                                    Padding(
-                                      padding: EdgeInsets.all(5),
-                                      child: TextField(
-                                        keyboardType:
-                                            TextInputType.numberWithOptions(
-                                                decimal: true),
-                                        inputFormatters: [
-                                          DecimalTextInputFormatter(
-                                              decimalRange:
-                                                  model.quantityDecimal,
-                                              activatedNegativeValues: false)
-                                        ],
-                                        onChanged: (value) {
-                                          model.handleTextChanged(
-                                              'quantity', value);
+                                      // Slider
+                                      Slider(
+                                        divisions: 6,
+                                        label:
+                                            '${model.sliderValue.toStringAsFixed(2)}',
+                                        activeColor: globals.primaryColor,
+                                        min: 0.0,
+                                        max: 100.0,
+                                        onChanged: (newValue) {
+                                          model.sliderOnchange(newValue);
                                         },
-                                        maxLines: 1,
-                                        controller:
-                                            model.quantityTextController,
-                                        decoration: InputDecoration(
-                                            labelText:
-                                                AppLocalizations.of(context)
-                                                    .quantity,
-                                            labelStyle: Theme.of(context)
-                                                .textTheme
-                                                .headline6),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
+                                        value: model.sliderValue,
                                       ),
-                                    ),
-                                    // Slider
-                                    Slider(
-                                      divisions: 6,
-                                      label:
-                                          '${model.sliderValue.toStringAsFixed(2)}',
-                                      activeColor: globals.primaryColor,
-                                      min: 0.0,
-                                      max: 100.0,
-                                      onChanged: (newValue) {
-                                        model.sliderOnchange(newValue);
-                                      },
-                                      value: model.sliderValue,
-                                    ),
-                                    // Transaction Amount text
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 3.0),
-                                          child: Text(
-                                            AppLocalizations.of(context).amount,
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 12.0),
+                                      // Transaction Amount text
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 3.0),
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .amount,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12.0),
+                                            ),
                                           ),
-                                        ),
-                                        UIHelper.verticalSpaceSmall,
-                                        // Transaction Amount
-                                        Expanded(
-                                          child: model.bidOrAsk == true
-                                              ? Text(
-                                                  "${model.transactionAmount.toStringAsFixed(model.priceDecimal)}" +
-                                                      " " +
-                                                      model.baseCoinName,
-                                                  textAlign: TextAlign.end,
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 12.0))
-                                              : Text(
-                                                  "${model.transactionAmount.toStringAsFixed(model.priceDecimal)}" +
-                                                      " " +
-                                                      model.baseCoinName,
-                                                  textAlign: TextAlign.end,
-                                                  style: TextStyle(
-                                                      color: Colors.grey,
-                                                      fontSize: 12.0)),
-                                        )
-                                      ],
-                                    ),
-                                    UIHelper.verticalSpaceSmall,
-                                    // Total Balance
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text(
-                                            AppLocalizations.of(context)
-                                                .balance,
-                                            style: TextStyle(
-                                                color: globals.primaryColor,
-                                                fontSize: 13.0)),
-                                        // First Check if Object is null
-                                        model.targetCoinWalletData == null &&
-                                                model.baseCoinWalletData == null
-                                            // If true then to avoid error screen, assign/display 0 in both sell and buy tab
-                                            ? model.bidOrAsk == true
+                                          UIHelper.verticalSpaceSmall,
+                                          // Transaction Amount
+                                          Expanded(
+                                            child: model.bidOrAsk == true
                                                 ? Text(
-                                                    "0.00" +
+                                                    "${model.transactionAmount.toStringAsFixed(model.priceDecimal)}" +
                                                         " " +
                                                         model.baseCoinName,
+                                                    textAlign: TextAlign.end,
                                                     style: TextStyle(
-                                                        color: globals
-                                                            .primaryColor,
-                                                        fontSize: 13.0))
+                                                        color: Colors.grey,
+                                                        fontSize: 12.0))
                                                 : Text(
-                                                    "0.00" +
-                                                        " " +
-                                                        model.targetCoinName,
-                                                    style: TextStyle(
-                                                        color: globals
-                                                            .primaryColor,
-                                                        fontSize: 13.0))
-                                            :
-                                            // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
-                                            model.bidOrAsk == true
-                                                ? Text(
-                                                    "${model.baseCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
+                                                    "${model.transactionAmount.toStringAsFixed(model.priceDecimal)}" +
                                                         " " +
                                                         model.baseCoinName,
+                                                    textAlign: TextAlign.end,
                                                     style: TextStyle(
-                                                        color: globals
-                                                            .primaryColor,
-                                                        fontSize: 13.0))
-                                                : Column(
-                                                    children: [
-                                                      Text(
-                                                          "${model.targetCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
-                                                              " " +
-                                                              model
-                                                                  .targetCoinName,
-                                                          style: TextStyle(
-                                                              color: globals
-                                                                  .primaryColor,
-                                                              fontSize: 13.0)),
-                                                      // Text(
-                                                      //   '\$' +
-                                                      //       (model.targetCoinWalletData
-                                                      //                   .inExchange *
-                                                      //               model.price)
-                                                      //           .toStringAsFixed(2),
-                                                      //   style: Theme.of(context)
-                                                      //       .textTheme
-                                                      //       .subtitle2,
-                                                      // )
-                                                    ],
-                                                  )
-                                      ],
-                                    ),
-                                    UIHelper.verticalSpaceSmall,
-                                    // kanban gas fee
-                                    Row(
-                                      children: <Widget>[
-                                        Text(
-                                          AppLocalizations.of(context)
-                                              .kanbanGasFee,
-                                          style: new TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 12.0),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              left:
-                                                  5), // padding left to keep some space from the text
-                                          child: Text(
-                                            '${model.kanbanTransFee.toStringAsFixed(model.priceDecimal)}',
+                                                        color: Colors.grey,
+                                                        fontSize: 12.0)),
+                                          )
+                                        ],
+                                      ),
+                                      UIHelper.verticalSpaceSmall,
+                                      // Total Balance
+                                      BalanceRowWidget(model: model),
+                                      UIHelper.verticalSpaceSmall,
+                                      // kanban gas fee
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            AppLocalizations.of(context)
+                                                .kanbanGasFee,
                                             style: new TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 12.0),
                                           ),
-                                        )
-                                      ],
-                                    ),
-                                    UIHelper.verticalSpaceSmall,
-                                    // Advance
-                                    Row(
-                                      children: <Widget>[
-                                        Text(
-                                          AppLocalizations.of(context).advance,
-                                          style: new TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 12.0),
-                                        ),
-                                        Switch(
-                                          value: model.transFeeAdvance,
-                                          inactiveTrackColor: globals.grey,
-                                          // dragStartBehavior: DragStartBehavior.start,
-                                          activeColor: globals.primaryColor,
-                                          onChanged: (bool isOn) {
-                                            //  setState(ViewState.Busy);
-                                            model.transFeeAdvance = isOn;
-                                            //  });
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                    Visibility(
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left:
+                                                    5), // padding left to keep some space from the text
+                                            child: Text(
+                                              '${model.kanbanTransFee.toStringAsFixed(model.priceDecimal)}',
+                                              style: new TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 12.0),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      UIHelper.verticalSpaceSmall,
+                                      // Advance
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            AppLocalizations.of(context)
+                                                .advance,
+                                            style: new TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12.0),
+                                          ),
+                                          Switch(
+                                            value: model.transFeeAdvance,
+                                            inactiveTrackColor: globals.grey,
+                                            // dragStartBehavior: DragStartBehavior.start,
+                                            activeColor: globals.primaryColor,
+                                            onChanged: (bool isOn) {
+                                              //  setState(ViewState.Busy);
+                                              model.transFeeAdvance = isOn;
+                                              //  });
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                      Visibility(
                                         visible: model.transFeeAdvance,
                                         child: Padding(
                                             padding:
@@ -488,114 +374,185 @@ class BuySellView extends StatelessWidget {
                                                   ],
                                                 )
                                               ],
-                                            ))),
-                                    // Buy Sell Button
-                                    UIHelper.verticalSpaceSmall,
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: RaisedButton(
-                                          elevation: 4,
-                                          animationDuration:
-                                              Duration(milliseconds: 100),
-                                          splashColor: Colors.purpleAccent,
-                                          padding: const EdgeInsets.all(5.0),
-                                          textColor: Colors.white,
-                                          color: model.bidOrAsk
-                                              ? Color(0xFF0da88b)
-                                              : Color(0xFFe2103c),
-                                          onPressed: () {
-                                            model.checkPass(context);
-                                          },
-                                          child: Text(
-                                              model.bidOrAsk
-                                                  ? AppLocalizations.of(context)
-                                                      .buy
-                                                  : AppLocalizations.of(context)
-                                                      .sell,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4)),
-                                    )
-                                  ],
+                                            )),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              )),
+                              ),
+                              // Buy Sell Button
+                              UIHelper.verticalSpaceSmall,
+                              SizedBox(
+                                width: double.infinity,
+                                child: RaisedButton(
+                                    elevation: 4,
+                                    animationDuration:
+                                        Duration(milliseconds: 100),
+                                    splashColor: Colors.purpleAccent,
+                                    padding: const EdgeInsets.all(5.0),
+                                    textColor: Colors.white,
+                                    color: model.bidOrAsk
+                                        ? Color(0xFF0da88b)
+                                        : Color(0xFFe2103c),
+                                    onPressed: () {
+                                      model.checkPass(context);
+                                    },
+                                    child: Text(
+                                        model.bidOrAsk
+                                            ? AppLocalizations.of(context).buy
+                                            : AppLocalizations.of(context).sell,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4)),
+                              )
+                            ],
+                          ),
+                        ),
 
 /*----------------------------------------------------------
                 Price and Quantity orderbook side
  -----------------------------------------------------------*/
-                          Expanded(
-                              flex: 5,
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      // Heading Price
-                                      Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 0, 0, 5),
-                                          decoration: const BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.grey),
-                                            ),
+                        Expanded(
+                            flex: 5,
+                            child: Column(
+                              children: <Widget>[
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    // Heading Price
+                                    Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 0, 5),
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(
+                                                width: 1.0, color: Colors.grey),
                                           ),
-                                          child: Text(
-                                              AppLocalizations.of(context)
-                                                  .price,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6)),
-                                      // Heading Quantity
-                                      Container(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 0, 0, 5),
-                                          decoration: const BoxDecoration(
-                                            border: Border(
-                                              bottom: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.grey),
-                                            ),
+                                        ),
+                                        child: Text(
+                                            AppLocalizations.of(context).price,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6)),
+                                    // Heading Quantity
+                                    Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 0, 5),
+                                        decoration: const BoxDecoration(
+                                          border: Border(
+                                            bottom: BorderSide(
+                                                width: 1.0, color: Colors.grey),
                                           ),
-                                          child: Text(
-                                              AppLocalizations.of(context)
-                                                  .quantity,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6))
-                                    ],
-                                  ),
-                                  orderDetail(
-                                      orderbook.sellOrders.reversed.toList(),
-                                      false,
-                                      model),
-                                  Container(
-                                      padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text('${orderbook.price.toString()}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4)
-                                        ],
-                                      )),
-                                  orderDetail(orderbook.buyOrders, true, model),
-                                ],
-                              ))
-                        ],
-                      ),
+                                        ),
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .quantity,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6))
+                                  ],
+                                ),
+                                orderDetail(
+                                    orderbook.sellOrders.reversed.toList(),
+                                    false,
+                                    model),
+                                Container(
+                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text('${orderbook.price.toString()}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4)
+                                      ],
+                                    )),
+                                orderDetail(orderbook.buyOrders, true, model),
+                              ],
+                            ))
+                      ],
                     ),
+                    // ]),
                     // My Orders view
                     MyOrdersView(tickerName: model.tickerName),
-                  ]),
-                  model.busy
-                      ? model.sharedService.stackFullScreenLoadingIndicator()
-                      : Container(),
-                ])));
+                    //   ]),
+                    model.busy
+                        ? model.sharedService.stackFullScreenLoadingIndicator()
+                        : Container(),
+                  ],
+                ),
+              ),
+            )));
+  }
+
+  Padding buildPriceInputPaddingWidget(
+      BuySellScreenState model, BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(5),
+      child: TextField(
+        keyboardType: TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [
+          DecimalTextInputFormatter(
+              decimalRange: model.priceDecimal, activatedNegativeValues: false)
+        ],
+        onChanged: (value) {
+          model.handleTextChanged('price', value);
+        },
+        maxLines: 1,
+        controller: model.priceTextController,
+        decoration: InputDecoration(
+            labelText: AppLocalizations.of(context).price,
+            labelStyle: Theme.of(context).textTheme.headline6),
+        style: Theme.of(context).textTheme.headline5,
+      ),
+    );
+  }
+
+  Row buildBuySellTextRow(BuySellScreenState model, BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Container(
+            decoration: BoxDecoration(
+              border: Border(
+                  bottom: model.bidOrAsk
+                      ? BorderSide(width: 2.0, color: globals.primaryColor)
+                      : BorderSide.none),
+            ),
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+            child: GestureDetector(
+                onTap: () {
+                  model.selectBuySellTab(true);
+                },
+                child: Text(
+                  AppLocalizations.of(context).buy,
+                  style: TextStyle(
+                      color: model.bidOrAsk ? Color(0XFF871fff) : Colors.white,
+                      fontSize: 14.0),
+                ))),
+        Container(
+            decoration: BoxDecoration(
+              border: Border(
+                  bottom: model.bidOrAsk
+                      ? BorderSide.none
+                      : BorderSide(width: 2.0, color: Color(0XFF871fff))),
+            ),
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+            margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+            child: GestureDetector(
+                onTap: () {
+                  model.selectBuySellTab(false);
+                },
+                child: Text(
+                  AppLocalizations.of(context).sell,
+                  style: TextStyle(
+                      color: model.bidOrAsk ? Colors.white : Color(0XFF871fff),
+                      fontSize: 14.0),
+                )))
+      ],
+    );
   }
 
   // Using orderDetail here in this buy and sell screen to fill the price and quanity in text fields when user click on the order
@@ -648,6 +605,75 @@ class BuySellView extends StatelessWidget {
                   ],
                 )),
           )
+      ],
+    );
+  }
+}
+
+class BalanceRowWidget extends StatelessWidget {
+  const BalanceRowWidget({Key key, this.model}) : super(key: key);
+  final BuySellScreenState model;
+  @override
+  Widget build(BuildContext context) {
+    model.showcaseEvent(context);
+    return Container(
+        child:
+            // !model.storageService.showCaseView
+            //    ?
+            Showcase(
+      key: model.globalKeyOne,
+      description: AppLocalizations.of(context).buySellInstruction1,
+      child: transferRow(context, model),
+    )
+        //  : transferRow(context, model)
+        );
+  }
+
+  Row transferRow(BuildContext context, BuySellScreenState model) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(AppLocalizations.of(context).balance,
+            style: TextStyle(color: globals.primaryColor, fontSize: 13.0)),
+        // First Check if Object is null
+        model.targetCoinWalletData == null && model.baseCoinWalletData == null
+            // If true then to avoid error screen, assign/display 0 in both sell and buy tab
+            ? model.bidOrAsk == true
+                ? Text("0.00" + " " + model.baseCoinName,
+                    style:
+                        TextStyle(color: globals.primaryColor, fontSize: 13.0))
+                : Text("0.00" + " " + model.targetCoinName,
+                    style:
+                        TextStyle(color: globals.primaryColor, fontSize: 13.0))
+            :
+            // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
+            model.bidOrAsk == true
+                ? Text(
+                    "${model.baseCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
+                        " " +
+                        model.baseCoinName,
+                    style:
+                        TextStyle(color: globals.primaryColor, fontSize: 13.0))
+                : Column(
+                    children: [
+                      Text(
+                          "${model.targetCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
+                              " " +
+                              model.targetCoinName,
+                          style: TextStyle(
+                              color: globals.primaryColor, fontSize: 13.0)),
+                      // Text(
+                      //   '\$' +
+                      //       (model.targetCoinWalletData
+                      //                   .inExchange *
+                      //               model.price)
+                      //           .toStringAsFixed(2),
+                      //   style: Theme.of(context)
+                      //       .textTheme
+                      //       .subtitle2,
+                      // )
+                    ],
+                  )
       ],
     );
   }

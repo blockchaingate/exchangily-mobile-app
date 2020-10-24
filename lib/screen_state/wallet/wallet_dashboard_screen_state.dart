@@ -15,11 +15,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
@@ -33,9 +35,11 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import '../../environments/coins.dart' as coinList;
 import '../../shared/globals.dart' as globals;
 import 'package:intl/intl.dart';
@@ -85,12 +89,18 @@ class WalletDashboardScreenState extends BaseState {
   //vars for announcement
   bool hasApiError = false;
   List announceList;
+  GlobalKey globalKeyOne;
+  GlobalKey globalKeyTwo;
+  var storageService = locator<LocalStorageService>();
+  double totalBalanceContainerWidth = 100.0;
+
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
 
   init() async {
     setBusy(true);
+
     sharedService.context = context;
     //  await getDecimalPairConfig();
     await refreshBalance();
@@ -245,8 +255,18 @@ class WalletDashboardScreenState extends BaseState {
         log.i("announcement: exit!!!");
       }
     }
-
+totalBalanceContainerWidth=270.0;
     setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                        Showcase Feature
+----------------------------------------------------------------------*/
+  showcaseEvent(BuildContext test) async {
+    if (!storageService.showCaseView)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
+      });
   }
 
 /*----------------------------------------------------------------------
@@ -255,7 +275,7 @@ class WalletDashboardScreenState extends BaseState {
 
   onSingleCoinCardClick(index) {
     FocusScope.of(context).requestFocus(FocusNode());
-    Navigator.pushNamed(context, '/walletFeatures',
+    navigationService.navigateUsingpopAndPushedNamed('/walletFeatures',
         arguments: walletInfo[index]);
     searchCoinTextController.clear();
     resetWalletInfoObject();
@@ -847,8 +867,17 @@ class WalletDashboardScreenState extends BaseState {
         log.e('---------------------ELSE old way-----------------------');
         await oldWayToGetBalances(coinTickersLength);
       }
+    }).timeout(Duration(seconds: 25), onTimeout: () {
+      log.e('time out');
+      walletInfo = walletInfoCopy;
+      sharedService.alertDialog(AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+      setBusy(false);
+      return;
     }).catchError((err) async {
       log.e('Wallet balance CATCH $err');
+      sharedService.alertDialog(AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).serverError);
       setBusy(false);
     });
 

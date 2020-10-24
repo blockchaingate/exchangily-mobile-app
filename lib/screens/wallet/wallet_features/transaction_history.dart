@@ -1,18 +1,20 @@
+import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../../shared/globals.dart' as globals;
 
-class TransactionHistory extends StatelessWidget {
+class TransactionHistoryView extends StatelessWidget {
   final String tickerName;
-  TransactionHistory({Key key, this.tickerName}) : super(key: key);
+  TransactionHistoryView({Key key, this.tickerName}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    double customFontSize = 12;
     return BaseScreen<TransactionHistoryScreenState>(
       onModelReady: (model) async {
         //  model.transactionHistory = [];
@@ -24,7 +26,7 @@ class TransactionHistory extends StatelessWidget {
           centerTitle: true,
           title: Text(AppLocalizations.of(context).transactionHistory,
               style: Theme.of(context).textTheme.headline3),
-          backgroundColor: globals.secondaryColor,
+          backgroundColor: colors.secondaryColor,
         ),
         body: SingleChildScrollView(
           child: model.busy
@@ -49,7 +51,7 @@ class TransactionHistory extends StatelessWidget {
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
                                       vertical: 8.0, horizontal: 5.0),
-                                  color: globals.walletCardColor,
+                                  color: colors.walletCardColor,
                                   child: Row(
                                     children: <Widget>[
                                       Container(
@@ -69,12 +71,12 @@ class TransactionHistory extends StatelessWidget {
                                                 ? Icon(
                                                     Icons.arrow_downward,
                                                     size: 24,
-                                                    color: globals.buyPrice,
+                                                    color: colors.buyPrice,
                                                   )
                                                 : Icon(
                                                     Icons.arrow_upward,
                                                     size: 24,
-                                                    color: globals.sellPrice,
+                                                    color: colors.sellPrice,
                                                   ),
 
                                             if (transaction.tag == 'withdraw')
@@ -143,8 +145,7 @@ class TransactionHistory extends StatelessWidget {
                                                             decoration:
                                                                 TextDecoration
                                                                     .underline,
-                                                            color: globals
-                                                                .primaryColor),
+                                                            color: colors.primaryColor),
                                                     recognizer:
                                                         TapGestureRecognizer()
                                                           ..onTap = () {
@@ -186,9 +187,11 @@ class TransactionHistory extends StatelessWidget {
                                                   .subtitle2),
                                           Text(
                                             transaction.quantity
-                                                .toStringAsFixed(model
-                                                    .decimalConfig
-                                                    .quantityDecimal),
+                                                .toStringAsFixed(
+                                                  // model
+                                                  //   .decimalConfig
+                                                  //   .quantityDecimal
+                                                   2 ),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5
@@ -212,32 +215,31 @@ class TransactionHistory extends StatelessWidget {
                                                       ),
                                                       if (transaction.status ==
                                                           'Complete')
-                                                        Text(AppLocalizations.of(context).completed.toUpperCase(),
+                                                        Text(firstCharToUppercase(AppLocalizations.of(context).completed),
                                                             style: TextStyle(
-                                                                color: globals
-                                                                    .buyPrice))
+                                                              fontSize: customFontSize,
+                                                                color: colors.buyPrice))
                                                       else if (transaction.status ==
                                                           'Require redeposit')
-                                                        Text(AppLocalizations.of(context).requireRedeposit.toUpperCase(),
+                                                        Text(firstCharToUppercase(AppLocalizations.of(context).requireRedeposit),
                                                             style: TextStyle(
-                                                                fontSize: 10,
-                                                                color: globals
-                                                                    .yellow))
+                                                                fontSize: customFontSize,
+                                                                color: colors.yellow))
                                                       else if (transaction.status ==
                                                           'Failed')
-                                                        Text(AppLocalizations.of(context).failed.toUpperCase(),
+                                                        Text(firstCharToUppercase(AppLocalizations.of(context).failed),
                                                             style: TextStyle(
-                                                                fontSize: 10,
-                                                                color: globals
-                                                                    .sellPrice))
+                                                                fontSize: customFontSize,
+                                                                color: colors.sellPrice))
                                                       else if (transaction.status ==
                                                           'Error')
-                                                        Text(AppLocalizations.of(context).error.toUpperCase(),
+                                                        Text(firstCharToUppercase(AppLocalizations.of(context).error),
                                                             style: TextStyle(
-                                                                fontSize: 10,
-                                                                color: globals.sellPrice))
+                                                                fontSize: customFontSize,
+                                                                color: colors.sellPrice))
                                                       else
-                                                        Text(AppLocalizations.of(context).pending.toUpperCase(), style: TextStyle(fontSize: 10, color: globals.sellPrice))
+                                                        Text(firstCharToUppercase(AppLocalizations.of(context).pending), 
+                                                        style: TextStyle(fontSize: customFontSize, color: colors.yellow))
                                                     ],
                                                   ),
                                                 )

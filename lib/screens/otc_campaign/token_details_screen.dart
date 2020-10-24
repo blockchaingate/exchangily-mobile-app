@@ -28,7 +28,10 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
                   padding: EdgeInsets.all(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[Text(AppLocalizations.of(context).myOrders), Text('234513')],
+                    children: <Widget>[
+                      Text(AppLocalizations.of(context).myOrders),
+                      Text('234513')
+                    ],
                   ),
                 ),
               ),
@@ -36,7 +39,10 @@ class CampaignTokenDetailsScreen extends StatelessWidget {
                 color: globals.walletCardColor,
                 elevation: 5,
                 child: Column(
-                  children: <Widget>[Text(AppLocalizations.of(context).myRewardTokens), Text('875444')],
+                  children: <Widget>[
+                    Text(AppLocalizations.of(context).myRewardTokens),
+                    Text('875444')
+                  ],
                 ),
               )
             ],

@@ -48,6 +48,13 @@ class BindpayViewmodel extends FutureViewModel {
   String barcodeRes = '';
   String barcodeRes2 = '';
   var walletBalancesBody;
+  bool isShowBottomSheet = false;
+  List<Map<String, dynamic>> test = [
+    {'tickerName': 'BTC', 'quantity': 10},
+    {'tickerName': 'ETH', 'quantity': 50},
+    {'tickerName': 'LTC', 'quantity': 10},
+    {'tickerName': 'ETC', 'quantity': 50}
+  ];
 
 /*----------------------------------------------------------------------
                           INIT
@@ -122,6 +129,93 @@ class BindpayViewmodel extends FutureViewModel {
   // }
 
 /*----------------------------------------------------------------------
+                    Change bottom sheet hide/show status
+----------------------------------------------------------------------*/
+  changeBottomSheetStatus() {
+    setBusy(true);
+    isShowBottomSheet = !isShowBottomSheet;
+    setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                    Show bottom sheet for coin list
+----------------------------------------------------------------------*/
+  coinListBottomSheet(BuildContext context1) {
+    if (isShowBottomSheet) {
+      print('Bottom Sheet already visible');
+
+      navigationService.goBack();
+    } else {
+      showBottomSheet(
+        context: context1,
+        builder: (context1) => Container(
+          width: double.infinity,
+          height: 100,
+          margin: EdgeInsets.symmetric(horizontal: 10.0),
+          decoration: BoxDecoration(
+            color: grey.withAlpha(300),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+            // boxShadow: [
+            //   BoxShadow(
+            //       blurRadius: 3, color: Colors.grey[600], spreadRadius: 2)
+            // ]
+          ),
+          child: ListView.separated(
+              separatorBuilder: (context, _) => UIHelper.divider,
+              itemCount: coins.length,
+              itemBuilder: (BuildContext context, int index) {
+                //  mainAxisSize: MainAxisSize.max,
+                //mainAxisAlignment: MainAxisAlignment.center,
+                // children: [
+
+                return Container(
+                  color: tickerName == coins[index]['tickerName']
+                      ? primaryColor
+                      : Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      //  Platform.isIOS
+                      updateSelectedTickernameIOS(
+                          index, coins[index]['quantity'].toDouble());
+                      // : updateSelectedTickername(coins[index]['tickerName'],
+                      //     coins[index]['quantity'].toDouble());
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(coins[index]['tickerName'].toString(),
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline5),
+                          UIHelper.horizontalSpaceSmall,
+                          Text(coins[index]['quantity'].toString(),
+                              style: Theme.of(context).textTheme.headline5),
+                          Divider(
+                            color: Colors.white,
+                            height: 1,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              // TextField(
+              //   decoration: InputDecoration.collapsed(
+              //     hintText: 'Enter your reference number',
+              //   ),
+              // )
+              //   ]
+              ),
+        ),
+      );
+    }
+    changeBottomSheetStatus();
+  }
+
+/*----------------------------------------------------------------------
                     onBackButtonPressed
 ----------------------------------------------------------------------*/
   onBackButtonPressed() async {
@@ -191,20 +285,28 @@ class BindpayViewmodel extends FutureViewModel {
 /*----------------------------------------------------------------------
                     Update Selected Tickername
 ----------------------------------------------------------------------*/
-  updateSelectedTickername(String name) {
+  updateSelectedTickername(
+    String name,
+  ) {
     setBusy(true);
     tickerName = name;
+
     print('tickerName $tickerName');
     setBusy(false);
+    // if (isShowBottomSheet) navigationService.goBack();
+    // changeBottomSheetStatus();
   }
 
-  updateSelectedTickernameIOS(int index) {
+  updateSelectedTickernameIOS(int index, double updatedQuantity) {
     setBusy(true);
     print('INDEX ${index + 1} ---- coins length ${coins.length}');
     if (index + 1 <= coins.length)
       tickerName = coins.elementAt(index)['tickerName'];
-    print('IOS tickerName $tickerName');
+    quantity = updatedQuantity;
+    print('IOS tickerName $tickerName --- quantity $quantity');
     setBusy(false);
+    if (isShowBottomSheet) navigationService.goBack();
+    changeBottomSheetStatus();
   }
 
 /*----------------------------------------------------------------------

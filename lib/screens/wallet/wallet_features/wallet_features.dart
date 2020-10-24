@@ -17,10 +17,9 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/navigation_service.dart';
+
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/globals.dart' as globals;
@@ -77,10 +76,10 @@ class WalletFeaturesScreen extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  //  Navigator.pop(context);
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
-                                  // model.navigationService
-                                  //     .navigateTo('/mainNav', arguments: 0);
+                                  model.navigationService
+                                      .navigateTo('/dashboard');
                                 }))
                       ],
                     ),

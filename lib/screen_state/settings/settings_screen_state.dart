@@ -15,19 +15,22 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcase_widget.dart';
+import 'package:stacked/stacked.dart';
 
 import '../../localizations.dart';
 import '../../logger.dart';
 import '../../service_locator.dart';
 import '../base_state.dart';
 
-class SettingsScreenState extends BaseState {
+class SettingsScreenViewmodel extends BaseViewModel {
   bool isVisible = false;
   String mnemonic = '';
   final log = getLogger('SettingsState');
@@ -36,7 +39,7 @@ class SettingsScreenState extends BaseState {
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
-
+  var storageService = locator<LocalStorageService>();
   final NavigationService navigationService = locator<NavigationService>();
   Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
   String selectedLanguage;
@@ -52,14 +55,32 @@ class SettingsScreenState extends BaseState {
   bool isDialogDisplay = false;
   ScrollController scrollController;
   bool isDeleting = false;
+  GlobalKey one;
+  GlobalKey two;
+  bool isShowCaseOnce;
 
   init() async {
     setBusy(true);
+
+    storageService.showCaseView == null
+        ? isShowCaseOnce = false
+        : isShowCaseOnce = storageService.showCaseView;
+
     sharedService.getDialogWarningsStatus().then((res) {
       if (res != null) isDialogDisplay = res;
     });
     getAppVersion();
     await selectDefaultWalletLanguage();
+    if (selectedLanguage == '')
+      selectedLanguage = await getStoredDataByKeys('lang');
+    setBusy(false);
+  }
+
+  showcaseEvent(BuildContext test) async {
+    setBusy(true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(test).startShowCase([one, two]);
+    });
     setBusy(false);
   }
 
@@ -102,7 +123,6 @@ class SettingsScreenState extends BaseState {
 
   Future deleteWallet() async {
     errorMessage = '';
-    isDeleting = true;
     setBusy(true);
     log.i('model busy $busy');
     await dialogService
@@ -113,6 +133,7 @@ class SettingsScreenState extends BaseState {
             buttonTitle: AppLocalizations.of(context).confirm)
         .then((res) async {
       if (res.confirmed) {
+        isDeleting = true;
         log.w('deleting wallet');
         await walletDatabaseService.deleteDb();
         await walletService.deleteEncryptedData();
@@ -123,7 +144,7 @@ class SettingsScreenState extends BaseState {
       } else if (res.returnedText == 'Closed') {
         log.e('Dialog Closed By User');
         isDeleting = false;
-        setState(ViewState.Idle);
+        setBusy(false);
         return errorMessage = '';
       } else {
         log.e('Wrong pass');
@@ -147,7 +168,7 @@ class SettingsScreenState extends BaseState {
   // Show mnemonic
   displayMnemonic() async {
     errorMessage = '';
-    setState(ViewState.Busy);
+    setBusy(true);
     log.w('Is visi $isVisible');
     if (isVisible) {
       isVisible = !isVisible;
@@ -163,35 +184,43 @@ class SettingsScreenState extends BaseState {
           isVisible = !isVisible;
           mnemonic = res.returnedText;
 
-          setState(ViewState.Idle);
+          setBusy(false);
           return '';
         } else if (res.returnedText == 'Closed') {
           log.e('Dialog Closed By User');
-          setState(ViewState.Idle);
+          setBusy(false);
           return errorMessage = '';
         } else {
           log.e('Wrong pass');
-          setState(ViewState.Idle);
+          setBusy(false);
           return errorMessage =
               AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
         }
       }).catchError((error) {
         log.e(error);
-        setState(ViewState.Idle);
+        setBusy(false);
         return false;
       });
     }
   }
 
-  getStoredDataByKeys(String key) async {
+  Future getStoredDataByKeys(String key,
+      {bool isSetData = false, dynamic value}) async {
+    print('key $key -- isData $isSetData -- value $value');
+    setBusy(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.get(key);
+    if (isSetData) prefs.setBool(key, value);
+
+    log.e('value of get key ${prefs.get(key)}');
+    isShowCaseOnce = prefs.get(key);
+    setBusy(false);
+    if (!isSetData) return prefs.get(key);
   }
 
   // Change wallet language
 
   changeWalletLanguage(updatedLanguageValue) async {
-    setState(ViewState.Busy);
+  
     setBusy(true);
     // Get the Map key using value
     // String key = languages.keys.firstWhere((k) => languages[k] == lang);
@@ -220,7 +249,7 @@ class SettingsScreenState extends BaseState {
     }
 
     log.w('langGlobal: ' + getlangGlobal());
-    setState(ViewState.Idle);
+    setBusy(false);
     setBusy(false);
   }
 
@@ -233,9 +262,10 @@ class SettingsScreenState extends BaseState {
   // Get app version Code
 
   getAppVersion() async {
-    setState(ViewState.Busy);
+    setBusy(true);
+    log.w('in app getappver');
     versionName = await sharedService.getLocalAppVersion();
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
   // Set the display warning value to local storage

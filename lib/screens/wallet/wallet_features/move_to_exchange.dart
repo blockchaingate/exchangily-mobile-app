@@ -12,7 +12,6 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';

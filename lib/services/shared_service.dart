@@ -23,13 +23,14 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
+//import 'package:url_launcher/url_launcher.dart';
 
 import '../localizations.dart';
 import '../shared/globals.dart' as globals;
@@ -72,14 +73,14 @@ class SharedService {
             Launch link urls
 --------------------------------------------------- */
 
-  launchURL(String url) async {
-    log.i('launchURL $url');
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  // launchURL(String url) async {
+  //   log.i('launchURL $url');
+  //   if (await canLaunch(url)) {
+  //     await launch(url);
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
 
 /* ---------------------------------------------------
             Full screen Stack loading indicator
@@ -198,6 +199,7 @@ class SharedService {
       {bool isWarning = false,
       String path,
       dynamic arguments,
+      bool isCopyTxId = false,
       bool isDismissible = true,
       bool isUpdate = false,
       bool isLater = false,
@@ -267,33 +269,32 @@ class SharedService {
                       ),
                     ),
                     // SizedBox(height: 10),
-                    // Container(
-                    //   margin: EdgeInsetsDirectional.only(bottom: 10),
-                    //   child: FlatButton(
-                    //     // color: globals.primaryColor,
-                    //     padding: EdgeInsets.all(0),
-                    //     child: Text(
-                    //       AppLocalizations.of(context).close,
-                    //       style:
-                    //           TextStyle(color: Colors.white, fontSize: 14),
-                    //     ),
-                    //     onPressed: () {
-                    //       if (path == '' || path == null) {
-                    //         Navigator.of(context).pop(false);
-                    //       } else {
-                    //         navigationService.navigateTo(path,
-                    //             arguments: arguments);
-                    //         Navigator.of(context).pop(false);
-                    //       }
-                    //     },
-                    //   ),
-                    // ),
                   ],
                 );
               }),
             ),
             // actions: [],
             actions: <Widget>[
+              isCopyTxId
+                  ? RaisedButton(
+                      child:
+                          Text(AppLocalizations.of(context).taphereToCopyTxId),
+                      onPressed: () {
+                        Clipboard.setData(new ClipboardData(text: message));
+                      })
+                  // RichText(
+                  //     text: TextSpan(
+                  //         text: AppLocalizations.of(context).taphereToCopyTxId,
+                  //         style: TextStyle(
+                  //             decoration: TextDecoration.underline,
+                  //             color: globals.primaryColor),
+                  //         recognizer: TapGestureRecognizer()
+                  //           ..onTap = () {
+                  //             Clipboard.setData(
+                  //                 new ClipboardData(text: message));
+                  //           }),
+                  //   )
+                  : Container(),
               isDismissible
                   ? Container(
                       margin: EdgeInsetsDirectional.only(bottom: 10),
@@ -316,9 +317,11 @@ class SharedService {
                               if (path == '' || path == null) {
                                 Navigator.of(context).pop(false);
                               } else {
-                                navigationService.navigateTo(path,
-                                    arguments: arguments);
-                                Navigator.of(context).pop(false);
+                                print('pATH $path');
+                                navigationService.navigateTo(
+                                  path,
+                                );
+                                //Navigator.of(context).pop(false);
                               }
                             },
                           ),
@@ -335,7 +338,7 @@ class SharedService {
                                     ),
                                   ),
                                   onPressed: () {
-                                    launchURL(stringData);
+                                    // launchURL(stringData);
                                     Navigator.of(context).pop(false);
                                   },
                                 )

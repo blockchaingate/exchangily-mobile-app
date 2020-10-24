@@ -161,7 +161,7 @@ class RouteGenerator {
 
       case '/transactionHistory':
         return MaterialPageRoute(
-            builder: (_) => TransactionHistory(
+            builder: (_) => TransactionHistoryView(
                   tickerName: args,
                 ));
 

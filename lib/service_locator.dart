@@ -59,53 +59,66 @@ import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_detail
 GetIt locator = GetIt();
 
 Future serviceLocator() async {
-  // singleton returns the old instance
+  // Singleton returns the old instance
+
+  // Wallet
   locator.registerLazySingleton(() => WalletService());
-  locator.registerLazySingleton(() => VaultService());
-  locator.registerLazySingleton(() => ApiService());
-  locator.registerLazySingleton(() => DialogService());
   locator.registerLazySingleton(() => WalletDataBaseService());
+  locator.registerLazySingleton(() => VaultService());
+  // Shared
+  locator.registerLazySingleton(() => ApiService());
   locator.registerLazySingleton(() => SharedService());
-  locator.registerLazySingleton(() => TradeService());
-  locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
   locator.registerLazySingleton(() => NavigationService());
+  locator.registerLazySingleton(() => DialogService());
+  // Campaign
   locator.registerLazySingleton(() => CampaignService());
   locator.registerLazySingleton(() => CampaignUserDatabaseService());
+  // Trade
+  locator.registerLazySingleton(() => TradeService());
+  locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
+
   locator.registerLazySingleton(() => PdfViewerService());
 
-  // Singelton
+  // LocalStorageService Singelton
   var instance = await LocalStorageService.getInstance();
   locator.registerSingleton<LocalStorageService>(instance);
 
-  // factory returns the new instance
+  // Factory returns the new instance
+
+  // Wallet
   locator.registerFactory(() => AnnouncementListScreenState());
   locator.registerFactory(() => ConfirmMnemonicScreenState());
   locator.registerFactory(() => CreatePasswordScreenState());
   locator.registerFactory(() => WalletDashboardScreenState());
   locator.registerFactory(() => WalletFeaturesScreenState());
   locator.registerFactory(() => SendScreenState());
-  locator.registerFactory(() => SettingsScreenState());
+  locator.registerFactory(() => SettingsScreenViewmodel());
   locator.registerFactory(() => LanguageScreenState());
   locator.registerFactory(() => WalletSetupScreenState());
   locator.registerFactory(() => ChooseWalletLanguageScreenState());
-  locator.registerFactory(() => BuySellScreenState());
+  locator.registerFactory(() => MoveToExchangeScreenState());
+  locator.registerFactory(() => MoveToWalletScreenState());
   locator.registerFactory(() => TransactionHistoryScreenState());
+  // OTC
   locator.registerFactory(() => OtcScreenState());
   locator.registerFactory(() => OtcDetailsScreenState());
   locator.registerFactory(() => OrderListScreenState());
-  locator.registerFactory(() => MoveToExchangeScreenState());
-  locator.registerFactory(() => MoveToWalletScreenState());
+  // Campaign
   locator.registerFactory(() => CampaignInstructionsScreenState());
   locator.registerFactory(() => CampaignPaymentScreenState());
   locator.registerFactory(() => CampaignDashboardScreenState());
   locator.registerFactory(() => CampaignLoginScreenState());
   locator.registerFactory(() => CampaignRegisterAccountScreenState());
   locator.registerFactory(() => TeamRewardDetailsScreenState());
+  // Trade
   locator.registerFactory(() => MarketsViewModel());
   locator.registerFactory(() => TradeViewModel());
-  locator.registerFactory(() => MainNavState());
+  locator.registerFactory(() => BuySellScreenState());
   locator.registerFactory(() => MarketPairsTabViewState());
   locator.registerFactory(() => CampaignSingleScreenState());
   locator.registerFactory(() => CarouselWidgetState());
+  // Bindpay
   locator.registerFactory(() => BindpayViewmodel());
+  // Navigation
+  locator.registerFactory(() => MainNavState());
 }

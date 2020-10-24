@@ -28,6 +28,7 @@ class MarketsView extends StatelessWidget {
         onModelReady: (model) {
           model.context = context;
         },
+        initialiseSpecialViewModelsOnce: true,
         builder: (context, model, _) => WillPopScope(
               onWillPop: () async {
                 model.onBackButtonPressed();
