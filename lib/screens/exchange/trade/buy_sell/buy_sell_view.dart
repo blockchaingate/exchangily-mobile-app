@@ -102,35 +102,111 @@ class BuySellView extends StatelessWidget {
                   overflow: Overflow.visible,
                   alignment: Alignment.center,
                   children: [
-                    ListView(
-                      children: <Widget>[
-                        //    : Container(),
-                        // Buy/Sell text row
+                    ListView(children: <Widget>[
+                      //    : Container(),
+                      // Buy/Sell text row
 
-                        buildBuySellTextRow(model, context),
-                        // Price and quantity text
-                        Container(
-                          margin: EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF2c2c4c),
-                            border: Border(
-                                top: BorderSide(
-                                    width: 1.0, color: Colors.white10),
-                                bottom: BorderSide(
-                                    width: 1.0, color: Colors.white10)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
+                      Row(
+                        children: <Widget>[
+                          Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: model.bidOrAsk
+                                        ? BorderSide(
+                                            width: 2.0,
+                                            color: globals.primaryColor)
+                                        : BorderSide.none),
+                              ),
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    model.selectBuySellTab(true);
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context).buy,
+                                    style: TextStyle(
+                                        color: model.bidOrAsk
+                                            ? Color(0XFF871fff)
+                                            : Colors.white,
+                                        fontSize: 14.0),
+                                  ))),
+                          Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                    bottom: model.bidOrAsk
+                                        ? BorderSide.none
+                                        : BorderSide(
+                                            width: 2.0,
+                                            color: Color(0XFF871fff))),
+                              ),
+                              padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    model.selectBuySellTab(false);
+                                  },
+                                  child: Text(
+                                    AppLocalizations.of(context).sell,
+                                    style: TextStyle(
+                                        color: model.bidOrAsk
+                                            ? Colors.white
+                                            : Color(0XFF871fff),
+                                        fontSize: 14.0),
+                                  )))
+                        ],
+                      ),
+                      // Price and quantity text
+                      Container(
+                        margin: EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          color: Color(0xFF2c2c4c),
+                          border: Border(
+                              top:
+                                  BorderSide(width: 1.0, color: Colors.white10),
+                              bottom: BorderSide(
+                                  width: 1.0, color: Colors.white10)),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Expanded(
                                 flex: 5,
                                 child: Container(
                                   padding: EdgeInsets.only(right: 2, left: 1),
                                   child: Column(
                                     children: <Widget>[
                                       // price text input
-                                      buildPriceInputPaddingWidget(
-                                          model, context),
+                                      Padding(
+                                        padding: EdgeInsets.all(5),
+                                        child: TextField(
+                                          keyboardType:
+                                              TextInputType.numberWithOptions(
+                                                  decimal: true),
+                                          inputFormatters: [
+                                            DecimalTextInputFormatter(
+                                                decimalRange:
+                                                    model.priceDecimal,
+                                                activatedNegativeValues: false)
+                                          ],
+                                          onChanged: (value) {
+                                            model.handleTextChanged(
+                                                'price', value);
+                                          },
+                                          maxLines: 1,
+                                          controller: model.priceTextController,
+                                          decoration: InputDecoration(
+                                              labelText:
+                                                  AppLocalizations.of(context)
+                                                      .price,
+                                              labelStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5,
+                                        ),
+                                      ),
                                       // quantity text input
                                       Padding(
                                         padding: EdgeInsets.all(5),
@@ -267,217 +343,218 @@ class BuySellView extends StatelessWidget {
                                         ],
                                       ),
                                       Visibility(
-                                        visible: model.transFeeAdvance,
-                                        child: Padding(
-                                            padding:
-                                                EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                            child: Column(
-                                              children: <Widget>[
-                                                // Kanban gas price
-                                                Row(
-                                                  children: <Widget>[
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)
-                                                          .kanbanGasPrice,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline5,
-                                                    ),
-                                                    Expanded(
-                                                        child: Padding(
-                                                      padding:
-                                                          EdgeInsets.fromLTRB(
-                                                              20, 0, 0, 0),
-                                                      child: TextField(
-                                                          controller: model
-                                                              .kanbanGasPriceTextController,
-                                                          onChanged:
-                                                              (String amount) {
-                                                            model
-                                                                .updateTransFee();
-                                                          },
-                                                          keyboardType: TextInputType
-                                                              .numberWithOptions(
-                                                                  decimal:
-                                                                      true), // numnber keyboard
-                                                          decoration: InputDecoration(
-                                                              focusedBorder: UnderlineInputBorder(
-                                                                  borderSide: BorderSide(
-                                                                      color: globals
-                                                                          .primaryColor)),
-                                                              enabledBorder: UnderlineInputBorder(
-                                                                  borderSide: BorderSide(
-                                                                      color: globals
-                                                                          .grey)),
-                                                              hintText:
-                                                                  '0.00000',
-                                                              hintStyle: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline5),
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline5),
-                                                    ))
-                                                  ],
-                                                ),
-                                                // Kanban gas limit
-                                                Row(
-                                                  children: <Widget>[
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)
-                                                          .kanbanGasLimit,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline5,
-                                                    ),
-                                                    Expanded(
-                                                        child: Padding(
-                                                            padding: EdgeInsets
-                                                                .fromLTRB(20, 0,
-                                                                    0, 0),
-                                                            child: TextField(
-                                                              controller: model
-                                                                  .kanbanGasLimitTextController,
-                                                              onChanged: (String
-                                                                  amount) {
-                                                                model
-                                                                    .updateTransFee();
-                                                              },
-                                                              keyboardType: TextInputType
-                                                                  .numberWithOptions(
-                                                                      decimal:
-                                                                          true), // numnber keyboard
-                                                              decoration: InputDecoration(
-                                                                  focusedBorder: UnderlineInputBorder(
-                                                                      borderSide: BorderSide(
-                                                                          color: globals
-                                                                              .primaryColor)),
-                                                                  enabledBorder: UnderlineInputBorder(
-                                                                      borderSide: BorderSide(
-                                                                          color: globals
-                                                                              .grey)),
-                                                                  hintText:
-                                                                      '0.00000',
-                                                                  hintStyle: Theme.of(
-                                                                          context)
-                                                                      .textTheme
-                                                                      .headline5),
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline5,
-                                                            )))
-                                                  ],
-                                                )
-                                              ],
-                                            )),
-                                      )
+                                          visible: model.transFeeAdvance,
+                                          child: Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  5, 0, 5, 0),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  // Kanban gas price
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .kanbanGasPrice,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline5,
+                                                      ),
+                                                      Expanded(
+                                                          child: Padding(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                20, 0, 0, 0),
+                                                        child: TextField(
+                                                            controller: model
+                                                                .kanbanGasPriceTextController,
+                                                            onChanged: (String
+                                                                amount) {
+                                                              model
+                                                                  .updateTransFee();
+                                                            },
+                                                            keyboardType: TextInputType
+                                                                .numberWithOptions(
+                                                                    decimal:
+                                                                        true), // numnber keyboard
+                                                            decoration: InputDecoration(
+                                                                focusedBorder: UnderlineInputBorder(
+                                                                    borderSide: BorderSide(
+                                                                        color: globals
+                                                                            .primaryColor)),
+                                                                enabledBorder: UnderlineInputBorder(
+                                                                    borderSide: BorderSide(
+                                                                        color: globals
+                                                                            .grey)),
+                                                                hintText:
+                                                                    '0.00000',
+                                                                hintStyle: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline5),
+                                                            style:
+                                                                Theme.of(context)
+                                                                    .textTheme
+                                                                    .headline5),
+                                                      ))
+                                                    ],
+                                                  ),
+                                                  // Kanban gas limit
+                                                  Row(
+                                                    children: <Widget>[
+                                                      Text(
+                                                        AppLocalizations.of(
+                                                                context)
+                                                            .kanbanGasLimit,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline5,
+                                                      ),
+                                                      Expanded(
+                                                          child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .fromLTRB(
+                                                                          20,
+                                                                          0,
+                                                                          0,
+                                                                          0),
+                                                              child: TextField(
+                                                                controller: model
+                                                                    .kanbanGasLimitTextController,
+                                                                onChanged:
+                                                                    (String
+                                                                        amount) {
+                                                                  model
+                                                                      .updateTransFee();
+                                                                },
+                                                                keyboardType: TextInputType
+                                                                    .numberWithOptions(
+                                                                        decimal:
+                                                                            true), // numnber keyboard
+                                                                decoration: InputDecoration(
+                                                                    focusedBorder: UnderlineInputBorder(
+                                                                        borderSide: BorderSide(
+                                                                            color: globals
+                                                                                .primaryColor)),
+                                                                    enabledBorder: UnderlineInputBorder(
+                                                                        borderSide: BorderSide(
+                                                                            color: globals
+                                                                                .grey)),
+                                                                    hintText:
+                                                                        '0.00000',
+                                                                    hintStyle: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .headline5),
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline5,
+                                                              )))
+                                                    ],
+                                                  )
+                                                ],
+                                              )))
                                     ],
                                   ),
-                                ),
-                              ),
-                              // Buy Sell Button
-                              UIHelper.verticalSpaceSmall,
-                              SizedBox(
-                                width: double.infinity,
-                                child: RaisedButton(
-                                    elevation: 4,
-                                    animationDuration:
-                                        Duration(milliseconds: 100),
-                                    splashColor: Colors.purpleAccent,
-                                    padding: const EdgeInsets.all(5.0),
-                                    textColor: Colors.white,
-                                    color: model.bidOrAsk
-                                        ? Color(0xFF0da88b)
-                                        : Color(0xFFe2103c),
-                                    onPressed: () {
-                                      model.checkPass(context);
-                                    },
-                                    child: Text(
-                                        model.bidOrAsk
-                                            ? AppLocalizations.of(context).buy
-                                            : AppLocalizations.of(context).sell,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline4)),
-                              )
-                            ],
-                          ),
+                                )),
+                            // Buy Sell Button
+                            UIHelper.verticalSpaceSmall,
+                            SizedBox(
+                              width: double.infinity,
+                              child: RaisedButton(
+                                  elevation: 4,
+                                  animationDuration:
+                                      Duration(milliseconds: 100),
+                                  splashColor: Colors.purpleAccent,
+                                  padding: const EdgeInsets.all(5.0),
+                                  textColor: Colors.white,
+                                  color: model.bidOrAsk
+                                      ? Color(0xFF0da88b)
+                                      : Color(0xFFe2103c),
+                                  onPressed: () {
+                                    model.checkPass(context);
+                                  },
+                                  child: Text(
+                                      model.bidOrAsk
+                                          ? AppLocalizations.of(context).buy
+                                          : AppLocalizations.of(context).sell,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline4)),
+                            )
+                          ],
                         ),
+                      ),
+                      //),
 
 /*----------------------------------------------------------
                 Price and Quantity orderbook side
  -----------------------------------------------------------*/
-                        Expanded(
-                            flex: 5,
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    // Heading Price
-                                    Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 0, 5),
-                                        decoration: const BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(
-                                                width: 1.0, color: Colors.grey),
-                                          ),
+                      Expanded(
+                          flex: 5,
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  // Heading Price
+                                  Container(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                      decoration: const BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              width: 1.0, color: Colors.grey),
                                         ),
-                                        child: Text(
-                                            AppLocalizations.of(context).price,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6)),
-                                    // Heading Quantity
-                                    Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 0, 5),
-                                        decoration: const BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(
-                                                width: 1.0, color: Colors.grey),
-                                          ),
+                                      ),
+                                      child: Text(
+                                          AppLocalizations.of(context).price,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6)),
+                                  // Heading Quantity
+                                  Container(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                      decoration: const BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                              width: 1.0, color: Colors.grey),
                                         ),
-                                        child: Text(
-                                            AppLocalizations.of(context)
-                                                .quantity,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6))
-                                  ],
-                                ),
-                                orderDetail(
-                                    orderbook.sellOrders.reversed.toList(),
-                                    false,
-                                    model),
-                                Container(
-                                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Text('${orderbook.price.toString()}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline4)
-                                      ],
-                                    )),
-                                orderDetail(orderbook.buyOrders, true, model),
-                              ],
-                            ))
-                      ],
-                    ),
-                    // ]),
-                    // My Orders view
-                    MyOrdersView(tickerName: model.tickerName),
-                    //   ]),
+                                      ),
+                                      child: Text(
+                                          AppLocalizations.of(context).quantity,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6))
+                                ],
+                              ),
+                              orderDetail(
+                                  orderbook.sellOrders.reversed.toList(),
+                                  false,
+                                  model),
+                              Container(
+                                  padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text('${orderbook.price.toString()}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4)
+                                    ],
+                                  )),
+                              orderDetail(orderbook.buyOrders, true, model),
+                            ],
+                          )),
+
+                      // My Orders view
+                      MyOrdersView(tickerName: model.tickerName),
+                    ]),
                     model.busy
                         ? model.sharedService.stackFullScreenLoadingIndicator()
                         : Container(),
@@ -485,74 +562,6 @@ class BuySellView extends StatelessWidget {
                 ),
               ),
             )));
-  }
-
-  Padding buildPriceInputPaddingWidget(
-      BuySellScreenState model, BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(5),
-      child: TextField(
-        keyboardType: TextInputType.numberWithOptions(decimal: true),
-        inputFormatters: [
-          DecimalTextInputFormatter(
-              decimalRange: model.priceDecimal, activatedNegativeValues: false)
-        ],
-        onChanged: (value) {
-          model.handleTextChanged('price', value);
-        },
-        maxLines: 1,
-        controller: model.priceTextController,
-        decoration: InputDecoration(
-            labelText: AppLocalizations.of(context).price,
-            labelStyle: Theme.of(context).textTheme.headline6),
-        style: Theme.of(context).textTheme.headline5,
-      ),
-    );
-  }
-
-  Row buildBuySellTextRow(BuySellScreenState model, BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Container(
-            decoration: BoxDecoration(
-              border: Border(
-                  bottom: model.bidOrAsk
-                      ? BorderSide(width: 2.0, color: globals.primaryColor)
-                      : BorderSide.none),
-            ),
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: GestureDetector(
-                onTap: () {
-                  model.selectBuySellTab(true);
-                },
-                child: Text(
-                  AppLocalizations.of(context).buy,
-                  style: TextStyle(
-                      color: model.bidOrAsk ? Color(0XFF871fff) : Colors.white,
-                      fontSize: 14.0),
-                ))),
-        Container(
-            decoration: BoxDecoration(
-              border: Border(
-                  bottom: model.bidOrAsk
-                      ? BorderSide.none
-                      : BorderSide(width: 2.0, color: Color(0XFF871fff))),
-            ),
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
-            child: GestureDetector(
-                onTap: () {
-                  model.selectBuySellTab(false);
-                },
-                child: Text(
-                  AppLocalizations.of(context).sell,
-                  style: TextStyle(
-                      color: model.bidOrAsk ? Colors.white : Color(0XFF871fff),
-                      fontSize: 14.0),
-                )))
-      ],
-    );
   }
 
   // Using orderDetail here in this buy and sell screen to fill the price and quanity in text fields when user click on the order

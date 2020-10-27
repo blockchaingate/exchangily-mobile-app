@@ -183,9 +183,6 @@ dependencies:
   # To highlight new feature or how to use tuts
   showcaseview: ^0.1.6
 
-  # To highlight new feature or how to use tuts
-  showcaseview: ^0.1.6
-
   # Connectivity
   connectivity: ^0.4.3+1
 
