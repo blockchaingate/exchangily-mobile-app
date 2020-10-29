@@ -13,6 +13,7 @@
 
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +41,22 @@ toBitInt(num, [zeroLength]) {
   return val;
 }
 */
+
+// extension ExtendedText on Widget {
+//   addContainer(){
+//     return Container(
+//       padding: const EdgeInsets.all(16),
+//       margin: const EdgeInsets.all(16),
+//       color: Colors.yellow,
+//       child: this,
+//     );
+//   }
+// }
+
+String firstCharToUppercase(String value) {
+  String formattedString = value[0].toUpperCase() + value.substring(1);
+  return formattedString;
+}
 
 hex2Buffer(hexString) {
   var buffer = new List<int>();

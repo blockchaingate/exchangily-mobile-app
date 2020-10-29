@@ -1544,7 +1544,7 @@ class AppLocalizations {
   }
 
   String get tranfser {
-    return Intl.message("Tranfser",
+    return Intl.message("Transfer",
         name: 'tranfser', desc: 'flash_pay_tranfser');
   }
 
@@ -1605,6 +1605,21 @@ class AppLocalizations {
     return Intl.message("Show instructions for how to use certain app features",
         name: 'settingsShowcaseInstructions',
         desc: 'settings_showcase_instructions');
+  }
+    String get note {
+    return Intl.message("Note",
+        name: 'note',
+        desc: 'note_text');
+  }
+      String get walletDashboardInstruction1 {
+    return Intl.message("Please add gas by using FAB coin to use wallet and exchange features",
+        name: 'walletDashboardInstruction1',
+        desc: 'wallet_dashboard_instruction_1');
+  }
+      String get walletDashboardInstruction2 {
+    return Intl.message('Transfer funds from wallet to exchange to trade and use bindpay',
+        name: 'walletDashboardInstruction2',
+        desc: 'wallet_dashboard_instruction_2');
   }
 }
 

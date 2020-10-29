@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-09-18T15:59:28.744154",
+  "@@last_modified": "2020-10-23T18:16:45.984858",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1782,7 +1782,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "tranfser": "Tranfser",
+  "tranfser": "Transfer",
   "@tranfser": {
     "description": "flash_pay_tranfser",
     "type": "text",
@@ -1809,6 +1809,60 @@
   "pleaseCorrectTheFormatOfReceiveAddress": "Please correct the format of receive address",
   "@pleaseCorrectTheFormatOfReceiveAddress": {
     "description": "flash_pay_tranfser_correct_format_of_receive_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "important": "Important",
+  "@important": {
+    "description": "backup_mnemonic_important",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noInternetWarning": "Cannot load the content as your device is not to the internet",
+  "@noInternetWarning": {
+    "description": "no_internet_warning",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletInstruction1": "Please add gas by using FAB coin to use wallet and exchange features",
+  "@walletInstruction1": {
+    "description": "wallet_instruction_1",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletInstruction2": "Transfer funds from wallet to exchange to trade and use bindpay",
+  "@walletInstruction2": {
+    "description": "wallet_instruction_2",
+    "type": "text",
+    "placeholders": {}
+  },
+  "buySellInstruction1": "Make sure you have coin balance to trade",
+  "@buySellInstruction1": {
+    "description": "buy_Sell_instruction_1",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsShowcaseInstructions": "Show instructions for how to use certain app features",
+  "@settingsShowcaseInstructions": {
+    "description": "settings_showcase_instructions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note": "Note",
+  "@note": {
+    "description": "note_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletDashboardInstruction1": "Please add gas by using FAB coin to use wallet and exchange features",
+  "@walletDashboardInstruction1": {
+    "description": "wallet_dashboard_instruction_1",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletDashboardInstruction2": "Transfer funds from wallet to exchange to trade and use bindpay",
+  "@walletDashboardInstruction2": {
+    "description": "wallet_dashboard_instruction_2",
     "type": "text",
     "placeholders": {}
   }
