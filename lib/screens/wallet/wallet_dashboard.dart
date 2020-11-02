@@ -863,6 +863,7 @@ class DepositWidget extends StatelessWidget {
         child: tickerName.toUpperCase() == 'FAB'
             ? Showcase(
                 key: model.globalKeyTwo,
+                descTextStyle: TextStyle(fontSize: 9,color: black),
                 description:
                     AppLocalizations.of(context).walletDashboardInstruction2,
                 child: buildPaddingDeposit(context),
