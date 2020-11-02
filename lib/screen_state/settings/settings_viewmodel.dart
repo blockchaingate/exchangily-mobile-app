@@ -30,7 +30,7 @@ import '../../logger.dart';
 import '../../service_locator.dart';
 import '../base_state.dart';
 
-class SettingsScreenViewmodel extends BaseViewModel {
+class SettingsViewmodel extends BaseViewModel {
   bool isVisible = false;
   String mnemonic = '';
   final log = getLogger('SettingsState');
@@ -204,9 +204,7 @@ class SettingsScreenViewmodel extends BaseViewModel {
       prefs.setString('lang', 'en');
       setlangGlobal('en');
     }
-
-    log.w('langGlobal: ' + getlangGlobal());
-    setBusy(false);
+    //  log.w('langGlobal: ' + getlangGlobal());
     setBusy(false);
   }
 

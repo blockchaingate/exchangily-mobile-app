@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class BindpayView extends StatelessWidget {
@@ -148,7 +149,9 @@ class BindpayView extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4.0),
                                 border: Border.all(
-                                    color: primaryColor,
+                                    color: model.coins.isEmpty
+                                        ? Colors.transparent
+                                        : primaryColor,
                                     style: BorderStyle.solid,
                                     width: 0.50),
                               ),
@@ -161,15 +164,42 @@ class BindpayView extends StatelessWidget {
                                     child: Icon(Icons.arrow_drop_down),
                                   ),
                                   iconEnabledColor: primaryColor,
+                                  iconDisabledColor: model.coins.isEmpty
+                                      ? secondaryColor
+                                      : grey,
                                   iconSize: 30,
                                   hint: Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
-                                    child: Text(
-                                      AppLocalizations.of(context).coin,
-                                      textAlign: TextAlign.start,
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ),
+                                    padding: model.coins.isEmpty
+                                        ? EdgeInsets.all(0)
+                                        : const EdgeInsets.only(left: 10.0),
+                                    child: model.coins.isEmpty
+                                        ? ListTile(
+                                            dense: true,
+                                            leading: Icon(
+                                              Icons.account_balance_wallet,
+                                              color: red,
+                                              size: 18,
+                                            ),
+                                            title: Text(
+                                                AppLocalizations.of(context)
+                                                    .noCoinBalance,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText2),
+                                            subtitle: Text(
+                                                AppLocalizations.of(context)
+                                                    .transferFundsToExchangeUsingDepositButton,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2))
+                                        : Text(
+                                            AppLocalizations.of(context)
+                                                .selectCoin,
+                                            textAlign: TextAlign.start,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5,
+                                          ),
                                   ),
                                   value: model.tickerName,
                                   onChanged: (newValue) {
@@ -215,6 +245,10 @@ class BindpayView extends StatelessWidget {
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                               prefixIcon: IconButton(
+                                  padding: EdgeInsets.only(left: 10),
+                                  alignment: Alignment.centerLeft,
+                                  tooltip:
+                                      AppLocalizations.of(context).scanBarCode,
                                   icon: Icon(
                                     Icons.camera_alt,
                                     color: white,
@@ -355,9 +389,11 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Padding(
                 padding: const EdgeInsets.only(right: 5.0),
-                child: model.coins.isEmpty ? Text(
-                    'No Coin Exchange Balance Available'): Text(
-                    model.tickerName == '' ? 'Choose Coin' : model.tickerName),
+                child: model.coins.isEmpty
+                    ? Text(AppLocalizations.of(context).noCoinBalance)
+                    : Text(model.tickerName == ''
+                        ? AppLocalizations.of(context).selectCoin
+                        : model.tickerName),
               ),
               Text(model.quantity == 0.0 ? '' : model.quantity.toString()),
               Icon(Icons.arrow_drop_down)

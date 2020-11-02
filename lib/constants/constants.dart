@@ -26,4 +26,6 @@ class Constants {
 
   static int kanbanGasPrice = environment['chains']['KANBAN']['gasPrice'];
   static int kanbanGasLimit = environment['chains']['KANBAN']['gasLimit'];
+
+  
 }

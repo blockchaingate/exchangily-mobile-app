@@ -18,7 +18,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
@@ -43,7 +43,7 @@ class WalletDashboardScreen extends StatelessWidget {
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
     final key = new GlobalKey<ScaffoldState>();
-    return BaseScreen<WalletDashboardScreenState>(onModelReady: (model) async {
+    return BaseScreen<WalletDashboardViewModel>(onModelReady: (model) async {
       model.context = context;
       model.globalKeyOne = _one;
       model.globalKeyTwo = _two;
@@ -416,7 +416,7 @@ class WalletDashboardScreen extends StatelessWidget {
       walletInfo,
       elevation,
       context,
-      WalletDashboardScreenState model) {
+      WalletDashboardViewModel model) {
     if (tickerName == 'BCH' || tickerName == 'FAB') {
       print('AVAILABLE BAL $available');
     }
@@ -668,7 +668,7 @@ class WalletDashboardScreen extends StatelessWidget {
 
 class TotalBalanceWidget extends StatelessWidget {
   const TotalBalanceWidget({Key key, this.model}) : super(key: key);
-  final WalletDashboardScreenState model;
+  final WalletDashboardViewModel model;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -818,7 +818,7 @@ class TotalBalanceWidget extends StatelessWidget {
 
 class AddGasRow extends StatelessWidget {
   const AddGasRow({Key key, this.model}) : super(key: key);
-  final WalletDashboardScreenState model;
+  final WalletDashboardViewModel model;
 
   // @override
   // void initState() {
@@ -852,7 +852,7 @@ class DepositWidget extends StatelessWidget {
   const DepositWidget({Key key, this.model, this.index, this.tickerName})
       : super(key: key);
 
-  final WalletDashboardScreenState model;
+  final WalletDashboardViewModel model;
   final int index;
   final String tickerName;
 

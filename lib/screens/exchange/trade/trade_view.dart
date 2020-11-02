@@ -6,7 +6,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/settings/settings.dart';
+import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell.dart';
 import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
@@ -280,6 +280,7 @@ class TradeView extends StatelessWidget {
               // bottomNavigationBar: BottomNavBar(count: 1),
               bottomNavigationBar: Container(
                   padding: EdgeInsets.symmetric(horizontal: 10),
+                  margin: EdgeInsets.only(bottom: 15),
                   width: 160,
                   //margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
                   child: Row(

@@ -12,7 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/environments/environment_type.dart';
-import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,17 +22,17 @@ import 'package:stacked/stacked.dart';
 import '../../localizations.dart';
 import '../../shared/globals.dart' as globals;
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key key}) : super(key: key);
+class SettingsView extends StatelessWidget {
+  const SettingsView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<SettingsScreenViewmodel>.reactive(
+    return ViewModelBuilder<SettingsViewmodel>.reactive(
       onModelReady: (model) async {
         model.context = context;
         await model.init();
       },
-      viewModelBuilder: () => SettingsScreenViewmodel(),
+      viewModelBuilder: () => SettingsViewmodel(),
       builder: (context, model, _) => WillPopScope(
         onWillPop: () async {
           model.onBackButtonPressed();
@@ -80,7 +80,7 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class SettingsStatefulWidget extends StatefulWidget {
-  final SettingsScreenViewmodel model;
+  final SettingsViewmodel model;
   const SettingsStatefulWidget({
     Key key,
     this.model,
@@ -116,7 +116,7 @@ class _SettingsStatefulWidgetState extends State<SettingsStatefulWidget> {
 class SettingsContainer extends StatelessWidget {
   const SettingsContainer({Key key, this.model}) : super(key: key);
 
-  final SettingsScreenViewmodel model;
+  final SettingsViewmodel model;
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +311,9 @@ class SettingsContainer extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text('Showcase instructions for features',
+                    Text(
+                        AppLocalizations.of(context)
+                            .settingsShowcaseInstructions,
                         style: Theme.of(context).textTheme.headline5,
                         textAlign: TextAlign.center),
                     Checkbox(
@@ -403,7 +405,7 @@ class SettingsContainer extends StatelessWidget {
           ),
         ),
         model.isDeleting
-            ? Text('Deleting wallet...')
+            ? Text(AppLocalizations.of(context).deleteWallet + '...')
             : Text(
                 AppLocalizations.of(context).deleteWallet,
                 textAlign: TextAlign.center,

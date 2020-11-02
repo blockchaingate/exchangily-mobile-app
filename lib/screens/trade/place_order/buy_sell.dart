@@ -641,7 +641,7 @@ class BalanceRowWidget extends StatelessWidget {
             //    ?
             Showcase(
       key: model.globalKeyOne,
-      description: 'Make sure you have coin balance to trade',
+      description: AppLocalizations.of(context).buySellInstruction1,
       child: transferRow(context, model),
     )
         //  : transferRow(context, model)
