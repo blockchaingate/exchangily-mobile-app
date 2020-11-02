@@ -1847,63 +1847,99 @@
     "type": "text",
     "placeholders": {}
   },
+  "wrongPassword": "请输入正确的密码",
+  "@wrongPassword": {
+    "description": "flash_pay_tranfser_wrong_password",
+    "type": "text",
+    "placeholders": {}
+  }，
   "pleaseCorrectTheFormatOfReceiveAddress": "请输入正确的接收地址",
   "@pleaseCorrectTheFormatOfReceiveAddress": {
     "description": "flash_pay_tranfser_correct_format_of_receive_address",
     "type": "text",
     "placeholders": {}
   },
-  "important": "Important",
+  "important": "重要提示",
   "@important": {
     "description": "backup_mnemonic_important",
     "type": "text",
     "placeholders": {}
   },
-  "noInternetWarning": "Cannot load the content as your device is not to the internet",
+  "noInternetWarning": "由于您的设备没有接入互联网无法加载",
   "@noInternetWarning": {
     "description": "no_internet_warning",
     "type": "text",
     "placeholders": {}
   },
-  "walletInstruction1": "Please add gas by using FAB coin to use wallet and exchange features",
+  "walletInstruction1": "请添加燃料(FAB)以使用钱包和交易所功能",
   "@walletInstruction1": {
     "description": "wallet_instruction_1",
     "type": "text",
     "placeholders": {}
   },
-  "walletInstruction2": "Transfer funds from wallet to exchange to trade and use bindpay",
+  "walletInstruction2": "将资金转入交易区以进行交易或使用闪付功能",
   "@walletInstruction2": {
     "description": "wallet_instruction_2",
     "type": "text",
     "placeholders": {}
   },
-  "buySellInstruction1": "Make sure you have coin balance to trade",
+  "buySellInstruction1": "请确认您有足够的币进行交易",
   "@buySellInstruction1": {
     "description": "buy_Sell_instruction_1",
     "type": "text",
     "placeholders": {}
   },
-  "settingsShowcaseInstructions": "Show instructions for how to use certain app features",
+  "settingsShowcaseInstructions": "显示如何使用App功能的操作指南",
   "@settingsShowcaseInstructions": {
     "description": "settings_showcase_instructions",
     "type": "text",
     "placeholders": {}
   },
-  "note": "Note",
+  "note": "备注",
   "@note": {
     "description": "note_text",
     "type": "text",
     "placeholders": {}
   },
-  "walletDashboardInstruction1": "Please add gas by using FAB coin to use wallet and exchange features",
+  "walletDashboardInstruction1": "请添加燃料(FAB)以使用钱包和交易所功能",
   "@walletDashboardInstruction1": {
     "description": "wallet_dashboard_instruction_1",
     "type": "text",
     "placeholders": {}
   },
-  "walletDashboardInstruction2": "Transfer funds from wallet to exchange to trade and use bindpay",
+  "walletDashboardInstruction2": "将资金转入交易区以进行交易或使用闪付功能",
   "@walletDashboardInstruction2": {
     "description": "wallet_dashboard_instruction_2",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noCoinBalance": "在交易所没有足够余额",
+  "@noCoinBalance": {
+    "description": "no_coin_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transferFundsToExchangeUsingDepositButton": "请在钱包里点击欲存到交易所的币种，然后点击存币按钮将币转到交易所",
+  "@transferFundsToExchangeUsingDepositButton": {
+    "description": "transfer_funds_to_exchange_using_deposit_button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseChooseTheLanguage": "请选择语言",
+  "@pleaseChooseTheLanguage": {
+    "description": "Please choose the language",
+    "type": "text",
+    "placeholders": {}
+  },
+  "selectCoin": "请选择币",
+  "@selectCoin": {
+    "description": "select_coin",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deletingWallet": "正在删除钱包",
+  "@deletingWallet": {
+    "description": "deleting_wallet",
     "type": "text",
     "placeholders": {}
   }

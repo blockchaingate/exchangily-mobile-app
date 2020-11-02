@@ -1660,5 +1660,95 @@
     "description": "flash_pay_tranfser_wrong_password",
     "type": "text",
     "placeholders": {}
+  },
+  "pleaseCorrectTheFormatOfReceiveAddress": "請輸入正確的接收地址",
+  "@pleaseCorrectTheFormatOfReceiveAddress": {
+    "description": "flash_pay_tranfser_correct_format_of_receive_address",
+    "type": "text",
+    "placeholders": {}
+  },
+  "important": "重要提示",
+  "@important": {
+    "description": "backup_mnemonic_important",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noInternetWarning": "由於您的設備沒有接入互聯網無法加載",
+  "@noInternetWarning": {
+    "description": "no_internet_warning",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletInstruction1": "請添加燃料(FAB)以使用錢包和交易所功能",
+  "@walletInstruction1": {
+    "description": "wallet_instruction_1",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletInstruction2": "將資金轉入交易區以進行交易或使用閃付功能",
+  "@walletInstruction2": {
+    "description": "wallet_instruction_2",
+    "type": "text",
+    "placeholders": {}
+  },
+  "buySellInstruction1": "請確認您有足夠的幣進行交易",
+  "@buySellInstruction1": {
+    "description": "buy_Sell_instruction_1",
+    "type": "text",
+    "placeholders": {}
+  },
+  "settingsShowcaseInstructions": "顯示如何使用App功能的操作指南",
+  "@settingsShowcaseInstructions": {
+    "description": "settings_showcase_instructions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "note": "備註",
+  "@note": {
+    "description": "note_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletDashboardInstruction1": "請添加燃料(FAB)以使用錢包和交易所功能",
+  "@walletDashboardInstruction1": {
+    "description": "wallet_dashboard_instruction_1",
+    "type": "text",
+    "placeholders": {}
+  },
+  "walletDashboardInstruction2": "將資金轉入交易區以進行交易或使用閃付功能",
+  "@walletDashboardInstruction2": {
+    "description": "wallet_dashboard_instruction_2",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noCoinBalance": "在交易所沒有足夠餘額",
+  "@noCoinBalance": {
+    "description": "no_coin_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transferFundsToExchangeUsingDepositButton": "請在錢包裡點擊欲存到交易所的幣種，然後點擊存幣按鈕將幣轉到交易所",
+  "@transferFundsToExchangeUsingDepositButton": {
+    "description": "transfer_funds_to_exchange_using_deposit_button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseChooseTheLanguage": "請選擇語言",
+  "@pleaseChooseTheLanguage": {
+    "description": "Please choose the language",
+    "type": "text",
+    "placeholders": {}
+  },
+  "selectCoin": "請選擇幣",
+  "@selectCoin": {
+    "description": "select_coin",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deletingWallet": "正在刪除錢包",
+  "@deletingWallet": {
+    "description": "deleting_wallet",
+    "type": "text",
+    "placeholders": {}
   }
-  }
+}
