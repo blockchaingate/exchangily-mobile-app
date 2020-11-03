@@ -87,8 +87,10 @@ class PairPriceView extends StatelessWidget {
             child: Column(children: <Widget>[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                //  crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  UIHelper.horizontalSpaceLarge,
+                  UIHelper.horizontalSpaceMedium,
                   Expanded(
                     flex: 2,
                     child: Text(AppLocalizations.of(context).volume,
@@ -111,6 +113,7 @@ class PairPriceView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  UIHelper.horizontalSpaceLarge,
                   UIHelper.horizontalSpaceMedium,
                   Expanded(
                     flex: 2,

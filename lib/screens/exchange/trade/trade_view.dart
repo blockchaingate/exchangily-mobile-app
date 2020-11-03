@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -241,75 +242,94 @@ class TradeView extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ]),
-                  ),
-                ]),
-              ),
-        // Floatin Button buy/sell
-        // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        // floatingActionButton:
-        // bottomNavigationBar: BottomNavBar(count: 1),
-        bottomNavigationBar: Container(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          width: 160,
-          //margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              // Buy button
-              SizedBox(width: 5),
-              Flexible(
-                flex: 1,
-                child: RaisedButton(
-                  padding: EdgeInsets.all(0),
-                  color: buyPrice,
-                  onPressed: () {
-                    if (model.currentPairPrice != null &&
-                        model.dataReady(model.orderBookStreamKey) &&
-                        !model.isBusy)
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BuySellView(
-                                orderbook: model.orderbook,
+                    ),
+              // Floatin Button buy/sell
+              // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+              // floatingActionButton:
+              // bottomNavigationBar: BottomNavBar(count: 1),
+              bottomNavigationBar: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  margin: EdgeInsets.only(bottom: 15),
+                  width: 160,
+                  //margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      //Add Favorite
+                      // Flexible(
+                      //     flex: 2,
+                      //     child: Container(
+                      //       margin: EdgeInsets.only(right: 2.0),
+                      //       child: FlatButton(
+                      //         padding: EdgeInsets.all(0),
+                      //         color: buyPrice,
+                      //         onPressed: () {
+                      //           Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (context) => BuySell(
+                      //                     pair: model.currentPairPrice.symbol,
+                      //                     bidOrAsk: true)),
+                      //           );
+                      //         },
+                      //         child: Text(AppLocalizations.of(context).buy,
+                      //             style:
+                      //                 TextStyle(fontSize: 13, color: white)),
+                      //       ),
+                      //     )),
+                      // Buy Button
+                      Flexible(
+                          flex: 1,
+                          child: Container(
+                            margin: EdgeInsets.only(right: 2.0),
+                            child: FlatButton(
+                              padding: EdgeInsets.all(0),
+                              color: buyPrice,
+                              onPressed: () {
+                                if (model.currentPairPrice != null &&
+                                    model.dataReady(model.orderBookStreamKey) &&
+                                    !model.isBusy)
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BuySellView(
+                                        orderbook: model.orderbook,
                                 pairSymbolWithSlash: model.pairSymbolWithSlash,
-                                bidOrAsk: true)),
-                      );
-                  },
-                  child: Text(AppLocalizations.of(context).buy,
-                      style: TextStyle(fontSize: 13, color: white)),
-                ),
-              ),
-              // Sell button
-              SizedBox(width: 5),
-              Flexible(
-                  flex: 1,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(0),
-                    color: sellPrice,
-                    shape: StadiumBorder(
-                        side: BorderSide(color: sellPrice, width: 1)),
-                    onPressed: () {
-                      if (model.currentPairPrice != null &&
-                          model.dataReady(model.orderBookStreamKey) &&
-                          !model.isBusy)
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BuySellView(
-                                  orderbook: model.orderbook,
-                                  pairSymbolWithSlash:
-                                      model.pairSymbolWithSlash,
-                                  bidOrAsk: false)),
-                        );
-                    },
-                    child: Text(AppLocalizations.of(context).sell,
-                        style: TextStyle(fontSize: 13, color: Colors.white)),
-                  ))
-            ],
-          ),
-        ),
-      ),
-    );
+                                            bidOrAsk: true)),
+                                  );
+                              },
+                              child: Text(AppLocalizations.of(context).buy,
+                                  style: TextStyle(fontSize: 13, color: white)),
+                            ),
+                          )),
+                      // Sell button
+                      SizedBox(width: 5),
+                      Flexible(
+                          flex: 1,
+                          child: RaisedButton(
+                            padding: EdgeInsets.all(0),
+                            color: sellPrice,
+                            shape: StadiumBorder(
+                                side: BorderSide(color: sellPrice, width: 1)),
+                            onPressed: () {
+                              if (model.currentPairPrice != null &&
+                                  model.dataReady(model.orderBookStreamKey) &&
+                                  !model.isBusy)
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => BuySellView(
+                                       orderbook: model.orderbook,
+                                pairSymbolWithSlash: model.pairSymbolWithSlash,
+                                          bidOrAsk: false)),
+                                );
+                            },
+                            child: Text(AppLocalizations.of(context).sell,
+                                style: TextStyle(
+                                    fontSize: 13, color: Colors.white)),
+                          ))
+                    ],
+                  )),
+            ));
   }
 }

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-10-23T18:16:45.984858",
+  "@@last_modified": "2020-11-02T15:48:42.110164",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1863,6 +1863,36 @@
   "walletDashboardInstruction2": "Transfer funds from wallet to exchange to trade and use bindpay",
   "@walletDashboardInstruction2": {
     "description": "wallet_dashboard_instruction_2",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noCoinBalance": "No coin balance in exchange",
+  "@noCoinBalance": {
+    "description": "no_coin_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transferFundsToExchangeUsingDepositButton": "Please transfer funds to exchange using deposit button in wallet dashboard",
+  "@transferFundsToExchangeUsingDepositButton": {
+    "description": "transfer_funds_to_exchange_using_deposit_button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseChooseTheLanguage": "Please choose the language",
+  "@pleaseChooseTheLanguage": {
+    "description": "Please choose the language",
+    "type": "text",
+    "placeholders": {}
+  },
+  "selectCoin": "Select Coin",
+  "@selectCoin": {
+    "description": "select_coin",
+    "type": "text",
+    "placeholders": {}
+  },
+  "deletingWallet": "Deleting wallet",
+  "@deletingWallet": {
+    "description": "deleting_wallet",
     "type": "text",
     "placeholders": {}
   }

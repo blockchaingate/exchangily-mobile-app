@@ -1,6 +1,6 @@
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/language_screen_state.dart';
-import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../localizations.dart';

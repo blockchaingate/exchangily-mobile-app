@@ -51,7 +51,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas.dart'
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
-import 'package:exchangilymobileapp/screens/settings/settings.dart';
+import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'screens/otc_campaign/token_details_screen.dart';

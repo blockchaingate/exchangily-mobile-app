@@ -169,9 +169,19 @@ class BindpayViewmodel extends FutureViewModel {
                 // children: [
 
                 return Container(
-                  color: tickerName == coins[index]['tickerName']
-                      ? primaryColor
-                      : Colors.transparent,
+                  decoration: BoxDecoration(
+                    // color: grey.withAlpha(300),
+                    borderRadius: index == 0
+                        ? BorderRadius.vertical(top: Radius.circular(10))
+                        : BorderRadius.all(Radius.zero),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //       blurRadius: 3, color: Colors.grey[600], spreadRadius: 2)
+                    // ]
+                    color: tickerName == coins[index]['tickerName']
+                        ? primaryColor
+                        : Colors.transparent,
+                  ),
                   child: InkWell(
                     onTap: () {
                       //  Platform.isIOS

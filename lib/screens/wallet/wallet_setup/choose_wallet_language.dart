@@ -51,12 +51,11 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
             ),
             // Language Text and Icon Container
             Container(
-             padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: EdgeInsets.symmetric(horizontal: 5),
               child: Row(
-               
                 children: <Widget>[
                   Expanded(
-                  flex: 1,
+                    flex: 1,
                     child: Icon(
                       Icons.language,
                       color: Colors.white,
@@ -64,7 +63,8 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
                   ),
                   Expanded(
                     flex: 3,
-                    child: Text('Please choose the language',
+                    child: Text(
+                        AppLocalizations.of(context).pleaseChooseTheLanguage,
                         textAlign: TextAlign.start,
                         style: Theme.of(context).textTheme.headline5),
                   )
@@ -78,7 +78,7 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
                     highlightColor: globals.white,
                     child: Center(
                       child: Text(
-                        'Loading...',
+                        AppLocalizations.of(context).loading + '...',
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ),

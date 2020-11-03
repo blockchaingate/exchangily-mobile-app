@@ -16,7 +16,7 @@ class NetworkStausView extends StatelessWidget {
             width: 50,
           )),
       body: Container(
-        color: sellPrice.withOpacity(.4),
+        color: primaryColor.withOpacity(.4),
         padding: EdgeInsets.all(50),
         child: Center(
           child: Text(

@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/screen_state/settings/settings_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
+
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,12 +12,12 @@ class SettingsPortableView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<SettingsScreenViewmodel>.reactive(
+    return ViewModelBuilder<SettingsViewmodel>.reactive(
       onModelReady: (model) async {
         model.context = context;
         await model.init();
       },
-      viewModelBuilder: () => SettingsScreenViewmodel(),
+      viewModelBuilder: () => SettingsViewmodel(),
       builder: (context, model, _) => Scaffold(
         // When the keyboard appears, the Flutter widgets resize to avoid that we use resizeToAvoidBottomInset: false
         resizeToAvoidBottomInset: false,
@@ -31,7 +32,7 @@ class SettingsPortableView extends StatelessWidget {
 
 class SettingsPortableContainer extends StatelessWidget {
   const SettingsPortableContainer({Key key, this.model}) : super(key: key);
-  final SettingsScreenViewmodel model;
+  final SettingsViewmodel model;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -44,6 +45,7 @@ class SettingsPortableContainer extends StatelessWidget {
             children: [
               UIHelper.verticalSpaceLarge,
               // Container(
+              //   margin: EdgeInsets.only(left: 8.0),
               //   child: Theme.of(context).platform == TargetPlatform.iOS
               //       ? CupertinoPicker(
               //           diameterRatio: 1.3,
@@ -82,12 +84,13 @@ class SettingsPortableContainer extends StatelessWidget {
               //             ])
               //       : DropdownButtonHideUnderline(
               //           child: DropdownButton(
+              //               isExpanded: true,
               //               iconEnabledColor: primaryColor,
               //               iconSize: 30,
               //               hint: Row(
               //                 children: [
               //                   Padding(
-              //                     padding: const EdgeInsets.only(right: 2.0),
+              //                     padding: const EdgeInsets.only(right: 4.0),
               //                     child: Icon(Icons.language,
               //                         color: white, size: 16),
               //                   ),
@@ -102,6 +105,7 @@ class SettingsPortableContainer extends StatelessWidget {
               //               value: model.selectedLanguage,
               //               onChanged: (newValue) {
               //                 model.changeWalletLanguage(newValue);
+              //                 model.navigationService.navigateUsingpopAndPushedNamed('buysell');
               //               },
               //               items: [
               //                 DropdownMenuItem(

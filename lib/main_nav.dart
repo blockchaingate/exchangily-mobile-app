@@ -1,14 +1,16 @@
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
-
+import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../shared/globals.dart' as globals;
+//import './lib/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+
+import 'constants/colors.dart';
 
 class MainNav extends StatefulWidget {
   MainNav({this.currentPage = 0});
@@ -44,7 +46,7 @@ class _MainNavState extends State<MainNav> {
           physics: new NeverScrollableScrollPhysics(),
           children: <Widget>[
             WalletDashboardScreen(),
-            MarketsView(hideSlider: false),
+            MarketsView(),
             CampaignInstructionScreen(),
             SettingsView()
           ],
@@ -56,9 +58,9 @@ class _MainNavState extends State<MainNav> {
           type: BottomNavigationBarType.fixed,
           selectedFontSize: 14,
           elevation: 20,
-          unselectedItemColor: globals.grey,
-          backgroundColor: globals.walletCardColor,
-          selectedItemColor: globals.primaryColor,
+          unselectedItemColor: grey,
+          backgroundColor: walletCardColor,
+          selectedItemColor: primaryColor,
           showUnselectedLabels: true,
           items: [
             BottomNavigationBarItem(
@@ -102,8 +104,7 @@ class _MainNavState extends State<MainNav> {
   }
 
   void navigateToPage(int page) {
-    _pageController.animateToPage(page,
-        duration: Duration(milliseconds: 300), curve: Curves.ease);
+    _pageController.jumpToPage(page);
   }
 
   void onPageChanged(int page) {
@@ -118,7 +119,6 @@ class _MainNavState extends State<MainNav> {
     _pageController = new PageController(initialPage: widget.currentPage);
     setState(() {
       this._page = widget.currentPage;
-      // keep this for future testing
       // print("current page: ${widget.currentPage}");
       // print("_page: ${this._page}");
     });

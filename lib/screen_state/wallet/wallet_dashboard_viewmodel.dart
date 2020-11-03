@@ -45,7 +45,7 @@ import '../../shared/globals.dart' as globals;
 import 'package:intl/intl.dart';
 import 'package:json_diff/json_diff.dart';
 
-class WalletDashboardScreenState extends BaseState {
+class WalletDashboardViewModel extends BaseState {
   final log = getLogger('WalletDahsboardScreenState');
 
   BuildContext context;
@@ -255,7 +255,7 @@ class WalletDashboardScreenState extends BaseState {
         log.i("announcement: exit!!!");
       }
     }
-totalBalanceContainerWidth=270.0;
+    totalBalanceContainerWidth = 270.0;
     setBusy(false);
   }
 

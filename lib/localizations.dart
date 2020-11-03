@@ -1605,21 +1605,52 @@ class AppLocalizations {
         name: 'settingsShowcaseInstructions',
         desc: 'settings_showcase_instructions');
   }
-    String get note {
-    return Intl.message("Note",
-        name: 'note',
-        desc: 'note_text');
+
+  String get note {
+    return Intl.message("Note", name: 'note', desc: 'note_text');
   }
-      String get walletDashboardInstruction1 {
-    return Intl.message("Please add gas by using FAB coin to use wallet and exchange features",
+
+  String get walletDashboardInstruction1 {
+    return Intl.message(
+        "Please add gas by using FAB coin to use wallet and exchange features",
         name: 'walletDashboardInstruction1',
         desc: 'wallet_dashboard_instruction_1');
   }
-      String get walletDashboardInstruction2 {
-    return Intl.message('Transfer funds from wallet to exchange to trade and use bindpay',
+
+  String get walletDashboardInstruction2 {
+    return Intl.message(
+        'Transfer funds from wallet to exchange to trade and use bindpay',
         name: 'walletDashboardInstruction2',
         desc: 'wallet_dashboard_instruction_2');
   }
+
+  String get noCoinBalance {
+    return Intl.message('No coin balance in exchange',
+        name: 'noCoinBalance', desc: 'no_coin_balance');
+  }
+
+  String get transferFundsToExchangeUsingDepositButton {
+    return Intl.message(
+        'Please transfer funds to exchange using deposit button in wallet dashboard',
+        name: 'transferFundsToExchangeUsingDepositButton',
+        desc: 'transfer_funds_to_exchange_using_deposit_button');
+  }
+
+  String get pleaseChooseTheLanguage {
+    return Intl.message('Please choose the language',
+        name: 'pleaseChooseTheLanguage', desc: 'Please choose the language');
+  }
+
+  String get selectCoin {
+    return Intl.message('Select Coin', name: 'selectCoin', desc: 'select_coin');
+  }
+
+  String get deletingWallet {
+    return Intl.message('Deleting wallet',
+        name: 'deletingWallet', desc: 'deleting_wallet');
+  }
+
+  // Share page pending translation added by Jack
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

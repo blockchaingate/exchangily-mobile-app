@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -30,12 +31,13 @@ import '../../logger.dart';
 import '../../service_locator.dart';
 import '../base_state.dart';
 
-class SettingsScreenViewmodel extends BaseViewModel {
+class SettingsViewmodel extends BaseViewModel {
   bool isVisible = false;
   String mnemonic = '';
   final log = getLogger('SettingsState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService = locator<TransactionHistoryDatabaseService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
@@ -136,6 +138,7 @@ class SettingsScreenViewmodel extends BaseViewModel {
         isDeleting = true;
         log.w('deleting wallet');
         await walletDatabaseService.deleteDb();
+        await transactionHistoryDatabaseService.deleteDb();
         await walletService.deleteEncryptedData();
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('lang');
@@ -247,9 +250,7 @@ class SettingsScreenViewmodel extends BaseViewModel {
       AppLocalizations.load(Locale('en', 'EN'));
       prefs.setString('lang', key);
     }
-
-    log.w('langGlobal: ' + getlangGlobal());
-    setBusy(false);
+    //  log.w('langGlobal: ' + getlangGlobal());
     setBusy(false);
   }
 
