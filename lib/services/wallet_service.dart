@@ -162,14 +162,14 @@ class WalletService {
 
   String getRandomMnemonic() {
     String randomMnemonic = '';
-    if (isLocal == true) {
-      randomMnemonic =
-         // 'hidden arch mind decline summer convince voice together pony infant input lunar';
-      //"dune stem onion cliff equip seek kiwi salute area elegant atom injury";
-       'culture sound obey clean pretty medal churn behind chief cactus alley ready';
-      // 'group quick salad argue animal rubber wolf close weird school spell agent';
-      return randomMnemonic;
-    }
+    // if (isLocal == true) {
+    //   randomMnemonic =
+    //      // 'hidden arch mind decline summer convince voice together pony infant input lunar';
+    //   //"dune stem onion cliff equip seek kiwi salute area elegant atom injury";
+    //    'culture sound obey clean pretty medal churn behind chief cactus alley ready';
+    //   // 'group quick salad argue animal rubber wolf close weird school spell agent';
+    //   return randomMnemonic;
+    // }
     randomMnemonic = bip39.generateMnemonic();
     return randomMnemonic;
   }
@@ -453,7 +453,8 @@ class WalletService {
 
         /// may add deposit or withdraw in front of status for better understanding
         sharedService.alertDialog(
-            '${transaction.tickerName} ${transactionHistory.tag}', stringUtils.firstCharToUppercase(result.toString()),
+            '${transaction.tickerName} ${transactionHistory.tag}',
+            stringUtils.firstCharToUppercase(result.toString()),
             isWarning: false);
         String date = DateTime.now().toString();
 

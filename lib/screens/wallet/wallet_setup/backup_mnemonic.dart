@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -88,7 +89,7 @@ class _BackupMnemonicWalletScreenState
       body: Container(
         padding: EdgeInsets.all(10),
         child: ListView(
-         // mainAxisSize: MainAxisSize.min,
+          // mainAxisSize: MainAxisSize.min,
           // crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             UIHelper.verticalSpaceMedium,
@@ -141,26 +142,24 @@ class _BackupMnemonicWalletScreenState
               child: _buttonGrid(),
             ),
             // UIHelper.verticalSpaceSmall,
-            Expanded(
-              child: Center(
-                child: Container(
-                  padding: EdgeInsets.all(15),
-                  child: MaterialButton(
-                    color: globals.btnColor,
-                    child: Text(
-                      AppLocalizations.of(context).confirm,
-                      // style: Theme.of(context).textTheme.headline4,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1,
-                          fontSize: 16),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pushNamed('/confirmMnemonic',
-                          arguments:
-                              BackupMnemonicWalletScreen.randomMnemonicList);
-                    },
+            Center(
+              child: Container(
+                padding: EdgeInsets.all(15),
+                child: MaterialButton(
+                  color: primaryColor,
+                  child: Text(
+                    AppLocalizations.of(context).confirm,
+                    // style: Theme.of(context).textTheme.headline4,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 1,
+                        fontSize: 16),
                   ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/confirmMnemonic',
+                        arguments:
+                            BackupMnemonicWalletScreen.randomMnemonicList);
+                  },
                 ),
               ),
             )

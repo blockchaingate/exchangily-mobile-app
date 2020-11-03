@@ -309,7 +309,7 @@ class SettingsContainer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(right: 3.0),
+                      padding: const EdgeInsets.only(right: 5.0),
                       child: Icon(
                         Icons.warning,
                         color: yellow,
@@ -335,14 +335,14 @@ class SettingsContainer extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: Icon(
-                        Icons.insert_comment,
-                        color: white,
-                        size: 18,
-                      ),
-                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 5.0),
+                    //   child: Icon(
+                    //     Icons.insert_comment,
+                    //     color: white,
+                    //     size: 18,
+                    //   ),
+                    // ),
                     Expanded(
                       child: Text(
                           AppLocalizations.of(context)

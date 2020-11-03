@@ -1847,12 +1847,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "wrongPassword": "请输入正确的密码",
-  "@wrongPassword": {
-    "description": "flash_pay_tranfser_wrong_password",
-    "type": "text",
-    "placeholders": {}
-  }，
+
   "pleaseCorrectTheFormatOfReceiveAddress": "请输入正确的接收地址",
   "@pleaseCorrectTheFormatOfReceiveAddress": {
     "description": "flash_pay_tranfser_correct_format_of_receive_address",
@@ -1940,6 +1935,12 @@
   "deletingWallet": "正在删除钱包",
   "@deletingWallet": {
     "description": "deleting_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "wrongPassword": "请输入正确的密码",
+  "@wrongPassword": {
+    "description": "flash_pay_tranfser_wrong_password",
     "type": "text",
     "placeholders": {}
   }
