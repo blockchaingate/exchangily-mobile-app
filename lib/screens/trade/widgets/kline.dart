@@ -160,4 +160,6 @@ class KlinePageBloc extends KlineBloc with TradeService {
     this.getDataFromStream();
     //});
   }
+
+  getTickerChannel(String pair, String s) {}
 }

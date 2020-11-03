@@ -94,7 +94,7 @@ class TradeViewModel extends MultipleStreamViewModel {
   /// Initialize when model ready
   init() async {
     await getDecimalPairConfig();
-    await getExchangeAssets();
+    //   await getExchangeAssets();
     String holder = updateTickerName(pairPriceByRoute.symbol);
     pairSymbolWithSlash = holder;
     String tickerWithoutBasePair = holder.split('/')[0];
@@ -231,7 +231,7 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   getDecimalPairConfig() async {
     await tradeService
-        .getDecimalPairConfig(pairPriceByRoute.symbol)
+        .getSinglePairDecimalConfig(pairPriceByRoute.symbol)
         .then((decimalValues) {
       singlePairDecimalConfig = decimalValues;
       log.i(
@@ -271,7 +271,7 @@ class TradeViewModel extends MultipleStreamViewModel {
       pauseAllStreams();
     } else if (index == 3) {
       pauseAllStreams();
-      await getExchangeAssets();
+      // await getExchangeAssets();
     }
   }
 
@@ -320,24 +320,6 @@ class TradeViewModel extends MultipleStreamViewModel {
 /*-------------------------------------------------------------------------------------
                                 Get Exchange Assets
 -------------------------------------------------------------------------------------*/
-
-  getExchangeAssets() async {
-    //  setBusy(true);
-    //  notifyListeners();
-    log.e('In get exchange assets');
-    setBusyForObject(myExchangeAssets, true);
-    String exgAddress = await getExgAddress();
-    var res = await runBusyFuture(walletService.assetsBalance(exgAddress));
-    log.w('Asset exchange $res');
-    if (res != null) myExchangeAssets = res;
-    // await walletService.assetsBalance(exgAddress).then((value) {
-    //   // log.w('value $value');
-    //   myExchangeAssets = value;
-    //   // log.w('exchange assets $myExchangeAssets');
-    // });
-    //  setBusy(false);
-    setBusyForObject(myExchangeAssets, false);
-  }
 
   Future<String> getExgAddress() async {
     var exgWallet = await walletDataBaseService.getBytickerName('EXG');

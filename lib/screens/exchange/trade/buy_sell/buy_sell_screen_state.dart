@@ -47,8 +47,8 @@ import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 import 'dart:core';
 
-class BuySellScreenState extends BaseState {
-  final log = getLogger('BuySellScreenState');
+class BuySellViewModel extends BaseState {
+  final log = getLogger('BuySellViewModel');
   List<WalletInfo> walletInfo;
   WalletInfo targetCoinWalletData;
   WalletInfo baseCoinWalletData;
@@ -56,6 +56,7 @@ class BuySellScreenState extends BaseState {
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+
   BuildContext context;
   bool bidOrAsk;
   String baseCoinName;
@@ -68,8 +69,8 @@ class BuySellScreenState extends BaseState {
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
-  List<Order> sell;
-  List<Order> buy;
+  List<OrderModel> sell;
+  List<OrderModel> buy;
   DialogService _dialogService = locator<DialogService>();
   double currentPrice = 0;
   double currentQuantity = 0;
@@ -81,7 +82,7 @@ class BuySellScreenState extends BaseState {
   String exgAddress;
   WalletInfo coin;
   final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
-  List<Order> orderList;
+  List<OrderModel> orderList;
   double transactionAmount = 0;
   List<PairDecimalConfig> pairDecimalConfigList = [];
   int priceDecimal = 0;
@@ -97,18 +98,24 @@ class BuySellScreenState extends BaseState {
 
   init() async {
     // log.e(pair);
+
     // splitPair(pair);
-    // setDefaultGasPrice();
-    // sell = [];
-    // buy = [];
-    // bidOrAsk = bidOrAsk;
+    print('1');
+    setDefaultGasPrice();
+    print('2');
+
     // orderListFromTradeService();
-    // tradeListFromTradeService();
+    print('3');
+    //  tradeListFromTradeService();
+    // print('4');
     // await retrieveWallets();
-    // await orderList();
-    // await tradeList();
-    // await getDecimalPairConfig();
+    print('5');
+    await getDecimalPairConfig();
+    print('6');
+    sharedService.context = context;
+    print('7');
     fillPriceAndQuantityTextFields();
+    print('8');
   }
 
   /*----------------------------------------------------------------------
@@ -145,15 +152,15 @@ class BuySellScreenState extends BaseState {
   splitPair(String pair) {
     log.e('pair $pair');
     var coinsArray = pair.split("/");
-    baseCoinName = coinsArray[1];
     targetCoinName = coinsArray[0];
+    baseCoinName = coinsArray[1];
     tickerName = targetCoinName + baseCoinName;
     log.e('tickername $tickerName');
   }
 
-  // getPairDecimalConfig
+  //
 /* ---------------------------------------------------
-            Full screen Stack loading indicator
+            getPairDecimalConfig
 --------------------------------------------------- */
   getDecimalPairConfig() async {
     setBusy(true);
@@ -186,22 +193,22 @@ class BuySellScreenState extends BaseState {
 /* ---------------------------------------------------
             Full screen Stack loading indicator
 --------------------------------------------------- */
-  orderListFromTradeService() {
-    setState(ViewState.Busy);
-    orderListChannel =
-        tradeService.getOrderListChannel(targetCoinName + baseCoinName);
-    setState(ViewState.Idle);
-  }
+  // orderListFromTradeService() {
+  //   setState(ViewState.Busy);
+  //   orderListChannel =
+  //       tradeService.getOrderListChannel(targetCoinName + baseCoinName);
+  //   setState(ViewState.Idle);
+  // }
 
 /* ---------------------------------------------------
             Full screen Stack loading indicator
 --------------------------------------------------- */
-  tradeListFromTradeService() {
-    setState(ViewState.Busy);
-    tradeListChannel =
-        tradeService.getTradeListChannel(targetCoinName + baseCoinName);
-    setState(ViewState.Idle);
-  }
+  // tradeListFromTradeService() {
+  //   setState(ViewState.Busy);
+  //   tradeListChannel =
+  //       tradeService.getTradeListChannel(targetCoinName + baseCoinName);
+  //   setState(ViewState.Idle);
+  // }
 
 /* ---------------------------------------------------
             Order List
@@ -367,7 +374,7 @@ class BuySellScreenState extends BaseState {
   }
 
 /* ---------------------------------------------------
-           To Big Int
+            To Big Int
 --------------------------------------------------- */
   toBitInt(num) {
     var numString = num.toString();

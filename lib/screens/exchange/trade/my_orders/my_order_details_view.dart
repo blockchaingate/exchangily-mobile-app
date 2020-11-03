@@ -9,7 +9,7 @@ import 'package:stacked/stacked.dart';
 import 'my_order_viewmodel.dart';
 
 class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
-  final List<Order> orders;
+  final List<OrderModel> orders;
   const MyOrderDetailsView({Key key, this.orders}) : super(key: key);
 
   @override

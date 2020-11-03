@@ -52,7 +52,7 @@ class TradeService {
                     getPairDecimalConfig
 ----------------------------------------------------------------------*/
 
-  Future<DecimalConfig> getDecimalPairConfig(String pairName) async {
+  Future<DecimalConfig> getSinglePairDecimalConfig(String pairName) async {
     List<PairDecimalConfig> pairDecimalConfigList = [];
     DecimalConfig singlePairDecimalConfig = new DecimalConfig();
     await _api.getPairDecimalConfig().then((res) {
@@ -212,7 +212,7 @@ class TradeService {
 //   }
 
   // Get my orders by tickername
-  Future<List<Order>> getMyOrdersByTickerName(
+  Future<List<OrderModel>> getMyOrdersByTickerName(
       String exgAddress, String tickerName) async {
     OrderList orderList;
     try {

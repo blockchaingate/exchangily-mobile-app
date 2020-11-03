@@ -17,7 +17,9 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
+import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/utils/kanban.util.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
@@ -48,6 +50,33 @@ class ApiService {
   final ethBaseUrl = environment["endpoints"]["eth"];
   final eventsUrl = environment["eventInfo"];
 
+/*----------------------------------------------------------------------
+                    Get single coin exchange balance
+----------------------------------------------------------------------*/
+  Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
+      String tickerName) async {
+    String exgAddress = await getExchangilyAddress();
+    String url =
+        getSingleCoinExchangeBalanceUrl + exgAddress + '/' + tickerName;
+    log.i('getSingleCoinExchangeBalance url $url');
+    ExchangeBalanceModel exchangeBalance = new ExchangeBalanceModel();
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      log.w('json data  $json');
+      if (json != null) {
+        json['message'] != null
+            ? exchangeBalance =
+                ExchangeBalanceModel(lockedAmount: 12.0, unlockedAmount: 14.0)
+            : exchangeBalance = ExchangeBalanceModel.fromJson(json);
+      }
+      log.e('exchangeBalance ${exchangeBalance.toJson()}');
+      return exchangeBalance;
+    } catch (err) {
+      log.e('getSingleCoinExchangeBalance CATCH $err');
+      throw Exception(err);
+    }
+  }
 /*----------------------------------------------------------------------
                     Get Token List
 ----------------------------------------------------------------------*/

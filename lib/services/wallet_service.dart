@@ -589,7 +589,7 @@ class WalletService {
             name: name);
         _walletInfo.add(wi);
       }
-      var res = await assetsBalance(exgAddress);
+      var res = await getAllExchangeBalances(exgAddress);
       if (res != null) {
         var length = res.length;
         // For loop over asset balance result
@@ -666,7 +666,9 @@ class WalletService {
                       Assets Balance
 ----------------------------------------------------------------------*/
 
-  Future assetsBalance(String exgAddress) async {
+  Future getAllExchangeBalances(String exgAddress) async {
+    if (exgAddress.isEmpty)
+      exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     try {
       List<Map<String, dynamic>> bal = [];
       var res = await _api.getAssetsBalance(exgAddress);

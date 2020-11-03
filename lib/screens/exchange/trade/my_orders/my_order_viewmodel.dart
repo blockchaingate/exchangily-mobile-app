@@ -39,10 +39,10 @@ class MyOrdersViewModel extends BaseViewModel {
   double filledAmount = 0;
   double filledPercentage = 0;
   String errorMessage = '';
-  List<Order> myAllOrders = [];
-  List<Order> myOpenOrders = [];
-  List<Order> myCloseOrders = [];
-  List<List<Order>> myOrdersTabBarView = [];
+  List<OrderModel> myAllOrders = [];
+  List<OrderModel> myOpenOrders = [];
+  List<OrderModel> myCloseOrders = [];
+  List<List<OrderModel>> myOrdersTabBarView = [];
 
   bool isFutureError = false;
   bool _showCurrentPairOrders = false;
@@ -53,7 +53,7 @@ class MyOrdersViewModel extends BaseViewModel {
   init() {
     getMyOrdersByTickerName();
     tradeService
-        .getDecimalPairConfig(tickerName)
+        .getSinglePairDecimalConfig(tickerName)
         .then((decimalConfig) => decimalConfig = decimalConfig);
     //futureToRun();
   }
@@ -167,7 +167,7 @@ class MyOrdersViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  void onData(List<Order> data) {
+  void onData(List<OrderModel> data) {
     setBusy(true);
     if (data != null) {
       myAllOrders = data;

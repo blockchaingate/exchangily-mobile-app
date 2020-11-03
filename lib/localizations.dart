@@ -1645,11 +1645,6 @@ class AppLocalizations {
     return Intl.message('Select Coin', name: 'selectCoin', desc: 'select_coin');
   }
 
-  String get deletingWallet {
-    return Intl.message('Deleting wallet',
-        name: 'deletingWallet', desc: 'deleting_wallet');
-  }
-
   // Share page pending translation added by Jack
 }
 

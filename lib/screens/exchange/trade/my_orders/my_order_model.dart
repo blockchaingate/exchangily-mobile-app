@@ -13,7 +13,7 @@
 
 import 'package:exchangilymobileapp/utils/string_util.dart';
 
-class Order {
+class OrderModel {
   String _orderHash;
   int _orderType;
   bool _bidOrAsk;
@@ -27,7 +27,7 @@ class Order {
   double _totalOrderQuantity;
   double _filledPercentage;
   bool _isCancelled;
-  Order(
+  OrderModel(
       {String orderHash,
       int orderType,
       bool bidOrAsk,
@@ -59,8 +59,8 @@ class Order {
     this._isCancelled = isCancelled;
   }
 
-  factory Order.fromJson(Map<String, dynamic> json) {
-    return Order(
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
+    return OrderModel(
         orderHash: json['orderHash'],
         orderType: json['orderType'],
         bidOrAsk: json['bidOrAsk'],
@@ -152,14 +152,14 @@ class Order {
 }
 
 class OrderList {
-  final List<Order> orders;
+  final List<OrderModel> orders;
   OrderList({this.orders});
 
   factory OrderList.fromJson(List<dynamic> parsedJson) {
-    List<Order> orders = new List<Order>();
+    List<OrderModel> orders = new List<OrderModel>();
     parsedJson.forEach((i) {
       // print('raw orders ${i}');
-      Order order = Order.fromJson(i);
+      OrderModel order = OrderModel.fromJson(i);
       //  print('ready for ui orders ${order.toJson()}');
       orders.add(order);
     });
