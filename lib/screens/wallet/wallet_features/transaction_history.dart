@@ -50,12 +50,12 @@ class TransactionHistoryView extends StatelessWidget {
                                 elevation: 4,
                                 child: Container(
                                   padding: EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 5.0),
+                                      vertical: 8.0, horizontal: 4.0),
                                   color: colors.walletCardColor,
                                   child: Row(
                                     children: <Widget>[
                                       Container(
-                                        width: 50,
+                                        width: 40,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -221,10 +221,13 @@ class TransactionHistoryView extends StatelessWidget {
                                                                 color: colors.buyPrice))
                                                       else if (transaction.status ==
                                                           'Require redeposit')
-                                                        Text(firstCharToUppercase(AppLocalizations.of(context).requireRedeposit),
-                                                            style: TextStyle(
-                                                                fontSize: customFontSize,
-                                                                color: colors.yellow))
+                                                        SizedBox(
+                                                          width: 80,
+                                                          child: Text(firstCharToUppercase(AppLocalizations.of(context).requireRedeposit),
+                                                              style: TextStyle(
+                                                                  fontSize: customFontSize,
+                                                                  color: colors.yellow)),
+                                                        )
                                                       else if (transaction.status ==
                                                           'Failed')
                                                         Text(firstCharToUppercase(AppLocalizations.of(context).failed),

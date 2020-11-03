@@ -211,7 +211,7 @@ class SettingsContainer extends StatelessWidget {
                                             const EdgeInsets.only(right: 3.0),
                                         child: Icon(
                                           Icons.language,
-                                          color: primaryColor,
+                                          color: grey,
                                           size: 18,
                                         ),
                                       ),
@@ -222,6 +222,29 @@ class SettingsContainer extends StatelessWidget {
                                             .textTheme
                                             .headline5,
                                       ),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children:[
+                                             Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_up,
+                                          color: primaryColor,
+                                          size: 12,
+                                        ),
+                                      ),
+                                         Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: primaryColor,
+                                          size: 12,
+                                        ),
+                                      ),
+                                        ]
+                                      )
                                     ],
                                   ),
                                 ),

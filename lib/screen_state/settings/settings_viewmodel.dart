@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -36,6 +37,7 @@ class SettingsViewmodel extends BaseViewModel {
   final log = getLogger('SettingsState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService = locator<TransactionHistoryDatabaseService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
@@ -105,6 +107,7 @@ class SettingsViewmodel extends BaseViewModel {
         isDeleting = true;
         log.w('deleting wallet');
         await walletDatabaseService.deleteDb();
+        await transactionHistoryDatabaseService.deleteDb();
         await walletService.deleteEncryptedData();
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('lang');
