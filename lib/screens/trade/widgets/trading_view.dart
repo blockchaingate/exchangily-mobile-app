@@ -30,8 +30,10 @@ class LoadHTMLFileToWEbView extends StatefulWidget {
 
 class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
   WebViewController _controller;
+
   @override
   Widget build(BuildContext context) {
+    var interval = '30m';
     return Container(
         padding: EdgeInsets.all(0),
         margin: EdgeInsets.all(0),
@@ -41,12 +43,12 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
             _controller = webViewController;
-            _loadHtmlFromAssets();
+            _loadHtmlFromAssets(interval);
           },
         ));
   }
 
-  _loadHtmlFromAssets() async {
+  _loadHtmlFromAssets(interval) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var lang = prefs.getString('lang');
     if (lang == 'en') {
@@ -56,11 +58,13 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     }
 
     var pairArray = widget.pair.split('/');
+
     String fileText = await rootBundle.loadString('assets/pages/index.html');
     fileText = fileText
         .replaceAll('BTC', pairArray[0])
         .replaceAll('USDT', pairArray[1])
         .replaceAll('en_US', lang)
+        .replaceAll('30m', interval)
         .replaceAll('https://kanbantest.fabcoinapi.com/',
             environment['endpoints']['kanban'])
         .replaceAll(
