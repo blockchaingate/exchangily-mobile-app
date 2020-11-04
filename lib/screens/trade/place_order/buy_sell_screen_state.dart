@@ -25,6 +25,7 @@ import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/screens/trade/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -100,6 +101,9 @@ class BuySellScreenState extends BaseViewModel {
   var storageService = locator<LocalStorageService>();
   double unlockedAmount;
   double lockedAmount;
+  
+  ExchangeBalanceModel targetCoinExchangeBalance;
+  ExchangeBalanceModel baseCoinExchangeBalance;
   init() async {
     // log.e(pair);
     // splitPair(pair);
@@ -116,27 +120,42 @@ class BuySellScreenState extends BaseViewModel {
     fillPriceAndQuantityTextFields();
   }
 
-  Future getSingleCoinExchangeBalanceFromAll(String tickerName) async {
+ /*----------------------------------------------------------------------
+                Single coin exchange balance using old api
+----------------------------------------------------------------------*/
+  Future getSingleCoinExchangeBalanceFromAll(
+      String targetCoin, String baseCoin) async {
     setBusy(true);
     log.e('In get exchange assets');
-    String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
-    List res = await walletService.assetsBalance(exgAddress);
-    log.e('RES $res');
+
     // await getSingleCoinExchangeBalance(tickerName).then((value) {
     //   print('exchangeBalance using api ${value.toJson()}');
     //   exchangeBalance = value;
     // });
-    // if (exchangeBalance.lockedAmount == null) {
+    //  if (exchangeBalance == null) {
+    String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    List res = await walletService.getAllExchangeBalances(exgAddress);
+    log.e('RES $res');
+    targetCoinExchangeBalance = new ExchangeBalanceModel();
+    baseCoinExchangeBalance = new ExchangeBalanceModel();
 
     res.forEach((coin) {
-      if (coin['coin'] == tickerName) {
+      if (coin['coin'] == baseCoin) {
         log.w('singleCoinExchangeBalance $coin');
-        unlockedAmount = coin['amount'];
-        lockedAmount = coin['lockedAmount'];
-        print('exchangeBalance using all coins for loop $unlockedAmount');
+        baseCoinExchangeBalance.unlockedAmount = coin['amount'];
+        baseCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
+        print(
+            'exchangeBalance using all coins for loop ${baseCoinExchangeBalance.toJson()}');
+      }
+      if (coin['coin'] == targetCoin) {
+        log.w('singleCoinExchangeBalance $coin');
+        targetCoinExchangeBalance.unlockedAmount = coin['amount'];
+        targetCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
+        print(
+            'exchangeBalance using all coins for loop ${targetCoinExchangeBalance.toJson()}');
       }
     });
-    // }
+
     setBusy(false);
   }
 
@@ -181,7 +200,7 @@ class BuySellScreenState extends BaseViewModel {
     targetCoinName = coinsArray[0];
     tickerName = targetCoinName + baseCoinName;
     log.e('tickername $tickerName');
-    getSingleCoinExchangeBalanceFromAll(targetCoinName);
+    getSingleCoinExchangeBalanceFromAll(targetCoinName,baseCoinName);
     setBusy(false);
   }
 
@@ -597,7 +616,7 @@ class BuySellScreenState extends BaseViewModel {
             context);
               Future.delayed(new Duration(seconds: 3),
                                   () {
-         getSingleCoinExchangeBalanceFromAll(targetCoinName);});
+         getSingleCoinExchangeBalanceFromAll(targetCoinName,baseCoinName);});
       } else {
         walletService.showInfoFlushbar(
             AppLocalizations.of(context).placeOrderTransactionFailed,
@@ -621,10 +640,11 @@ class BuySellScreenState extends BaseViewModel {
   checkPass(context) async {
     setBusy(true);
 
-    var targetCoinbalance =
-        targetCoinWalletData.inExchange; // coin(asset) bal for sell
-    var baseCoinbalance = baseCoinWalletData // usd bal for buy
-        .inExchange;
+ var targetCoinbalance = targetCoinExchangeBalance.unlockedAmount;
+
+    //targetCoinWalletData.inExchange; // coin(asset) bal for sell
+    var baseCoinbalance = baseCoinExchangeBalance.unlockedAmount;
+    // baseCoinWalletData.inExchange; // usd bal for buy
 
     if (price == null ||
         quantity == null ||
@@ -640,8 +660,8 @@ class BuySellScreenState extends BaseViewModel {
     if (!bidOrAsk) {
       caculateTransactionAmount();
       log.e(
-          'SELL tx amount $transactionAmount -- targetCoinbalance ${targetCoinbalance * price}');
-      if (caculateTransactionAmount() > (targetCoinbalance * price)) {
+          'SELL tx amount $transactionAmount -- targetCoinbalance ${targetCoinbalance}');
+      if (caculateTransactionAmount() > targetCoinbalance) {
         sharedService.alertDialog(
             "", AppLocalizations.of(context).invalidAmount,
             isWarning: false);

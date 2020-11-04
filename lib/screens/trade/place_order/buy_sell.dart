@@ -45,7 +45,7 @@ class BuySellView extends StatelessWidget {
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
     return ViewModelBuilder<BuySellScreenState>.reactive(
-      viewModelBuilder:() => BuySellScreenState(),
+        viewModelBuilder: () => BuySellScreenState(),
         onModelReady: (model) async {
           model.context = context;
           model.globalKeyOne = _one;
@@ -668,35 +668,19 @@ class BalanceRowWidget extends StatelessWidget {
                         TextStyle(color: globals.primaryColor, fontSize: 13.0))
             :
             // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
-            model.bidOrAsk == true
+            model.bidOrAsk
                 ? Text(
-                    "${model.baseCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
+                    "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
                         " " +
                         model.baseCoinName,
                     style:
                         TextStyle(color: globals.primaryColor, fontSize: 13.0))
-                : model.isBusy ? CupertinoActivityIndicator(): Column(
-                    children: [ 
-                      model.unlockedAmount == null? Text('0.0', style: TextStyle(
-                              color: globals.primaryColor, fontSize: 13.0))
-                     : Text(
-                          "${model.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
-                              " " +
-                              model.targetCoinName,
-                          style: TextStyle(
-                              color: globals.primaryColor, fontSize: 13.0)),
-                      // Text(
-                      //   '\$' +
-                      //       (model.targetCoinWalletData
-                      //                   .inExchange *
-                      //               model.price)
-                      //           .toStringAsFixed(2),
-                      //   style: Theme.of(context)
-                      //       .textTheme
-                      //       .subtitle2,
-                      // )
-                    ],
-                  )
+                : Text(
+                    "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
+                        " " +
+                        model.targetCoinName,
+                    style:
+                        TextStyle(color: globals.primaryColor, fontSize: 13.0))
       ],
     );
   }
