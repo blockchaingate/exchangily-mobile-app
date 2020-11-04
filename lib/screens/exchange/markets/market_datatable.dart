@@ -58,15 +58,15 @@ class _MarketDataTableState extends State<MarketDataTable> {
       //Use the theme to change data table sort icon color
       data: ThemeData.dark(),
       child: DataTable(
-          dataRowHeight: 60,
+          dataRowHeight: 55,
           sortAscending: _sortAsc,
           sortColumnIndex: _sortColumnIndex,
-          horizontalMargin: 7,
-          columnSpacing: 0,
+          horizontalMargin: 5,
+          columnSpacing: 5,
           columns: [
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 3 / 11,
+                width: MediaQuery.of(context).size.width * 3 / 15,
                 child: Text(
                   AppLocalizations.of(context).ticker,
                   style: Theme.of(context).textTheme.headline6,
@@ -168,7 +168,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
             ),
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 2 / 11,
+                width: MediaQuery.of(context).size.width * 2 / 15,
                 child: Text(
                   AppLocalizations.of(context).change,
                   style: Theme.of(context).textTheme.headline6,

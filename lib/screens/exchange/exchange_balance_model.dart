@@ -5,9 +5,9 @@ class ExchangeBalanceModel {
   ExchangeBalanceModel({double unlockedAmount, double lockedAmount});
 
   factory ExchangeBalanceModel.fromJson(Map<String, dynamic> json) {
-    return ExchangeBalanceModel(
-        unlockedAmount: json['unlockedAmount'] ?? 0.0,
-        lockedAmount: json['lockedAmount'] ?? 0.0);
+    return new ExchangeBalanceModel(
+        unlockedAmount: json['unlockedAmount'] as double,
+        lockedAmount: json['lockedAmount'] as double);
   }
 
   Map<String, dynamic> toJson() {

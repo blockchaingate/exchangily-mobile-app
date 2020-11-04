@@ -66,8 +66,7 @@ class ApiService {
       log.w('json data  $json');
       if (json != null) {
         json['message'] != null
-            ? exchangeBalance =
-                ExchangeBalanceModel(lockedAmount: 12.0, unlockedAmount: 14.0)
+            ? exchangeBalance = null
             : exchangeBalance = ExchangeBalanceModel.fromJson(json);
       }
       log.e('exchangeBalance ${exchangeBalance.toJson()}');
@@ -319,11 +318,11 @@ class ApiService {
       log.e('res ${res.body}');
       var jsonList = jsonDecode(res.body) as List;
       log.i('jsonList $jsonList');
-      //  OrderList orderList = OrderList.fromJson(jsonList);
-      //  print('after order list ${orderList.orders.length}');
+      OrderList orderList = OrderList.fromJson(jsonList);
+      print('after order list ${orderList.orders.length}');
       //  throw Exception('Catch Exception');
-      return jsonList;
-      //orderList.orders;
+      //return jsonList;
+      return orderList.orders;
     } catch (err) {
       log.e('getOrders Failed to load the data from the API， $err');
       throw Exception('Catch Exception $err');

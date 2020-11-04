@@ -199,7 +199,7 @@ class HeaderRow extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 2,
+          flex: 1,
           child: Text(
             'Change',
             style: Theme.of(context).textTheme.subtitle2,

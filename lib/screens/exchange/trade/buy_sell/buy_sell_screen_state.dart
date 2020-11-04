@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
@@ -98,6 +99,10 @@ class BuySellViewModel extends BaseState {
   var storageService = locator<LocalStorageService>();
   double unlockedAmount;
   double lockedAmount;
+  ExchangeBalanceModel targetCoinExchangeBalance;
+  ExchangeBalanceModel baseCoinExchangeBalance;
+  bool isReload = false;
+
   init() async {
     // log.e(pair);
 
@@ -110,7 +115,7 @@ class BuySellViewModel extends BaseState {
     print('3');
     //  tradeListFromTradeService();
     // print('4');
-    // await retrieveWallets();
+    await retrieveWallets();
     print('5');
     await getDecimalPairConfig();
     print('6');
@@ -120,27 +125,52 @@ class BuySellViewModel extends BaseState {
     print('8');
   }
 
-  Future getSingleCoinExchangeBalanceFromAll(String tickerName) async {
+/*----------------------------------------------------------------------
+                      Single coin exchange balance using new api
+----------------------------------------------------------------------*/
+
+  Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
+      String tickerName) async {
+    // using new api endpoint for single exchange balance by name
+    return await apiService.getSingleCoinExchangeBalance(tickerName);
+  }
+
+/*----------------------------------------------------------------------
+                Single coin exchange balance using old api
+----------------------------------------------------------------------*/
+  Future getSingleCoinExchangeBalanceFromAll(
+      String targetCoin, String baseCoin) async {
     setBusy(true);
     log.e('In get exchange assets');
-    String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
-    List res = await walletService.getAllExchangeBalances(exgAddress);
-    log.e('RES $res');
+
     // await getSingleCoinExchangeBalance(tickerName).then((value) {
     //   print('exchangeBalance using api ${value.toJson()}');
     //   exchangeBalance = value;
     // });
-    // if (exchangeBalance.lockedAmount == null) {
+    //  if (exchangeBalance == null) {
+    String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    List res = await walletService.getAllExchangeBalances(exgAddress);
+    log.e('RES $res');
+    targetCoinExchangeBalance = new ExchangeBalanceModel();
+    baseCoinExchangeBalance = new ExchangeBalanceModel();
 
     res.forEach((coin) {
-      if (coin['coin'] == tickerName) {
+      if (coin['coin'] == baseCoin) {
         log.w('singleCoinExchangeBalance $coin');
-        unlockedAmount = coin['amount'];
-        lockedAmount = coin['lockedAmount'];
-        print('exchangeBalance using all coins for loop $unlockedAmount');
+        baseCoinExchangeBalance.unlockedAmount = coin['amount'];
+        baseCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
+        print(
+            'exchangeBalance using all coins for loop ${baseCoinExchangeBalance.toJson()}');
+      }
+      if (coin['coin'] == targetCoin) {
+        log.w('singleCoinExchangeBalance $coin');
+        targetCoinExchangeBalance.unlockedAmount = coin['amount'];
+        targetCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
+        print(
+            'exchangeBalance using all coins for loop ${targetCoinExchangeBalance.toJson()}');
       }
     });
-    // }
+
     setBusy(false);
   }
 
@@ -185,7 +215,7 @@ class BuySellViewModel extends BaseState {
     baseCoinName = coinsArray[1];
     tickerName = targetCoinName + baseCoinName;
     log.e('tickername $tickerName');
-    getSingleCoinExchangeBalanceFromAll(targetCoinName);
+    getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
     setBusy(false);
   }
 
@@ -464,6 +494,8 @@ class BuySellViewModel extends BaseState {
         timeBeforeExpiration,
         false,
         orderHash);
+    log.e('exg add ${exgAddress}');
+
     var nonce = await getNonce(exgAddress);
 
     var keyPairKanban = getExgKeyPair(seed);
@@ -600,7 +632,11 @@ class BuySellViewModel extends BaseState {
             green,
             context);
         Future.delayed(new Duration(seconds: 3), () {
-          getSingleCoinExchangeBalanceFromAll(targetCoinName);
+          getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+          isReload = true;
+        });
+        Future.delayed(new Duration(seconds: 10), () {
+          isReload = true;
         });
       } else {
         walletService.showInfoFlushbar(
@@ -625,10 +661,11 @@ class BuySellViewModel extends BaseState {
   checkPass(context) async {
     setBusy(true);
 
-    var targetCoinbalance =
-        targetCoinWalletData.inExchange; // coin(asset) bal for sell
-    var baseCoinbalance = baseCoinWalletData // usd bal for buy
-        .inExchange;
+    var targetCoinbalance = targetCoinExchangeBalance.unlockedAmount;
+
+    //targetCoinWalletData.inExchange; // coin(asset) bal for sell
+    var baseCoinbalance = baseCoinExchangeBalance.unlockedAmount;
+    // baseCoinWalletData.inExchange; // usd bal for buy
 
     if (price == null ||
         quantity == null ||
@@ -641,10 +678,9 @@ class BuySellViewModel extends BaseState {
     }
 
     if (!bidOrAsk) {
-      caculateTransactionAmount();
       log.e(
-          'SELL tx amount $transactionAmount -- targetCoinbalance ${targetCoinbalance * price}');
-      if (caculateTransactionAmount() > (targetCoinbalance * price)) {
+          'SELL tx amount ${caculateTransactionAmount()} -- targetCoinbalance $targetCoinbalance');
+      if (caculateTransactionAmount() > targetCoinbalance) {
         sharedService.alertDialog(
             "", AppLocalizations.of(context).invalidAmount,
             isWarning: false);
@@ -663,6 +699,7 @@ class BuySellViewModel extends BaseState {
         setBusy(false);
         return;
       } else {
+        print('going to place order');
         await placeBuySellOrder();
       }
     }

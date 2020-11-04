@@ -24,7 +24,8 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 class MyOrdersViewModel extends BaseViewModel {
   // FutureViewModel<List<OrderModel>> {
   final String tickerName;
-  MyOrdersViewModel({this.tickerName});
+  final bool isReload;
+  MyOrdersViewModel({this.tickerName, this.isReload});
 
   final log = getLogger('MyOrdersViewModel');
 

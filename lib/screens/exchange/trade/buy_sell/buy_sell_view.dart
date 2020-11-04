@@ -110,12 +110,12 @@ class BuySellView extends StatelessWidget {
                                 )),
                             // Buy Sell Button
                             UIHelper.verticalSpaceSmall,
-                            // Expanded(
-                            //     flex: 5,
-                            //     child: Container(
-                            //         margin: EdgeInsets.only(left: 3),
-                            //         child:
-                            //             buildRightSideOrderbookColumn(context, model))),
+                            Expanded(
+                                flex: 5,
+                                child: Container(
+                                    margin: EdgeInsets.only(left: 3),
+                                    child: buildRightSideOrderbookColumn(
+                                        context, model))),
                           ],
                         ),
                       ),
@@ -125,7 +125,9 @@ class BuySellView extends StatelessWidget {
  -----------------------------------------------------------*/
 
                       //
-                      //   MyOrdersView(tickerName: model.tickerName),
+                      MyOrdersView(
+                          tickerName: model.tickerName,
+                          isReload: model.isReload),
                     ]),
                     model.busy
                         ? model.sharedService.stackFullScreenLoadingIndicator()
@@ -571,8 +573,8 @@ class BalanceRowWidget extends StatelessWidget {
                         style: TextStyle(
                             color: globals.primaryColor, fontSize: 13.0)),
                     // First Check if Object is null
-                    model.targetCoinWalletData == null &&
-                            model.baseCoinWalletData == null
+                    model.targetCoinExchangeBalance == null ||
+                            model.baseCoinExchangeBalance == null
                         // If true then to avoid error screen, assign/display 0 in both sell and buy tab
                         ? model.bidOrAsk == true
                             ? Text("0.00" + " " + model.baseCoinName,
@@ -585,85 +587,24 @@ class BalanceRowWidget extends StatelessWidget {
                                     fontSize: 13.0))
                         :
                         // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
-                        model.bidOrAsk == true
+                        model.bidOrAsk
                             ? Text(
-                                "${model.baseCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
+                                "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
                                     " " +
                                     model.baseCoinName,
                                 style: TextStyle(
                                     color: globals.primaryColor,
                                     fontSize: 13.0))
-                            : Column(
-                                children: [
-                                  SingleCoinExchangeBalanceWidget(
-                                    tickerName: model.targetCoinName,
-                                  )
-                                  // Text(
-                                  //     "${model.targetCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
-                                  //         " " +
-                                  //         model.targetCoinName,
-                                  //     style: TextStyle(
-                                  //         color: globals.primaryColor,
-                                  //         fontSize: 13.0)),
-                                  // SizedBox(
-                                  //     child: SingleCoinExchangeBalanceWidget(
-                                  //   tickerName: model.targetCoinName,
-                                  // ))
-                                  // Text(
-                                  //   '\$' +
-                                  //       (model.targetCoinWalletData
-                                  //                   .inExchange *
-                                  //               model.price)
-                                  //           .toStringAsFixed(2),
-                                  //   style: Theme.of(context)
-                                  //       .textTheme
-                                  //       .subtitle2,
-                                  // )
-                                ],
-                              )
+                            : Text(
+                                "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
+                                    " " +
+                                    model.targetCoinName,
+                                style: TextStyle(
+                                    color: globals.primaryColor,
+                                    fontSize: 13.0))
                   ],
                 ))
         //  : transferRow(context, model)
         );
   }
-}
-
-class SingleCoinExchangeBalanceWidget
-    extends ViewModelBuilderWidget<MyExchangeAssetsViewModel> {
-  final String tickerName;
-  SingleCoinExchangeBalanceWidget({this.tickerName});
-  @override
-  void onViewModelReady(MyExchangeAssetsViewModel model) async {
-    print('000000000000000');
-    await model.getSingleCoinExchangeBalanceFromAll(tickerName);
-    print('9999999999999');
-  }
-
-  @override
-  bool get createNewModelOnInsert => true;
-
-  @override
-  bool get reactive => true;
-
-  @override
-  Widget builder(
-      BuildContext context, MyExchangeAssetsViewModel model, Widget child) {
-    return Row(
-      children: [
-        model.exchangeBalance.unlockedAmount != null
-            ? Text(model.exchangeBalance.unlockedAmount.toString(),
-                style: TextStyle(color: globals.primaryColor, fontSize: 13.0))
-            : Text('0.0'),
-        Padding(
-          padding: const EdgeInsets.only(left: 4.0),
-          child: Text(tickerName,
-              style: TextStyle(color: globals.primaryColor, fontSize: 13.0)),
-        ),
-      ],
-    );
-  }
-
-  @override
-  MyExchangeAssetsViewModel viewModelBuilder(BuildContext context) =>
-      MyExchangeAssetsViewModel();
 }

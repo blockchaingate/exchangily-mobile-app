@@ -10,15 +10,18 @@ import 'my_order_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
   final String tickerName;
-  MyOrdersView({Key key, this.tickerName}) : super(key: key);
+  final bool isReload;
+  MyOrdersView({Key key, this.tickerName, this.isReload}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
-        disposeViewModel: false,
-        viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
+        createNewModelOnInsert: true,
+        viewModelBuilder: () =>
+            MyOrdersViewModel(tickerName: tickerName, isReload: isReload),
         onModelReady: (model) {
-          print('in init MyOrdersView');
+          print('in init MyOrdersView, is reloading $isReload');
+
           model.init();
           model.myOrdersTabBarView = [
             model.myAllOrders,
@@ -170,7 +173,7 @@ class MyOrdersView extends StatelessWidget {
             child: Text(AppLocalizations.of(context).pair,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
-            flex: 3,
+            flex: 2,
             child: Text(AppLocalizations.of(context).price,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
@@ -227,7 +230,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                       child: Text(order.pairName.toString(),
                           style: Theme.of(context).textTheme.headline6)),
                   Expanded(
-                      flex: 3,
+                      flex: 2,
                       child: Text(
                           order.price.toStringAsFixed(
                               model.decimalConfig.priceDecimal),

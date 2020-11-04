@@ -97,22 +97,23 @@ class TradeViewModel extends MultipleStreamViewModel {
     //   await getExchangeAssets();
     String holder = updateTickerName(pairPriceByRoute.symbol);
     pairSymbolWithSlash = holder;
-    String tickerWithoutBasePair = holder.split('/')[0];
-    if (holder.split('/')[1] == 'USDT' || holder.split('/')[1] == 'DUSD') {
-      usdValue = dataReady('allPrices')
-          ? currentPairPrice.price
-          : pairPriceByRoute.price;
-    } else {
-      usdValue = await apiService
-          .getCoinMarketPriceByTickerName(tickerWithoutBasePair);
-    }
   }
 
 // Change/update stream data before displaying on UI
   @override
-  void onData(String key, data) {
+  void onData(String key, data) async {
     // orderBook = [buyOrderBookList, sellOrderBookList];
     // cancelSingleStreamByKey(allPricesStreamKey);
+    if (pairSymbolWithSlash.split('/')[1] == 'USDT' ||
+        pairSymbolWithSlash.split('/')[1] == 'DUSD') {
+      usdValue = dataReady('allPrices')
+          ? currentPairPrice.price
+          : pairPriceByRoute.price;
+    } else {
+      String tickerWithoutBasePair = pairSymbolWithSlash.split('/')[0];
+      usdValue = await apiService
+          .getCoinMarketPriceByTickerName(tickerWithoutBasePair);
+    }
   }
 
 /*----------------------------------------------------------------------

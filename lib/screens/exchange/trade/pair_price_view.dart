@@ -43,11 +43,11 @@ class PairPriceView extends StatelessWidget {
                     style: TextStyle(fontSize: 30, color: priceColor)),
                 Column(
                   children: [
-                    Text(
-                        "\$" +
-                            usdValue
-                                .toStringAsFixed(decimalConfig.priceDecimal),
-                        style: Theme.of(context).textTheme.headline3),
+                    // Text(
+                    //     "\$" +
+                    //         usdValue
+                    //             .toStringAsFixed(decimalConfig.priceDecimal),
+                    //     style: Theme.of(context).textTheme.headline3),
                     Row(
                       children: [
                         Text(
