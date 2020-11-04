@@ -28,6 +28,7 @@ import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:stacked/stacked.dart';
 
 import 'buy_sell_screen_state.dart';
 
@@ -43,7 +44,8 @@ class BuySellView extends StatelessWidget {
     SharedService sharedService = locator<SharedService>();
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
-    return BaseScreen<BuySellScreenState>(
+    return ViewModelBuilder<BuySellScreenState>.reactive(
+      viewModelBuilder:() => BuySellScreenState(),
         onModelReady: (model) async {
           model.context = context;
           model.globalKeyOne = _one;
@@ -567,7 +569,7 @@ class BuySellView extends StatelessWidget {
                         // My Orders view
                         MyOrdersView(tickerName: model.tickerName),
                       ]),
-                      model.busy
+                      model.isBusy
                           ? model.sharedService
                               .stackFullScreenLoadingIndicator()
                           : Container(),
@@ -673,10 +675,12 @@ class BalanceRowWidget extends StatelessWidget {
                         model.baseCoinName,
                     style:
                         TextStyle(color: globals.primaryColor, fontSize: 13.0))
-                : Column(
-                    children: [
-                      Text(
-                          "${model.targetCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
+                : model.isBusy ? CupertinoActivityIndicator(): Column(
+                    children: [ 
+                      model.unlockedAmount == null? Text('0.0', style: TextStyle(
+                              color: globals.primaryColor, fontSize: 13.0))
+                     : Text(
+                          "${model.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
                               " " +
                               model.targetCoinName,
                           style: TextStyle(
