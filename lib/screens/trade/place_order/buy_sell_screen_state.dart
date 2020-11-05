@@ -25,7 +25,7 @@ import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
-import 'package:exchangilymobileapp/screens/trade/exchange_balance_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -101,7 +101,7 @@ class BuySellScreenState extends BaseViewModel {
   var storageService = locator<LocalStorageService>();
   double unlockedAmount;
   double lockedAmount;
-  
+
   ExchangeBalanceModel targetCoinExchangeBalance;
   ExchangeBalanceModel baseCoinExchangeBalance;
   init() async {
@@ -120,7 +120,7 @@ class BuySellScreenState extends BaseViewModel {
     fillPriceAndQuantityTextFields();
   }
 
- /*----------------------------------------------------------------------
+  /*----------------------------------------------------------------------
                 Single coin exchange balance using old api
 ----------------------------------------------------------------------*/
   Future getSingleCoinExchangeBalanceFromAll(
@@ -200,7 +200,7 @@ class BuySellScreenState extends BaseViewModel {
     targetCoinName = coinsArray[0];
     tickerName = targetCoinName + baseCoinName;
     log.e('tickername $tickerName');
-    getSingleCoinExchangeBalanceFromAll(targetCoinName,baseCoinName);
+    getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
     setBusy(false);
   }
 
@@ -614,9 +614,9 @@ class BuySellScreenState extends BaseViewModel {
             Icons.check,
             green,
             context);
-              Future.delayed(new Duration(seconds: 3),
-                                  () {
-         getSingleCoinExchangeBalanceFromAll(targetCoinName,baseCoinName);});
+        Future.delayed(new Duration(seconds: 3), () {
+          getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+        });
       } else {
         walletService.showInfoFlushbar(
             AppLocalizations.of(context).placeOrderTransactionFailed,
@@ -640,7 +640,7 @@ class BuySellScreenState extends BaseViewModel {
   checkPass(context) async {
     setBusy(true);
 
- var targetCoinbalance = targetCoinExchangeBalance.unlockedAmount;
+    var targetCoinbalance = targetCoinExchangeBalance.unlockedAmount;
 
     //targetCoinWalletData.inExchange; // coin(asset) bal for sell
     var baseCoinbalance = baseCoinExchangeBalance.unlockedAmount;
@@ -649,8 +649,7 @@ class BuySellScreenState extends BaseViewModel {
     if (price == null ||
         quantity == null ||
         price.isNegative ||
-        quantity.isNegative
-        ) {
+        quantity.isNegative) {
       setBusy(false);
       sharedService.alertDialog("", AppLocalizations.of(context).invalidAmount,
           isWarning: false);

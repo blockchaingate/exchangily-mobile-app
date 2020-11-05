@@ -657,7 +657,8 @@ class BalanceRowWidget extends StatelessWidget {
         Text(AppLocalizations.of(context).balance,
             style: TextStyle(color: globals.primaryColor, fontSize: 13.0)),
         // First Check if Object is null
-        model.targetCoinWalletData == null && model.baseCoinWalletData == null
+        model.baseCoinExchangeBalance == null &&
+                model.targetCoinExchangeBalance == null
             // If true then to avoid error screen, assign/display 0 in both sell and buy tab
             ? model.bidOrAsk == true
                 ? Text("0.00" + " " + model.baseCoinName,
