@@ -22,6 +22,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
@@ -30,6 +31,8 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -49,7 +52,10 @@ import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 import 'dart:core';
 
-class BuySellViewModel extends BaseState {
+class BuySellViewModel extends ReactiveViewModel {
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [tradeService];
+
   final log = getLogger('BuySellViewModel');
   List<WalletInfo> walletInfo;
   WalletInfo targetCoinWalletData;
@@ -57,7 +63,9 @@ class BuySellViewModel extends BaseState {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
+  OrderService _orderService = locator<OrderService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+  NavigationService navigationService = locator<NavigationService>();
 
   BuildContext context;
   bool bidOrAsk;
@@ -68,6 +76,7 @@ class BuySellViewModel extends BaseState {
   TextEditingController kanbanGasLimitTextController = TextEditingController();
   TextEditingController quantityTextController = TextEditingController();
   TextEditingController priceTextController = TextEditingController();
+
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
@@ -81,9 +90,12 @@ class BuySellViewModel extends BaseState {
   IOWebSocketChannel tradeListChannel;
   double price;
   double quantity;
+
+  double get priceFromTradeService => tradeService.price;
+  double get quantityFromTradeService => tradeService.quantity;
   String exgAddress;
   WalletInfo coin;
-  final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
+  // final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
   List<OrderModel> orderList;
   double transactionAmount = 0;
   List<PairDecimalConfig> pairDecimalConfigList = [];
@@ -92,7 +104,7 @@ class BuySellViewModel extends BaseState {
   ApiService apiService = locator<ApiService>();
   String pair = '';
   String tickerName = '';
-  Orderbook orderbook;
+
   //Price passedPair;
   GlobalKey globalKeyOne;
   GlobalKey globalKeyTwo;
@@ -102,7 +114,7 @@ class BuySellViewModel extends BaseState {
   ExchangeBalanceModel targetCoinExchangeBalance;
   ExchangeBalanceModel baseCoinExchangeBalance;
   bool isReload = false;
-
+  String pairSymbolWithSlash = '';
   init() async {
     // log.e(pair);
 
@@ -184,12 +196,15 @@ class BuySellViewModel extends BaseState {
       });
   }
 
+  /*----------------------------------------------------------------------
+                        Fill text fields
+----------------------------------------------------------------------*/
   fillPriceAndQuantityTextFields() {
     setBusy(true);
-    priceTextController.text = orderbook.price.toString();
-    price = orderbook.price;
-    quantityTextController.text = orderbook.quantity.toString();
-    quantity = orderbook.quantity;
+    priceTextController.text = priceFromTradeService.toString();
+    price = priceFromTradeService;
+    quantityTextController.text = quantityFromTradeService.toString();
+    quantity = quantityFromTradeService;
     setBusy(false);
   }
 
@@ -401,10 +416,10 @@ class BuySellViewModel extends BaseState {
           openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds;
       var newCloseOrds =
           closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds;
-      if ((myordersState != null) && (myordersState.currentState != null)) {
-        myordersState.currentState
-            .refreshBalOrds(newbals, newOpenOrds, newCloseOrds, exgAddress);
-      }
+      // if ((myordersState != null) && (myordersState.currentState != null)) {
+      //   myordersState.currentState
+      //       .refreshBalOrds(newbals, newOpenOrds, newCloseOrds, exgAddress);
+      // }
     });
     setBusy(false);
   }
@@ -635,8 +650,20 @@ class BuySellViewModel extends BaseState {
           getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
           isReload = true;
         });
-        Future.delayed(new Duration(seconds: 10), () {
-          isReload = true;
+        Future.delayed(new Duration(seconds: 6), () async {
+          // await _orderService.getMyOrdersByTickerName(
+          //     exgAddress, targetCoinName + baseCoinName);
+          _orderService.swapSources();
+          notifyListeners();
+          //navigationService.goBack();
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) => BuySellView(
+          //           orderbook: orderbook,
+          //           pairSymbolWithSlash: pairSymbolWithSlash,
+          //           bidOrAsk: bidOrAsk)),
+          //  );
         });
       } else {
         walletService.showInfoFlushbar(
@@ -678,9 +705,8 @@ class BuySellViewModel extends BaseState {
     }
 
     if (!bidOrAsk) {
-      log.e(
-          'SELL tx amount ${caculateTransactionAmount()} -- targetCoinbalance $targetCoinbalance');
-      if (caculateTransactionAmount() > targetCoinbalance) {
+      log.e('SELL tx amount $quantity -- targetCoinbalance $targetCoinbalance');
+      if (quantity > targetCoinbalance) {
         sharedService.alertDialog(
             "", AppLocalizations.of(context).invalidAmount,
             isWarning: false);

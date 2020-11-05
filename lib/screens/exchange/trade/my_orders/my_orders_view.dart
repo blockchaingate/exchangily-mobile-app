@@ -16,12 +16,11 @@ class MyOrdersView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
-        createNewModelOnInsert: true,
         viewModelBuilder: () =>
             MyOrdersViewModel(tickerName: tickerName, isReload: isReload),
         onModelReady: (model) {
           print('in init MyOrdersView, is reloading $isReload');
-
+          model.context = context;
           model.init();
           // model.myOrdersTabBarView = [
           //   model.myAllOrders,
@@ -78,14 +77,21 @@ class MyOrdersView extends StatelessWidget {
                                     scale: 0.75,
                                     child: Switch.adaptive(
                                         activeColor: primaryColor,
-                                        value: model.showCurrentPairOrders,
+                                        value: model.isShowAllOrders,
                                         onChanged: (v) {
+                                          print('switch value $v');
+                                          model.busy(true);
                                           model.swapSources();
+                                          print(
+                                              'called swap sources in the viewmodel from view');
+                                          model.busy(false);
                                         }),
                                   ),
                                 ],
                               ),
-
+                              model.errorMessage.isNotEmpty
+                                  ? Center(child: Text(model.errorMessage))
+                                  : Container(),
                               // Order type tabs
                               Column(
                                 children: <Widget>[

@@ -61,8 +61,8 @@ class TradeViewModel extends MultipleStreamViewModel {
   Map<String, StreamData> get streamsMap => {
         tickerStreamKey: StreamData<dynamic>(
             tradeService.getTickerDataStream(pairPriceByRoute.symbol)),
-        orderBookStreamKey: StreamData<dynamic>(tradeService
-            .getOrderBookStreamByTickerName(pairPriceByRoute.symbol)),
+        // orderBookStreamKey: StreamData<dynamic>(tradeService
+        //     .getOrderBookStreamByTickerName(pairPriceByRoute.symbol)),
         marketTradesStreamKey: StreamData<dynamic>(tradeService
             .getMarketTradesStreamByTickerName(pairPriceByRoute.symbol))
       };
@@ -138,24 +138,24 @@ class TradeViewModel extends MultipleStreamViewModel {
                         Orderbook
 ----------------------------------------------------------------------*/
 
-      else if (key == orderBookStreamKey) {
-        var jsonDynamic = jsonDecode(data);
-        print('Orderbook $jsonDynamic');
-        orderbook = Orderbook.fromJson(jsonDynamic);
-        //  OrderList orderList = OrderList.fromJson(jsonDynamicList);
-        //  log.e('orderList.orders.length ${orderList.orders.length}');
-        //  buyOrderBookList = orderAggregation(orderList.orders);
+      // else if (key == orderBookStreamKey) {
+      //   var jsonDynamic = jsonDecode(data);
+      //   log.w('Orderbook $jsonDynamic');
+      //   orderbook = Orderbook.fromJson(jsonDynamic);
+      //   //  OrderList orderList = OrderList.fromJson(jsonDynamicList);
+      //   //  log.e('orderList.orders.length ${orderList.orders.length}');
+      //   //  buyOrderBookList = orderAggregation(orderList.orders);
 
-        // Sell orders
-        //  List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
-        // OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
-        //  List sellOrders = sellOrderList.orders.reversed
-        //      .toList(); // reverse sell orders to show the list ascending
+      //   // Sell orders
+      //   //  List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
+      //   // OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
+      //   //  List sellOrders = sellOrderList.orders.reversed
+      //   //      .toList(); // reverse sell orders to show the list ascending
 
-        //  sellOrderBookList = orderAggregation(sellOrderList.orders);
-        log.w(
-            'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
-      }
+      //   //  sellOrderBookList = orderAggregation(sellOrderList.orders);
+      //   log.w(
+      //       'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
+      // }
 
 /*----------------------------------------------------------------------
                     Market trade list

@@ -18,6 +18,8 @@ import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:observable_ish/observable_ish.dart';
+import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -25,10 +27,29 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import "package:hex/hex.dart";
 
-class TradeService {
+class TradeService with ReactiveServiceMixin {
+  TradeService() {
+    listenToReactiveValues([_price, _quantity]);
+  }
+
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
   static String basePath = environment['websocket'];
+
+  RxValue<double> _price = RxValue<double>(initial: 0.0);
+  double get price => _price.value;
+
+  RxValue<double> _quantity = RxValue<double>(initial: 0.0);
+  double get quantity => _quantity.value;
+
+/*----------------------------------------------------------------------
+                    Set price and quantity
+----------------------------------------------------------------------*/
+  void setPriceQuantityValues(double p, double q) {
+    _price.value = p;
+    _quantity.value = q;
+    log.w('$price, $quantity');
+  }
 
 /*----------------------------------------------------------------------
                     Convert fab to hex
@@ -153,7 +174,7 @@ class TradeService {
   }
 
 /*----------------------------------------------------------------------
-                      Orders
+                      Orderbook
 ----------------------------------------------------------------------*/
 
   Stream getOrderBookStreamByTickerName(String tickerName) {

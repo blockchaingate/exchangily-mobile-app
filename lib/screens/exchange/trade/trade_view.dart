@@ -136,7 +136,6 @@ class TradeView extends StatelessWidget {
                   : Container(
                       child: ListView(children: [
                         /// Ticker price stream
-
                         Container(
                           margin: EdgeInsets.only(top: 5.0),
                           child: PairPriceView(
@@ -168,7 +167,8 @@ class TradeView extends StatelessWidget {
                                 },
                                 indicatorColor: primaryColor,
                                 indicatorSize: TabBarIndicatorSize.tab,
-                                // Tabs
+                                // Tab Names
+
                                 tabs: [
                                   Text(AppLocalizations.of(context).orderBook,
                                       style: Theme.of(context)
@@ -208,15 +208,8 @@ class TradeView extends StatelessWidget {
                                 children: [
                                   // order book container
                                   Container(
-                                    child: !model
-                                            .dataReady(model.orderBookStreamKey)
-                                        ? ShimmerLayout(
-                                            layoutType: 'orderbook',
-                                          )
-                                        : OrderBookView(
-                                            orderbook: model.orderbook,
-                                            decimalConfig:
-                                                model.singlePairDecimalConfig),
+                                    child: OrderBookView(
+                                        tickerName: pairPriceByRoute.symbol),
                                   ),
 
                                   // Market trades
@@ -230,7 +223,7 @@ class TradeView extends StatelessWidget {
                                             marketTrades:
                                                 model.marketTradesList),
                                   ),
-                                  Container(),
+
                                   MyOrdersView(
                                       tickerName: pairPriceByRoute.symbol),
                                   // My Exchange Asssets
@@ -296,13 +289,12 @@ class TradeView extends StatelessWidget {
                               color: buyPrice,
                               onPressed: () {
                                 if (model.currentPairPrice != null &&
-                                    model.dataReady(model.orderBookStreamKey) &&
                                     !model.isBusy)
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => BuySellView(
-                                            orderbook: model.orderbook,
+                                            //   orderbook: model.orderbook,
                                             pairSymbolWithSlash:
                                                 model.pairSymbolWithSlash,
                                             bidOrAsk: true)),
@@ -323,13 +315,12 @@ class TradeView extends StatelessWidget {
                                 side: BorderSide(color: sellPrice, width: 1)),
                             onPressed: () {
                               if (model.currentPairPrice != null &&
-                                  model.dataReady(model.orderBookStreamKey) &&
                                   !model.isBusy)
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => BuySellView(
-                                          orderbook: model.orderbook,
+                                          //  orderbook: model.orderbook,
                                           pairSymbolWithSlash:
                                               model.pairSymbolWithSlash,
                                           bidOrAsk: false)),

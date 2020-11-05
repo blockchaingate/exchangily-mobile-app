@@ -2,113 +2,133 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
 class OrderBookView extends StatelessWidget {
-  final Orderbook orderbook;
-  final DecimalConfig decimalConfig;
-  OrderBookView({Key key, this.orderbook, this.decimalConfig})
-      : super(key: key);
-  // final NavigationService navigationService = locator<NavigationService>();
+  final String tickerName;
+  OrderBookView({Key key, this.tickerName}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(5.0),
-      child: Column(
-        children: <Widget>[
-          // Heading Buy Sell Orders Row
-          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-            Container(
-              child: Text(AppLocalizations.of(context).buyOrders,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline6),
-            ),
-            Container(
-              child: Text(AppLocalizations.of(context).sellOrders,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline6),
-            ),
-          ]),
-          UIHelper.verticalSpaceSmall,
-          // quanity/price text Row
+    return ViewModelBuilder<OrderbookViewModel>.reactive(
+      // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
+      // which is required override
+      viewModelBuilder: () => OrderbookViewModel(tickerName: tickerName),
+      onModelReady: (model) {
+        // model.context = context;
+        model.init();
+      },
+      builder: (context, model, _) => !model.dataReady
+          ? ShimmerLayout(
+              layoutType: 'orderbook',
+            )
+          : Container(
+              padding: EdgeInsets.all(5.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  // Heading Buy Sell Orders Row
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          child: Text(AppLocalizations.of(context).buyOrders,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline6),
+                        ),
+                        Container(
+                          child: Text(AppLocalizations.of(context).sellOrders,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline6),
+                        ),
+                      ]),
+                  UIHelper.verticalSpaceSmall,
+                  // quanity/price text Row
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Flexible(
-                flex: 1,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 7),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Text(AppLocalizations.of(context).quantity,
-                          textAlign: TextAlign.start,
-                          style: TextStyle(fontSize: 9, color: grey)),
-                      Text(AppLocalizations.of(context).price,
-                          style: TextStyle(fontSize: 9, color: grey))
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 7),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(AppLocalizations.of(context).quantity,
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(fontSize: 9, color: grey)),
+                              Text(AppLocalizations.of(context).price,
+                                  style: TextStyle(fontSize: 9, color: grey))
+                            ],
+                          ),
+                        ),
+                      ),
+                      Flexible(
+                        flex: 1,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 7),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(AppLocalizations.of(context).price,
+                                  style: TextStyle(fontSize: 9, color: grey)),
+                              Text(AppLocalizations.of(context).quantity,
+                                  style: TextStyle(fontSize: 9, color: grey)),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                ),
-              ),
-              Flexible(
-                flex: 1,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 7),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(AppLocalizations.of(context).price,
-                          style: TextStyle(fontSize: 9, color: grey)),
-                      Text(AppLocalizations.of(context).quantity,
-                          style: TextStyle(fontSize: 9, color: grey)),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Buy/Sell Orders List View
-          Row(
-            children: [
-              // Buy orders
-              Flexible(
-                flex: 1,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: orderbook.buyOrders.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return OrderDetailsView(
-                      decimalConfig: decimalConfig,
-                      orders: orderbook.buyOrders,
-                      index: index,
-                      isBuy: true,
-                    );
-                  },
-                ),
-              ),
+                  // Buy/Sell Orders List View
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Buy orders
+                      Expanded(
+                        flex: 1,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: model.orderbook.buyOrders.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return OrderDetailsView(
+                              decimalConfig: model.decimalConfig,
+                              orders: model.orderbook.buyOrders,
+                              index: index,
+                              isBuy: true,
+                            );
+                          },
+                        ),
+                      ),
 
-              // Sell Orders
-              Flexible(
-                flex: 1,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: orderbook.sellOrders.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return OrderDetailsView(
-                      decimalConfig: decimalConfig,
-                      orders: orderbook.sellOrders,
-                      index: index,
-                      isBuy: false,
-                    );
-                  },
-                ),
+                      // Sell Orders
+                      Expanded(
+                        flex: 1,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: model.orderbook.sellOrders.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return OrderDetailsView(
+                              decimalConfig: model.decimalConfig,
+                              orders: model.orderbook.sellOrders,
+                              index: index,
+                              isBuy: false,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                ],
               ),
-            ],
-          )
-        ],
-      ),
+            ),
     );
   }
 }

@@ -16,11 +16,14 @@ import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_scr
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orders_book_view.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 
@@ -32,12 +35,11 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 
 class BuySellView extends StatelessWidget {
-  BuySellView(
-      {Key key, this.bidOrAsk, this.pairSymbolWithSlash, this.orderbook})
+  BuySellView({Key key, this.bidOrAsk, this.pairSymbolWithSlash})
       : super(key: key);
   final bool bidOrAsk;
   final String pairSymbolWithSlash;
-  final Orderbook orderbook;
+
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -45,14 +47,15 @@ class BuySellView extends StatelessWidget {
 
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
-    return BaseScreen<BuySellViewModel>(
+    return ViewModelBuilder<BuySellViewModel>.reactive(
+        viewModelBuilder: () => BuySellViewModel(),
         onModelReady: (model) async {
           model.context = context;
           model.globalKeyOne = _one;
           model.globalKeyTwo = _two;
           model.bidOrAsk = bidOrAsk;
-          model.orderbook = orderbook;
 
+          model.pairSymbolWithSlash = pairSymbolWithSlash;
           // sharedService.context = context;
           model.splitPair(pairSymbolWithSlash);
           // model.setDefaultGasPrice();
@@ -111,11 +114,23 @@ class BuySellView extends StatelessWidget {
                             // Buy Sell Button
                             UIHelper.verticalSpaceSmall,
                             Expanded(
-                                flex: 5,
-                                child: Container(
-                                    margin: EdgeInsets.only(left: 3),
-                                    child: buildRightSideOrderbookColumn(
-                                        context, model))),
+                              flex: 5,
+                              child: Container(
+                                  // height:
+                                  //     MediaQuery.of(context).size.height / 2,
+                                  margin: EdgeInsets.only(left: 3),
+                                  child:
+
+/*----------------------------------------------------------
+                Orderbook view
+ -----------------------------------------------------------*/
+                                      // OrderBookView(tickerName: model.tickerName),
+                                      VerticalOrderbook(
+                                          tickerName: model.tickerName)
+                                  // buildRightSideOrderbookColumn(
+                                  //     context, model),
+                                  ),
+                            ),
                           ],
                         ),
                       ),
@@ -124,12 +139,12 @@ class BuySellView extends StatelessWidget {
                 My Orders view
  -----------------------------------------------------------*/
 
-                      //
                       MyOrdersView(
                           tickerName: model.tickerName,
                           isReload: model.isReload),
+                      //
                     ]),
-                    model.busy
+                    model.isBusy
                         ? model.sharedService.stackFullScreenLoadingIndicator()
                         : Container(),
                   ],
@@ -138,52 +153,8 @@ class BuySellView extends StatelessWidget {
             )));
   }
 
-  Column buildRightSideOrderbookColumn(
-      BuildContext context, BuySellViewModel model) {
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            // Heading Price
-            Container(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(width: 1.0, color: Colors.grey),
-                  ),
-                ),
-                child: Text(AppLocalizations.of(context).price,
-                    style: Theme.of(context).textTheme.headline6)),
-            // Heading Quantity
-            Container(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(width: 1.0, color: Colors.grey),
-                  ),
-                ),
-                child: Text(AppLocalizations.of(context).quantity,
-                    style: Theme.of(context).textTheme.headline6))
-          ],
-        ),
-        orderDetail(orderbook.sellOrders.reversed.toList(), false, model),
-        Container(
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('${orderbook.price.toString()}',
-                    style: Theme.of(context).textTheme.headline4)
-              ],
-            )),
-        orderDetail(orderbook.buyOrders, true, model),
-      ],
-    );
-  }
-
 /*----------------------------------------------------------------------
-                      Buy sell  tab row
+                      Top Buy sell tab row
 ----------------------------------------------------------------------*/
 
   Row buildBuySellTabRow(BuySellViewModel model, BuildContext context) {
@@ -264,66 +235,195 @@ class BuySellView extends StatelessWidget {
       backgroundColor: Color(0XFF1f2233),
     );
   }
+}
+/*----------------------------------------------------------------------
+                      Orderbook rightside
+----------------------------------------------------------------------*/
 
+/// Using orderDetail here in this buy and sell screen to fill the price
+///  and quanity in text fields when user click on the order
+class VerticalOrderbook extends StatelessWidget {
+  final String tickerName;
+  VerticalOrderbook({this.tickerName});
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder<OrderbookViewModel>.reactive(
+      // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
+      // which is required override
+      viewModelBuilder: () => OrderbookViewModel(tickerName: tickerName),
+      onModelReady: (model) {
+        // model.context = context;
+        model.init();
+      },
+      builder: (context, model, _) => !model.dataReady
+          ? Container(
+              height: MediaQuery.of(context).size.height / 2.7,
+              child: Center(
+                  child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: Container(
+                          color: globals.white,
+                          child: CupertinoActivityIndicator()))))
+          : Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    // Heading Price
+                    Container(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(width: 1.0, color: Colors.grey),
+                          ),
+                        ),
+                        child: Text(AppLocalizations.of(context).price,
+                            style: Theme.of(context).textTheme.headline6)),
+                    // Heading Quantity
+                    Container(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(width: 1.0, color: Colors.grey),
+                          ),
+                        ),
+                        child: Text(AppLocalizations.of(context).quantity,
+                            style: Theme.of(context).textTheme.headline6))
+                  ],
+                ),
+                buildVerticalOrderbookColumn(
+                    model.orderbook.sellOrders.reversed.toList(), false, model),
+                Container(
+                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('${model.orderbook.price.toString()}',
+                            style: Theme.of(context).textTheme.headline4)
+                      ],
+                    )),
+                buildVerticalOrderbookColumn(
+                    model.orderbook.buyOrders, true, model),
+              ],
+            ),
+    );
+  }
+}
 /*----------------------------------------------------------------------
                       Order Detail
 ----------------------------------------------------------------------*/
 
-  /// Using orderDetail here in this buy and sell screen to fill the price
-  ///  and quanity in text fields when user click on the order
-  Widget orderDetail(List<OrderType> orderArray, final bool bidOrAsk, model) {
-    // List<OrderType> sellOrders = [];
-    print('OrderArray length before ${orderArray.length}');
-    orderArray = (orderArray.length > 7)
-        ? orderArray = (orderArray.sublist(0, 7))
-        : orderArray;
-    // if (bidOrAsk) {
-    //   sellOrders = orderArray.reversed.toList();
-    //   orderArray = sellOrders;
-    // }
-    print('OrderArray length after ${orderArray.length}');
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: <Widget>[
-        for (var order in orderArray)
-          InkWell(
-            onTap: () {
-              model.setBusy(true);
-              model.quantityTextController.text =
-                  order.quantity.toStringAsFixed(model.quantityDecimal);
-              model.quantity = order.quantity;
-              model.priceTextController.text =
-                  order.price.toStringAsFixed(model.priceDecimal);
-              model.price = order.price;
-              model.transactionAmount = model.quantity * model.price;
-              model.updateTransFee();
-              model.setBusy(false);
-            },
-            child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(order.price.toStringAsFixed(model.priceDecimal),
-                        style: TextStyle(
-                            color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
-                            fontSize: 13.0)),
-                    Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                        color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
-                        child: Text(
-                            order.quantity
-                                .toStringAsFixed(model.quantityDecimal),
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 13.0)))
-                  ],
-                )),
-          )
-      ],
-    );
-  }
+Column buildVerticalOrderbookColumn(
+    List<OrderType> orderArray, final bool bidOrAsk, OrderbookViewModel model) {
+  // List<OrderType> sellOrders = [];
+  print('OrderArray length before ${orderArray.length}');
+  orderArray = (orderArray.length > 7)
+      ? orderArray = orderArray.sublist(0, 7)
+      : orderArray;
+  print('OrderArray length after ${orderArray.length}');
+  return Column(
+    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: <Widget>[
+      for (var order in orderArray)
+        InkWell(
+          onTap: () {
+            print('trying filling values ${order.price} --  ${order.quantity}');
+            model.fillTextFields(order.price, order.quantity);
+            // model.setBusy(true);
+            // model.quantityTextController.text =
+            //     order.quantity.toStringAsFixed(model.quantityDecimal);
+            // model.quantity = order.quantity;
+            // model.priceTextController.text =
+            //     order.price.toStringAsFixed(model.priceDecimal);
+            // model.price = order.price;
+            // model.transactionAmount = model.quantity * model.price;
+            // model.updateTransFee();
+            // model.setBusy(false);
+          },
+          child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                      order.price
+                          .toStringAsFixed(model.decimalConfig.priceDecimal),
+                      style: TextStyle(
+                          color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
+                          fontSize: 13.0)),
+                  Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                      color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
+                      child: Text(
+                          order.quantity.toStringAsFixed(
+                              model.decimalConfig.quantityDecimal),
+                          style:
+                              TextStyle(color: Colors.white, fontSize: 13.0)))
+                ],
+              )),
+        )
+    ],
+  );
 }
+
+/*----------------------------------------------------------------------
+                      Old Order Detail Widget
+----------------------------------------------------------------------*/
+
+// Widget orderDetail(List<OrderType> orderArray, final bool bidOrAsk, model) {
+//   // List<OrderType> sellOrders = [];
+//   print('OrderArray length before ${orderArray.length}');
+//   orderArray = (orderArray.length > 7)
+//       ? orderArray = (orderArray.sublist(0, 7))
+//       : orderArray;
+//   // if (bidOrAsk) {
+//   //   sellOrders = orderArray.reversed.toList();
+//   //   orderArray = sellOrders;
+//   // }
+//   print('OrderArray length after ${orderArray.length}');
+//   return Column(
+//     mainAxisAlignment: MainAxisAlignment.spaceAround,
+//     children: <Widget>[
+//       for (var order in orderArray)
+//         InkWell(
+//           onTap: () {
+//             model.setBusy(true);
+//             model.quantityTextController.text =
+//                 order.quantity.toStringAsFixed(model.quantityDecimal);
+//             model.quantity = order.quantity;
+//             model.priceTextController.text =
+//                 order.price.toStringAsFixed(model.priceDecimal);
+//             model.price = order.price;
+//             model.transactionAmount = model.quantity * model.price;
+//             model.updateTransFee();
+//             model.setBusy(false);
+//           },
+//           child: Padding(
+//               padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: <Widget>[
+//                   Text(order.price.toStringAsFixed(model.priceDecimal),
+//                       style: TextStyle(
+//                           color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
+//                           fontSize: 13.0)),
+//                   Container(
+//                       padding:
+//                           EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+//                       color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
+//                       child: Text(
+//                           order.quantity.toStringAsFixed(model.quantityDecimal),
+//                           style:
+//                               TextStyle(color: Colors.white, fontSize: 13.0)))
+//                 ],
+//               )),
+//         )
+//     ],
+//   );
+// }
 
 /*----------------------------------------------------------------------
                       Left Side Column Widgets
@@ -335,8 +435,11 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
 
   @override
   Widget build(BuildContext context, BuySellViewModel model) {
+    print('TEST ETST ${model.priceFromTradeService}');
     return Column(
       children: <Widget>[
+        Text('Testing price : ${model.priceFromTradeService.toString()}'),
+        Text('Testing qty : ${model.quantityFromTradeService.toString()}'),
         // price text input
         Padding(
           padding: EdgeInsets.all(5),

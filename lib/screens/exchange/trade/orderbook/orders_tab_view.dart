@@ -11,15 +11,7 @@ import 'package:stacked/stacked.dart';
 
 // TODO: Change stream accordiongly when user select tab
 
-class OrdersTabView extends
-// StatelessWidget {
-    ViewModelBuilderWidget<TradeViewModel> {
-  // final List<dynamic> ordersViewTabBody;
-  // OrdersTabView({
-  //   Key key,
-  //   // this.ordersViewTabBody
-  // }) : super(key: key);
-
+class OrdersTabView extends ViewModelBuilderWidget<TradeViewModel> {
   @override
   // Widget build(BuildContext context) {
   Widget builder(BuildContext context, TradeViewModel model, Widget child) {
@@ -57,7 +49,9 @@ class OrdersTabView extends
                   height: screenHeight * 0.70,
                   color: Theme.of(context).accentColor,
                   child: TabBarView(children: [
-                    Expanded(child: OrderBookView(orderbook: model.orderbook)),
+                    Expanded(
+                        child: OrderBookView(
+                            tickerName: model.pairPriceByRoute.symbol)),
                     Expanded(
                         child: MarketTradesView(
                             marketTrades: model.marketTradesList)),
@@ -82,24 +76,24 @@ class OrdersTabView extends
   TradeViewModel viewModelBuilder(BuildContext context) => TradeViewModel();
 }
 
-class SelectedTabWidget extends StatelessWidget {
-  final tabBody;
-  final int index;
-  const SelectedTabWidget({Key key, this.tabBody, this.index})
-      : super(key: key);
+// class SelectedTabWidget extends StatelessWidget {
+//   final tabBody;
+//   final int index;
+//   const SelectedTabWidget({Key key, this.tabBody, this.index})
+//       : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: [
-      if (index == 0)
-        Expanded(child: OrderBookView(orderbook: tabBody))
-      else if (index == 1)
-        Expanded(child: MarketTradesView(marketTrades: tabBody))
-      else if (index == 2)
-        Expanded(child: Text(AppLocalizations.of(context).myOrders))
-      // MyOrderDetails(orderList: tabBody)
-    ]);
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(children: [
+//       if (index == 0)
+//         Expanded(child: OrderBookView( tickerName: model.pairPriceByRoute.symbol))
+//       else if (index == 1)
+//         Expanded(child: MarketTradesView(marketTrades: tabBody))
+//       else if (index == 2)
+//         Expanded(child: Text(AppLocalizations.of(context).myOrders))
+//       // MyOrderDetails(orderList: tabBody)
+//     ]);
+//   }
+// }
 
 // Order Book Details
