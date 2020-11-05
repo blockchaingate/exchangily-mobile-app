@@ -8,6 +8,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_mo
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/abi_util.dart';
@@ -32,6 +33,7 @@ class MyOrdersViewModel extends BaseViewModel {
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
   TradeService tradeService = locator<TradeService>();
+  OrderService _orderService = locator<OrderService>();
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   NavigationService navigationService = locator<NavigationService>();
@@ -44,6 +46,8 @@ class MyOrdersViewModel extends BaseViewModel {
   List<OrderModel> myOpenOrders = [];
   List<OrderModel> myCloseOrders = [];
   List<List<OrderModel>> myOrdersTabBarView = [];
+
+  List<OrderModel> get orders => _orderService.orders;
 
   bool isFutureError = false;
   bool _showCurrentPairOrders = false;
@@ -114,13 +118,13 @@ class MyOrdersViewModel extends BaseViewModel {
     String exgAddress = await getExgAddress();
 
     //return
-    await tradeService
-        .getMyOrdersByTickerName(exgAddress, tickerName)
-        .then((data) {
-      if (data != null) {
-        myAllOrders = data;
-        log.e('My order length ${myAllOrders.length}');
-        data.forEach((element) {
+    await _orderService
+        .getMyOrdersByTickerName(exgAddress, tickerName);
+     //   .then((data) {
+     // if (data != null) {
+     //   myAllOrders = data;
+        log.e('My new order length ${orders.length}');
+        orders.forEach((element) {
           /// 'amount' = orderQuantity,
           /// 'filledAmount' = filledQuantity
           // filledAmount =
@@ -141,11 +145,11 @@ class MyOrdersViewModel extends BaseViewModel {
         log.w('open orders ${myOpenOrders.length}');
         log.w('close orders ${myCloseOrders.length}');
         myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
-      }
-    }).catchError((err) {
-      isFutureError = true;
-      log.e('getMyOrdersByTickerName $err');
-    });
+     // }
+    // }).catchError((err) {
+    //   isFutureError = true;
+    //   log.e('getMyOrdersByTickerName $err');
+    // });
     // .then((value) => onData(value));
     //return myAllOrders;
     setBusy(false);

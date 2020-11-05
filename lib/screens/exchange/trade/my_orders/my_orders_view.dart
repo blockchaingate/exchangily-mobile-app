@@ -23,11 +23,11 @@ class MyOrdersView extends StatelessWidget {
           print('in init MyOrdersView, is reloading $isReload');
 
           model.init();
-          model.myOrdersTabBarView = [
-            model.myAllOrders,
-            model.myOpenOrders,
-            model.myCloseOrders
-          ];
+          // model.myOrdersTabBarView = [
+          //   model.myAllOrders,
+          //   model.myOpenOrders,
+          //   model.myCloseOrders
+          // ];
         },
         builder: (context, model, _) => Container(
             child:

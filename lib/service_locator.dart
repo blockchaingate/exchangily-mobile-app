@@ -41,6 +41,7 @@ import 'package:exchangilymobileapp/services/db/transaction_history_database_ser
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
@@ -79,6 +80,8 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
 
   locator.registerLazySingleton(() => PdfViewerService());
+
+  locator.registerLazySingleton(() => OrderService());
 
   // LocalStorageService Singelton
   var instance = await LocalStorageService.getInstance();
