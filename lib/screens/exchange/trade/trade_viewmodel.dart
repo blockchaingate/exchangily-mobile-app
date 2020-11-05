@@ -319,7 +319,8 @@ class TradeViewModel extends MultipleStreamViewModel {
     log.e('In get exchange assets');
     setBusyForObject(myExchangeAssets, true);
     String exgAddress = await getExgAddress();
-    var res = await runBusyFuture(walletService.assetsBalance(exgAddress));
+    var res =
+        await runBusyFuture(walletService.getAllExchangeBalances(exgAddress));
     log.w('Asset exchange $res');
     if (res != null) myExchangeAssets = res;
     // await walletService.assetsBalance(exgAddress).then((value) {

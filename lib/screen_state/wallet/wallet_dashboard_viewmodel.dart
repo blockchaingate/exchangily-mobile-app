@@ -970,7 +970,7 @@ class WalletDashboardViewModel extends BaseState {
   // get exchange asset balance
   getExchangeAssetsBalance() async {
     String address = await getExgAddressFromWalletDatabase();
-    var res = await walletService.assetsBalance(address);
+    var res = await walletService.getAllExchangeBalances(address);
     if (res != null) {
       var length = res.length;
       // For loop over asset balance result

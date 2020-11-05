@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
@@ -202,11 +203,49 @@ class SettingsContainer extends StatelessWidget {
                             },
                             children: [
                                 Center(
-                                  child: Text(
-                                    AppLocalizations.of(context)
-                                        .changeWalletLanguage,
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 3.0),
+                                        child: Icon(
+                                          Icons.language,
+                                          color: grey,
+                                          size: 18,
+                                        ),
+                                      ),
+                                      Text(
+                                        AppLocalizations.of(context)
+                                            .changeWalletLanguage,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children:[
+                                             Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_up,
+                                          color: primaryColor,
+                                          size: 12,
+                                        ),
+                                      ),
+                                         Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
+                                        child: Icon(
+                                          Icons.keyboard_arrow_down,
+                                          color: primaryColor,
+                                          size: 12,
+                                        ),
+                                      ),
+                                        ]
+                                      )
+                                    ],
                                   ),
                                 ),
                                 Center(
@@ -292,6 +331,14 @@ class SettingsContainer extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(right: 5.0),
+                      child: Icon(
+                        Icons.warning,
+                        color: yellow,
+                        size: 18,
+                      ),
+                    ),
                     Text(AppLocalizations.of(context).showDialogWarnings,
                         style: Theme.of(context).textTheme.headline5,
                         textAlign: TextAlign.center),
@@ -311,11 +358,21 @@ class SettingsContainer extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                        AppLocalizations.of(context)
-                            .settingsShowcaseInstructions,
-                        style: Theme.of(context).textTheme.headline5,
-                        textAlign: TextAlign.center),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 5.0),
+                    //   child: Icon(
+                    //     Icons.insert_comment,
+                    //     color: white,
+                    //     size: 18,
+                    //   ),
+                    // ),
+                    Expanded(
+                      child: Text(
+                          AppLocalizations.of(context)
+                              .settingsShowcaseInstructions,
+                          style: Theme.of(context).textTheme.headline5,
+                          textAlign: TextAlign.center),
+                    ),
                     Checkbox(
                         activeColor: globals.primaryColor,
                         value: !model.isShowCaseOnce,

@@ -28,6 +28,7 @@ import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:stacked/stacked.dart';
 
 import 'buy_sell_screen_state.dart';
 
@@ -43,7 +44,8 @@ class BuySellView extends StatelessWidget {
     SharedService sharedService = locator<SharedService>();
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
-    return BaseScreen<BuySellScreenState>(
+    return ViewModelBuilder<BuySellScreenState>.reactive(
+        viewModelBuilder: () => BuySellScreenState(),
         onModelReady: (model) async {
           model.context = context;
           model.globalKeyOne = _one;
@@ -567,7 +569,7 @@ class BuySellView extends StatelessWidget {
                         // My Orders view
                         MyOrdersView(tickerName: model.tickerName),
                       ]),
-                      model.busy
+                      model.isBusy
                           ? model.sharedService
                               .stackFullScreenLoadingIndicator()
                           : Container(),
@@ -655,7 +657,8 @@ class BalanceRowWidget extends StatelessWidget {
         Text(AppLocalizations.of(context).balance,
             style: TextStyle(color: globals.primaryColor, fontSize: 13.0)),
         // First Check if Object is null
-        model.targetCoinWalletData == null && model.baseCoinWalletData == null
+        model.baseCoinExchangeBalance == null &&
+                model.targetCoinExchangeBalance == null
             // If true then to avoid error screen, assign/display 0 in both sell and buy tab
             ? model.bidOrAsk == true
                 ? Text("0.00" + " " + model.baseCoinName,
@@ -666,33 +669,19 @@ class BalanceRowWidget extends StatelessWidget {
                         TextStyle(color: globals.primaryColor, fontSize: 13.0))
             :
             // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
-            model.bidOrAsk == true
+            model.bidOrAsk
                 ? Text(
-                    "${model.baseCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
+                    "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
                         " " +
                         model.baseCoinName,
                     style:
                         TextStyle(color: globals.primaryColor, fontSize: 13.0))
-                : Column(
-                    children: [
-                      Text(
-                          "${model.targetCoinWalletData.inExchange.toStringAsFixed(model.priceDecimal)}" +
-                              " " +
-                              model.targetCoinName,
-                          style: TextStyle(
-                              color: globals.primaryColor, fontSize: 13.0)),
-                      // Text(
-                      //   '\$' +
-                      //       (model.targetCoinWalletData
-                      //                   .inExchange *
-                      //               model.price)
-                      //           .toStringAsFixed(2),
-                      //   style: Theme.of(context)
-                      //       .textTheme
-                      //       .subtitle2,
-                      // )
-                    ],
-                  )
+                : Text(
+                    "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
+                        " " +
+                        model.targetCoinName,
+                    style:
+                        TextStyle(color: globals.primaryColor, fontSize: 13.0))
       ],
     );
   }
