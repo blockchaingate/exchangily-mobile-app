@@ -413,7 +413,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "amount": "可用数量",
+    "amount": "交易额",
     "@amount": {
         "description": "amount_text",
         "type": "text",
