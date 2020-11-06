@@ -32,11 +32,12 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
     listenToReactiveValues([_price, _quantity]);
   }
-Stream tickerStream;
-Stream allPriceStream;
-StreamSubscription _streamSubscription;
-StreamController streamController;
-   @override
+  Stream tickerStream;
+  Stream allPriceStream;
+  StreamSubscription _streamSubscription;
+  StreamController streamController;
+
+  @override
   void start() {
     super.start();
     log.w('starting service');
@@ -44,26 +45,39 @@ StreamController streamController;
   }
 
   @override
-  void stop() async{
+  void stop() async {
     super.stop();
-       log.w('stopping service');
-  //     _streamSubscription = allPriceStream.listen((event) { });
-  //     _streamSubscription.cancel();
-  //  // await getAllPriceChannel().sink.close();
-  //     log.w('all price closed');
-  //   // cancel stream subscription
-
+    log.w('stopping service');
+    //     _streamSubscription = allPriceStream.listen((event) { });
+    //     _streamSubscription.cancel();
+    //  // await getAllPriceChannel().sink.close();
+    //     log.w('all price closed');
+    //   // cancel stream subscription
   }
 
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
   static String basePath = environment['websocket'];
 
+  /// To check if orderbook has loaded in orderbook viewmodel
+  /// and then use this in buysellview to display price and quantity values
+  /// in the textfields
+  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(initial: false);
+  bool get isOrderbookLoaded => _isOrderbookLoaded.value;
+
   RxValue<double> _price = RxValue<double>(initial: 0.0);
   double get price => _price.value;
 
   RxValue<double> _quantity = RxValue<double>(initial: 0.0);
   double get quantity => _quantity.value;
+
+/*----------------------------------------------------------------------
+                    set orderbook loaded status
+----------------------------------------------------------------------*/
+  void setOrderbookLoadedStatus(bool v) {
+    _isOrderbookLoaded.value = v;
+    log.w('setOrderbookLoadedStatus $isOrderbookLoaded');
+  }
 
 /*----------------------------------------------------------------------
                     Set price and quantity
@@ -116,11 +130,11 @@ StreamController streamController;
                     Close IOWebSocket Connections
 ----------------------------------------------------------------------*/
 
-  closeIOWebSocketConnections(String pair)  {
-     getTickerDataChannel(pair,'24').sink.close();
-     getAllPriceChannel().sink.close();
-     getOrderListChannel(pair).sink.close();
-     getTradeListChannel(pair).sink.close();
+  closeIOWebSocketConnections(String pair) {
+    getTickerDataChannel(pair, '24').sink.close();
+    getAllPriceChannel().sink.close();
+    getOrderListChannel(pair).sink.close();
+    getTradeListChannel(pair).sink.close();
   }
 
 /*----------------------------------------------------------------------
@@ -129,7 +143,6 @@ StreamController streamController;
 // Values based on that time interval
 
   Stream getTickerDataStream(String pair, {String interval = '24h'}) {
-    
     try {
       tickerStream = getTickerDataChannel(pair, interval).stream;
       return tickerStream.asBroadcastStream().distinct();
@@ -152,11 +165,11 @@ StreamController streamController;
 ----------------------------------------------------------------------*/
 
 // Stream getAllCoinPriceStream() async* {
-    
+
 // try{
 //        allPriceStream = getAllPriceChannel().stream;
 //        yield allPriceStream;
-// }   
+// }
 //    catch (err) {
 //       log.e('$err'); // Error thrown here will go to onError in them view model
 //       throw Exception(err);

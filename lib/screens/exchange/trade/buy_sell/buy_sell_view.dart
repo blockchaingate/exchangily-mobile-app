@@ -43,8 +43,6 @@ class BuySellView extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    print('1 $bidOrAsk');
-
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
     return ViewModelBuilder<BuySellViewModel>.reactive(
@@ -435,7 +433,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
 
   @override
   Widget build(BuildContext context, BuySellViewModel model) {
-    // model.priceTextController.text = model.priceFromTradeService.toString();
+    //  model.priceTextController.text = model.priceFromTradeService.toString();
     // model.quantityTextController.text =
     //     model.quantityFromTradeService.toString();
     return Column(
@@ -450,8 +448,11 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                   decimalRange: model.priceDecimal,
                   activatedNegativeValues: false)
             ],
+            onTap: () {
+              model.priceTextController.text = '';
+            },
             onChanged: (value) {
-              model.handleTextChanged('price', value);
+              if (value.isNotEmpty) model.handleTextChanged('price', value);
             },
             maxLines: 1,
             controller: model.priceTextController,
@@ -471,8 +472,11 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                   decimalRange: model.quantityDecimal,
                   activatedNegativeValues: false)
             ],
+            onTap: () {
+              model.quantityTextController.text = '';
+            },
             onChanged: (value) {
-              model.handleTextChanged('quantity', value);
+              if (value.isNotEmpty) model.handleTextChanged('quantity', value);
             },
             maxLines: 1,
             controller: model.quantityTextController,

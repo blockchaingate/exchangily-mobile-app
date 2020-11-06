@@ -49,6 +49,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   double filledAmount = 0;
   double filledPercentage = 0;
   String errorMessage = '';
+
   List<OrderModel> myAllOrders = [];
   List<OrderModel> myOpenOrders = [];
   List<OrderModel> myCloseOrders = [];
@@ -78,7 +79,20 @@ class MyOrdersViewModel extends ReactiveViewModel {
   // Future<List<OrderModel>> futureToRun() =>
   //     !_showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
 
-// Clear order lists
+/*-------------------------------------------------------------------------------------
+                        Order aggregation
+-------------------------------------------------------------------------------------*/
+
+  orderAggregation(List<OrderModel> orders) {
+    orders.forEach((order) {
+      // order.price
+    });
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Clear order lists
+-------------------------------------------------------------------------------------*/
+
   clearOrderLists() {
     myAllOrders = [];
     myOpenOrders = [];

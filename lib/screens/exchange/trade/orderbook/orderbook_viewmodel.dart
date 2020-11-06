@@ -7,7 +7,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:stacked/stacked.dart';
 
-class OrderbookViewModel extends StreamViewModel {
+class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
   final String tickerName;
   OrderbookViewModel({this.tickerName});
 
@@ -31,7 +31,10 @@ class OrderbookViewModel extends StreamViewModel {
   @override
   void onData(data) {
     fillTextFields(orderbook.price, orderbook.quantity);
-}
+    log.w('orderbook data ready $dataReady');
+    tradeService.setOrderbookLoadedStatus(true);
+  }
+
   @override
   void onError(error) {
     log.e('Orderbook Stream Error $error');

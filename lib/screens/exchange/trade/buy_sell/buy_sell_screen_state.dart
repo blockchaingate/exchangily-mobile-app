@@ -88,7 +88,7 @@ class BuySellViewModel extends ReactiveViewModel {
   double sliderValue = 10.0;
   IOWebSocketChannel orderListChannel;
   IOWebSocketChannel tradeListChannel;
-  double price;
+  double price = 0.0;
   double quantity;
 
   double get priceFromTradeService => tradeService.price;
@@ -115,26 +115,56 @@ class BuySellViewModel extends ReactiveViewModel {
   ExchangeBalanceModel baseCoinExchangeBalance;
   bool isReload = false;
   String pairSymbolWithSlash = '';
+
+  bool _isOrderbookLoaded = false;
+  bool get isOrderbookLoaded => _isOrderbookLoaded;
+
   init() async {
     // log.e(pair);
+    setBusy(true);
 
     // splitPair(pair);
     print('1');
     setDefaultGasPrice();
     print('2');
-
+    sharedService.context = context;
+    getOrderbookLoadedStatus();
     // orderListFromTradeService();
     print('3');
     //  tradeListFromTradeService();
     // print('4');
-    await retrieveWallets();
+    //await retrieveWallets();
+    exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     print('5');
     await getDecimalPairConfig();
     print('6');
-    sharedService.context = context;
     print('7');
     fillPriceAndQuantityTextFields();
     print('8');
+    setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                    get orderbook loaded status
+----------------------------------------------------------------------*/
+  void getOrderbookLoadedStatus() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      log.i('getOrderbookLoadedStatus timer started');
+      _isOrderbookLoaded = tradeService.isOrderbookLoaded;
+      if (_isOrderbookLoaded) {
+        setBusy(true);
+        price = priceFromTradeService;
+        quantity = quantityFromTradeService;
+        priceTextController.text = price.toString();
+        quantityTextController.text = quantityFromTradeService.toString();
+        timer.cancel();
+        log.i(
+            'getOrderbookLoadedStatus timer cancel -- price $price -- controller ${priceTextController.text}');
+      } else
+        price = 300.0;
+      setBusy(false);
+      log.w('getOrderbookLoadedStatus $isOrderbookLoaded');
+    });
   }
 
 /*----------------------------------------------------------------------
@@ -201,10 +231,10 @@ class BuySellViewModel extends ReactiveViewModel {
 ----------------------------------------------------------------------*/
   fillPriceAndQuantityTextFields() {
     setBusy(true);
-    priceTextController.text = priceFromTradeService.toString();
-    price = priceFromTradeService;
-    quantityTextController.text = quantityFromTradeService.toString();
-    quantity = quantityFromTradeService;
+    // priceTextController.text = priceFromTradeService.toString();
+    // price = priceFromTradeService;
+    // quantityTextController.text = quantityFromTradeService.toString();
+    // quantity = quantityFromTradeService;
     setBusy(false);
   }
 
@@ -231,6 +261,36 @@ class BuySellViewModel extends ReactiveViewModel {
     tickerName = targetCoinName + baseCoinName;
     log.e('tickername $tickerName');
     getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+    setBusy(false);
+  }
+
+/* ---------------------------------------------------
+            Handle Text Change
+--------------------------------------------------- */
+  void handleTextChanged(String name, String text) {
+    setBusy(true);
+    if (name == 'price') {
+      try {
+        price = double.parse(text);
+        log.w('price $price');
+        caculateTransactionAmount();
+        updateTransFee();
+      } catch (e) {
+        setBusy(false);
+        log.e('Handle text price changed $e');
+      }
+    }
+    if (name == 'quantity') {
+      try {
+        quantity = double.parse(text);
+        log.w('quantity $quantity');
+        caculateTransactionAmount();
+        updateTransFee();
+      } catch (e) {
+        setBusy(false);
+        log.e('Handle text quantity changed $e');
+      }
+    }
     setBusy(false);
   }
 
@@ -673,44 +733,18 @@ class BuySellViewModel extends ReactiveViewModel {
   }
 
 /* ---------------------------------------------------
-            Handle Text Change
---------------------------------------------------- */
-  void handleTextChanged(String name, String text) {
-    setBusy(true);
-    if (name == 'price') {
-      try {
-        price = double.parse(text);
-        log.w('price $price');
-        caculateTransactionAmount();
-        updateTransFee();
-      } catch (e) {
-        setBusy(false);
-        log.e('Handle text price changed $e');
-      }
-    }
-    if (name == 'quantity') {
-      try {
-        quantity = double.parse(text);
-        log.w('quantity $quantity');
-        caculateTransactionAmount();
-        updateTransFee();
-      } catch (e) {
-        setBusy(false);
-        log.e('Handle text quantity changed $e');
-      }
-    }
-    setBusy(false);
-  }
-
-/* ---------------------------------------------------
             Slider Onchange
 --------------------------------------------------- */
   sliderOnchange(newValue) {
     setBusy(true);
     sliderValue = newValue;
-    var targetCoinbalance = targetCoinWalletData.inExchange; // usd bal for buy
-    var baseCoinbalance = baseCoinWalletData //coin(asset) bal for sell
-        .inExchange;
+    var targetCoinbalance =
+        targetCoinExchangeBalance.unlockedAmount; // usd bal for buy
+    //  targetCoinWalletData.inExchange;
+    var baseCoinbalance =
+        baseCoinExchangeBalance.unlockedAmount; //coin(asset) bal for sell
+    //baseCoinWalletData
+    //  .inExchange;
     if (quantity.isNaN) quantity = 0.0;
     if (price != null &&
         quantity != null &&
@@ -731,14 +765,14 @@ class BuySellViewModel extends ReactiveViewModel {
         transactionAmount = quantity * price;
         quantityTextController.text = quantity.toStringAsFixed(quantityDecimal);
         updateTransFee();
-        log.i(transactionAmount);
-        log.e(changeBalanceWithSlider);
+        log.w('Slider value $sliderValue');
+        log.i('calculated tx amount $transactionAmount');
+        log.e('Balance change with slider $changeBalanceWithSlider');
       }
     } else {
       log.e(
           'In sliderOnchange else where quantity $quantity or price $price is null/empty');
     }
-    log.w(sliderValue);
     setBusy(false);
   }
 
