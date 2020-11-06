@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/services/stoppable_service.dart';
 import 'package:observable_ish/observable_ish.dart';
 import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
@@ -27,9 +28,31 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import "package:hex/hex.dart";
 
-class TradeService with ReactiveServiceMixin {
+class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
     listenToReactiveValues([_price, _quantity]);
+  }
+Stream tickerStream;
+Stream allPriceStream;
+StreamSubscription _streamSubscription;
+StreamController streamController;
+   @override
+  void start() {
+    super.start();
+    log.w('starting service');
+    // start subscription again
+  }
+
+  @override
+  void stop() async{
+    super.stop();
+       log.w('stopping service');
+  //     _streamSubscription = allPriceStream.listen((event) { });
+  //     _streamSubscription.cancel();
+  //  // await getAllPriceChannel().sink.close();
+  //     log.w('all price closed');
+  //   // cancel stream subscription
+
   }
 
   final log = getLogger('TradeService');
@@ -93,10 +116,11 @@ class TradeService with ReactiveServiceMixin {
                     Close IOWebSocket Connections
 ----------------------------------------------------------------------*/
 
-  closeIOWebSocketConnections(String pair) async {
-    await getAllPriceChannel().sink.close();
-    await getOrderListChannel(pair).sink.close();
-    await getTradeListChannel(pair).sink.close();
+  closeIOWebSocketConnections(String pair)  {
+     getTickerDataChannel(pair,'24').sink.close();
+     getAllPriceChannel().sink.close();
+     getOrderListChannel(pair).sink.close();
+     getTradeListChannel(pair).sink.close();
   }
 
 /*----------------------------------------------------------------------
@@ -105,10 +129,10 @@ class TradeService with ReactiveServiceMixin {
 // Values based on that time interval
 
   Stream getTickerDataStream(String pair, {String interval = '24h'}) {
-    Stream stream;
+    
     try {
-      stream = getTickerDataChannel(pair, interval).stream;
-      return stream.asBroadcastStream().distinct();
+      tickerStream = getTickerDataChannel(pair, interval).stream;
+      return tickerStream.asBroadcastStream().distinct();
     } catch (err) {
       log.e(
           'getTickerDataStream CATCH $err'); // Error thrown here will go to onError in them view model
@@ -127,11 +151,22 @@ class TradeService with ReactiveServiceMixin {
           Get Coin Price Details Using allPrices Web Sockets
 ----------------------------------------------------------------------*/
 
+// Stream getAllCoinPriceStream() async* {
+    
+// try{
+//        allPriceStream = getAllPriceChannel().stream;
+//        yield allPriceStream;
+// }   
+//    catch (err) {
+//       log.e('$err'); // Error thrown here will go to onError in them view model
+//       throw Exception(err);
+//     }
+//   }
   Stream getAllCoinPriceStream() {
     Stream stream;
     try {
-      stream = getAllPriceChannel().stream;
-      return stream.asBroadcastStream().distinct();
+      allPriceStream = getAllPriceChannel().stream;
+      return allPriceStream.asBroadcastStream().distinct();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
       throw Exception(err);

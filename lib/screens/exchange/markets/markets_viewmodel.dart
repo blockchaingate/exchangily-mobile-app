@@ -20,11 +20,12 @@ import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/stoppable_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class MarketsViewModel extends StreamViewModel<dynamic> {
+class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   final log = getLogger('MarketsViewModal');
 
   String errorMessage = '';
@@ -37,6 +38,23 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   final NavigationService navigationService = locator<NavigationService>();
   BuildContext context;
   List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];
+
+  @override
+  void start() {
+    super.start();
+    log.w('market view model starting service');
+    // start subscription again
+  }
+
+  @override
+  void stop() async {
+    super.stop();
+    log.w(' mvm stopping service');
+    log.e('is empty ${stream.isEmpty} -- is broadcasr ${stream.isBroadcast}');
+    if (streamSubscription != null) streamSubscription.pause();
+    log.w('mvm all price closed');
+    // cancel stream subscription
+  }
 
   @override
   Stream<dynamic> get stream {
