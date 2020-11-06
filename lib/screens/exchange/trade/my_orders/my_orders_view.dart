@@ -77,10 +77,11 @@ class MyOrdersView extends StatelessWidget {
                                     scale: 0.75,
                                     child: Switch.adaptive(
                                         activeColor: primaryColor,
-                                        value: model.isShowAllOrders,
-                                        onChanged: (v) {
+                                        value: model.isSwitch,
+                                        onChanged: (bool v) {
                                           print('switch value $v');
                                           model.busy(true);
+                                          //  model.isSwitch = v;
                                           model.swapSources();
                                           print(
                                               'called swap sources in the viewmodel from view');

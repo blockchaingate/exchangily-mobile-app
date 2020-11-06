@@ -509,7 +509,7 @@ class BuySellViewModel extends ReactiveViewModel {
         timeBeforeExpiration,
         false,
         orderHash);
-    log.e('exg add ${exgAddress}');
+    log.e('exg addr ${exgAddress}');
 
     var nonce = await getNonce(exgAddress);
 
@@ -556,69 +556,6 @@ class BuySellViewModel extends ReactiveViewModel {
     }
     return transactionAmount;
   }
-
-/* ---------------------------------------------------
-            Show Orders
---------------------------------------------------- */
-  // showOrders(Order order) async {
-  //   setState(ViewState.Busy);
-  //   var newbuy = order. .buy;
-  //   var newsell = orders.sell;
-  //   var preItem;
-  //   for (var i = 0; i < newbuy.length; i++) {
-  //     var item = newbuy[i];
-  //     var price = item.price;
-  //     var orderQuantity = item.orderQuantity;
-
-  //     var filledQuantity = item.filledQuantity;
-  //     if (preItem != null) {
-  //       if (preItem.price == price) {
-  //         preItem.orderQuantity =
-  //             doubleAdd(preItem.orderQuantity, orderQuantity);
-  //         preItem.filledQuantity =
-  //             doubleAdd(preItem.filledQuantity, filledQuantity);
-  //         newbuy.removeAt(i);
-  //         i--;
-  //       } else {
-  //         preItem = item;
-  //       }
-  //     } else {
-  //       preItem = item;
-  //     }
-  //   }
-
-  //   preItem = null;
-  //   for (var i = 0; i < newsell.length; i++) {
-  //     var item = newsell[i];
-  //     var price = item.price;
-  //     var orderQuantity = item.orderQuantity;
-  //     var filledQuantity = item.filledQuantity;
-  //     if (preItem != null) {
-  //       if (preItem.price == price) {
-  //         preItem.orderQuantity =
-  //             doubleAdd(preItem.orderQuantity, orderQuantity);
-  //         preItem.filledQuantity =
-  //             doubleAdd(preItem.filledQuantity, filledQuantity);
-  //         newsell.removeAt(i);
-  //         i--;
-  //       } else {
-  //         preItem = item;
-  //       }
-  //     } else {
-  //       preItem = item;
-  //     }
-  //   }
-
-  //   if (!listEquals(newbuy, this.buy) || !listEquals(newsell, this.sell)) {
-  //     setState(ViewState.Busy);
-  //     this.sell = (newsell.length > 5)
-  //         ? (newsell.sublist(newsell.length - 5))
-  //         : newsell;
-  //     this.buy = (newbuy.length > 5) ? (newbuy.sublist(0, 5)) : newbuy;
-  //     setState(ViewState.Idle);
-  //   }
-  //   setState(ViewState.Idle);
-  // }
 
 /* ---------------------------------------------------
             Place Buy/Sell Order
@@ -743,17 +680,18 @@ class BuySellViewModel extends ReactiveViewModel {
     if (name == 'price') {
       try {
         price = double.parse(text);
+        log.w('price $price');
         caculateTransactionAmount();
         updateTransFee();
       } catch (e) {
         setBusy(false);
-        ;
         log.e('Handle text price changed $e');
       }
     }
     if (name == 'quantity') {
       try {
         quantity = double.parse(text);
+        log.w('quantity $quantity');
         caculateTransactionAmount();
         updateTransFee();
       } catch (e) {

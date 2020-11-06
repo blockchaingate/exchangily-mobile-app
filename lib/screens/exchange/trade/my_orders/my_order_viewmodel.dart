@@ -62,6 +62,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   String onClickOrderHash = '';
   DecimalConfig decimalConfig = new DecimalConfig();
   bool get isShowAllOrders => _orderService.isShowAllOrders;
+  bool isSwitch = false;
 
   init() {
     getMyOrdersByTickerName();
@@ -69,6 +70,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
         .getSinglePairDecimalConfig(tickerName)
         .then((decimalConfig) => decimalConfig = decimalConfig);
 
+    log.w('1 show all pairs value init $isShowAllOrders -- swtich   $isSwitch');
     //futureToRun();
   }
 
@@ -84,12 +86,15 @@ class MyOrdersViewModel extends ReactiveViewModel {
     myOrdersTabBarView = [];
   }
 
+/*-------------------------------------------------------------------------------------
+                      Get All Orders
+-------------------------------------------------------------------------------------*/
   getAllMyOrders() async {
     setBusy(true);
     isFutureError = false;
     String exgAddress = await getExgAddress();
     clearOrderLists();
-    await apiService.getMyOrders(exgAddress).then((data) {
+    await _orderService.getMyOrders(exgAddress).then((data) {
       if (data != null) {
         myAllOrders = data;
         log.e('getAllMyOrders length ${myAllOrders.length}');
@@ -108,8 +113,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
             myCloseOrders.add(element);
           }
         });
-        log.w('open orders ${myOpenOrders.length}');
-        log.w('close orders ${myCloseOrders.length}');
+        log.w('getAllMyOrders open orders ${myOpenOrders.length}');
+        log.w('getAllMyOrders close orders ${myCloseOrders.length}');
         // Add order lists to orders tab bar view
         myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
       }
@@ -120,6 +125,9 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(false);
   }
 
+/*-------------------------------------------------------------------------------------
+                      Get orders by tickername
+-------------------------------------------------------------------------------------*/
   getMyOrdersByTickerName() async {
     setBusy(true);
     clearOrderLists();
@@ -131,7 +139,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     //   .then((data) {
     // if (data != null) {
     //   myAllOrders = data;
-    log.e('My new order length ${singlePairOrders.length}');
+    log.e('getMyOrdersByTickerName order length ${singlePairOrders.length}');
     singlePairOrders.forEach((element) {
       myAllOrders = singlePairOrders;
 
@@ -152,8 +160,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
       // Add order lists to orders tab bar view
     });
-    log.w('open orders ${myOpenOrders.length}');
-    log.w('close orders ${myCloseOrders.length}');
+    log.w('getMyOrdersByTickerName open orders ${myOpenOrders.length}');
+    log.w('getMyOrdersByTickerName close orders ${myCloseOrders.length}');
     myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
     // }
     // }).catchError((err) {
@@ -175,13 +183,19 @@ class MyOrdersViewModel extends ReactiveViewModel {
                       Swap Sources
 -------------------------------------------------------------------------------------*/
   void swapSources() async {
-    log.w('swap sources show all pairs $isShowAllOrders');
+    setBusy(true);
+    log.i('2 swap sources show all pairs $isShowAllOrders');
     // _showCurrentPairOrders = !_showCurrentPairOrders;
     // !_showCurrentPairOrders
     _orderService.swapSources();
+    log.w('5 swap sources show all pairs $isShowAllOrders  before method');
     isShowAllOrders ? await getAllMyOrders() : await getMyOrdersByTickerName();
+    isSwitch = isShowAllOrders;
+    log.i(
+        '6 swap sources show all pairs $isShowAllOrders  after method -- swtich   $isSwitch');
 
     notifyListeners();
+    setBusy(false);
   }
 
 /*-------------------------------------------------------------------------------------

@@ -30,15 +30,15 @@ class OrderService with ReactiveServiceMixin {
   }
 
   void swapSources() {
-    log.e('swap sources show all pairs ${_isShowAllOrders.value}');
+    log.e('3 swap sources show all pairs ${_isShowAllOrders.value}');
     _isShowAllOrders.value = !_isShowAllOrders.value;
-    log.w('swap sources show all pairs ${_isShowAllOrders.value}');
+    log.w('4 swap sources show all pairs ${_isShowAllOrders.value}');
   }
 
 /*-------------------------------------------------------------------------------------
                       Get All Orders
 -------------------------------------------------------------------------------------*/
-  void getMyOrders(String exgAddress) async {
+  Future<List<OrderModel>> getMyOrders(String exgAddress) async {
     try {
       String url = getOrdersPagedByFabHexAddressURL + exgAddress;
       log.w('get my orders url $url');
@@ -47,10 +47,11 @@ class OrderService with ReactiveServiceMixin {
       var jsonList = jsonDecode(res.body) as List;
       log.i('jsonList $jsonList');
       OrderList orderList = OrderList.fromJson(jsonList);
-      print('after order list ${orderList.orders.length}');
+      log.w('getMyOrders order list length ${orderList.orders.length}');
       //  throw Exception('Catch Exception');
       //return jsonList;
       _orders = orderList.orders;
+      return _orders;
     } catch (err) {
       log.e('getOrders Failed to load the data from the API， $err');
       throw Exception('Catch Exception $err');

@@ -435,9 +435,9 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
 
   @override
   Widget build(BuildContext context, BuySellViewModel model) {
-    model.priceTextController.text = model.priceFromTradeService.toString();
-    model.quantityTextController.text =
-        model.quantityFromTradeService.toString();
+    // model.priceTextController.text = model.priceFromTradeService.toString();
+    // model.quantityTextController.text =
+    //     model.quantityFromTradeService.toString();
     return Column(
       children: <Widget>[
         // price text input
