@@ -29,8 +29,8 @@ class OrderBookView extends StatelessWidget {
             )
           : Container(
               padding: EdgeInsets.all(5.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+              child: ListView(
+          //   mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   // Heading Buy Sell Orders Row
                   Row(
@@ -95,6 +95,7 @@ class OrderBookView extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: ListView.builder(
+                          scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemCount: model.orderbook.buyOrders.length,
                           itemBuilder: (BuildContext context, int index) {

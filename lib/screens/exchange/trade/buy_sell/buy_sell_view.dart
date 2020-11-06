@@ -435,11 +435,11 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
 
   @override
   Widget build(BuildContext context, BuySellViewModel model) {
-    print('TEST ETST ${model.priceFromTradeService}');
+   model.priceTextController.text = model.priceFromTradeService.toString();
+    model.quantityTextController.text = model.quantityFromTradeService.toString();
     return Column(
       children: <Widget>[
-        Text('Testing price : ${model.priceFromTradeService.toString()}'),
-        Text('Testing qty : ${model.quantityFromTradeService.toString()}'),
+       
         // price text input
         Padding(
           padding: EdgeInsets.all(5),
