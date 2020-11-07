@@ -775,8 +775,9 @@ class WalletDashboardViewModel extends BaseState {
 
     log.i('Coin address body $walletBalancesBody');
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('walletBalancesBody', walletBalancesBody.toString());
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    //  prefs.setString('walletBalancesBody', walletBalancesBody.toString());
+    storageService.walletBalancesBody = walletBalancesBody.toString();
 
     // ----------------------------------------
     // Calling walletBalances in wallet service

@@ -79,6 +79,10 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
+/*-------------------------------------------------------------------------------------
+                      Showcase Event Start
+-------------------------------------------------------------------------------------*/
+
   showcaseEvent(BuildContext test) async {
     setBusy(true);
     WidgetsBinding.instance.addPostFrameCallback((_) {

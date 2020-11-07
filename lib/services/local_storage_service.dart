@@ -8,10 +8,11 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Local Storage Keys
 ----------------------------------------------------------------------*/
-  static const String ShowCaseViewKey = 'showCaseView';
+  static const String ShowCaseViewKey = 'isShowCaseView';
   static const String AppLanguagesKey = 'languages';
   static const String DarkModeKey = 'darkmode';
   static const String HKServerKey = 'isHKServer';
+  static const String WalletBalancesBodyKey = 'walletBalancesBody';
 /*----------------------------------------------------------------------
                   Instance
 ----------------------------------------------------------------------*/
@@ -71,8 +72,8 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Dark mode getter/setter
 ----------------------------------------------------------------------*/
-  bool get darkMode => _getFromDisk(DarkModeKey) ?? false;
-  set darkMode(bool value) => _saveToDisk(DarkModeKey, value);
+  bool get isDarkMode => _getFromDisk(DarkModeKey) ?? false;
+  set isDarkMode(bool value) => _saveToDisk(DarkModeKey, value);
 
 /*----------------------------------------------------------------------
                 Showcase View getter/setter
@@ -87,4 +88,12 @@ class LocalStorageService {
   bool get isHKServer => _getFromDisk(HKServerKey) ?? false;
 
   set isHKServer(bool value) => _saveToDisk(HKServerKey, value);
+
+/*----------------------------------------------------------------------
+                Wallet balance body
+----------------------------------------------------------------------  */
+  String get walletBalancesBody => _getFromDisk(WalletBalancesBodyKey) ?? false;
+
+  set walletBalancesBody(String value) =>
+      _saveToDisk(WalletBalancesBodyKey, value);
 }

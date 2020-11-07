@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
 import 'package:hex/hex.dart';
@@ -357,15 +358,27 @@ class MyOrdersViewModel extends ReactiveViewModel {
         //     Icons.info,
         //     colors.green,
         //     context);
-        Future.delayed(new Duration(seconds: 3), () async {
-          _orderService.swapSources();
-        });
+        onRefresh();
+        setBusy(false);
+        showSimpleNotification(
+          Center(
+              child: Text(AppLocalizations.of(context).orderCancelled,
+                  style: Theme.of(context).textTheme.headline6)),
+        );
+        // Future.delayed(new Duration(seconds: 3), () async {
+        //   _orderService.swapSources();
+        // });
       }
     } else if (!res.confirmed) {
       log.e('wrong password');
+      setBusy(false);
 
-      errorMessage =
-          AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
+      showSimpleNotification(
+        Center(
+            child: Text(
+                AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+                style: Theme.of(context).textTheme.headline6)),
+      );
       // Code to remove later
 
       // sharedService.alertDialog(AppLocalizations.of(context).passwordMismatch,
@@ -382,7 +395,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
       //   leftBarIndicatorColor: colors.red,
       //   duration: Duration(seconds: 3),
       // ).show(context);
-      setBusy(false);
     } else {
       if (res.returnedText != 'Closed') {
         // showNotification(context);

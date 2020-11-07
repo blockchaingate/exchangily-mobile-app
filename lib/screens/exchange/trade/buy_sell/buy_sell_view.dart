@@ -488,8 +488,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         ),
         // Slider
         Slider(
-          divisions: 6,
-          label: '${model.sliderValue.toStringAsFixed(2)}',
+          divisions: 100,
+          label: '${model.sliderValue.toStringAsFixed(2)}%',
           activeColor: globals.primaryColor,
           min: 0.0,
           max: 100.0,
