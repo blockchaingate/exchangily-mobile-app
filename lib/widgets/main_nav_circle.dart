@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
@@ -67,7 +68,7 @@ class _MainNavCircleState extends State<MainNavCircle> {
       case 0:
         return WalletDashboardScreen();
       case 1:
-        return Market();
+        return MarketsView();
       case 2:
         return CampaignInstructionScreen();
       case 3:

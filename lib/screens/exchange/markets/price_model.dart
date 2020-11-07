@@ -10,7 +10,6 @@
 * Author: ken.qiu@exchangily.com, barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
-import 'package:exchangilymobileapp/utils/string_util.dart';
 
 class Price {
   String _symbol;

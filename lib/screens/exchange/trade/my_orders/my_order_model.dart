@@ -7,87 +7,48 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Author: ken.qiu@exchangily.com
+* Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
 
 import 'package:exchangilymobileapp/utils/string_util.dart';
 
-/*---------------------------------------
-                Json Structure
----------------------------------------*/
-var jsonStructure = [
-  {
-    "payWithExg": false,
-    "orderHash":
-        "0xb63c75356a21caaf4c416b00455b4cbce5444fb83481911158393c80aec30dfc",
-    "address": "0xdcd0f23125f74ef621dfa3310625f8af0dcd971b",
-    "pairLeft": 3,
-    "pairRight": 1,
-    "orderType": 1,
-    "bidOrAsk": true,
-    "price": "139000000000000000000",
-    "orderQuantity": "98351302944053745",
-    "filledQuantity": "1648697055946255",
-    "time": 1588987183,
-    "isActive": true,
-    "txHash": {
-      "createOrder":
-          "0xae0870d115ab40b8ccf6b9780d60ab7edddc8ba60473f7ed92cd16c0364d882a"
-    },
-    "blockNumber": {
-      "createOrder": 1974689,
-      "fulfillOrder": [1974689, 1974689, 1974689, 1974689, 1974689]
-    },
-    "price_n": {"numberDecimal": "139000000000000000000"},
-    "orderQuantity_n": {"numberDecimal": "100000000000000000"},
-    "filledQuantity_n": {"numberDecimal": "1648697055946255"}
-  }
-];
-
-/// PENDING - Change the name to Order from OrderModel once new architecture fully working
 class OrderModel {
-  bool _payWithExg;
   String _orderHash;
-  String _address;
-  int _pairLeft;
-  int _pairRight;
   int _orderType;
   bool _bidOrAsk;
   double _price;
   double _orderQuantity;
+  double _originalOrderQuantity;
   double _filledQuantity;
   int _time;
   bool _isActive;
   String _pairName;
   double _totalOrderQuantity;
   double _filledPercentage;
+  bool _isCancelled;
   OrderModel(
-      {bool payWithExg,
-      String orderHash,
-      String address,
-      int pairLeft,
-      int pairRight,
+      {String orderHash,
       int orderType,
       bool bidOrAsk,
       double price,
       double orderQuantity,
+      double originalOrderQuantity,
       double filledQuantity,
       int time,
       bool isActive,
       String pairName,
       double totalOrderQuantity,
-      double filledPercentage}) {
-    this._payWithExg = payWithExg;
+      double filledPercentage,
+      bool isCancelled}) {
     this._orderHash = orderHash;
-    this._address = address;
-    this._pairLeft = pairLeft;
-    this._pairRight = pairRight;
+
     this._orderType = orderType;
     this._bidOrAsk = bidOrAsk;
     this._price = price ?? 0.0;
     this._orderQuantity = orderQuantity ??
         0.0; // how much is left, if i order 10 and filled 3 then oq is 7
+    this._originalOrderQuantity = originalOrderQuantity ?? 0.0;
     this._filledQuantity = filledQuantity ??
         0.0; // how many filled so if order of 10 with 3 filled then 3 is the value
     this._time = time;
@@ -95,46 +56,38 @@ class OrderModel {
     this._pairName = pairName;
     this._totalOrderQuantity = orderQuantity + filledQuantity;
     this._filledPercentage = (filledQuantity * 100) / _totalOrderQuantity;
+    this._isCancelled = isCancelled;
   }
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
-        payWithExg: json['payWithExg'],
         orderHash: json['orderHash'],
-        address: json['address'],
-        pairLeft: json['pairLeft'],
-        pairRight: json['pairRight'],
         orderType: json['orderType'],
         bidOrAsk: json['bidOrAsk'],
         price: bigNum2Double(json['price']),
         orderQuantity: bigNum2Double(json['orderQuantity']),
+        originalOrderQuantity: bigNum2Double(json['originalOrderQuantity']),
         filledQuantity: bigNum2Double(json['filledQuantity']),
         time: json['time'],
         isActive: json['isActive'],
-        pairName: json['pairName']);
+        pairName: json['pairName'],
+        isCancelled: json['isCancelled']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['payWithExg'] = this._payWithExg;
     data['orderHash'] = this._orderHash;
-    data['address'] = this._address;
-    data['pairLeft'] = this._pairLeft;
-    data['pairRight'] = this._pairRight;
     data['orderType'] = this._orderType;
     data['bidOrAsk'] = this._bidOrAsk;
     data['price'] = this._price;
     data['orderQuantity'] = this._orderQuantity;
+    data['originalOrderQuantity'] = this._originalOrderQuantity;
     data['filledQuantity'] = this._filledQuantity;
     data['time'] = this._time;
     data['isActive'] = this._isActive;
     data['pairName'] = this._pairName;
+    data['isCancelled'] = this._isCancelled;
     return data;
-  }
-
-  String get address => _address;
-  set address(String address) {
-    this._address = address;
   }
 
   String get orderHash => _orderHash;
@@ -162,16 +115,6 @@ class OrderModel {
     this._time = time;
   }
 
-  int get pairRight => _pairRight;
-  set pairRight(int pairRight) {
-    this._pairRight = pairRight;
-  }
-
-  int get pairLeft => _pairLeft;
-  set pairLeft(int pairLeft) {
-    this._pairLeft = pairLeft;
-  }
-
   int get orderType => _orderType;
   set orderType(int orderType) {
     this._orderType = orderType;
@@ -180,11 +123,6 @@ class OrderModel {
   bool get isActive => _isActive;
   set isActive(bool isActive) {
     this._isActive = isActive;
-  }
-
-  bool get payWithExg => _payWithExg;
-  set payWithExg(bool payWithExg) {
-    this._payWithExg = payWithExg;
   }
 
   bool get bidOrAsk => _bidOrAsk;
@@ -205,6 +143,11 @@ class OrderModel {
   double get filledPercentage => _filledPercentage;
   set filledPercentage(double filledPercentage) {
     this._filledPercentage = filledPercentage;
+  }
+
+  bool get isCancelled => _isCancelled;
+  set isCancelled(bool isCancelled) {
+    this._isCancelled = isCancelled;
   }
 }
 

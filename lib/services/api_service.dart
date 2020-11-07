@@ -17,12 +17,14 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
+import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/utils/kanban.util.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
 
 /// The service responsible for networking requests
 class ApiService {
@@ -30,7 +32,7 @@ class ApiService {
   final client = new http.Client();
 
   final kanbanBaseUrl = environment['endpoints']['kanban'];
-  final blockchaingateUrl =  environment['endpoints']['blockchaingate'];
+  final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
   // Please keep this for future test
   // final kanbanBaseUrl = environment['endpoints']['LocalKanban'];
@@ -48,6 +50,32 @@ class ApiService {
   final ethBaseUrl = environment["endpoints"]["eth"];
   final eventsUrl = environment["eventInfo"];
 
+/*----------------------------------------------------------------------
+                    Get single coin exchange balance
+----------------------------------------------------------------------*/
+  Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
+      String tickerName) async {
+    String exgAddress = await getExchangilyAddress();
+    String url =
+        getSingleCoinExchangeBalanceUrl + exgAddress + '/' + tickerName;
+    log.i('getSingleCoinExchangeBalance url $url');
+    ExchangeBalanceModel exchangeBalance = new ExchangeBalanceModel();
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      log.w('json data  $json');
+      if (json != null) {
+        json['message'] != null
+            ? exchangeBalance = null
+            : exchangeBalance = ExchangeBalanceModel.fromJson(json);
+      }
+      log.e('exchangeBalance ${exchangeBalance.toJson()}');
+      return exchangeBalance;
+    } catch (err) {
+      log.e('getSingleCoinExchangeBalance CATCH $err');
+      throw Exception(err);
+    }
+  }
 /*----------------------------------------------------------------------
                     Get Token List
 ----------------------------------------------------------------------*/
@@ -216,9 +244,9 @@ class ApiService {
 -------------------------------------------------------------------------------------*/
 
   Future getCoinCurrencyUsdPrice() async {
-    log.w('url $coinCurrencyUsdPriceUrl');
+    log.w('url $coinCurrencyUsdValueUrl');
     try {
-      var response = await client.get(coinCurrencyUsdPriceUrl);
+      var response = await client.get(coinCurrencyUsdValueUrl);
       var json = jsonDecode(response.body);
       log.w('getCoinCurrencyUsdPrice $json');
       return json;
@@ -281,18 +309,19 @@ class ApiService {
   }
 
   // Get Orders by address
-  Future<List<OrderModel>> getOrders(String exgAddress) async {
+  //Future<Order>
+  Future getMyOrders(String exgAddress) async {
     try {
-      String url = environment['endpoints']['kanban'] + orders + exgAddress;
+      String url = getOrdersPagedURL + exgAddress;
       log.w('get my orders url $url');
-      print('in try');
       var res = await client.get(url);
-      log.e('res $res');
+      log.e('res ${res.body}');
       var jsonList = jsonDecode(res.body) as List;
       log.i('jsonList $jsonList');
       OrderList orderList = OrderList.fromJson(jsonList);
       print('after order list ${orderList.orders.length}');
       //  throw Exception('Catch Exception');
+      //return jsonList;
       return orderList.orders;
     } catch (err) {
       log.e('getOrders Failed to load the data from the API， $err');
@@ -301,16 +330,18 @@ class ApiService {
   }
 
   // Get Orders by tickername
-  Future getMyOrdersByTickerName(String exgAddress, String tickerName) async {
-    String url = environment['endpoints']['kanban'] +
-        'getordersbytickername/' +
-        exgAddress +
-        '/' +
-        tickerName;
+  Future getMyOrdersPagedByFabHexAddressAndTickerName(
+      String exgAddress, String tickerName) async {
+    String url = getOrdersPagedByTickerNameURL + exgAddress + '/' + tickerName;
+    // String url = environment['endpoints']['kanban'] +
+    //     'getordersbytickername/' +
+    //     exgAddress +
+    //     '/' +
+    //     tickerName;
     log.i('getMyOrdersByTickerName url $url');
     try {
       final res = await client.get(url);
-      print('after res $res');
+      print('after res ${res.body}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
       }

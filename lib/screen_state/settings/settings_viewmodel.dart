@@ -43,7 +43,7 @@ class SettingsViewmodel extends BaseViewModel {
   SharedService sharedService = locator<SharedService>();
   var storageService = locator<LocalStorageService>();
   final NavigationService navigationService = locator<NavigationService>();
-  List<String> languages = ['English', 'Chinese'];
+  Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
   String selectedLanguage;
   // bool result = false;
   String errorMessage = '';
@@ -72,6 +72,7 @@ class SettingsViewmodel extends BaseViewModel {
       if (res != null) isDialogDisplay = res;
     });
     getAppVersion();
+    await selectDefaultWalletLanguage();
     if (selectedLanguage == '')
       selectedLanguage = await getStoredDataByKeys('lang');
     setBusy(false);
@@ -83,6 +84,36 @@ class SettingsViewmodel extends BaseViewModel {
       ShowCaseWidget.of(test).startShowCase([one, two]);
     });
     setBusy(false);
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Get coin currency Usd Prices
+-------------------------------------------------------------------------------------*/
+
+  Future<String> selectDefaultWalletLanguage() async {
+    setBusy(true);
+    if (selectedLanguage == '' || selectedLanguage == null) {
+      String key = await getStoredDataByKeys('lang');
+      // log.w('key in init $key');
+
+      // /// Created Map of languages because in dropdown if i want to show
+      // /// first default value as whichever language is currently the app
+      // /// is in then default value that i want to show should match with one
+      // /// of the dropdownMenuItem's value
+
+      if (languages.containsKey(key)) {
+        selectedLanguage = languages[key];
+      }
+      // else if (languages.containsValue(key)) {
+      //   String keyIsValue = key;
+
+      //   selectedLanguage =
+      //       languages.keys.firstWhere((k) => languages[k] == keyIsValue);
+      // }
+      print('ssss $selectedLanguage');
+    }
+    setBusy(false);
+    return selectedLanguage;
   }
 
   void showMnemonic() async {
@@ -191,21 +222,33 @@ class SettingsViewmodel extends BaseViewModel {
 
   // Change wallet language
 
-  changeWalletLanguage(lang) async {
+  changeWalletLanguage(updatedLanguageValue) async {
+  
     setBusy(true);
+    // Get the Map key using value
+    // String key = languages.keys.firstWhere((k) => languages[k] == lang);
+    String key = '';
+    log.e('KEY or Value $updatedLanguageValue');
+    if (languages.containsValue(updatedLanguageValue)) {
+      key = languages.keys
+          .firstWhere((k) => languages[k] == updatedLanguageValue);
+      log.i('key in changeWalletLanguage $key');
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    selectedLanguage = lang;
+    selectedLanguage = key.isEmpty ? updatedLanguageValue : languages[key];
     log.w('Selec $selectedLanguage');
-
-    if (lang == 'Chinese' || lang == 'zh') {
+    if (updatedLanguageValue == 'Chinese' ||
+        updatedLanguageValue == 'zh' ||
+        key == 'zh') {
       log.e('in zh');
       AppLocalizations.load(Locale('zh', 'ZH'));
-      prefs.setString('lang', 'zh');
-    } else if (lang == 'English' || lang == 'en') {
+      prefs.setString('lang', key);
+    } else if (updatedLanguageValue == 'English' ||
+        updatedLanguageValue == 'en' ||
+        key == 'en') {
       log.e('in en');
       AppLocalizations.load(Locale('en', 'EN'));
-      prefs.setString('lang', 'en');
-      setlangGlobal('en');
+      prefs.setString('lang', key);
     }
     //  log.w('langGlobal: ' + getlangGlobal());
     setBusy(false);

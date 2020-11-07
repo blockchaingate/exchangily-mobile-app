@@ -92,7 +92,9 @@ class NumberUtil {
   }
 
   // check decimal places more than 6
-  checkDecimal(double value) {}
+  checkDecimal(double value) {
+    String valueToString = value.toString();
+  }
 }
 
 class DecimalTextInputFormatter extends TextInputFormatter {

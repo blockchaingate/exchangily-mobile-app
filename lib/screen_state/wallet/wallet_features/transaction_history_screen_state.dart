@@ -28,7 +28,7 @@ class TransactionHistoryScreenState extends BaseState {
         .then((data) async {
       transactionHistory = data;
       await tradeService
-          .getDecimalPairConfig(tickerName)
+          .getSinglePairDecimalConfig(tickerName)
           .then((decimalConfig) => decimalConfig = decimalConfig);
     }).catchError((onError) {
       setBusy(false);

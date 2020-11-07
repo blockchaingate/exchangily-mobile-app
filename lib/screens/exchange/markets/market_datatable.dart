@@ -1,5 +1,5 @@
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -49,22 +49,27 @@ class _MarketDataTableState extends State<MarketDataTable> {
 
   @override
   Widget build(BuildContext context) {
+    onRowTap(Price itemRow) {
+      itemRow.symbol = itemRow.symbol.replaceAll('/', '').toString();
+      navigationService.navigateTo('/exchangeTrade', arguments: itemRow);
+    }
+
     return Theme(
       //Use the theme to change data table sort icon color
       data: ThemeData.dark(),
       child: DataTable(
-          dataRowHeight: 60,
+          dataRowHeight: 55,
           sortAscending: _sortAsc,
           sortColumnIndex: _sortColumnIndex,
-          horizontalMargin: 7,
-          columnSpacing: 0,
+          horizontalMargin: 5,
+          columnSpacing: 5,
           columns: [
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 3 / 11,
+                width: MediaQuery.of(context).size.width * 3 / 15,
                 child: Text(
                   AppLocalizations.of(context).ticker,
-                  style: Theme.of(context).textTheme.subtitle2,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -92,7 +97,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context).price,
-                  style: Theme.of(context).textTheme.subtitle2,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -118,7 +123,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context).high,
-                  style: Theme.of(context).textTheme.subtitle2,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -142,7 +147,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                 width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context).low,
-                  style: Theme.of(context).textTheme.subtitle2,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -163,10 +168,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
             ),
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 2 / 11,
+                width: MediaQuery.of(context).size.width * 2 / 15,
                 child: Text(
                   AppLocalizations.of(context).change,
-                  style: Theme.of(context).textTheme.subtitle2,
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
@@ -203,7 +208,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                                   itemRow.symbol.toString(),
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline4
+                                      .headline3
                                       .copyWith(
                                         fontWeight: FontWeight.w400,
                                       ),
@@ -220,15 +225,12 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           ),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                       DataCell(
                         Container(
-                          child: Text(itemRow.price.toString(),
+                          child: Text(itemRow.price.toStringAsFixed(6),
                               style: Theme.of(context)
                                   .textTheme
                                   .headline6
@@ -238,10 +240,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               textAlign: TextAlign.start),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                       DataCell(
@@ -251,10 +250,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               fontWeight: FontWeight.w400, fontSize: 16),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                       DataCell(
@@ -264,10 +260,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               fontWeight: FontWeight.w400, fontSize: 16),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                       DataCell(
@@ -283,10 +276,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                               fontSize: 16),
                         ),
                         onTap: () {
-                          itemRow.symbol =
-                              itemRow.symbol.replaceAll('/', '').toString();
-                          navigationService.navigateTo('/exchangeTrade',
-                              arguments: itemRow);
+                          onRowTap(itemRow);
                         },
                       ),
                     ],

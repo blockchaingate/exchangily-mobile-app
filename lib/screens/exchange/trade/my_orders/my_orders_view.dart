@@ -1,40 +1,35 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_exchange_assets_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
 import 'my_order_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
   final String tickerName;
-  MyOrdersView({Key key, this.tickerName}) : super(key: key);
+  final bool isReload;
+  MyOrdersView({Key key, this.tickerName, this.isReload}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
-        disposeViewModel: false,
-        viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
+        viewModelBuilder: () =>
+            MyOrdersViewModel(tickerName: tickerName, isReload: isReload),
         onModelReady: (model) {
-          print('in init MyOrdersView');
+          print('in init MyOrdersView, is reloading $isReload');
+          model.context = context;
           model.init();
-          model.myOrdersTabBarView = [
-            model.myAllOrders,
-            model.myOpenOrders,
-            model.myCloseOrders
-          ];
         },
         builder: (context, model, _) => Container(
             child:
                 // error handling
                 model.isFutureError
                     ? Container(
-                        color: Colors.red.withAlpha(150),
+                        color: primaryColor.withAlpha(150),
                         padding: EdgeInsets.all(25),
                         alignment: Alignment.center,
                         child: Column(
@@ -51,7 +46,7 @@ class MyOrdersView extends StatelessWidget {
                                 model.isFutureError = false;
                                 print(
                                     'Running futures to run again to reset the hasError and try to get the data so that user can see the data with view instead of error screen');
-                                model.getAllMyOrders();
+                                model.swapSources();
                               },
                             ),
                           ],
@@ -60,9 +55,33 @@ class MyOrdersView extends StatelessWidget {
                     // Layout
                     : Container(
                         child: DefaultTabController(
-                          length: 3,
+                          length: 4,
                           child: Column(
                             children: [
+                              // Container(
+                              //   color: primaryColor.withAlpha(150),
+                              //   padding: EdgeInsets.all(25),
+                              //   alignment: Alignment.center,
+                              //   child: Column(
+                              //     children: [
+                              //       Text(
+                              //         AppLocalizations.of(context).serverError +
+                              //             ': ${model.errorMessage}',
+                              //         style: TextStyle(color: Colors.white),
+                              //       ),
+                              //       IconButton(
+                              //         icon: Icon(Icons.replay),
+                              //         color: white,
+                              //         onPressed: () {
+                              //           model.isFutureError = false;
+                              //           print(
+                              //               'Running futures to run again to reset the hasError and try to get the data so that user can see the data with view instead of error screen');
+                              //           model.swapSources1();
+                              //         },
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
                               // Switch to show only current pair orders
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -78,14 +97,18 @@ class MyOrdersView extends StatelessWidget {
                                     scale: 0.75,
                                     child: Switch.adaptive(
                                         activeColor: primaryColor,
-                                        value: model.showCurrentPairOrders,
-                                        onChanged: (v) {
+                                        value: model.isSwitch,
+                                        onChanged: (bool v) {
+                                          print('switch value $v');
+
                                           model.swapSources();
                                         }),
                                   ),
                                 ],
                               ),
-
+                              model.errorMessage.isNotEmpty
+                                  ? Center(child: Text(model.errorMessage))
+                                  : Container(),
                               // Order type tabs
                               Column(
                                 children: <Widget>[
@@ -118,6 +141,12 @@ class MyOrdersView extends StatelessWidget {
                                       Text(
                                           AppLocalizations.of(context)
                                               .closeOrders,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                      Text(
+                                          AppLocalizations.of(context)
+                                              .cancelledOrders,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -173,7 +202,7 @@ class MyOrdersView extends StatelessWidget {
             child: Text(AppLocalizations.of(context).pair,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
-            flex: 3,
+            flex: 2,
             child: Text(AppLocalizations.of(context).price,
                 style: Theme.of(context).textTheme.subtitle2)),
         Expanded(
@@ -200,98 +229,124 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
 
   @override
   Widget build(BuildContext context, MyOrdersViewModel model) {
-    return
-        // !model.dataReady
-        //     ? ShimmerLayout(layoutType: 'marketTrades')
-        //     :
-        ListView.builder(
-            itemCount: orders.length,
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context, int index) {
-              var order = orders[index];
-              return Row(
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: Text('${index + 1}',
-                          style: Theme.of(context).textTheme.headline6)),
-                  Expanded(
-                      flex: 1,
-                      child: Text(
-                          order.bidOrAsk
-                              ? AppLocalizations.of(context).buy
-                              : AppLocalizations.of(context).sell,
-                          style: Theme.of(context).textTheme.headline6.copyWith(
-                                color: Color(
-                                    (order.bidOrAsk) ? 0xFF0da88b : 0xFFe2103c),
-                              ))),
-                  Expanded(
-                      flex: 2,
-                      child: Text(order.pairName.toString(),
-                          style: Theme.of(context).textTheme.headline6)),
-                  Expanded(
-                      flex: 3,
-                      child: Text(
-                          order.price.toStringAsFixed(
-                              model.decimalConfig.priceDecimal),
-                          style: Theme.of(context).textTheme.headline6)),
-                  Expanded(
-                      flex: 2,
-                      child: Text(
-                          order.totalOrderQuantity.toStringAsFixed(
-                              model.decimalConfig.quantityDecimal),
-                          style: Theme.of(context).textTheme.headline6)),
-                  Expanded(
-                      flex: 2,
-                      child: Column(
-                        children: [
-                          Text(
-                              order.filledQuantity.toStringAsFixed(
-                                  model.decimalConfig.quantityDecimal),
-                              style: Theme.of(context).textTheme.headline6),
-                          Text(
-                              order.filledPercentage.isNaN
-                                  ? '0.0%'
-                                  : '${order.filledPercentage.toStringAsFixed(2)}%',
-                              style: Theme.of(context).textTheme.subtitle2)
-                        ],
-                      )),
-                  Expanded(
-                      flex: 1,
-                      child: order.isActive
-                          ? model.isBusy &&
-                                  orders[index].orderHash ==
-                                      model.onClickOrderHash
-                              ? CupertinoActivityIndicator()
-                              : IconButton(
-                                  color: red,
-                                  icon: Icon(
-                                    Icons.close,
-                                    size: 16,
-                                  ),
-                                  onPressed: () {
-                                    print(index);
-                                    print(orders.indexOf(order));
-                                    if (index == orders.indexOf(order)) {
-                                      print(
-                                          'inside if ${index == orders.indexOf(order)}');
+    return SmartRefresher(
+      enablePullUp: true,
+      header: Theme.of(context).platform == TargetPlatform.iOS
+          ? ClassicHeader()
+          : MaterialClassicHeader(),
+      enablePullDown: true,
+      footer: CustomFooter(
+        builder: (BuildContext context, LoadStatus mode) {
+          Widget body;
+          if (mode == LoadStatus.idle) {
+            body = Text("pull up load");
+          } else if (mode == LoadStatus.loading) {
+            body = CupertinoActivityIndicator();
+          } else if (mode == LoadStatus.failed) {
+            body = Text("Load Failed!Click retry!");
+          } else if (mode == LoadStatus.canLoading) {
+            body = Text("release to load more");
+          } else {
+            body = Text("No more Data");
+          }
+          return Container(
+            height: 55.0,
+            child: Center(child: body),
+          );
+        },
+      ),
+      controller: model.refreshController,
+      onRefresh: model.onRefresh,
+      onLoading: model.onLoading,
+      child: ListView.builder(
+          itemCount: orders.length,
+          shrinkWrap: true,
+          itemBuilder: (BuildContext context, int index) {
+            var order = orders[index];
+            return Row(
+              children: [
+                // Expanded(
+                //     flex: 1,
+                //     child: Text('${index + 1}',
+                //         style: Theme.of(context).textTheme.headline6)),
+                Expanded(
+                    flex: 1,
+                    child: Text(
+                        order.bidOrAsk
+                            ? AppLocalizations.of(context).buy
+                            : AppLocalizations.of(context).sell,
+                        style: Theme.of(context).textTheme.headline6.copyWith(
+                              color: Color(
+                                  (order.bidOrAsk) ? 0xFF0da88b : 0xFFe2103c),
+                            ))),
+                Expanded(
+                    flex: 2,
+                    child: Text(order.pairName.toString(),
+                        style: Theme.of(context).textTheme.headline6)),
+                Expanded(
+                    flex: 2,
+                    child: Text(
+                        order.price
+                            .toStringAsFixed(model.decimalConfig.priceDecimal),
+                        style: Theme.of(context).textTheme.headline6)),
+                Expanded(
+                    flex: 2,
+                    child: Text(
+                        order.totalOrderQuantity.toStringAsFixed(
+                            model.decimalConfig.quantityDecimal),
+                        style: Theme.of(context).textTheme.headline6)),
+                Expanded(
+                    flex: 2,
+                    child: Column(
+                      children: [
+                        Text(
+                            order.filledQuantity.toStringAsFixed(
+                                model.decimalConfig.quantityDecimal),
+                            style: Theme.of(context).textTheme.headline6),
+                        Text(
+                            order.filledPercentage.isNaN
+                                ? '0.0%'
+                                : '${order.filledPercentage.toStringAsFixed(2)}%',
+                            style: Theme.of(context).textTheme.subtitle2)
+                      ],
+                    )),
+                Expanded(
+                    flex: 1,
+                    child: order.isActive
+                        ? model.isBusy &&
+                                orders[index].orderHash ==
+                                    model.onClickOrderHash
+                            ? CupertinoActivityIndicator()
+                            : IconButton(
+                                color: red,
+                                icon: Icon(
+                                  Icons.close,
+                                  size: 16,
+                                ),
+                                onPressed: () {
+                                  print(index);
+                                  print(orders.indexOf(order));
+                                  if (index == orders.indexOf(order)) {
+                                    print(
+                                        'inside if ${index == orders.indexOf(order)}');
 
-                                      model.checkPass(context, order.orderHash);
-                                    }
-                                  })
-                          : IconButton(
-                              disabledColor:
-                                  Theme.of(context).disabledColor.withAlpha(50),
-                              icon: Icon(
-                                Icons.close,
-                                size: 16,
-                              ),
-                              onPressed: () {
-                                print('closed orders');
-                              }))
-                ],
-              );
-            });
+                                    model.checkPass(context, order.orderHash);
+                                  }
+                                })
+                        : IconButton(
+                            disabledColor:
+                                Theme.of(context).disabledColor.withAlpha(50),
+                            icon: Icon(
+                              Icons.close,
+                              size: 16,
+                            ),
+                            onPressed: () {
+                              print('closed orders');
+                            }))
+              ],
+            );
+          }),
+    );
   }
 
   // @override

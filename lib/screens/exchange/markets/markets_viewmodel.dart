@@ -16,16 +16,16 @@ import 'dart:convert';
 
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/stoppable_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
-import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class MarketsViewModel extends StreamViewModel<dynamic> {
+class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   final log = getLogger('MarketsViewModal');
 
   String errorMessage = '';
@@ -40,9 +40,25 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   List<String> tabNames = ['USDT', 'DUSD', 'BTC', 'ETH', 'EXG'];
 
   @override
+  void start() {
+    super.start();
+    log.w('market view model starting service');
+    // start subscription again
+  }
+
+  @override
+  void stop() async {
+    super.stop();
+    log.w(' mvm stopping service');
+    log.e('is empty ${stream.isEmpty} -- is broadcasr ${stream.isBroadcast}');
+    if (streamSubscription != null) streamSubscription.pause();
+    log.w('mvm all price closed');
+    // cancel stream subscription
+  }
+
+  @override
   Stream<dynamic> get stream {
     Stream<dynamic> res;
-
     res = tradeService.getAllCoinPriceStream();
     return res;
   }
@@ -58,13 +74,13 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   @override
   transformData(data) {
     try {
-      print('data $data');
       List<dynamic> jsonDynamicList = jsonDecode(data) as List;
 
       PriceList priceList = PriceList.fromJson(jsonDynamicList);
       pairPriceList = priceList.prices;
       log.w('pair price list length ${pairPriceList.length}');
       pairPriceList.forEach((element) {
+        //  print(element.toJson());
         if (element.change.isNaN) element.change = 0.0;
       });
     } catch (err) {
@@ -87,6 +103,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> {
   @override
   void onCancel() {
     log.e('Stream closed');
+    streamSubscription.cancel().then((value) => print('CANCEL'));
   }
 
   onBackButtonPressed() async {

@@ -35,7 +35,7 @@ class ShimmerLayout extends StatelessWidget {
               } else if (layoutType == 'orderbook') {
                 layout = Shimmer.fromColors(
                     child: ShimmerOrderbookLayout(),
-                    baseColor: primaryColor.withAlpha(155),
+                    baseColor: grey.withAlpha(155),
                     highlightColor: Colors.white);
               } else if (layoutType == 'marketTrades') {
                 layout = Shimmer.fromColors(

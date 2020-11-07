@@ -19,28 +19,27 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
-import 'package:exchangilymobileapp/models/trade/orders.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
-import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/abi_util.dart';
-import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:keccak/keccak.dart';
 import 'package:random_string/random_string.dart';
@@ -53,15 +52,21 @@ import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 import 'dart:core';
 
-class BuySellScreenState extends BaseViewModel {
-  final log = getLogger('BuySellScreenState');
+class BuySellViewModel extends ReactiveViewModel {
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [tradeService];
+
+  final log = getLogger('BuySellViewModel');
   List<WalletInfo> walletInfo;
   WalletInfo targetCoinWalletData;
   WalletInfo baseCoinWalletData;
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
+  OrderService _orderService = locator<OrderService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+  NavigationService navigationService = locator<NavigationService>();
+
   BuildContext context;
   bool bidOrAsk;
   String baseCoinName;
@@ -71,6 +76,7 @@ class BuySellScreenState extends BaseViewModel {
   TextEditingController kanbanGasLimitTextController = TextEditingController();
   TextEditingController quantityTextController = TextEditingController();
   TextEditingController priceTextController = TextEditingController();
+
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
@@ -82,12 +88,15 @@ class BuySellScreenState extends BaseViewModel {
   double sliderValue = 10.0;
   IOWebSocketChannel orderListChannel;
   IOWebSocketChannel tradeListChannel;
-  double price;
+  double price = 0.0;
   double quantity;
+
+  double get priceFromTradeService => tradeService.price;
+  double get quantityFromTradeService => tradeService.quantity;
   String exgAddress;
   WalletInfo coin;
-  final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
-  Orders orders;
+  // final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
+  List<OrderModel> orderList;
   double transactionAmount = 0;
   List<PairDecimalConfig> pairDecimalConfigList = [];
   int priceDecimal = 0;
@@ -95,32 +104,80 @@ class BuySellScreenState extends BaseViewModel {
   ApiService apiService = locator<ApiService>();
   String pair = '';
   String tickerName = '';
-  Price passedPair;
+
+  //Price passedPair;
   GlobalKey globalKeyOne;
   GlobalKey globalKeyTwo;
   var storageService = locator<LocalStorageService>();
   double unlockedAmount;
   double lockedAmount;
-
   ExchangeBalanceModel targetCoinExchangeBalance;
   ExchangeBalanceModel baseCoinExchangeBalance;
+  bool isReload = false;
+  String pairSymbolWithSlash = '';
+
+  bool _isOrderbookLoaded = false;
+  bool get isOrderbookLoaded => _isOrderbookLoaded;
+
   init() async {
     // log.e(pair);
+    setBusy(true);
+
     // splitPair(pair);
-    // setDefaultGasPrice();
-    // sell = [];
-    // buy = [];
-    // bidOrAsk = bidOrAsk;
+    print('1');
+    setDefaultGasPrice();
+    print('2');
+    sharedService.context = context;
+    getOrderbookLoadedStatus();
     // orderListFromTradeService();
-    // tradeListFromTradeService();
-    // await retrieveWallets();
-    // await orderList();
-    // await tradeList();
-    // await getDecimalPairConfig();
+    print('3');
+    //  tradeListFromTradeService();
+    // print('4');
+    //await retrieveWallets();
+    exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    print('5');
+    await getDecimalPairConfig();
+    print('6');
+    print('7');
     fillPriceAndQuantityTextFields();
+    print('8');
+    setBusy(false);
   }
 
-  /*----------------------------------------------------------------------
+/*----------------------------------------------------------------------
+                    get orderbook loaded status
+----------------------------------------------------------------------*/
+  void getOrderbookLoadedStatus() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      log.i('getOrderbookLoadedStatus timer started');
+      _isOrderbookLoaded = tradeService.isOrderbookLoaded;
+      if (_isOrderbookLoaded) {
+        setBusy(true);
+        price = priceFromTradeService;
+        quantity = quantityFromTradeService;
+        priceTextController.text = price.toString();
+        quantityTextController.text = quantityFromTradeService.toString();
+        timer.cancel();
+        log.i(
+            'getOrderbookLoadedStatus timer cancel -- price $price -- controller ${priceTextController.text}');
+      } else
+        price = 300.0;
+      setBusy(false);
+      log.w('getOrderbookLoadedStatus $isOrderbookLoaded');
+    });
+  }
+
+/*----------------------------------------------------------------------
+                      Single coin exchange balance using new api
+----------------------------------------------------------------------*/
+
+  Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
+      String tickerName) async {
+    // using new api endpoint for single exchange balance by name
+    return await apiService.getSingleCoinExchangeBalance(tickerName);
+  }
+
+/*----------------------------------------------------------------------
                 Single coin exchange balance using old api
 ----------------------------------------------------------------------*/
   Future getSingleCoinExchangeBalanceFromAll(
@@ -169,12 +226,15 @@ class BuySellScreenState extends BaseViewModel {
       });
   }
 
+  /*----------------------------------------------------------------------
+                        Fill text fields
+----------------------------------------------------------------------*/
   fillPriceAndQuantityTextFields() {
     setBusy(true);
-    priceTextController.text = passedPair.price.toString();
-    price = passedPair.price;
-    quantityTextController.text = 1.toString();
-    quantity = 1.0;
+    // priceTextController.text = priceFromTradeService.toString();
+    // price = priceFromTradeService;
+    // quantityTextController.text = quantityFromTradeService.toString();
+    // quantity = quantityFromTradeService;
     setBusy(false);
   }
 
@@ -196,17 +256,47 @@ class BuySellScreenState extends BaseViewModel {
     setBusy(true);
     log.e('pair $pair');
     var coinsArray = pair.split("/");
-    baseCoinName = coinsArray[1];
     targetCoinName = coinsArray[0];
+    baseCoinName = coinsArray[1];
     tickerName = targetCoinName + baseCoinName;
     log.e('tickername $tickerName');
     getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
     setBusy(false);
   }
 
-  // getPairDecimalConfig
 /* ---------------------------------------------------
-            Full screen Stack loading indicator
+            Handle Text Change
+--------------------------------------------------- */
+  void handleTextChanged(String name, String text) {
+    setBusy(true);
+    if (name == 'price') {
+      try {
+        price = double.parse(text);
+        log.w('price $price');
+        caculateTransactionAmount();
+        updateTransFee();
+      } catch (e) {
+        setBusy(false);
+        log.e('Handle text price changed $e');
+      }
+    }
+    if (name == 'quantity') {
+      try {
+        quantity = double.parse(text);
+        log.w('quantity $quantity');
+        caculateTransactionAmount();
+        updateTransFee();
+      } catch (e) {
+        setBusy(false);
+        log.e('Handle text quantity changed $e');
+      }
+    }
+    setBusy(false);
+  }
+
+  //
+/* ---------------------------------------------------
+            getPairDecimalConfig
 --------------------------------------------------- */
   getDecimalPairConfig() async {
     setBusy(true);
@@ -239,53 +329,53 @@ class BuySellScreenState extends BaseViewModel {
 /* ---------------------------------------------------
             Full screen Stack loading indicator
 --------------------------------------------------- */
-  orderListFromTradeService() {
-    setBusy(true);
-    orderListChannel =
-        tradeService.getOrderListChannel(targetCoinName + baseCoinName);
-    setBusy(false);
-  }
+  // orderListFromTradeService() {
+  //   setState(ViewState.Busy);
+  //   orderListChannel =
+  //       tradeService.getOrderListChannel(targetCoinName + baseCoinName);
+  //   setState(ViewState.Idle);
+  // }
 
 /* ---------------------------------------------------
             Full screen Stack loading indicator
 --------------------------------------------------- */
-  tradeListFromTradeService() {
-    setBusy(true);
-    tradeListChannel =
-        tradeService.getTradeListChannel(targetCoinName + baseCoinName);
-    setBusy(false);
-  }
+  // tradeListFromTradeService() {
+  //   setState(ViewState.Busy);
+  //   tradeListChannel =
+  //       tradeService.getTradeListChannel(targetCoinName + baseCoinName);
+  //   setState(ViewState.Idle);
+  // }
 
 /* ---------------------------------------------------
             Order List
 --------------------------------------------------- */
-  //
-  Future orderList() async {
-    setBusy(true);
-    orderListChannel.stream.listen((ordersString) {
-      orders = Decoder.fromOrdersJsonArray(ordersString);
-      //  log.w(orders);
-      showOrders(orders);
-    });
-    setBusy(false);
-  }
+//   //
+//   Future orderList() async {
+//     setState(ViewState.Busy);
+//     orderListChannel.stream.listen((ordersString) {
+//       orders = Decoder.fromOrdersJsonArray(ordersString);
+//       //  log.w(orders);
+//       showOrders(orders);
+//     });
+//     setState(ViewState.Idle);
+//   }
 
-/* ---------------------------------------------------
-            Trade List
---------------------------------------------------- */
-  //
-  tradeList() async {
-    setBusy(true);
-    tradeListChannel.stream.listen((tradesString) {
-      List<TradeModel> trades = Decoder.fromTradesJsonArray(tradesString);
+// /* ---------------------------------------------------
+//             Trade List
+// --------------------------------------------------- */
+//   //
+//   tradeList() async {
+//     setState(ViewState.Busy);
+//     tradeListChannel.stream.listen((tradesString) {
+//       List<MarketTrades> trades = Decoder.fromTradesJsonArray(tradesString);
 
-      if (trades != null && trades.length > 0) {
-        TradeModel latestTrade = trades[0];
-        currentPrice = latestTrade.price;
-      }
-    });
-    setBusy(false);
-  }
+//       if (trades != null && trades.length > 0) {
+//         MarketTrades latestTrade = trades[0];
+//         currentPrice = latestTrade.price;
+//       }
+//     });
+//     setState(ViewState.Idle);
+//   }
 
 /* ---------------------------------------------------
             Retrieve Wallets
@@ -386,10 +476,10 @@ class BuySellScreenState extends BaseViewModel {
           openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds;
       var newCloseOrds =
           closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds;
-      if ((myordersState != null) && (myordersState.currentState != null)) {
-        myordersState.currentState
-            .refreshBalOrds(newbals, newOpenOrds, newCloseOrds, exgAddress);
-      }
+      // if ((myordersState != null) && (myordersState.currentState != null)) {
+      //   myordersState.currentState
+      //       .refreshBalOrds(newbals, newOpenOrds, newCloseOrds, exgAddress);
+      // }
     });
     setBusy(false);
   }
@@ -420,7 +510,7 @@ class BuySellScreenState extends BaseViewModel {
   }
 
 /* ---------------------------------------------------
-           To Big Int
+            To Big Int
 --------------------------------------------------- */
   toBitInt(num) {
     var numString = num.toString();
@@ -479,6 +569,8 @@ class BuySellScreenState extends BaseViewModel {
         timeBeforeExpiration,
         false,
         orderHash);
+    log.e('exg addr ${exgAddress}');
+
     var nonce = await getNonce(exgAddress);
 
     var keyPairKanban = getExgKeyPair(seed);
@@ -526,69 +618,6 @@ class BuySellScreenState extends BaseViewModel {
   }
 
 /* ---------------------------------------------------
-            Show Orders
---------------------------------------------------- */
-  showOrders(Orders orders) async {
-    setBusy(true);
-    var newbuy = orders.buy;
-    var newsell = orders.sell;
-    var preItem;
-    for (var i = 0; i < newbuy.length; i++) {
-      var item = newbuy[i];
-      var price = item.price;
-      var orderQuantity = item.orderQuantity;
-
-      var filledQuantity = item.filledQuantity;
-      if (preItem != null) {
-        if (preItem.price == price) {
-          preItem.orderQuantity =
-              doubleAdd(preItem.orderQuantity, orderQuantity);
-          preItem.filledQuantity =
-              doubleAdd(preItem.filledQuantity, filledQuantity);
-          newbuy.removeAt(i);
-          i--;
-        } else {
-          preItem = item;
-        }
-      } else {
-        preItem = item;
-      }
-    }
-
-    preItem = null;
-    for (var i = 0; i < newsell.length; i++) {
-      var item = newsell[i];
-      var price = item.price;
-      var orderQuantity = item.orderQuantity;
-      var filledQuantity = item.filledQuantity;
-      if (preItem != null) {
-        if (preItem.price == price) {
-          preItem.orderQuantity =
-              doubleAdd(preItem.orderQuantity, orderQuantity);
-          preItem.filledQuantity =
-              doubleAdd(preItem.filledQuantity, filledQuantity);
-          newsell.removeAt(i);
-          i--;
-        } else {
-          preItem = item;
-        }
-      } else {
-        preItem = item;
-      }
-    }
-
-    if (!listEquals(newbuy, this.buy) || !listEquals(newsell, this.sell)) {
-      setBusy(false);
-      this.sell = (newsell.length > 5)
-          ? (newsell.sublist(newsell.length - 5))
-          : newsell;
-      this.buy = (newbuy.length > 5) ? (newbuy.sublist(0, 5)) : newbuy;
-      setBusy(false);
-    }
-    setBusy(false);
-  }
-
-/* ---------------------------------------------------
             Place Buy/Sell Order
 --------------------------------------------------- */
   Future placeBuySellOrder() async {
@@ -616,6 +645,22 @@ class BuySellScreenState extends BaseViewModel {
             context);
         Future.delayed(new Duration(seconds: 3), () {
           getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+          isReload = true;
+        });
+        Future.delayed(new Duration(seconds: 6), () async {
+          // await _orderService.getMyOrdersByTickerName(
+          //     exgAddress, targetCoinName + baseCoinName);
+          _orderService.swapSources();
+          notifyListeners();
+          //navigationService.goBack();
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //       builder: (context) => BuySellView(
+          //           orderbook: orderbook,
+          //           pairSymbolWithSlash: pairSymbolWithSlash,
+          //           bidOrAsk: bidOrAsk)),
+          //  );
         });
       } else {
         walletService.showInfoFlushbar(
@@ -657,10 +702,8 @@ class BuySellScreenState extends BaseViewModel {
     }
 
     if (!bidOrAsk) {
-      caculateTransactionAmount();
-      log.e(
-          'SELL tx amount $transactionAmount -- targetCoinbalance ${targetCoinbalance}');
-      if (caculateTransactionAmount() > targetCoinbalance) {
+      log.e('SELL tx amount $quantity -- targetCoinbalance $targetCoinbalance');
+      if (quantity > targetCoinbalance) {
         sharedService.alertDialog(
             "", AppLocalizations.of(context).invalidAmount,
             isWarning: false);
@@ -679,6 +722,7 @@ class BuySellScreenState extends BaseViewModel {
         setBusy(false);
         return;
       } else {
+        print('going to place order');
         await placeBuySellOrder();
       }
     }
@@ -689,43 +733,18 @@ class BuySellScreenState extends BaseViewModel {
   }
 
 /* ---------------------------------------------------
-            Handle Text Change
---------------------------------------------------- */
-  void handleTextChanged(String name, String text) {
-    setBusy(true);
-    if (name == 'price') {
-      try {
-        price = double.parse(text);
-        caculateTransactionAmount();
-        updateTransFee();
-      } catch (e) {
-        setBusy(false);
-        ;
-        log.e('Handle text price changed $e');
-      }
-    }
-    if (name == 'quantity') {
-      try {
-        quantity = double.parse(text);
-        caculateTransactionAmount();
-        updateTransFee();
-      } catch (e) {
-        setBusy(false);
-        log.e('Handle text quantity changed $e');
-      }
-    }
-    setBusy(false);
-  }
-
-/* ---------------------------------------------------
             Slider Onchange
 --------------------------------------------------- */
   sliderOnchange(newValue) {
     setBusy(true);
     sliderValue = newValue;
-    var targetCoinbalance = targetCoinWalletData.inExchange; // usd bal for buy
-    var baseCoinbalance = baseCoinWalletData //coin(asset) bal for sell
-        .inExchange;
+    var targetCoinbalance =
+        targetCoinExchangeBalance.unlockedAmount; // usd bal for buy
+    //  targetCoinWalletData.inExchange;
+    var baseCoinbalance =
+        baseCoinExchangeBalance.unlockedAmount; //coin(asset) bal for sell
+    //baseCoinWalletData
+    //  .inExchange;
     if (quantity.isNaN) quantity = 0.0;
     if (price != null &&
         quantity != null &&
@@ -746,14 +765,14 @@ class BuySellScreenState extends BaseViewModel {
         transactionAmount = quantity * price;
         quantityTextController.text = quantity.toStringAsFixed(quantityDecimal);
         updateTransFee();
-        log.i(transactionAmount);
-        log.e(changeBalanceWithSlider);
+        log.w('Slider value $sliderValue');
+        log.i('calculated tx amount $transactionAmount');
+        log.e('Balance change with slider $changeBalanceWithSlider');
       }
     } else {
       log.e(
           'In sliderOnchange else where quantity $quantity or price $price is null/empty');
     }
-    log.w(sliderValue);
     setBusy(false);
   }
 

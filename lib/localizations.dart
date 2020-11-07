@@ -1570,6 +1570,19 @@ class AppLocalizations {
         desc: 'flash_pay_tranfser_correct_format_of_receive_address');
   }
 
+  String get deletingWallet {
+    return Intl.message("Deleting wallet",
+        name: 'deletingWallet', desc: 'settings_view_deleting_wallet');
+  }
+
+  String get pleaseTransferFundsToExchangeWalletToUseBindpay {
+    return Intl.message(
+        "Please transfer funds to exchange wallet to use bindpay",
+        name: 'pleaseTransferFundsToExchangeWalletToUseBindpay',
+        desc:
+            'bindpay_please_transfer_funds_to_exchange_wallet_to_use_bindpay');
+  }
+
   String get important {
     return Intl.message("Important",
         name: 'important', desc: 'backup_mnemonic_important');
@@ -1580,20 +1593,6 @@ class AppLocalizations {
         "Cannot load the content as your device is not to the internet",
         name: 'noInternetWarning',
         desc: 'no_internet_warning');
-  }
-
-  String get walletInstruction1 {
-    return Intl.message(
-        "Please add gas by using FAB coin to use wallet and exchange features",
-        name: 'walletInstruction1',
-        desc: 'wallet_instruction_1');
-  }
-
-  String get walletInstruction2 {
-    return Intl.message(
-        "Transfer funds from wallet to exchange to trade and use bindpay",
-        name: 'walletInstruction2',
-        desc: 'wallet_instruction_2');
   }
 
   String get buySellInstruction1 {
@@ -1646,9 +1645,9 @@ class AppLocalizations {
     return Intl.message('Select Coin', name: 'selectCoin', desc: 'select_coin');
   }
 
-  String get deletingWallet {
-    return Intl.message('Deleting wallet',
-        name: 'deletingWallet', desc: 'deleting_wallet');
+  String get cancelledOrders {
+    return Intl.message('Cancelled Orders',
+        name: 'cancelledOrders', desc: 'cancelled_orders');
   }
 
   // Share page pending translation added by Jack

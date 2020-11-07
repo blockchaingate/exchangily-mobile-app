@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -43,11 +43,11 @@ class PairPriceView extends StatelessWidget {
                     style: TextStyle(fontSize: 30, color: priceColor)),
                 Column(
                   children: [
-                    Text(
-                        "\$" +
-                            usdValue
-                                .toStringAsFixed(decimalConfig.priceDecimal),
-                        style: Theme.of(context).textTheme.headline3),
+                    // Text(
+                    //     "\$" +
+                    //         usdValue
+                    //             .toStringAsFixed(decimalConfig.priceDecimal),
+                    //     style: Theme.of(context).textTheme.headline3),
                     Row(
                       children: [
                         Text(

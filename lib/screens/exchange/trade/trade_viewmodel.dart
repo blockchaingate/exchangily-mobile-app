@@ -1,24 +1,22 @@
 import 'dart:convert';
-
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
-import 'package:exchangilymobileapp/models/trade/trade-model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/stoppable_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class TradeViewModel extends MultipleStreamViewModel {
+class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   final Price pairPriceByRoute;
   TradeViewModel({this.pairPriceByRoute});
 
@@ -36,20 +34,21 @@ class TradeViewModel extends MultipleStreamViewModel {
 
   List<PairDecimalConfig> pairDecimalConfigList = [];
 
-  List<OrderModel> buyOrderBookList = [];
-  List<OrderModel> sellOrderBookList = [];
-  List orderBook = [];
+  //List<Order> buyOrderBookList = [];
+  //List<Order> sellOrderBookList = [];
+  Orderbook orderbook;
 
-  List<TradeModel> marketTradesList = [];
+  List<MarketTrades> marketTradesList = [];
 
-  List<OrderModel> myOrders = [];
+  // List<Order> myOrders = [];
 
   Price currentPairPrice;
   List<dynamic> ordersViewTabBody = [];
 
   List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
-  String allPriceStreamKey = 'allPrices';
+  String allPricesStreamKey = 'allPrices';
+  String tickerStreamKey = 'ticker';
   String orderBookStreamKey = 'orderBookList';
   String marketTradesStreamKey = 'marketTradesList';
 
@@ -57,13 +56,14 @@ class TradeViewModel extends MultipleStreamViewModel {
   DecimalConfig singlePairDecimalConfig = new DecimalConfig();
   bool isDisposing = false;
   double usdValue = 0.0;
+  String pairSymbolWithSlash = '';
 
   @override
   Map<String, StreamData> get streamsMap => {
-        allPriceStreamKey:
-            StreamData<dynamic>(tradeService.getAllCoinPriceStream()),
-        orderBookStreamKey: StreamData<dynamic>(tradeService
-            .getOrderBookStreamByTickerName(pairPriceByRoute.symbol)),
+        tickerStreamKey: StreamData<dynamic>(
+            tradeService.getTickerDataStream(pairPriceByRoute.symbol)),
+        // orderBookStreamKey: StreamData<dynamic>(tradeService
+        //     .getOrderBookStreamByTickerName(pairPriceByRoute.symbol)),
         marketTradesStreamKey: StreamData<dynamic>(tradeService
             .getMarketTradesStreamByTickerName(pairPriceByRoute.symbol))
       };
@@ -95,82 +95,87 @@ class TradeViewModel extends MultipleStreamViewModel {
   /// Initialize when model ready
   init() async {
     await getDecimalPairConfig();
-    await getExchangeAssets();
+    //   await getExchangeAssets();
     String holder = updateTickerName(pairPriceByRoute.symbol);
-    String tickerWithoutBasePair = holder.split('/')[0];
-    if (holder.split('/')[1] == 'USDT' || holder.split('/')[1] == 'DUSD') {
-      usdValue = dataReady('allPrices')
-          ? currentPairPrice.price
-          : pairPriceByRoute.price;
-    } else {
-      usdValue = await apiService
-          .getCoinMarketPriceByTickerName(tickerWithoutBasePair);
-    }
+    pairSymbolWithSlash = holder;
   }
 
 // Change/update stream data before displaying on UI
   @override
   void onData(String key, data) async {
-    orderBook = [buyOrderBookList, sellOrderBookList];
+    // orderBook = [buyOrderBookList, sellOrderBookList];
+    // cancelSingleStreamByKey(allPricesStreamKey);
+    if (pairSymbolWithSlash.split('/')[1] == 'USDT' ||
+        pairSymbolWithSlash.split('/')[1] == 'DUSD') {
+      usdValue = dataReady('allPrices')
+          ? currentPairPrice.price
+          : pairPriceByRoute.price;
+    } else {
+      String tickerWithoutBasePair = pairSymbolWithSlash.split('/')[0];
+      usdValue = await apiService
+          .getCoinMarketPriceByTickerName(tickerWithoutBasePair);
+    }
   }
 
-  /// Transform stream data before notifying to view modal
+/*----------------------------------------------------------------------
+          Transform stream data before notifying to view modal
+----------------------------------------------------------------------*/
+
   @override
   dynamic transformData(String key, data) {
-    log.e('checking error ${error(key)}');
     try {
       /// All prices list
-      if (key == allPriceStreamKey) {
-        List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-        PriceList priceList = PriceList.fromJson(jsonDynamicList);
-        pairPriceList = priceList.prices;
-        pairPriceList.forEach((element) {
-          if (element.change.isNaN) element.change = 0.0;
-          if (element.symbol == pairPriceByRoute.symbol) {
-            currentPairPrice = element;
-          }
-        });
-        Map<String, dynamic> res =
-            tradeService.marketPairPriceGroups(pairPriceList);
-        marketPairsTabBar = res['marketPairsGroupList'];
+      if (key == tickerStreamKey) {
+        var jsonDynamic = jsonDecode(data);
+        currentPairPrice = Price.fromJson(jsonDynamic);
+        log.w('TICKER PRICE ${currentPairPrice.toJson()}');
+        // Map<String, dynamic> res =
+        //     tradeService.marketPairPriceGroups(pairPriceList);
+        // marketPairsTabBar = res['marketPairsGroupList'];
         // notifyListeners();
       } // all prices ends
 
-      /// Order list
-      else if (key == orderBookStreamKey) {
-        // Buy order
-        List<dynamic> jsonDynamicList = jsonDecode(data)['buy'] as List;
-        OrderList orderList = OrderList.fromJson(jsonDynamicList);
-        log.e('orderList.orders.length ${orderList.orders.length}');
-        buyOrderBookList = orderAggregation(orderList.orders);
+/*----------------------------------------------------------------------
+                        Orderbook
+----------------------------------------------------------------------*/
 
-        // Sell orders
-        List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
-        OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
-        //  List sellOrders = sellOrderList.orders.reversed
-        //      .toList(); // reverse sell orders to show the list ascending
-        sellOrderBookList = orderAggregation(sellOrderList.orders);
+      // else if (key == orderBookStreamKey) {
+      //   var jsonDynamic = jsonDecode(data);
+      //   log.w('Orderbook $jsonDynamic');
+      //   orderbook = Orderbook.fromJson(jsonDynamic);
+      //   //  OrderList orderList = OrderList.fromJson(jsonDynamicList);
+      //   //  log.e('orderList.orders.length ${orderList.orders.length}');
+      //   //  buyOrderBookList = orderAggregation(orderList.orders);
 
-        log.w(
-            'OrderBook length -- ${orderAggregation(buyOrderBookList).length} ${sellOrderList.orders.length}');
-      }
+      //   // Sell orders
+      //   //  List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
+      //   // OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
+      //   //  List sellOrders = sellOrderList.orders.reversed
+      //   //      .toList(); // reverse sell orders to show the list ascending
 
-      /// Market trade list
+      //   //  sellOrderBookList = orderAggregation(sellOrderList.orders);
+      //   log.w(
+      //       'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
+      // }
+
+/*----------------------------------------------------------------------
+                    Market trade list
+----------------------------------------------------------------------*/
+
       else if (key == marketTradesStreamKey) {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-        TradeList tradeList = TradeList.fromJson(jsonDynamicList);
-        log.w('trades length ${tradeList.trades.length}');
+        MarketTradeList tradeList = MarketTradeList.fromJson(jsonDynamicList);
         marketTradesList = tradeList.trades;
-        marketTradesList.forEach((element) {
-          //   log.e(element.toJson());
-        });
-        //  notifyListeners();
+        marketTradesList.forEach((element) {});
       }
     } catch (err) {
       log.e('Catch error $err');
     }
   }
 
+/*----------------------------------------------------------------------
+                onError
+----------------------------------------------------------------------*/
   @override
   void onError(String key, error) {
     log.e('In onError $key $error');
@@ -183,10 +188,12 @@ class TradeViewModel extends MultipleStreamViewModel {
     log.e('Stream $key closed');
   }
 
-  // Order aggregation
+/*----------------------------------------------------------------------
+                  Order aggregation
+----------------------------------------------------------------------*/
 
-  List<OrderModel> orderAggregation(List<OrderModel> passedOrders) {
-    List<OrderModel> result = [];
+  List<Orderbook> orderAggregation(List<Orderbook> passedOrders) {
+    List<Orderbook> result = [];
     print('passed orders length ${passedOrders.length}');
     double prevQuantity = 0.0;
     List<int> indexArray = [];
@@ -202,17 +209,17 @@ class TradeViewModel extends MultipleStreamViewModel {
         log.i(
             'price matched with prev price ${currentOrder.price} -- $prevPrice');
         log.w(
-            ' currentOrder qty ${currentOrder.orderQuantity} -- prevQuantity $prevQuantity');
-        currentOrder.orderQuantity += prevQuantity;
+            ' currentOrder qty ${currentOrder.quantity} -- prevQuantity $prevQuantity');
+        currentOrder.quantity += prevQuantity;
         //  aggrQty = currentOrder.orderQuantity + prevQuantity;
         prevPrice = currentOrder.price;
-        log.e(' currentOrder.orderQuantity  ${currentOrder.orderQuantity}');
+        log.e(' currentOrder.orderQuantity  ${currentOrder.quantity}');
         indexArray.add(passedOrders.indexOf(currentOrder));
         result.removeWhere((order) => order.price == prevPrice);
         result.add(currentOrder);
       } else {
         prevPrice = currentOrder.price;
-        prevQuantity = currentOrder.orderQuantity;
+        prevQuantity = currentOrder.quantity;
         log.w('price NOT matched so prevprice: $prevPrice');
         result.add(currentOrder);
       }
@@ -220,10 +227,13 @@ class TradeViewModel extends MultipleStreamViewModel {
     return result;
   }
 
-  /// Get Decimal Pair Configuration
+/*----------------------------------------------------------------------
+                  Get Decimal Pair Configuration
+----------------------------------------------------------------------*/
+
   getDecimalPairConfig() async {
     await tradeService
-        .getDecimalPairConfig(pairPriceByRoute.symbol)
+        .getSinglePairDecimalConfig(pairPriceByRoute.symbol)
         .then((decimalValues) {
       singlePairDecimalConfig = decimalValues;
       log.i(
@@ -263,7 +273,7 @@ class TradeViewModel extends MultipleStreamViewModel {
       pauseAllStreams();
     } else if (index == 3) {
       pauseAllStreams();
-      await getExchangeAssets();
+      // await getExchangeAssets();
     }
   }
 
@@ -312,25 +322,6 @@ class TradeViewModel extends MultipleStreamViewModel {
 /*-------------------------------------------------------------------------------------
                                 Get Exchange Assets
 -------------------------------------------------------------------------------------*/
-
-  getExchangeAssets() async {
-    //  setBusy(true);
-    //  notifyListeners();
-    log.e('In get exchange assets');
-    setBusyForObject(myExchangeAssets, true);
-    String exgAddress = await getExgAddress();
-    var res =
-        await runBusyFuture(walletService.getAllExchangeBalances(exgAddress));
-    log.w('Asset exchange $res');
-    if (res != null) myExchangeAssets = res;
-    // await walletService.assetsBalance(exgAddress).then((value) {
-    //   // log.w('value $value');
-    //   myExchangeAssets = value;
-    //   // log.w('exchange assets $myExchangeAssets');
-    // });
-    //  setBusy(false);
-    setBusyForObject(myExchangeAssets, false);
-  }
 
   Future<String> getExgAddress() async {
     var exgWallet = await walletDataBaseService.getBytickerName('EXG');

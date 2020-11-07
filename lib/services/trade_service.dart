@@ -11,27 +11,106 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:bs58check/bs58check.dart';
+import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
-import 'package:exchangilymobileapp/models/trade/order-model.dart';
-import 'package:exchangilymobileapp/models/trade/price.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/services/stoppable_service.dart';
+import 'package:observable_ish/observable_ish.dart';
+import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import "package:hex/hex.dart";
 
-class TradeService {
+class TradeService extends StoppableService with ReactiveServiceMixin {
+  TradeService() {
+    listenToReactiveValues([_price, _quantity]);
+  }
+  Stream tickerStream;
+  Stream allPriceStream;
+  StreamSubscription _streamSubscription;
+  StreamController streamController;
+
+  @override
+  void start() {
+    super.start();
+    log.w('starting service');
+    // start subscription again
+  }
+
+  @override
+  void stop() async {
+    super.stop();
+    log.w('stopping service');
+    //     _streamSubscription = allPriceStream.listen((event) { });
+    //     _streamSubscription.cancel();
+    //  // await getAllPriceChannel().sink.close();
+    //     log.w('all price closed');
+    //   // cancel stream subscription
+  }
+
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
   static String basePath = environment['websocket'];
+
+  /// To check if orderbook has loaded in orderbook viewmodel
+  /// and then use this in buysellview to display price and quantity values
+  /// in the textfields
+  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(initial: false);
+  bool get isOrderbookLoaded => _isOrderbookLoaded.value;
+
+  RxValue<double> _price = RxValue<double>(initial: 0.0);
+  double get price => _price.value;
+
+  RxValue<double> _quantity = RxValue<double>(initial: 0.0);
+  double get quantity => _quantity.value;
+
+/*----------------------------------------------------------------------
+                    set orderbook loaded status
+----------------------------------------------------------------------*/
+  void setOrderbookLoadedStatus(bool v) {
+    _isOrderbookLoaded.value = v;
+    log.w('setOrderbookLoadedStatus $isOrderbookLoaded');
+  }
+
+/*----------------------------------------------------------------------
+                    Set price and quantity
+----------------------------------------------------------------------*/
+  void setPriceQuantityValues(double p, double q) {
+    _price.value = p;
+    _quantity.value = q;
+    log.w('$price, $quantity');
+  }
+
+/*----------------------------------------------------------------------
+                    Convert fab to hex
+----------------------------------------------------------------------*/
+
+  String convertFabAddressToHex(String fabAddress) {
+    var decoded = base58.decode(fabAddress);
+    String hexString = HEX.encode(decoded);
+    return hexString;
+  }
+
+// store the trimmed hex value as kanban address won't change so
+// no need to convert everytime
+  String trimHexString(String hexString) {
+    int length = hexString.length;
+    String trimmedString = '0x' + hexString.substring(2, 42);
+    return trimmedString;
+  }
 
 /*----------------------------------------------------------------------
                     getPairDecimalConfig
 ----------------------------------------------------------------------*/
 
-  Future<DecimalConfig> getDecimalPairConfig(String pairName) async {
+  Future<DecimalConfig> getSinglePairDecimalConfig(String pairName) async {
     List<PairDecimalConfig> pairDecimalConfigList = [];
     DecimalConfig singlePairDecimalConfig = new DecimalConfig();
     await _api.getPairDecimalConfig().then((res) {
@@ -51,28 +130,66 @@ class TradeService {
                     Close IOWebSocket Connections
 ----------------------------------------------------------------------*/
 
-  closeIOWebSocketConnections(String pair) async {
-    await getAllPriceChannel().sink.close();
-    await getOrderListChannel(pair).sink.close();
-    await getTradeListChannel(pair).sink.close();
+  closeIOWebSocketConnections(String pair) {
+    getTickerDataChannel(pair, '24').sink.close();
+    getAllPriceChannel().sink.close();
+    getOrderListChannel(pair).sink.close();
+    getTradeListChannel(pair).sink.close();
+  }
+
+/*----------------------------------------------------------------------
+                    Get single pair WS data
+----------------------------------------------------------------------*/
+// Values based on that time interval
+
+  Stream getTickerDataStream(String pair, {String interval = '24h'}) {
+    try {
+      tickerStream = getTickerDataChannel(pair, interval).stream;
+      return tickerStream.asBroadcastStream().distinct();
+    } catch (err) {
+      log.e(
+          'getTickerDataStream CATCH $err'); // Error thrown here will go to onError in them view model
+      throw Exception(err);
+    }
+  }
+
+  IOWebSocketChannel getTickerDataChannel(String pair, String interval) {
+    var wsStringUrl = tickerWSUrl + pair + '@' + interval;
+    log.i('getTickerDataUrl $wsStringUrl');
+    final channel = IOWebSocketChannel.connect(wsStringUrl);
+    return channel;
   }
 
 /*----------------------------------------------------------------------
           Get Coin Price Details Using allPrices Web Sockets
 ----------------------------------------------------------------------*/
 
+// Stream getAllCoinPriceStream() async* {
+
+// try{
+//        allPriceStream = getAllPriceChannel().stream;
+//        yield allPriceStream;
+// }
+//    catch (err) {
+//       log.e('$err'); // Error thrown here will go to onError in them view model
+//       throw Exception(err);
+//     }
+//   }
   Stream getAllCoinPriceStream() {
     Stream stream;
     try {
-      // String url = basePath + 'allPrices';
-      //  log.i(url);
-      // IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
-      stream = getAllPriceChannel().stream;
-      return stream.asBroadcastStream().distinct();
+      allPriceStream = getAllPriceChannel().stream;
+      return allPriceStream.asBroadcastStream().distinct();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
       throw Exception(err);
     }
+  }
+
+  IOWebSocketChannel getAllPriceChannel() {
+    log.i('allPricesWSUrl $allPricesWSUrl');
+    IOWebSocketChannel channel = IOWebSocketChannel.connect(allPricesWSUrl);
+    return channel;
   }
 
 /*----------------------------------------------------------------------
@@ -93,8 +210,19 @@ class TradeService {
     }
   }
 
+  IOWebSocketChannel getTradeListChannel(String pair) {
+    try {
+      var wsString = environment['websocket'] + 'trades' + '@' + pair;
+      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
+      return channel;
+    } catch (err) {
+      throw Exception(
+          '$err'); // Error thrown here will go to onError in them view model
+    }
+  }
+
 /*----------------------------------------------------------------------
-                      Orders
+                      Orderbook
 ----------------------------------------------------------------------*/
 
   Stream getOrderBookStreamByTickerName(String tickerName) {
@@ -116,14 +244,6 @@ class TradeService {
     }
   }
 
-  /// IOWebSockets
-
-  IOWebSocketChannel getAllPriceChannel() {
-    String url = basePath + 'allPrices';
-    IOWebSocketChannel channel = IOWebSocketChannel.connect(url);
-    return channel;
-  }
-
   IOWebSocketChannel getOrderListChannel(String pair) {
     try {
       var wsString = environment['websocket'] + 'orders' + '@' + pair;
@@ -137,24 +257,6 @@ class TradeService {
     }
   }
 
-  IOWebSocketChannel getTradeListChannel(String pair) {
-    try {
-      var wsString = environment['websocket'] + 'trades' + '@' + pair;
-      IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
-      return channel;
-    } catch (err) {
-      throw Exception(
-          '$err'); // Error thrown here will go to onError in them view model
-    }
-  }
-
-  getTickerChannel(String pair, String interval) {
-    var wsString =
-        environment['websocket'] + 'ticker' + '@' + pair + '@' + interval;
-    final channel = IOWebSocketChannel.connect(wsString);
-    return channel;
-  }
-
   Future<double> getCoinMarketPrice(String name) async {
     double currentUsdValue;
     var data = await _api.getCoinCurrencyUsdPrice();
@@ -164,28 +266,34 @@ class TradeService {
     return currentUsdValue;
   }
 
-// Get all my orders
-  Future<List<OrderModel>> getMyOrders(String exgAddress) async {
-    OrderList orderList;
-    try {
-      var data = await _api.getOrders(exgAddress);
-      orderList = OrderList.fromJson(data);
-      // throw Exception('Catch Exception');
-      return orderList.orders;
-    } catch (err) {
-      log.e('getMyOrders Catch $err');
-      throw Exception('Catch Exception $err');
-    }
-  }
+// // Get all my orders
+//   Future<List<Order>> getMyOrders(String exgAddress) async {
+//     OrderList orderList;
+//     try {
+//       var data = await _api.getOrders(exgAddress);
+//       orderList = OrderList.fromJson(data);
+//       // throw Exception('Catch Exception');
+//       return orderList.orders;
+//     } catch (err) {
+//       log.e('getMyOrders Catch $err');
+//       throw Exception('Catch Exception $err');
+//     }
+//   }
 
   // Get my orders by tickername
   Future<List<OrderModel>> getMyOrdersByTickerName(
       String exgAddress, String tickerName) async {
     OrderList orderList;
     try {
-      var data = await _api.getMyOrdersByTickerName(exgAddress, tickerName);
-      orderList = OrderList.fromJson(data);
-      return orderList.orders;
+      var data = await _api.getMyOrdersPagedByFabHexAddressAndTickerName(
+          exgAddress, tickerName);
+      print(data);
+      if (data != null) {
+        orderList = OrderList.fromJson(data);
+        return orderList.orders;
+      } else {
+        return null;
+      }
     } catch (err) {
       log.e('getMyOrdersByTickerName Catch $err');
       throw Exception;

@@ -7,7 +7,7 @@ class ShimmerOrderbookLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height = 20;
+    double height = 15;
     double width = 50;
     return Container(
       padding: EdgeInsets.symmetric(vertical: 5.0),

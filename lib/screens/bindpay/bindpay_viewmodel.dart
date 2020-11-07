@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -43,6 +44,7 @@ class BindpayViewmodel extends FutureViewModel {
   List<Map<String, dynamic>> coins = [];
   GlobalKey globalKey = new GlobalKey();
   ScrollController scrollController;
+  bool isExchangeBalanceEmpty = false;
   String barcodeRes = '';
   String barcodeRes2 = '';
   var walletBalancesBody;
@@ -61,6 +63,70 @@ class BindpayViewmodel extends FutureViewModel {
   init() {
     sharedService.context = context;
   }
+
+  // saveDataLocally() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   List<Map<String, dynamic>> data = [
+  //     {
+  //       "language": "cn",
+  //       "headline": true,
+  //       "_id": "5f73720472809371565588a1",
+  //       "title": "test",
+  //       "category": "News",
+  //       "content": "中文004",
+  //       "contentSummary": "中文001中文001中文001中文001",
+  //       "createdBy": "58dc560d6ed93640a1e56cb7",
+  //       "postedDate": "2020-09-29T17:42:28.055Z",
+  //       "__v": 0
+  //     },
+  //     {
+  //       "language": "cn",
+  //       "headline": true,
+  //       "_id": "5f73720172809371565588a0",
+  //       "title": "test",
+  //       "category": "News",
+  //       "content": "中文003",
+  //       "contentSummary": "中文001中文001中文001中文001",
+  //       "createdBy": "58dc560d6ed93640a1e56cb7",
+  //       "postedDate": "2020-09-29T17:42:25.724Z",
+  //       "__v": 0
+  //     },
+  //     {
+  //       "language": "cn",
+  //       "headline": true,
+  //       "_id": "5f7371fe728093715655889f",
+  //       "title": "test",
+  //       "category": "News",
+  //       "content": "中文002",
+  //       "contentSummary": "中文001中文001中文001中文001",
+  //       "createdBy": "58dc560d6ed93640a1e56cb7",
+  //       "postedDate": "2020-09-29T17:42:22.978Z",
+  //       "__v": 0
+  //     },
+  //     {
+  //       "language": "cn",
+  //       "headline": true,
+  //       "_id": "5f7371ec728093715655889e",
+  //       "title": "test",
+  //       "category": "News",
+  //       "content": "中文001",
+  //       "contentSummary": "中文001中文001中文001中文001",
+  //       "createdBy": "58dc560d6ed93640a1e56cb7",
+  //       "postedDate": "2020-09-29T17:42:04.315Z",
+  //       "__v": 0
+  //     }
+  //   ];
+  //   List<String> jsonData = [];
+  //   data.forEach((element) {
+  //     jsonData.add(jsonEncode(element));
+  //   });
+  //   log.e('jsonData $jsonData');
+
+  //   prefs.setStringList('data01', jsonData);
+  //   var res = prefs.get('data01');
+
+  //   log.w('Retrieved Stored data $res');
+  // }
 
 /*----------------------------------------------------------------------
                     Change bottom sheet hide/show status
@@ -214,6 +280,7 @@ class BindpayViewmodel extends FutureViewModel {
   @override
   void onData(data) {
     List<WalletInfo> tokenList = data as List<WalletInfo>;
+    log.e(tokenList.length);
     tokenList.forEach((wallet) {
       if (wallet.inExchange != 0.0)
         coins.add(

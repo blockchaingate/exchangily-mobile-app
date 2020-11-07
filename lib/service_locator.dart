@@ -31,8 +31,9 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_f
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_screen_state.dart';
 import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/trade/place_order/buy_sell_screen_state.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
@@ -40,6 +41,7 @@ import 'package:exchangilymobileapp/services/db/transaction_history_database_ser
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
@@ -79,6 +81,8 @@ Future serviceLocator() async {
 
   locator.registerLazySingleton(() => PdfViewerService());
 
+  locator.registerLazySingleton(() => OrderService());
+
   // LocalStorageService Singelton
   var instance = await LocalStorageService.getInstance();
   locator.registerSingleton<LocalStorageService>(instance);
@@ -110,13 +114,15 @@ Future serviceLocator() async {
   locator.registerFactory(() => CampaignLoginScreenState());
   locator.registerFactory(() => CampaignRegisterAccountScreenState());
   locator.registerFactory(() => TeamRewardDetailsScreenState());
+  locator.registerFactory(() => CampaignSingleScreenState());
+  locator.registerFactory(() => CarouselWidgetState());
   // Trade
   locator.registerFactory(() => MarketsViewModel());
   locator.registerFactory(() => TradeViewModel());
-  locator.registerFactory(() => BuySellScreenState());
+  locator.registerFactory(() => BuySellViewModel());
+  locator.registerFactory(() => MyExchangeAssetsViewModel());
   locator.registerFactory(() => MarketPairsTabViewState());
-  locator.registerFactory(() => CampaignSingleScreenState());
-  locator.registerFactory(() => CarouselWidgetState());
+
   // Bindpay
   locator.registerFactory(() => BindpayViewmodel());
   // Navigation
