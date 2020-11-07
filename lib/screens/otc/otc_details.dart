@@ -19,7 +19,7 @@ class OtcDetailsScreen extends StatelessWidget {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             centerTitle: true,
-            title: Text('OTC Details'),
+            title: Text('OTC ${AppLocalizations.of(context).details}'),
             backgroundColor: globals.secondaryColor),
         body: Container(
             padding: EdgeInsets.all(5.0),

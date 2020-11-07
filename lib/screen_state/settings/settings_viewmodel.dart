@@ -37,7 +37,8 @@ class SettingsViewmodel extends BaseViewModel {
   final log = getLogger('SettingsState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
-  TransactionHistoryDatabaseService transactionHistoryDatabaseService = locator<TransactionHistoryDatabaseService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+      locator<TransactionHistoryDatabaseService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
@@ -64,17 +65,17 @@ class SettingsViewmodel extends BaseViewModel {
   init() async {
     setBusy(true);
 
-    storageService.showCaseView == null
+    storageService.isShowCaseView == null
         ? isShowCaseOnce = false
-        : isShowCaseOnce = storageService.showCaseView;
+        : isShowCaseOnce = storageService.isShowCaseView;
 
     sharedService.getDialogWarningsStatus().then((res) {
       if (res != null) isDialogDisplay = res;
     });
     getAppVersion();
     await selectDefaultWalletLanguage();
-    if (selectedLanguage == '')
-      selectedLanguage = await getStoredDataByKeys('lang');
+    // if (selectedLanguage == '')
+    //   selectedLanguage = getSetLocalStorageDataByKey('lang');
     setBusy(false);
   }
 
@@ -93,7 +94,7 @@ class SettingsViewmodel extends BaseViewModel {
   Future<String> selectDefaultWalletLanguage() async {
     setBusy(true);
     if (selectedLanguage == '' || selectedLanguage == null) {
-      String key = await getStoredDataByKeys('lang');
+      String key = await getSetLocalStorageDataByKey('lang');
       // log.w('key in init $key');
 
       // /// Created Map of languages because in dropdown if i want to show
@@ -110,7 +111,7 @@ class SettingsViewmodel extends BaseViewModel {
       //   selectedLanguage =
       //       languages.keys.firstWhere((k) => languages[k] == keyIsValue);
       // }
-      print('ssss $selectedLanguage');
+      print('selectedLanguage $selectedLanguage');
     }
     setBusy(false);
     return selectedLanguage;
@@ -207,23 +208,27 @@ class SettingsViewmodel extends BaseViewModel {
     }
   }
 
-  Future getStoredDataByKeys(String key,
+/*-------------------------------------------------------------------------------------
+                      Get stored data by keys
+-------------------------------------------------------------------------------------*/
+  getSetLocalStorageDataByKey(String key,
       {bool isSetData = false, dynamic value}) async {
     print('key $key -- isData $isSetData -- value $value');
+
     setBusy(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (isSetData) prefs.setBool(key, value);
 
-    log.e('value of get key ${prefs.get(key)}');
-    isShowCaseOnce = prefs.get(key);
+    if (isSetData) prefs.setBool(key, value);
+    log.e('key-- $key-- value ${prefs.get(key)}');
+
     setBusy(false);
-    if (!isSetData) return prefs.get(key);
+    return prefs.get(key);
   }
 
-  // Change wallet language
-
+/*-------------------------------------------------------------------------------------
+                      Change wallet language
+-------------------------------------------------------------------------------------*/
   changeWalletLanguage(updatedLanguageValue) async {
-  
     setBusy(true);
     // Get the Map key using value
     // String key = languages.keys.firstWhere((k) => languages[k] == lang);
@@ -236,7 +241,7 @@ class SettingsViewmodel extends BaseViewModel {
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     selectedLanguage = key.isEmpty ? updatedLanguageValue : languages[key];
-    log.w('Selec $selectedLanguage');
+    log.w('selectedLanguage $selectedLanguage');
     if (updatedLanguageValue == 'Chinese' ||
         updatedLanguageValue == 'zh' ||
         key == 'zh') {

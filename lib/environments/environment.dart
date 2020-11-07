@@ -50,6 +50,7 @@ Map devConfig = {
     //for server
     'blockchaingate': 'https://test.blockchaingate.com/v2/',
     'kanban': 'https://kanbantest.fabcoinapi.com/',
+    'hongkongServer': 'api.dscmap.com/',
     'btc': 'https://btctest.fabcoinapi.com/',
     'ltc': 'https://ltctest.fabcoinapi.com/',
     'bch': 'https://bchtest.fabcoinapi.com/',
@@ -186,6 +187,7 @@ Map productionConfig = {
   'endpoints': {
     'blockchaingate': 'https://www.blockchaingate.com/v2/',
     'kanban': 'https://kanbanprod.fabcoinapi.com/',
+    'hongkongServer': 'api.dscmap.com/',
     'btc': 'https://btcprod.fabcoinapi.com/',
     'ltc': 'https://ltcprod.fabcoinapi.com/',
     'bch': 'https://bchprod.fabcoinapi.com/',

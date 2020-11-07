@@ -223,28 +223,28 @@ class SettingsContainer extends StatelessWidget {
                                             .headline5,
                                       ),
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children:[
-                                             Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 5.0),
-                                        child: Icon(
-                                          Icons.keyboard_arrow_up,
-                                          color: primaryColor,
-                                          size: 12,
-                                        ),
-                                      ),
-                                         Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 5.0),
-                                        child: Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: primaryColor,
-                                          size: 12,
-                                        ),
-                                      ),
-                                        ]
-                                      )
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5.0),
+                                              child: Icon(
+                                                Icons.keyboard_arrow_up,
+                                                color: primaryColor,
+                                                size: 12,
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 5.0),
+                                              child: Icon(
+                                                Icons.keyboard_arrow_down,
+                                                color: primaryColor,
+                                                size: 12,
+                                              ),
+                                            ),
+                                          ])
                                     ],
                                   ),
                                 ),
@@ -297,13 +297,15 @@ class SettingsContainer extends StatelessWidget {
                                                 .headline6),
                                       ],
                                     ),
-                                    value: model.languages[0],
+                                    value: model.languages['en'],
                                   ),
                                   DropdownMenuItem(
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Image.asset(
                                           "assets/images/img/flagChina.png",
@@ -318,7 +320,7 @@ class SettingsContainer extends StatelessWidget {
                                                 .headline6),
                                       ],
                                     ),
-                                    value: model.languages[1],
+                                    value: model.languages['zh'],
                                   ),
                                 ]),
                           ),
@@ -378,12 +380,12 @@ class SettingsContainer extends StatelessWidget {
                         value: !model.isShowCaseOnce,
                         onChanged: (value) {
                           // set updated value
-                          model.storageService.showCaseView = !value;
+                          model.storageService.isShowCaseView = !value;
 
                           model.setBusy(true);
                           // get new value and assign it to the viewmodel variable
                           model.isShowCaseOnce =
-                              model.storageService.showCaseView;
+                              model.storageService.isShowCaseView;
                           model.setBusy(false);
                           print(model.isShowCaseOnce);
                         }),

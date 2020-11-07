@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-11-06T20:36:32.432626",
+  "@@last_modified": "2020-11-07T12:09:01.501992",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -555,12 +555,6 @@
   "openOrders": "Open Orders",
   "@openOrders": {
     "description": "open_orders_text",
-    "type": "text",
-    "placeholders": {}
-  },
-  "closeOrders": "Close Orders",
-  "@closeOrders": {
-    "description": "close_orders_text",
     "type": "text",
     "placeholders": {}
   },
@@ -1893,6 +1887,24 @@
   "cancelledOrders": "Cancelled Orders",
   "@cancelledOrders": {
     "description": "cancelled_orders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "details": "Details",
+  "@details": {
+    "description": "etails",
+    "type": "text",
+    "placeholders": {}
+  },
+  "closedOrders": "Closed Orders",
+  "@closedOrders": {
+    "description": "close_orders_text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "releaseToLoadMore": " Release to load more",
+  "@releaseToLoadMore": {
+    "description": " release_to_load_more",
     "type": "text",
     "placeholders": {}
   }

@@ -212,12 +212,12 @@ class SettingsPortableContainer extends StatelessWidget {
                           inactiveTrackColor: white,
                           value: !model.isShowCaseOnce,
                           onChanged: (value) {
-                            model.storageService.showCaseView = !value;
+                            model.storageService.isShowCaseView = !value;
 
                             model.setBusy(true);
                             // get new value and assign it to the viewmodel variable
                             model.isShowCaseOnce =
-                                model.storageService.showCaseView;
+                                model.storageService.isShowCaseView;
                             model.setBusy(false);
                             print(model.isShowCaseOnce);
                           }),

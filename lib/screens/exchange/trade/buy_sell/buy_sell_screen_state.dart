@@ -220,7 +220,7 @@ class BuySellViewModel extends ReactiveViewModel {
                         Showcase Feature
 ----------------------------------------------------------------------*/
   showcaseEvent(BuildContext test) async {
-    if (!storageService.showCaseView)
+    if (!storageService.isShowCaseView)
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
       });

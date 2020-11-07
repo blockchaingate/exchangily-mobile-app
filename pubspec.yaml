@@ -191,8 +191,11 @@ dependencies:
   # Reactive
   observable_ish:
 
-  #pagination
+  # Pagination
   pagination_view: ^1.0.3+2
+
+  # Overlay notification
+  overlay_support: ^1.0.5
 
 dev_dependencies:
   intl_translation: '^0.17.0'

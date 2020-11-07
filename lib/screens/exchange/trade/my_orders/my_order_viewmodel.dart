@@ -229,10 +229,10 @@ class MyOrdersViewModel extends ReactiveViewModel {
       if (element.isActive) {
         myOpenOrders.add(element);
         //  log.e('Close orders ${myOpenOrders.length}');
-      } else if (!element.isActive) {
+      } else if (!element.isActive && !element.isCancelled) {
         myCloseOrders.add(element);
-        //  log.w('Close orders ${myCloseOrders.length}');
       } else if (element.isCancelled) {
+        log.e('is element cancel value ${element.isCancelled}');
         cancelledOrders.add(element);
       }
 

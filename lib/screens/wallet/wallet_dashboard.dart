@@ -73,7 +73,7 @@ class WalletDashboardScreen extends StatelessWidget {
                 print('onComplete: $index, $key');
               },
               onFinish: () {
-                model.storageService.showCaseView = true;
+                model.storageService.isShowCaseView = true;
               },
               builder: Builder(
                 builder: (context) => Column(
@@ -834,17 +834,22 @@ class AddGasRow extends StatelessWidget {
     var end = Offset.zero;
     var tween = Tween(begin: begin, end: end);
     model.showcaseEvent(context);
-    return Showcase(
-      key: model.globalKeyOne,
-      title: AppLocalizations.of(context).note + ':',
-      description: AppLocalizations.of(context).walletDashboardInstruction1,
-      child: TweenAnimationBuilder(
-          duration: Duration(milliseconds: 500),
-          tween: tween,
-          builder: (_, Offset offset, __) {
-            return Container(child: (Gas(gasAmount: model.gasAmount)));
-          }),
-    );
+    return
+        // model.gasAmount < 0.005
+        //     ? Showcase(
+        //         key: model.globalKeyOne,
+        //         title: AppLocalizations.of(context).note + ':',
+        //         description:
+        //             AppLocalizations.of(context).walletDashboardInstruction1,
+        //         child: TweenAnimationBuilder(
+        //             duration: Duration(milliseconds: 500),
+        //             tween: tween,
+        //             builder: (_, Offset offset, __) {
+        //               return Container(child: (Gas(gasAmount: model.gasAmount)));
+        //             }),
+        //       )
+        //     :
+        Gas(gasAmount: model.gasAmount);
   }
 }
 
@@ -863,7 +868,7 @@ class DepositWidget extends StatelessWidget {
         child: tickerName.toUpperCase() == 'FAB'
             ? Showcase(
                 key: model.globalKeyTwo,
-                descTextStyle: TextStyle(fontSize: 9,color: black),
+                descTextStyle: TextStyle(fontSize: 9, color: black),
                 description:
                     AppLocalizations.of(context).walletDashboardInstruction2,
                 child: buildPaddingDeposit(context),

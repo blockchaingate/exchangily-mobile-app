@@ -487,11 +487,6 @@ class AppLocalizations {
         name: 'openOrders', desc: 'open_orders_text');
   }
 
-  String get closeOrders {
-    return Intl.message('Close Orders',
-        name: 'closeOrders', desc: 'close_orders_text');
-  }
-
   String get assets {
     return Intl.message('Assets', name: 'assets', desc: 'assets_text');
   }
@@ -1648,6 +1643,20 @@ class AppLocalizations {
   String get cancelledOrders {
     return Intl.message('Cancelled Orders',
         name: 'cancelledOrders', desc: 'cancelled_orders');
+  }
+
+  String get details {
+    return Intl.message('Details', name: 'details', desc: 'etails');
+  }
+
+  String get closedOrders {
+    return Intl.message('Closed Orders',
+        name: 'closedOrders', desc: 'close_orders_text');
+  }
+
+  String get releaseToLoadMore {
+    return Intl.message(' Release to load more',
+        name: 'releaseToLoadMore', desc: ' release_to_load_more');
   }
 
   // Share page pending translation added by Jack

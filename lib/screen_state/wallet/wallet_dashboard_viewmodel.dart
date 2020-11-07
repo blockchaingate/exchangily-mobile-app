@@ -263,7 +263,7 @@ class WalletDashboardViewModel extends BaseState {
                         Showcase Feature
 ----------------------------------------------------------------------*/
   showcaseEvent(BuildContext test) async {
-    if (!storageService.showCaseView)
+    if (!storageService.isShowCaseView)
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
       });
@@ -859,6 +859,7 @@ class WalletDashboardViewModel extends BaseState {
           });
         } else {
           log.i('Fab or gas balance available already');
+          storageService.isShowCaseView = true;
         }
       } // if wallet balance list != null ends
 

@@ -140,7 +140,7 @@ class MyOrdersView extends StatelessWidget {
                                               .headline6),
                                       Text(
                                           AppLocalizations.of(context)
-                                              .closeOrders,
+                                              .closedOrders,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -245,7 +245,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
           } else if (mode == LoadStatus.failed) {
             body = Text("Load Failed!Click retry!");
           } else if (mode == LoadStatus.canLoading) {
-            body = Text("release to load more");
+            body = Text(AppLocalizations.of(context).releaseToLoadMore);
           } else {
             body = Text("No more Data");
           }

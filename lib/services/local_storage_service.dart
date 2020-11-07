@@ -1,6 +1,8 @@
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {
+  final log = getLogger('LocalStorageService');
   static LocalStorageService _instance;
   static SharedPreferences _preferences;
 /*----------------------------------------------------------------------
@@ -9,6 +11,7 @@ class LocalStorageService {
   static const String ShowCaseViewKey = 'showCaseView';
   static const String AppLanguagesKey = 'languages';
   static const String DarkModeKey = 'darkmode';
+  static const String HKServerKey = 'isHKServer';
 /*----------------------------------------------------------------------
                   Instance
 ----------------------------------------------------------------------*/
@@ -54,7 +57,7 @@ class LocalStorageService {
 
   dynamic _getFromDisk(String key) {
     var value = _preferences.get(key);
-    print('(TRACE) LocalStorageService:_getFromDisk. key: $key value: $value');
+    log.i('key: $key value: $value');
     return value;
   }
 
@@ -74,7 +77,14 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Showcase View getter/setter
 ----------------------------------------------------------------------  */
-  bool get showCaseView => _getFromDisk(ShowCaseViewKey) ?? false;
+  bool get isShowCaseView => _getFromDisk(ShowCaseViewKey) ?? false;
 
-  set showCaseView(bool value) => _saveToDisk(ShowCaseViewKey, value);
+  set isShowCaseView(bool value) => _saveToDisk(ShowCaseViewKey, value);
+
+/*----------------------------------------------------------------------
+                Is HK server getter/setter
+----------------------------------------------------------------------  */
+  bool get isHKServer => _getFromDisk(HKServerKey) ?? false;
+
+  set isHKServer(bool value) => _saveToDisk(HKServerKey, value);
 }
