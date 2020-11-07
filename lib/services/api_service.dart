@@ -312,7 +312,7 @@ class ApiService {
   //Future<Order>
   Future getMyOrders(String exgAddress) async {
     try {
-      String url = getOrdersPagedByFabHexAddressURL + exgAddress;
+      String url = getOrdersPagedURL + exgAddress;
       log.w('get my orders url $url');
       var res = await client.get(url);
       log.e('res ${res.body}');
@@ -332,10 +332,7 @@ class ApiService {
   // Get Orders by tickername
   Future getMyOrdersPagedByFabHexAddressAndTickerName(
       String exgAddress, String tickerName) async {
-    String url = getOrdersPagedByFabHexAddressAndTickerNameURL +
-        exgAddress +
-        '/' +
-        tickerName;
+    String url = getOrdersPagedByTickerNameURL + exgAddress + '/' + tickerName;
     // String url = environment['endpoints']['kanban'] +
     //     'getordersbytickername/' +
     //     exgAddress +

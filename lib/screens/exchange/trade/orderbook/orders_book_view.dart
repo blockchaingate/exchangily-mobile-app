@@ -18,7 +18,7 @@ class OrderBookView extends StatelessWidget {
     return ViewModelBuilder<OrderbookViewModel>.reactive(
       disposeViewModel: false,
       fireOnModelReadyOnce: true,
-      initialiseSpecialViewModelsOnce: true,
+
       // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
       // which is required override
       viewModelBuilder: () => OrderbookViewModel(tickerName: tickerName),
@@ -31,6 +31,7 @@ class OrderBookView extends StatelessWidget {
               layoutType: 'orderbook',
             )
           : Container(
+              color: secondaryColor.withAlpha(250),
               padding: EdgeInsets.all(5.0),
               child: ListView(
                 //   mainAxisAlignment: MainAxisAlignment.start,

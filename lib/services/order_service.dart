@@ -27,7 +27,7 @@ class OrderService with ReactiveServiceMixin {
   bool get isShowAllOrders => _isShowAllOrders.value;
 
   OrderService() {
-    listenToReactiveValues([_singlePairOrders]);
+    listenToReactiveValues([_singlePairOrders, _isShowAllOrders]);
   }
 
 /*----------------------------------------------------------------------
@@ -80,16 +80,27 @@ class OrderService with ReactiveServiceMixin {
 
 /*-------------------------------------------------------------------------------------
                       Get All Orders
+          defaults are skip 0, page size 10, any type of order
             /ordersbyaddresspaged/:address/:start?/:count?/:status?
+https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54cec39c1a21886fe0f/10/5
+                                                                                          skip 10/ grab 5
 -------------------------------------------------------------------------------------*/
-  Future<List<OrderModel>> getMyOrders(String exgAddress) async {
+  Future<List<OrderModel>> getMyOrders(String exgAddress,
+      {int skip = 0, int count = 10, String status = ''}) async {
+    log.w('getMyOrders $exgAddress  -- skip $skip -- count $count');
     try {
-      String url = getOrdersPagedByFabHexAddressURL + exgAddress;
+      String url = getOrdersPagedURL +
+          exgAddress +
+          '/' +
+          skip.toString() +
+          '/' +
+          count.toString() +
+          '/' +
+          status;
       log.w('get my orders url $url');
       var res = await client.get(url);
-      log.e('res ${res.body}');
       var jsonList = jsonDecode(res.body) as List;
-      log.i('jsonList $jsonList');
+      log.e(jsonList);
       OrderList orderList = OrderList.fromJson(jsonList);
       log.w('getMyOrders order list length ${orderList.orders.length}');
       //  throw Exception('Catch Exception');
@@ -107,19 +118,38 @@ class OrderService with ReactiveServiceMixin {
 
 /*-------------------------------------------------------------------------------------
                       Get my orders by tickername
+            /ordersbyaddresspaged/:address/:start?/:count?/:status?
+                                                          'open', 'closed', 'canceled'
 -------------------------------------------------------------------------------------*/
 
-  Future getMyOrdersByTickerName(String exgAddress, String tickerName) async {
-    log.w('getMyOrdersByTickerName $exgAddress -- $tickerName');
+  Future getMyOrdersByTickerName(String exgAddress, String tickerName,
+      {int skip = 0, int count = 10, String status = ''}) async {
+    log.w(
+        'getMyOrdersByTickerName $exgAddress -- $tickerName -- skip $skip -- count $count');
 
-    OrderList orderList;
     try {
-      var data = await _api.getMyOrdersPagedByFabHexAddressAndTickerName(
-          exgAddress, tickerName);
-      log.w('getMyOrdersByTickerName $data');
-      if (data != null) {
-        orderList = OrderList.fromJson(data);
+      String url = getOrdersPagedByTickerNameURL +
+          exgAddress +
+          '/' +
+          tickerName +
+          '/' +
+          skip.toString() +
+          '/' +
+          count.toString() +
+          '/' +
+          status;
+      // String url = environment['endpoints']['kanban'] +
+      //     'getordersbytickername/' +
+      //     exgAddress +
+      //     '/' +
+      //     tickerName;
+      log.i('getMyOrdersByTickerName url $url');
+      var res = await client.get(url);
 
+      if (res != null) {
+        var jsonList = jsonDecode(res.body) as List;
+
+        OrderList orderList = OrderList.fromJson(jsonList);
         //   _singlePairOrders.value = orderAggregation(orderList.orders);3
         _singlePairOrders.value = orderList.orders;
         //  .map((e) => e).toList();

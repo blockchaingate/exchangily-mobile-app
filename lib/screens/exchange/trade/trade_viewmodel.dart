@@ -16,32 +16,12 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-class TradeViewModel extends MultipleStreamViewModel with StoppableService{
+class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   final Price pairPriceByRoute;
   TradeViewModel({this.pairPriceByRoute});
 
   final log = getLogger('TradeViewModal');
 
-
-
-  @override
-  void start() {
-    super.start();
-    log.w('TVM starting service');
-    // start subscription again
-  }
-
-  @override
-  void stop() async{
-    super.stop();
-      log.w('TVM stopping service');
-      dispose();
-      // getSubscriptionForKey(tickerStreamKey).cancel();
-    // closeConnections();
-      log.w('TVM all price closed');
-    // cancel stream subscription
-
-  }
   BuildContext context;
 
   NavigationService navigationService = locator<NavigationService>();

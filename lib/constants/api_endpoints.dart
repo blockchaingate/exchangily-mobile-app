@@ -70,9 +70,8 @@ final String tradesWSUrl = kanbanBaseWSUrl + 'trades@';
 final String ordersWSUrl = kanbanBaseWSUrl + 'orders@';
 final String tickerWSUrl = kanbanBaseWSUrl + 'ticker@';
 
-final String getOrdersPagedByFabHexAddressURL =
-    baseKanbanUrl + 'ordersbyaddresspaged/';
-final String getOrdersPagedByFabHexAddressAndTickerNameURL =
+final String getOrdersPagedURL = baseKanbanUrl + 'ordersbyaddresspaged/';
+final String getOrdersPagedByTickerNameURL =
     baseKanbanUrl + 'getordersbytickernamepaged/';
 
 /// https://kanbantest.fabcoinapi.com/exchangily/getBalance/

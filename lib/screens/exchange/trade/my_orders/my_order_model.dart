@@ -145,9 +145,9 @@ class OrderModel {
     this._filledPercentage = filledPercentage;
   }
 
-  bool get isCancelled => isCancelled;
+  bool get isCancelled => _isCancelled;
   set isCancelled(bool isCancelled) {
-    this.isCancelled = isCancelled;
+    this._isCancelled = isCancelled;
   }
 }
 

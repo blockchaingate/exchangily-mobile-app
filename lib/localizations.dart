@@ -1645,6 +1645,11 @@ class AppLocalizations {
     return Intl.message('Select Coin', name: 'selectCoin', desc: 'select_coin');
   }
 
+  String get cancelledOrders {
+    return Intl.message('Cancelled Orders',
+        name: 'cancelledOrders', desc: 'cancelled_orders');
+  }
+
   // Share page pending translation added by Jack
 }
 

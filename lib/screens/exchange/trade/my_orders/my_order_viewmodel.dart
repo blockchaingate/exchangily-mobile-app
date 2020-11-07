@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
 import 'package:hex/hex.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -53,6 +54,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   List<OrderModel> myAllOrders = [];
   List<OrderModel> myOpenOrders = [];
   List<OrderModel> myCloseOrders = [];
+  List<OrderModel> cancelledOrders = [];
   List<List<OrderModel>> myOrdersTabBarView = [];
 
   List<OrderModel> get orders => _orderService.orders;
@@ -65,132 +67,21 @@ class MyOrdersViewModel extends ReactiveViewModel {
   bool get isShowAllOrders => _orderService.isShowAllOrders;
   bool isSwitch = false;
 
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  RefreshController get refreshController => _refreshController;
+
+  int skip = 0;
+  int count = 10;
+
   init() {
     getMyOrdersByTickerName();
     tradeService
         .getSinglePairDecimalConfig(tickerName)
         .then((decimalConfig) => decimalConfig = decimalConfig);
 
-    log.w('1 show all pairs value init $isShowAllOrders -- swtich   $isSwitch');
+    _orderService.swapSources();
     //futureToRun();
-  }
-
-  // @override
-  // Future<List<OrderModel>> futureToRun() =>
-  //     !_showCurrentPairOrders ? getMyOrdersByTickerName() : getAllMyOrders();
-
-/*-------------------------------------------------------------------------------------
-                        Order aggregation
--------------------------------------------------------------------------------------*/
-
-  orderAggregation(List<OrderModel> orders) {
-    orders.forEach((order) {
-      // order.price
-    });
-  }
-
-/*-------------------------------------------------------------------------------------
-                      Clear order lists
--------------------------------------------------------------------------------------*/
-
-  clearOrderLists() {
-    myAllOrders = [];
-    myOpenOrders = [];
-    myCloseOrders = [];
-    myOrdersTabBarView = [];
-  }
-
-/*-------------------------------------------------------------------------------------
-                      Get All Orders
--------------------------------------------------------------------------------------*/
-  getAllMyOrders() async {
-    setBusy(true);
-    isFutureError = false;
-    String exgAddress = await getExgAddress();
-    clearOrderLists();
-    await _orderService.getMyOrders(exgAddress).then((data) {
-      if (data != null) {
-        myAllOrders = data;
-        log.e('getAllMyOrders length ${myAllOrders.length}');
-        data.forEach((element) {
-          /// 'amount' = orderQuantity,
-          /// 'filledAmount' = filledQuantity
-          // filledAmount =
-          //     doubleAdd(element.orderQuantity, element.filledQuantity);
-          // filledPercentage = (element.filledQuantity *
-          //     100 /
-          //     doubleAdd(element.filledQuantity, element.orderQuantity));
-
-          if (element.isActive) {
-            myOpenOrders.add(element);
-          } else if (!element.isActive) {
-            myCloseOrders.add(element);
-          }
-        });
-        log.w('getAllMyOrders open orders ${myOpenOrders.length}');
-        log.w('getAllMyOrders close orders ${myCloseOrders.length}');
-        // Add order lists to orders tab bar view
-        myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
-      }
-    }).catchError((err) {
-      isFutureError = true;
-      log.e('getAllMyOrders $err');
-    });
-    setBusy(false);
-  }
-
-/*-------------------------------------------------------------------------------------
-                      Get orders by tickername
--------------------------------------------------------------------------------------*/
-  getMyOrdersByTickerName() async {
-    setBusy(true);
-    clearOrderLists();
-    isFutureError = false;
-    String exgAddress = await getExgAddress();
-
-    //return
-    await _orderService.getMyOrdersByTickerName(exgAddress, tickerName);
-    //   .then((data) {
-    // if (data != null) {
-    //   myAllOrders = data;
-    log.e('getMyOrdersByTickerName order length ${singlePairOrders.length}');
-    singlePairOrders.forEach((element) {
-      myAllOrders = singlePairOrders;
-
-      /// 'amount' = orderQuantity,
-      /// 'filledAmount' = filledQuantity
-      // filledAmount =
-      //     doubleAdd(element.orderQuantity, element.filledQuantity);
-      // filledPercentage = (element.filledQuantity *
-      //     100 /
-      //     doubleAdd(element.filledQuantity, element.orderQuantity));
-      if (element.isActive) {
-        myOpenOrders.add(element);
-        //  log.e('Close orders ${myOpenOrders.length}');
-      } else if (!element.isActive) {
-        myCloseOrders.add(element);
-        //  log.w('Close orders ${myCloseOrders.length}');
-      }
-
-      // Add order lists to orders tab bar view
-    });
-    log.w('getMyOrdersByTickerName open orders ${myOpenOrders.length}');
-    log.w('getMyOrdersByTickerName close orders ${myCloseOrders.length}');
-    myOrdersTabBarView = [myAllOrders, myOpenOrders, myCloseOrders];
-    // }
-    // }).catchError((err) {
-    //   isFutureError = true;
-    //   log.e('getMyOrdersByTickerName $err');
-    // });
-    // .then((value) => onData(value));
-    //return myAllOrders;
-    setBusy(false);
-  }
-
-  // Get Exg address from wallet database
-  Future<String> getExgAddress() async {
-    var exgWallet = await walletDataBaseService.getBytickerName('EXG');
-    return exgWallet.address;
   }
 
 /*-------------------------------------------------------------------------------------
@@ -211,6 +102,182 @@ class MyOrdersViewModel extends ReactiveViewModel {
     notifyListeners();
     setBusy(false);
   }
+/*-------------------------------------------------------------------------------------
+                        Pull to refresh
+-------------------------------------------------------------------------------------*/
+
+  void onRefresh() async {
+    setBusy(true);
+    log.e('in refreshing orders');
+
+    isShowAllOrders ? await getAllMyOrders() : await getMyOrdersByTickerName();
+    refreshController.refreshCompleted();
+    setBusy(false);
+  }
+
+  void onLoading() async {
+    setBusy(true);
+    log.e('in loading new orders -- Skip $skip');
+
+    if (isShowAllOrders) {
+      if (myAllOrders.length == 10)
+        skip += 10;
+      else
+        skip = 0;
+      await getAllMyOrders();
+    } else {
+      if (singlePairOrders.length == 10)
+        skip += 10;
+      else
+        skip = 0;
+      await getMyOrdersByTickerName();
+    }
+    log.i('skip count $skip');
+    _refreshController.loadComplete();
+    setBusy(false);
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Clear order lists
+-------------------------------------------------------------------------------------*/
+
+  clearOrderLists() {
+    myAllOrders = [];
+    myOpenOrders = [];
+    myCloseOrders = [];
+    myOrdersTabBarView = [];
+    cancelledOrders = [];
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Get All Orders
+-------------------------------------------------------------------------------------*/
+  getAllMyOrders() async {
+    setBusy(true);
+    isFutureError = false;
+    String exgAddress = await getExgAddress();
+
+    clearOrderLists();
+    await _orderService.getMyOrders(exgAddress, skip: skip).then((data) {
+      if (data != null) {
+        myAllOrders = data;
+        log.e('getAllMyOrders length ${myAllOrders.length}');
+        data.forEach((element) {
+          /// 'amount' = orderQuantity,
+          /// 'filledAmount' = filledQuantity
+          // filledAmount =
+          //     doubleAdd(element.orderQuantity, element.filledQuantity);
+          // filledPercentage = (element.filledQuantity *
+          //     100 /
+          //     doubleAdd(element.filledQuantity, element.orderQuantity));
+
+          if (element.isActive) {
+            myOpenOrders.add(element);
+          } else if (!element.isActive && !element.isCancelled) {
+            myCloseOrders.add(element);
+          } else if (element.isCancelled) {
+            log.e('is element cancel value ${element.isCancelled}');
+            cancelledOrders.add(element);
+          }
+        });
+        log.w('getAllMyOrders open orders ${myOpenOrders.length}');
+        log.w('getAllMyOrders close orders ${myCloseOrders.length}');
+        log.w(
+            'getMyOrdersByTickerName cancelledOrders  ${cancelledOrders.length}');
+        // Add order lists to orders tab bar view
+        myOrdersTabBarView = [
+          myAllOrders,
+          myOpenOrders,
+          myCloseOrders,
+          cancelledOrders
+        ];
+      }
+    }).catchError((err) {
+      isFutureError = true;
+      log.e('getAllMyOrders $err');
+    });
+    setBusy(false);
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Get orders by tickername
+-------------------------------------------------------------------------------------*/
+  getMyOrdersByTickerName() async {
+    setBusy(true);
+
+    clearOrderLists();
+    isFutureError = false;
+    String exgAddress = await getExgAddress();
+
+    //return
+    await _orderService.getMyOrdersByTickerName(exgAddress, tickerName,
+        skip: skip);
+    //   .then((data) {
+    // if (data != null) {
+    //   myAllOrders = data;
+    log.e('getMyOrdersByTickerName order length ${singlePairOrders.length}');
+    singlePairOrders.forEach((element) {
+      myAllOrders = singlePairOrders;
+
+      /// 'amount' = orderQuantity,
+      /// 'filledAmount' = filledQuantity
+      // filledAmount =
+      //     doubleAdd(element.orderQuantity, element.filledQuantity);
+      // filledPercentage = (element.filledQuantity *
+      //     100 /
+      //     doubleAdd(element.filledQuantity, element.orderQuantity));
+      if (element.isActive) {
+        myOpenOrders.add(element);
+        //  log.e('Close orders ${myOpenOrders.length}');
+      } else if (!element.isActive) {
+        myCloseOrders.add(element);
+        //  log.w('Close orders ${myCloseOrders.length}');
+      } else if (element.isCancelled) {
+        cancelledOrders.add(element);
+      }
+
+      // Add order lists to orders tab bar view
+    });
+    log.w('getMyOrdersByTickerName open orders ${myOpenOrders.length}');
+    log.w('getMyOrdersByTickerName close orders ${myCloseOrders.length}');
+    log.w('getMyOrdersByTickerName cancelledOrders  ${cancelledOrders.length}');
+    myOrdersTabBarView = [
+      myAllOrders,
+      myOpenOrders,
+      myCloseOrders,
+      cancelledOrders
+    ];
+    // }
+    // }).catchError((err) {
+    //   isFutureError = true;
+    //   log.e('getMyOrdersByTickerName $err');
+    // });
+    // .then((value) => onData(value));
+    //return myAllOrders;
+    setBusy(false);
+  }
+
+  // Get Exg address from wallet database
+  Future<String> getExgAddress() async {
+    var exgWallet = await walletDataBaseService.getBytickerName('EXG');
+    return exgWallet.address;
+  }
+
+  // void swapSources1() async {
+  //   setBusy(true);
+  //   log.i('AAA swap sources show all pairs $isShowAllOrders');
+  //   // _showCurrentPairOrders = !_showCurrentPairOrders;
+  //   // !_showCurrentPairOrders
+  //   _orderService.swapSources();
+  //   log.w('BBB swap sources show all pairs $isShowAllOrders  before method');
+  //   // isShowAllOrders ? await getAllMyOrders() : await getMyOrdersByTickerName();
+  //   isSwitch = isShowAllOrders;
+  //   log.i(
+  //       'CCC swap sources show all pairs $isShowAllOrders  after method -- swtich   $isSwitch');
+
+  //   notifyListeners();
+  //   setBusy(false);
+  // }
 
 /*-------------------------------------------------------------------------------------
                       On Data
