@@ -22,6 +22,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -77,6 +78,14 @@ class SettingsViewmodel extends BaseViewModel {
     // if (selectedLanguage == '')
     //   selectedLanguage = getSetLocalStorageDataByKey('lang');
     setBusy(false);
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Reload app
+-------------------------------------------------------------------------------------*/
+
+  reloadApp() {
+    Phoenix.rebirth(context);
   }
 
 /*-------------------------------------------------------------------------------------

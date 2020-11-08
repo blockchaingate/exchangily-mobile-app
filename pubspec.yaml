@@ -197,6 +197,9 @@ dependencies:
   # Overlay notification
   overlay_support: ^1.0.5
 
+  # Reload app
+  flutter_phoenix: ^0.1.0
+
 dev_dependencies:
   intl_translation: '^0.17.0'
   intl: ^0.16.0

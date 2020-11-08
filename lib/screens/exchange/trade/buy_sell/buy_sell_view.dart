@@ -292,7 +292,7 @@ class VerticalOrderbook extends StatelessWidget {
                   ],
                 ),
                 buildVerticalOrderbookColumn(
-                    model.orderbook.sellOrders.reversed.toList(), false, model),
+                    model.orderbook.sellOrders, false, model),
                 Container(
                     padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                     child: Row(
@@ -318,7 +318,9 @@ Column buildVerticalOrderbookColumn(
   // List<OrderType> sellOrders = [];
   print('OrderArray length before ${orderArray.length}');
   orderArray = (orderArray.length > 7)
-      ? orderArray = orderArray.sublist(0, 7)
+      ? orderArray = bidOrAsk
+          ? orderArray.sublist(0, 7)
+          : orderArray.sublist(0, 7).reversed.toList()
       : orderArray;
   print('OrderArray length after ${orderArray.length}');
   return Column(

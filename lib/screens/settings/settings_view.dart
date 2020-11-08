@@ -392,6 +392,10 @@ class SettingsContainer extends StatelessWidget {
                   ],
                 )),
 
+            Card(
+              child: FlatButton(
+                  onPressed: model.reloadApp(), child: Text('Reload app')),
+            ),
             // Version Code
             Card(
               elevation: 5,
