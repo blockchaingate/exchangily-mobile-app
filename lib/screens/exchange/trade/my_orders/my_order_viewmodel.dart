@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -211,51 +212,54 @@ class MyOrdersViewModel extends ReactiveViewModel {
     String exgAddress = await getExgAddress();
 
     //return
-    await _orderService.getMyOrdersByTickerName(exgAddress, tickerName,
-        skip: skip);
-    //   .then((data) {
-    // if (data != null) {
-    //   myAllOrders = data;
-    log.e('getMyOrdersByTickerName order length ${singlePairOrders.length}');
-    singlePairOrders.forEach((element) {
-      myAllOrders = singlePairOrders;
+    await _orderService
+        .getMyOrdersByTickerName(exgAddress, tickerName, skip: skip)
+        .then((value) {
+      log.e('getMyOrdersByTickerName order length ${singlePairOrders.length}');
+      singlePairOrders.forEach((element) {
+        myAllOrders = singlePairOrders;
 
-      /// 'amount' = orderQuantity,
-      /// 'filledAmount' = filledQuantity
-      // filledAmount =
-      //     doubleAdd(element.orderQuantity, element.filledQuantity);
-      // filledPercentage = (element.filledQuantity *
-      //     100 /
-      //     doubleAdd(element.filledQuantity, element.orderQuantity));
-      if (element.isActive) {
-        myOpenOrders.add(element);
-        //  log.e('Close orders ${myOpenOrders.length}');
-      } else if (!element.isActive && !element.isCancelled) {
-        myCloseOrders.add(element);
-      } else if (element.isCancelled) {
-        log.e('is element cancel value ${element.isCancelled}');
-        cancelledOrders.add(element);
-      }
+        /// 'amount' = orderQuantity,
+        /// 'filledAmount' = filledQuantity
+        // filledAmount =
+        //     doubleAdd(element.orderQuantity, element.filledQuantity);
+        // filledPercentage = (element.filledQuantity *
+        //     100 /
+        //     doubleAdd(element.filledQuantity, element.orderQuantity));
+        if (element.isActive) {
+          myOpenOrders.add(element);
+          //  log.e('Close orders ${myOpenOrders.length}');
+        } else if (!element.isActive && !element.isCancelled) {
+          myCloseOrders.add(element);
+        } else if (element.isCancelled) {
+          log.e('is element cancel value ${element.isCancelled}');
+          cancelledOrders.add(element);
+        }
 
-      // Add order lists to orders tab bar view
+        // Add order lists to orders tab bar view
+      });
+      log.w('getMyOrdersByTickerName open orders ${myOpenOrders.length}');
+      log.w('getMyOrdersByTickerName close orders ${myCloseOrders.length}');
+      log.w(
+          'getMyOrdersByTickerName cancelledOrders  ${cancelledOrders.length}');
+      myOrdersTabBarView = [
+        myAllOrders,
+        myOpenOrders,
+        myCloseOrders,
+        cancelledOrders
+      ];
+      // }
+      // }).catchError((err) {
+      //   isFutureError = true;
+      //   log.e('getMyOrdersByTickerName $err');
+      // });
+      // .then((value) => onData(value));
+      //return myAllOrders;
+      setBusy(false);
+    }).catchError((err) {
+      log.e('Catch getMyOrdersByTickerName');
+      setBusy(false);
     });
-    log.w('getMyOrdersByTickerName open orders ${myOpenOrders.length}');
-    log.w('getMyOrdersByTickerName close orders ${myCloseOrders.length}');
-    log.w('getMyOrdersByTickerName cancelledOrders  ${cancelledOrders.length}');
-    myOrdersTabBarView = [
-      myAllOrders,
-      myOpenOrders,
-      myCloseOrders,
-      cancelledOrders
-    ];
-    // }
-    // }).catchError((err) {
-    //   isFutureError = true;
-    //   log.e('getMyOrdersByTickerName $err');
-    // });
-    // .then((value) => onData(value));
-    //return myAllOrders;
-    setBusy(false);
   }
 
   // Get Exg address from wallet database

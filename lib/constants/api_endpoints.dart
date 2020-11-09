@@ -12,7 +12,7 @@ final String baseKanbanUrl = isProduction
     ? isHKServer ? baseHKServerUrl : 'https://kanbanprod.fabcoinapi.com/'
     : 'https://kanbantest.fabcoinapi.com/';
 
-final String baseHKServerUrl = 'api.dscmap.com/';
+final String baseHKServerUrl = 'https://api.dscmap.com/';
 /*----------------------------------------------------------------------
                         Free Fab
 ----------------------------------------------------------------------*/
