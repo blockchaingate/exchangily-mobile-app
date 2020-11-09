@@ -176,7 +176,7 @@ class SettingsPortableContainer extends StatelessWidget {
                           inactiveTrackColor: white,
                           value: model.isDialogDisplay,
                           onChanged: (value) {
-                            model.setDialogWarningValue(value);
+                            model.setIsDialogWarningValue(value);
                           }),
                     ),
                   ),

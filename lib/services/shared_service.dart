@@ -258,7 +258,9 @@ class SharedService {
                               onChanged: (bool value) async {
                                 setState(() => checkBoxValue = value);
                                 print(!checkBoxValue);
-                                // user click on do not show which is negative means false so to make it work it needs to be opposite to the orginal value
+
+                                /// user click on do not show which is negative means false
+                                /// so to make it work it needs to be opposite of the orginal value
                                 await setDialogWarningsStatus(!checkBoxValue);
                               }),
                           Text(

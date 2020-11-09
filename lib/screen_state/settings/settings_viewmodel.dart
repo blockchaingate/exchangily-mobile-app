@@ -84,9 +84,14 @@ class SettingsViewmodel extends BaseViewModel {
                       Reload app
 -------------------------------------------------------------------------------------*/
 
-  reloadApp() {
-    Phoenix.rebirth(context);
-  }
+  // reloadApp() {
+  //   setBusy(true);
+  //   log.i('1');
+  //   storageService.isHKServer = true;
+  //   Phoenix.rebirth(context);
+  //   log.i('2');
+  //   setBusy(false);
+  // }
 
 /*-------------------------------------------------------------------------------------
                       Showcase Event Start
@@ -97,6 +102,31 @@ class SettingsViewmodel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ShowCaseWidget.of(test).startShowCase([one, two]);
     });
+    setBusy(false);
+  }
+
+  setIsShowcase(bool v) {
+    // set updated value
+    log.i('setIsShowcase $v value');
+    storageService.isShowCaseView = !storageService.isShowCaseView;
+
+    // get new value and assign it to the viewmodel variable
+    setBusy(true);
+    isShowCaseOnce = storageService.isShowCaseView;
+    setBusy(false);
+    log.w('is show case once value $isShowCaseOnce');
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Set the display warning value to local storage
+-------------------------------------------------------------------------------------*/
+
+  setIsDialogWarningValue(value) async {
+    storageService.isNoticeDialogDisplay =
+        !storageService.isNoticeDialogDisplay;
+    setBusy(true);
+    //sharedService.setDialogWarningsStatus(value);
+    isDialogDisplay = storageService.isNoticeDialogDisplay;
     setBusy(false);
   }
 
@@ -284,14 +314,6 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(true);
     log.w('in app getappver');
     versionName = await sharedService.getLocalAppVersion();
-    setBusy(false);
-  }
-
-  // Set the display warning value to local storage
-  setDialogWarningValue(value) async {
-    setBusy(true);
-    sharedService.setDialogWarningsStatus(value);
-    isDialogDisplay = value;
     setBusy(false);
   }
 

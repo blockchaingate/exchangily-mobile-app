@@ -9,7 +9,7 @@ final String baseBlockchainGateV2Url = isProduction
     : 'https://test.blockchaingate.com/v2/';
 
 final String baseKanbanUrl = isProduction
-    ? 'https://kanbanprod.fabcoinapi.com/'
+    ? isHKServer ? baseHKServerUrl : 'https://kanbanprod.fabcoinapi.com/'
     : 'https://kanbantest.fabcoinapi.com/';
 
 final String baseHKServerUrl = 'api.dscmap.com/';

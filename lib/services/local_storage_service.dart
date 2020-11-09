@@ -8,6 +8,7 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Local Storage Keys
 ----------------------------------------------------------------------*/
+  static const String NoticeDialogDisplayKey = 'isDialogDisplay';
   static const String ShowCaseViewKey = 'isShowCaseView';
   static const String AppLanguagesKey = 'languages';
   static const String DarkModeKey = 'darkmode';
@@ -74,6 +75,15 @@ class LocalStorageService {
 ----------------------------------------------------------------------*/
   bool get isDarkMode => _getFromDisk(DarkModeKey) ?? false;
   set isDarkMode(bool value) => _saveToDisk(DarkModeKey, value);
+
+/*----------------------------------------------------------------------
+                Notice Dialog getter/setter
+----------------------------------------------------------------------  */
+  bool get isNoticeDialogDisplay =>
+      _getFromDisk(NoticeDialogDisplayKey) ?? false;
+
+  set isNoticeDialogDisplay(bool value) =>
+      _saveToDisk(NoticeDialogDisplayKey, value);
 
 /*----------------------------------------------------------------------
                 Showcase View getter/setter

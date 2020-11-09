@@ -17,7 +17,6 @@ import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dar
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:showcaseview/showcase.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
 import '../../localizations.dart';
@@ -51,28 +50,27 @@ class SettingsView extends StatelessWidget {
           ),
           body: model.isBusy
               ? Center(child: model.sharedService.loadingIndicator())
-              : model.isShowCaseOnce == false
-                  ? ShowCaseWidget(
-                      onStart: (index, key) {
-                        print('onStart: $index, $key');
-                      },
-                      onComplete: (index, key) {
-                        print('onComplete: $index, $key');
-                      },
-                      onFinish: () async {
-                        // print('FINISH, set isShowCaseOnce to true as we have shown user the showcase dialogs');
-                        // await model.getStoredDataByKeys('isShowCaseOnce',
-                        //     isSetData: true, value: true);
-                      },
-                      // autoPlay: true,
-                      // autoPlayDelay: Duration(seconds: 3),
-                      // autoPlayLockEnable: true,
-                      builder: Builder(
-                        builder: (context) =>
-                            SettingsStatefulWidget(model: model),
-                      ),
-                    )
-                  : SettingsContainer(model: model),
+              // : model.isShowCaseOnce == false
+              //     ? ShowCaseWidget(
+              //         onStart: (index, key) {
+              //           print('onStart: $index, $key');
+              //         },
+              //         onComplete: (index, key) {
+              //           print('onComplete: $index, $key');
+              //         },
+              //         onFinish: () async {
+              //           // print('FINISH, set isShowCaseOnce to true as we have shown user the showcase dialogs');
+              //           // await model.getStoredDataByKeys('isShowCaseOnce',
+              //           //     isSetData: true, value: true);
+              //         },
+              //         // autoPlay: true,
+              //         // autoPlayDelay: Duration(seconds: 3),
+              //         // autoPlayLockEnable: true,
+              //         builder: Builder(
+              //           builder: (context) => SettingsWidget(model: model),
+              //         ),
+              //       )
+              : SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
         ),
       ),
@@ -80,36 +78,25 @@ class SettingsView extends StatelessWidget {
   }
 }
 
-class SettingsStatefulWidget extends StatefulWidget {
+class SettingsWidget extends StatelessWidget {
   final SettingsViewmodel model;
-  const SettingsStatefulWidget({
+  SettingsWidget({
     Key key,
     this.model,
   }) : super(key: key);
 
   @override
-  _SettingsStatefulWidgetState createState() => _SettingsStatefulWidgetState();
-}
-
-class _SettingsStatefulWidgetState extends State<SettingsStatefulWidget> {
-  BuildContext myContext;
-  GlobalKey _one = GlobalKey();
-  GlobalKey _two = GlobalKey();
-  @override
-  void initState() {
-    super.initState();
-    widget.model.one = _one;
-    widget.model.two = _two;
-    print('isShow _SettingsWidgetState ${widget.model.isShowCaseOnce}');
-    widget.model.showcaseEvent(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
+    GlobalKey _one = GlobalKey();
+    GlobalKey _two = GlobalKey();
+    model.one = _one;
+    model.two = _two;
+    print('isShow _SettingsWidgetState ${model.isShowCaseOnce}');
+    model.showcaseEvent(context);
     // WidgetsBinding.instance
     //   .addPostFrameCallback((_) => widget.model.showcaseEvent(context));
     return SettingsContainer(
-      model: widget.model,
+      model: model,
     );
   }
 }
@@ -328,74 +315,142 @@ class SettingsContainer extends StatelessWidget {
                 )),
             // Show/Hide dialog warning checkbox
             Card(
-                elevation: 5,
-                color: globals.walletCardColor,
+              elevation: 5,
+              color: globals.walletCardColor,
+              child: Container(
+                padding: EdgeInsets.all(10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(right: 5.0),
-                      child: Icon(
-                        Icons.warning,
-                        color: yellow,
-                        size: 18,
-                      ),
+                      padding: const EdgeInsets.all(6.0),
+                      child: Icon(Icons.warning, color: yellow, size: 16),
                     ),
-                    Text(AppLocalizations.of(context).showDialogWarnings,
-                        style: Theme.of(context).textTheme.headline5,
-                        textAlign: TextAlign.center),
-                    Checkbox(
-                        activeColor: globals.primaryColor,
-                        value: model.isDialogDisplay,
-                        onChanged: (value) {
-                          model.setDialogWarningValue(value);
-                        }),
+                    Expanded(
+                      child: Text(
+                          AppLocalizations.of(context).showDialogWarnings,
+                          style: Theme.of(context).textTheme.headline5,
+                          textAlign: TextAlign.left),
+                    ),
+                    SizedBox(
+                      height: 20,
+                      child: Switch(
+                          inactiveThumbColor: grey,
+                          activeTrackColor: white,
+                          activeColor: primaryColor,
+                          inactiveTrackColor: white,
+                          value: model.isDialogDisplay,
+                          onChanged: (value) {
+                            model.setIsDialogWarningValue(value);
+                          }),
+                    ),
                   ],
-                )),
+                ),
+              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: <Widget>[
+              //     Padding(
+              //       padding: const EdgeInsets.only(right: 5.0),
+              //       child: Icon(
+              //         Icons.warning,
+              //         color: yellow,
+              //         size: 18,
+              //       ),
+              //     ),
+              //     Text(AppLocalizations.of(context).showDialogWarnings,
+              //         style: Theme.of(context).textTheme.headline5,
+              //         textAlign: TextAlign.center),
+              //     Checkbox(
+              //         activeColor: globals.primaryColor,
+              //         value: model.isDialogDisplay,
+              //         onChanged: (value) {
+              //           model.setDialogWarningValue(value);
+              //         }),
+              //   ],
+              // )
+            ),
 
             // Showcase ON/OFF
             Card(
                 elevation: 5,
                 color: globals.walletCardColor,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 5.0),
-                    //   child: Icon(
-                    //     Icons.insert_comment,
-                    //     color: white,
-                    //     size: 18,
-                    //   ),
-                    // ),
-                    Expanded(
-                      child: Text(
-                          AppLocalizations.of(context)
-                              .settingsShowcaseInstructions,
-                          style: Theme.of(context).textTheme.headline5,
-                          textAlign: TextAlign.center),
-                    ),
-                    Checkbox(
-                        activeColor: globals.primaryColor,
-                        value: !model.isShowCaseOnce,
-                        onChanged: (value) {
-                          // set updated value
-                          model.storageService.isShowCaseView = !value;
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    //  crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child:
+                            Icon(Icons.insert_comment, color: white, size: 18),
+                      ),
+                      Expanded(
+                        child: Text(
+                            AppLocalizations.of(context)
+                                .settingsShowcaseInstructions,
+                            style: Theme.of(context).textTheme.headline5,
+                            textAlign: TextAlign.left),
+                      ),
+                      SizedBox(
+                        height: 20,
+                        child: Switch(
+                            inactiveThumbColor: grey,
+                            activeTrackColor: white,
+                            activeColor: primaryColor,
+                            inactiveTrackColor: white,
+                            value: model.isShowCaseOnce,
+                            onChanged: (value) {
+                              model.setIsShowcase(value);
+                              // model.storageService.isShowCaseView = !value;
 
-                          model.setBusy(true);
-                          // get new value and assign it to the viewmodel variable
-                          model.isShowCaseOnce =
-                              model.storageService.isShowCaseView;
-                          model.setBusy(false);
-                          print(model.isShowCaseOnce);
-                        }),
-                  ],
-                )),
+                              // model.setBusy(true);
+                              // // get new value and assign it to the viewmodel variable
+                              // model.isShowCaseOnce =
+                              //     model.storageService.isShowCaseView;
+                              // model.setBusy(false);
+                              // print(model.isShowCaseOnce);
+                            }),
+                      ),
+                      // ),
+                    ],
+                  ),
+                )
 
-            Card(
-              child: FlatButton(
-                  onPressed: model.reloadApp(), child: Text('Reload app')),
-            ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: <Widget>[
+                //     // Padding(
+                //     //   padding: const EdgeInsets.only(left: 5.0),
+                //     //   child: Icon(
+                //     //     Icons.insert_comment,
+                //     //     color: white,
+                //     //     size: 18,
+                //     //   ),
+                //     // ),
+                //     Expanded(
+                //       child: Text(
+                //           AppLocalizations.of(context)
+                //               .settingsShowcaseInstructions,
+                //           style: Theme.of(context).textTheme.headline5,
+                //           textAlign: TextAlign.center),
+                //     ),
+                //     Checkbox(
+                //         activeColor: globals.primaryColor,
+                //         value: model.isShowCaseOnce,
+                //         onChanged: (value) {
+                //           model.setIsShowcase(value);
+                //         }),
+                //   ],
+                // ),
+                ),
+// Server url change
+            // Card(
+            //   child: FlatButton(
+            //       onPressed: () => model.reloadApp(),
+            //       child: Text('Reload app')),
+            // ),
             // Version Code
             Card(
               elevation: 5,

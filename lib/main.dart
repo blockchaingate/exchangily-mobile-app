@@ -58,9 +58,9 @@ class MyApp extends StatelessWidget {
     return StreamProvider(
       create: (BuildContext context) =>
           ConnectivityService().connectionStatusController.stream,
-      child: Phoenix(
-        child: LifeCycleManager(
-          child: OverlaySupport(
+      child: LifeCycleManager(
+        child: OverlaySupport(
+          child: Phoenix(
             child: MaterialApp(
               // locale: DevicePreview.of(context).locale,
               navigatorKey: locator<NavigationService>().navigatorKey,
