@@ -188,10 +188,10 @@ class MyOrdersView extends StatelessWidget {
       color: walletCardColor,
       padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
       child: Row(children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Text('#', style: Theme.of(context).textTheme.subtitle2),
-        ),
+        // Expanded(
+        //   flex: 1,
+        //   child: Text('#', style: Theme.of(context).textTheme.subtitle2),
+        // ),
         Expanded(
           flex: 1,
           child: Text(AppLocalizations.of(context).type,
