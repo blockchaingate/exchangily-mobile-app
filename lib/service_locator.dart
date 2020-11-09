@@ -36,6 +36,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart'
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_screen_state.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -82,6 +83,8 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => PdfViewerService());
 
   locator.registerLazySingleton(() => OrderService());
+
+  locator.registerLazySingleton(() => ConfigService());
 
   // LocalStorageService Singelton
   var instance = await LocalStorageService.getInstance();

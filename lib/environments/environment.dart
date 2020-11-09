@@ -50,7 +50,7 @@ Map devConfig = {
     //for server
     'blockchaingate': 'https://test.blockchaingate.com/v2/',
     'kanban': 'https://kanbantest.fabcoinapi.com/',
-    'hongkongServer': 'api.dscmap.com/',
+    'HKServer': 'https://api.dscmap.com/',
     'btc': 'https://btctest.fabcoinapi.com/',
     'ltc': 'https://ltctest.fabcoinapi.com/',
     'bch': 'https://bchtest.fabcoinapi.com/',
@@ -187,7 +187,7 @@ Map productionConfig = {
   'endpoints': {
     'blockchaingate': 'https://www.blockchaingate.com/v2/',
     'kanban': 'https://kanbanprod.fabcoinapi.com/',
-    'hongkongServer': 'api.dscmap.com/',
+    'HKServer': 'https://api.dscmap.com/',
     'btc': 'https://btcprod.fabcoinapi.com/',
     'ltc': 'https://ltcprod.fabcoinapi.com/',
     'bch': 'https://bchprod.fabcoinapi.com/',
@@ -239,6 +239,7 @@ Map productionConfig = {
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },
   "websocket": "wss://kanbanprod.fabcoinapi.com/ws/",
+  "websocketHK": "wss://api.dscmap.com/ws/",
   "minimumWithdraw": {
     "EXG": 50,
     "BTC": 0.01,

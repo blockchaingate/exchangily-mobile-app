@@ -85,12 +85,12 @@ class SettingsViewmodel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
 
   reloadApp() {
-    setBusy(true);
-    log.i('1');
+    //  setBusy(true);
+    //  log.i('1');
     storageService.isHKServer = true;
-    Phoenix.rebirth(context);
-    log.i('2');
-    setBusy(false);
+    // Phoenix.rebirth(context);
+    //  log.i('2');
+    //  setBusy(false);
   }
 
 /*-------------------------------------------------------------------------------------
