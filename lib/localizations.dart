@@ -1659,6 +1659,17 @@ class AppLocalizations {
         name: 'releaseToLoadMore', desc: ' release_to_load_more');
   }
 
+  String get useAsiaNode {
+    return Intl.message('Use Asia Node',
+        name: 'useAsiaNode', desc: ' use_asia_node_settings_view');
+  }
+
+  String get useNorthAmericanNode {
+    return Intl.message('Use North American Node',
+        name: 'useNorthAmericanNode',
+        desc: ' use_north_american_node_settings_view');
+  }
+
   // Share page pending translation added by Jack
 }
 

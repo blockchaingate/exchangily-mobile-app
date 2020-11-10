@@ -12,12 +12,12 @@
 */
 
 import 'package:bs58check/bs58check.dart';
-import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/stoppable_service.dart';
 import 'package:observable_ish/observable_ish.dart';
 import 'package:stacked/stacked.dart';
@@ -32,6 +32,14 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
     listenToReactiveValues([_price, _quantity]);
   }
+
+  ConfigService configService = locator<ConfigService>();
+
+// final String allPricesWSUrl = kanbanBaseWSUrl + 'allPrices';
+// final String tradesWSUrl = kanbanBaseWSUrl + 'trades@';
+// final String ordersWSUrl = kanbanBaseWSUrl + 'orders@';
+// final String tickerWSUrl = kanbanBaseWSUrl + 'ticker@';
+
   Stream tickerStream;
   Stream allPriceStream;
   StreamSubscription _streamSubscription;
@@ -57,7 +65,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
-  static String basePath = environment['websocket'];
+  //static String basePath = environment['websocket'];
 
   /// To check if orderbook has loaded in orderbook viewmodel
   /// and then use this in buysellview to display price and quantity values
@@ -154,7 +162,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel getTickerDataChannel(String pair, String interval) {
-    var wsStringUrl = tickerWSUrl + pair + '@' + interval;
+    var wsStringUrl =
+        configService.getKanbanBaseWSUrl() + 'ticker@' + pair + '@' + interval;
     log.i('getTickerDataUrl $wsStringUrl');
     final channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
@@ -187,8 +196,10 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel getAllPriceChannel() {
-    log.i('allPricesWSUrl $allPricesWSUrl');
-    IOWebSocketChannel channel = IOWebSocketChannel.connect(allPricesWSUrl);
+    var wsStringUrl = configService.getKanbanBaseWSUrl() + 'allPrices';
+    log.i('getAllPriceChannel $wsStringUrl');
+
+    IOWebSocketChannel channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
   }
 
@@ -212,7 +223,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel getTradeListChannel(String pair) {
     try {
-      var wsString = environment['websocket'] + 'trades' + '@' + pair;
+      var wsString = configService.getKanbanBaseWSUrl() + 'trades' + '@' + pair;
+      log.i('getTradeListUrl $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
     } catch (err) {
@@ -246,7 +258,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel getOrderListChannel(String pair) {
     try {
-      var wsString = environment['websocket'] + 'orders' + '@' + pair;
+      var wsString = configService.getKanbanBaseWSUrl() + 'orders' + '@' + pair;
+      log.i('getOrderListUrl $wsString');
       // if not put the IOWebSoketChannel.connect to variable channel and
       // directly returns it then in the multiple stream it doesn't work
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);

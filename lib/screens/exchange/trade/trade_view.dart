@@ -149,10 +149,10 @@ class TradeView extends StatelessWidget {
                         ),
 
                         //  Below container contains trading view chart in the trade tab
-                        Container(
-                          child: LoadHTMLFileToWEbView(
-                              model.updateTickerName(pairPriceByRoute.symbol)),
-                        ),
+                        // Container(
+                        //   child: LoadHTMLFileToWEbView(
+                        //       model.updateTickerName(pairPriceByRoute.symbol)),
+                        // ),
 
                         UIHelper.verticalSpaceMedium,
                         DefaultTabController(

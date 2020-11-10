@@ -1,20 +1,17 @@
 import 'dart:convert';
-
-import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:observable_ish/value/value.dart';
 import 'package:stacked/stacked.dart';
 import 'package:http/http.dart' as http;
 
 class OrderService with ReactiveServiceMixin {
   final log = getLogger('OrderService');
-  ApiService _api = locator<ApiService>();
 
   final client = new http.Client();
+  ConfigService configService = locator<ConfigService>();
 
   List<OrderModel> _orders = [];
   List<OrderModel> get orders => _orders;
@@ -89,7 +86,8 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
       {int skip = 0, int count = 10, String status = ''}) async {
     log.w('getMyOrders $exgAddress  -- skip $skip -- count $count');
     try {
-      String url = getOrdersPagedURL +
+      String url = configService.getKanbanBaseUrl() +
+          'ordersbyaddresspaged/' +
           exgAddress +
           '/' +
           skip.toString() +
@@ -128,7 +126,8 @@ https://kanbanprod.fabcoinapi.com/ordersbyaddresspaged/0x3b7b00ee5a7f7d57dff7b54
         'getMyOrdersByTickerName $exgAddress -- $tickerName -- skip $skip -- count $count');
 
     try {
-      String url = getOrdersPagedByTickerNameURL +
+      String url = configService.getKanbanBaseUrl() +
+          'getordersbytickernamepaged/' +
           exgAddress +
           '/' +
           tickerName +

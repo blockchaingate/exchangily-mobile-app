@@ -14,11 +14,14 @@
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 
 import '../utils/string_util.dart' as stringUtils;
@@ -30,8 +33,12 @@ import '../environments/environment.dart';
 class ApiService {
   final log = getLogger('ApiService');
   final client = new http.Client();
+  ConfigService configService = locator<ConfigService>();
+  // final kanbanBaseUrl = getKanbanBaseUrl()
 
-  final kanbanBaseUrl = environment['endpoints']['kanban'];
+  //  isHKServer
+  //     ? environment['endpoints']['HKServer']
+  //     : environment['endpoints']['kanban'];
   final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
   // Please keep this for future test
@@ -56,8 +63,11 @@ class ApiService {
   Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
       String tickerName) async {
     String exgAddress = await getExchangilyAddress();
-    String url =
-        getSingleCoinExchangeBalanceUrl + exgAddress + '/' + tickerName;
+    String url = configService.getKanbanBaseUrl() +
+        getSingleCoinExchangeBalanceRoute +
+        exgAddress +
+        '/' +
+        tickerName;
     log.i('getSingleCoinExchangeBalance url $url');
     ExchangeBalanceModel exchangeBalance = new ExchangeBalanceModel();
     try {
@@ -81,7 +91,7 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future<List<Token>> getTokenList() async {
-    String url = getTokenListUrl;
+    String url = configService.getKanbanBaseUrl() + getTokenListRoute;
     log.i('getTokenList url $url');
     try {
       var response = await client.get(url);
@@ -102,10 +112,10 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future getApiAppVersion() async {
-    String url = getAppVersionUrl;
+    String url = configService.getKanbanBaseUrl() + getAppVersionRoute;
     log.i('getApiAppVersion url $url');
     try {
-      var response = await client.get(getAppVersionUrl);
+      var response = await client.get(url);
 
       log.w('getApiAppVersion  ${response.body}');
       return response.body;
@@ -182,8 +192,7 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future getTransactionStatus(String transactionId) async {
-    var url =
-        environment['endpoints']['kanban'] + 'checkstatus/' + transactionId;
+    var url = configService.getKanbanBaseUrl() + 'checkstatus/' + transactionId;
     log.e(url);
     try {
       var response = await client.get(url);
@@ -200,7 +209,7 @@ class ApiService {
 -------------------------------------------------------------------------------------*/
 
   Future<List<WalletBalance>> getWalletBalance(body) async {
-    String url = kanbanBaseUrl + walletBalances;
+    String url = configService.getKanbanBaseUrl() + walletBalances;
     log.i('getWalletBalance URL $url');
     WalletBalanceList balanceList;
     try {
@@ -244,9 +253,10 @@ class ApiService {
 -------------------------------------------------------------------------------------*/
 
   Future getCoinCurrencyUsdPrice() async {
-    log.w('url $coinCurrencyUsdValueUrl');
     try {
-      var response = await client.get(coinCurrencyUsdValueUrl);
+      String url = configService.getKanbanBaseUrl() + coinCurrencyUsdValueRoute;
+      log.e('getCoinCurrencyUsdPrice $url');
+      var response = await client.get(url);
       var json = jsonDecode(response.body);
       log.w('getCoinCurrencyUsdPrice $json');
       return json;
@@ -269,7 +279,7 @@ class ApiService {
   Future getGasBalance(String exgAddress) async {
     try {
       final res = await http
-          .get(environment['endpoints']['kanban'] + getBalance + exgAddress);
+          .get(configService.getKanbanBaseUrl() + getBalance + exgAddress);
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
@@ -282,8 +292,7 @@ class ApiService {
 
   // Get Assets balance
   Future getAssetsBalance(String exgAddress) async {
-    String url =
-        environment['endpoints']['kanban'] + assetsBalance + exgAddress;
+    String url = configService.getKanbanBaseUrl() + assetsBalance + exgAddress;
     log.w('get assets balance url $url');
     try {
       final res = await client.get(url);
@@ -298,7 +307,7 @@ class ApiService {
 
   // Get Orders by address
   Future getOrdersTest(String exgAddress) async {
-    String url = environment['endpoints']['kanban'] + orders + exgAddress;
+    String url = configService.getKanbanBaseUrl() + orders + exgAddress;
     log.w('get my orders url $url');
     try {
       throw Exception('Catch Exception');
@@ -312,7 +321,8 @@ class ApiService {
   //Future<Order>
   Future getMyOrders(String exgAddress) async {
     try {
-      String url = getOrdersPagedURL + exgAddress;
+      String url =
+          configService.getKanbanBaseUrl() + getOrdersPagedRoute + exgAddress;
       log.w('get my orders url $url');
       var res = await client.get(url);
       log.e('res ${res.body}');
@@ -332,7 +342,11 @@ class ApiService {
   // Get Orders by tickername
   Future getMyOrdersPagedByFabHexAddressAndTickerName(
       String exgAddress, String tickerName) async {
-    String url = getOrdersPagedByTickerNameURL + exgAddress + '/' + tickerName;
+    String url = configService.getKanbanBaseUrl() +
+        getOrdersPagedByTickerNameRoute +
+        exgAddress +
+        '/' +
+        tickerName;
     // String url = environment['endpoints']['kanban'] +
     //     'getordersbytickername/' +
     //     exgAddress +
@@ -600,8 +614,8 @@ class ApiService {
 
   // Get Decimal configuration for the coins
   Future<List<PairDecimalConfig>> getPairDecimalConfig() async {
-    var url = Constants.PAIR_DECIMAL_CONFIG_URL;
-    log.e(url);
+    var url = configService.getKanbanBaseUrl() + getPairConfigRoute;
+    log.e('getPairDecimalConfig $url');
     try {
       var response = await client.get(url);
       var jsonList = jsonDecode(response.body) as List;
@@ -616,7 +630,8 @@ class ApiService {
 
   Future getSliderImages() async {
     try {
-      final res = await http.get(kanbanBaseUrl + "kanban/getadvconfig");
+      final res = await http
+          .get(configService.getKanbanBaseUrl() + "kanban/getadvconfig");
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         return jsonDecode(res.body);
@@ -649,11 +664,11 @@ class ApiService {
 
   Future getEvents() async {
     print("Calling api: getEvents");
-    print("Url: " + kanbanBaseUrl + "kanban/getCampaigns");
+    print("Url: " + configService.getKanbanBaseUrl() + "kanban/getCampaigns");
     try {
       final res = await http.get(
           // "http://192.168.0.12:4000/kanban/getCampaigns"
-          kanbanBaseUrl + "kanban/getCampaigns");
+          configService.getKanbanBaseUrl() + "kanban/getCampaigns");
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
         print("success");
@@ -674,7 +689,7 @@ class ApiService {
     try {
       final res = await http.post(
         // "http://192.168.0.12:4000/kanban/getCampaignSingle",
-        kanbanBaseUrl + "kanban/getCampaignSingle",
+        configService.getKanbanBaseUrl() + "kanban/getCampaignSingle",
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

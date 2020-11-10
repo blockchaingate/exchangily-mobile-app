@@ -316,6 +316,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "updateNow" : MessageLookupByLibrary.simpleMessage("Update now"),
     "updateStatus" : MessageLookupByLibrary.simpleMessage("Update status"),
     "updateYourOrderStatus" : MessageLookupByLibrary.simpleMessage("Update your order status"),
+    "useAsiaNode" : MessageLookupByLibrary.simpleMessage("Use Asia Node"),
+    "useNorthAmericanNode" : MessageLookupByLibrary.simpleMessage("Use North American Node"),
     "userAccessDenied" : MessageLookupByLibrary.simpleMessage("User Access Denied"),
     "userReturnedByPressingBackButton" : MessageLookupByLibrary.simpleMessage("User returned by pressing the back button"),
     "validationError" : MessageLookupByLibrary.simpleMessage("Validation Error"),

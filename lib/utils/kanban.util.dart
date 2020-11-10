@@ -11,35 +11,40 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../environments/environment.dart';
 
 Future<String> getScarAddress() async {
-  var url = environment['endpoints']['kanban'] + 'kanban/getScarAddress';
+  ConfigService configService = locator<ConfigService>();
+
+  var url = configService.getKanbanBaseUrl() + 'kanban/getScarAddress';
   var client = new http.Client();
   var response = await client.get(url);
   return response.body;
 }
 
 Future<String> getCoinPoolAddress() async {
-  var url =
-      environment['endpoints']['kanban'] + 'exchangily/getCoinPoolAddress';
+  ConfigService configService = locator<ConfigService>();
+  var url = configService.getKanbanBaseUrl() + 'exchangily/getCoinPoolAddress';
   var client = new http.Client();
   var response = await client.get(url);
   return response.body;
 }
 
 Future<String> getExchangilyAddress() async {
-  var url =
-      environment['endpoints']['kanban'] + 'exchangily/getExchangeAddress';
+  ConfigService configService = locator<ConfigService>();
+  var url = configService.getKanbanBaseUrl() + 'exchangily/getExchangeAddress';
+  print('URL getExchangilyAddress $url');
   var client = new http.Client();
   var response = await client.get(url);
   return response.body;
 }
 
 Future<double> getGas(String address) async {
-  var url = environment['endpoints']['kanban'] + 'kanban/getBalance/' + address;
+  ConfigService configService = locator<ConfigService>();
+  var url = configService.getKanbanBaseUrl() + 'kanban/getBalance/' + address;
   var client = new http.Client();
   var response = await client.get(url);
   var json = jsonDecode(response.body);
@@ -48,9 +53,11 @@ Future<double> getGas(String address) async {
 }
 
 Future<int> getNonce(String address) async {
-  var url = environment['endpoints']['kanban'] +
+  ConfigService configService = locator<ConfigService>();
+  var url = configService.getKanbanBaseUrl() +
       'kanban/getTransactionCount/' +
       address;
+  print('URL getNonce $url');
   var client = new http.Client();
   var response = await client.get(url);
   var json = jsonDecode(response.body);
@@ -59,7 +66,8 @@ Future<int> getNonce(String address) async {
 
 Future<Map<String, dynamic>> submitDeposit(
     String rawTransaction, String rawKanbanTransaction) async {
-  var url = environment['endpoints']['kanban'] + 'submitDeposit';
+  ConfigService configService = locator<ConfigService>();
+  var url = configService.getKanbanBaseUrl() + 'submitDeposit';
   var data = {
     'rawTransaction': rawTransaction,
     'rawKanbanTransaction': rawKanbanTransaction
@@ -78,7 +86,8 @@ Future<Map<String, dynamic>> submitDeposit(
 }
 
 Future getKanbanErrDeposit(String address) async {
-  var url = environment['endpoints']['kanban'] + 'depositerr/' + address;
+  ConfigService configService = locator<ConfigService>();
+  var url = configService.getKanbanBaseUrl() + 'depositerr/' + address;
   print('getKanbanErrDeposit $url');
   try {
     var client = new http.Client();
@@ -95,7 +104,9 @@ Future getKanbanErrDeposit(String address) async {
 
 Future<Map<String, dynamic>> submitReDeposit(
     String rawKanbanTransaction) async {
-  var url = environment['endpoints']['kanban'] + 'resubmitDeposit';
+  ConfigService configService = locator<ConfigService>();
+  var url = configService.getKanbanBaseUrl() + 'resubmitDeposit';
+  print('URL submitReDeposit $url');
   var data = {'rawKanbanTransaction': rawKanbanTransaction};
 
   try {
@@ -113,7 +124,9 @@ Future<Map<String, dynamic>> submitReDeposit(
 
 Future<Map<String, dynamic>> sendKanbanRawTransaction(
     String rawKanbanTransaction) async {
-  var url = environment['endpoints']['kanban'] + 'kanban/sendRawTransaction';
+  ConfigService configService = locator<ConfigService>();
+  var url = configService.getKanbanBaseUrl() + 'kanban/sendRawTransaction';
+  print('URL sendKanbanRawTransaction $url');
   var data = {'signedTransactionData': rawKanbanTransaction};
 
   try {

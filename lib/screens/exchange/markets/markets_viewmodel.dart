@@ -93,6 +93,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   @override
   void onError(error) {
     log.e('In onError $error');
+    setBusy(false);
     errorMessage = error.toString();
 
     sharedService.alertDialog(AppLocalizations.of(context).serverError,

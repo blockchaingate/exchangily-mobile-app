@@ -70,34 +70,19 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   // Map<String, StreamData> res =
   //     tradeService.getMultipleStreams(pairPriceByRoute.symbol);
 
-  // @override
-  // @mustCallSuper
-  // dispose() async {
-  //   setBusy(true);
-  //   isDisposing = true;
-  //   await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
-  //   log.i('Close all IOWebsocket connections');
-  //   isDisposing = false;
-  //   setBusy(false);
-  //   navigationService.goBack();
-  //   super.dispose();
-  // }
-
-  closeConnections() async {
-    setBusy(true);
-    isDisposing = true;
-    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
-    // log.i('Close all IOWebsocket connections');
-    // isDisposing = false;
-    // setBusy(false);
-  }
-
   /// Initialize when model ready
   init() async {
     await getDecimalPairConfig();
     //   await getExchangeAssets();
     String holder = updateTickerName(pairPriceByRoute.symbol);
     pairSymbolWithSlash = holder;
+  }
+
+// Not in use
+  closeConnections() async {
+    setBusy(true);
+    isDisposing = true;
+    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
   }
 
 // Change/update stream data before displaying on UI

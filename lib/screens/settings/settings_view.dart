@@ -382,7 +382,7 @@ class SettingsContainer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.all(6.0),
+                        padding: const EdgeInsets.only(left: 5.0, right: 8.0),
                         child:
                             Icon(Icons.insert_comment, color: white, size: 18),
                       ),
@@ -403,54 +403,55 @@ class SettingsContainer extends StatelessWidget {
                             value: model.isShowCaseOnce,
                             onChanged: (value) {
                               model.setIsShowcase(value);
-                              // model.storageService.isShowCaseView = !value;
-
-                              // model.setBusy(true);
-                              // // get new value and assign it to the viewmodel variable
-                              // model.isShowCaseOnce =
-                              //     model.storageService.isShowCaseView;
-                              // model.setBusy(false);
-                              // print(model.isShowCaseOnce);
                             }),
                       ),
                       // ),
                     ],
                   ),
-                )
-
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: <Widget>[
-                //     // Padding(
-                //     //   padding: const EdgeInsets.only(left: 5.0),
-                //     //   child: Icon(
-                //     //     Icons.insert_comment,
-                //     //     color: white,
-                //     //     size: 18,
-                //     //   ),
-                //     // ),
-                //     Expanded(
-                //       child: Text(
-                //           AppLocalizations.of(context)
-                //               .settingsShowcaseInstructions,
-                //           style: Theme.of(context).textTheme.headline5,
-                //           textAlign: TextAlign.center),
-                //     ),
-                //     Checkbox(
-                //         activeColor: globals.primaryColor,
-                //         value: model.isShowCaseOnce,
-                //         onChanged: (value) {
-                //           model.setIsShowcase(value);
-                //         }),
-                //   ],
-                // ),
-                ),
+                )),
 // Server url change
+            // Card(
+            //   child: FlatButton(
+            //       onPressed: () => model.reloadApp(),
+            //       child: Text('Reload app')),
+            // ),
             Card(
-              child: FlatButton(
-                  onPressed: () => model.reloadApp(),
-                  child: Text('Reload app')),
-            ),
+                elevation: 5,
+                color: globals.walletCardColor,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    //  crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0, right: 8.0),
+                        child: Icon(Icons.storage, color: white, size: 18),
+                      ),
+                      // Add column here and add text box that shows which node is current
+                      Expanded(
+                        child: Text(AppLocalizations.of(context).useAsiaNode,
+                            style: Theme.of(context).textTheme.headline5,
+                            textAlign: TextAlign.left),
+                      ),
+                      SizedBox(
+                        height: 20,
+                        child: Switch(
+                            inactiveThumbColor: grey,
+                            activeTrackColor: white,
+                            activeColor: primaryColor,
+                            inactiveTrackColor: white,
+                            value: model.storageService.isHKServer,
+                            onChanged: (value) {
+                              model.reloadApp();
+                            }),
+                      ),
+                      // ),
+                    ],
+                  ),
+                )),
+
+            //Card(child: Container(child: Text(model.test))),
             // Version Code
             Card(
               elevation: 5,

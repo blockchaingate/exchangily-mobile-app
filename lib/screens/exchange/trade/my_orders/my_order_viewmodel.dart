@@ -66,8 +66,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   String onClickOrderHash = '';
   DecimalConfig decimalConfig = new DecimalConfig();
-  bool get isShowAllOrders => _orderService.isShowAllOrders;
-  bool isSwitch = false;
+  //bool get isShowAllOrders => _orderService.isShowAllOrders;
+  bool isShowAllOrders = false;
 
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -83,25 +83,18 @@ class MyOrdersViewModel extends ReactiveViewModel {
         .then((decimalConfig) => decimalConfig = decimalConfig);
 
     _orderService.swapSources();
-    //futureToRun();
   }
 
 /*-------------------------------------------------------------------------------------
                       Swap Sources
 -------------------------------------------------------------------------------------*/
-  void swapSources() async {
+  void swapSources(bool v) async {
     setBusy(true);
-    log.i('2 swap sources show all pairs $isShowAllOrders');
-    // _showCurrentPairOrders = !_showCurrentPairOrders;
-    // !_showCurrentPairOrders
-    _orderService.swapSources();
+    // log.i('2 swap sources show all pairs $isShowAllOrders');
+    //  _orderService.swapSources();
+    isShowAllOrders = v;
     log.w('5 swap sources show all pairs $isShowAllOrders  before method');
     isShowAllOrders ? await getAllMyOrders() : await getMyOrdersByTickerName();
-    isSwitch = isShowAllOrders;
-    log.i(
-        '6 swap sources show all pairs $isShowAllOrders  after method -- swtich   $isSwitch');
-
-    notifyListeners();
     setBusy(false);
   }
 /*-------------------------------------------------------------------------------------

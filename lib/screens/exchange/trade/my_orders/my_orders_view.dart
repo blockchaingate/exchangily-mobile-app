@@ -46,7 +46,7 @@ class MyOrdersView extends StatelessWidget {
                                 model.isFutureError = false;
                                 print(
                                     'Running futures to run again to reset the hasError and try to get the data so that user can see the data with view instead of error screen');
-                                model.swapSources();
+                                model.swapSources(false);
                               },
                             ),
                           ],
@@ -97,11 +97,11 @@ class MyOrdersView extends StatelessWidget {
                                     scale: 0.75,
                                     child: Switch.adaptive(
                                         activeColor: primaryColor,
-                                        value: model.isSwitch,
+                                        value: model.isShowAllOrders,
                                         onChanged: (bool v) {
                                           print('switch value $v');
 
-                                          model.swapSources();
+                                          model.swapSources(v);
                                         }),
                                   ),
                                 ],

@@ -311,6 +311,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "updateNow" : MessageLookupByLibrary.simpleMessage("立即更新"),
     "updateStatus" : MessageLookupByLibrary.simpleMessage("更新状态"),
     "updateYourOrderStatus" : MessageLookupByLibrary.simpleMessage("更新订单状态"),
+    "useAsiaNode" : MessageLookupByLibrary.simpleMessage("连接亚洲节点"),
+    "useNorthAmericanNode" : MessageLookupByLibrary.simpleMessage("连接北美节点"),
     "userAccessDenied" : MessageLookupByLibrary.simpleMessage("用户访问被拒绝"),
     "userReturnedByPressingBackButton" : MessageLookupByLibrary.simpleMessage("用户按返回键返回"),
     "validationError" : MessageLookupByLibrary.simpleMessage("验证错误"),

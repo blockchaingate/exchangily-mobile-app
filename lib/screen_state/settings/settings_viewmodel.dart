@@ -11,8 +11,10 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/api_endpoints.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -62,7 +64,9 @@ class SettingsViewmodel extends BaseViewModel {
   GlobalKey one;
   GlobalKey two;
   bool isShowCaseOnce;
-
+  String test;
+  ConfigService configService = locator<ConfigService>();
+  bool isHKServer;
   init() async {
     setBusy(true);
 
@@ -75,6 +79,7 @@ class SettingsViewmodel extends BaseViewModel {
     });
     getAppVersion();
     await selectDefaultWalletLanguage();
+    test = configService.getKanbanBaseUrl();
     // if (selectedLanguage == '')
     //   selectedLanguage = getSetLocalStorageDataByKey('lang');
     setBusy(false);
@@ -85,12 +90,17 @@ class SettingsViewmodel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
 
   reloadApp() {
-    //  setBusy(true);
+    setBusy(true);
     //  log.i('1');
-    storageService.isHKServer = true;
+    storageService.isHKServer = !storageService.isHKServer;
+
+    storageService.isUSServer = storageService.isHKServer ? false : true;
     // Phoenix.rebirth(context);
     //  log.i('2');
-    //  setBusy(false);
+    test = configService.getKanbanBaseUrl();
+    isHKServer = storageService.isHKServer;
+    log.e('GLobal kanban url $test');
+    setBusy(false);
   }
 
 /*-------------------------------------------------------------------------------------

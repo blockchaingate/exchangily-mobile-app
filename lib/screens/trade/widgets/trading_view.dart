@@ -12,6 +12,8 @@
 */
 
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
@@ -30,6 +32,7 @@ class LoadHTMLFileToWEbView extends StatefulWidget {
 
 class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
   WebViewController _controller;
+  ConfigService configService = locator<ConfigService>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -62,9 +65,9 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
         .replaceAll('USDT', pairArray[1])
         .replaceAll('en_US', lang)
         .replaceAll('https://kanbantest.fabcoinapi.com/',
-            environment['endpoints']['kanban'])
-        .replaceAll(
-            'wss://kanbantest.fabcoinapi.com/ws/', environment['websocket']);
+            configService.getKanbanBaseUrl())
+        .replaceAll('wss://kanbantest.fabcoinapi.com/ws/',
+            configService.getKanbanBaseWSUrl());
 
     _controller.loadUrl(Uri.dataFromString(fileText,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))

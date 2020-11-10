@@ -238,8 +238,10 @@ Map productionConfig = {
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },
-  "websocket": "wss://kanbanprod.fabcoinapi.com/ws/",
-  "websocketHK": "wss://api.dscmap.com/ws/",
+  "websocket": {
+    "us": "wss://kanbanprod.fabcoinapi.com/ws/",
+    "hk": "wss://api.dscmap.com/ws/",
+  },
   "minimumWithdraw": {
     "EXG": 50,
     "BTC": 0.01,
@@ -273,7 +275,7 @@ Map productionConfig = {
 
 final environment = isProduction ? productionConfig : devConfig;
 
-class EnvironmentConfig extends Constants {
-  static const String CAMPAIGN_TEST_URL = 'https://test.blockchaingate.com/v2/';
-  static const String CAMPAIGN_PROD_URL = 'https://blockchaingate.com/v2/';
-}
+// class EnvironmentConfig extends Constants {
+//   static const String CAMPAIGN_TEST_URL = 'https://test.blockchaingate.com/v2/';
+//   static const String CAMPAIGN_PROD_URL = 'https://blockchaingate.com/v2/';
+// }
