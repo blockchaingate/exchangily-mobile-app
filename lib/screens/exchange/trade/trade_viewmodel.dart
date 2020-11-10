@@ -57,6 +57,8 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   bool isDisposing = false;
   double usdValue = 0.0;
   String pairSymbolWithSlash = '';
+  String interval = '30m';
+  bool isIntervalUpdated = false;
 
   @override
   Map<String, StreamData> get streamsMap => {
@@ -76,6 +78,19 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     //   await getExchangeAssets();
     String holder = updateTickerName(pairPriceByRoute.symbol);
     pairSymbolWithSlash = holder;
+  }
+
+/*----------------------------------------------------------------------
+                    Change chart interval
+----------------------------------------------------------------------*/
+  updateChartInterval(String value) async{
+    setBusy(true);
+    interval = value;
+   // isIntervalUpdated = true;
+    log.i('Interval $interval --- isIntervalUpdated $isIntervalUpdated');
+  //  await Future.delayed(new Duration(seconds:2), () =>  isIntervalUpdated = false);
+  //      log.i('Interval $interval --- isIntervalUpdatedAfter reversing $isIntervalUpdated');
+    setBusy(false);
   }
 
 // Not in use
@@ -112,12 +127,9 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
       /// All prices list
       if (key == tickerStreamKey) {
         var jsonDynamic = jsonDecode(data);
+        log.i('ticker json data $jsonDynamic');
         currentPairPrice = Price.fromJson(jsonDynamic);
         log.w('TICKER PRICE ${currentPairPrice.toJson()}');
-        // Map<String, dynamic> res =
-        //     tradeService.marketPairPriceGroups(pairPriceList);
-        // marketPairsTabBar = res['marketPairsGroupList'];
-        // notifyListeners();
       } // all prices ends
 
 /*----------------------------------------------------------------------

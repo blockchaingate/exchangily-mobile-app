@@ -149,12 +149,54 @@ class TradeView extends StatelessWidget {
                         ),
 
                         //  Below container contains trading view chart in the trade tab
+                  //    model.isIntervalUpdated ?
                         Container(
                           child: LoadHTMLFileToWEbView(
-                              model.updateTickerName(pairPriceByRoute.symbol)),
+                           
+                              model.updateTickerName(pairPriceByRoute.symbol),
+                            model.interval,
+                          //  model.isBusy
+                            )
                         ),
+                        //: CircularProgressIndicator(),
+                        Text(model.interval),
+                        ButtonBar(
+                            alignment: MainAxisAlignment.center,
+                            buttonPadding: EdgeInsets.all(4),
+                            children: [
+                                FlatButton(
+                                child: Text('30m'),
+                                onPressed: () =>
+                                    model.updateChartInterval('30m'),
+                              ),
+                              FlatButton(
+                                child: Text('1hr'),
+                                onPressed: () =>
+                                    model.updateChartInterval('60m'),
+                              ),
+                              FlatButton(
+                                child: Text('4hr'),
+                                onPressed: () =>
+                                    model.updateChartInterval('4hr'),
+                              ),
+                              FlatButton(
+                                child: Text('1D'),
+                                onPressed: () =>
+                                    model.updateChartInterval('1D'),
+                              ),
+                              FlatButton(
+                                child: Text('1W'),
+                                onPressed: () =>
+                                    model.updateChartInterval('1W'),
+                              ),
+                              FlatButton(
+                                child: Text('1M'),
+                                onPressed: () =>
+                                    model.updateChartInterval('1M'),
+                              )
+                            ]),
 
-                        UIHelper.verticalSpaceMedium,
+                        // UIHelper.verticalSpaceMedium,
                         DefaultTabController(
                           length: 4,
                           //ordersViewTabBody.length,

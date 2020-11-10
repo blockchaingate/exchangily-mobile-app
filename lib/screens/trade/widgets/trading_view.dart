@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:flutter/material.dart';
@@ -25,29 +25,44 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadHTMLFileToWEbView extends StatefulWidget {
   final String pair;
-  LoadHTMLFileToWEbView(this.pair);
+  final String interval;
+  //final bool isBusy;
+  LoadHTMLFileToWEbView(
+    this.pair,
+    this.interval,
+//  this.isBusy
+  );
   @override
   _LoadHTMLFileToWEbViewState createState() => _LoadHTMLFileToWEbViewState();
 }
 
 class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
-  String interval = '1m';
+  // String interval = '1m';
   WebViewController _controller;
   ConfigService configService = locator<ConfigService>();
+  String holder;
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(0),
-        margin: EdgeInsets.all(0),
-        height: 280,
-        child: WebView(
-          initialUrl: '',
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller = webViewController;
-            _loadHtmlFromAssets();
-          },
-        ));
+    // isBusy ${widget.isBusy} --
+    setState(() {
+      holder = widget.interval;
+    });
+
+    print('New interval ${widget.interval}');
+    return
+        //  widget.isBusy ? CupertinoActivityIndicator() :
+        Container(
+            padding: EdgeInsets.all(0),
+            margin: EdgeInsets.all(0),
+            height: 280,
+            child: WebView(
+              initialUrl: '',
+              javascriptMode: JavascriptMode.unrestricted,
+              onWebViewCreated: (WebViewController webViewController) {
+                _controller = webViewController;
+                _loadHtmlFromAssets();
+              },
+            ));
   }
 
   _loadHtmlFromAssets() async {
@@ -58,14 +73,14 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     } else if (lang == 'zh') {
       lang = 'zh-CN';
     }
-
+    print('INTERVAL STATEFUL ${holder}');
     var pairArray = widget.pair.split('/');
     String fileText = await rootBundle.loadString('assets/pages/index.html');
     fileText = fileText
         .replaceAll('BTC', pairArray[0])
         .replaceAll('USDT', pairArray[1])
         .replaceAll('en_US', lang)
-        .replaceAll('30m', interval)
+        .replaceAll('30m', holder)
         .replaceAll('https://kanbantest.fabcoinapi.com/',
             configService.getKanbanBaseUrl())
         .replaceAll('wss://kanbantest.fabcoinapi.com/ws/',
