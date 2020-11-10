@@ -11,7 +11,10 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:convert';
+
 import 'package:bs58check/bs58check.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
@@ -27,6 +30,8 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import "package:hex/hex.dart";
+
+import 'package:http/http.dart' as http;
 
 class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
@@ -78,6 +83,29 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   RxValue<double> _quantity = RxValue<double>(initial: 0.0);
   double get quantity => _quantity.value;
+
+  final client = new http.Client();
+
+/*----------------------------------------------------------------------
+                    Get tx status
+        - kanban/explorer/getTransactionStatus/orderHash
+		        - {txhash:'',status:0x1 or 0x0}
+		        - error will be any string
+----------------------------------------------------------------------*/
+  Future getTxStatus(String txHash) async {
+    String url =
+        configService.getKanbanBaseUrl() + txStatusStatusRoute + '/$txHash';
+    log.e('getTxStatus url $url');
+
+    var response = await client.get(url);
+    var json = jsonDecode(response.body);
+    if (json != null) {
+      // json['message'] != null
+
+      log.w('getTxStatus json $json}');
+    }
+    return json;
+  }
 
 /*----------------------------------------------------------------------
                     set orderbook loaded status

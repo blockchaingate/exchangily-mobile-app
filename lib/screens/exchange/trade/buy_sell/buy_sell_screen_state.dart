@@ -111,7 +111,7 @@ class BuySellViewModel extends ReactiveViewModel {
   double lockedAmount;
   ExchangeBalanceModel targetCoinExchangeBalance;
   ExchangeBalanceModel baseCoinExchangeBalance;
-  bool isReload = false;
+  bool isReloadMyOrders = false;
   String pairSymbolWithSlash = '';
 
   bool _isOrderbookLoaded = false;
@@ -491,7 +491,7 @@ class BuySellViewModel extends ReactiveViewModel {
 --------------------------------------------------- */
   Future placeBuySellOrder() async {
     setBusy(true);
-
+    isReloadMyOrders = false;
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -512,25 +512,34 @@ class BuySellViewModel extends ReactiveViewModel {
             Icons.check,
             green,
             context);
-        Future.delayed(new Duration(seconds: 3), () {
-          getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
-          isReload = true;
+        // Future.delayed(new Duration(seconds: 2), () {
+        //   getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+        //   // isReloadMyOrders = true;
+        // });
+        Timer.periodic(Duration(seconds: 1), (timer) async {
+          var res =
+              await tradeService.getTxStatus(resKanban["transactionHash"]);
+          if (res != null) {
+            log.i('RES $res');
+            String status = res['status'];
+            if (status == '0x1') {
+              setBusy(true);
+              log.e('isReloadMyOrders $isReloadMyOrders -- isBusy $isBusy');
+              isReloadMyOrders = true;
+              getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+              Future.delayed(new Duration(milliseconds: 200), () {
+                setBusy(true);
+                isReloadMyOrders = false;
+                log.e('isReloadMyOrders $isReloadMyOrders');
+                setBusy(false);
+              });
+              setBusy(false);
+            }
+            log.e('isReloadMyOrders $isReloadMyOrders');
+            log.i('timer cancelled');
+            timer.cancel();
+          }
         });
-        //  Future.delayed(new Duration(seconds: 6), () async {
-        // await _orderService.getMyOrdersByTickerName(
-        //     exgAddress, targetCoinName + baseCoinName);
-        // _orderService.swapSources();
-        // notifyListeners();
-        //navigationService.goBack();
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) => BuySellView(
-        //           orderbook: orderbook,
-        //           pairSymbolWithSlash: pairSymbolWithSlash,
-        //           bidOrAsk: bidOrAsk)),
-        //  );
-        //  });
       } else {
         walletService.showInfoFlushbar(
             AppLocalizations.of(context).placeOrderTransactionFailed,

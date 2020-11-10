@@ -137,10 +137,14 @@ class BuySellView extends StatelessWidget {
 /*----------------------------------------------------------
                 My Orders view
  -----------------------------------------------------------*/
-
-                      MyOrdersView(
-                          tickerName: model.tickerName,
-                          isReload: model.isReload),
+                      model.isReloadMyOrders
+                          ? Container(
+                              height: MediaQuery.of(context).size.height * 0.20,
+                              margin: EdgeInsets.all(5),
+                              child: Center(child: CircularProgressIndicator()))
+                          : MyOrdersView(
+                              tickerName: model.tickerName,
+                            ),
                       //
                     ]),
                     model.isBusy

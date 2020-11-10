@@ -12,7 +12,7 @@
 */
 
 import 'dart:convert';
-import 'package:exchangilymobileapp/constants/api_endpoints.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';

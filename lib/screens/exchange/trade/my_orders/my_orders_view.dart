@@ -11,16 +11,16 @@ import 'my_orders_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
   final String tickerName;
-  final bool isReload;
-  MyOrdersView({Key key, this.tickerName, this.isReload}) : super(key: key);
+
+  MyOrdersView({Key key, this.tickerName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
-        viewModelBuilder: () =>
-            MyOrdersViewModel(tickerName: tickerName, isReload: isReload),
+        createNewModelOnInsert: true,
+        viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
-          print('in init MyOrdersView, is reloading $isReload');
+          print('in init MyOrdersView');
           model.context = context;
           model.init();
         },

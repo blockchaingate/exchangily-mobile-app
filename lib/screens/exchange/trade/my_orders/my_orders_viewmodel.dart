@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -34,8 +35,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   List<ReactiveServiceMixin> get reactiveServices => [_orderService];
   BuildContext context;
   final String tickerName;
-  final bool isReload;
-  MyOrdersViewModel({this.tickerName, this.isReload});
+
+  MyOrdersViewModel({this.tickerName});
 
   final log = getLogger('MyOrdersViewModel');
 
@@ -76,13 +77,17 @@ class MyOrdersViewModel extends ReactiveViewModel {
   int skip = 0;
   int count = 10;
 
+  bool _isOrderbookLoaded = false;
+  bool get isOrderbookLoaded => _isOrderbookLoaded;
+
   init() {
+    log.i('INIT');
     getMyOrdersByTickerName();
     tradeService
         .getSinglePairDecimalConfig(tickerName)
         .then((decimalConfig) => decimalConfig = decimalConfig);
 
-    _orderService.swapSources();
+    // _orderService.swapSources();
   }
 
 /*-------------------------------------------------------------------------------------
@@ -171,7 +176,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
           } else if (!element.isActive && !element.isCancelled) {
             myCloseOrders.add(element);
           } else if (element.isCancelled) {
-            log.e('is element cancel value ${element.isCancelled}');
             cancelledOrders.add(element);
           }
         });
@@ -225,7 +229,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
         } else if (!element.isActive && !element.isCancelled) {
           myCloseOrders.add(element);
         } else if (element.isCancelled) {
-          log.e('is element cancel value ${element.isCancelled}');
           cancelledOrders.add(element);
         }
 
@@ -355,13 +358,29 @@ class MyOrdersViewModel extends ReactiveViewModel {
         //     Icons.info,
         //     colors.green,
         //     context);
-        onRefresh();
+        Timer.periodic(Duration(seconds: 2), (timer) async {
+          var res =
+              await tradeService.getTxStatus(resKanban["transactionHash"]);
+          if (res != null) {
+            String status = res['status'];
+            bool test = status == '0x1';
+            log.i('RES $res -- bool $test');
+            if (status == '0x1') {
+              setBusy(true);
+              isShowAllOrders
+                  ? await getAllMyOrders()
+                  : await getMyOrdersByTickerName();
+              setBusy(false);
+            }
+            timer.cancel();
+          }
+        });
         setBusy(false);
-        showSimpleNotification(
-          Center(
-              child: Text(AppLocalizations.of(context).orderCancelled,
-                  style: Theme.of(context).textTheme.headline6)),
-        );
+        // showSimpleNotification(
+        //   Center(
+        //       child: Text(AppLocalizations.of(context).orderCancelled,
+        //           style: Theme.of(context).textTheme.headline6)),
+        // );
         // Future.delayed(new Duration(seconds: 3), () async {
         //   _orderService.swapSources();
         // });

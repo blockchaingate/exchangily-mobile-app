@@ -6,7 +6,7 @@ import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-import 'my_order_viewmodel.dart';
+import 'my_orders_viewmodel.dart';
 
 class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
   final List<OrderModel> orders;
