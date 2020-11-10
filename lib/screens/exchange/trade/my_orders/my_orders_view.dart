@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
-import 'my_order_viewmodel.dart';
+import 'my_orders_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
   final String tickerName;
@@ -158,6 +158,7 @@ class MyOrdersView extends StatelessWidget {
                                   // header
                                   priceFieldsHeadersRow(context),
                                   // Tab bar view container
+
                                   Container(
                                       height:
                                           MediaQuery.of(context).size.height *

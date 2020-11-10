@@ -20,19 +20,25 @@ import 'dart:convert';
 mixin KanbanService {
   var client = new http.Client();
   final log = getLogger('KanbanService');
-ConfigService configService = locator<ConfigService>(;)
+  ConfigService configService = locator<ConfigService>();
+
+/*----------------------------------------------------------------------
+                    Get scar/exchangily address
+----------------------------------------------------------------------*/
   getScarAddress() async {
     var url =
-       configService.getKanbanBaseUrl() + 'exchangily/getExchangeAddress';
+        configService.getKanbanBaseUrl() + 'exchangily/getExchangeAddress';
     var response = await client.get(url);
     var json = jsonDecode(response.body);
     return json;
   }
 
-  // Get Decimal configuration for the coins
+/*----------------------------------------------------------------------
+                    Get Decimal configuration for the coins
+----------------------------------------------------------------------*/
+
   Future getDepositTransactionStatus(String transactionId) async {
-    var url =
-       configService.getKanbanBaseUrl() + 'checkstatus/' + transactionId;
+    var url = configService.getKanbanBaseUrl() + 'checkstatus/' + transactionId;
     try {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
