@@ -278,6 +278,8 @@ class ApiService {
   // Get Gas Balance
   Future getGasBalance(String exgAddress) async {
     try {
+      String url = configService.getKanbanBaseUrl() + getBalance + exgAddress;
+      log.e('get gas balance url $url');
       final res = await http
           .get(configService.getKanbanBaseUrl() + getBalance + exgAddress);
       log.w(jsonDecode(res.body));

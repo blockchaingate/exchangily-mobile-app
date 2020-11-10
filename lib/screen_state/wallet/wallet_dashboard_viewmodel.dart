@@ -735,7 +735,7 @@ class WalletDashboardViewModel extends BaseState {
     walletInfo = [];
 
     int coinTickersLength = walletService.coinTickers.length;
-    await getGas();
+
     //await getDecimalPairConfig();
 
     /// Check if wallet database coins are same as wallet service list
@@ -853,7 +853,7 @@ class WalletDashboardViewModel extends BaseState {
 
         // get exg address to get free fab
         String address = await getExgAddressFromWalletDatabase();
-
+        await getGas();
         // check gas and fab balance if 0 then ask for free fab
         if (gasAmount == 0.0 && fabBalance == 0.0) {
           await apiService.getFreeFab(address).then((res) {
