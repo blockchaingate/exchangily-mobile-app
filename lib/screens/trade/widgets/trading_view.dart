@@ -31,6 +31,7 @@ class LoadHTMLFileToWEbView extends StatefulWidget {
 }
 
 class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
+  String interval = '1m';
   WebViewController _controller;
   ConfigService configService = locator<ConfigService>();
   @override
@@ -64,6 +65,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
         .replaceAll('BTC', pairArray[0])
         .replaceAll('USDT', pairArray[1])
         .replaceAll('en_US', lang)
+        .replaceAll('30m', interval)
         .replaceAll('https://kanbantest.fabcoinapi.com/',
             configService.getKanbanBaseUrl())
         .replaceAll('wss://kanbantest.fabcoinapi.com/ws/',
