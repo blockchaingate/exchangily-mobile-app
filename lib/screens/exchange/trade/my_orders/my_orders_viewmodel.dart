@@ -358,7 +358,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
         //     Icons.info,
         //     colors.green,
         //     context);
-        Timer.periodic(Duration(seconds: 2), (timer) async {
+        Timer.periodic(Duration(seconds: 3), (timer) async {
           var res =
               await tradeService.getTxStatus(resKanban["transactionHash"]);
           if (res != null) {

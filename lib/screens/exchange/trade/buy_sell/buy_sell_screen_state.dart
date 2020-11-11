@@ -516,7 +516,7 @@ class BuySellViewModel extends ReactiveViewModel {
         //   getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
         //   // isReloadMyOrders = true;
         // });
-        Timer.periodic(Duration(seconds: 1), (timer) async {
+        Timer.periodic(Duration(seconds: 3), (timer) async {
           var res =
               await tradeService.getTxStatus(resKanban["transactionHash"]);
           if (res != null) {
@@ -527,7 +527,7 @@ class BuySellViewModel extends ReactiveViewModel {
               log.e('isReloadMyOrders $isReloadMyOrders -- isBusy $isBusy');
               isReloadMyOrders = true;
               getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
-              Future.delayed(new Duration(milliseconds: 200), () {
+              Future.delayed(new Duration(milliseconds: 500), () {
                 setBusy(true);
                 isReloadMyOrders = false;
                 log.e('isReloadMyOrders $isReloadMyOrders');
