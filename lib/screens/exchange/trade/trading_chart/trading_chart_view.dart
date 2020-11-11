@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
@@ -62,8 +63,8 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     // });
 
     return ViewModelBuilder.reactive(
-      createNewModelOnInsert: true,
-      viewModelBuilder: () => TradeViewModel(),
+      //createNewModelOnInsert: true,
+      viewModelBuilder: () => TradingChartViewModel(),
       onModelReady: (model) {
         //  model.context = context;
         print('New interval ${model.interval}');
@@ -89,7 +90,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     );
   }
 
-  _loadHtmlFromAssets(TradeViewModel model) async {
+  _loadHtmlFromAssets(TradingChartViewModel model) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var lang = prefs.getString('lang');
     if (lang == 'en') {

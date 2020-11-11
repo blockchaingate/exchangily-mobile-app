@@ -6,9 +6,10 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my
 
 import 'package:exchangilymobileapp/screens/exchange/trade/pair_price_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_view.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
-import 'package:exchangilymobileapp/screens/trade/widgets/trading_view.dart';
+
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
@@ -152,14 +153,12 @@ class TradeView extends StatelessWidget {
                         pairPriceByRoute.symbol == null
                             ? Container(
                                 child: model.sharedService.loadingIndicator())
-                            :
-                        Container(
-                            child:
-                             LoadHTMLFileToWEbView(
-                          model.updateTickerName(pairPriceByRoute.symbol),
-                         
-                        ),
-                        ),
+                            : Container(
+                                child: LoadHTMLFileToWEbView(
+                                  model.updateTickerName(
+                                      pairPriceByRoute.symbol),
+                                ),
+                              ),
                         //: CircularProgressIndicator(),
                         Text(model.interval),
                         ButtonBar(
