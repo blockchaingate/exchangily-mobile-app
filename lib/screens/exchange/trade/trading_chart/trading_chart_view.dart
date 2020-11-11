@@ -11,16 +11,11 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/constants/api_routes.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
-import 'dart:async';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,15 +36,6 @@ class LoadHTMLFileToWEbView extends StatefulWidget {
 }
 
 class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
-  @override
-  void initState() {
-    super.initState();
-
-    setState(() {
-      //  holder = widget.interval;
-    });
-  }
-
   // String interval = '1m';
 //  WebViewController _controller;
   //ConfigService configService = locator<ConfigService>();
@@ -63,29 +49,77 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     // });
 
     return ViewModelBuilder.reactive(
-      //createNewModelOnInsert: true,
+      createNewModelOnInsert: true,
       viewModelBuilder: () => TradingChartViewModel(),
       onModelReady: (model) {
         //  model.context = context;
-        print('New interval ${model.interval}');
+        print('New interval ${model.tradingChartInterval}');
         //  model.init();
       },
       builder: (context, model, _) =>
           //  widget.isBusy ? CupertinoActivityIndicator() :
+          Column(
+        children: [
           Container(
-        padding: EdgeInsets.all(0),
-        margin: EdgeInsets.all(0),
-        height: 280,
-        child: WebView(
-          initialUrl: '',
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            model.webViewController = webViewController;
-            model.isBusy && model.isIntervalUpdated
-                ? _loadHtmlFromAssets(model)
-                : _loadHtmlFromAssets(model);
-          },
-        ),
+            padding: EdgeInsets.all(0),
+            margin: EdgeInsets.all(0),
+            height: 280,
+            child: WebView(
+              initialUrl: '',
+              javascriptMode: JavascriptMode.unrestricted,
+              onWebViewCreated: (WebViewController webViewController) {
+                model.webViewController = webViewController;
+                // model.isBusy && model.isIntervalUpdated
+                //     ? _loadHtmlFromAssets(model)
+                //     :
+                model.isBusy? Center(child: CupertinoActivityIndicator(),):
+                _loadHtmlFromAssets(model);
+              },
+            ),
+          ),
+          Text(model.tradingChartInterval),
+          Text(model.isTradingChartModelBusy.toString()),
+          SizedBox(
+            height: 100,
+            child: ButtonBar(
+                layoutBehavior: ButtonBarLayoutBehavior.padded,
+                // direc
+                mainAxisSize: MainAxisSize.max,
+                alignment: MainAxisAlignment.center,
+                buttonPadding: EdgeInsets.all(4),
+                children: [
+                  FlatButton(
+                    child: Text('5m'),
+                    onPressed: () => model.updateChartInterval('5m'),
+                  ),
+                  FlatButton(
+                    child: Text('30m'),
+                    onPressed: () => model.updateChartInterval('30m'),
+                  ),
+                  FlatButton(
+                    child: Text('1hr'),
+                    onPressed: () => model.updateChartInterval('60m'),
+                  ),
+                  FlatButton(
+                    child: Text('4hr'),
+                    onPressed: () => model.updateChartInterval('4h'),
+                  ),
+                  FlatButton(
+                    child: Text('1D'),
+                    onPressed: () => model.updateChartInterval('24h'),
+                  ),
+                  // FlatButton(
+                  //   child: Text('1W'),
+                  //   onPressed: () => model.updateChartInterval('1W'),
+                  // ),
+                  // FlatButton(
+                  //   child: Text('1M'),
+                  //   onPressed: () =>
+                  //       model.updateChartInterval('1M'),
+                  // )
+                ]),
+          ),
+        ],
       ),
     );
   }
@@ -98,14 +132,14 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     } else if (lang == 'zh') {
       lang = 'zh-CN';
     }
-    print('INTERVAL STATEFUL ${model.interval}');
+    print('INTERVAL STATEFUL ${model.tradingChartInterval}');
     var pairArray = widget.pair.split('/');
     String fileText = await rootBundle.loadString('assets/pages/index.html');
     fileText = fileText
         .replaceAll('BTC', pairArray[0])
         .replaceAll('USDT', pairArray[1])
         .replaceAll('en_US', lang)
-        .replaceAll('30m', model.interval)
+        .replaceAll('30m', model.tradingChartInterval)
         .replaceAll('https://kanbantest.fabcoinapi.com/',
             model.configService.getKanbanBaseUrl())
         .replaceAll('wss://kanbantest.fabcoinapi.com/ws/',

@@ -35,7 +35,7 @@ import 'package:http/http.dart' as http;
 
 class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
-    listenToReactiveValues([_price, _quantity, _interval]);
+    listenToReactiveValues([_price, _quantity, _interval, _isTradingChartModelBusy]);
   }
 
   final log = getLogger('TradeService');
@@ -59,6 +59,11 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   RxValue<String> _interval = RxValue<String>(initial: '30m');
   String get interval => _interval.value;
 
+  RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(initial: false);
+  bool get isTradingChartModelBusy => _isTradingChartModelBusy.value;
+
+  
+
   Stream tickerStream;
   Stream allPriceStream;
   StreamSubscription _streamSubscription;
@@ -80,6 +85,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     //  // await getAllPriceChannel().sink.close();
     //     log.w('all price closed');
     //   // cancel stream subscription
+  }
+
+/*----------------------------------------------------------------------
+                    set orderbook loaded status
+----------------------------------------------------------------------*/
+  void setTradingChartInterval(String v, bool isBusy) {
+    _isTradingChartModelBusy.value = isBusy;
+    _interval.value = v;
+    log.w('setTradingChartInterval $interval');
   }
 
 /*----------------------------------------------------------------------
@@ -188,7 +202,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   IOWebSocketChannel getTickerDataChannel(String pair, String interval) {
     var wsStringUrl =
         configService.getKanbanBaseWSUrl() + 'ticker@' + pair + '@' + interval;
-    log.i('getTickerDataUrl $wsStringUrl');
+  //  log.i('getTickerDataUrl $wsStringUrl');
     final channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
   }
@@ -248,7 +262,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   IOWebSocketChannel getTradeListChannel(String pair) {
     try {
       var wsString = configService.getKanbanBaseWSUrl() + 'trades' + '@' + pair;
-      log.i('getTradeListUrl $wsString');
+    //  log.i('getTradeListUrl $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
     } catch (err) {

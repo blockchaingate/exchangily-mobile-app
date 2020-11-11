@@ -60,7 +60,7 @@ class LocalStorageService {
 
   dynamic _getFromDisk(String key) {
     var value = _preferences.get(key);
-    log.i('key: $key value: $value');
+   // log.i('key: $key value: $value');
     return value;
   }
 
