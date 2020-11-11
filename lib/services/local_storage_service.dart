@@ -8,10 +8,12 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Local Storage Keys
 ----------------------------------------------------------------------*/
+  static const String NoticeDialogDisplayKey = 'isDialogDisplay';
   static const String ShowCaseViewKey = 'isShowCaseView';
   static const String AppLanguagesKey = 'languages';
   static const String DarkModeKey = 'darkmode';
   static const String HKServerKey = 'isHKServer';
+  static const String USServerKey = 'isUSServer';
   static const String WalletBalancesBodyKey = 'walletBalancesBody';
 /*----------------------------------------------------------------------
                   Instance
@@ -76,6 +78,15 @@ class LocalStorageService {
   set isDarkMode(bool value) => _saveToDisk(DarkModeKey, value);
 
 /*----------------------------------------------------------------------
+                Notice Dialog getter/setter
+----------------------------------------------------------------------  */
+  bool get isNoticeDialogDisplay =>
+      _getFromDisk(NoticeDialogDisplayKey) ?? false;
+
+  set isNoticeDialogDisplay(bool value) =>
+      _saveToDisk(NoticeDialogDisplayKey, value);
+
+/*----------------------------------------------------------------------
                 Showcase View getter/setter
 ----------------------------------------------------------------------  */
   bool get isShowCaseView => _getFromDisk(ShowCaseViewKey) ?? false;
@@ -88,6 +99,13 @@ class LocalStorageService {
   bool get isHKServer => _getFromDisk(HKServerKey) ?? false;
 
   set isHKServer(bool value) => _saveToDisk(HKServerKey, value);
+
+/*----------------------------------------------------------------------
+                Is USD server getter/setter
+----------------------------------------------------------------------  */
+  bool get isUSServer => _getFromDisk(USServerKey) ?? false;
+
+  set isUSServer(bool value) => _saveToDisk(USServerKey, value);
 
 /*----------------------------------------------------------------------
                 Wallet balance body

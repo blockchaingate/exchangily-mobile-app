@@ -73,7 +73,7 @@ class WalletDashboardScreen extends StatelessWidget {
                 print('onComplete: $index, $key');
               },
               onFinish: () {
-                model.storageService.isShowCaseView = true;
+                model.storageService.isShowCaseView = false;
               },
               builder: Builder(
                 builder: (context) => Column(
@@ -216,32 +216,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                         )),
                                   )),
                           UIHelper.horizontalSpaceMedium,
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () => FocusScope.of(context)
-                                  .requestFocus(FocusNode()),
-                              child: Container(
-                                margin: EdgeInsets.only(top: 5),
-                                height: 30,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: primaryColor, width: 1),
-                                      ),
-                                      // helperText: 'Search',
-                                      // helperStyle:
-                                      //     Theme.of(context).textTheme.bodyText1,
-                                      suffixIcon:
-                                          Icon(Icons.search, color: white)),
-                                  controller: model.searchCoinTextController,
-                                  onChanged: (String value) {
-                                    model.searchCoinsByTickerName(value);
-                                  },
-                                ),
-                              ),
-                            ),
-                          )
+                          
                         ],
                       ),
                     ),
@@ -287,7 +262,38 @@ class WalletDashboardScreen extends StatelessWidget {
                                   ),
                                 ],
                               ))
-                          : AddGasRow(model: model),
+                          : Row(
+                            children: [
+                              AddGasRow(model: model),
+                                UIHelper.horizontalSpaceSmall,
+                              Expanded(
+                            child: GestureDetector(
+                              onTap: () => FocusScope.of(context)
+                                  .requestFocus(FocusNode()),
+                              child: Container(
+                                margin: EdgeInsets.only(top: 5),
+                                height: 30,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: primaryColor, width: 1),
+                                      ),
+                                      // helperText: 'Search',
+                                      // helperStyle:
+                                      //     Theme.of(context).textTheme.bodyText1,
+                                      suffixIcon:
+                                          Icon(Icons.search, color: white)),
+                                  controller: model.searchCoinTextController,
+                                  onChanged: (String value) {
+                                    model.searchCoinsByTickerName(value);
+                                  },
+                                ),
+                              ),
+                            ),
+                          )
+                            ],
+                          ),
                     ),
 
                     UIHelper.verticalSpaceSmall,
@@ -834,22 +840,20 @@ class AddGasRow extends StatelessWidget {
     var end = Offset.zero;
     var tween = Tween(begin: begin, end: end);
     model.showcaseEvent(context);
-    return
-        // model.gasAmount < 0.005
-        //     ? Showcase(
-        //         key: model.globalKeyOne,
-        //         title: AppLocalizations.of(context).note + ':',
-        //         description:
-        //             AppLocalizations.of(context).walletDashboardInstruction1,
-        //         child: TweenAnimationBuilder(
-        //             duration: Duration(milliseconds: 500),
-        //             tween: tween,
-        //             builder: (_, Offset offset, __) {
-        //               return Container(child: (Gas(gasAmount: model.gasAmount)));
-        //             }),
-        //       )
-        //     :
-        Gas(gasAmount: model.gasAmount);
+    return model.storageService.isShowCaseView && model.gasAmount < 0.5
+        ? Showcase(
+            key: model.globalKeyOne,
+            title: AppLocalizations.of(context).note + ':',
+            description:
+                AppLocalizations.of(context).walletDashboardInstruction1,
+            child: TweenAnimationBuilder(
+                duration: Duration(milliseconds: 500),
+                tween: tween,
+                builder: (_, Offset offset, __) {
+                  return Container(child: (Gas(gasAmount: model.gasAmount)));
+                }),
+          )
+        : Gas(gasAmount: model.gasAmount);
   }
 }
 

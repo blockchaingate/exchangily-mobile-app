@@ -4,20 +4,15 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
                         Base Url's
 ----------------------------------------------------------------------*/
 
-final String baseBlockchainGateV2Url = isProduction
+const String baseBlockchainGateV2Url = isProduction
     ? 'https://blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
 
-final String baseKanbanUrl = isProduction
-    ? 'https://kanbanprod.fabcoinapi.com/'
-    : 'https://kanbantest.fabcoinapi.com/';
-
-final String baseHKServerUrl = 'api.dscmap.com/';
 /*----------------------------------------------------------------------
                         Free Fab
 ----------------------------------------------------------------------*/
 /// Url below not in use
-const String freeFabUrl = 'https://kanbanprod.fabcoinapi.com/kanban/getairdrop';
+// const String freeFabUrl = 'https://kanbanprod.fabcoinapi.com/kanban/getairdrop';
 
 final String getFreeFabUrl =
     baseBlockchainGateV2Url + 'airdrop/getQuestionair/';
@@ -32,24 +27,24 @@ final String postFreeFabUrl =
 final String usdCoinPriceUrl =
     'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
 
-final String coinPricesWSUrl = kanbanBaseWSUrl + 'allprices';
+final String allCoinPricesWSRoute = 'allprices';
 // Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
-final String coinCurrencyUsdValueUrl = baseKanbanUrl + 'USDvalues';
+final String coinCurrencyUsdValueRoute = 'USDvalues';
 
 /*----------------------------------------------------------------------
                             Get App Version
 ----------------------------------------------------------------------*/
 
-final String getAppVersionUrl = baseKanbanUrl + 'getappversion';
+final String getAppVersionRoute = 'getappversion';
 
 /*----------------------------------------------------------------------
                 Get Token List, Decimal config, checkstatus
 ----------------------------------------------------------------------*/
 
-final String getTokenListUrl = baseKanbanUrl + 'exchangily/getTokenList';
-
-final String pairDecimalConfigUrl = baseKanbanUrl + 'kanban/getpairconfig';
-final String redepositStatusUrl = baseKanbanUrl + 'checkstatus/';
+final String getTokenListRoute = 'exchangily/getTokenList';
+const String getPairConfigRoute = 'kanban/getpairconfig';
+final String pairDecimalConfigRoute = 'kanban/getpairconfig';
+final String redepositStatusRoute = 'checkstatus/';
 /*----------------------------------------------------------------------
                             Exchange
 ----------------------------------------------------------------------*/
@@ -60,30 +55,25 @@ final String redepositStatusUrl = baseKanbanUrl + 'checkstatus/';
 // Below is the address type which is used in ordersPaged
 // convert base58 fab address to hex. trim the first two and last 8 chars.
 // then put a 0x in front
+final String txStatusStatusRoute = 'kanban/explorer/getTransactionStatus';
 
-final String kanbanBaseWSUrl = isProduction
-    ? 'wss://kanbanprod.fabcoinapi.com/ws/'
-    : 'wss://kanbantest.fabcoinapi.com/ws/';
+final String allPricesWSRoute = 'allPrices';
+final String tradesWSRoute = 'trades@';
+final String ordersWSRoute = 'orders@';
+final String tickerWSRoute = 'ticker@';
 
-final String allPricesWSUrl = kanbanBaseWSUrl + 'allPrices';
-final String tradesWSUrl = kanbanBaseWSUrl + 'trades@';
-final String ordersWSUrl = kanbanBaseWSUrl + 'orders@';
-final String tickerWSUrl = kanbanBaseWSUrl + 'ticker@';
-
-final String getOrdersPagedURL = baseKanbanUrl + 'ordersbyaddresspaged/';
-final String getOrdersPagedByTickerNameURL =
-    baseKanbanUrl + 'getordersbytickernamepaged/';
+final String getOrdersPagedRoute = 'ordersbyaddresspaged/';
+final String getOrdersPagedByTickerNameRoute = 'getordersbytickernamepaged/';
 
 /// https://kanbantest.fabcoinapi.com/exchangily/getBalance/
 /// 0xb754f9c8b706c59646a4e97601a0ad81067e1cf9/HOT
-final String getSingleCoinExchangeBalanceUrl =
-    baseKanbanUrl + 'exchangily/getBalance/';
+final String getSingleCoinExchangeBalanceRoute = 'exchangily/getBalance/';
 
 /*----------------------------------------------------------------------
                         Campaign
 ----------------------------------------------------------------------*/
-final String testUsdtWalletAddress =
-    '0x7bfbfaf1d3f81827e1642114c7905de413d83321';
+// final String testUsdtWalletAddress =
+//     '0x7bfbfaf1d3f81827e1642114c7905de413d83321';
 
-final String prodUsdtWalletAddress =
-    '0x4e93c47b42d09f61a31f798877329890791077b2';
+// final String prodUsdtWalletAddress =
+//     '0x4e93c47b42d09f61a31f798877329890791077b2';

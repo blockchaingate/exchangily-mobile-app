@@ -11,8 +11,10 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -22,6 +24,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -61,7 +64,9 @@ class SettingsViewmodel extends BaseViewModel {
   GlobalKey one;
   GlobalKey two;
   bool isShowCaseOnce;
-
+  String test;
+  ConfigService configService = locator<ConfigService>();
+  bool isHKServer;
   init() async {
     setBusy(true);
 
@@ -74,8 +79,27 @@ class SettingsViewmodel extends BaseViewModel {
     });
     getAppVersion();
     await selectDefaultWalletLanguage();
+    test = configService.getKanbanBaseUrl();
     // if (selectedLanguage == '')
     //   selectedLanguage = getSetLocalStorageDataByKey('lang');
+    setBusy(false);
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Reload app
+-------------------------------------------------------------------------------------*/
+
+  reloadApp() {
+    setBusy(true);
+    //  log.i('1');
+    storageService.isHKServer = !storageService.isHKServer;
+
+    storageService.isUSServer = storageService.isHKServer ? false : true;
+    // Phoenix.rebirth(context);
+    //  log.i('2');
+    test = configService.getKanbanBaseUrl();
+    isHKServer = storageService.isHKServer;
+    log.e('GLobal kanban url $test');
     setBusy(false);
   }
 
@@ -88,6 +112,31 @@ class SettingsViewmodel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ShowCaseWidget.of(test).startShowCase([one, two]);
     });
+    setBusy(false);
+  }
+
+  setIsShowcase(bool v) {
+    // set updated value
+    log.i('setIsShowcase $v value');
+    storageService.isShowCaseView = !storageService.isShowCaseView;
+
+    // get new value and assign it to the viewmodel variable
+    setBusy(true);
+    isShowCaseOnce = storageService.isShowCaseView;
+    setBusy(false);
+    log.w('is show case once value $isShowCaseOnce');
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Set the display warning value to local storage
+-------------------------------------------------------------------------------------*/
+
+  setIsDialogWarningValue(value) async {
+    storageService.isNoticeDialogDisplay =
+        !storageService.isNoticeDialogDisplay;
+    setBusy(true);
+    //sharedService.setDialogWarningsStatus(value);
+    isDialogDisplay = storageService.isNoticeDialogDisplay;
     setBusy(false);
   }
 
@@ -275,14 +324,6 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(true);
     log.w('in app getappver');
     versionName = await sharedService.getLocalAppVersion();
-    setBusy(false);
-  }
-
-  // Set the display warning value to local storage
-  setDialogWarningValue(value) async {
-    setBusy(true);
-    sharedService.setDialogWarningsStatus(value);
-    isDialogDisplay = value;
     setBusy(false);
   }
 

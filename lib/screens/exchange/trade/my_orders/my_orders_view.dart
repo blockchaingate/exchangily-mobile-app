@@ -7,20 +7,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
-import 'my_order_viewmodel.dart';
+import 'my_orders_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
   final String tickerName;
-  final bool isReload;
-  MyOrdersView({Key key, this.tickerName, this.isReload}) : super(key: key);
+
+  MyOrdersView({Key key, this.tickerName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
-        viewModelBuilder: () =>
-            MyOrdersViewModel(tickerName: tickerName, isReload: isReload),
+        createNewModelOnInsert: true,
+        viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
-          print('in init MyOrdersView, is reloading $isReload');
+          print('in init MyOrdersView');
           model.context = context;
           model.init();
         },
@@ -46,7 +46,7 @@ class MyOrdersView extends StatelessWidget {
                                 model.isFutureError = false;
                                 print(
                                     'Running futures to run again to reset the hasError and try to get the data so that user can see the data with view instead of error screen');
-                                model.swapSources();
+                                model.swapSources(false);
                               },
                             ),
                           ],
@@ -97,11 +97,11 @@ class MyOrdersView extends StatelessWidget {
                                     scale: 0.75,
                                     child: Switch.adaptive(
                                         activeColor: primaryColor,
-                                        value: model.isSwitch,
+                                        value: model.isShowAllOrders,
                                         onChanged: (bool v) {
                                           print('switch value $v');
 
-                                          model.swapSources();
+                                          model.swapSources(v);
                                         }),
                                   ),
                                 ],
@@ -158,6 +158,7 @@ class MyOrdersView extends StatelessWidget {
                                   // header
                                   priceFieldsHeadersRow(context),
                                   // Tab bar view container
+
                                   Container(
                                       height:
                                           MediaQuery.of(context).size.height *
@@ -188,10 +189,10 @@ class MyOrdersView extends StatelessWidget {
       color: walletCardColor,
       padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
       child: Row(children: <Widget>[
-        Expanded(
-          flex: 1,
-          child: Text('#', style: Theme.of(context).textTheme.subtitle2),
-        ),
+        // Expanded(
+        //   flex: 1,
+        //   child: Text('#', style: Theme.of(context).textTheme.subtitle2),
+        // ),
         Expanded(
           flex: 1,
           child: Text(AppLocalizations.of(context).type,

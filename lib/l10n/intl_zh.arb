@@ -1967,5 +1967,17 @@
         "description": " release_to_load_more",
         "type": "text",
         "placeholders": {}
+    },
+    "useAsiaNode": "连接亚洲节点",
+    "@useAsiaNode": {
+      "description": " use_asia_node_settings_view",
+      "type": "text",
+      "placeholders": {}
+    },
+    "useNorthAmericanNode": "连接北美节点",
+    "@useNorthAmericanNode": {
+      "description": " use_north_american_node_settings_view",
+      "type": "text",
+      "placeholders": {}
     }
 }

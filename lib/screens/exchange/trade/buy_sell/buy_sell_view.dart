@@ -73,6 +73,7 @@ class BuySellView extends StatelessWidget {
               },
               onComplete: (index, key) {
                 print('onComplete: $index, $key');
+                model.storageService.isShowCaseView = false;
               },
               builder: Builder(
                 builder: (context) => Stack(
@@ -136,10 +137,14 @@ class BuySellView extends StatelessWidget {
 /*----------------------------------------------------------
                 My Orders view
  -----------------------------------------------------------*/
-
-                      MyOrdersView(
-                          tickerName: model.tickerName,
-                          isReload: model.isReload),
+                      model.isReloadMyOrders
+                          ? Container(
+                              height: MediaQuery.of(context).size.height * 0.20,
+                              margin: EdgeInsets.all(5),
+                              child: Center(child: CircularProgressIndicator()))
+                          : MyOrdersView(
+                              tickerName: model.tickerName,
+                            ),
                       //
                     ]),
                     model.isBusy
@@ -292,7 +297,7 @@ class VerticalOrderbook extends StatelessWidget {
                   ],
                 ),
                 buildVerticalOrderbookColumn(
-                    model.orderbook.sellOrders.reversed.toList(), false, model),
+                    model.orderbook.sellOrders, false, model),
                 Container(
                     padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
                     child: Row(
@@ -318,7 +323,9 @@ Column buildVerticalOrderbookColumn(
   // List<OrderType> sellOrders = [];
   print('OrderArray length before ${orderArray.length}');
   orderArray = (orderArray.length > 7)
-      ? orderArray = orderArray.sublist(0, 7)
+      ? orderArray = bidOrAsk
+          ? orderArray.sublist(0, 7)
+          : orderArray.sublist(0, 7).reversed.toList()
       : orderArray;
   print('OrderArray length after ${orderArray.length}');
   return Column(
@@ -530,7 +537,13 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         ),
         UIHelper.verticalSpaceSmall,
         // Total Balance
-        BalanceRowWidget(model: model),
+        model.isBusy ||
+                model.targetCoinExchangeBalance == null ||
+                model.baseCoinExchangeBalance == null ||
+                model.baseCoinExchangeBalance.unlockedAmount == null ||
+                model.targetCoinExchangeBalance.unlockedAmount == null
+            ? Center(child: CupertinoActivityIndicator())
+            : BalanceRowWidget(model: model),
         UIHelper.verticalSpaceSmall,
         // kanban gas fee
         Row(
@@ -667,51 +680,47 @@ class BalanceRowWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     model.showcaseEvent(context);
     return Container(
-        child:
-            // !model.storageService.showCaseView
-            //    ?
-            Showcase(
+        child: model.isBusy &&
+                model.storageService.isShowCaseView &&
+                (model.targetCoinExchangeBalance.unlockedAmount == 0.0 ||
+                    model.baseCoinExchangeBalance.unlockedAmount < 1.0)
+            ? Showcase(
                 key: model.globalKeyOne,
                 description: AppLocalizations.of(context).buySellInstruction1,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(AppLocalizations.of(context).balance,
-                        style: TextStyle(
-                            color: globals.primaryColor, fontSize: 13.0)),
-                    // First Check if Object is null
-                    model.targetCoinExchangeBalance == null ||
-                            model.baseCoinExchangeBalance == null
-                        // If true then to avoid error screen, assign/display 0 in both sell and buy tab
-                        ? model.bidOrAsk == true
-                            ? Text("0.00" + " " + model.baseCoinName,
-                                style: TextStyle(
-                                    color: globals.primaryColor,
-                                    fontSize: 13.0))
-                            : Text("0.00" + " " + model.targetCoinName,
-                                style: TextStyle(
-                                    color: globals.primaryColor,
-                                    fontSize: 13.0))
-                        :
-                        // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
-                        model.bidOrAsk
-                            ? Text(
-                                "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
-                                    " " +
-                                    model.baseCoinName,
-                                style: TextStyle(
-                                    color: globals.primaryColor,
-                                    fontSize: 13.0))
-                            : Text(
-                                "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
-                                    " " +
-                                    model.targetCoinName,
-                                style: TextStyle(
-                                    color: globals.primaryColor,
-                                    fontSize: 13.0))
-                  ],
-                ))
-        //  : transferRow(context, model)
-        );
+                child: buildTransferRow(context, model))
+            : buildTransferRow(context, model));
+  }
+
+  Row buildTransferRow(BuildContext context, BuySellViewModel model) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Text(AppLocalizations.of(context).balance,
+            style: TextStyle(color: globals.primaryColor, fontSize: 13.0)),
+        // First Check if Object is null
+        // model.targetCoinExchangeBalance == null ||
+        //         model.baseCoinExchangeBalance == null ||  model.baseCoinExchangeBalance.unlockedAmount == null
+        //         ||  model.targetCoinExchangeBalance.unlockedAmount == null
+        //          ? CupertinoActivityIndicator() :
+        //     // If true then to avoid error screen, assign/display 0 in both sell and buy tab
+
+        //     // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
+        model.bidOrAsk
+            ?
+            // ?  model.baseCoinExchangeBalance.unlockAmount == null?textDemoWidget():
+            Text(
+                "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
+                    " " +
+                    model.baseCoinName,
+                style: TextStyle(color: globals.primaryColor, fontSize: 13.0))
+            :
+            // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
+            Text(
+                "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal) ?? 0.0}" +
+                    " " +
+                    model.targetCoinName,
+                style: TextStyle(color: globals.primaryColor, fontSize: 13.0))
+      ],
+    );
   }
 }

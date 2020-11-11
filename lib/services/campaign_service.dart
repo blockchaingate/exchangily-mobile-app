@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/environments/environment_type.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';
@@ -26,9 +25,7 @@ class CampaignService {
   final String campaignId = '1';
   Campaign campaign;
 
-  static final BASE_URL = isProduction
-      ? EnvironmentConfig.CAMPAIGN_PROD_URL
-      : EnvironmentConfig.CAMPAIGN_TEST_URL;
+  static final BASE_URL = baseBlockchainGateV2Url;
   static final registerUrl = BASE_URL + 'members/create';
   static final loginUrl = BASE_URL + 'members/login';
   static final kycWithTokenUrl = BASE_URL + 'kyc/create';

@@ -20,12 +20,10 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_view.dart';
+
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
-import 'package:exchangilymobileapp/screens/trade/place_order/my_orders.dart';
+
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -113,7 +111,7 @@ class BuySellViewModel extends ReactiveViewModel {
   double lockedAmount;
   ExchangeBalanceModel targetCoinExchangeBalance;
   ExchangeBalanceModel baseCoinExchangeBalance;
-  bool isReload = false;
+  bool isReloadMyOrders = false;
   String pairSymbolWithSlash = '';
 
   bool _isOrderbookLoaded = false;
@@ -123,10 +121,8 @@ class BuySellViewModel extends ReactiveViewModel {
     // log.e(pair);
     setBusy(true);
 
-    // splitPair(pair);
-    print('1');
+    //  await splitPair(pairSymbolWithSlash);
     setDefaultGasPrice();
-    print('2');
     sharedService.context = context;
     getOrderbookLoadedStatus();
     // orderListFromTradeService();
@@ -135,10 +131,8 @@ class BuySellViewModel extends ReactiveViewModel {
     // print('4');
     //await retrieveWallets();
     exgAddress = await sharedService.getExgAddressFromWalletDatabase();
-    print('5');
+
     await getDecimalPairConfig();
-    print('6');
-    print('7');
     fillPriceAndQuantityTextFields();
     print('8');
     setBusy(false);
@@ -168,16 +162,6 @@ class BuySellViewModel extends ReactiveViewModel {
   }
 
 /*----------------------------------------------------------------------
-                      Single coin exchange balance using new api
-----------------------------------------------------------------------*/
-
-  Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
-      String tickerName) async {
-    // using new api endpoint for single exchange balance by name
-    return await apiService.getSingleCoinExchangeBalance(tickerName);
-  }
-
-/*----------------------------------------------------------------------
                 Single coin exchange balance using old api
 ----------------------------------------------------------------------*/
   Future getSingleCoinExchangeBalanceFromAll(
@@ -185,34 +169,46 @@ class BuySellViewModel extends ReactiveViewModel {
     setBusy(true);
     log.e('In get exchange assets');
 
-    // await getSingleCoinExchangeBalance(tickerName).then((value) {
-    //   print('exchangeBalance using api ${value.toJson()}');
-    //   exchangeBalance = value;
-    // });
-    //  if (exchangeBalance == null) {
-    String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
-    List res = await walletService.getAllExchangeBalances(exgAddress);
-    log.e('RES $res');
-    targetCoinExchangeBalance = new ExchangeBalanceModel();
-    baseCoinExchangeBalance = new ExchangeBalanceModel();
+    targetCoinExchangeBalance =
+        await apiService.getSingleCoinExchangeBalance(targetCoin);
+    log.i('targetCoin Balance using api ${targetCoinExchangeBalance.toJson()}');
 
-    res.forEach((coin) {
-      if (coin['coin'] == baseCoin) {
-        log.w('singleCoinExchangeBalance $coin');
-        baseCoinExchangeBalance.unlockedAmount = coin['amount'];
-        baseCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
-        print(
-            'exchangeBalance using all coins for loop ${baseCoinExchangeBalance.toJson()}');
-      }
-      if (coin['coin'] == targetCoin) {
-        log.w('singleCoinExchangeBalance $coin');
-        targetCoinExchangeBalance.unlockedAmount = coin['amount'];
-        targetCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
-        print(
-            'exchangeBalance using all coins for loop ${targetCoinExchangeBalance.toJson()}');
-      }
-    });
+    baseCoinExchangeBalance =
+        await apiService.getSingleCoinExchangeBalance(baseCoin);
+    log.i('baseCoin Balance using api ${baseCoinExchangeBalance.toJson()}');
 
+    if (targetCoinExchangeBalance == null || baseCoinExchangeBalance == null) {
+      String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+      List res = await walletService.getAllExchangeBalances(exgAddress);
+
+      targetCoinExchangeBalance = new ExchangeBalanceModel();
+      baseCoinExchangeBalance = new ExchangeBalanceModel();
+
+      res.forEach((coin) {
+        if (coin['coin'] == baseCoin) {
+          log.w('baseCoin ExchangeBalance $coin');
+          baseCoinExchangeBalance.unlockedAmount = coin['amount'];
+          baseCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
+          print(
+              'exchangeBalance using all coins for loop ${baseCoinExchangeBalance.toJson()}');
+        }
+        // else{
+        //     baseCoinExchangeBalance.unlockedAmount = 0.0;
+        //   baseCoinExchangeBalance.lockedAmount = 0.0;
+        // }
+        if (coin['coin'] == targetCoin) {
+          log.w('targetCoin ExchangeBalance $coin');
+          targetCoinExchangeBalance.unlockedAmount = coin['amount'];
+          targetCoinExchangeBalance.lockedAmount = coin['lockedAmount'];
+          print(
+              'exchangeBalance using all coins for loop ${targetCoinExchangeBalance.toJson()}');
+        }
+        // else{
+        //     targetCoinExchangeBalance.unlockedAmount = 0.0;
+        //   targetCoinExchangeBalance.lockedAmount = 0.0;
+        // }
+      });
+    }
     setBusy(false);
   }
 
@@ -252,7 +248,7 @@ class BuySellViewModel extends ReactiveViewModel {
             Full screen Stack loading indicator
 --------------------------------------------------- */
   // Split Pair Name
-  splitPair(String pair) {
+  splitPair(String pair) async {
     setBusy(true);
     log.e('pair $pair');
     var coinsArray = pair.split("/");
@@ -260,7 +256,7 @@ class BuySellViewModel extends ReactiveViewModel {
     baseCoinName = coinsArray[1];
     tickerName = targetCoinName + baseCoinName;
     log.e('tickername $tickerName');
-    getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+    await getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
     setBusy(false);
   }
 
@@ -327,57 +323,6 @@ class BuySellViewModel extends ReactiveViewModel {
   }
 
 /* ---------------------------------------------------
-            Full screen Stack loading indicator
---------------------------------------------------- */
-  // orderListFromTradeService() {
-  //   setState(ViewState.Busy);
-  //   orderListChannel =
-  //       tradeService.getOrderListChannel(targetCoinName + baseCoinName);
-  //   setState(ViewState.Idle);
-  // }
-
-/* ---------------------------------------------------
-            Full screen Stack loading indicator
---------------------------------------------------- */
-  // tradeListFromTradeService() {
-  //   setState(ViewState.Busy);
-  //   tradeListChannel =
-  //       tradeService.getTradeListChannel(targetCoinName + baseCoinName);
-  //   setState(ViewState.Idle);
-  // }
-
-/* ---------------------------------------------------
-            Order List
---------------------------------------------------- */
-//   //
-//   Future orderList() async {
-//     setState(ViewState.Busy);
-//     orderListChannel.stream.listen((ordersString) {
-//       orders = Decoder.fromOrdersJsonArray(ordersString);
-//       //  log.w(orders);
-//       showOrders(orders);
-//     });
-//     setState(ViewState.Idle);
-//   }
-
-// /* ---------------------------------------------------
-//             Trade List
-// --------------------------------------------------- */
-//   //
-//   tradeList() async {
-//     setState(ViewState.Busy);
-//     tradeListChannel.stream.listen((tradesString) {
-//       List<MarketTrades> trades = Decoder.fromTradesJsonArray(tradesString);
-
-//       if (trades != null && trades.length > 0) {
-//         MarketTrades latestTrade = trades[0];
-//         currentPrice = latestTrade.price;
-//       }
-//     });
-//     setState(ViewState.Idle);
-//   }
-
-/* ---------------------------------------------------
             Retrieve Wallets
 --------------------------------------------------- */
   retrieveWallets() async {
@@ -399,89 +344,13 @@ class BuySellViewModel extends ReactiveViewModel {
         }
         if (coin.tickerName == 'EXG') {
           exgAddress = coin.address;
-          this.refresh(exgAddress);
+          // this.refresh(exgAddress);
         }
       }
       setBusy(false);
     }).catchError((error) {
       setBusy(false);
     });
-  }
-
-/* ---------------------------------------------------
-            Refresh Balances and Orders
---------------------------------------------------- */
-  refresh(String address) {
-    setBusy(true);
-    if (address == null) {
-      setBusy(false);
-      return;
-    }
-    Timer.periodic(Duration(seconds: 3), (Timer time) async {
-      // print("Yeah, this line is printed after 3 seconds");
-      // var balances = await apiService.getAssetsBalance(address);
-      // var orders = await tradeService.getOrders(address);
-
-      List<Map<String, dynamic>> newbals = [];
-      List<Map<String, dynamic>> openOrds = [];
-      List<Map<String, dynamic>> closeOrds = [];
-
-      // for (var i = 0; i < balances.length; i++) {
-      //   var bal = balances[i];
-      //   var coinType = int.parse(bal['coinType']);
-      //   var unlockedAmount = bigNum2Double(bal['unlockedAmount']);
-      //   var lockedAmount = bigNum2Double(bal['lockedAmount']);
-      //   var newbal = {
-      //     "coin": coin_list[coinType]['name'],
-      //     "amount": unlockedAmount,
-      //     "lockedAmount": lockedAmount
-      //   };
-      //   newbals.add(newbal);
-      // }
-
-      // for (var i = 0; i < orders.length; i++) {
-      //   var order = orders[i];
-      //   var orderHash = order.orderHash;
-      //   var address = order.address;
-      //   var orderType = order.orderType;
-      //   var bidOrAsk = order.bidOrAsk;
-      //   var pairLeft = order.pairLeft;
-      //   var pairRight = order.pairRight;
-      //   var price = bigNum2Double(order.price);
-      //   var orderQuantity = bigNum2Double(order.orderQuantity);
-      //   var filledQuantity = bigNum2Double(order.filledQuantity);
-      //   var time = order.time;
-      //   var isActive = order.isActive;
-
-      //   //{ "block":  "absdda...", "type": "Buy", "pair": "EXG/USDT", "price": 1, "amount": 1000.00},
-      //   var newOrd = {
-      //     'orderHash': orderHash,
-      //     'type': (bidOrAsk == true) ? 'Buy' : 'Sell',
-      //     'pair': coin_list[pairLeft]['name'].toString() +
-      //         '/' +
-      //         coin_list[pairRight]['name'].toString(),
-      //     'price': price,
-      //     'amount': orderQuantity,
-      //     'filledAmount': filledQuantity
-      //   };
-
-      //   if (isActive == true) {
-      //     openOrds.add(newOrd);
-      //   } else {
-      //     closeOrds.add(newOrd);
-      //   }
-      // }
-
-      var newOpenOrds =
-          openOrds.length > 10 ? openOrds.sublist(0, 10) : openOrds;
-      var newCloseOrds =
-          closeOrds.length > 10 ? closeOrds.sublist(0, 10) : closeOrds;
-      // if ((myordersState != null) && (myordersState.currentState != null)) {
-      //   myordersState.currentState
-      //       .refreshBalOrds(newbals, newOpenOrds, newCloseOrds, exgAddress);
-      // }
-    });
-    setBusy(false);
   }
 
 /* ---------------------------------------------------
@@ -569,7 +438,7 @@ class BuySellViewModel extends ReactiveViewModel {
         timeBeforeExpiration,
         false,
         orderHash);
-    log.e('exg addr ${exgAddress}');
+    log.e('exg addr $exgAddress');
 
     var nonce = await getNonce(exgAddress);
 
@@ -622,7 +491,7 @@ class BuySellViewModel extends ReactiveViewModel {
 --------------------------------------------------- */
   Future placeBuySellOrder() async {
     setBusy(true);
-
+    isReloadMyOrders = false;
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -643,24 +512,33 @@ class BuySellViewModel extends ReactiveViewModel {
             Icons.check,
             green,
             context);
-        Future.delayed(new Duration(seconds: 3), () {
-          getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
-          isReload = true;
-        });
-        Future.delayed(new Duration(seconds: 6), () async {
-          // await _orderService.getMyOrdersByTickerName(
-          //     exgAddress, targetCoinName + baseCoinName);
-          _orderService.swapSources();
-          notifyListeners();
-          //navigationService.goBack();
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //       builder: (context) => BuySellView(
-          //           orderbook: orderbook,
-          //           pairSymbolWithSlash: pairSymbolWithSlash,
-          //           bidOrAsk: bidOrAsk)),
-          //  );
+        // Future.delayed(new Duration(seconds: 2), () {
+        //   getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+        //   // isReloadMyOrders = true;
+        // });
+        Timer.periodic(Duration(seconds: 3), (timer) async {
+          var res =
+              await tradeService.getTxStatus(resKanban["transactionHash"]);
+          if (res != null) {
+            log.i('RES $res');
+            String status = res['status'];
+            if (status == '0x1') {
+              setBusy(true);
+              log.e('isReloadMyOrders $isReloadMyOrders -- isBusy $isBusy');
+              isReloadMyOrders = true;
+              getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+              Future.delayed(new Duration(milliseconds: 500), () {
+                setBusy(true);
+                isReloadMyOrders = false;
+                log.e('isReloadMyOrders $isReloadMyOrders');
+                setBusy(false);
+              });
+              setBusy(false);
+            }
+            log.e('isReloadMyOrders $isReloadMyOrders');
+            log.i('timer cancelled');
+            timer.cancel();
+          }
         });
       } else {
         walletService.showInfoFlushbar(

@@ -263,10 +263,13 @@ class WalletDashboardViewModel extends BaseState {
                         Showcase Feature
 ----------------------------------------------------------------------*/
   showcaseEvent(BuildContext test) async {
-    if (!storageService.isShowCaseView)
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
-      });
+    log.e(
+        'Is showvcase ${storageService.isShowCaseView} -gas amount $gasAmount');
+    //  if (storageService.isShowCaseView && gasAmount < 0.5)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
+      //
+    });
   }
 
 /*----------------------------------------------------------------------
@@ -732,7 +735,7 @@ class WalletDashboardViewModel extends BaseState {
     walletInfo = [];
 
     int coinTickersLength = walletService.coinTickers.length;
-    await getGas();
+
     //await getDecimalPairConfig();
 
     /// Check if wallet database coins are same as wallet service list
@@ -850,7 +853,7 @@ class WalletDashboardViewModel extends BaseState {
 
         // get exg address to get free fab
         String address = await getExgAddressFromWalletDatabase();
-
+        await getGas();
         // check gas and fab balance if 0 then ask for free fab
         if (gasAmount == 0.0 && fabBalance == 0.0) {
           await apiService.getFreeFab(address).then((res) {
@@ -860,7 +863,7 @@ class WalletDashboardViewModel extends BaseState {
           });
         } else {
           log.i('Fab or gas balance available already');
-          storageService.isShowCaseView = true;
+          //  storageService.isShowCaseView = true;
         }
       } // if wallet balance list != null ends
 
