@@ -216,32 +216,7 @@ class WalletDashboardScreen extends StatelessWidget {
                                         )),
                                   )),
                           UIHelper.horizontalSpaceMedium,
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () => FocusScope.of(context)
-                                  .requestFocus(FocusNode()),
-                              child: Container(
-                                margin: EdgeInsets.only(top: 5),
-                                height: 30,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: primaryColor, width: 1),
-                                      ),
-                                      // helperText: 'Search',
-                                      // helperStyle:
-                                      //     Theme.of(context).textTheme.bodyText1,
-                                      suffixIcon:
-                                          Icon(Icons.search, color: white)),
-                                  controller: model.searchCoinTextController,
-                                  onChanged: (String value) {
-                                    model.searchCoinsByTickerName(value);
-                                  },
-                                ),
-                              ),
-                            ),
-                          )
+                          
                         ],
                       ),
                     ),
@@ -287,7 +262,38 @@ class WalletDashboardScreen extends StatelessWidget {
                                   ),
                                 ],
                               ))
-                          : AddGasRow(model: model),
+                          : Row(
+                            children: [
+                              AddGasRow(model: model),
+                                UIHelper.horizontalSpaceSmall,
+                              Expanded(
+                            child: GestureDetector(
+                              onTap: () => FocusScope.of(context)
+                                  .requestFocus(FocusNode()),
+                              child: Container(
+                                margin: EdgeInsets.only(top: 5),
+                                height: 30,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: primaryColor, width: 1),
+                                      ),
+                                      // helperText: 'Search',
+                                      // helperStyle:
+                                      //     Theme.of(context).textTheme.bodyText1,
+                                      suffixIcon:
+                                          Icon(Icons.search, color: white)),
+                                  controller: model.searchCoinTextController,
+                                  onChanged: (String value) {
+                                    model.searchCoinsByTickerName(value);
+                                  },
+                                ),
+                              ),
+                            ),
+                          )
+                            ],
+                          ),
                     ),
 
                     UIHelper.verticalSpaceSmall,
