@@ -7,20 +7,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:stacked/stacked.dart';
-import 'my_order_viewmodel.dart';
+import 'my_orders_viewmodel.dart';
 
 class MyOrdersView extends StatelessWidget {
   final String tickerName;
-  final bool isReload;
-  MyOrdersView({Key key, this.tickerName, this.isReload}) : super(key: key);
+
+  MyOrdersView({Key key, this.tickerName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MyOrdersViewModel>.reactive(
-        viewModelBuilder: () =>
-            MyOrdersViewModel(tickerName: tickerName, isReload: isReload),
+        createNewModelOnInsert: true,
+        viewModelBuilder: () => MyOrdersViewModel(tickerName: tickerName),
         onModelReady: (model) {
-          print('in init MyOrdersView, is reloading $isReload');
+          print('in init MyOrdersView');
           model.context = context;
           model.init();
         },
@@ -158,6 +158,7 @@ class MyOrdersView extends StatelessWidget {
                                   // header
                                   priceFieldsHeadersRow(context),
                                   // Tab bar view container
+
                                   Container(
                                       height:
                                           MediaQuery.of(context).size.height *

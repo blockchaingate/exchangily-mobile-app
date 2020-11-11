@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/constants/api_endpoints.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';

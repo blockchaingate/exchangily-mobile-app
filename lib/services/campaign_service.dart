@@ -1,8 +1,6 @@
 import 'dart:convert';
 
-import 'package:exchangilymobileapp/constants/api_endpoints.dart';
-import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:exchangilymobileapp/environments/environment_type.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign.dart';
 import 'package:exchangilymobileapp/models/campaign/campaign_order.dart';

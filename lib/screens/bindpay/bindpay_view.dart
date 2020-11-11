@@ -395,10 +395,12 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
                         : model.tickerName),
               ),
               Text(model.quantity == 0.0 ? '' : model.quantity.toString()),
-              Icon(Icons.arrow_drop_down)
+               model.coins.isNotEmpty?
+              Icon( Icons.arrow_drop_down):Container()
             ]),
           ),
           onPressed: () {
+            if(model.coins.isNotEmpty)
             model.coinListBottomSheet(context);
           }),
     );

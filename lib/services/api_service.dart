@@ -12,7 +12,7 @@
 */
 
 import 'dart:convert';
-import 'package:exchangilymobileapp/constants/api_endpoints.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
@@ -28,12 +28,14 @@ import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 
 /// The service responsible for networking requests
 class ApiService {
   final log = getLogger('ApiService');
   final client = new http.Client();
   ConfigService configService = locator<ConfigService>();
+  SharedService sharedService = locator<SharedService>();
   // final kanbanBaseUrl = getKanbanBaseUrl()
 
   //  isHKServer
@@ -62,24 +64,24 @@ class ApiService {
 ----------------------------------------------------------------------*/
   Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
       String tickerName) async {
-    String exgAddress = await getExchangilyAddress();
+    String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    //  String exgAddress = await getExchangilyAddress();
     String url = configService.getKanbanBaseUrl() +
         getSingleCoinExchangeBalanceRoute +
         exgAddress +
         '/' +
         tickerName;
-    log.i('getSingleCoinExchangeBalance url $url');
-    ExchangeBalanceModel exchangeBalance = new ExchangeBalanceModel();
+    log.e('getSingleCoinExchangeBalance url $url');
+    ExchangeBalanceModel exchangeBalance;
     try {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
-      log.w('json data  $json');
       if (json != null) {
-        json['message'] != null
-            ? exchangeBalance = null
-            : exchangeBalance = ExchangeBalanceModel.fromJson(json);
+        // json['message'] != null
+        exchangeBalance = ExchangeBalanceModel.fromJson(json);
+
+        log.e('exchangeBalance ${exchangeBalance.toJson()}');
       }
-      log.e('exchangeBalance ${exchangeBalance.toJson()}');
       return exchangeBalance;
     } catch (err) {
       log.e('getSingleCoinExchangeBalance CATCH $err');
@@ -621,7 +623,7 @@ class ApiService {
     try {
       var response = await client.get(url);
       var jsonList = jsonDecode(response.body) as List;
-      log.w(' getPairDecimalConfig $jsonList');
+      //log.w(' getPairDecimalConfig $jsonList');
       PairDecimalConfigList pairList = PairDecimalConfigList.fromJson(jsonList);
       return pairList.pairList;
     } catch (err) {

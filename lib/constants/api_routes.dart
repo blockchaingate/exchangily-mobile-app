@@ -55,6 +55,7 @@ final String redepositStatusRoute = 'checkstatus/';
 // Below is the address type which is used in ordersPaged
 // convert base58 fab address to hex. trim the first two and last 8 chars.
 // then put a 0x in front
+final String txStatusStatusRoute = 'kanban/explorer/getTransactionStatus';
 
 final String allPricesWSRoute = 'allPrices';
 final String tradesWSRoute = 'trades@';

@@ -137,10 +137,14 @@ class BuySellView extends StatelessWidget {
 /*----------------------------------------------------------
                 My Orders view
  -----------------------------------------------------------*/
-
-                      MyOrdersView(
-                          tickerName: model.tickerName,
-                          isReload: model.isReload),
+                      model.isReloadMyOrders
+                          ? Container(
+                              height: MediaQuery.of(context).size.height * 0.20,
+                              margin: EdgeInsets.all(5),
+                              child: Center(child: CircularProgressIndicator()))
+                          : MyOrdersView(
+                              tickerName: model.tickerName,
+                            ),
                       //
                     ]),
                     model.isBusy
@@ -533,7 +537,11 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         ),
         UIHelper.verticalSpaceSmall,
         // Total Balance
-        model.isBusy
+        model.isBusy ||
+                model.targetCoinExchangeBalance == null ||
+                model.baseCoinExchangeBalance == null ||
+                model.baseCoinExchangeBalance.unlockedAmount == null ||
+                model.targetCoinExchangeBalance.unlockedAmount == null
             ? Center(child: CupertinoActivityIndicator())
             : BalanceRowWidget(model: model),
         UIHelper.verticalSpaceSmall,
@@ -690,31 +698,28 @@ class BalanceRowWidget extends StatelessWidget {
         Text(AppLocalizations.of(context).balance,
             style: TextStyle(color: globals.primaryColor, fontSize: 13.0)),
         // First Check if Object is null
-        model.targetCoinExchangeBalance == null ||
-                model.baseCoinExchangeBalance == null
-            // If true then to avoid error screen, assign/display 0 in both sell and buy tab
-            ? model.bidOrAsk == true
-                ? Text("0.00" + " " + model.baseCoinName,
-                    style:
-                        TextStyle(color: globals.primaryColor, fontSize: 13.0))
-                : Text("0.00" + " " + model.targetCoinName,
-                    style:
-                        TextStyle(color: globals.primaryColor, fontSize: 13.0))
+        // model.targetCoinExchangeBalance == null ||
+        //         model.baseCoinExchangeBalance == null ||  model.baseCoinExchangeBalance.unlockedAmount == null
+        //         ||  model.targetCoinExchangeBalance.unlockedAmount == null
+        //          ? CupertinoActivityIndicator() :
+        //     // If true then to avoid error screen, assign/display 0 in both sell and buy tab
+
+        //     // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
+        model.bidOrAsk
+            ?
+            // ?  model.baseCoinExchangeBalance.unlockAmount == null?textDemoWidget():
+            Text(
+                "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
+                    " " +
+                    model.baseCoinName,
+                style: TextStyle(color: globals.primaryColor, fontSize: 13.0))
             :
-            // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
-            model.bidOrAsk
-                ? Text(
-                    "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
-                        " " +
-                        model.baseCoinName,
-                    style:
-                        TextStyle(color: globals.primaryColor, fontSize: 13.0))
-                : Text(
-                    "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
-                        " " +
-                        model.targetCoinName,
-                    style:
-                        TextStyle(color: globals.primaryColor, fontSize: 13.0))
+            // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
+            Text(
+                "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal) ?? 0.0}" +
+                    " " +
+                    model.targetCoinName,
+                style: TextStyle(color: globals.primaryColor, fontSize: 13.0))
       ],
     );
   }
