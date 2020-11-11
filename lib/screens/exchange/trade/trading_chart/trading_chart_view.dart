@@ -11,11 +11,14 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stacked/stacked.dart';
 import 'dart:async';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:convert';
@@ -25,11 +28,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadHTMLFileToWEbView extends StatefulWidget {
   final String pair;
-  final String interval;
+  // final String interval;
   //final bool isBusy;
   LoadHTMLFileToWEbView(
     this.pair,
-    this.interval,
+    //   this.interval,
 //  this.isBusy
   );
   @override
@@ -37,35 +40,56 @@ class LoadHTMLFileToWEbView extends StatefulWidget {
 }
 
 class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      //  holder = widget.interval;
+    });
+  }
+
   // String interval = '1m';
-  WebViewController _controller;
-  ConfigService configService = locator<ConfigService>();
-  String holder;
+//  WebViewController _controller;
+  //ConfigService configService = locator<ConfigService>();
+
   @override
   Widget build(BuildContext context) {
     // isBusy ${widget.isBusy} --
-    setState(() {
-      holder = widget.interval;
-    });
+    // setState(() {
+    //   holder = widget.interval;
 
-    print('New interval ${widget.interval}');
-    return
-        //  widget.isBusy ? CupertinoActivityIndicator() :
-        Container(
-            padding: EdgeInsets.all(0),
-            margin: EdgeInsets.all(0),
-            height: 280,
-            child: WebView(
-              initialUrl: '',
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController webViewController) {
-                _controller = webViewController;
-                _loadHtmlFromAssets();
-              },
-            ));
+    // });
+
+    return ViewModelBuilder.reactive(
+      createNewModelOnInsert: true,
+      viewModelBuilder: () => TradeViewModel(),
+      onModelReady: (model) {
+        //  model.context = context;
+        print('New interval ${model.interval}');
+        //  model.init();
+      },
+      builder: (context, model, _) =>
+          //  widget.isBusy ? CupertinoActivityIndicator() :
+          Container(
+        padding: EdgeInsets.all(0),
+        margin: EdgeInsets.all(0),
+        height: 280,
+        child: WebView(
+          initialUrl: '',
+          javascriptMode: JavascriptMode.unrestricted,
+          onWebViewCreated: (WebViewController webViewController) {
+            model.webViewController = webViewController;
+            model.isBusy && model.isIntervalUpdated
+                ? _loadHtmlFromAssets(model)
+                : _loadHtmlFromAssets(model);
+          },
+        ),
+      ),
+    );
   }
 
-  _loadHtmlFromAssets() async {
+  _loadHtmlFromAssets(TradeViewModel model) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var lang = prefs.getString('lang');
     if (lang == 'en') {
@@ -73,20 +97,20 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     } else if (lang == 'zh') {
       lang = 'zh-CN';
     }
-    print('INTERVAL STATEFUL ${holder}');
+    print('INTERVAL STATEFUL ${model.interval}');
     var pairArray = widget.pair.split('/');
     String fileText = await rootBundle.loadString('assets/pages/index.html');
     fileText = fileText
         .replaceAll('BTC', pairArray[0])
         .replaceAll('USDT', pairArray[1])
         .replaceAll('en_US', lang)
-        .replaceAll('30m', holder)
+        .replaceAll('30m', model.interval)
         .replaceAll('https://kanbantest.fabcoinapi.com/',
-            configService.getKanbanBaseUrl())
+            model.configService.getKanbanBaseUrl())
         .replaceAll('wss://kanbantest.fabcoinapi.com/ws/',
-            configService.getKanbanBaseWSUrl());
+            model.configService.getKanbanBaseWSUrl());
 
-    _controller.loadUrl(Uri.dataFromString(fileText,
+    model.webViewController.loadUrl(Uri.dataFromString(fileText,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString());
   }
