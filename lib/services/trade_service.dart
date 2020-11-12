@@ -35,15 +35,34 @@ import 'package:http/http.dart' as http;
 
 class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
-    listenToReactiveValues([_price, _quantity]);
+    listenToReactiveValues([_price, _quantity, _interval, _isTradingChartModelBusy]);
   }
 
+  final log = getLogger('TradeService');
+  ApiService _api = locator<ApiService>();
   ConfigService configService = locator<ConfigService>();
+  final client = new http.Client();
+  //static String basePath = environment['websocket'];
 
-// final String allPricesWSUrl = kanbanBaseWSUrl + 'allPrices';
-// final String tradesWSUrl = kanbanBaseWSUrl + 'trades@';
-// final String ordersWSUrl = kanbanBaseWSUrl + 'orders@';
-// final String tickerWSUrl = kanbanBaseWSUrl + 'ticker@';
+  /// To check if orderbook has loaded in orderbook viewmodel
+  /// and then use this in buysellview to display price and quantity values
+  /// in the textfields
+  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(initial: false);
+  bool get isOrderbookLoaded => _isOrderbookLoaded.value;
+
+  RxValue<double> _price = RxValue<double>(initial: 0.0);
+  double get price => _price.value;
+
+  RxValue<double> _quantity = RxValue<double>(initial: 0.0);
+  double get quantity => _quantity.value;
+
+  RxValue<String> _interval = RxValue<String>(initial: '30m');
+  String get interval => _interval.value;
+
+  RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(initial: false);
+  bool get isTradingChartModelBusy => _isTradingChartModelBusy.value;
+
+  
 
   Stream tickerStream;
   Stream allPriceStream;
@@ -68,23 +87,14 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     //   // cancel stream subscription
   }
 
-  final log = getLogger('TradeService');
-  ApiService _api = locator<ApiService>();
-  //static String basePath = environment['websocket'];
-
-  /// To check if orderbook has loaded in orderbook viewmodel
-  /// and then use this in buysellview to display price and quantity values
-  /// in the textfields
-  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(initial: false);
-  bool get isOrderbookLoaded => _isOrderbookLoaded.value;
-
-  RxValue<double> _price = RxValue<double>(initial: 0.0);
-  double get price => _price.value;
-
-  RxValue<double> _quantity = RxValue<double>(initial: 0.0);
-  double get quantity => _quantity.value;
-
-  final client = new http.Client();
+/*----------------------------------------------------------------------
+                    set orderbook loaded status
+----------------------------------------------------------------------*/
+  void setTradingChartInterval(String v, bool isBusy) {
+    _isTradingChartModelBusy.value = isBusy;
+    _interval.value = v;
+    log.w('setTradingChartInterval $interval -- isBusy $isTradingChartModelBusy');
+  }
 
 /*----------------------------------------------------------------------
                     Get tx status
@@ -192,7 +202,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   IOWebSocketChannel getTickerDataChannel(String pair, String interval) {
     var wsStringUrl =
         configService.getKanbanBaseWSUrl() + 'ticker@' + pair + '@' + interval;
-    log.i('getTickerDataUrl $wsStringUrl');
+  //  log.i('getTickerDataUrl $wsStringUrl');
     final channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
   }
@@ -252,7 +262,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   IOWebSocketChannel getTradeListChannel(String pair) {
     try {
       var wsString = configService.getKanbanBaseWSUrl() + 'trades' + '@' + pair;
-      log.i('getTradeListUrl $wsString');
+    //  log.i('getTradeListUrl $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
     } catch (err) {
