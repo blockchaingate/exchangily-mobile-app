@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_viewmodel.dart';
+import 'package:exchangilymobileapp/shared/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,10 +43,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = 
-                                      Theme.of(context)
-                                          .textTheme
-                                          .bodyText1;
+    var theme = Theme.of(context).textTheme.bodyText1;
     // isBusy ${widget.isBusy} --
     // setState(() {
     //   holder = widget.interval;
@@ -53,78 +51,60 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     // });
 
     return ViewModelBuilder.reactive(
-     // createNewModelOnInsert: true,
+      // createNewModelOnInsert: true,
       viewModelBuilder: () => TradingChartViewModel(),
       onModelReady: (model) {
         //  model.context = context;
-        
-          model.init();
+
+        model.init();
       },
-      builder: (context, model, _) =>
-          Column(
+      builder: (context, model, _) => Column(
         children: [
-           model.isTradingChartModelBusy? Container(   padding: EdgeInsets.all(0),
-            margin: EdgeInsets.all(0),
-            height: 280,child:Center(child: CupertinoActivityIndicator())):
-          Container(
-            padding: EdgeInsets.all(0),
-            margin: EdgeInsets.all(0),
-            height: 280,
-            child: WebView(
-              initialUrl: '',
-              javascriptMode: JavascriptMode.unrestricted,
-              onWebViewCreated: (WebViewController webViewController) {
-                model.webViewController = webViewController;
-                // model.isBusy && model.isIntervalUpdated
-                //     ? _loadHtmlFromAssets(model)
-                //     :
-               
-                _loadHtmlFromAssets(model);
-              },
-            ),
-          ),
+          model.isTradingChartModelBusy
+              ? Container(
+                  padding: EdgeInsets.all(0),
+                  margin: EdgeInsets.all(0),
+                  height: 280,
+                  child: Center(child: CupertinoActivityIndicator()))
+              : Container(
+                  padding: EdgeInsets.all(0),
+                  margin: EdgeInsets.all(0),
+                  height: 280,
+                  child: WebView(
+                    initialUrl: '',
+                    javascriptMode: JavascriptMode.unrestricted,
+                    onWebViewCreated: (WebViewController webViewController) {
+                      model.webViewController = webViewController;
+                      // model.isBusy && model.isIntervalUpdated
+                      //     ? _loadHtmlFromAssets(model)
+                      //     :
+
+                      _loadHtmlFromAssets(model);
+                    },
+                  ),
+                ),
           // Text(model.tradingChartInterval),
           // Text(model.isTradingChartModelBusy.toString()),
           SizedBox(
-            height: 50,
-            child: ButtonBar(
-                layoutBehavior: ButtonBarLayoutBehavior.padded,
-                // direc
-                mainAxisSize: MainAxisSize.max,
-                alignment: MainAxisAlignment.center,
-                buttonPadding: EdgeInsets.all(4),
-                children: [
-                  FlatButton(
-                    child: Text('5m',style:model.fontTheme),
-                    onPressed: () => model.updateChartInterval('5m'),
-                  ),
-                  FlatButton(
-                    child: Text('30m',style:model.fontTheme),
-                    onPressed: () => model.updateChartInterval('30m'),
-                  ),
-                  FlatButton(
-                    child: Text('1hr',style:model.fontTheme),
-                    onPressed: () => model.updateChartInterval('60m'),
-                  ),
-                  FlatButton(
-                    child: Text('4hr',style:model.fontTheme),
-                    onPressed: () => model.updateChartInterval('4h'),
-                  ),
-                  FlatButton(
-                    child: Text('1D',style:model.fontTheme),
-                    onPressed: () => model.updateChartInterval('24h'),
-                  ),
-                  // FlatButton(
-                  //   child: Text('1W'),
-                  //   onPressed: () => model.updateChartInterval('1W'),
-                  // ),
-                  // FlatButton(
-                  //   child: Text('1M'),
-                  //   onPressed: () =>
-                  //       model.updateChartInterval('1M'),
-                  // )
-                ]),
-          ),
+              height: 50,
+              child: Center(
+                child: ListView.builder(
+                    itemCount: model.intervalMap.length,
+                    itemExtent: 65,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext context, int index) {
+                      String key = model.intervalMap.keys.elementAt(index);
+                      return FlatButton(
+                        textColor:
+                            model.intervalMap[key] == model.tradingChartInterval
+                                ? primaryColor
+                                : white,
+                        child: Text(key, style: model.fontTheme),
+                        onPressed: () =>
+                            model.updateChartInterval(model.intervalMap[key]),
+                      );
+                    }),
+              )),
         ],
       ),
     );

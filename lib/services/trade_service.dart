@@ -202,7 +202,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   IOWebSocketChannel getTickerDataChannel(String pair, String interval) {
     var wsStringUrl =
         configService.getKanbanBaseWSUrl() + 'ticker@' + pair + '@' + interval;
-  //  log.i('getTickerDataUrl $wsStringUrl');
+    log.e('getTickerDataUrl $wsStringUrl');
     final channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
   }
@@ -235,7 +235,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel getAllPriceChannel() {
     var wsStringUrl = configService.getKanbanBaseWSUrl() + 'allPrices';
-    log.i('getAllPriceChannel $wsStringUrl');
+    log.e('getAllPriceChannelUrl $wsStringUrl');
 
     IOWebSocketChannel channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
