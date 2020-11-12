@@ -19,6 +19,7 @@ class TradingChartViewModel extends ReactiveViewModel {
   String get tradingChartInterval => _tradeService.interval;
 //  String get selectedInterval => _tradingChartInterval;
   bool get isTradingChartModelBusy => _tradeService.isTradingChartModelBusy;
+  
   double intervalTextFontSize = 12;
   var fontTheme;
   get intervalMap => Constants.intervalMap;
@@ -35,8 +36,6 @@ class TradingChartViewModel extends ReactiveViewModel {
     _tradeService.setTradingChartInterval(interval, true);
     _tradingChartInterval = _tradeService.interval;
     log.i('tradingChartInterval $tradingChartInterval');
-    //  await Future.delayed(new Duration(seconds:2), () =>  isIntervalUpdated = false);
-    //      log.i('Interval $interval --- isIntervalUpdatedAfter reversing $isIntervalUpdated');
     Future.delayed(Duration(seconds: 1), () {
       _tradeService.setTradingChartInterval(_tradingChartInterval, false);
     });

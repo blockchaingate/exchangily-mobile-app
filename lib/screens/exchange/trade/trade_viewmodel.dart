@@ -61,9 +61,9 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   String pairSymbolWithSlash = '';
   String get interval => tradeService.interval;
   bool isIntervalUpdated = false;
-bool get isTradingChartModelBusy => tradeService.isTradingChartModelBusy;
+  bool get isTradingChartModelBusy => tradeService.isTradingChartModelBusy;
   WebViewController webViewController;
-
+  bool isStreamDataNull = false;
   @override
   Map<String, StreamData> get streamsMap => {
         tickerStreamKey: StreamData<dynamic>(
@@ -82,22 +82,6 @@ bool get isTradingChartModelBusy => tradeService.isTradingChartModelBusy;
     //   await getExchangeAssets();
     String holder = updateTickerName(pairPriceByRoute.symbol);
     pairSymbolWithSlash = holder;
-  }
-
-
-
-// Not in use
-  closeConnections() async {
-    setBusy(true);
-    isDisposing = true;
-    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
-  }
-
-// Change/update stream data before displaying on UI
-  @override
-  void onData(String key, data) async {
-    // orderBook = [buyOrderBookList, sellOrderBookList];
-    // cancelSingleStreamByKey(allPricesStreamKey);
     if (pairSymbolWithSlash.split('/')[1] == 'USDT' ||
         pairSymbolWithSlash.split('/')[1] == 'DUSD') {
       usdValue = dataReady('allPrices')
@@ -110,44 +94,41 @@ bool get isTradingChartModelBusy => tradeService.isTradingChartModelBusy;
     }
   }
 
+// Not in use
+  closeConnections() async {
+    setBusy(true);
+    // isDisposing = true;
+    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
+  }
+
+  @override
+  void onSubscribed(String key) {
+    log.w('$key Stream subscribed ');
+  }
+
+// Change/update stream data before displaying on UI
+  @override
+  void onData(String key, data) async {
+    log.w('On data $data');
+  }
+
 /*----------------------------------------------------------------------
           Transform stream data before notifying to view modal
 ----------------------------------------------------------------------*/
 
   @override
   dynamic transformData(String key, data) {
+    log.w('transformData data $data');
+
     try {
       /// All prices list
       if (key == tickerStreamKey) {
         var jsonDynamic = jsonDecode(data);
-       // log.i('ticker json data $jsonDynamic');
+        // log.i('ticker json data $jsonDynamic');
         currentPairPrice = Price.fromJson(jsonDynamic);
-       // log.w('TICKER PRICE ${currentPairPrice.toJson()}');
-      } // all prices ends
+        // log.w('TICKER PRICE ${currentPairPrice.toJson()}');
 
-/*----------------------------------------------------------------------
-                        Orderbook
-----------------------------------------------------------------------*/
-
-      // else if (key == orderBookStreamKey) {
-      //   var jsonDynamic = jsonDecode(data);
-      //   log.w('Orderbook $jsonDynamic');
-      //   orderbook = Orderbook.fromJson(jsonDynamic);
-      //   //  OrderList orderList = OrderList.fromJson(jsonDynamicList);
-      //   //  log.e('orderList.orders.length ${orderList.orders.length}');
-      //   //  buyOrderBookList = orderAggregation(orderList.orders);
-
-      //   // Sell orders
-      //   //  List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
-      //   // OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
-      //   //  List sellOrders = sellOrderList.orders.reversed
-      //   //      .toList(); // reverse sell orders to show the list ascending
-
-      //   //  sellOrderBookList = orderAggregation(sellOrderList.orders);
-      //   log.w(
-      //       'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
-      // }
-
+      }
 /*----------------------------------------------------------------------
                     Market trade list
 ----------------------------------------------------------------------*/
@@ -160,6 +141,10 @@ bool get isTradingChartModelBusy => tradeService.isTradingChartModelBusy;
       }
     } catch (err) {
       log.e('Catch error $err');
+      setBusy(true);
+      isStreamDataNull = true;
+      closeConnections();
+      setBusy(false);
     }
   }
 

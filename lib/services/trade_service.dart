@@ -35,7 +35,8 @@ import 'package:http/http.dart' as http;
 
 class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
-    listenToReactiveValues([_price, _quantity, _interval, _isTradingChartModelBusy]);
+    listenToReactiveValues(
+        [_price, _quantity, _interval, _isTradingChartModelBusy]);
   }
 
   final log = getLogger('TradeService');
@@ -61,8 +62,6 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(initial: false);
   bool get isTradingChartModelBusy => _isTradingChartModelBusy.value;
-
-  
 
   Stream tickerStream;
   Stream allPriceStream;
@@ -93,7 +92,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   void setTradingChartInterval(String v, bool isBusy) {
     _isTradingChartModelBusy.value = isBusy;
     _interval.value = v;
-    log.w('setTradingChartInterval $interval -- isBusy $isTradingChartModelBusy');
+    log.w(
+        'setTradingChartInterval $interval -- isBusy $isTradingChartModelBusy');
   }
 
 /*----------------------------------------------------------------------
@@ -147,7 +147,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 // store the trimmed hex value as kanban address won't change so
 // no need to convert everytime
   String trimHexString(String hexString) {
-    int length = hexString.length;
+    //  int length = hexString.length;
     String trimmedString = '0x' + hexString.substring(2, 42);
     return trimmedString;
   }
@@ -160,12 +160,14 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     List<PairDecimalConfig> pairDecimalConfigList = [];
     DecimalConfig singlePairDecimalConfig = new DecimalConfig();
     await _api.getPairDecimalConfig().then((res) {
-      pairDecimalConfigList = res;
-      for (PairDecimalConfig pair in pairDecimalConfigList) {
-        if (pair.name == pairName) {
-          singlePairDecimalConfig = DecimalConfig(
-              priceDecimal: pair.priceDecimal,
-              quantityDecimal: pair.qtyDecimal);
+      if (res != null) {
+        pairDecimalConfigList = res;
+        for (PairDecimalConfig pair in pairDecimalConfigList) {
+          if (pair.name == pairName) {
+            singlePairDecimalConfig = DecimalConfig(
+                priceDecimal: pair.priceDecimal,
+                quantityDecimal: pair.qtyDecimal);
+          }
         }
       }
     });
@@ -190,8 +192,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   Stream getTickerDataStream(String pair, {String interval = '24h'}) {
     try {
-      tickerStream = getTickerDataChannel(pair, interval).stream;
-      return tickerStream.asBroadcastStream().distinct();
+      tickerStream =
+          getTickerDataChannel(pair, interval).stream.asBroadcastStream();
+      // tickerStream.first.then((element) {
+      //   log.e('ELEMENT $element');
+      //   if (element == null) {
+      //     getTickerDataChannel(pair, interval).sink.close();
+      //   }
+      // });
+      return tickerStream.distinct();
     } catch (err) {
       log.e(
           'getTickerDataStream CATCH $err'); // Error thrown here will go to onError in them view model
@@ -262,7 +271,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   IOWebSocketChannel getTradeListChannel(String pair) {
     try {
       var wsString = configService.getKanbanBaseWSUrl() + 'trades' + '@' + pair;
-    //  log.i('getTradeListUrl $wsString');
+      //  log.i('getTradeListUrl $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
     } catch (err) {
