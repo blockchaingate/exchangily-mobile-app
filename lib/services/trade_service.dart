@@ -93,7 +93,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   void setTradingChartInterval(String v, bool isBusy) {
     _isTradingChartModelBusy.value = isBusy;
     _interval.value = v;
-    log.w('setTradingChartInterval $interval');
+    log.w('setTradingChartInterval $interval -- isBusy $isTradingChartModelBusy');
   }
 
 /*----------------------------------------------------------------------

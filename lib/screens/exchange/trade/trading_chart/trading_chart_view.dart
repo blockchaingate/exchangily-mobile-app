@@ -42,6 +42,10 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = 
+                                      Theme.of(context)
+                                          .textTheme
+                                          .bodyText1;
     // isBusy ${widget.isBusy} --
     // setState(() {
     //   holder = widget.interval;
@@ -49,17 +53,19 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     // });
 
     return ViewModelBuilder.reactive(
-      createNewModelOnInsert: true,
+     // createNewModelOnInsert: true,
       viewModelBuilder: () => TradingChartViewModel(),
       onModelReady: (model) {
         //  model.context = context;
-        print('New interval ${model.tradingChartInterval}');
-        //  model.init();
+        
+          model.init();
       },
       builder: (context, model, _) =>
-          //  widget.isBusy ? CupertinoActivityIndicator() :
           Column(
         children: [
+           model.isTradingChartModelBusy? Container(   padding: EdgeInsets.all(0),
+            margin: EdgeInsets.all(0),
+            height: 280,child:Center(child: CupertinoActivityIndicator())):
           Container(
             padding: EdgeInsets.all(0),
             margin: EdgeInsets.all(0),
@@ -72,15 +78,15 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
                 // model.isBusy && model.isIntervalUpdated
                 //     ? _loadHtmlFromAssets(model)
                 //     :
-                model.isBusy? Center(child: CupertinoActivityIndicator(),):
+               
                 _loadHtmlFromAssets(model);
               },
             ),
           ),
-          Text(model.tradingChartInterval),
-          Text(model.isTradingChartModelBusy.toString()),
+          // Text(model.tradingChartInterval),
+          // Text(model.isTradingChartModelBusy.toString()),
           SizedBox(
-            height: 100,
+            height: 50,
             child: ButtonBar(
                 layoutBehavior: ButtonBarLayoutBehavior.padded,
                 // direc
@@ -89,23 +95,23 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
                 buttonPadding: EdgeInsets.all(4),
                 children: [
                   FlatButton(
-                    child: Text('5m'),
+                    child: Text('5m',style:model.fontTheme),
                     onPressed: () => model.updateChartInterval('5m'),
                   ),
                   FlatButton(
-                    child: Text('30m'),
+                    child: Text('30m',style:model.fontTheme),
                     onPressed: () => model.updateChartInterval('30m'),
                   ),
                   FlatButton(
-                    child: Text('1hr'),
+                    child: Text('1hr',style:model.fontTheme),
                     onPressed: () => model.updateChartInterval('60m'),
                   ),
                   FlatButton(
-                    child: Text('4hr'),
+                    child: Text('4hr',style:model.fontTheme),
                     onPressed: () => model.updateChartInterval('4h'),
                   ),
                   FlatButton(
-                    child: Text('1D'),
+                    child: Text('1D',style:model.fontTheme),
                     onPressed: () => model.updateChartInterval('24h'),
                   ),
                   // FlatButton(
@@ -132,7 +138,6 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     } else if (lang == 'zh') {
       lang = 'zh-CN';
     }
-    print('INTERVAL STATEFUL ${model.tradingChartInterval}');
     var pairArray = widget.pair.split('/');
     String fileText = await rootBundle.loadString('assets/pages/index.html');
     fileText = fileText

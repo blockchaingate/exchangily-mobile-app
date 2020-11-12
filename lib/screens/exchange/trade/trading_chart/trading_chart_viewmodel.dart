@@ -3,6 +3,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:stacked/stacked.dart';
+import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TradingChartViewModel extends ReactiveViewModel {
@@ -14,8 +15,14 @@ class TradingChartViewModel extends ReactiveViewModel {
   List<ReactiveServiceMixin> get reactiveServices => [_tradeService];
 
   String get tradingChartInterval => _tradeService.interval;
-  //String tradingChartInterval = '4h';
+  String _tradingChartInterval = '';
   bool get isTradingChartModelBusy => _tradeService.isTradingChartModelBusy;
+  double intervalTextFontSize = 12;
+  var fontTheme;
+
+  init(){
+    fontTheme =TextStyle(fontSize:intervalTextFontSize);
+  }
 
   /*----------------------------------------------------------------------
                     Change chart interval
@@ -24,13 +31,13 @@ class TradingChartViewModel extends ReactiveViewModel {
     setBusy(true);
   
    _tradeService.setTradingChartInterval(value,true);
-//tradingChartInterval = _tradeService.interval;
+_tradingChartInterval = _tradeService.interval;
     log.i('tradingChartInterval ${tradingChartInterval} --');
     //  await Future.delayed(new Duration(seconds:2), () =>  isIntervalUpdated = false);
     //      log.i('Interval $interval --- isIntervalUpdatedAfter reversing $isIntervalUpdated');
-    Future.delayed(Duration(seconds: 2),(){
+    Future.delayed(Duration(seconds:1),(){
 
-    _tradeService.setTradingChartInterval(value,false);
+    _tradeService.setTradingChartInterval(_tradingChartInterval,false);
     });
     setBusy(false);
   }

@@ -150,19 +150,20 @@ class TradeView extends StatelessWidget {
                         ),
 
                         //  Below container contains trading view chart in the trade tab
-                        model.isTradingChartModelBusy
-                            ? Container(
-                                child: model.sharedService.loadingIndicator())
-                            : Container(
+                        // model.isTradingChartModelBusy
+                        //     ? Container(
+                        //         child: model.sharedService.loadingIndicator())
+                        //     :
+                             Container(
                                 child: LoadHTMLFileToWEbView(
                                   model.updateTickerName(
                                       pairPriceByRoute.symbol),
                                 ),
                               ),
                         //: CircularProgressIndicator(),
-                        Text(model.interval),
-                        Text(model.isTradingChartModelBusy.toString()),
-                        Text('above'),
+                        // Text(model.interval),
+                        // Text(model.isTradingChartModelBusy.toString()),
+                       
                         // UIHelper.verticalSpaceMedium,
                         DefaultTabController(
                           length: 4,
