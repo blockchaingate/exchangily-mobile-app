@@ -15,7 +15,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -144,7 +143,7 @@ class BuySellViewModel extends ReactiveViewModel {
   void getOrderbookLoadedStatus() {
     Timer.periodic(Duration(seconds: 1), (timer) {
       log.i('getOrderbookLoadedStatus timer started');
-      _isOrderbookLoaded = tradeService.isOrderbookLoaded;
+      _isOrderbookLoaded = tradeService.hasOrderbookLoaded;
       if (_isOrderbookLoaded) {
         setBusy(true);
         price = priceFromTradeService;

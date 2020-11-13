@@ -255,15 +255,16 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   pauseAllStreams() {
     log.e('Stream pause');
     getSubscriptionForKey(marketTradesStreamKey).pause();
-    getSubscriptionForKey(orderBookStreamKey).pause();
+    getSubscriptionForKey(tickerStreamKey).pause();
     notifyListeners();
   }
 
   resumeAllStreams() {
     log.e('Stream resume');
-
-    getSubscriptionForKey('marketTradesList').resume();
-    getSubscriptionForKey('orderBookList').resume();
+    if (getSubscriptionForKey(marketTradesStreamKey).isPaused)
+      getSubscriptionForKey(marketTradesStreamKey).resume();
+    if (getSubscriptionForKey(tickerStreamKey).isPaused)
+      getSubscriptionForKey(tickerStreamKey).resume();
     notifyListeners();
   }
 

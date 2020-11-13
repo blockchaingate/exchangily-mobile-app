@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
+import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
@@ -15,6 +16,10 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
   TradeService tradeService = locator<TradeService>();
   Orderbook orderbook;
   DecimalConfig decimalConfig = new DecimalConfig();
+
+
+
+  //final GlobalKey<AnimatedListState> orderbookAnimatedListKey = GlobalKey<AnimatedListState>();
 
   @override
   Stream get stream => tradeService.getOrderBookStreamByTickerName(tickerName);

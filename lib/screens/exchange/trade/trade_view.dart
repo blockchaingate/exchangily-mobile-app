@@ -333,6 +333,7 @@ class TradeView extends StatelessWidget {
                               onPressed: () {
                                 if (model.currentPairPrice != null &&
                                     !model.isBusy)
+                                    
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -342,6 +343,7 @@ class TradeView extends StatelessWidget {
                                                 model.pairSymbolWithSlash,
                                             bidOrAsk: true)),
                                   );
+                                  model.pauseAllStreams();
                               },
                               child: Text(AppLocalizations.of(context).buy,
                                   style: TextStyle(fontSize: 13, color: white)),
