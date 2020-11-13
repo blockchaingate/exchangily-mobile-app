@@ -622,10 +622,13 @@ class ApiService {
     log.e('getPairDecimalConfig $url');
     try {
       var response = await client.get(url);
-      var jsonList = jsonDecode(response.body) as List;
-      //log.w(' getPairDecimalConfig $jsonList');
-      PairDecimalConfigList pairList = PairDecimalConfigList.fromJson(jsonList);
-      return pairList.pairList;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var jsonList = jsonDecode(response.body) as List;
+        //log.w(' getPairDecimalConfig $jsonList');
+        PairDecimalConfigList pairList =
+            PairDecimalConfigList.fromJson(jsonList);
+        return pairList.pairList;
+      }
     } catch (err) {
       log.e('In getPairDecimalConfig catch $err');
       return null;

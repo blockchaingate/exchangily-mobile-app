@@ -3,7 +3,6 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,7 @@ class OrderBookView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<OrderbookViewModel>.reactive(
-      disposeViewModel: false,
+      disposeViewModel: true,
       fireOnModelReadyOnce: true,
 
       // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap

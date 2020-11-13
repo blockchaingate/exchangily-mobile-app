@@ -68,12 +68,3 @@ final String getOrdersPagedByTickerNameRoute = 'getordersbytickernamepaged/';
 /// https://kanbantest.fabcoinapi.com/exchangily/getBalance/
 /// 0xb754f9c8b706c59646a4e97601a0ad81067e1cf9/HOT
 final String getSingleCoinExchangeBalanceRoute = 'exchangily/getBalance/';
-
-/*----------------------------------------------------------------------
-                        Campaign
-----------------------------------------------------------------------*/
-// final String testUsdtWalletAddress =
-//     '0x7bfbfaf1d3f81827e1642114c7905de413d83321';
-
-// final String prodUsdtWalletAddress =
-//     '0x4e93c47b42d09f61a31f798877329890791077b2';

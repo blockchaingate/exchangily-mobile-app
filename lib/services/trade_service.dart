@@ -35,15 +35,33 @@ import 'package:http/http.dart' as http;
 
 class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
-    listenToReactiveValues([_price, _quantity]);
+    listenToReactiveValues(
+        [_price, _quantity, _interval, _isTradingChartModelBusy]);
   }
 
+  final log = getLogger('TradeService');
+  ApiService _api = locator<ApiService>();
   ConfigService configService = locator<ConfigService>();
+  final client = new http.Client();
+  //static String basePath = environment['websocket'];
 
-// final String allPricesWSUrl = kanbanBaseWSUrl + 'allPrices';
-// final String tradesWSUrl = kanbanBaseWSUrl + 'trades@';
-// final String ordersWSUrl = kanbanBaseWSUrl + 'orders@';
-// final String tickerWSUrl = kanbanBaseWSUrl + 'ticker@';
+  /// To check if orderbook has loaded in orderbook viewmodel
+  /// and then use this in buysellview to display price and quantity values
+  /// in the textfields
+  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(initial: false);
+  bool get isOrderbookLoaded => _isOrderbookLoaded.value;
+
+  RxValue<double> _price = RxValue<double>(initial: 0.0);
+  double get price => _price.value;
+
+  RxValue<double> _quantity = RxValue<double>(initial: 0.0);
+  double get quantity => _quantity.value;
+
+  RxValue<String> _interval = RxValue<String>(initial: '30m');
+  String get interval => _interval.value;
+
+  RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(initial: false);
+  bool get isTradingChartModelBusy => _isTradingChartModelBusy.value;
 
   Stream tickerStream;
   Stream allPriceStream;
@@ -68,23 +86,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     //   // cancel stream subscription
   }
 
-  final log = getLogger('TradeService');
-  ApiService _api = locator<ApiService>();
-  //static String basePath = environment['websocket'];
-
-  /// To check if orderbook has loaded in orderbook viewmodel
-  /// and then use this in buysellview to display price and quantity values
-  /// in the textfields
-  RxValue<bool> _isOrderbookLoaded = RxValue<bool>(initial: false);
-  bool get isOrderbookLoaded => _isOrderbookLoaded.value;
-
-  RxValue<double> _price = RxValue<double>(initial: 0.0);
-  double get price => _price.value;
-
-  RxValue<double> _quantity = RxValue<double>(initial: 0.0);
-  double get quantity => _quantity.value;
-
-  final client = new http.Client();
+/*----------------------------------------------------------------------
+                    set orderbook loaded status
+----------------------------------------------------------------------*/
+  void setTradingChartInterval(String v, bool isBusy) {
+    _isTradingChartModelBusy.value = isBusy;
+    _interval.value = v;
+    log.w(
+        'setTradingChartInterval $interval -- isBusy $isTradingChartModelBusy');
+  }
 
 /*----------------------------------------------------------------------
                     Get tx status
@@ -137,7 +147,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 // store the trimmed hex value as kanban address won't change so
 // no need to convert everytime
   String trimHexString(String hexString) {
-    int length = hexString.length;
+    //  int length = hexString.length;
     String trimmedString = '0x' + hexString.substring(2, 42);
     return trimmedString;
   }
@@ -150,12 +160,14 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     List<PairDecimalConfig> pairDecimalConfigList = [];
     DecimalConfig singlePairDecimalConfig = new DecimalConfig();
     await _api.getPairDecimalConfig().then((res) {
-      pairDecimalConfigList = res;
-      for (PairDecimalConfig pair in pairDecimalConfigList) {
-        if (pair.name == pairName) {
-          singlePairDecimalConfig = DecimalConfig(
-              priceDecimal: pair.priceDecimal,
-              quantityDecimal: pair.qtyDecimal);
+      if (res != null) {
+        pairDecimalConfigList = res;
+        for (PairDecimalConfig pair in pairDecimalConfigList) {
+          if (pair.name == pairName) {
+            singlePairDecimalConfig = DecimalConfig(
+                priceDecimal: pair.priceDecimal,
+                quantityDecimal: pair.qtyDecimal);
+          }
         }
       }
     });
@@ -180,8 +192,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   Stream getTickerDataStream(String pair, {String interval = '24h'}) {
     try {
-      tickerStream = getTickerDataChannel(pair, interval).stream;
-      return tickerStream.asBroadcastStream().distinct();
+      tickerStream =
+          getTickerDataChannel(pair, interval).stream.asBroadcastStream();
+      // tickerStream.first.then((element) {
+      //   log.e('ELEMENT $element');
+      //   if (element == null) {
+      //     getTickerDataChannel(pair, interval).sink.close();
+      //   }
+      // });
+      return tickerStream.distinct();
     } catch (err) {
       log.e(
           'getTickerDataStream CATCH $err'); // Error thrown here will go to onError in them view model
@@ -192,7 +211,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   IOWebSocketChannel getTickerDataChannel(String pair, String interval) {
     var wsStringUrl =
         configService.getKanbanBaseWSUrl() + 'ticker@' + pair + '@' + interval;
-    log.i('getTickerDataUrl $wsStringUrl');
+    log.e('getTickerDataUrl $wsStringUrl');
     final channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
   }
@@ -225,7 +244,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel getAllPriceChannel() {
     var wsStringUrl = configService.getKanbanBaseWSUrl() + 'allPrices';
-    log.i('getAllPriceChannel $wsStringUrl');
+    log.e('getAllPriceChannelUrl $wsStringUrl');
 
     IOWebSocketChannel channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
@@ -252,7 +271,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   IOWebSocketChannel getTradeListChannel(String pair) {
     try {
       var wsString = configService.getKanbanBaseWSUrl() + 'trades' + '@' + pair;
-      log.i('getTradeListUrl $wsString');
+      //  log.i('getTradeListUrl $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
     } catch (err) {

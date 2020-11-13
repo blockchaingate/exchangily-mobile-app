@@ -278,7 +278,7 @@ class WalletDashboardViewModel extends BaseState {
 
   onSingleCoinCardClick(index) {
     FocusScope.of(context).requestFocus(FocusNode());
-    navigationService.navigateUsingpopAndPushedNamed('/walletFeatures',
+    navigationService.navigateTo('/walletFeatures',
         arguments: walletInfo[index]);
     searchCoinTextController.clear();
     resetWalletInfoObject();

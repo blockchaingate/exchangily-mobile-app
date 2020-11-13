@@ -48,7 +48,7 @@ class Price {
   factory Price.fromJson(Map<String, dynamic> json) {
     return Price(
         symbol: json['s'].toString(),
-        price: json['p'].toDouble(),
+        price: json['p'].toDouble() ?? 0.0,
         high: json['h'].toDouble(),
         low: json['l'].toDouble(),
         open: json['o'].toDouble(),

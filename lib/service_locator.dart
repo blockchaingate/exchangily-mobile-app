@@ -33,7 +33,8 @@ import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_screen_state.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
@@ -125,6 +126,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => BuySellViewModel());
   locator.registerFactory(() => MyExchangeAssetsViewModel());
   locator.registerFactory(() => MarketPairsTabViewState());
+  locator.registerFactory(() => TradingChartViewModel());
 
   // Bindpay
   locator.registerFactory(() => BindpayViewmodel());

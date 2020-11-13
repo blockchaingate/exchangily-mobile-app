@@ -11,19 +11,14 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_screen_state.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
+
+import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orders_book_view.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
-import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 

@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -15,6 +16,7 @@ import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   final Price pairPriceByRoute;
@@ -31,7 +33,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   ApiService apiService = locator<ApiService>();
   TradeService tradeService = locator<TradeService>();
   WalletService walletService = locator<WalletService>();
-
+  ConfigService configService = locator<ConfigService>();
   List<PairDecimalConfig> pairDecimalConfigList = [];
 
   //List<Order> buyOrderBookList = [];
@@ -57,7 +59,11 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   bool isDisposing = false;
   double usdValue = 0.0;
   String pairSymbolWithSlash = '';
-
+  String get interval => tradeService.interval;
+  bool isIntervalUpdated = false;
+  bool get isTradingChartModelBusy => tradeService.isTradingChartModelBusy;
+  WebViewController webViewController;
+  bool isStreamDataNull = false;
   @override
   Map<String, StreamData> get streamsMap => {
         tickerStreamKey: StreamData<dynamic>(
@@ -76,20 +82,6 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     //   await getExchangeAssets();
     String holder = updateTickerName(pairPriceByRoute.symbol);
     pairSymbolWithSlash = holder;
-  }
-
-// Not in use
-  closeConnections() async {
-    setBusy(true);
-    isDisposing = true;
-    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
-  }
-
-// Change/update stream data before displaying on UI
-  @override
-  void onData(String key, data) async {
-    // orderBook = [buyOrderBookList, sellOrderBookList];
-    // cancelSingleStreamByKey(allPricesStreamKey);
     if (pairSymbolWithSlash.split('/')[1] == 'USDT' ||
         pairSymbolWithSlash.split('/')[1] == 'DUSD') {
       usdValue = dataReady('allPrices')
@@ -102,47 +94,41 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     }
   }
 
+// Not in use
+  closeConnections() async {
+    setBusy(true);
+    // isDisposing = true;
+    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
+  }
+
+  @override
+  void onSubscribed(String key) {
+    log.w('$key Stream subscribed ');
+  }
+
+// Change/update stream data before displaying on UI
+  @override
+  void onData(String key, data) async {
+    log.w('On data $data');
+  }
+
 /*----------------------------------------------------------------------
           Transform stream data before notifying to view modal
 ----------------------------------------------------------------------*/
 
   @override
   dynamic transformData(String key, data) {
+    log.w('transformData data $data');
+
     try {
       /// All prices list
       if (key == tickerStreamKey) {
         var jsonDynamic = jsonDecode(data);
+        // log.i('ticker json data $jsonDynamic');
         currentPairPrice = Price.fromJson(jsonDynamic);
-        log.w('TICKER PRICE ${currentPairPrice.toJson()}');
-        // Map<String, dynamic> res =
-        //     tradeService.marketPairPriceGroups(pairPriceList);
-        // marketPairsTabBar = res['marketPairsGroupList'];
-        // notifyListeners();
-      } // all prices ends
+        // log.w('TICKER PRICE ${currentPairPrice.toJson()}');
 
-/*----------------------------------------------------------------------
-                        Orderbook
-----------------------------------------------------------------------*/
-
-      // else if (key == orderBookStreamKey) {
-      //   var jsonDynamic = jsonDecode(data);
-      //   log.w('Orderbook $jsonDynamic');
-      //   orderbook = Orderbook.fromJson(jsonDynamic);
-      //   //  OrderList orderList = OrderList.fromJson(jsonDynamicList);
-      //   //  log.e('orderList.orders.length ${orderList.orders.length}');
-      //   //  buyOrderBookList = orderAggregation(orderList.orders);
-
-      //   // Sell orders
-      //   //  List<dynamic> jsonDynamicSellList = jsonDecode(data)['sell'] as List;
-      //   // OrderList sellOrderList = OrderList.fromJson(jsonDynamicSellList);
-      //   //  List sellOrders = sellOrderList.orders.reversed
-      //   //      .toList(); // reverse sell orders to show the list ascending
-
-      //   //  sellOrderBookList = orderAggregation(sellOrderList.orders);
-      //   log.w(
-      //       'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
-      // }
-
+      }
 /*----------------------------------------------------------------------
                     Market trade list
 ----------------------------------------------------------------------*/
@@ -155,6 +141,10 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
       }
     } catch (err) {
       log.e('Catch error $err');
+      setBusy(true);
+      isStreamDataNull = true;
+      closeConnections();
+      setBusy(false);
     }
   }
 

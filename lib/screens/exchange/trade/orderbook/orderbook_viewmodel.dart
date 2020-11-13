@@ -32,6 +32,7 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
   void onData(data) {
     fillTextFields(orderbook.price, orderbook.quantity);
     log.w('orderbook data ready $dataReady');
+    if(dataReady)
     tradeService.setOrderbookLoadedStatus(true);
   }
 
