@@ -15,11 +15,11 @@ class TradingChartViewModel extends ReactiveViewModel {
   @override
   List<ReactiveServiceMixin> get reactiveServices => [_tradeService];
 
-  String _tradingChartInterval = '30m';
+  String _tradingChartInterval = '24h';
   String get tradingChartInterval => _tradeService.interval;
 //  String get selectedInterval => _tradingChartInterval;
   bool get isTradingChartModelBusy => _tradeService.isTradingChartModelBusy;
-  
+
   double intervalTextFontSize = 12;
   var fontTheme;
   get intervalMap => Constants.intervalMap;

@@ -62,6 +62,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
         children: [
           model.isTradingChartModelBusy
               ? Container(
+                  color: white,
                   padding: EdgeInsets.all(0),
                   margin: EdgeInsets.all(0),
                   height: 280,
@@ -95,6 +96,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
                     itemBuilder: (BuildContext context, int index) {
                       String key = model.intervalMap.keys.elementAt(index);
                       return FlatButton(
+                        padding: EdgeInsets.symmetric(horizontal: 0),
                         textColor:
                             model.intervalMap[key] == model.tradingChartInterval
                                 ? primaryColor

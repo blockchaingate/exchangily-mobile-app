@@ -57,7 +57,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   RxValue<double> _quantity = RxValue<double>(initial: 0.0);
   double get quantity => _quantity.value;
 
-  RxValue<String> _interval = RxValue<String>(initial: '30m');
+  RxValue<String> _interval = RxValue<String>(initial: '24h');
   String get interval => _interval.value;
 
   RxValue<bool> _isTradingChartModelBusy = RxValue<bool>(initial: false);
