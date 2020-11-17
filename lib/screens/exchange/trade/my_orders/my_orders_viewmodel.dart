@@ -103,7 +103,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(false);
   }
 /*-------------------------------------------------------------------------------------
-                        Pull to refresh
+                        Pull Down to refresh
 -------------------------------------------------------------------------------------*/
 
   void onRefresh() async {
@@ -114,6 +114,10 @@ class MyOrdersViewModel extends ReactiveViewModel {
     refreshController.refreshCompleted();
     setBusy(false);
   }
+
+/*-------------------------------------------------------------------------------------
+                        Pull Up to load more
+-------------------------------------------------------------------------------------*/
 
   void onLoading() async {
     setBusy(true);
@@ -376,11 +380,11 @@ class MyOrdersViewModel extends ReactiveViewModel {
           }
         });
         setBusy(false);
-        // showSimpleNotification(
-        //   Center(
-        //       child: Text(AppLocalizations.of(context).orderCancelled,
-        //           style: Theme.of(context).textTheme.headline6)),
-        // );
+        showSimpleNotification(
+          Center(
+              child: Text(AppLocalizations.of(context).orderCancelled,
+                  style: Theme.of(context).textTheme.headline6)),
+        );
         // Future.delayed(new Duration(seconds: 3), () async {
         //   _orderService.swapSources();
         // });

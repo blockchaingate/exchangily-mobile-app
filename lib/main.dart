@@ -64,6 +64,7 @@ class MyApp extends StatelessWidget {
             child: MaterialApp(
               // locale: DevicePreview.of(context).locale,
               navigatorKey: locator<NavigationService>().navigatorKey,
+              //or locator<DialogService>().navigatorKey,
 
               builder: (context, widget) => Navigator(
                   onGenerateRoute: (settings) => MaterialPageRoute(
