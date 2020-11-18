@@ -11,6 +11,7 @@ import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class CampaignInstructionsScreenState extends BaseState {
   final log = getLogger('CampaignInstructionsScreenState');
@@ -84,11 +85,10 @@ class CampaignInstructionsScreenState extends BaseState {
   }
 
   navigateTo(String route, {String errorMessage = ''}) {
-    navigationService.navigateUsingpopAndPushedNamed(route,
-        arguments: errorMessage);
+    navigationService.pushNamedAndRemoveUntil(route, arguments: errorMessage);
   }
 
   onBackButtonPressed() async {
-    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+    navigationService.pushNamedAndRemoveUntil('/dashboard');
   }
 }

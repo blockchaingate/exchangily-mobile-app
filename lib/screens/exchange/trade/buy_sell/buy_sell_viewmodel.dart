@@ -42,6 +42,7 @@ import 'package:keccak/keccak.dart';
 import 'package:random_string/random_string.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:web_socket_channel/io.dart';
 
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
@@ -143,7 +144,7 @@ class BuySellViewModel extends ReactiveViewModel {
   void getOrderbookLoadedStatus() {
     Timer.periodic(Duration(seconds: 1), (timer) {
       log.i('getOrderbookLoadedStatus timer started');
-      _isOrderbookLoaded = tradeService.hasOrderbookLoaded;
+      _isOrderbookLoaded = tradeService.isOrderbookLoaded;
       if (_isOrderbookLoaded) {
         setBusy(true);
         price = priceFromTradeService;
@@ -497,7 +498,7 @@ class BuySellViewModel extends ReactiveViewModel {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.returnedText;
+      String mnemonic = res.responseData.toString();
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var txHex = await txHexforPlaceOrder(seed);
@@ -548,7 +549,7 @@ class BuySellViewModel extends ReactiveViewModel {
             context);
       }
     } else {
-      if (res.returnedText != 'Closed') {
+      if (res.responseData.toString() != 'Closed') {
         showNotification(context);
         setBusy(false);
       }

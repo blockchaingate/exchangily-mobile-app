@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import '../../localizations.dart';
 import '../../logger.dart';
@@ -50,9 +51,7 @@ class LanguageScreenState extends BaseState {
   // bool isDeleting = false;
   ScrollController scrollController;
 
-  init() {
-  }
-
+  init() {}
 
   // Change wallet language
 
@@ -73,5 +72,4 @@ class LanguageScreenState extends BaseState {
     }
     setState(ViewState.Idle);
   }
-
 }

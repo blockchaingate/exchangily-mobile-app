@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../shared/globals.dart' as globals;
 
 class BottomNavBar extends StatelessWidget {
@@ -86,17 +87,17 @@ class BottomNavBar extends StatelessWidget {
         switch (idx) {
           case 0:
             if (currentRouteName != 'WalletDashboardScreen')
-              navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+              navigationService.pushNamedAndRemoveUntil('/dashboard');
             break;
 
           case 1:
             if (currentRouteName != 'MarketsView')
-              navigationService.navigateUsingpopAndPushedNamed('/marketsView',
+              navigationService.pushNamedAndRemoveUntil('/marketsView',
                   arguments: false);
             break;
           case 2:
             if (currentRouteName != 'BindpayView')
-              navigationService.navigateUsingPushReplacementNamed('/bindpay');
+              navigationService.pushNamedAndRemoveUntil('/bindpay');
             break;
           // case 2:
           // if (currentRouteName != 'OtcScreen')
@@ -105,11 +106,11 @@ class BottomNavBar extends StatelessWidget {
           case 3:
             if (currentRouteName != 'CampaignInstructionScreen')
               navigationService
-                  .navigateUsingPushReplacementNamed('/campaignInstructions');
+                  .pushNamedAndRemoveUntil('/campaignInstructions');
             break;
           case 4:
             if (currentRouteName != 'SettingsScreen')
-              navigationService.navigateUsingpopAndPushedNamed('/settings');
+              navigationService.pushNamedAndRemoveUntil('/settings');
             else if (ModalRoute.of(context).settings.name == 'SettingsScreen')
               return null;
             break;

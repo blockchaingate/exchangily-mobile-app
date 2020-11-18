@@ -27,6 +27,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignPaymentScreenState extends BaseState {
@@ -92,7 +93,7 @@ class CampaignPaymentScreenState extends BaseState {
 ----------------------------------------------------------------------*/
   initState() async {
     var gasPriceReal = await walletService.getEthGasPrice();
-    if(gasPrice < gasPriceReal) {
+    if (gasPrice < gasPriceReal) {
       gasPrice = gasPriceReal;
     }
     setBusy(true);
@@ -156,7 +157,7 @@ class CampaignPaymentScreenState extends BaseState {
         buttonTitle: AppLocalizations.of(context).confirm);
     if (dialogResponse.confirmed) {
       isConfirming = true;
-      String mnemonic = dialogResponse.returnedText;
+      String mnemonic = dialogResponse.responseData.toString();
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       if (tickerName == 'USDT') {
@@ -233,7 +234,7 @@ class CampaignPaymentScreenState extends BaseState {
         setBusy(false);
         isConfirming = false;
       });
-    } else if (dialogResponse.returnedText != 'Closed') {
+    } else if (dialogResponse.responseData.toString() != 'Closed') {
       setBusy(false);
       setErrorMessage(
           AppLocalizations.of(context).pleaseProvideTheCorrectPassword);

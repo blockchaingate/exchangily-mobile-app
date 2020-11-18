@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class ChooseWalletLanguageScreenState extends BaseState {
   final log = getLogger('ChooseWalletLanguageScreenState');

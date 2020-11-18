@@ -13,6 +13,7 @@ import 'package:exchangilymobileapp/models/campaign/user_data.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../shared/globals.dart' as globals;
 
 class CampaignLoginScreenState extends BaseState {
@@ -51,8 +52,7 @@ class CampaignLoginScreenState extends BaseState {
               .then((res) {
             if (res != null) {
               userData = res;
-              navigationService.navigateUsingpopAndPushedNamed(
-                  '/campaignDashboard',
+              navigationService.pushNamedAndRemoveUntil('/campaignDashboard',
                   arguments: userData);
               setBusy(false);
               setErrorMessage('');

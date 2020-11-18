@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -124,7 +125,7 @@ class _RedepositState extends State<Redeposit> {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.returnedText;
+      String mnemonic = res.responseData.toString();
       Uint8List seed = walletService.generateSeed(mnemonic);
       var keyPairKanban = getExgKeyPair(seed);
       var exgAddress = keyPairKanban['address'];
@@ -215,7 +216,7 @@ class _RedepositState extends State<Redeposit> {
             context);
       }
     } else {
-      if (res.returnedText != 'Closed') {
+      if (res.responseData.toString() != 'Closed') {
         showNotification(context);
       }
     }

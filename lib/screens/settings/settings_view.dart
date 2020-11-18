@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -137,6 +138,31 @@ class SettingsContainer extends StatelessWidget {
                 await model.deleteWallet();
               },
             ),
+
+            Card(
+              elevation: 4,
+              child: Container(
+                  alignment: Alignment.centerLeft,
+                  color: globals.walletCardColor,
+                  padding: EdgeInsets.all(20),
+                  // height: 100,
+                  child: Row(
+                    children: [
+                      InkWell(
+                          onTap: () => model.showBasicDialog(),
+                          child: Text('Simple dialog')),
+                      UIHelper.horizontalSpaceSmall,
+                      InkWell(
+                          onTap: () => model.showConfirmationDialog(),
+                          child: Text('Confirmation dialog')),
+                      UIHelper.horizontalSpaceSmall,
+                      InkWell(
+                          onTap: () => model.showCustomDialog(),
+                          child: Text('Custom dialog')),
+                    ],
+                  )),
+            ),
+            Text(model.confirmationRes.toString()),
             InkWell(
               splashColor: globals.primaryColor,
               child: Card(

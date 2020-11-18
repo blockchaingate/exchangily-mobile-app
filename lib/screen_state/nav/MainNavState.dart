@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../logger.dart';
 import '../../service_locator.dart';
 import '../base_state.dart';
@@ -14,7 +15,6 @@ class MainNavState extends BaseState {
   bool isVisible = false;
   String mnemonic = '';
   final log = getLogger('LanguageScreenState');
-  DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
@@ -33,9 +33,7 @@ class MainNavState extends BaseState {
   // bool isDeleting = false;
   ScrollController scrollController;
 
-  init() {
-  }
-
+  init() {}
 
   // Change wallet language
 

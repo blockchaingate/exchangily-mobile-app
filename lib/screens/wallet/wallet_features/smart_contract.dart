@@ -25,6 +25,8 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'dart:typed_data';
 
+import 'package:stacked_services/stacked_services.dart';
+
 class SmartContract extends StatefulWidget {
   const SmartContract({Key key}) : super(key: key);
 
@@ -291,8 +293,8 @@ class _SmartContractState extends State<SmartContract> {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote);
     if (res.confirmed) {
       log.w('Pass matched');
-      log.w('${res.returnedText}');
-      String mnemonic = res.returnedText;
+      log.w('${res.responseData.toString()}');
+      String mnemonic = res.responseData.toString();
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var contractInfo = await walletService.getFabSmartContract(
@@ -316,7 +318,7 @@ class _SmartContractState extends State<SmartContract> {
         errMsg = res['errMsg'];
       }
     } else {
-      if (res.returnedText != 'Closed') {
+      if (res.responseData.toString() != 'Closed') {
         log.w('Wrong password');
         showNotification(context);
       }

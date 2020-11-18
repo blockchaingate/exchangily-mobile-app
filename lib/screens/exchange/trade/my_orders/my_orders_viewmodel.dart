@@ -29,6 +29,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
+import 'package:stacked_services/stacked_services.dart';
 
 class MyOrdersViewModel extends ReactiveViewModel {
   @override
@@ -348,7 +349,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.returnedText;
+      String mnemonic = res.responseData.toString();
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var txHex = await txHexforCancelOrder(seed, orderHash);
@@ -380,11 +381,11 @@ class MyOrdersViewModel extends ReactiveViewModel {
           }
         });
         setBusy(false);
-        showSimpleNotification(
-          Center(
-              child: Text(AppLocalizations.of(context).orderCancelled,
-                  style: Theme.of(context).textTheme.headline6)),
-        );
+        // showSimpleNotification(
+        //   Center(
+        //       child: Text(AppLocalizations.of(context).orderCancelled,
+        //           style: Theme.of(context).textTheme.headline6)),
+        // );
         // Future.delayed(new Duration(seconds: 3), () async {
         //   _orderService.swapSources();
         // });
@@ -416,7 +417,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
       //   duration: Duration(seconds: 3),
       // ).show(context);
     } else {
-      if (res.returnedText != 'Closed') {
+      if (res.responseData.toString() != 'Closed') {
         // showNotification(context);
         setBusy(false);
       }

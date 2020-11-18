@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/enums/dialog_type.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/alert/alert_request.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
@@ -19,6 +20,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
 
@@ -38,7 +40,8 @@ class _DialogManagerState extends State<DialogManager> {
   @override
   void initState() {
     super.initState();
-    _dialogService.registerDialogListener(_showdDialog);
+    //  _dialogService.
+    // registerDialogListener(_showdDialog);
     controller.text = '';
   }
 
@@ -63,28 +66,24 @@ class _DialogManagerState extends State<DialogManager> {
         desc: request.description,
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
-          _dialogService.dialogComplete(
-              AlertResponse(returnedText: 'Closed', confirmed: false));
+          _dialogService.completeDialog(
+              DialogResponse(responseData: 'Closed', confirmed: false));
         },
-        content: Column(
-          children: <Widget>[
-            TextField(
-              style: TextStyle(color: globals.white),
-              controller: controller,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelStyle: Theme.of(context)
-                    .textTheme
-                    .bodyText1
-                    .copyWith(color: globals.white),
-                icon: Icon(
-                  Icons.security,
-                  color: globals.primaryColor,
-                ),
-                labelText: AppLocalizations.of(context).typeYourWalletPassword,
-              ),
+        content: TextField(
+          style: TextStyle(color: globals.white),
+          controller: controller,
+          obscureText: true,
+          decoration: InputDecoration(
+            labelStyle: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(color: globals.white),
+            icon: Icon(
+              Icons.security,
+              color: globals.primaryColor,
             ),
-          ],
+            labelText: AppLocalizations.of(context).typeYourWalletPassword,
+          ),
         ),
         buttons: [
           DialogButton(
@@ -93,13 +92,13 @@ class _DialogManagerState extends State<DialogManager> {
               FocusScope.of(context).requestFocus(FocusNode());
               _walletService.readEncryptedData(controller.text).then((data) {
                 if (data != '' && data != null) {
-                  _dialogService.dialogComplete(
-                      AlertResponse(returnedText: data, confirmed: true));
+                  _dialogService.completeDialog(
+                      DialogResponse(responseData: data, confirmed: true));
                   controller.text = '';
                   Navigator.of(context).pop();
                 } else {
                   _dialogService
-                      .dialogComplete(AlertResponse(confirmed: false));
+                      .completeDialog(DialogResponse(confirmed: false));
                   controller.text = '';
                   Navigator.of(context).pop();
                 }

@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../../localizations.dart';
 import '../../../service_locator.dart';
 
@@ -33,7 +34,6 @@ class WalletSetupScreenState extends BaseState {
   String errorMessage = '';
 
   Future checkExistingWallet() async {
-    NavigationService navigationService = locator<NavigationService>();
     setState(ViewState.Busy);
     await dataBaseService.getAll().then((res) async {
       if (res == null || res == []) {

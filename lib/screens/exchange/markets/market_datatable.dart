@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class MarketDataTable extends StatefulWidget {
   final List<Price> pairList;

@@ -10,6 +10,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class CampaignRegisterAccountScreenState extends BaseState {
   final log = getLogger('RegisterScreenState');

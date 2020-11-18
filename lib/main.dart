@@ -15,6 +15,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/Managers/life_cycle_manager.dart';
 import 'package:exchangilymobileapp/routes.dart';
+import 'package:exchangilymobileapp/screens/share/setup_dialog_ui.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/connectivity_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:logger/logger.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
+import 'package:stacked_services/stacked_services.dart';
 import './shared/globals.dart' as globals;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'localizations.dart';
@@ -34,6 +36,7 @@ Future<void> main() async {
   debugPaintSizeEnabled = false;
   try {
     await serviceLocator();
+    //  setupDialogUi();
     Logger.level = Level.info;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
@@ -63,14 +66,17 @@ class MyApp extends StatelessWidget {
           child: Phoenix(
             child: MaterialApp(
               // locale: DevicePreview.of(context).locale,
-              navigatorKey: locator<NavigationService>().navigatorKey,
-              //or locator<DialogService>().navigatorKey,
+              navigatorKey: // locator<NavigationService>().navigatorKey,
+                  locator<DialogService>().navigatorKey,
 
               builder: (context, widget) => Navigator(
                   onGenerateRoute: (settings) => MaterialPageRoute(
-                      builder: (context) => DialogManager(
-                            child: widget,
-                          ))),
+                        builder: (context) =>
+                            //   DialogManager(
+                            //        child:
+                            widget,
+                        //    )
+                      )),
               localizationsDelegates: [
                 AppLocalizationsDelegate(),
                 GlobalMaterialLocalizations.delegate,
@@ -132,7 +138,7 @@ class MyApp extends StatelessWidget {
                         fontWeight: FontWeight.w300),
                     bodyText1: TextStyle(
                         fontSize: 13,
-                        color: globals.white,
+                        color: globals.black,
                         fontWeight: FontWeight.w300),
                     bodyText2: TextStyle(fontSize: 13, color: globals.red),
                     headline6: TextStyle(

@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../../logger.dart';
 import '../../../shared/globals.dart' as globals;
 
@@ -88,7 +89,7 @@ class MoveToWalletScreenState extends BaseState {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.returnedText;
+      String mnemonic = res.responseData.toString();
       Uint8List seed = walletService.generateSeed(mnemonic);
       var tokenType = walletInfo.tokenType;
       var coinName = walletInfo.tickerName;
@@ -150,7 +151,7 @@ class MoveToWalletScreenState extends BaseState {
         print('Withdraw catch $err');
       });
     } else {
-      if (res.returnedText != 'Closed') {
+      if (res.responseData.toString() != 'Closed') {
         showNotification(context);
       }
     }

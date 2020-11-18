@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -42,13 +43,14 @@ class AddGas extends StatelessWidget {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.returnedText;
+      String mnemonic = res.responseData.toString();
+      // .returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
       var ret = await walletService.addGasDo(seed, amount);
 
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
       String errorMsg = ret["errMsg"];
-    
+
       String formattedErrorMsg = firstCharToUppercase(errorMsg);
 
       myController.text = '';
@@ -61,7 +63,7 @@ class AddGas extends StatelessWidget {
           isCopyTxId: ret["errMsg"] == '' ? true : false,
           path: (ret["errMsg"] == '') ? 'dashboard' : '');
     } else {
-      if (res.returnedText != 'Closed') {
+      if (res.responseData.toString() != 'Closed') {
         showNotification(context);
       }
     }

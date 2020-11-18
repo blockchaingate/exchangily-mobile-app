@@ -31,14 +31,14 @@ class LanguageScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline3),
             backgroundColor: globals.secondaryColor,
             leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                onPressed: () {
-                  // model.pauseAllStreams();
-                  // _scaffoldKey.currentState.openDrawer();
-                  // model.navigationService.goBack();
-                  model.navigationService.goBack();
-                },
-              ),
+              icon: Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                // model.pauseAllStreams();
+                // _scaffoldKey.currentState.openDrawer();
+                // model.navigationService.goBack();
+                model.navigationService.back();
+              },
+            ),
           ),
           body: Container(
             padding: EdgeInsets.all(10),

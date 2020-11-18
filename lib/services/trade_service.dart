@@ -49,7 +49,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   /// and then use this in buysellview to display price and quantity values
   /// in the textfields
   RxValue<bool> _isOrderbookLoaded = RxValue<bool>(initial: false);
-  bool get hasOrderbookLoaded => _isOrderbookLoaded.value;
+  bool get isOrderbookLoaded => _isOrderbookLoaded.value;
 
   RxValue<double> _price = RxValue<double>(initial: 0.0);
   double get price => _price.value;
@@ -122,7 +122,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 ----------------------------------------------------------------------*/
   void setOrderbookLoadedStatus(bool v) {
     _isOrderbookLoaded.value = v;
-    log.w('setOrderbookLoadedStatus $hasOrderbookLoaded');
+    log.w('setOrderbookLoadedStatus $isOrderbookLoaded');
   }
 
 /*----------------------------------------------------------------------

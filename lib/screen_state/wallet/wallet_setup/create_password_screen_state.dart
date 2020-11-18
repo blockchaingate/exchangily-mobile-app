@@ -23,6 +23,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class CreatePasswordScreenState extends BaseState {
   final WalletService _walletService = locator<WalletService>();
@@ -52,7 +53,6 @@ class CreatePasswordScreenState extends BaseState {
     -------------------------------------------------- */
 
   Future createOfflineWallets() async {
-    NavigationService navigationService = locator<NavigationService>();
     setState(ViewState.Busy);
     await _vaultService.secureMnemonic(
         context, passTextController.text, randomMnemonicFromRoute);
@@ -62,7 +62,7 @@ class CreatePasswordScreenState extends BaseState {
       _walletInfo = data;
       // Navigator.pushNamed(context, '/mainNav', arguments: _walletInfo);
       //  navigationService.navigateTo('/mainNav', arguments: 0);
-      navigationService.navigateUsingPushNamedAndRemoveUntil('/dashboard');
+      navigationService.pushNamedAndRemoveUntil('/dashboard');
       randomMnemonicFromRoute = '';
     }).catchError((onError) {
       passwordMatch = false;

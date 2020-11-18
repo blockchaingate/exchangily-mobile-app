@@ -13,6 +13,7 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:hex/hex.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class OrderListScreenState extends BaseState {
   DialogService _dialogService = locator<DialogService>();
@@ -38,7 +39,7 @@ class OrderListScreenState extends BaseState {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
-      String mnemonic = res.returnedText;
+      String mnemonic = res.responseData.toString();
       Uint8List seed = walletService.generateSeed(mnemonic);
 
       var txHex = await txHexforCancelOrder(seed, orderHash);
@@ -54,7 +55,7 @@ class OrderListScreenState extends BaseState {
       }
       print(resKanban);
     } else {
-      if (res.returnedText != 'Closed') {
+      if (res.responseData.toString() != 'Closed') {
         showNotification(context);
       }
     }

@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TradeViewModel extends MultipleStreamViewModel with StoppableService {
@@ -305,6 +306,6 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   }
 
   onBackButtonPressed() async {
-    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+    navigationService..pushNamedAndRemoveUntil('/dashboard');
   }
 }

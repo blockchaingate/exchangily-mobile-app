@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/enums/dialog_type.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
@@ -28,6 +29,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import '../../localizations.dart';
 import '../../logger.dart';
@@ -67,6 +69,8 @@ class SettingsViewmodel extends BaseViewModel {
   String test;
   ConfigService configService = locator<ConfigService>();
   bool isHKServer;
+  bool _confirmationRes = false;
+  bool get confirmationRes => _confirmationRes;
   init() async {
     setBusy(true);
 
@@ -83,6 +87,42 @@ class SettingsViewmodel extends BaseViewModel {
     // if (selectedLanguage == '')
     //   selectedLanguage = getSetLocalStorageDataByKey('lang');
     setBusy(false);
+  }
+
+/*-------------------------------------------------------------------------------------
+                        Show dialogs
+-------------------------------------------------------------------------------------*/
+  Future showBasicDialog() async {
+    log.i('showBasicDialog');
+    DialogResponse dialogResponse = await dialogService.showDialog(
+      barrierDismissible: true,
+      title: 'test',
+      dialogPlatform: DialogPlatform.Cupertino,
+      description: 'hey desc',
+      cancelTitle: 'cancel',
+      // buttonTitle: 'OK'
+    );
+
+    log.w(dialogResponse?.responseData);
+  }
+
+  Future showConfirmationDialog() async {
+    log.i('Confirmation');
+    DialogResponse dialogResponse = await dialogService.showConfirmationDialog(
+        barrierDismissible: true,
+        title: 'test',
+        description: 'hey desc',
+        cancelTitle: 'cancel',
+        confirmationTitle: 'Yes');
+
+    _confirmationRes = dialogResponse?.confirmed;
+    notifyListeners();
+  }
+
+  Future showCustomDialog() async {
+    log.i('CUSTOM');
+    DialogResponse dialogResponse = await dialogService.showCustomDialog(
+        title: 'test', description: 'hey desc', takesInput: true);
   }
 
 /*-------------------------------------------------------------------------------------
@@ -182,11 +222,11 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(true);
     log.i('model busy $busy');
     await dialogService
-        .showDialog(
+        .showCustomDialog(
             title: AppLocalizations.of(context).enterPassword,
             description:
                 AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-            buttonTitle: AppLocalizations.of(context).confirm)
+            mainButtonTitle: AppLocalizations.of(context).confirm)
         .then((res) async {
       if (res.confirmed) {
         isDeleting = true;
@@ -198,7 +238,7 @@ class SettingsViewmodel extends BaseViewModel {
         prefs.remove('lang');
         prefs.clear();
         Navigator.pushNamed(context, '/');
-      } else if (res.returnedText == 'Closed') {
+      } else if (res.responseData.toString() == 'Closed') {
         log.e('Dialog Closed By User');
         isDeleting = false;
         setBusy(false);
@@ -231,19 +271,22 @@ class SettingsViewmodel extends BaseViewModel {
       isVisible = !isVisible;
     } else {
       await dialogService
-          .showDialog(
+          .showCustomDialog(
+              //variant: DialogType.form,
+              customData: DialogType.form,
               title: AppLocalizations.of(context).enterPassword,
               description: AppLocalizations.of(context)
                   .dialogManagerTypeSamePasswordNote,
-              buttonTitle: AppLocalizations.of(context).confirm)
+              mainButtonTitle: AppLocalizations.of(context).confirm)
           .then((res) async {
+        log.e('res $res');
         if (res.confirmed) {
           isVisible = !isVisible;
-          mnemonic = res.returnedText;
+          mnemonic = res.responseData.toString();
 
           setBusy(false);
           return '';
-        } else if (res.returnedText == 'Closed') {
+        } else if (res.responseData.toString() == 'Closed') {
           log.e('Dialog Closed By User');
           setBusy(false);
           return errorMessage = '';

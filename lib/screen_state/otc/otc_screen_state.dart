@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import '../../localizations.dart';
 import '../../logger.dart';
@@ -68,7 +69,7 @@ class OtcScreenState extends BaseState {
         Navigator.pushNamed(context, '/');
         setState(ViewState.Idle);
         return null;
-      } else if (res.returnedText == 'Closed') {
+      } else if (res.responseData.toString() == 'Closed') {
         log.e('Dialog Closed By User');
         setState(ViewState.Idle);
         return errorMessage = '';
@@ -102,10 +103,10 @@ class OtcScreenState extends BaseState {
           .then((res) async {
         if (res.confirmed) {
           isVisible = !isVisible;
-          mnemonic = res.returnedText;
+          mnemonic = res.responseData.toString();
           setState(ViewState.Idle);
           return '';
-        } else if (res.returnedText == 'Closed') {
+        } else if (res.responseData.toString() == 'Closed') {
           log.e('Dialog Closed By User');
           setState(ViewState.Idle);
           return errorMessage = '';

@@ -33,6 +33,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../../shared/globals.dart' as globals;
 
 class SendScreenState extends BaseState {
@@ -134,7 +135,7 @@ class SendScreenState extends BaseState {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (dialogResponse.confirmed) {
-      String mnemonic = dialogResponse.returnedText;
+      String mnemonic = dialogResponse.responseData.toString();
       Uint8List seed = walletService.generateSeed(mnemonic);
       String tickerName = walletInfo.tickerName.toUpperCase();
       String tokenType = walletInfo.tokenType.toUpperCase();
@@ -236,7 +237,7 @@ class SendScreenState extends BaseState {
         //errorMessage = AppLocalizations.of(context).transanctionFailed;
         setState(ViewState.Idle);
       });
-    } else if (dialogResponse.returnedText != 'Closed') {
+    } else if (dialogResponse.responseData.toString() != 'Closed') {
       setState(ViewState.Idle);
       return errorMessage =
           AppLocalizations.of(context).pleaseProvideTheCorrectPassword;

@@ -1,22 +1,22 @@
-/*
-* Copyright (c) 2020 Exchangily LLC
-*
-* Licensed under Apache License v2.0
-* You may obtain a copy of the License at
-*
-*      https://www.apache.org/licenses/LICENSE-2.0
-*
-*----------------------------------------------------------------------
-* Author: barry-ruprai@exchangily.com
-*----------------------------------------------------------------------
-*/
+// /*
+// * Copyright (c) 2020 Exchangily LLC
+// *
+// * Licensed under Apache License v2.0
+// * You may obtain a copy of the License at
+// *
+// *      https://www.apache.org/licenses/LICENSE-2.0
+// *
+// *----------------------------------------------------------------------
+// * Author: barry-ruprai@exchangily.com
+// *----------------------------------------------------------------------
+// */
 
 import 'dart:async';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/alert/alert_request.dart';
 import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 
-class DialogService {
+class DialogService1 {
   Function(AlertRequest) _showDialogListener;
   Function(AlertRequest) _showOrderUpdateDialogListener;
   Completer<AlertResponse> _dialogCompleter;

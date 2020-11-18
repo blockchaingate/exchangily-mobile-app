@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class CampaignDashboardScreenState extends BaseState {
   final log = getLogger('CampaignDashboardScreenState');

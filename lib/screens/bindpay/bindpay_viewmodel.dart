@@ -26,6 +26,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 class BindpayViewmodel extends FutureViewModel {
   final log = getLogger('BindpayViewmodel');
@@ -76,7 +77,7 @@ class BindpayViewmodel extends FutureViewModel {
     if (isShowBottomSheet) {
       print('Bottom Sheet already visible');
 
-      navigationService.goBack();
+      navigationService.back();
     } else {
       showBottomSheet(
         context: context1,
@@ -250,7 +251,7 @@ class BindpayViewmodel extends FutureViewModel {
     quantity = updatedQuantity;
     print('IOS tickerName $tickerName --- quantity $quantity');
     setBusy(false);
-    if (isShowBottomSheet) navigationService.goBack();
+    if (isShowBottomSheet) navigationService.back();
     changeBottomSheetStatus();
   }
 
@@ -565,7 +566,7 @@ class BindpayViewmodel extends FutureViewModel {
               buttonTitle: AppLocalizations.of(context).confirm)
           .then((res) async {
         if (res.confirmed) {
-          String mnemonic = res.returnedText;
+          String mnemonic = res.responseData.toString();
           Uint8List seed = walletService.generateSeed(mnemonic);
           await walletService
               .sendCoin(seed, coinType, addressController.text,
@@ -582,7 +583,7 @@ class BindpayViewmodel extends FutureViewModel {
                   AppLocalizations.of(context).pleaseTryAgainLater);
             }
           });
-        } else if (res.returnedText == 'Closed') {
+        } else if (res.responseData.toString() == 'Closed') {
           log.e('Dialog Closed By User');
           setBusy(false);
         } else {

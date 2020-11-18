@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
 
@@ -38,7 +39,7 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
   void initState() {
     log.w(widget.child);
     super.initState();
-    _dialogService.registerDialogListener(_showdOrderUpdateDialog);
+    //  _dialogService.registerDialogListener(_showdOrderUpdateDialog);
     controller.text = '';
   }
 
@@ -63,8 +64,8 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
         desc: request.description,
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
-          _dialogService.dialogComplete(AlertResponse(
-              returnedText: 'Closed Order Update Popup', confirmed: false));
+          // _dialogService.dialogComplete(AlertResponse(
+          //     returnedText: 'Closed Order Update Popup', confirmed: false));
         },
         content: Column(
           children: <Widget>[

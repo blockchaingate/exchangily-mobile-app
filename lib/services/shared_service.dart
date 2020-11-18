@@ -30,6 +30,7 @@ import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacked_services/stacked_services.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
 import '../localizations.dart';
@@ -145,10 +146,9 @@ class SharedService {
 -------------------------------------------------------------------------------------*/
 
   onBackButtonPressed(String route) async {
-    log.w(
-        'back button pressed, is final route ${navigationService.isFinalRoute()}');
+    log.w('back button pressed, is final route ${navigationService.back()}');
 
-    navigationService.navigateUsingpopAndPushedNamed(route);
+    navigationService.pushNamedAndRemoveUntil(route);
   }
 
   Future<bool> closeApp() async {

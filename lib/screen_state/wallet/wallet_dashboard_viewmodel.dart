@@ -40,6 +40,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../environments/coins.dart' as coinList;
 import '../../shared/globals.dart' as globals;
 import 'package:intl/intl.dart';

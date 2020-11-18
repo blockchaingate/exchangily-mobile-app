@@ -4,6 +4,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked_services/stacked_services.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MarketPairPriceDetailView extends StatelessWidget {
