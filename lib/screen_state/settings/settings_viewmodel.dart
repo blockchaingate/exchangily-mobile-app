@@ -97,10 +97,8 @@ class SettingsViewmodel extends BaseViewModel {
     DialogResponse dialogResponse = await dialogService.showDialog(
       barrierDismissible: true,
       title: 'test',
-      dialogPlatform: DialogPlatform.Cupertino,
+      dialogPlatform: DialogPlatform.Custom,
       description: 'hey desc',
-      cancelTitle: 'cancel',
-      // buttonTitle: 'OK'
     );
 
     log.w(dialogResponse?.responseData);
@@ -109,11 +107,10 @@ class SettingsViewmodel extends BaseViewModel {
   Future showConfirmationDialog() async {
     log.i('Confirmation');
     DialogResponse dialogResponse = await dialogService.showConfirmationDialog(
-        barrierDismissible: true,
-        title: 'test',
-        description: 'hey desc',
-        cancelTitle: 'cancel',
-        confirmationTitle: 'Yes');
+      barrierDismissible: true,
+      title: 'Notice',
+      description: 'I am Confirmation dialog',
+    );
 
     _confirmationRes = dialogResponse?.confirmed;
     notifyListeners();
@@ -122,7 +119,10 @@ class SettingsViewmodel extends BaseViewModel {
   Future showCustomDialog() async {
     log.i('CUSTOM');
     DialogResponse dialogResponse = await dialogService.showCustomDialog(
-        title: 'test', description: 'hey desc', takesInput: true);
+        title: 'AppLocalizations.of(context).pleaseFillYourPassword',
+        //  variant: DialogType.form,
+        barrierDismissible: true);
+    log.e(dialogResponse?.responseData);
   }
 
 /*-------------------------------------------------------------------------------------
@@ -130,17 +130,7 @@ class SettingsViewmodel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
 
   reloadApp() {
-    setBusy(true);
-    //  log.i('1');
-    storageService.isHKServer = !storageService.isHKServer;
-
-    storageService.isUSServer = storageService.isHKServer ? false : true;
-    // Phoenix.rebirth(context);
-    //  log.i('2');
-    test = configService.getKanbanBaseUrl();
-    isHKServer = storageService.isHKServer;
-    log.e('GLobal kanban url $test');
-    setBusy(false);
+    Phoenix.rebirth(context);
   }
 
 /*-------------------------------------------------------------------------------------

@@ -73,6 +73,7 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => SharedService());
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DialogService());
+  locator.registerLazySingleton(() => SnackbarService());
   // Campaign
   locator.registerLazySingleton(() => CampaignService());
   locator.registerLazySingleton(() => CampaignUserDatabaseService());

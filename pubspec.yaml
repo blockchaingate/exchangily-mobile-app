@@ -120,7 +120,7 @@ dependencies:
 
   # State Management
   stacked: ^1.7.6
-  stacked_services: 0.5.4+4
+  stacked_services: 0.5.4+5
 
   #flutter_beautiful_popup
   flutter_beautiful_popup: ^1.5.0

@@ -35,8 +35,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
   try {
-    await serviceLocator();
-    //  setupDialogUi();
+    serviceLocator();
+    setupDialogUi();
     Logger.level = Level.info;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
@@ -138,7 +138,7 @@ class MyApp extends StatelessWidget {
                         fontWeight: FontWeight.w300),
                     bodyText1: TextStyle(
                         fontSize: 13,
-                        color: globals.black,
+                        color: globals.white,
                         fontWeight: FontWeight.w300),
                     bodyText2: TextStyle(fontSize: 13, color: globals.red),
                     headline6: TextStyle(

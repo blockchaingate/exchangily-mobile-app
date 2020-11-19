@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/dialog_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +9,8 @@ import 'package:stacked_services/stacked_services.dart';
 
 void setupDialogUi() {
   var dialogService = locator<DialogService>();
-  final log = getLogger('setupDialogUi');
   dialogService.registerCustomDialogBuilder(
-      variant: DialogType.base,
+      variant: DialogType.form,
       builder: (BuildContext context, DialogRequest dialogRequest) => Dialog(
           child: _customDialogUi(
               dialogRequest,
@@ -47,10 +45,11 @@ class _BasicCustomDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('BASIC DIALOG');
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        //   color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -58,7 +57,7 @@ class _BasicCustomDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
-            dialogRequest.title,
+            dialogRequest.title ?? '',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
           ),
           SizedBox(
@@ -105,12 +104,19 @@ class _PasswordInputDialog extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _dialogService = locator<DialogService>();
+    print('Password Input dialog');
     WalletService _walletService = locator<WalletService>();
     var controller = useTextEditingController();
     return Container(
       child: Column(
         children: [
+          Text(
+            dialogRequest.title,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+          ),
+          SizedBox(
+            height: 20,
+          ),
           TextField(
             style: TextStyle(color: white),
             controller: controller,
@@ -126,21 +132,31 @@ class _PasswordInputDialog extends HookWidget {
             ),
           ),
           GestureDetector(
-
+              child: Container(
+                child: dialogRequest.showIconInMainButton
+                    ? Icon(Icons.check_circle)
+                    : Text(dialogRequest.mainButtonTitle),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.redAccent,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              ),
               // Complete the dialog when you're done with it to return some data
               onTap: () => _walletService
                       .readEncryptedData(controller.text)
                       .then((data) {
                     if (data != '' && data != null) {
-                      _dialogService.completeDialog(
+                      onDialogTap(
                           DialogResponse(responseData: data, confirmed: true));
                       controller.text = '';
-                      Navigator.of(context).pop();
+                      //   Navigator.of(context).pop();
                     } else {
-                      _dialogService
-                          .completeDialog(DialogResponse(confirmed: false));
+                      onDialogTap(DialogResponse(confirmed: false));
                       controller.text = '';
-                      Navigator.of(context).pop();
+                      //Navigator.of(context).pop();
                     }
                   })
 
