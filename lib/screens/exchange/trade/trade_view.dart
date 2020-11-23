@@ -18,7 +18,7 @@ import 'package:stacked/stacked.dart';
 
 import 'market_trades/market_trades_view.dart';
 import 'my_orders/my_orders_view.dart';
-import 'orderbook/orders_book_view.dart';
+import 'orderbook/orderbook_view.dart';
 import 'package:flutter/cupertino.dart';
 
 class TradeView extends StatelessWidget {
