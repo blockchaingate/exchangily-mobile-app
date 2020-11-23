@@ -58,6 +58,7 @@ class WalletDashboardViewModel extends BaseState {
   ApiService apiService = locator<ApiService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
+
   final double elevation = 5;
   String totalUsdBalance = '';
 
@@ -106,6 +107,17 @@ class WalletDashboardViewModel extends BaseState {
     await refreshBalance();
     getConfirmDepositStatus();
     showDialogWarning();
+
+    totalBalanceContainerWidth = 270.0;
+    checkAnnouncement();
+    setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                        Check Announcement
+----------------------------------------------------------------------*/
+
+  checkAnnouncement() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = prefs.getString('lang');
     setlangGlobal(lang);
@@ -255,8 +267,6 @@ class WalletDashboardViewModel extends BaseState {
         log.i("announcement: exit!!!");
       }
     }
-    totalBalanceContainerWidth = 270.0;
-    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
@@ -734,7 +744,7 @@ class WalletDashboardViewModel extends BaseState {
     });
     walletInfo = [];
 
-    int coinTickersLength = walletService.coinTickers.length;
+    // int coinTickersLength = walletService.coinTickers.length;
 
     //await getDecimalPairConfig();
 
@@ -870,7 +880,7 @@ class WalletDashboardViewModel extends BaseState {
       // in else if walletBalances is null then check balance with old method
       else if (walletBalanceList == null) {
         log.e('---------------------ELSE old way-----------------------');
-        await oldWayToGetBalances(coinTickersLength);
+        await oldWayToGetBalances(walletService.coinTickers.length);
       }
     }).timeout(Duration(seconds: 25), onTimeout: () {
       log.e('time out');

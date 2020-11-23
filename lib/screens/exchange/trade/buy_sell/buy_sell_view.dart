@@ -11,7 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
@@ -316,13 +315,11 @@ class VerticalOrderbook extends StatelessWidget {
 Column buildVerticalOrderbookColumn(
     List<OrderType> orderArray, final bool bidOrAsk, OrderbookViewModel model) {
   // List<OrderType> sellOrders = [];
-  print('OrderArray length before ${orderArray.length}');
-  orderArray = (orderArray.length > 7)
-      ? orderArray = bidOrAsk
-          ? orderArray.sublist(0, 7)
-          : orderArray.sublist(0, 7).reversed.toList()
-      : orderArray;
-  print('OrderArray length after ${orderArray.length}');
+  print('OrderArray $bidOrAsk length before ${orderArray.length}');
+  if (!bidOrAsk) orderArray = orderArray.reversed.toList();
+  if (orderArray.length > 7) orderArray = orderArray.sublist(0, 7);
+
+  print('OrderArray $bidOrAsk length after ${orderArray.length}');
   return Column(
     //   mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: <Widget>[

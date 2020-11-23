@@ -8,6 +8,8 @@ const String baseBlockchainGateV2Url = isProduction
     ? 'https://blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
 
+final String walletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
+
 /*----------------------------------------------------------------------
                         Free Fab
 ----------------------------------------------------------------------*/

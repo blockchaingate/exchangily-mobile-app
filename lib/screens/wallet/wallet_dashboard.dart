@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
@@ -216,7 +217,6 @@ class WalletDashboardScreen extends StatelessWidget {
                                         )),
                                   )),
                           UIHelper.horizontalSpaceMedium,
-                          
                         ],
                       ),
                     ),
@@ -263,37 +263,39 @@ class WalletDashboardScreen extends StatelessWidget {
                                 ],
                               ))
                           : Row(
-                            children: [
-                              AddGasRow(model: model),
+                              children: [
+                                AddGasRow(model: model),
                                 UIHelper.horizontalSpaceSmall,
-                              Expanded(
-                            child: GestureDetector(
-                              onTap: () => FocusScope.of(context)
-                                  .requestFocus(FocusNode()),
-                              child: Container(
-                                margin: EdgeInsets.only(top: 5),
-                                height: 30,
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: primaryColor, width: 1),
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () => FocusScope.of(context)
+                                        .requestFocus(FocusNode()),
+                                    child: Container(
+                                      margin: EdgeInsets.only(top: 5),
+                                      height: 30,
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: primaryColor,
+                                                  width: 1),
+                                            ),
+                                            // helperText: 'Search',
+                                            // helperStyle:
+                                            //     Theme.of(context).textTheme.bodyText1,
+                                            suffixIcon: Icon(Icons.search,
+                                                color: white)),
+                                        controller:
+                                            model.searchCoinTextController,
+                                        onChanged: (String value) {
+                                          model.searchCoinsByTickerName(value);
+                                        },
                                       ),
-                                      // helperText: 'Search',
-                                      // helperStyle:
-                                      //     Theme.of(context).textTheme.bodyText1,
-                                      suffixIcon:
-                                          Icon(Icons.search, color: white)),
-                                  controller: model.searchCoinTextController,
-                                  onChanged: (String value) {
-                                    model.searchCoinsByTickerName(value);
-                                  },
-                                ),
-                              ),
+                                    ),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                            ],
-                          ),
                     ),
 
                     UIHelper.verticalSpaceSmall,
@@ -455,8 +457,8 @@ class WalletDashboardScreen extends StatelessWidget {
                             blurRadius: 10.0,
                             spreadRadius: 1.0),
                       ]),
-                  child:
-                      Image.asset('assets/images/wallet-page/$tickerName.png'),
+                  child: Image.network('$walletCoinsLogoUrl$tickerName.png'),
+                  //asset('assets/images/wallet-page/$tickerName.png'),
                   width: 35,
                   height: 35),
               UIHelper.horizontalSpaceSmall,

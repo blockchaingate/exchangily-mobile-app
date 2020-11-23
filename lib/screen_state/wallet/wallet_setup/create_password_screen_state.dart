@@ -29,7 +29,7 @@ class CreatePasswordScreenState extends BaseState {
   final VaultService _vaultService = locator<VaultService>();
   final NavigationService navigationService = locator<NavigationService>();
 
-  List<WalletInfo> _walletInfo;
+  //List<WalletInfo> _walletInfo;
   final log = getLogger('CreatePasswordScreenState');
   bool checkPasswordConditions = false;
   bool passwordMatch = false;
@@ -59,7 +59,7 @@ class CreatePasswordScreenState extends BaseState {
     await _walletService
         .createOfflineWallets(randomMnemonicFromRoute)
         .then((data) {
-      _walletInfo = data;
+      //  _walletInfo = data;
       // Navigator.pushNamed(context, '/mainNav', arguments: _walletInfo);
       //  navigationService.navigateTo('/mainNav', arguments: 0);
       navigationService.navigateUsingPushNamedAndRemoveUntil('/dashboard');
@@ -113,7 +113,7 @@ class CreatePasswordScreenState extends BaseState {
       setState(ViewState.Idle);
       return;
     } else {
-      if (!regex.hasMatch(pass) && isProduction) {
+      if (!regex.hasMatch(pass)) {
         password = '';
         confirmPassword = '';
         checkPasswordConditions = false;
@@ -126,7 +126,7 @@ class CreatePasswordScreenState extends BaseState {
             context);
         setState(ViewState.Idle);
         return;
-      } else if (pass != confirmPass && isProduction) {
+      } else if (pass != confirmPass) {
         password = '';
         confirmPassword = '';
         checkPasswordConditions = false;
