@@ -170,32 +170,35 @@ class SettingsContainer extends StatelessWidget {
 
             Card(
                 elevation: 5,
-                child: Container(
-                  color: globals.walletCardColor,
-                  child: Center(
-                    child: Theme.of(context).platform == TargetPlatform.iOS
-                        ? CupertinoPicker(
-                            diameterRatio: 1.3,
-                            offAxisFraction: 5,
-                            scrollController: model.scrollController,
-                            itemExtent: 50,
-                            onSelectedItemChanged: (int value) {
-                              String lang = '';
-                              if (value == 1) {
-                                lang = 'en';
-                              } else if (value == 2) {
-                                lang = 'zh';
-                              }
-                              model.changeWalletLanguage(lang);
-                            },
-                            children: [
-                                Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                color: globals.walletCardColor,
+                child: Theme.of(context).platform == TargetPlatform.iOS
+                    ? Row(
+                      
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: CupertinoPicker(
+                                diameterRatio: 1.3,
+                                offAxisFraction: 5,
+                                scrollController: model.scrollController,
+                                itemExtent: 50,
+                                onSelectedItemChanged: (int value) {
+                                  String lang = '';
+                                  if (value == 1) {
+                                    lang = 'en';
+                                  } else if (value == 2) {
+                                    lang = 'zh';
+                                  }
+                                  model.changeWalletLanguage(lang);
+                                },
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.end,
                                     children: [
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 3.0),
+                                        padding: const EdgeInsets.only(
+                                            right: 3.0),
                                         child: Icon(
                                           Icons.language,
                                           color: grey,
@@ -209,110 +212,115 @@ class SettingsContainer extends StatelessWidget {
                                             .textTheme
                                             .headline5,
                                       ),
-                                      Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 5.0),
-                                              child: Icon(
-                                                Icons.keyboard_arrow_up,
-                                                color: primaryColor,
-                                                size: 12,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 5.0),
-                                              child: Icon(
-                                                Icons.keyboard_arrow_down,
-                                                color: primaryColor,
-                                                size: 12,
-                                              ),
-                                            ),
-                                          ])
                                     ],
                                   ),
-                                ),
-                                Center(
-                                  child: Text(
-                                    "English",
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                ),
-                                Center(
-                                  child: Text(
-                                    "简体中文",
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                ),
-                              ])
-                        : DropdownButtonHideUnderline(
-                            child: DropdownButton(
-                                iconEnabledColor: globals.primaryColor,
-                                iconSize: 26,
-                                hint: Text(
-                                  AppLocalizations.of(context)
-                                      .changeWalletLanguage,
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline5,
-                                ),
-                                value: model.selectedLanguage,
-                                onChanged: (newValue) {
-                                  model.changeWalletLanguage(newValue);
-                                },
-                                items: [
-                                  DropdownMenuItem(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/img/flagEn.png",
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                        SizedBox(width: 15),
-                                        Text("English",
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6),
-                                      ],
+                                  Center(
+                                    child: Text(
+                                      "English",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5,
                                     ),
-                                    value: model.languages['en'],
                                   ),
-                                  DropdownMenuItem(
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/img/flagChina.png",
-                                          width: 20,
-                                          height: 20,
-                                        ),
-                                        SizedBox(width: 15),
-                                        Text("简体中文",
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline6),
-                                      ],
+                                  Center(
+                                    child: Text(
+                                      "简体中文",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5,
                                     ),
-                                    value: model.languages['zh'],
                                   ),
                                 ]),
                           ),
-                  ),
-                )),
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 5.0),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_up,
+                                      color: primaryColor,
+                                      size: 12,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(left: 5.0),
+                                    child: Icon(
+                                      Icons.keyboard_arrow_down,
+                                      color: primaryColor,
+                                      size: 12,
+                                    ),
+                                  ),
+                                ]),
+                          )
+                        ],
+                      )
+                    : DropdownButtonHideUnderline(
+                        child: DropdownButton(
+                            iconEnabledColor: globals.primaryColor,
+                            iconSize: 26,
+                            hint: Text(
+                              AppLocalizations.of(context)
+                                  .changeWalletLanguage,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline5,
+                            ),
+                            value: model.selectedLanguage,
+                            onChanged: (newValue) {
+                              model.changeWalletLanguage(newValue);
+                            },
+                            items: [
+                              DropdownMenuItem(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      "assets/images/img/flagEn.png",
+                                      width: 20,
+                                      height: 20,
+                                    ),
+                                    SizedBox(width: 15),
+                                    Text("English",
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
+                                  ],
+                                ),
+                                value: model.languages['en'],
+                              ),
+                              DropdownMenuItem(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      "assets/images/img/flagChina.png",
+                                      width: 20,
+                                      height: 20,
+                                    ),
+                                    SizedBox(width: 15),
+                                    Text("简体中文",
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
+                                  ],
+                                ),
+                                value: model.languages['zh'],
+                              ),
+                            ]),
+                      )),
             // Show/Hide dialog warning checkbox
             Card(
               elevation: 5,
