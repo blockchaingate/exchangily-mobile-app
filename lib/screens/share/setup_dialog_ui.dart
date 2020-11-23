@@ -3,6 +3,7 @@ import 'package:exchangilymobileapp/enums/dialog_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -20,7 +21,7 @@ void setupDialogUi() {
 
 Widget _customDialogUi(
     DialogRequest dialogRequest, Function(DialogResponse) onDialogTap) {
-  var dialogType = dialogRequest.customData as DialogType;
+  var dialogType = dialogRequest.variant;
 
   print('dialogType $dialogType');
   switch (dialogType) {
@@ -107,16 +108,18 @@ class _PasswordInputDialog extends HookWidget {
     print('Password Input dialog');
     WalletService _walletService = locator<WalletService>();
     var controller = useTextEditingController();
+    final isEmptyTextField = useState(false);
+    final isWrongPassword = useState(false);
     return Container(
+      color: secondaryColor,
+      padding: EdgeInsets.all(10),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            dialogRequest.title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
-          ),
-          SizedBox(
-            height: 20,
-          ),
+          // Text(
+          //   dialogRequest.title ?? 'Hello no text',
+          //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 23),
+          // ),
           TextField(
             style: TextStyle(color: white),
             controller: controller,
@@ -131,21 +134,37 @@ class _PasswordInputDialog extends HookWidget {
               labelText: AppLocalizations.of(context).typeYourWalletPassword,
             ),
           ),
-          GestureDetector(
+          UIHelper.verticalSpaceSmall,
+          Visibility(
+              visible: isEmptyTextField.value,
+              child: Text(AppLocalizations.of(context).emptyPassword)),
+          Visibility(
+              visible: isWrongPassword.value,
+              child: Text(AppLocalizations.of(context).passwordDoesNotMatched)),
+          SizedBox(
+            height: 10,
+          ),
+          FlatButton(
               child: Container(
                 child: dialogRequest.showIconInMainButton
                     ? Icon(Icons.check_circle)
-                    : Text(dialogRequest.mainButtonTitle),
+                    : Text(
+                        dialogRequest.mainButtonTitle,
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                width: double.infinity,
+                //  width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.redAccent,
+                  color: primaryColor,
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
               // Complete the dialog when you're done with it to return some data
-              onTap: () => _walletService
+              onPressed: () {
+                if (controller.text != '') {
+                  isEmptyTextField.value = false;
+                  _walletService
                       .readEncryptedData(controller.text)
                       .then((data) {
                     if (data != '' && data != null) {
@@ -156,10 +175,16 @@ class _PasswordInputDialog extends HookWidget {
                     } else {
                       onDialogTap(DialogResponse(confirmed: false));
                       controller.text = '';
+                      isWrongPassword.value = true;
                       //Navigator.of(context).pop();
                     }
-                  })
-
+                  });
+                } else {
+                  onDialogTap(DialogResponse(confirmed: false));
+                  isEmptyTextField.value = true;
+                  isWrongPassword.value = false;
+                }
+              }
               //  _dialogService
               //     .completeDialog(DialogResponse(confirmed: true)),
               // child: Container(

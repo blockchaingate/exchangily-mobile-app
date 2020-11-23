@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/enums/dialog_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
@@ -46,6 +47,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   TradeService tradeService = locator<TradeService>();
   OrderService _orderService = locator<OrderService>();
   DialogService _dialogService = locator<DialogService>();
+  SnackbarService _snackBarService = locator<SnackbarService>();
   WalletService walletService = locator<WalletService>();
   NavigationService navigationService = locator<NavigationService>();
   ApiService apiService = locator<ApiService>();
@@ -343,11 +345,10 @@ class MyOrdersViewModel extends ReactiveViewModel {
     setBusy(true);
 
     onClickOrderHash = orderHash;
-    var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
-        description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
+    var res = await _dialogService.showCustomDialog(
+        barrierDismissible: true,
+        variant: DialogType.form,
+        mainButtonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
       String mnemonic = res.responseData.toString();
       Uint8List seed = walletService.generateSeed(mnemonic);
@@ -378,6 +379,14 @@ class MyOrdersViewModel extends ReactiveViewModel {
               setBusy(false);
             }
             timer.cancel();
+            _snackBarService.showSnackbar(
+                message: AppLocalizations.of(context).orderCancelled);
+            // await _dialogService.showDialog(
+            //   barrierDismissible: true,
+            //   title: 'test',
+            //   dialogPlatform: DialogPlatform.Custom,
+            //   description: 'hey desc',
+            // );
           }
         });
         setBusy(false);

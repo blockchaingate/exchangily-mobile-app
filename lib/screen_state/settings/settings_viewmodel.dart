@@ -101,7 +101,12 @@ class SettingsViewmodel extends BaseViewModel {
       description: 'hey desc',
     );
 
-    log.w(dialogResponse?.responseData);
+    log.w(dialogResponse?.confirmed);
+    if (dialogResponse.confirmed) {
+      navigationService.back();
+      print('test');
+      Navigator.of(context).pop();
+    }
   }
 
   Future showConfirmationDialog() async {
@@ -111,7 +116,6 @@ class SettingsViewmodel extends BaseViewModel {
       title: 'Notice',
       description: 'I am Confirmation dialog',
     );
-
     _confirmationRes = dialogResponse?.confirmed;
     notifyListeners();
   }
@@ -119,10 +123,10 @@ class SettingsViewmodel extends BaseViewModel {
   Future showCustomDialog() async {
     log.i('CUSTOM');
     DialogResponse dialogResponse = await dialogService.showCustomDialog(
-        title: 'AppLocalizations.of(context).pleaseFillYourPassword',
-        //  variant: DialogType.form,
+        variant: DialogType.form,
+        mainButtonTitle: AppLocalizations.of(context).confirm,
         barrierDismissible: true);
-    log.e(dialogResponse?.responseData);
+    log.e(dialogResponse?.confirmed);
   }
 
 /*-------------------------------------------------------------------------------------
