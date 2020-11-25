@@ -260,7 +260,7 @@ class SettingsContainer extends StatelessWidget {
                           )
                         ],
                       )
-                    : DropdownButtonHideUnderline(
+                    :Center(child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                             iconEnabledColor: globals.primaryColor,
                             iconSize: 26,
@@ -320,7 +320,7 @@ class SettingsContainer extends StatelessWidget {
                                 value: model.languages['zh'],
                               ),
                             ]),
-                      )),
+                      ),),),
             // Show/Hide dialog warning checkbox
             Card(
               elevation: 5,

@@ -12,54 +12,89 @@
 */
 
 import 'dart:async';
+import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/alert/alert_request.dart';
-import 'package:exchangilymobileapp/models/alert/alert_response.dart';
 
 class DialogService {
-  Function(AlertRequest) _showDialogListener;
-  Function(AlertRequest) _showOrderUpdateDialogListener;
-  Completer<AlertResponse> _dialogCompleter;
+  GlobalKey<NavigatorState> _dialogNavigationKey = GlobalKey<NavigatorState>();
+  Function(DialogRequest) _showDialogListener;
+  Function(DialogRequest) _showOrderUpdateDialogListener;
+  Function(DialogRequest) _showBasicDialogListener;
+  Completer<DialogResponse> _dialogCompleter;
+
+  GlobalKey<NavigatorState> get navigatorKey => _dialogNavigationKey;
+
   final log = getLogger('DialogService');
   // Registers a callback function, typically to show the dialog box
-  void registerDialogListener(Function(AlertRequest) showDialogListener) {
+
+/*----------------------------------------------------------------------
+      Completer the _dialogCompleter to resume the Future's execution
+----------------------------------------------------------------------*/
+
+  void dialogComplete(DialogResponse response) {
+    //   _dialogNavigationKey.currentState.pop();
+    _dialogCompleter.complete(response);
+    _dialogCompleter = null;
+  }
+/*----------------------------------------------------------------------
+                Password Dialog
+----------------------------------------------------------------------*/
+
+  void registerDialogListener(Function(DialogRequest) showDialogListener) {
     _showDialogListener = showDialogListener;
   }
 
-  void registerOrderUpdateDialogListener(
-      Function(AlertRequest) showOrerUpdateDialogListener) {
-    _showOrderUpdateDialogListener = showOrerUpdateDialogListener;
-  }
-
   // Calls the dialog listener and returns a future that will wait for the dialog to complete
-  Future<AlertResponse> showDialog(
+  Future<DialogResponse> showDialog(
       {String title, String description, String buttonTitle}) {
     log.w('In show dialog');
-    _dialogCompleter = Completer<AlertResponse>();
-    _showDialogListener(AlertRequest(
+    _dialogCompleter = Completer<DialogResponse>();
+    _showDialogListener(DialogRequest(
         title: title, description: description, buttonTitle: buttonTitle));
     return _dialogCompleter.future;
   }
 
+/*----------------------------------------------------------------------
+                  Basic dialog
+----------------------------------------------------------------------*/
+
+  void registerBasicDialogListener(
+      Function(DialogRequest) showBasicDialogListener) {
+    _showBasicDialogListener = showBasicDialogListener;
+  }
+
+  Future<DialogResponse> showBasicDialog(
+      {String title, String description, String buttonTitle}) {
+    log.w('In show basic dialog');
+    _dialogCompleter = Completer<DialogResponse>();
+    _showBasicDialogListener(DialogRequest(
+        title: title, description: description, buttonTitle: buttonTitle));
+    return _dialogCompleter.future;
+  }
+
+/*----------------------------------------------------------------------
+                Order update dialog
+----------------------------------------------------------------------*/
+  void registerOrderUpdateDialogListener(
+      Function(DialogRequest) showOrerUpdateDialogListener) {
+    _showOrderUpdateDialogListener = showOrerUpdateDialogListener;
+  }
+
   // Calls the dialog listener and returns a future that will wait for the dialog to complete
-  Future<AlertResponse> showOrderUpdateDialog(
+  Future<DialogResponse> showOrderUpdateDialog(
       {String title,
       String description,
       String confirmOrder,
       String cancelOrder}) {
     log.w('showOrerUpdateDialog $title');
-    _dialogCompleter = Completer<AlertResponse>();
-    _showOrderUpdateDialogListener(AlertRequest(
+    _dialogCompleter = Completer<DialogResponse>();
+    _showOrderUpdateDialogListener(DialogRequest(
         title: title,
         description: description,
         buttonTitle: confirmOrder,
         cancelButton: cancelOrder));
     return _dialogCompleter.future;
-  }
-
-  // Completer the _dialogCompleter to resume the Future's execution
-  void dialogComplete(AlertResponse response) {
-    _dialogCompleter.complete(response);
-    _dialogCompleter = null;
   }
 }

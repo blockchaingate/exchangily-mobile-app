@@ -12,7 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -36,7 +36,7 @@ class OtcScreenState extends BaseState {
   String selectedLanguage;
   // bool result = false;
   String errorMessage = '';
-  AlertResponse alertResponse;
+  DialogResponse dialogResponse;
   BuildContext context;
   String versionName = '';
   String versionCode = '';

@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/connectivity_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 import 'package:flutter/services.dart';
@@ -63,9 +64,10 @@ class MyApp extends StatelessWidget {
           child: Phoenix(
             child: MaterialApp(
               // locale: DevicePreview.of(context).locale,
-              navigatorKey: locator<NavigationService>().navigatorKey,
 
+              navigatorKey: locator<NavigationService>().navigatorKey,
               builder: (context, widget) => Navigator(
+                key:locator<DialogService>().navigatorKey,
                   onGenerateRoute: (settings) => MaterialPageRoute(
                       builder: (context) => DialogManager(
                             child: widget,

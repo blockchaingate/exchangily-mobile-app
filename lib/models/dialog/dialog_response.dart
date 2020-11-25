@@ -7,15 +7,15 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Class Name: AlertResponse
+* Class Name: dialogResponse
 *
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
 
-class AlertResponse {
+class DialogResponse {
   final String returnedText;
   final bool confirmed;
 
-  AlertResponse({this.returnedText, this.confirmed});
+  DialogResponse({this.returnedText, this.confirmed});
 }

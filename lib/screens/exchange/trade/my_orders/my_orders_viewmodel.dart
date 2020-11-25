@@ -79,6 +79,10 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
   bool _isOrderbookLoaded = false;
   bool get isOrderbookLoaded => _isOrderbookLoaded;
+  String get orderCancelledText => _orderCancelledText;
+
+  String _orderCancelledText;
+  TextStyle orderCancelledTextStyle;
 
   init() {
     log.i('INIT');
@@ -87,6 +91,9 @@ class MyOrdersViewModel extends ReactiveViewModel {
         .getSinglePairDecimalConfig(tickerName)
         .then((decimalConfig) => decimalConfig = decimalConfig);
 
+    _orderCancelledText = AppLocalizations.of(context).orderCancelled;
+    orderCancelledTextStyle =
+        Theme.of(context).textTheme.bodyText1.copyWith(color: colors.green);
     // _orderService.swapSources();
   }
 
@@ -335,8 +342,6 @@ class MyOrdersViewModel extends ReactiveViewModel {
                       Check Password
 -------------------------------------------------------------------------------------*/
   checkPass(context, orderHash) async {
-    setBusy(true);
-
     onClickOrderHash = orderHash;
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -358,63 +363,62 @@ class MyOrdersViewModel extends ReactiveViewModel {
         //     Icons.info,
         //     colors.green,
         //     context);
-        Timer.periodic(Duration(seconds: 3), (timer) async {
+        Timer.periodic(Duration(seconds: 2), (timer) async {
           var res =
               await tradeService.getTxStatus(resKanban["transactionHash"]);
           if (res != null) {
             String status = res['status'];
-            bool test = status == '0x1';
-            log.i('RES $res -- bool $test');
+            bool txStatus = status == '0x1';
+            log.i('RES $res -- bool $txStatus');
             if (status == '0x1') {
               setBusy(true);
+
               isShowAllOrders
                   ? await getAllMyOrders()
                   : await getMyOrdersByTickerName();
               setBusy(false);
             }
+
             timer.cancel();
+            showSimpleNotification(
+                Center(
+                  child:
+                      Text(orderCancelledText, style: orderCancelledTextStyle),
+                ),
+                position: NotificationPosition.bottom);
+            // _dialogService.showBasicDialog(
+            //     title: orderCancelledText, description: '', buttonTitle: 'Ok');
           }
         });
-        setBusy(false);
-        // showSimpleNotification(
-        //   Center(
-        //       child: Text(AppLocalizations.of(context).orderCancelled,
-        //           style: Theme.of(context).textTheme.headline6)),
-        // );
+
         // Future.delayed(new Duration(seconds: 3), () async {
         //   _orderService.swapSources();
         // });
       }
-    } else if (!res.confirmed) {
+    } else if (!res.confirmed && res.returnedText != 'Closed') {
       log.e('wrong password');
-      setBusy(false);
-
       showSimpleNotification(
         Center(
             child: Text(
                 AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-                style: Theme.of(context).textTheme.headline6)),
+                style: Theme.of(context).textTheme.bodyText2)),
       );
-      // Code to remove later
-
-      // sharedService.alertDialog(AppLocalizations.of(context).passwordMismatch,
-      //     AppLocalizations.of(context).pleaseProvideTheCorrectPassword);
-      // Flushbar(
-      //   backgroundColor: colors.secondaryColor.withOpacity(0.75),
-      //   title: AppLocalizations.of(context).passwordMismatch,
-      //   message: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-      //   icon: Icon(
-      //     Icons.cancel,
-      //     size: 24,
-      //     color: colors.primaryColor,
-      //   ),
-      //   leftBarIndicatorColor: colors.red,
-      //   duration: Duration(seconds: 3),
-      // ).show(context);
     } else {
-      if (res.returnedText != 'Closed') {
-        // showNotification(context);
-        setBusy(false);
+      if (res.returnedText == 'Closed') {
+        // Flushbar(
+        //   backgroundColor: colors.secondaryColor.withOpacity(0.75),
+        //   title: AppLocalizations.of(context).passwordMismatch,
+        //   message: AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        //   icon: Icon(
+        //     Icons.cancel,
+        //     size: 24,
+        //     color: colors.primaryColor,
+        //   ),
+        //   leftBarIndicatorColor: colors.red,
+        //   duration: Duration(seconds: 3),
+        // ).show(context);
+
+        log.i('dialog closed by user');
       }
     }
 

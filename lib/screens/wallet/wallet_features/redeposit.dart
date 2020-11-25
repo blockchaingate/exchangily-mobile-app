@@ -85,6 +85,7 @@ class _RedepositState extends State<Redeposit> {
 
     for (var i = 0; i < errDepositData.length; i++) {
       var item = errDepositData[i];
+      print('ITEM $item');
       var coinType = item['coinType'];
       if (coin_list[coinType]['name'] == coinName) {
         errDepositList.add(item);

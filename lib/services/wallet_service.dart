@@ -1,8 +1,7 @@
 import 'package:bitbox/bitbox.dart' as Bitbox;
-import 'package:exchangilymobileapp/constants/constants.dart';
-import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -10,7 +9,6 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
-import 'package:exchangilymobileapp/utils/decoder.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -23,8 +21,6 @@ import 'dart:async';
 import 'package:bip39/bip39.dart' as bip39;
 import '../packages/bip32/bip32_base.dart' as bip32;
 import 'package:hex/hex.dart';
-import "package:pointycastle/pointycastle.dart";
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -38,9 +34,7 @@ import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
-import '../utils/number_util.dart';
 import 'dart:io';
-import 'dart:convert';
 import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
 import 'package:bitcoin_flutter/src/transaction_builder.dart';
@@ -53,11 +47,9 @@ import 'package:web_socket_channel/io.dart';
 import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:decimal/decimal.dart';
-import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/utils/exaddr.dart';
-import 'package:http/http.dart' as http;
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -149,7 +141,7 @@ class WalletService {
     'Genesis Vision'
   ];
 
-  Completer<AlertResponse> _completer;
+  Completer<DialogResponse> _completer;
 
 /*----------------------------------------------------------------------
                 Get Random Mnemonic
@@ -522,7 +514,7 @@ class WalletService {
   }
 
   // Completer the _dialogCompleter to resume the Future's execution
-  void transactionComplete(AlertResponse response) {
+  void transactionComplete(DialogResponse response) {
     _completer.complete(response);
     _completer = null;
   }
@@ -665,7 +657,7 @@ class WalletService {
     try {
       List<Map<String, dynamic>> bal = [];
       var res = await _api.getAssetsBalance(exgAddress);
-      // log.w('assetsBalance exchange $res');
+      log.w('assetsBalance exchange $res');
       for (var i = 0; i < res.length; i++) {
         var tempBal = res[i];
         var coinType = int.parse(tempBal['coinType']);
@@ -700,7 +692,7 @@ class WalletService {
       icon: Icon(
         iconData,
         size: 24,
-        color: globals.primaryColor,
+        color: colors.primaryColor,
       ),
       leftBarIndicatorColor: leftBarColor,
       duration: Duration(seconds: 3),

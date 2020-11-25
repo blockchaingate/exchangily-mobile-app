@@ -3,7 +3,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trades_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orders_book_view.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 
 import 'package:flutter/material.dart';

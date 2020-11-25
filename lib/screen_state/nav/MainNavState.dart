@@ -1,5 +1,4 @@
-import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -25,7 +24,7 @@ class MainNavState extends BaseState {
   String selectedLanguage;
   // bool result = false;
   String errorMessage = '';
-  AlertResponse alertResponse;
+  DialogResponse dialogResponse;
   BuildContext context;
   // String versionName = '';
   // String versionCode = '';
@@ -33,9 +32,7 @@ class MainNavState extends BaseState {
   // bool isDeleting = false;
   ScrollController scrollController;
 
-  init() {
-  }
-
+  init() {}
 
   // Change wallet language
 

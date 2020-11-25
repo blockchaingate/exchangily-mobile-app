@@ -12,12 +12,13 @@
 */
 
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/alert/alert_request.dart';
-import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
@@ -38,7 +39,8 @@ class _DialogManagerState extends State<DialogManager> {
   @override
   void initState() {
     super.initState();
-    _dialogService.registerDialogListener(_showdDialog);
+    _dialogService.registerDialogListener(_showDialog);
+    _dialogService.registerBasicDialogListener(_showBasicDialog);
     controller.text = '';
   }
 
@@ -47,11 +49,19 @@ class _DialogManagerState extends State<DialogManager> {
     return widget.child;
   }
 
-  void _showdDialog(AlertRequest request) {
+  void showBasicSnackbar(DialogRequest request) {
+    showSimpleNotification(
+      Center(
+          child: Text(request.title,
+              style: Theme.of(context).textTheme.headline6)),
+    );
+  }
+
+  void _showBasicDialog(DialogRequest request) {
     Alert(
         style: AlertStyle(
             animationType: AnimationType.grow,
-            isOverlayTapDismiss: true,
+            isOverlayTapDismiss: false,
             backgroundColor: globals.walletCardColor,
             descStyle: Theme.of(context).textTheme.bodyText1,
             titleStyle: Theme.of(context)
@@ -64,7 +74,48 @@ class _DialogManagerState extends State<DialogManager> {
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
           _dialogService.dialogComplete(
-              AlertResponse(returnedText: 'Closed', confirmed: false));
+              DialogResponse(returnedText: 'Closed', confirmed: false));
+        },
+        // content: Column(
+        //   children: <Widget>[
+        //     Text(request.description)
+
+        //   ],
+        // ),
+        buttons: [
+          DialogButton(
+            color: globals.primaryColor,
+            onPressed: () {
+              _dialogService.dialogComplete(DialogResponse(confirmed: false));
+
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              request.buttonTitle,
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          )
+        ]).show();
+  }
+
+  void _showDialog(DialogRequest request) {
+    Alert(
+        style: AlertStyle(
+            animationType: AnimationType.grow,
+            isOverlayTapDismiss: false,
+            backgroundColor: globals.walletCardColor,
+            descStyle: Theme.of(context).textTheme.bodyText1,
+            titleStyle: Theme.of(context)
+                .textTheme
+                .headline3
+                .copyWith(fontWeight: FontWeight.bold)),
+        context: context,
+        title: request.title,
+        desc: request.description,
+        closeFunction: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+          _dialogService.dialogComplete(
+              DialogResponse(returnedText: 'Closed', confirmed: false));
         },
         content: Column(
           children: <Widget>[
@@ -90,16 +141,17 @@ class _DialogManagerState extends State<DialogManager> {
           DialogButton(
             color: globals.primaryColor,
             onPressed: () {
-              FocusScope.of(context).requestFocus(FocusNode());
+              if (controller.text != '')
+                FocusScope.of(context).requestFocus(FocusNode());
               _walletService.readEncryptedData(controller.text).then((data) {
                 if (data != '' && data != null) {
                   _dialogService.dialogComplete(
-                      AlertResponse(returnedText: data, confirmed: true));
+                      DialogResponse(returnedText: data, confirmed: true));
                   controller.text = '';
                   Navigator.of(context).pop();
                 } else {
                   _dialogService
-                      .dialogComplete(AlertResponse(confirmed: false));
+                      .dialogComplete(DialogResponse(confirmed: false));
                   controller.text = '';
                   Navigator.of(context).pop();
                 }

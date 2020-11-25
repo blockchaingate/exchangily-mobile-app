@@ -14,13 +14,13 @@
 */
 import 'package:flutter/cupertino.dart';
 
-class AlertRequest {
+class DialogRequest {
   final String title;
   final String description;
   final String buttonTitle;
   final String cancelButton;
 
-  AlertRequest(
+  DialogRequest(
       {@required this.title,
       this.description,
       @required this.buttonTitle,

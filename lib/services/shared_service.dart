@@ -395,9 +395,9 @@ class SharedService {
   void showInfoFlushbar(String title, String message, IconData iconData,
       Color leftBarColor, BuildContext context) {
     Flushbar(
-      backgroundColor: globals.secondaryColor.withOpacity(0.75),
-      title: title,
-      message: message,
+      backgroundColor: globals.primaryColor,
+      titleText: Text(title, style: Theme.of(context).textTheme.headline5),
+      messageText: Text(message, style: Theme.of(context).textTheme.subtitle2),
       // icon: Icon(
       //   iconData,
       //   size: 24,

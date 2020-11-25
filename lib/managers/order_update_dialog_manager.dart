@@ -12,8 +12,8 @@
 */
 
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/alert/alert_request.dart';
-import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +47,7 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
     return widget.child;
   }
 
-  void _showdOrderUpdateDialog(AlertRequest request) {
+  void _showdOrderUpdateDialog(DialogRequest request) {
     Alert(
         style: AlertStyle(
             animationType: AnimationType.grow,
@@ -63,8 +63,8 @@ class _OrderUpdateDialogManagerState extends State<OrderUpdateDialogManager> {
         desc: request.description,
         closeFunction: () {
           FocusScope.of(context).requestFocus(FocusNode());
-          _dialogService.dialogComplete(AlertResponse(
-              returnedText: 'Closed Order Update Popup', confirmed: false));
+          _dialogService.dialogComplete(
+              DialogResponse(returnedText: 'Closed', confirmed: false));
         },
         content: Column(
           children: <Widget>[

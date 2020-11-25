@@ -15,7 +15,6 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -40,6 +39,7 @@ import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:keccak/keccak.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:random_string/random_string.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -506,12 +506,18 @@ class BuySellViewModel extends ReactiveViewModel {
       var resKanban = await sendKanbanRawTransaction(txHex);
       log.e('resKanban $resKanban');
       if (resKanban != null && resKanban['transactionHash'] != null) {
-        sharedService.showInfoFlushbar(
-            AppLocalizations.of(context).placeOrderTransactionSuccessful,
-            'txid:' + resKanban['transactionHash'],
-            Icons.check,
-            green,
-            context);
+        showSimpleNotification(
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(AppLocalizations.of(context).orderCreatedSuccessfully,
+                  style: Theme.of(context).textTheme.headline5),
+              Text('txid:' + resKanban['transactionHash'],
+                  style: Theme.of(context).textTheme.headline6),
+            ],
+          ),
+          position: NotificationPosition.bottom,
+        );
         // Future.delayed(new Duration(seconds: 2), () {
         //   getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
         //   // isReloadMyOrders = true;

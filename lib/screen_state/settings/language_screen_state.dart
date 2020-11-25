@@ -12,7 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -42,7 +42,7 @@ class LanguageScreenState extends BaseState {
   String selectedLanguage;
   // bool result = false;
   String errorMessage = '';
-  AlertResponse alertResponse;
+  DialogResponse dialogResponse;
   BuildContext context;
   // String versionName = '';
   // String versionCode = '';
@@ -50,9 +50,7 @@ class LanguageScreenState extends BaseState {
   // bool isDeleting = false;
   ScrollController scrollController;
 
-  init() {
-  }
-
+  init() {}
 
   // Change wallet language
 
@@ -73,5 +71,4 @@ class LanguageScreenState extends BaseState {
     }
     setState(ViewState.Idle);
   }
-
 }

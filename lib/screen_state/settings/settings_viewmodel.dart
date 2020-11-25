@@ -11,9 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/constants/api_routes.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/models/alert/alert_response.dart';
+import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -22,7 +20,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/shared/globalLang.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -32,7 +30,6 @@ import 'package:stacked/stacked.dart';
 import '../../localizations.dart';
 import '../../logger.dart';
 import '../../service_locator.dart';
-import '../base_state.dart';
 
 class SettingsViewmodel extends BaseViewModel {
   bool isVisible = false;
@@ -51,7 +48,7 @@ class SettingsViewmodel extends BaseViewModel {
   String selectedLanguage;
   // bool result = false;
   String errorMessage = '';
-  AlertResponse alertResponse;
+  DialogResponse dialogResponse;
   BuildContext context;
   String versionName = '';
   String versionCode = '';
@@ -222,11 +219,13 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
-  // Show mnemonic
+/*----------------------------------------------------------------------
+                Display mnemonic
+----------------------------------------------------------------------*/
   displayMnemonic() async {
     errorMessage = '';
-    setBusy(true);
-    log.w('Is visi $isVisible');
+
+    log.w('Is visible $isVisible');
     if (isVisible) {
       isVisible = !isVisible;
     } else {
@@ -238,6 +237,7 @@ class SettingsViewmodel extends BaseViewModel {
               buttonTitle: AppLocalizations.of(context).confirm)
           .then((res) async {
         if (res.confirmed) {
+          setBusy(true);
           isVisible = !isVisible;
           mnemonic = res.returnedText;
 
@@ -245,8 +245,8 @@ class SettingsViewmodel extends BaseViewModel {
           return '';
         } else if (res.returnedText == 'Closed') {
           log.e('Dialog Closed By User');
-          setBusy(false);
-          return errorMessage = '';
+          // setBusy(false);
+          // return errorMessage = '';
         } else {
           log.e('Wrong pass');
           setBusy(false);
@@ -259,6 +259,7 @@ class SettingsViewmodel extends BaseViewModel {
         return false;
       });
     }
+    setBusy(false);
   }
 
 /*-------------------------------------------------------------------------------------
