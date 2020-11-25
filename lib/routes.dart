@@ -49,7 +49,7 @@ import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/trade/main.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 

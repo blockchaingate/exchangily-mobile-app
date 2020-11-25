@@ -33,7 +33,7 @@ class MoveToExchangeScreen extends StatelessWidget {
     double bal = walletInfo.availableBalance;
     String coinName = walletInfo.tickerName;
 
-    return BaseScreen<MoveToExchangeScreenState>(
+    return BaseScreen<MoveToExchangeViewModel>(
       onModelReady: (model) {
         model.context = context;
         model.walletInfo = walletInfo;

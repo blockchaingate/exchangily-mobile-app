@@ -205,8 +205,7 @@ Uint8List _padTo32(Uint8List data) {
 Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
     {int chainId, var network}) async {
   print('signBtcMessageWith begin');
-  Uint8List messageHash = magicHash(
-      originalMessage, network);
+  Uint8List messageHash = magicHash(originalMessage, network);
 
   print('network=');
   print(network);
@@ -245,8 +244,7 @@ Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
 Future<Uint8List> signDogeMessageWith(originalMessage, Uint8List privateKey,
     {int chainId, var network}) async {
   print('signDogeMessageWith');
-  Uint8List messageHash = magicHashDoge(
-      originalMessage, network);
+  Uint8List messageHash = magicHashDoge(originalMessage, network);
   //messageHash.insert(1, 25);
   print('network=');
   print(network);
@@ -348,7 +346,6 @@ Uint8List magicHashDoge(String message, [NetworkType network]) {
 
   buffer.setRange(1, messagePrefix.length + 1, messagePrefix);
 
-
   encode(message.length, buffer, messagePrefix.length + 1);
   buffer.setRange(
       messagePrefix.length + messageVISize + 1, length, utf8.encode(message));
@@ -357,12 +354,9 @@ Uint8List magicHashDoge(String message, [NetworkType network]) {
 }
 
 signedMessage(String originalMessage, seed, coinName, tokenType) async {
-
   var r = '';
   var s = '';
   var v = '';
-
-
 
   var signedMess;
   if (coinName == 'ETH' || tokenType == 'ETH') {
@@ -402,10 +396,9 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
     //var hdWallet = new HDWallet.fromSeed(seed, network: testnet);
 
     var network = environment["chains"]['BTC']["network"];
-    if(coinName == 'LTC') {
+    if (coinName == 'LTC') {
       network = environment["chains"]['LTC']["network"];
-    } else
-    if(coinName == 'DOGE') {
+    } else if (coinName == 'DOGE') {
       network = environment["chains"]['DOGE']["network"];
     }
     final root2 = bip32.BIP32.fromSeed(
@@ -413,8 +406,7 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
         bip32.NetworkType(
             wif: network.wif,
             bip32: new bip32.Bip32Type(
-                public: network.bip32.public,
-                private: network.bip32.private)));
+                public: network.bip32.public, private: network.bip32.private)));
 
     var coinType = environment["CoinType"]["FAB"];
     if (coinName == 'BTC') {
@@ -430,13 +422,13 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
       coinType = environment["CoinType"]["BCH"];
     }
     var bitCoinChild =
-      root2.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
+        root2.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
     //var btcWallet =
     //    hdWallet.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
     var privateKey = bitCoinChild.privateKey;
     // var credentials = EthPrivateKey(privateKey);
 
-    if(coinName == 'DOGE') {
+    if (coinName == 'DOGE') {
       signedMess = await signDogeMessageWith(originalMessage, privateKey,
           network: network);
     } else {

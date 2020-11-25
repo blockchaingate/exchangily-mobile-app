@@ -36,6 +36,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart'
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/order_list_screen_state.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
@@ -98,15 +99,16 @@ Future serviceLocator() async {
   locator.registerFactory(() => ConfirmMnemonicScreenState());
   locator.registerFactory(() => CreatePasswordScreenState());
   locator.registerFactory(() => WalletDashboardViewModel());
-  locator.registerFactory(() => WalletFeaturesScreenState());
+  locator.registerFactory(() => WalletFeaturesViewModel());
   locator.registerFactory(() => SendScreenState());
   locator.registerFactory(() => SettingsViewmodel());
   locator.registerFactory(() => LanguageScreenState());
   locator.registerFactory(() => WalletSetupScreenState());
   locator.registerFactory(() => ChooseWalletLanguageScreenState());
-  locator.registerFactory(() => MoveToExchangeScreenState());
+  locator.registerFactory(() => MoveToExchangeViewModel());
   locator.registerFactory(() => MoveToWalletScreenState());
   locator.registerFactory(() => TransactionHistoryScreenState());
+  locator.registerFactory(() => RedepositViewModel());
   // OTC
   locator.registerFactory(() => OtcScreenState());
   locator.registerFactory(() => OtcDetailsScreenState());

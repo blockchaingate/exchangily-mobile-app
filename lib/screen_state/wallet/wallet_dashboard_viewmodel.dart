@@ -105,11 +105,11 @@ class WalletDashboardViewModel extends BaseState {
     sharedService.context = context;
     //  await getDecimalPairConfig();
     await refreshBalance();
-    getConfirmDepositStatus();
-    showDialogWarning();
 
     totalBalanceContainerWidth = 270.0;
     checkAnnouncement();
+    await getConfirmDepositStatus();
+    showDialogWarning();
     setBusy(false);
   }
 
@@ -295,7 +295,7 @@ class WalletDashboardViewModel extends BaseState {
   }
 
 /*----------------------------------------------------------------------
-                    Get app version
+                    Search Coins By TickerName
 ----------------------------------------------------------------------*/
 
   searchCoinsByTickerName(String value) async {
@@ -665,33 +665,41 @@ class WalletDashboardViewModel extends BaseState {
     return gasAmount;
   }
 
-  // Get Confirm deposit err
+/*----------------------------------------------------------------------
+                      Get Confirm deposit err
+----------------------------------------------------------------------*/
+
   getConfirmDepositStatus() async {
     String address = await walletService.getExgAddressFromWalletDatabase();
     await walletService.getErrDeposit(address).then((res) async {
-      log.w('getConfirmDepositStatus $res');
       if (res != null) {
-        if (res.length <= 0) return;
+        log.w('getConfirmDepositStatus $res');
         var singleTransaction = res[0];
-        //  log.e('1 $singleTransaction');
         int coinType = singleTransaction['coinType'];
 
-        //  log.w('2 $coinType');
-        isConfirmDeposit = true;
-        String name = coinList.coin_list[coinType]['name'];
-        //  log.e(name);
+        var name = coinList.newCoinTypeMap[coinType.toString()];
+        // .keys.firstWhere((element) {
+        //   log.i('test $element -- ${coinType.toString()}');
+        //   return element == coinType.toString();
+        // });
+        log.e('Pending deposit coin $name');
         await walletDatabaseService.getBytickerName(name).then((res) {
           if (res != null) {
+            setBusy(true);
             confirmDepositCoinWallet = res;
+            isConfirmDeposit = true;
+            setBusy(false);
           }
         });
       }
     });
   }
-
-  // Show dialog warning
+/*----------------------------------------------------------------------
+                      Show dialog warning
+----------------------------------------------------------------------*/
 
   showDialogWarning() {
+    log.w('in showDialogWarning isConfirmDeposit $isConfirmDeposit');
     if (gasAmount < 0.5) {
       sharedService.getDialogWarningsStatus().then((value) {
         {
@@ -744,23 +752,6 @@ class WalletDashboardViewModel extends BaseState {
     });
     walletInfo = [];
 
-    // int coinTickersLength = walletService.coinTickers.length;
-
-    //await getDecimalPairConfig();
-
-    /// Check if wallet database coins are same as wallet service list
-    /// if not then call create offline wallet in the wallet service
-    // print('${walletService.coinTickers.length} -- ${walletInfoCopy.length}');
-    // if (coinTickersLength != walletInfoCopy.length) {
-    //   print('$coinTickersLength -- ${walletInfoCopy.length}');
-    //   await walletService.createOfflineWallets(
-    //       'culture sound obey clean pretty medal churn behind chief cactus alley ready');
-    //   await walletDatabaseService.getAll().then((walletList) {
-    //     walletInfoCopy = [];
-    //     walletInfoCopy = walletList;
-    //   });
-    // }
-
     Map<String, dynamic> walletBalancesBody = {
       'btcAddress': '',
       'ethAddress': '',
@@ -787,9 +778,6 @@ class WalletDashboardViewModel extends BaseState {
     });
 
     log.i('Coin address body $walletBalancesBody');
-
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    //  prefs.setString('walletBalancesBody', walletBalancesBody.toString());
     storageService.walletBalancesBody = walletBalancesBody.toString();
 
     // ----------------------------------------
@@ -859,7 +847,7 @@ class WalletDashboardViewModel extends BaseState {
         calcTotalBal();
         await updateWalletDatabase();
 
-        if (!isProduction) debugVersionPopup();
+        //  if (!isProduction) debugVersionPopup();
 
         // get exg address to get free fab
         String address = await getExgAddressFromWalletDatabase();

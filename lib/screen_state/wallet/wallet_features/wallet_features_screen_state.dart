@@ -18,17 +18,18 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/material.dart';
 
-class WalletFeaturesScreenState extends BaseState {
-  final log = getLogger('WalletFeaturesScreenState');
+class WalletFeaturesViewModel extends BaseState {
+  final log = getLogger('WalletFeaturesViewModel');
 
   WalletInfo walletInfo;
   WalletService walletService = locator<WalletService>();
-  WalletDataBaseService databaseService = locator<WalletDataBaseService>();
+  SharedService sharedService = locator<SharedService>();
   NavigationService navigationService = locator<NavigationService>();
   DialogService dialogService = locator<DialogService>();
   final double elevation = 5;
@@ -63,21 +64,8 @@ class WalletFeaturesScreenState extends BaseState {
 
   refreshErrDeposit() async {}
 
-  Future getExgAddress() async {
-    String address = '';
-    var res = await databaseService.getAll();
-    for (var i = 0; i < res.length; i++) {
-      WalletInfo item = res[i];
-      if (item.tickerName == 'EXG') {
-        address = item.address;
-        break;
-      }
-    }
-    return address;
-  }
-
   Future getErrDeposit() async {
-    var address = await this.getExgAddress();
+    var address = await this.sharedService.getExgAddressFromWalletDatabase();
     var result = await walletService.getErrDeposit(address);
     log.i('getErrDeposit $result');
     return result;

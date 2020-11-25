@@ -32,7 +32,7 @@ class WalletFeaturesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen<WalletFeaturesScreenState>(
+    return BaseScreen<WalletFeaturesViewModel>(
       onModelReady: (model) {
         model.walletInfo = walletInfo;
         model.context = context;
@@ -184,7 +184,7 @@ class WalletFeaturesScreen extends StatelessWidget {
                           for (var i = 0; i < errDepositData.length; i++) {
                             var item = errDepositData[i];
                             var coinType = item['coinType'];
-                            if (coin_list[coinType]['name'] ==
+                            if (newCoinTypeMap[coinType.toString()] ==
                                 walletInfo.tickerName) {
                               model.errDepositItem = item;
                               break;

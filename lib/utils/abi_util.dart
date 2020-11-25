@@ -15,7 +15,6 @@ import 'package:exchangilymobileapp/utils/exaddr.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import './string_util.dart';
 import 'package:web3dart/web3dart.dart';
-import 'package:http/http.dart' as http;
 import 'package:hex/hex.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/src/utils/rlp.dart' as rlp;
@@ -24,7 +23,7 @@ import 'dart:typed_data';
 // {"success":true,"data":{"transactionID":"3ba8d681cddea5376c9b6ab2963ff243160fa086ec0681a67a3206ad80284d76"}}
 
 getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
-  var abiHex = "3295d51e";
+  var abiHex = "0xcce185b8";
   abiHex += fixLength(coinType.toRadixString(16), 64);
 
   var amountHex = amountInLink.toRadixString(16);
@@ -35,7 +34,7 @@ getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
 }
 
 getSendCoinFuncABI(coinType, kbPaymentAddress, amount) {
-  var abiHex = "10c43d65";
+  var abiHex = "0x3faf0a66";
   var fabAddress = toLegacyAddress(kbPaymentAddress);
 
   var exAddress = fabToExgAddress(fabAddress);
@@ -50,7 +49,7 @@ getSendCoinFuncABI(coinType, kbPaymentAddress, amount) {
 
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
     String addressInKanban, signedMessage) {
-  var abiHex = "379eb862";
+  var abiHex = "0x379eb862";
   abiHex += trimHexPrefix(signedMessage["v"]);
   abiHex += fixLength(coinType.toRadixString(16), 62);
   abiHex += trimHexPrefix(txHash);
@@ -76,7 +75,7 @@ getCreateOrderFuncABI(
   /*
  0x12a3da170000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000002386f26fc10000000000000000000000000000000000000000000000000000002386f26fc100000000000000000000000000000000000000000000000000000000006296a75020000000000000000000000000000000000000000000000000000000000000000006e328d04a77db9be48be26004e8eb87ccb4432839a10bdff4112a2bffdb3821
    */
-  var abiHex = '12a3da17';
+  var abiHex = '0x19b54ba9';
   var bidOrAskString = bidOrAsk ? '1' : '0';
   abiHex += fixLength(bidOrAskString, 64);
   abiHex += fixLength(orderType.toString(), 64);
@@ -124,8 +123,8 @@ Uint8List uint8ListFromList(List<int> data) {
   return Uint8List.fromList(data);
 }
 
-Future signAbiHexWithPrivateKey(String abiHex, String privateKey, String coinPoolAddress, int nonce, int gasPrice, int gasLimit) async{
-
+Future signAbiHexWithPrivateKey(String abiHex, String privateKey,
+    String coinPoolAddress, int nonce, int gasPrice, int gasLimit) async {
   var chainId = environment["chains"]["KANBAN"]["chainId"];
   //var apiUrl = "https://ropsten.infura.io/v3/6c5bdfe73ef54bbab0accf87a6b4b0ef"; //Replace with your API
 

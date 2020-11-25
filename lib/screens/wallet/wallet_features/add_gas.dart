@@ -28,8 +28,6 @@ import 'dart:typed_data';
 class AddGas extends StatelessWidget {
   final DialogService _dialogService = locator<DialogService>();
   final WalletService walletService = locator<WalletService>();
-  AddGas({Key key}) : super(key: key);
-
   final SharedService sharedService = locator<SharedService>();
 
   final log = getLogger('AddGas');
@@ -48,7 +46,7 @@ class AddGas extends StatelessWidget {
 
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
       String errorMsg = ret["errMsg"];
-    
+
       String formattedErrorMsg = firstCharToUppercase(errorMsg);
 
       myController.text = '';
@@ -62,12 +60,12 @@ class AddGas extends StatelessWidget {
           path: (ret["errMsg"] == '') ? 'dashboard' : '');
     } else {
       if (res.returnedText != 'Closed') {
-        showNotification(context);
+        wrongPasswordNotification(context);
       }
     }
   }
 
-  showNotification(context) {
+  wrongPasswordNotification(context) {
     sharedService.showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,
         AppLocalizations.of(context).pleaseProvideTheCorrectPassword,

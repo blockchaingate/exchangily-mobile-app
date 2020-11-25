@@ -15,10 +15,11 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import '../../../logger.dart';
 import '../../../shared/globals.dart' as globals;
 
-class MoveToExchangeScreenState extends BaseState {
+class MoveToExchangeViewModel extends BaseState {
   final log = getLogger('MoveToExchangeScreenState');
 
   DialogService _dialogService = locator<DialogService>();
@@ -207,34 +208,29 @@ class MoveToExchangeScreenState extends BaseState {
           walletService.checkDepositTransactionStatus(transactionHistory);
           walletService.insertTransactionInDatabase(transactionHistory);
         }
-        sharedService.alertDialog(
-            success
-                ? AppLocalizations.of(context).depositTransactionSuccess
-                : AppLocalizations.of(context).depositTransactionFailed,
-            success
-                ? ""
-                : ret.containsKey("error") && ret["error"] != null
-                    ? ret["error"]
-                    : AppLocalizations.of(context).serverError,
-            isWarning: false);
-
-        // final popup = BeautifulPopup(
-        //   context: context,
-        //   template: TemplateGift,
-        // );
-
-        // popup.show(
-        //   title: 'String or Widget',
-        //   content: 'String or Widget',
-        //   actions: [
-        //     popup.button(
-        //       label: 'Close',
-        //       onPressed: Navigator.of(context).pop,
-        //     ),
-        //   ],
-        //   // bool barrierDismissible = false,
-        //   // Widget close,
-        // );
+        showSimpleNotification(
+            Column(children: [
+              success
+                  ? Text(AppLocalizations.of(context).depositTransactionSuccess)
+                  : Text(AppLocalizations.of(context).depositTransactionFailed),
+              success
+                  ? Text("")
+                  : ret.containsKey("error") && ret["error"] != null
+                      ? Text(ret["error"])
+                      : Text(AppLocalizations.of(context).serverError),
+            ]),
+            position: NotificationPosition.bottom,
+            background: primaryColor);
+        // sharedService.alertDialog(
+        //     success
+        //         ? AppLocalizations.of(context).depositTransactionSuccess
+        //         : AppLocalizations.of(context).depositTransactionFailed,
+        //     success
+        //         ? ""
+        //         : ret.containsKey("error") && ret["error"] != null
+        //             ? ret["error"]
+        //             : AppLocalizations.of(context).serverError,
+        //     isWarning: false);
       }).catchError((onError) {
         log.e('Deposit Catch $onError');
         sharedService.alertDialog(

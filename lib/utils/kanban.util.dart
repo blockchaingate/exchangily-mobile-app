@@ -88,7 +88,7 @@ Future<Map<String, dynamic>> submitDeposit(
 Future getKanbanErrDeposit(String address) async {
   ConfigService configService = locator<ConfigService>();
   var url = configService.getKanbanBaseUrl() + 'depositerr/' + address;
-  print('getKanbanErrDeposit $url');
+  print('kanbanUtil getKanbanErrDeposit $url');
   try {
     var client = new http.Client();
     var response = await client.get(url);

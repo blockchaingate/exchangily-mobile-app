@@ -222,7 +222,7 @@ class SharedService {
                     padding: EdgeInsets.all(10),
                     child: Text(title),
                   ),
-            titleTextStyle: Theme.of(context).textTheme.headline4,
+            titleTextStyle: Theme.of(context).textTheme.headline5,
             contentTextStyle: TextStyle(color: globals.grey),
             contentPadding: EdgeInsets.symmetric(horizontal: 10),
             content: Visibility(
@@ -319,11 +319,11 @@ class SharedService {
                               if (path == '' || path == null) {
                                 Navigator.of(context).pop(false);
                               } else {
-                                print('pATH $path');
-                                navigationService.navigateTo(
-                                  path,
-                                );
-                                //Navigator.of(context).pop(false);
+                                print('PATH $path');
+                                navigationService
+                                    .navigateUsingpopAndPushedNamed(path,
+                                        arguments: arguments);
+                                Navigator.of(context).pop(false);
                               }
                             },
                           ),
@@ -397,7 +397,7 @@ class SharedService {
     Flushbar(
       backgroundColor: globals.primaryColor,
       titleText: Text(title, style: Theme.of(context).textTheme.headline5),
-      messageText: Text(message, style: Theme.of(context).textTheme.subtitle2),
+      messageText: Text(message, style: Theme.of(context).textTheme.headline6),
       // icon: Icon(
       //   iconData,
       //   size: 24,

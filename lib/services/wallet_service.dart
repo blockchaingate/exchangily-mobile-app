@@ -1,5 +1,6 @@
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
@@ -16,6 +17,7 @@ import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.da
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:bip39/bip39.dart' as bip39;
@@ -436,15 +438,27 @@ class WalletService {
         log.i('Timer cancel');
 
         /// may add deposit or withdraw in front of status for better understanding
-        sharedService.alertDialog(
-            '${transaction.tickerName} ${transactionHistory.tag}',
-            stringUtils.firstCharToUppercase(result.toString()),
-            isWarning: false);
+        // sharedService.alertDialog(
+        //     '${transaction.tickerName} ${transactionHistory.tag}',
+        //     stringUtils.firstCharToUppercase(result.toString()),
+        //     isWarning: false);
         String date = DateTime.now().toString();
 
         if (transaction != null) {
           transactionHistoryByTxId = await transactionHistoryDatabaseService
               .getByTxId(transaction.txId);
+          showSimpleNotification(
+              Column(children: [
+                Row(
+                  children: [
+                    Text('${transactionHistoryByTxId.tickerName} '),
+                    Text('${transactionHistoryByTxId.tag}')
+                  ],
+                ),
+                Text(stringUtils.firstCharToUppercase(result.toString())),
+              ]),
+              position: NotificationPosition.bottom,
+              background: primaryColor);
         }
 
         if (res['code'] == 0) {
@@ -665,7 +679,7 @@ class WalletService {
             stringUtils.bigNum2Double(tempBal['unlockedAmount']);
         var lockedAmount = stringUtils.bigNum2Double(tempBal['lockedAmount']);
         var finalBal = {
-          'coin': coinList.coin_list[coinType]['name'],
+          'coin': coinList.newCoinTypeMap[coinType.toString()],
           'amount': unlockedAmount,
           'lockedAmount': lockedAmount
         };
@@ -723,11 +737,13 @@ class WalletService {
 ----------------------------------------------------------------------*/
 
   getCoinTypeIdByName(String coinName) {
-    var coins =
-        coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
-    if (coins != null) {
-      log.w('getCoinTypeIdByName $coins');
-      return coins[0]['id'];
+    var newCoinList = coinList.newCoinTypeMap.entries
+        .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
+    // var coins =
+    //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
+    if (newCoinList != null) {
+      log.w('New Coin list ${newCoinList.key}');
+      return newCoinList.key;
     }
     return 0;
   }
