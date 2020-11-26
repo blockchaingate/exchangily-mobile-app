@@ -682,15 +682,17 @@ class WalletDashboardViewModel extends BaseState {
         //   log.i('test $element -- ${coinType.toString()}');
         //   return element == coinType.toString();
         // });
-        log.e('Pending deposit coin $name');
-        await walletDatabaseService.getBytickerName(name).then((res) {
-          if (res != null) {
-            setBusy(true);
-            confirmDepositCoinWallet = res;
-            isConfirmDeposit = true;
-            setBusy(false);
-          }
-        });
+        if (name != null) {
+          log.e('Pending deposit coin $name');
+          await walletDatabaseService.getBytickerName(name).then((res) {
+            if (res != null) {
+              setBusy(true);
+              confirmDepositCoinWallet = res;
+              isConfirmDeposit = true;
+              setBusy(false);
+            }
+          });
+        }
       }
     });
   }

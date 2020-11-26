@@ -754,7 +754,7 @@ class WalletService {
   getOriginalMessage(
       int coinType, String txHash, BigInt amount, String address) {
     var buf = '';
-    buf += stringUtils.fixLength(coinType.toRadixString(16), 4);
+    buf += stringUtils.fixLength(coinType.toRadixString(16), 8);
     buf += stringUtils.fixLength(txHash, 64);
     var hexString = amount.toRadixString(16);
     buf += stringUtils.fixLength(hexString, 64);
@@ -916,13 +916,14 @@ class WalletService {
 
     var signedMess =
         await signedMessage(originalMessage, seed, coinName, tokenType);
-
+    log.e('Signed message $signedMess');
+    print('coin type $coinType');
+    log.w('Original message $originalMessage');
     var coinPoolAddress = await getCoinPoolAddress();
 
     var abiHex = getDepositFuncABI(
         coinType, txHash, amountInLink, addressInKanban, signedMess);
 
-    // print('abiHexxxxxx=' + abiHex);
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(

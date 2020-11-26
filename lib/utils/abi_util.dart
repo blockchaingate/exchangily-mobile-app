@@ -59,6 +59,7 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
   abiHex += fixLength(trimHexPrefix(addressInKanban), 64);
   abiHex += trimHexPrefix(signedMessage["r"]);
   abiHex += trimHexPrefix(signedMessage["s"]);
+  print('getDepositFuncABI $abiHex');
   return abiHex;
 }
 

@@ -28,7 +28,6 @@
 //   {'id': 26, 'name': 'FUN', 'icon': ''},
 //   {'id': 27, 'name': 'DRGN', 'icon': ''}
 // ];
-// culture sound obey clean pretty medal churn behind chief cactus alley ready
 const Map<int, String> newCoinTypeMap = {
   131072: "FAB",
   131073: "EXG",
