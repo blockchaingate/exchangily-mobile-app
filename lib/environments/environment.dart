@@ -103,7 +103,10 @@ Map devConfig = {
       },
     ],
   },
-  "websocket": "wss://kanbantest.fabcoinapi.com/ws/",
+  "websocket": {
+    "us": "wss://kanbantest.fabcoinapi.com/ws/",
+    "hk": "wss://kanbantest.fabcoinapi.com/ws/",
+  },
   "minimumWithdraw": {
     "EXG": 50,
     "BTC": 0.01,

@@ -43,12 +43,14 @@ class AddGas extends StatelessWidget {
       String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
       var ret = await walletService.addGasDo(seed, amount);
-
+      log.w('res $ret');
       //{'txHex': txHex, 'txHash': txHash, 'errMsg': errMsg}
-      String errorMsg = ret["errMsg"];
+      String formattedErrorMsg = '';
+      if (ret["errMsg"] != '' && ret["errMsg"] != null) {
+        String errorMsg = ret["errMsg"];
 
-      String formattedErrorMsg = firstCharToUppercase(errorMsg);
-
+        formattedErrorMsg = firstCharToUppercase(errorMsg);
+      }
       myController.text = '';
       sharedService.alertDialog(
           (ret["errMsg"] == '')

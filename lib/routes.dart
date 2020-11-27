@@ -41,7 +41,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_setup/choose_wallet_la
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_exchange.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/receive.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/send.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -100,7 +100,7 @@ class RouteGenerator {
 
       case '/walletFeatures':
         return MaterialPageRoute(
-            builder: (_) => WalletFeaturesScreen(walletInfo: args));
+            builder: (_) => WalletFeaturesView(walletInfo: args));
 
       case '/receive':
         return MaterialPageRoute(

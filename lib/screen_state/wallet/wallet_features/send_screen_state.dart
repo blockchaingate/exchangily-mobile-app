@@ -15,6 +15,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
@@ -26,6 +27,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,6 +35,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:overlay_support/overlay_support.dart';
 import '../../../shared/globals.dart' as globals;
 
 class SendScreenState extends BaseState {
@@ -339,9 +342,20 @@ class SendScreenState extends BaseState {
 // Copy Address
   copyAddress(context) {
     Clipboard.setData(new ClipboardData(text: txHash));
-    sharedService.alertDialog(AppLocalizations.of(context).transactionId,
-        AppLocalizations.of(context).copiedSuccessfully,
-        isWarning: false);
+    showSimpleNotification(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(AppLocalizations.of(context).transactionId + ' '),
+            Text(AppLocalizations.of(context).copiedSuccessfully),
+          ],
+        ),
+        position: NotificationPosition.bottom,
+        background: primaryColor);
+    // sharedService.alertDialog(AppLocalizations.of(context).transactionId,
+    //     AppLocalizations.of(context).copiedSuccessfully,
+    //     isWarning: false);
   }
 
   // Update Trans Fee
