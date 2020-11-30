@@ -615,7 +615,7 @@ class ApiService {
 
   // Get Decimal configuration for the coins
   Future<List<PairDecimalConfig>> getPairDecimalConfig() async {
-    var url = configService.getKanbanBaseUrl() + getPairConfigRoute;
+    var url = configService.getKanbanBaseUrl() + getDecimalPairConfigRoute;
     log.e('getPairDecimalConfig $url');
     try {
       var response = await client.get(url);

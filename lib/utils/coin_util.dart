@@ -44,6 +44,7 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'varuint.dart';
 import 'package:bitbox/bitbox.dart' as Bitbox;
+import '../environments/coins.dart' as coinList;
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
@@ -52,6 +53,22 @@ final log = getLogger('coin_util');
 Uint8List hash256(Uint8List buffer) {
   Uint8List _tmp = new SHA256Digest().process(buffer);
   return new SHA256Digest().process(_tmp);
+}
+
+/*----------------------------------------------------------------------
+                Get Coin Type Id By Name
+----------------------------------------------------------------------*/
+
+getCoinTypeIdByName(String coinName) {
+  var newCoinList = coinList.newCoinTypeMap.entries
+      .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
+  // var coins =
+  //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
+  if (newCoinList != null) {
+    log.w('New Coin list ${newCoinList.key}');
+    return newCoinList.key;
+  }
+  return 0;
 }
 
 encodeSignature(signature, recovery, compressed, segwitType) {

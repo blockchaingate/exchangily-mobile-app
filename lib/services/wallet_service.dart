@@ -732,21 +732,7 @@ class WalletService {
   Future<int> addGas() async {
     return 0;
   }
-/*----------------------------------------------------------------------
-                Get Coin Type Id By Name
-----------------------------------------------------------------------*/
 
-  getCoinTypeIdByName(String coinName) {
-    var newCoinList = coinList.newCoinTypeMap.entries
-        .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
-    // var coins =
-    //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
-    if (newCoinList != null) {
-      log.w('New Coin list ${newCoinList.key}');
-      return newCoinList.key;
-    }
-    return 0;
-  }
 /*----------------------------------------------------------------------
                 Get Original Message
 ----------------------------------------------------------------------*/

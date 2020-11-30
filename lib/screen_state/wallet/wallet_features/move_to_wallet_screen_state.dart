@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -11,15 +10,14 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../logger.dart';
 import '../../../shared/globals.dart' as globals;
 
-class MoveToWalletScreenState extends BaseState {
-  final log = getLogger('MoveToWalletScreenState');
+class MoveToWalletViewmodel extends BaseState {
+  final log = getLogger('MoveToWalletViewmodel');
 
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();

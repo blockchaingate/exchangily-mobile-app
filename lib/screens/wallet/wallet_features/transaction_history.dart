@@ -8,7 +8,6 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-
 class TransactionHistoryView extends StatelessWidget {
   final String tickerName;
   TransactionHistoryView({Key key, this.tickerName}) : super(key: key);
@@ -40,7 +39,7 @@ class TransactionHistoryView extends StatelessWidget {
                   ),
                 )
               : Container(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(4.0),
                   child: Column(
                     children: <Widget>[
                       for (var transaction in model.transactionHistory.reversed)
@@ -55,7 +54,7 @@ class TransactionHistoryView extends StatelessWidget {
                                   child: Row(
                                     children: <Widget>[
                                       Container(
-                                        width: 40,
+                                        width: 45,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -145,7 +144,8 @@ class TransactionHistoryView extends StatelessWidget {
                                                             decoration:
                                                                 TextDecoration
                                                                     .underline,
-                                                            color: colors.primaryColor),
+                                                            color: colors
+                                                                .primaryColor),
                                                     recognizer:
                                                         TapGestureRecognizer()
                                                           ..onTap = () {
@@ -188,10 +188,10 @@ class TransactionHistoryView extends StatelessWidget {
                                           Text(
                                             transaction.quantity
                                                 .toStringAsFixed(
-                                                  // model
-                                                  //   .decimalConfig
-                                                  //   .quantityDecimal
-                                                   2 ),
+                                                    // model
+                                                    //   .decimalConfig
+                                                    //   .quantityDecimal
+                                                    2),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline5
@@ -215,34 +215,69 @@ class TransactionHistoryView extends StatelessWidget {
                                                       ),
                                                       if (transaction.status ==
                                                           'Complete')
-                                                        Text(firstCharToUppercase(AppLocalizations.of(context).completed),
+                                                        Text(
+                                                            firstCharToUppercase(
+                                                                AppLocalizations.of(
+                                                                        context)
+                                                                    .completed),
                                                             style: TextStyle(
-                                                              fontSize: customFontSize,
-                                                                color: colors.buyPrice))
-                                                      else if (transaction.status ==
+                                                                fontSize:
+                                                                    customFontSize,
+                                                                color: colors
+                                                                    .buyPrice))
+                                                      else if (transaction
+                                                              .status ==
                                                           'Require redeposit')
                                                         SizedBox(
                                                           width: 80,
-                                                          child: Text(firstCharToUppercase(AppLocalizations.of(context).requireRedeposit),
+                                                          child: Text(
+                                                              firstCharToUppercase(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .requireRedeposit),
                                                               style: TextStyle(
-                                                                  fontSize: customFontSize,
-                                                                  color: colors.yellow)),
+                                                                  fontSize:
+                                                                      customFontSize,
+                                                                  color: colors
+                                                                      .yellow)),
                                                         )
-                                                      else if (transaction.status ==
+                                                      else if (transaction
+                                                              .status ==
                                                           'Failed')
-                                                        Text(firstCharToUppercase(AppLocalizations.of(context).failed),
+                                                        Text(
+                                                            firstCharToUppercase(
+                                                                AppLocalizations.of(
+                                                                        context)
+                                                                    .failed),
                                                             style: TextStyle(
-                                                                fontSize: customFontSize,
-                                                                color: colors.sellPrice))
-                                                      else if (transaction.status ==
+                                                                fontSize:
+                                                                    customFontSize,
+                                                                color: colors
+                                                                    .sellPrice))
+                                                      else if (transaction
+                                                              .status ==
                                                           'Error')
-                                                        Text(firstCharToUppercase(AppLocalizations.of(context).error),
+                                                        Text(
+                                                            firstCharToUppercase(
+                                                                AppLocalizations.of(
+                                                                        context)
+                                                                    .error),
                                                             style: TextStyle(
-                                                                fontSize: customFontSize,
-                                                                color: colors.sellPrice))
+                                                                fontSize:
+                                                                    customFontSize,
+                                                                color: colors
+                                                                    .sellPrice))
                                                       else
-                                                        Text(firstCharToUppercase(AppLocalizations.of(context).pending), 
-                                                        style: TextStyle(fontSize: customFontSize, color: colors.yellow))
+                                                        Text(
+                                                            firstCharToUppercase(
+                                                                AppLocalizations.of(
+                                                                        context)
+                                                                    .pending),
+                                                            style: TextStyle(
+                                                                fontSize:
+                                                                    customFontSize,
+                                                                color: colors
+                                                                    .yellow))
                                                     ],
                                                   ),
                                                 )

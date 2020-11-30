@@ -106,7 +106,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => WalletSetupScreenState());
   locator.registerFactory(() => ChooseWalletLanguageScreenState());
   locator.registerFactory(() => MoveToExchangeViewModel());
-  locator.registerFactory(() => MoveToWalletScreenState());
+  locator.registerFactory(() => MoveToWalletViewmodel());
   locator.registerFactory(() => TransactionHistoryScreenState());
   locator.registerFactory(() => RedepositViewModel());
   // OTC

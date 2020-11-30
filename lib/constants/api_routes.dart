@@ -44,9 +44,12 @@ final String getAppVersionRoute = 'getappversion';
 ----------------------------------------------------------------------*/
 
 final String getTokenListRoute = 'exchangily/getTokenList';
-const String getPairConfigRoute = 'kanban/getpairconfig';
-final String pairDecimalConfigRoute = 'kanban/getpairconfig';
+const String getDecimalPairConfigRoute = 'kanban/getpairconfig';
+//final String pairDecimalConfigRoute = 'kanban/getpairconfig';
 final String redepositStatusRoute = 'checkstatus/';
+
+// Add wallet Hex Fab address or kanban address in the end
+const String withdrawTxStatusRoute = 'withdrawrequestsbyaddress/';
 /*----------------------------------------------------------------------
                             Exchange
 ----------------------------------------------------------------------*/

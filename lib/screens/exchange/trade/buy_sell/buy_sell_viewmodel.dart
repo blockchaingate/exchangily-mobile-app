@@ -34,6 +34,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/abi_util.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
@@ -410,8 +411,8 @@ class BuySellViewModel extends ReactiveViewModel {
     setBusy(true);
     var timeBeforeExpiration = 423434342432;
     var orderType = 1;
-    var baseCoin = walletService.getCoinTypeIdByName(baseCoinName);
-    var targetCoin = walletService.getCoinTypeIdByName(targetCoinName);
+    var baseCoin = getCoinTypeIdByName(baseCoinName);
+    var targetCoin = getCoinTypeIdByName(targetCoinName);
 
     if (!bidOrAsk) {
       var tmp = baseCoin;

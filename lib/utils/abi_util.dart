@@ -23,7 +23,7 @@ import 'dart:typed_data';
 // {"success":true,"data":{"transactionID":"3ba8d681cddea5376c9b6ab2963ff243160fa086ec0681a67a3206ad80284d76"}}
 
 getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
-  var abiHex = "0xcce185b8";
+  var abiHex = "0x3295d51e";
   abiHex += fixLength(coinType.toRadixString(16), 64);
 
   var amountHex = amountInLink.toRadixString(16);
