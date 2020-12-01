@@ -50,6 +50,21 @@ final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
 final log = getLogger('coin_util');
 
+/*----------------------------------------------------------------------
+                Convert Decimal to Hex
+----------------------------------------------------------------------*/
+
+int convertDecimalToHex(int coinType) {
+  var x = coinType.toRadixString(16);
+  // var t = HEX.encode([baseCoin]);
+  log.e('basecoin $coinType --  Hex == $x');
+  return int.parse(x);
+}
+
+/*----------------------------------------------------------------------
+                Hash 256
+----------------------------------------------------------------------*/
+
 Uint8List hash256(Uint8List buffer) {
   Uint8List _tmp = new SHA256Digest().process(buffer);
   return new SHA256Digest().process(_tmp);

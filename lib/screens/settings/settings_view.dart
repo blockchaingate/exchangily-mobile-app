@@ -156,6 +156,17 @@ class SettingsContainer extends StatelessWidget {
                 model.displayMnemonic();
               },
             ),
+            //  InkWell(
+            //   splashColor: globals.primaryColor,
+            //   child: Card(
+            //     elevation: 5,
+            //     child:
+            //        Text('Convert Decimal to hex')
+            //   ),
+            //   onTap: () {
+            //     model.convertDecimalToHex();
+            //   },
+            // ),
             Visibility(
               visible: model.isVisible,
               child: Padding(
@@ -169,104 +180,97 @@ class SettingsContainer extends StatelessWidget {
             ),
 
             Card(
-                elevation: 5,
-                color: globals.walletCardColor,
-                child: Theme.of(context).platform == TargetPlatform.iOS
-                    ? Row(
-                      
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: CupertinoPicker(
-                                diameterRatio: 1.3,
-                                offAxisFraction: 5,
-                                scrollController: model.scrollController,
-                                itemExtent: 50,
-                                onSelectedItemChanged: (int value) {
-                                  String lang = '';
-                                  if (value == 1) {
-                                    lang = 'en';
-                                  } else if (value == 2) {
-                                    lang = 'zh';
-                                  }
-                                  model.changeWalletLanguage(lang);
-                                },
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.end,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 3.0),
-                                        child: Icon(
-                                          Icons.language,
-                                          color: grey,
-                                          size: 18,
-                                        ),
+              elevation: 5,
+              color: globals.walletCardColor,
+              child: Theme.of(context).platform == TargetPlatform.iOS
+                  ? Row(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: CupertinoPicker(
+                              diameterRatio: 1.3,
+                              offAxisFraction: 5,
+                              scrollController: model.scrollController,
+                              itemExtent: 50,
+                              onSelectedItemChanged: (int value) {
+                                String lang = '';
+                                if (value == 1) {
+                                  lang = 'en';
+                                } else if (value == 2) {
+                                  lang = 'zh';
+                                }
+                                model.changeWalletLanguage(lang);
+                              },
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 3.0),
+                                      child: Icon(
+                                        Icons.language,
+                                        color: grey,
+                                        size: 18,
                                       ),
-                                      Text(
-                                        AppLocalizations.of(context)
-                                            .changeWalletLanguage,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline5,
-                                      ),
-                                    ],
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      "English",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5,
                                     ),
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      "简体中文",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5,
+                                    Text(
+                                      AppLocalizations.of(context)
+                                          .changeWalletLanguage,
+                                      style:
+                                          Theme.of(context).textTheme.headline5,
                                     ),
+                                  ],
+                                ),
+                                Center(
+                                  child: Text(
+                                    "English",
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
                                   ),
-                                ]),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                                ),
+                                Center(
+                                  child: Text(
+                                    "简体中文",
+                                    style:
+                                        Theme.of(context).textTheme.headline5,
+                                  ),
+                                ),
+                              ]),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 5.0),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_up,
-                                      color: primaryColor,
-                                      size: 12,
-                                    ),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_up,
+                                    color: primaryColor,
+                                    size: 12,
                                   ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(left: 5.0),
-                                    child: Icon(
-                                      Icons.keyboard_arrow_down,
-                                      color: primaryColor,
-                                      size: 12,
-                                    ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 5.0),
+                                  child: Icon(
+                                    Icons.keyboard_arrow_down,
+                                    color: primaryColor,
+                                    size: 12,
                                   ),
-                                ]),
-                          )
-                        ],
-                      )
-                    :Center(child: DropdownButtonHideUnderline(
+                                ),
+                              ]),
+                        )
+                      ],
+                    )
+                  : Center(
+                      child: DropdownButtonHideUnderline(
                         child: DropdownButton(
                             iconEnabledColor: globals.primaryColor,
                             iconSize: 26,
                             hint: Text(
-                              AppLocalizations.of(context)
-                                  .changeWalletLanguage,
+                              AppLocalizations.of(context).changeWalletLanguage,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline5,
                             ),
@@ -278,8 +282,7 @@ class SettingsContainer extends StatelessWidget {
                               DropdownMenuItem(
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Image.asset(
                                       "assets/images/img/flagEn.png",
@@ -299,10 +302,8 @@ class SettingsContainer extends StatelessWidget {
                               DropdownMenuItem(
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Image.asset(
                                       "assets/images/img/flagChina.png",
@@ -320,7 +321,9 @@ class SettingsContainer extends StatelessWidget {
                                 value: model.languages['zh'],
                               ),
                             ]),
-                      ),),),
+                      ),
+                    ),
+            ),
             // Show/Hide dialog warning checkbox
             Card(
               elevation: 5,

@@ -209,16 +209,21 @@ class MoveToExchangeViewModel extends BaseState {
           walletService.insertTransactionInDatabase(transactionHistory);
         }
         showSimpleNotification(
-            Column(children: [
-              success
-                  ? Text(AppLocalizations.of(context).depositTransactionSuccess)
-                  : Text(AppLocalizations.of(context).depositTransactionFailed),
-              success
-                  ? Text("")
-                  : ret.containsKey("error") && ret["error"] != null
-                      ? Text(ret["error"])
-                      : Text(AppLocalizations.of(context).serverError),
-            ]),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  success
+                      ? Text(AppLocalizations.of(context)
+                          .depositTransactionSuccess)
+                      : Text(AppLocalizations.of(context)
+                          .depositTransactionFailed),
+                  success
+                      ? Text("")
+                      : ret.containsKey("error") && ret["error"] != null
+                          ? Text(ret["error"])
+                          : Text(AppLocalizations.of(context).serverError),
+                ]),
             position: NotificationPosition.bottom,
             background: primaryColor);
         // sharedService.alertDialog(

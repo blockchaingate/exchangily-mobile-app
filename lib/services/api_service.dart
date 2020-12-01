@@ -33,6 +33,7 @@ class ApiService {
   final client = new http.Client();
   ConfigService configService = locator<ConfigService>();
   SharedService sharedService = locator<SharedService>();
+  ConfigService _configService = locator<ConfigService>();
   // final kanbanBaseUrl = getKanbanBaseUrl()
 
   //  isHKServer
@@ -159,12 +160,14 @@ class ApiService {
   }
 
   Future getEthGasPrice() async {
-    var url = 'https://ethprod.fabcoinapi.com/getgasprice';
+    var ethBaseUrl = environment['endpoints']['eth'];
+    // _configService.getEthBaseUrl();
+    var url = ethBaseUrl + 'getgasprice';
     var ethGasPrice = 0;
     try {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
-      log.w(' getDepositTransactionStatus111 $json');
+      log.w(' getEthGasPrice $json');
       print((BigInt.parse(json['gasprice']) / BigInt.parse('1000000000'))
           .toDouble());
       ethGasPrice =
@@ -172,7 +175,7 @@ class ApiService {
               .toDouble()
               .round();
     } catch (err) {
-      log.e('In getDepositTransactionStatus catch $err');
+      log.e('In getEthGasPrice catch $err');
     }
 
     if (ethGasPrice < environment['chains']['ETH']['gasPrice']) {

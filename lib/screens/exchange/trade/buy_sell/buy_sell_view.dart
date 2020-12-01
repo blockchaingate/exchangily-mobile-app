@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
@@ -316,8 +317,8 @@ Column buildVerticalOrderbookColumn(
     List<OrderType> orderArray, final bool bidOrAsk, OrderbookViewModel model) {
   // List<OrderType> sellOrders = [];
   print('OrderArray $bidOrAsk length before ${orderArray.length}');
-  if (!bidOrAsk) orderArray = orderArray.reversed.toList();
   if (orderArray.length > 7) orderArray = orderArray.sublist(0, 7);
+  if (!bidOrAsk) orderArray = orderArray.reversed.toList();
 
   print('OrderArray $bidOrAsk length after ${orderArray.length}');
   return Column(
@@ -539,6 +540,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         UIHelper.verticalSpaceSmall,
         // kanban gas fee
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
               AppLocalizations.of(context).kanbanGasFee,
@@ -557,22 +559,26 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         UIHelper.verticalSpaceSmall,
         // Advance
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
               AppLocalizations.of(context).advance,
               style: new TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
-            Switch(
-              value: model.transFeeAdvance,
-              inactiveTrackColor: globals.grey,
-              // dragStartBehavior: DragStartBehavior.start,
-              activeColor: globals.primaryColor,
-              onChanged: (bool isOn) {
-                //  setState(ViewState.Busy);
-                model.transFeeAdvance = isOn;
-                //  });
-              },
-            )
+            SizedBox(
+              height: 20,
+              child: Transform.scale(
+                scale: 0.75,
+                child: Switch.adaptive(
+                    activeColor: primaryColor,
+                    value: model.transFeeAdvance,
+                    onChanged: (bool v) {
+                      model.setBusy(true);
+                      model.transFeeAdvance = !model.transFeeAdvance;
+                      model.setBusy(false);
+                    }),
+              ),
+            ),
           ],
         ),
         Visibility(
@@ -583,31 +589,32 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
               children: <Widget>[
                 // Kanban gas price
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context).kanbanGasPrice,
                       style: Theme.of(context).textTheme.headline5,
                     ),
+                    UIHelper.horizontalSpaceSmall,
                     Expanded(
-                        child: Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                      child: TextField(
-                          controller: model.kanbanGasPriceTextController,
-                          onChanged: (String amount) {
-                            model.updateTransFee();
-                          },
-                          keyboardType: TextInputType.numberWithOptions(
-                              decimal: true), // numnber keyboard
-                          decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: globals.primaryColor)),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: globals.grey)),
-                              hintText: '0.00000',
-                              hintStyle: Theme.of(context).textTheme.headline5),
-                          style: Theme.of(context).textTheme.headline5),
-                    ))
+                        child: TextField(
+                            controller: model.kanbanGasPriceTextController,
+                            onChanged: (String amount) {
+                              model.updateTransFee();
+                            },
+                            keyboardType: TextInputType.numberWithOptions(
+                                decimal: true), // numnber keyboard
+                            decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: globals.primaryColor)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: globals.grey)),
+                                hintText: '0.00000',
+                                hintStyle:
+                                    Theme.of(context).textTheme.headline5),
+                            style: Theme.of(context).textTheme.headline5))
                   ],
                 ),
                 //   Kanban gas limit
@@ -617,34 +624,32 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                       AppLocalizations.of(context).kanbanGasLimit,
                       style: Theme.of(context).textTheme.headline5,
                     ),
+                    UIHelper.horizontalSpaceSmall,
                     Expanded(
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                            child: TextField(
-                              controller: model.kanbanGasLimitTextController,
-                              onChanged: (String amount) {
-                                model.updateTransFee();
-                              },
-                              keyboardType: TextInputType.numberWithOptions(
-                                  decimal: true), // numnber keyboard
-                              decoration: InputDecoration(
-                                  focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: globals.primaryColor)),
-                                  enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: globals.grey)),
-                                  hintText: '0.00000',
-                                  hintStyle:
-                                      Theme.of(context).textTheme.headline5),
-                              style: Theme.of(context).textTheme.headline5,
-                            ))),
+                        child: TextField(
+                      controller: model.kanbanGasLimitTextController,
+                      onChanged: (String amount) {
+                        model.updateTransFee();
+                      },
+                      keyboardType: TextInputType.numberWithOptions(
+                          decimal: true), // numnber keyboard
+                      decoration: InputDecoration(
+                          focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: globals.primaryColor)),
+                          enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: globals.grey)),
+                          hintText: '0.00000',
+                          hintStyle: Theme.of(context).textTheme.headline5),
+                      style: Theme.of(context).textTheme.headline5,
+                    )),
                   ],
                 ),
               ],
             ),
           ),
         ),
+        UIHelper.verticalSpaceSmall,
         RaisedButton(
             elevation: 4,
             // animationDuration: Duration(milliseconds: 100),

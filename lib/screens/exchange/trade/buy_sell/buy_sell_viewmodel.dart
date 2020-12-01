@@ -119,23 +119,16 @@ class BuySellViewModel extends ReactiveViewModel {
   bool get isOrderbookLoaded => _isOrderbookLoaded;
 
   init() async {
-    // log.e(pair);
     setBusy(true);
-
-    //  await splitPair(pairSymbolWithSlash);
     setDefaultGasPrice();
     sharedService.context = context;
     getOrderbookLoadedStatus();
-    // orderListFromTradeService();
-    print('3');
-    //  tradeListFromTradeService();
-    // print('4');
-    //await retrieveWallets();
+
     exgAddress = await sharedService.getExgAddressFromWalletDatabase();
 
     await getDecimalPairConfig();
     fillPriceAndQuantityTextFields();
-    print('8');
+    transFeeAdvance = false;
     setBusy(false);
   }
 
@@ -411,7 +404,8 @@ class BuySellViewModel extends ReactiveViewModel {
     setBusy(true);
     var timeBeforeExpiration = 423434342432;
     var orderType = 1;
-    var baseCoin = getCoinTypeIdByName(baseCoinName);
+    int baseCoin = getCoinTypeIdByName(baseCoinName);
+    log.e('basecoin Hex ==' + baseCoin.toRadixString(16));
     var targetCoin = getCoinTypeIdByName(targetCoinName);
 
     if (!bidOrAsk) {
@@ -430,15 +424,17 @@ class BuySellViewModel extends ReactiveViewModel {
     print('priceBigInt==' + priceBigInt);
 
     var abiHex = getCreateOrderFuncABI(
+        false,
         bidOrAsk,
-        orderType,
-        baseCoin,
-        targetCoin,
+        //  orderType,
+        convertDecimalToHex(baseCoin),
+        convertDecimalToHex(targetCoin),
         qtyBigInt,
         priceBigInt,
-        timeBeforeExpiration,
-        false,
+        //   timeBeforeExpiration,
         orderHash);
+    debugPrint('abiHex $abiHex');
+    sliceAbiHex(abiHex);
     log.e('exg addr $exgAddress');
 
     var nonce = await getNonce(exgAddress);

@@ -53,6 +53,24 @@ toBitInt(num, [zeroLength]) {
 //   }
 // }
 
+sliceAbiHex(abiHex) {
+  String abiHexString = abiHex;
+  String first10Char = abiHexString.substring(0, 10);
+  List<String> slice64CharsList = [];
+  debugPrint('First abiHex 10 char $first10Char');
+  int condition = ((abiHexString.length - first10Char.length) / 64).round();
+  print('CONDITION $condition');
+  for (var i = 0; i < condition; i++) {
+    String t = abiHexString.substring(10);
+    int start = i * 64;
+    int end = (i * 64) + 64;
+    String res = t.substring(start, end);
+    debugPrint('$i - - $res');
+    slice64CharsList.add(res);
+    //  debugPrint('list $slice64CharsList');
+  }
+}
+
 String firstCharToUppercase(String value) {
   String formattedString = value[0].toUpperCase() + value.substring(1);
   return formattedString;

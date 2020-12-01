@@ -30,6 +30,8 @@ import 'package:stacked/stacked.dart';
 import '../../localizations.dart';
 import '../../logger.dart';
 import '../../service_locator.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
+import "package:hex/hex.dart";
 
 class SettingsViewmodel extends BaseViewModel {
   bool isVisible = false;
@@ -80,6 +82,13 @@ class SettingsViewmodel extends BaseViewModel {
     // if (selectedLanguage == '')
     //   selectedLanguage = getSetLocalStorageDataByKey('lang');
     setBusy(false);
+  }
+
+  convertDecimalToHex() {
+    int baseCoin = getCoinTypeIdByName('USDT');
+    var x = baseCoin.toRadixString(16);
+    var t = HEX.encode([baseCoin]);
+    log.e('basecoin $baseCoin --  Hex == $t');
   }
 
 /*-------------------------------------------------------------------------------------
