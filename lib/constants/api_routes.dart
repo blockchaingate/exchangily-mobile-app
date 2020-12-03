@@ -11,21 +11,19 @@ const String baseBlockchainGateV2Url = isProduction
 final String walletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
 
 /*----------------------------------------------------------------------
-                        Free Fab
+                        Wallet
 ----------------------------------------------------------------------*/
-/// Url below not in use
-// const String freeFabUrl = 'https://kanbanprod.fabcoinapi.com/kanban/getairdrop';
 
+// Add wallet Hex Fab address or kanban address in the end
+const String WithdrawTxStatusApiRoute = 'withdrawrequestsbyaddress/';
+
+// Free Fab
 final String getFreeFabUrl =
     baseBlockchainGateV2Url + 'airdrop/getQuestionair/';
-
 final String postFreeFabUrl =
     baseBlockchainGateV2Url + 'airdrop/answerQuestionair/';
 
-/*----------------------------------------------------------------------
-                        USD Coin Price
-----------------------------------------------------------------------*/
-
+// USD Coin Price
 final String usdCoinPriceUrl =
     'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,fabcoin,tether&vs_currencies=usd';
 
@@ -33,23 +31,15 @@ final String allCoinPricesWSRoute = 'allprices';
 // Get Usd Price for token and currencies like btc, exg, rmb, cad, usdt
 final String coinCurrencyUsdValueRoute = 'USDvalues';
 
-/*----------------------------------------------------------------------
-                            Get App Version
-----------------------------------------------------------------------*/
-
+// Get App Version
 final String getAppVersionRoute = 'getappversion';
 
-/*----------------------------------------------------------------------
-                Get Token List, Decimal config, checkstatus
-----------------------------------------------------------------------*/
-
+// Get Token List, Decimal config, checkstatus
 final String getTokenListRoute = 'exchangily/getTokenList';
 const String getDecimalPairConfigRoute = 'kanban/getpairconfig';
 //final String pairDecimalConfigRoute = 'kanban/getpairconfig';
 final String redepositStatusRoute = 'checkstatus/';
 
-// Add wallet Hex Fab address or kanban address in the end
-const String withdrawTxStatusRoute = 'withdrawrequestsbyaddress/';
 /*----------------------------------------------------------------------
                             Exchange
 ----------------------------------------------------------------------*/

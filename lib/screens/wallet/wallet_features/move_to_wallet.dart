@@ -13,7 +13,7 @@
 
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';

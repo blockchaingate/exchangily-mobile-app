@@ -275,10 +275,8 @@ class WalletDashboardViewModel extends BaseState {
   showcaseEvent(BuildContext test) async {
     log.e(
         'Is showvcase ${storageService.isShowCaseView} -gas amount $gasAmount');
-    //  if (storageService.isShowCaseView && gasAmount < 0.5)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
-      //
     });
   }
 

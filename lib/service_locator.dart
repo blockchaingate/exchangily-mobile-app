@@ -22,7 +22,7 @@ import 'package:exchangilymobileapp/screen_state/otc_campaign/payment_screen_sta
 import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/register_account_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings/language_screen_state.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wallet_language_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_screen_state.dart';

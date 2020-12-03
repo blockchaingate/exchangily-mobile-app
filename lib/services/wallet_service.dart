@@ -1,6 +1,7 @@
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
@@ -145,14 +146,13 @@ class WalletService {
 
   Completer<DialogResponse> _completer;
 
-/*----------------------------------------------------------------------
-                Get Random Mnemonic
-----------------------------------------------------------------------*/
-
   addTxids(allTxids) {
     txids = [...txids, ...allTxids].toSet().toList();
   }
 
+/*----------------------------------------------------------------------
+                Get Random Mnemonic
+----------------------------------------------------------------------*/
   String getRandomMnemonic() {
     String randomMnemonic = '';
 
@@ -414,13 +414,89 @@ class WalletService {
 /*----------------------------------------------------------------------
                 Transaction status
 ----------------------------------------------------------------------*/
+
+  checkTxStatus(TransactionHistory transaction) {
+    transaction.tag == 'deposit'
+        ? checkDepositTransactionStatus(transaction)
+        : checkWithdrawTxStatus(transaction);
+  }
+
+  // WITHDRAW TX status
+  checkWithdrawTxStatus(TransactionHistory transaction) async {
+    int baseTime = 30;
+    List result = [];
+    String txid = transaction.txId;
+          TransactionHistory transactionByTxid = new TransactionHistory();
+    Timer.periodic(Duration(seconds: baseTime), (Timer t) async {
+      log.w('Base time $baseTime -- local t.id ${txid}');
+      await _apiService.withdrawTxStatus().then((res) async {
+        if (res != null) {
+         // result = res;
+        //  log.e(' -- res $res');
+          // transactionByTxId = await transactionHistoryDatabaseService
+          //     .getByTxId(transaction.txId);
+          res.forEach((singleTx) {
+            var kanbanTxid = singleTx['kanbanTxid'];
+            log.w(
+                'res not null -- condition -- k.id $kanbanTxid -- t.id ${txid}');
+
+            // If kanban txid is equals to local txid
+            if (singleTx['kanbanTxid'] == txid) {
+            log.w('single withdraw entry $singleTx');
+              baseTime = 60;
+              log.i(
+                  'Withdraw Txid match found so time extended by 50 sec as blockchain will take time to generate txid');
+              // if blockchain txid is not empty means withdraw tx has completed
+              if (singleTx['blockchainTxid'] != "") {
+                String blockchainTxid = singleTx['blockchainTxid'].toString();
+                log.i('Blockchain Txid $blockchainTxid');
+                t.cancel();
+                log.e('timer cancel');
+                
+                showSimpleNotification(
+                   
+                      Row(
+                        children: [
+                          Text('${singleTx['coinName']} '),
+                          Text('${transaction.tag}'),
+                          Icon(Icons.alarm)
+                    //  Text(AppLocalizations.of(context).completed),
+                        ],
+                      ),
+                   
+                    position: NotificationPosition.bottom,
+                    background: primaryColor);
+                      String date = DateTime.now().toString();
+                      transactionByTxid = TransactionHistory(
+              id: transaction.id,
+              tickerName: transaction.tickerName,
+              address: '',
+              amount: 0.0,
+              date: date.toString(),
+              txId: transaction.txId,
+              status: 'Complete',
+              quantity: transaction.quantity,
+              tag: transaction.tag);
+                    transactionHistoryDatabaseService.update(transactionByTxid);
+              }
+            }
+            
+          });
+          log.i('After res for each');
+        }
+      });
+    });
+  }
+
+  // DEPOSIT TX status
   Future<String> checkDepositTransactionStatus(
       TransactionHistory transaction) async {
     String result = '';
     Timer.periodic(Duration(minutes: 1), (Timer t) async {
       TransactionHistory transactionHistory = new TransactionHistory();
-      TransactionHistory transactionHistoryByTxId = new TransactionHistory();
+      TransactionHistory transactionByTxId = new TransactionHistory();
       var res = await _apiService.getTransactionStatus(transaction.txId);
+
       log.w('checkDepositTransactionStatus $res');
 // 0 is confirmed
 // 1 is pending
@@ -437,26 +513,22 @@ class WalletService {
         result = res['message'];
         log.i('Timer cancel');
 
-        /// may add deposit or withdraw in front of status for better understanding
-        // sharedService.alertDialog(
-        //     '${transaction.tickerName} ${transactionHistory.tag}',
-        //     stringUtils.firstCharToUppercase(result.toString()),
-        //     isWarning: false);
         String date = DateTime.now().toString();
 
         if (transaction != null) {
-          transactionHistoryByTxId = await transactionHistoryDatabaseService
+          transactionByTxId = await transactionHistoryDatabaseService
               .getByTxId(transaction.txId);
           showSimpleNotification(
-              Column(children: [
-                Row(
-                  children: [
-                    Text('${transactionHistoryByTxId.tickerName} '),
-                    Text('${transactionHistoryByTxId.tag}')
-                  ],
-                ),
-                Text(stringUtils.firstCharToUppercase(result.toString())),
-              ]),
+             
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('${transactionByTxId.tickerName} '),
+                        Text('${transactionByTxId.tag}'),
+                    Text(stringUtils.firstCharToUppercase(result.toString())),
+                      ],
+                    ),
+                 
               position: NotificationPosition.bottom,
               background: primaryColor);
         }
@@ -464,15 +536,15 @@ class WalletService {
         if (res['code'] == 0) {
           log.e('Transaction history passed arguement ${transaction.toJson()}');
           transactionHistory = TransactionHistory(
-              id: transactionHistoryByTxId.id,
-              tickerName: transactionHistoryByTxId.tickerName,
+              id: transactionByTxId.id,
+              tickerName: transactionByTxId.tickerName,
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transactionHistoryByTxId.txId,
+              txId: transactionByTxId.txId,
               status: 'Complete',
-              quantity: transactionHistoryByTxId.quantity,
-              tag: transactionHistoryByTxId.tag);
+              quantity: transactionByTxId.quantity,
+              tag: transactionByTxId.tag);
 
           // after this method i will test single status update field in the transaciton history
           // await transactionHistoryDatabaseService
@@ -481,41 +553,41 @@ class WalletService {
 
         } else if (res['code'] == -1) {
           transactionHistory = TransactionHistory(
-              id: transactionHistoryByTxId.id,
-              tickerName: transactionHistoryByTxId.tickerName,
+              id: transactionByTxId.id,
+              tickerName: transactionByTxId.tickerName,
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transactionHistoryByTxId.txId,
+              txId: transactionByTxId.txId,
               status: 'Error',
-              quantity: transactionHistoryByTxId.quantity,
-              tag: transactionHistoryByTxId.tag);
+              quantity: transactionByTxId.quantity,
+              tag: transactionByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
         } else if (res['code'] == 2 || res['code'] == 2) {
           transactionHistory = TransactionHistory(
-              id: transactionHistoryByTxId.id,
-              tickerName: transactionHistoryByTxId.tickerName,
+              id: transactionByTxId.id,
+              tickerName: transactionByTxId.tickerName,
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transactionHistoryByTxId.txId,
+              txId: transactionByTxId.txId,
               status: 'Failed',
-              quantity: transactionHistoryByTxId.quantity,
-              tag: transactionHistoryByTxId.tag);
+              quantity: transactionByTxId.quantity,
+              tag: transactionByTxId.tag);
 
           //  await transactionHistoryDatabaseService.update(transactionHistory);
         } else if (res['code'] == -3 || res['code'] == 3) {
           transactionHistory = TransactionHistory(
-              id: transactionHistoryByTxId.id,
-              tickerName: transactionHistoryByTxId.tickerName,
+              id: transactionByTxId.id,
+              tickerName: transactionByTxId.tickerName,
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transactionHistoryByTxId.txId,
+              txId: transactionByTxId.txId,
               status: 'Require redeposit',
-              quantity: transactionHistoryByTxId.quantity,
-              tag: transactionHistoryByTxId.tag);
+              quantity: transactionByTxId.quantity,
+              tag: transactionByTxId.tag);
 
           // await transactionHistoryDatabaseService.update(transactionHistory);
         }

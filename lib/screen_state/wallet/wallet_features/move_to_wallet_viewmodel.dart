@@ -1,8 +1,10 @@
 import 'dart:typed_data';
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -13,8 +15,6 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../logger.dart';
-import '../../../shared/globals.dart' as globals;
 
 class MoveToWalletViewmodel extends BaseState {
   final log = getLogger('MoveToWalletViewmodel');
@@ -54,7 +54,9 @@ class MoveToWalletViewmodel extends BaseState {
     setBusy(false);
   }
 
-// Check Pass
+/*----------------------------------------------------------------------
+                      Verify Wallet Password
+----------------------------------------------------------------------*/
   checkPass() async {
     setBusy(true);
     var amount = double.tryParse(amountController.text);
@@ -69,16 +71,16 @@ class MoveToWalletViewmodel extends BaseState {
       return;
     }
 
-    if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-      sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).minimumAmountError,
-          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-          Icons.cancel,
-          globals.red,
-          context);
-      setBusy(false);
-      return;
-    }
+    // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
+    //   sharedService.showInfoFlushbar(
+    //       AppLocalizations.of(context).minimumAmountError,
+    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+    //       Icons.cancel,
+    //       red,
+    //       context);
+    //   setBusy(false);
+    //   return;
+    // }
     setMessage('');
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -129,7 +131,7 @@ class MoveToWalletViewmodel extends BaseState {
               quantity: amount,
               tag: 'withdraw');
 
-          walletService.checkDepositTransactionStatus(transactionHistory);
+          walletService.checkTxStatus(transactionHistory);
           walletService.insertTransactionInDatabase(transactionHistory);
         } else {
           var errMsg = ret['data'];
@@ -161,7 +163,7 @@ class MoveToWalletViewmodel extends BaseState {
         AppLocalizations.of(context).passwordMismatch,
         AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
         Icons.cancel,
-        globals.red,
+        red,
         context);
     setState(ViewState.Idle);
   }

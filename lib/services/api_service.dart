@@ -58,6 +58,36 @@ class ApiService {
   final eventsUrl = environment["eventInfo"];
 
 /*----------------------------------------------------------------------
+    <---    ------------------------------------    --------------->                
+                            WALLET Futures
+    <---   -------------------------------------    --------------->
+----------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------------
+                Withdraw Tx Status
+----------------------------------------------------------------------*/
+  Future withdrawTxStatus() async {
+    String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    //  String exgAddress = await getExchangilyAddress();
+    String url = configService.getKanbanBaseUrl() +
+        WithdrawTxStatusApiRoute +
+        exgAddress;
+    log.e('withdrawTxStatus url $url');
+
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      if (json != null) {
+        log.e('withdrawTxStatus $json}');
+        return json;
+      }
+    } catch (err) {
+      log.e('withdrawTxStatus CATCH $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
                     Get single coin exchange balance
 ----------------------------------------------------------------------*/
   Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(

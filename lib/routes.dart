@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/bindpay/bindpay_view.dart';
@@ -45,8 +46,6 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_featur
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:exchangilymobileapp/screens/market/main.dart';
-import 'package:exchangilymobileapp/screens/trade/main.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit.dart';
@@ -68,64 +67,84 @@ class RouteGenerator {
       case '/':
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageScreen());
 
-      //main navagation contains several pages
-      // case '/mainNav':
-      //   return MaterialPageRoute(builder: (_) => MainNav(currentPage: args));
-      // return MaterialPageRoute(builder: (_) => MainNavCircle());
-      case '/walletSetup':
+/*----------------------------------------------------------------------
+                          Wallet Setup
+----------------------------------------------------------------------*/
+      case WalletSetupViewRoute:
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
 
-      case '/importWallet':
+      case ImportWalletViewRoute:
         return MaterialPageRoute(builder: (_) => ImportWalletScreen());
 
-      case '/confirmMnemonic':
+      case BackupMnemonicViewRoute:
+        return MaterialPageRoute(builder: (_) => BackupMnemonicWalletScreen());
+
+      case ConfirmMnemonicViewRoute:
         return MaterialPageRoute(
             builder: (_) => ConfirmMnemonictWalletScreen(
                 randomMnemonicListFromRoute: args));
 
-      case '/backupMnemonic':
-        return MaterialPageRoute(builder: (_) => BackupMnemonicWalletScreen());
-
-      case '/createPassword':
+      case CreatePasswordViewRoute:
         return MaterialPageRoute(
             builder: (_) =>
                 CreatePasswordScreen(randomMnemonicFromRoute: args));
 
-      /// WALLET DASHBOARD
+/*----------------------------------------------------------------------
+                          Wallet Routes
+----------------------------------------------------------------------*/
 
-      case '/dashboard':
+      case DashboardViewRoute:
         return MaterialPageRoute(
             settings: RouteSettings(name: 'WalletDashboardScreen'),
             builder: (_) => WalletDashboardScreen());
 
-      case '/walletFeatures':
+      case AddGasViewRoute:
+        return MaterialPageRoute(builder: (_) => AddGas());
+
+      case SmartContractViewRoute:
+        return MaterialPageRoute(builder: (_) => SmartContract());
+
+      case DepositViewRoute:
+        return MaterialPageRoute(
+            builder: (_) => MoveToExchangeScreen(walletInfo: args));
+
+      case RedepositViewRoute:
+        return MaterialPageRoute(builder: (_) => Redeposit(walletInfo: args));
+
+      case WithdrawViewRoute:
+        return MaterialPageRoute(
+            builder: (_) => MoveToWalletScreen(walletInfo: args));
+
+      case WalletFeaturesViewRoute:
         return MaterialPageRoute(
             builder: (_) => WalletFeaturesView(walletInfo: args));
 
-      case '/receive':
+      case ReceiveViewRoute:
         return MaterialPageRoute(
             builder: (_) => ReceiveWalletScreen(
                   walletInfo: args,
                 ));
 
-      case '/send':
+      case SendViewRoute:
         return MaterialPageRoute(
             builder: (_) => SendWalletScreen(
                   walletInfo: args,
                 ));
 
-      // case '/market':
-      //   return MaterialPageRoute(builder: (_) => Market());
+      case TransactionHistoryViewRoute:
+        return MaterialPageRoute(
+            builder: (_) => TransactionHistoryView(
+                  tickerName: args,
+                ));
 
-      /// MARKET VIEW
+/*----------------------------------------------------------------------
+                          Exchange Routes
+----------------------------------------------------------------------*/
 
-      case '/marketsView':
+      case MarketsViewRoute:
         return MaterialPageRoute(
             settings: RouteSettings(name: 'MarketsView'),
             builder: (_) => MarketsView(hideSlider: args));
-
-      // case '/trade':
-      //   return MaterialPageRoute(builder: (_) => Trade('EXG/USDT'));
 
       case '/exchangeTrade':
         return MaterialPageRoute(
@@ -135,45 +154,9 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => MyOrdersView(tickerName: args));
 
-      case '/addGas':
-        return MaterialPageRoute(builder: (_) => AddGas());
-
-      case '/smartContract':
-        return MaterialPageRoute(builder: (_) => SmartContract());
-
-      case '/deposit':
-        return MaterialPageRoute(
-            builder: (_) => MoveToExchangeScreen(walletInfo: args));
-
-      case '/redeposit':
-        return MaterialPageRoute(builder: (_) => Redeposit(walletInfo: args));
-
-      case '/withdraw':
-        return MaterialPageRoute(
-            builder: (_) => MoveToWalletScreen(walletInfo: args));
-
-      /// SETTINGS
-
-      case '/settings':
-        return MaterialPageRoute(
-            settings: RouteSettings(name: 'SettingsScreen'),
-            builder: (_) => SettingsView());
-
-      case '/transactionHistory':
-        return MaterialPageRoute(
-            builder: (_) => TransactionHistoryView(
-                  tickerName: args,
-                ));
-
-      /// OTC Screen
-      case '/otc':
-        return MaterialPageRoute(builder: (_) => OtcScreen());
-
-      case '/otcDetails':
-        return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
-
-      /// CAMPAIGN INSTRUCTIONS
-
+/*----------------------------------------------------------------------
+                          Campaign Routes
+----------------------------------------------------------------------*/
       case '/campaignInstructions':
         return MaterialPageRoute(
             settings: RouteSettings(name: 'CampaignInstructionScreen'),
@@ -222,8 +205,26 @@ class RouteGenerator {
 
       case '/switchLanguage':
         return MaterialPageRoute(builder: (_) => LanguageScreen());
-      case '/bindpay':
+/*----------------------------------------------------------------------
+                      Bindpay Routes
+----------------------------------------------------------------------*/
+      case BindpayViewRoute:
         return MaterialPageRoute(builder: (_) => BindpayView());
+
+/*----------------------------------------------------------------------
+                      Navigation Routes
+----------------------------------------------------------------------*/
+      case SettingViewRoute:
+        return MaterialPageRoute(
+            settings: RouteSettings(name: 'SettingsScreen'),
+            builder: (_) => SettingsView());
+
+      /// OTC Screen
+      case '/otc':
+        return MaterialPageRoute(builder: (_) => OtcScreen());
+
+      case '/otcDetails':
+        return MaterialPageRoute(builder: (_) => OtcDetailsScreen());
 
       default:
         return _errorRoute(settings);
