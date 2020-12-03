@@ -16,7 +16,6 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
@@ -27,18 +26,15 @@ import 'package:exchangilymobileapp/widgets/network_status.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
 import '../../shared/globals.dart' as globals;
-import './wallet_features/gas.dart';
+import 'wallet_features/gas.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 
-class WalletDashboardScreen extends StatelessWidget {
-  WalletDashboardScreen({Key key}) : super(key: key);
-
-  final log = getLogger('Dashboard');
+class WalletDashboardView extends StatelessWidget {
+  WalletDashboardView({Key key}) : super(key: key);
 
   Widget build(BuildContext context) {
     GlobalKey _one = GlobalKey();
@@ -457,7 +453,7 @@ class WalletDashboardScreen extends StatelessWidget {
                             blurRadius: 10.0,
                             spreadRadius: 1.0),
                       ]),
-                  child: Image.network('$walletCoinsLogoUrl$tickerName.png'),
+                  child: Image.network('$WalletCoinsLogoUrl$tickerName.png'),
                   //asset('assets/images/wallet-page/$tickerName.png'),
                   width: 35,
                   height: 35),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard_view.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -66,7 +66,7 @@ class _MainNavCircleState extends State<MainNavCircle> {
   _getPage(int page) {
     switch (page) {
       case 0:
-        return WalletDashboardScreen();
+        return WalletDashboardView();
       case 1:
         return MarketsView();
       case 2:
@@ -74,7 +74,7 @@ class _MainNavCircleState extends State<MainNavCircle> {
       case 3:
         return SettingsView();
       default:
-        return WalletDashboardScreen();
+        return WalletDashboardView();
     }
   }
 }

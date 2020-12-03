@@ -23,7 +23,7 @@ import 'package:exchangilymobileapp/screen_state/otc_campaign/login_screen_state
 import 'package:exchangilymobileapp/screen_state/otc_campaign/register_account_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings/language_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_viewmodel.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wallet_language_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
@@ -107,7 +107,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => ChooseWalletLanguageScreenState());
   locator.registerFactory(() => MoveToExchangeViewModel());
   locator.registerFactory(() => MoveToWalletViewmodel());
-  locator.registerFactory(() => TransactionHistoryScreenState());
+  locator.registerFactory(() => TransactionHistoryViewmodel());
   locator.registerFactory(() => RedepositViewModel());
   // OTC
   locator.registerFactory(() => OtcScreenState());

@@ -10,6 +10,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
@@ -348,8 +349,8 @@ class WalletService {
     }
     await _apiService.getCoinCurrencyUsdPrice().then((res) {
       if (res != null) {
-        //   log.i('getCoinMarketPriceByTickerName $res');
         currentTickerUsdValue = res['data'][tickerName]['USD'].toDouble();
+        log.i('getting price for $tickerName - $currentTickerUsdValue');
       }
     });
     return currentTickerUsdValue;
@@ -426,61 +427,60 @@ class WalletService {
     int baseTime = 30;
     List result = [];
     String txid = transaction.txId;
-          TransactionHistory transactionByTxid = new TransactionHistory();
+    TransactionHistory transactionByTxid = new TransactionHistory();
     Timer.periodic(Duration(seconds: baseTime), (Timer t) async {
       log.w('Base time $baseTime -- local t.id ${txid}');
       await _apiService.withdrawTxStatus().then((res) async {
         if (res != null) {
-         // result = res;
-        //  log.e(' -- res $res');
+          // result = res;
+          //  log.e(' -- res $res');
           // transactionByTxId = await transactionHistoryDatabaseService
           //     .getByTxId(transaction.txId);
-          res.forEach((singleTx) {
+          res.forEach((singleTx) async {
             var kanbanTxid = singleTx['kanbanTxid'];
             log.w(
                 'res not null -- condition -- k.id $kanbanTxid -- t.id ${txid}');
 
             // If kanban txid is equals to local txid
             if (singleTx['kanbanTxid'] == txid) {
-            log.w('single withdraw entry $singleTx');
+              // log.w('single withdraw entry $singleTx');
               baseTime = 60;
-              log.i(
-                  'Withdraw Txid match found so time extended by 50 sec as blockchain will take time to generate txid');
+              // log.i(
+              //     'Withdraw Txid match found so time extended by 50 sec as blockchain will take time to generate txid');
               // if blockchain txid is not empty means withdraw tx has completed
               if (singleTx['blockchainTxid'] != "") {
                 String blockchainTxid = singleTx['blockchainTxid'].toString();
-                log.i('Blockchain Txid $blockchainTxid');
+                log.i('Blockchain Txid $blockchainTxid -- timer cancel');
                 t.cancel();
-                log.e('timer cancel');
-                
+
+                var storedTx = await transactionHistoryDatabaseService
+                    .getByTxId(transaction.txId);
                 showSimpleNotification(
-                   
-                      Row(
-                        children: [
-                          Text('${singleTx['coinName']} '),
-                          Text('${transaction.tag}'),
-                          Icon(Icons.alarm)
-                    //  Text(AppLocalizations.of(context).completed),
-                        ],
-                      ),
-                   
+                    Row(
+                      children: [
+                        Text('${singleTx['coinName']} '),
+                        Text('${transaction.tag}'),
+                        UIHelper.horizontalSpaceSmall,
+                        Icon(Icons.check)
+                        //  Text(AppLocalizations.of(context).completed),
+                      ],
+                    ),
                     position: NotificationPosition.bottom,
                     background: primaryColor);
-                      String date = DateTime.now().toString();
-                      transactionByTxid = TransactionHistory(
-              id: transaction.id,
-              tickerName: transaction.tickerName,
-              address: '',
-              amount: 0.0,
-              date: date.toString(),
-              txId: transaction.txId,
-              status: 'Complete',
-              quantity: transaction.quantity,
-              tag: transaction.tag);
-                    transactionHistoryDatabaseService.update(transactionByTxid);
+                String date = DateTime.now().toString();
+                transactionByTxid = TransactionHistory(
+                    id: storedTx.id,
+                    tickerName: storedTx.tickerName,
+                    address: '',
+                    amount: 0.0,
+                    date: date.toString(),
+                    txId: storedTx.txId,
+                    status: 'Complete',
+                    quantity: storedTx.quantity,
+                    tag: storedTx.tag);
+                transactionHistoryDatabaseService.update(transactionByTxid);
               }
             }
-            
           });
           log.i('After res for each');
         }
@@ -519,16 +519,14 @@ class WalletService {
           transactionByTxId = await transactionHistoryDatabaseService
               .getByTxId(transaction.txId);
           showSimpleNotification(
-             
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text('${transactionByTxId.tickerName} '),
-                        Text('${transactionByTxId.tag}'),
-                    Text(stringUtils.firstCharToUppercase(result.toString())),
-                      ],
-                    ),
-                 
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('${transactionByTxId.tickerName} '),
+                  Text('${transactionByTxId.tag}'),
+                  Text(stringUtils.firstCharToUppercase(result.toString())),
+                ],
+              ),
               position: NotificationPosition.bottom,
               background: primaryColor);
         }

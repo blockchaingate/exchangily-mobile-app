@@ -31,7 +31,7 @@ class MoveToWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bal = walletInfo.inExchange;
+    //  double bal = walletInfo.inExchange;
     String coinName = walletInfo.tickerName;
 
     return BaseScreen<MoveToWalletViewmodel>(
@@ -98,7 +98,9 @@ class MoveToWalletScreen extends StatelessWidget {
                     // Exchange bal
                     Row(
                       children: <Widget>[
-                        Text(AppLocalizations.of(context).inExchange + ' $bal',
+                        Text(
+                            AppLocalizations.of(context).inExchange +
+                                ' ${walletInfo.inExchange.toString()}',
                             style: Theme.of(context).textTheme.subtitle2),
                         Padding(
                           padding: EdgeInsets.symmetric(

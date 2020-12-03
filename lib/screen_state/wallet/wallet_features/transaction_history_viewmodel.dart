@@ -11,8 +11,8 @@ import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
-class TransactionHistoryScreenState extends BaseState {
-  final log = getLogger('TransactionHistoryScreenState');
+class TransactionHistoryViewmodel extends BaseState {
+  final log = getLogger('TransactionHistoryViewmodel');
   BuildContext context;
   List<TransactionHistory> transactionHistory;
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
@@ -20,6 +20,7 @@ class TransactionHistoryScreenState extends BaseState {
   SharedService sharedService = locator<SharedService>();
   DecimalConfig decimalConfig = new DecimalConfig();
   TradeService tradeService = locator<TradeService>();
+
   getTransaction(String tickerName) async {
     setBusy(true);
     transactionHistory = [];
@@ -43,4 +44,6 @@ class TransactionHistoryScreenState extends BaseState {
         AppLocalizations.of(context).copiedSuccessfully,
         isWarning: false);
   }
+
+  getWithdrawTxFromApi() {}
 }

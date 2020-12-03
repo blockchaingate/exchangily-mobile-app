@@ -122,7 +122,7 @@ class MoveToExchangeViewModel extends BaseState {
       return;
     }
     var amount = double.tryParse(myController.text);
-
+    refreshBalance();
     if (amount == null ||
         amount > walletInfo.availableBalance ||
         amount == 0 ||
@@ -226,6 +226,7 @@ class MoveToExchangeViewModel extends BaseState {
                 ]),
             position: NotificationPosition.bottom,
             background: primaryColor);
+
         // sharedService.alertDialog(
         //     success
         //         ? AppLocalizations.of(context).depositTransactionSuccess
@@ -251,6 +252,21 @@ class MoveToExchangeViewModel extends BaseState {
     setState(ViewState.Idle);
   }
 
+  refreshBalance() async {
+    setState(ViewState.Busy);
+    await walletService
+        .coinBalanceByAddress(
+            walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
+        .then((data) async {
+      log.w('data $data');
+      walletInfo.availableBalance = data['balance'];
+    }).catchError((err) {
+      log.e(err);
+      setState(ViewState.Idle);
+      throw Exception(err);
+    });
+    setState(ViewState.Idle);
+  }
 /*----------------------------------------------------------------------
                     ShowNotification
 ----------------------------------------------------------------------*/

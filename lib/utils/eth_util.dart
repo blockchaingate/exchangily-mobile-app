@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:keccak/keccak.dart';
 import 'package:hex/hex.dart';
@@ -21,7 +22,6 @@ import 'dart:async';
 import 'package:web3dart/web3dart.dart';
 import 'dart:convert';
 
-final String ethBaseUrl = environment["endpoints"]["eth"];
 getTransactionHash(Uint8List signTransaction) {
   var p = keccak(signTransaction);
   var hash = "0x" + HEX.encode(p);

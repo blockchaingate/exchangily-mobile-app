@@ -34,7 +34,7 @@ import 'package:exchangilymobileapp/screens/otc_campaign/team/team_rewards_detai
 import 'package:exchangilymobileapp/screens/settings/language.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/create_password.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/import_wallet.dart';
@@ -96,7 +96,7 @@ class RouteGenerator {
       case DashboardViewRoute:
         return MaterialPageRoute(
             settings: RouteSettings(name: 'WalletDashboardScreen'),
-            builder: (_) => WalletDashboardScreen());
+            builder: (_) => WalletDashboardView());
 
       case AddGasViewRoute:
         return MaterialPageRoute(builder: (_) => AddGas());

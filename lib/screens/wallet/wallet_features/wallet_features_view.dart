@@ -349,11 +349,7 @@ class WalletFeaturesView extends StatelessWidget {
                         await model.refreshBalance();
                       },
                       child: model.state == ViewState.Busy
-                          ? SizedBox(
-                              child: CircularProgressIndicator(),
-                              width: 20,
-                              height: 20,
-                            )
+                          ? model.sharedService.loadingIndicator()
                           : Center(
                               child: Icon(
                                 Icons.refresh,

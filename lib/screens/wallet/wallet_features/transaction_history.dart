@@ -1,7 +1,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
@@ -14,7 +14,7 @@ class TransactionHistoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double customFontSize = 12;
-    return BaseScreen<TransactionHistoryScreenState>(
+    return BaseScreen<TransactionHistoryViewmodel>(
       onModelReady: (model) async {
         //  model.transactionHistory = [];
         model.context = context;

@@ -94,7 +94,9 @@ class MoveToExchangeScreen extends StatelessWidget {
               // Wallet Balance
               Row(
                 children: <Widget>[
-                  Text(AppLocalizations.of(context).walletbalance + '  $bal',
+                  Text(
+                      AppLocalizations.of(context).walletbalance +
+                          '  ${model.walletInfo.availableBalance.toString()}',
                       style: Theme.of(context).textTheme.subtitle2),
                   Padding(
                     padding: EdgeInsets.symmetric(

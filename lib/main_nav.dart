@@ -2,7 +2,7 @@ import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard_view.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -45,7 +45,7 @@ class _MainNavState extends State<MainNav> {
         body: PageView(
           physics: new NeverScrollableScrollPhysics(),
           children: <Widget>[
-            WalletDashboardScreen(),
+            WalletDashboardView(),
             MarketsView(),
             CampaignInstructionScreen(),
             SettingsView()

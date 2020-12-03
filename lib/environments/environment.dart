@@ -1,5 +1,4 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
-import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
@@ -111,7 +110,7 @@ Map devConfig = {
     "EXG": 50,
     "BTC": 0.01,
     "FAB": 50,
-    "ETH": 0.1,
+    "ETH": 0.01,
     "USDT": 20,
     "DUSD": 20,
     "BCH": 0.002,

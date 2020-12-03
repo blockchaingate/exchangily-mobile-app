@@ -9,6 +9,7 @@ import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -21,6 +22,7 @@ class MoveToWalletViewmodel extends BaseState {
 
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
 
   WalletInfo walletInfo;
@@ -34,6 +36,7 @@ class MoveToWalletViewmodel extends BaseState {
   var kanbanTransFee;
   var minimumAmount;
   bool transFeeAdvance = false;
+  double gasAmount = 0.0;
 
   void initState() {
     setBusy(true);
@@ -51,7 +54,28 @@ class MoveToWalletViewmodel extends BaseState {
       gasFeeUnit = 'LIU';
       feeMeasurement = '10^(-8)';
     }
+    checkGasBalance();
     setBusy(false);
+  }
+
+  /*---------------------------------------------------
+                      Get gas
+--------------------------------------------------- */
+
+  checkGasBalance() async {
+    String address = await sharedService.getExgAddressFromWalletDatabase();
+    await walletService.gasBalance(address).then((data) {
+      gasAmount = data;
+      log.i('gas balance $gasAmount');
+      if (gasAmount < 0.5) {
+        sharedService.alertDialog(
+          AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).insufficientGasAmount,
+        );
+      }
+    }).catchError((onError) => log.e(onError));
+    log.w('gas amount $gasAmount');
+    return gasAmount;
   }
 
 /*----------------------------------------------------------------------
@@ -59,7 +83,22 @@ class MoveToWalletViewmodel extends BaseState {
 ----------------------------------------------------------------------*/
   checkPass() async {
     setBusy(true);
+    await checkGasBalance();
+    if (gasAmount == 0.0 || gasAmount < 0.5) {
+      sharedService.alertDialog(
+        AppLocalizations.of(context).notice,
+        AppLocalizations.of(context).insufficientGasAmount,
+      );
+      setBusy(false);
+      return;
+    }
     var amount = double.tryParse(amountController.text);
+    await apiService
+        .getSingleCoinExchangeBalance(walletInfo.tickerName)
+        .then((res) {
+      walletInfo.inExchange = res.unlockedAmount;
+      log.w('exchange balance check ${walletInfo.inExchange}');
+    });
     if (amount == null ||
         amount > walletInfo.inExchange ||
         amount == 0 ||
@@ -126,13 +165,22 @@ class MoveToWalletViewmodel extends BaseState {
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: txId != null ? txId : '',
+              txId: txId,
               status: 'pending',
               quantity: amount,
               tag: 'withdraw');
 
           walletService.checkTxStatus(transactionHistory);
           walletService.insertTransactionInDatabase(transactionHistory);
+          // Future.delayed(Duration(seconds: 10), () async {
+          //   await apiService
+          //       .getSingleCoinExchangeBalance(walletInfo.tickerName)
+          //       .then((res) {
+          //         if(navigationService.)
+          //     walletInfo.inExchange = res.unlockedAmount;
+          //     log.w('exchange balance reload ${walletInfo.inExchange}');
+          //   });
+          // });
         } else {
           var errMsg = ret['data'];
           if (errMsg == null || errMsg == '') {
