@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -22,11 +21,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
+import '../../environments/coins.dart' as coinList;
 
 class BindpayViewmodel extends FutureViewModel {
   final log = getLogger('BindpayViewmodel');
@@ -51,7 +52,18 @@ class BindpayViewmodel extends FutureViewModel {
   String barcodeRes2 = '';
   var walletBalancesBody;
   bool isShowBottomSheet = false;
-  ExchangeBalanceModel exchangeBalance;
+  List<ExchangeBalanceModel> exchangeBalance = [];
+
+/*----------------------------------------------------------------------
+                    Default Future to Run
+----------------------------------------------------------------------*/
+  @override
+  Future futureToRun() async {
+    return await apiService.getAssetsBalance('');
+
+    //await walletDataBaseService.getAll();
+    //apiService.getTokenList();
+  }
 
 /*----------------------------------------------------------------------
                           INIT
@@ -199,33 +211,23 @@ class BindpayViewmodel extends FutureViewModel {
   }
 
 /*----------------------------------------------------------------------
-                    Default Future to Run
-----------------------------------------------------------------------*/
-  @override
-  Future futureToRun() async {
-    return
-        //await apiService.getSingleCoinExchangeBalance(tickerName);
-
-        await walletDataBaseService.getAll();
-    //apiService.getTokenList();
-  }
-
-/*----------------------------------------------------------------------
                     After Future Data is ready
 ----------------------------------------------------------------------*/
   @override
   void onData(data) {
-    List<WalletInfo> tokenList = data as List<WalletInfo>;
-    log.e(tokenList.length);
-    tokenList.forEach((wallet) {
-      if (wallet.inExchange != 0.0)
-        coins.add(
-            {"tickerName": wallet.tickerName, "quantity": wallet.inExchange});
+    setBusyForObject(exchangeBalance, true);
+    exchangeBalance = data;
+    setBusyForObject(exchangeBalance, false);
+    exchangeBalance.forEach((element) {
+      print(element.toJson());
     });
-    coins != null || coins.isNotEmpty
-        ? tickerName = coins[0]['tickerName']
+
+    setBusyForObject(tickerName, true);
+    exchangeBalance != null || exchangeBalance.isNotEmpty
+        ? tickerName = exchangeBalance[0].ticker
         : tickerName = '';
-    print(' coins $coins');
+    setBusyForObject(tickerName, false);
+    log.e('tickerName $tickerName');
   }
 
 /*----------------------------------------------------------------------
@@ -259,34 +261,20 @@ class BindpayViewmodel extends FutureViewModel {
               Show dialog popup for receive address and barcode
 ----------------------------------------------------------------------*/
 
+/*----------------------------------------------------------------------
+                    Refresh Balance
+----------------------------------------------------------------------*/
   refreshBalance() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    walletBalancesBody = sharedPreferences.get('walletBalancesBody');
-
-    await this
-        .apiService
-        .getWalletBalance(walletBalancesBody)
-        .then((walletBalanceList) async {
-      if (walletBalanceList != null) {
-        double exchangeBal = 0.0;
-        walletBalanceList.forEach(
-          (wallet) async {
-            // Compare wallet ticker name to wallet balance coin name
-            if (wallet.coin == tickerName) {
-              exchangeBal = wallet.unlockedExchangeBalance;
-            } // If ends
-          },
-        );
-        coins.firstWhere((element) {
-          if (element['tickerName'] == tickerName)
-            exchangeBal = element['quantity'];
-          return true;
-        });
-      }
-    }).catchError((err) async {
-      log.e('Wallet balance CATCH $err');
-      setBusy(false);
+    setBusyForObject(exchangeBalance, true);
+    await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
+      exchangeBalance.firstWhere((element) {
+        if (element.ticker == tickerName)
+          element.unlockedAmount = res.unlockedAmount;
+        log.w('udpated balance check ${element.unlockedAmount}');
+        return true;
+      });
     });
+    setBusyForObject(exchangeBalance, false);
   }
 
 /*----------------------------------------------------------------------
@@ -295,7 +283,6 @@ class BindpayViewmodel extends FutureViewModel {
 
   showBarcode() {
     setBusy(true);
-
     walletDataBaseService.getBytickerName('FAB').then((coin) {
       String kbAddress = walletService.toKbPaymentAddress(coin.address);
       print('KBADDRESS $kbAddress');
@@ -556,8 +543,14 @@ class BindpayViewmodel extends FutureViewModel {
         setBusy(false);
         return;
       }
-      int coinType = getCoinTypeIdByName(tickerName);
-      print(coinType);
+      await refreshBalance();
+      ExchangeBalanceModel _selectedExchangeBal =
+          exchangeBalance.firstWhere((element) => element.ticker == tickerName);
+      // int coinType = getCoinTypeIdByName(tickerName);
+      print(_selectedExchangeBal.coinType);
+      if (_selectedExchangeBal.unlockedAmount <= 0.0) {
+        log.e('No exchange balance ${_selectedExchangeBal.unlockedAmount}');
+      }
       await dialogService
           .showDialog(
               title: AppLocalizations.of(context).enterPassword,
@@ -569,14 +562,22 @@ class BindpayViewmodel extends FutureViewModel {
           String mnemonic = res.returnedText;
           Uint8List seed = walletService.generateSeed(mnemonic);
           await walletService
-              .sendCoin(seed, coinType, addressController.text,
-                  double.parse(amountController.text))
+              .sendCoin(seed, _selectedExchangeBal.coinType,
+                  addressController.text, double.parse(amountController.text))
               .then((res) {
             log.w('RES $res');
             if (res['transactionHash'] != null ||
                 res['transactionHash'] != '') {
-              sharedService.alertDialog(
-                  "", AppLocalizations.of(context).sendTransactionComplete);
+              showSimpleNotification(
+                  Text(AppLocalizations.of(context).sendTransactionComplete),
+                  position: NotificationPosition.bottom,
+                  background: primaryColor);
+              // sharedService.alertDialog(
+              //     "", AppLocalizations.of(context).sendTransactionComplete);
+              Future.delayed(Duration(seconds: 3), () async {
+                await refreshBalance();
+                log.i('balance updated');
+              });
             } else {
               sharedService.alertDialog(
                   AppLocalizations.of(context).transanctionFailed,

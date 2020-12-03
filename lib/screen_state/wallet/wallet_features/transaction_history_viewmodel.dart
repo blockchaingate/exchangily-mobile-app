@@ -45,5 +45,6 @@ class TransactionHistoryViewmodel extends BaseState {
         isWarning: false);
   }
 
+// pending as currently i save tx's locally but t
   getWithdrawTxFromApi() {}
 }

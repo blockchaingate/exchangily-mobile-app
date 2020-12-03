@@ -122,7 +122,9 @@ class MoveToExchangeViewModel extends BaseState {
       return;
     }
     var amount = double.tryParse(myController.text);
-    refreshBalance();
+
+    await refreshBalance();
+
     if (amount == null ||
         amount > walletInfo.availableBalance ||
         amount == 0 ||
@@ -252,6 +254,9 @@ class MoveToExchangeViewModel extends BaseState {
     setState(ViewState.Idle);
   }
 
+/*----------------------------------------------------------------------
+                    Refresh Balance
+----------------------------------------------------------------------*/
   refreshBalance() async {
     setState(ViewState.Busy);
     await walletService

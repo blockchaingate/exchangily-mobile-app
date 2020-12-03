@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
@@ -148,7 +147,7 @@ class BindpayView extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4.0),
                                 border: Border.all(
-                                    color: model.coins.isEmpty
+                                    color: model.exchangeBalance.isEmpty
                                         ? Colors.transparent
                                         : primaryColor,
                                     style: BorderStyle.solid,
@@ -163,15 +162,16 @@ class BindpayView extends StatelessWidget {
                                     child: Icon(Icons.arrow_drop_down),
                                   ),
                                   iconEnabledColor: primaryColor,
-                                  iconDisabledColor: model.coins.isEmpty
-                                      ? secondaryColor
-                                      : grey,
+                                  iconDisabledColor:
+                                      model.exchangeBalance.isEmpty
+                                          ? secondaryColor
+                                          : grey,
                                   iconSize: 30,
                                   hint: Padding(
-                                    padding: model.coins.isEmpty
+                                    padding: model.exchangeBalance.isEmpty
                                         ? EdgeInsets.all(0)
                                         : const EdgeInsets.only(left: 10.0),
-                                    child: model.coins.isEmpty
+                                    child: model.exchangeBalance.isEmpty
                                         ? ListTile(
                                             dense: true,
                                             leading: Icon(
@@ -204,7 +204,7 @@ class BindpayView extends StatelessWidget {
                                   onChanged: (newValue) {
                                     model.updateSelectedTickername(newValue);
                                   },
-                                  items: model.coins.map(
+                                  items: model.exchangeBalance.map(
                                     (coin) {
                                       return DropdownMenuItem(
                                         child: Padding(
@@ -212,24 +212,29 @@ class BindpayView extends StatelessWidget {
                                               const EdgeInsets.only(left: 10.0),
                                           child: Row(
                                             children: [
-                                              Text(
-                                                  coin['tickerName'].toString(),
+                                              Text(coin.ticker.toString(),
                                                   textAlign: TextAlign.center,
                                                   style: Theme.of(context)
                                                       .textTheme
-                                                      .headline5),
+                                                      .headline5
+                                                      .copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold)),
                                               UIHelper.horizontalSpaceSmall,
                                               Text(
-                                                coin['quantity'].toString(),
+                                                coin.unlockedAmount.toString(),
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline5
-                                                    .copyWith(color: grey),
+                                                    .copyWith(
+                                                        color: grey,
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                               )
                                             ],
                                           ),
                                         ),
-                                        value: coin['tickerName'],
+                                        value: coin.ticker,
                                       );
                                     },
                                   ).toList()),
@@ -273,7 +278,10 @@ class BindpayView extends StatelessWidget {
                                   AppLocalizations.of(context).recieveAddress,
                               hintStyle: Theme.of(context).textTheme.headline5),
                           controller: model.addressController,
-                          style: Theme.of(context).textTheme.headline5),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(fontWeight: FontWeight.bold)),
 
 /*----------------------------------------------------------------------------------------------------
                                         Transfer amount textfield
@@ -291,7 +299,10 @@ class BindpayView extends StatelessWidget {
                                   AppLocalizations.of(context).enterAmount,
                               hintStyle: Theme.of(context).textTheme.headline5),
                           controller: model.amountController,
-                          style: Theme.of(context).textTheme.headline5),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline5
+                              .copyWith(fontWeight: FontWeight.bold)),
                       UIHelper.verticalSpaceMedium,
 /*----------------------------------------------------------------------------------------------------
                                         Transfer - Receive Button Row
@@ -395,13 +406,11 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
                         : model.tickerName),
               ),
               Text(model.quantity == 0.0 ? '' : model.quantity.toString()),
-               model.coins.isNotEmpty?
-              Icon( Icons.arrow_drop_down):Container()
+              model.coins.isNotEmpty ? Icon(Icons.arrow_drop_down) : Container()
             ]),
           ),
           onPressed: () {
-            if(model.coins.isNotEmpty)
-            model.coinListBottomSheet(context);
+            if (model.coins.isNotEmpty) model.coinListBottomSheet(context);
           }),
     );
   }

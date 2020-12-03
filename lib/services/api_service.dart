@@ -69,6 +69,30 @@ class ApiService {
   }
 
 /*----------------------------------------------------------------------
+                    Get All coin exchange balance
+----------------------------------------------------------------------*/
+  Future<List<ExchangeBalanceModel>> getAssetsBalance(String exgAddress) async {
+    exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    ExchangeBalanceModelList exchangeBalanceList;
+    String url =
+        configService.getKanbanBaseUrl() + AssetsBalanceApiRoute + exgAddress;
+    log.w('get assets balance url $url');
+    try {
+      final res = await client.get(url);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        var json = jsonDecode(res.body) as List;
+        log.w('getAssetsBalance json $json');
+        exchangeBalanceList = ExchangeBalanceModelList.fromJson(json);
+        log.w('getAssetsBalance model data ${exchangeBalanceList.balances}');
+      }
+      return exchangeBalanceList.balances;
+    } catch (e) {
+      log.e('getAssetsBalance Failed to load the data from the API, $e');
+      return null;
+    }
+  }
+
+/*----------------------------------------------------------------------
                     Get single coin exchange balance
 ----------------------------------------------------------------------*/
   Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
@@ -302,22 +326,6 @@ class ApiService {
       log.e('getGasBalance Failed to load the data from the API $e');
     }
     return {};
-  }
-
-  // Get Assets balance
-  Future getAssetsBalance(String exgAddress) async {
-    String url =
-        configService.getKanbanBaseUrl() + AssetsBalanceApiRoute + exgAddress;
-    log.w('get assets balance url $url');
-    try {
-      final res = await client.get(url);
-
-      if (res.statusCode == 200 || res.statusCode == 201) {
-        return jsonDecode(res.body);
-      }
-    } catch (e) {
-      log.e('getAssetsBalance Failed to load the data from the API, $e');
-    }
   }
 
   // Get Orders by address

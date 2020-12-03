@@ -744,10 +744,9 @@ class WalletService {
       log.w('assetsBalance exchange $res');
       for (var i = 0; i < res.length; i++) {
         var tempBal = res[i];
-        var coinType = int.parse(tempBal['coinType']);
-        var unlockedAmount =
-            stringUtils.bigNum2Double(tempBal['unlockedAmount']);
-        var lockedAmount = stringUtils.bigNum2Double(tempBal['lockedAmount']);
+        var coinType = res[i].coinType;
+        var unlockedAmount = res[i].unlockedAmount;
+        var lockedAmount = res[i].lockedAmount;
         var finalBal = {
           'coin': coinList.newCoinTypeMap[coinType.toString()],
           'amount': unlockedAmount,

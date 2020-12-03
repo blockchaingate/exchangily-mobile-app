@@ -81,8 +81,8 @@ const String GetOrdersByTickerApiRoute = 'getordersbytickernamepaged/';
 /// https://kanbantest.fabcoinapi.com/exchangily/getBalance/
 /// 0xb754f9c8b706c59646a4e97601a0ad81067e1cf9/HOT
 const String GetSingleCoinExchangeBalApiRoute = 'exchangily/getBalance/';
+const String AssetsBalanceApiRoute = 'exchangily/getBalances/';
 
 const String GetBalanceApiRoute = 'kanban/getBalance/';
-const String AssetsBalanceApiRoute = 'exchangily/getBalances/';
 const String OrdersByAddrApiRoute = 'ordersbyaddress/';
 const String WalletBalancesApiRoute = 'walletBalances';
