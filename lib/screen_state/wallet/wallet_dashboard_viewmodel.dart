@@ -37,12 +37,10 @@ import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import '../../environments/coins.dart' as coinList;
-import '../../shared/globals.dart' as globals;
-import 'package:intl/intl.dart';
+
 import 'package:json_diff/json_diff.dart';
 
 class WalletDashboardViewModel extends BaseState {
@@ -94,6 +92,7 @@ class WalletDashboardViewModel extends BaseState {
   GlobalKey globalKeyTwo;
   var storageService = locator<LocalStorageService>();
   double totalBalanceContainerWidth = 100.0;
+  final scrollController = ScrollController();
 
 /*----------------------------------------------------------------------
                     INIT
@@ -111,6 +110,12 @@ class WalletDashboardViewModel extends BaseState {
     await getConfirmDepositStatus();
     showDialogWarning();
     setBusy(false);
+  }
+
+  void endOfCoinList() async {
+    scrollController.jumpTo(
+      scrollController.position.maxScrollExtent,
+    );
   }
 
 /*----------------------------------------------------------------------
@@ -670,27 +675,29 @@ class WalletDashboardViewModel extends BaseState {
   getConfirmDepositStatus() async {
     String address = await walletService.getExgAddressFromWalletDatabase();
     await walletService.getErrDeposit(address).then((res) async {
-      if (res != null) {
-        log.w('getConfirmDepositStatus $res');
-        var singleTransaction = res[0];
-        int coinType = singleTransaction['coinType'];
+      if (res['json'] == []) {
+        log.e('getConfirmDepositStatus res not good');
+        return;
+      }
+      log.w('getConfirmDepositStatus $res');
+      var singleTransaction = res[0];
+      int coinType = singleTransaction['coinType'];
 
-        var name = coinList.newCoinTypeMap[coinType.toString()];
-        // .keys.firstWhere((element) {
-        //   log.i('test $element -- ${coinType.toString()}');
-        //   return element == coinType.toString();
-        // });
-        if (name != null) {
-          log.e('Pending deposit coin $name');
-          await walletDatabaseService.getBytickerName(name).then((res) {
-            if (res != null) {
-              setBusy(true);
-              confirmDepositCoinWallet = res;
-              isConfirmDeposit = true;
-              setBusy(false);
-            }
-          });
-        }
+      var name = coinList.newCoinTypeMap[coinType.toString()];
+      // .keys.firstWhere((element) {
+      //   log.i('test $element -- ${coinType.toString()}');
+      //   return element == coinType.toString();
+      // });
+      if (name != null) {
+        log.e('Pending deposit coin $name');
+        await walletDatabaseService.getBytickerName(name).then((res) {
+          if (res != null) {
+            setBusy(true);
+            confirmDepositCoinWallet = res;
+            isConfirmDeposit = true;
+            setBusy(false);
+          }
+        });
       }
     });
   }

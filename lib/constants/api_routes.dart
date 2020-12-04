@@ -10,6 +10,13 @@ const String baseBlockchainGateV2Url = isProduction
     : 'https://test.blockchaingate.com/v2/';
 
 /*----------------------------------------------------------------------
+                        Bindpay
+----------------------------------------------------------------------*/
+const String ChargeTextApiRoute = "charge";
+const String OrdersTextApiRoute = "orders";
+const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
+
+/*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
 const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";

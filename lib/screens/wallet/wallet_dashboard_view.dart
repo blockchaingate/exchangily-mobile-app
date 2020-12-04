@@ -308,6 +308,7 @@ class WalletDashboardView extends StatelessWidget {
                                 : Container(
                                     // margin: EdgeInsets.symmetric(horizontal: 8.0),
                                     child: ListView.builder(
+                                      itemExtent: 100,
                                       shrinkWrap: true,
                                       itemCount: model.walletInfoCopy.length,
                                       itemBuilder:
@@ -343,6 +344,8 @@ class WalletDashboardView extends StatelessWidget {
                                   controller: model.refreshController,
                                   onRefresh: model.onRefresh,
                                   child: ListView.builder(
+                                    controller: model.scrollController,
+                                    itemExtent: 95,
                                     shrinkWrap: true,
                                     itemCount: model.walletInfo.length,
                                     itemBuilder:
@@ -394,13 +397,20 @@ class WalletDashboardView extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                              ))
+                              )),
                   ],
                 ),
               ),
             ),
           ),
           bottomNavigationBar: BottomNavBar(count: 0),
+          // floatingActionButton: Container(
+          //   color: white,
+          //   child: IconButton(
+          //     icon: Icon(Icons.arrow_downward),
+          //     onPressed: () => model.endOfCoinList(),
+          //   ),
+          // ),
         ),
       );
     });

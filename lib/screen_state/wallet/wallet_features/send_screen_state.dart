@@ -27,7 +27,6 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -36,7 +35,6 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:overlay_support/overlay_support.dart';
-import '../../../shared/globals.dart' as globals;
 
 class SendScreenState extends BaseState {
   final log = getLogger('SendScreenState');
