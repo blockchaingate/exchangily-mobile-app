@@ -14,18 +14,24 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
   SharedService sharedService = locator<SharedService>();
   ApiService apiService = locator<ApiService>();
   ExchangeBalanceModel exchangeBalance = new ExchangeBalanceModel();
+  List<ExchangeBalanceModel> exchangeBalances = [];
   @override
   Future futureToRun() async {
     log.e('In get exchange assets');
-
-    var res = await walletService.getAllExchangeBalances('');
+    // String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    var res = await apiService.getAssetsBalance('');
     return res;
     // if (res != null) myExchangeAssets = res;
   }
 
   @override
   void onData(data) {
-    log.i('DATA $data');
+    setBusyForObject(exchangeBalance, true);
+    exchangeBalances = data;
+    setBusyForObject(exchangeBalance, false);
+    exchangeBalances.forEach((element) {
+      log.w(element.toJson());
+    });
   }
 
   Future getSingleCoinExchangeBalanceFromAll(String tickerName) async {

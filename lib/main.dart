@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
 
               navigatorKey: locator<NavigationService>().navigatorKey,
               builder: (context, widget) => Navigator(
-                key:locator<DialogService>().navigatorKey,
+                  key: locator<DialogService>().navigatorKey,
                   onGenerateRoute: (settings) => MaterialPageRoute(
                       builder: (context) => DialogManager(
                             child: widget,
@@ -126,15 +126,15 @@ class MyApp extends StatelessWidget {
                     headline5: TextStyle(
                         fontSize: 12.5,
                         color: globals.white,
-                        fontWeight: FontWeight.w300),
+                        fontWeight: FontWeight.w400),
                     subtitle2: TextStyle(
                         fontSize: 10.3,
                         color: globals.grey,
-                        fontWeight: FontWeight.w300),
+                        fontWeight: FontWeight.w400),
                     bodyText1: TextStyle(
                         fontSize: 13,
                         color: globals.white,
-                        fontWeight: FontWeight.w300),
+                        fontWeight: FontWeight.w400),
                     bodyText2: TextStyle(fontSize: 13, color: globals.red),
                     headline6: TextStyle(
                         fontSize: 10.5,

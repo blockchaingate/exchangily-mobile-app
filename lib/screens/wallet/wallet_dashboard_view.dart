@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:stacked/stacked.dart';
 import '../../shared/globals.dart' as globals;
 import 'wallet_features/gas.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
@@ -40,344 +41,337 @@ class WalletDashboardView extends StatelessWidget {
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
     final key = new GlobalKey<ScaffoldState>();
-    return BaseScreen<WalletDashboardViewModel>(onModelReady: (model) async {
-      model.context = context;
-      model.globalKeyOne = _one;
-      model.globalKeyTwo = _two;
-      await model.retrieveWalletsFromLocalDatabase();
-      await model.init();
-    }, builder: (context, model, child) {
-      // var connectionStatus = Provider.of<ConnectivityStatus>(context);
-      // if (connectionStatus == ConnectivityStatus.Offline)
-      //   return NetworkStausView();
-      // else
-      return WillPopScope(
-        onWillPop: () {
-          model.onBackButtonPressed();
-          return new Future(() => false);
+    return ViewModelBuilder.reactive(
+        viewModelBuilder: () => WalletDashboardViewModel(),
+        onModelReady: (model) async {
+          model.context = context;
+          model.globalKeyOne = _one;
+          model.globalKeyTwo = _two;
+          await model.retrieveWalletsFromLocalDatabase();
+          await model.init();
         },
-        child: Scaffold(
-          key: key,
-          body: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
+        builder: (context, model, child) {
+          // var connectionStatus = Provider.of<ConnectivityStatus>(context);
+          // if (connectionStatus == ConnectivityStatus.Offline)
+          //   return NetworkStausView();
+          // else
+          return WillPopScope(
+            onWillPop: () {
+              model.onBackButtonPressed();
+              return new Future(() => false);
             },
-            child: ShowCaseWidget(
-              onStart: (index, key) {
-                print('onStart: $index, $key');
-              },
-              onComplete: (index, key) {
-                print('onComplete: $index, $key');
-              },
-              onFinish: () {
-                model.storageService.isShowCaseView = false;
-              },
-              builder: Builder(
-                builder: (context) => Column(
-                  children: <Widget>[
+            child: Scaffold(
+              key: key,
+              body: GestureDetector(
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+                child: ShowCaseWidget(
+                  onStart: (index, key) {
+                    print('onStart: $index, $key');
+                  },
+                  onComplete: (index, key) {
+                    print('onComplete: $index, $key');
+                  },
+                  onFinish: () {
+                    model.storageService.isShowCaseView = false;
+                    model.showcaseEvent(context);
+                  },
+                  builder: Builder(
+                    builder: (context) => Column(
+                      children: <Widget>[
 /*-------------------------------------------------------------------------------------
                               Build Background and Logo Container
 -------------------------------------------------------------------------------------*/
-                    Container(
-                      // width: double.infinity,
-                      height: 130,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/wallet-page/background.png'),
-                              fit: BoxFit.cover)),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Expanded(
-                              child: Stack(
-                                overflow: Overflow.visible,
-                                children: <Widget>[
-                                  // Positioned(
-                                  //   top: 5,
-                                  //   right: 5,
-                                  //   child: IconButton(
-                                  //     icon: Icon(Icons.menu,
-                                  //         color: globals.white, size: 40),
-                                  //     onPressed: () {
-                                  //       log.i('trying to open the drawer');
-                                  //       key.currentState.openDrawer();
-                                  //     },
-                                  //   ),
-                                  // )
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Stack(
-                                  alignment: Alignment.center,
-                                  overflow: Overflow.visible,
-                                  children: <Widget>[
-                                    Positioned(
-                                      top: -10,
-                                      child: Image.asset(
-                                        'assets/images/start-page/logo.png',
-                                        width: 180,
-                                        color: globals.white,
-                                      ),
-                                    ),
-                                  ]),
-                            ),
+                        Container(
+                          // width: double.infinity,
+                          height: 130,
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      'assets/images/wallet-page/background.png'),
+                                  fit: BoxFit.cover)),
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Stack(
+                                    overflow: Overflow.visible,
+                                    children: <Widget>[
+                                      // Positioned(
+                                      //   top: 5,
+                                      //   right: 5,
+                                      //   child: IconButton(
+                                      //     icon: Icon(Icons.menu,
+                                      //         color: globals.white, size: 40),
+                                      //     onPressed: () {
+                                      //       log.i('trying to open the drawer');
+                                      //       key.currentState.openDrawer();
+                                      //     },
+                                      //   ),
+                                      // )
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Stack(
+                                      alignment: Alignment.center,
+                                      overflow: Overflow.visible,
+                                      children: <Widget>[
+                                        Positioned(
+                                          top: -10,
+                                          child: Image.asset(
+                                            'assets/images/start-page/logo.png',
+                                            width: 180,
+                                            color: globals.white,
+                                          ),
+                                        ),
+                                      ]),
+                                ),
 
 /*------------------------------------------------------------
                           Total Balance Card
 ------------------------------------------------------------*/
-                            Expanded(
-                              child: TotalBalanceWidget(model: model),
-                            ),
-                          ]),
-                    ),
+                                Expanded(
+                                  child: TotalBalanceWidget(model: model),
+                                ),
+                              ]),
+                        ),
 
 /*-----------------------------------------------------------------
                           Hide Small Amount Row
 -----------------------------------------------------------------*/
 
-                    Container(
-                      padding: EdgeInsets.only(right: 10, top: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 5.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                InkWell(
-                                  onTap: () {
-                                    model.hideSmallAmountAssets();
-                                  },
-                                  child: Row(
-                                    children: <Widget>[
-                                      model.isHideSmallAmountAssets
-                                          ? Icon(
-                                              Icons.money_off,
-                                              semanticLabel:
-                                                  'Hide Small Amount Assets',
-                                              color: globals.primaryColor,
-                                            )
-                                          : Icon(
-                                              Icons.attach_money,
-                                              semanticLabel:
-                                                  'Hide Small Amount Assets',
-                                              color: globals.primaryColor,
+                        Container(
+                          padding: EdgeInsets.only(right: 10, top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 5.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        model.hideSmallAmountAssets();
+                                      },
+                                      child: Row(
+                                        children: <Widget>[
+                                          model.isHideSmallAmountAssets
+                                              ? Icon(
+                                                  Icons.money_off,
+                                                  semanticLabel:
+                                                      'Hide Small Amount Assets',
+                                                  color: globals.primaryColor,
+                                                )
+                                              : Icon(
+                                                  Icons.attach_money,
+                                                  semanticLabel:
+                                                      'Hide Small Amount Assets',
+                                                  color: globals.primaryColor,
+                                                ),
+                                          Container(
+                                            padding: EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .hideSmallAmountAssets,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5
+                                                  .copyWith(wordSpacing: 1.25),
                                             ),
-                                      Container(
-                                        padding: EdgeInsets.only(left: 5),
-                                        child: Text(
-                                          AppLocalizations.of(context)
-                                              .hideSmallAmountAssets,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline5
-                                              .copyWith(wordSpacing: 1.25),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          //Add free FAB container
-                          !model.isFreeFabNotUsed
-                              ? Container()
-                              : Container(
-                                  margin: EdgeInsets.symmetric(vertical: 5.0),
-                                  decoration: BoxDecoration(
-                                      color: globals.primaryColor,
-                                      borderRadius: BorderRadius.circular(30)),
-                                  child: SizedBox(
-                                    width: 120,
-                                    height: 20,
-                                    child: OutlineButton.icon(
-                                        padding: EdgeInsets.all(0),
-                                        onPressed: model.getFreeFab,
-                                        icon: Icon(
-                                          Icons.add,
-                                          size: 18,
-                                          color: white,
-                                        ),
-                                        label: Text(
-                                          AppLocalizations.of(context).getFree +
-                                              ' FAB',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6,
-                                        )),
-                                  )),
-                          UIHelper.horizontalSpaceMedium,
-                        ],
-                      ),
-                    ),
-                    // Gas Container
-                    Container(
-                      margin: EdgeInsets.only(left: 8.0),
-                      child: model.busy
-                          ? Shimmer.fromColors(
-                              baseColor: globals.primaryColor,
-                              highlightColor: globals.grey,
-                              child: Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 5.0),
-                                    child: Icon(
-                                      Icons.donut_large,
-                                      size: 18,
-                                      color: globals.primaryColor,
-                                    ),
-                                  ),
-                                  UIHelper.horizontalSpaceSmall,
-                                  Text(
-                                    "${AppLocalizations.of(context).gas}: ${model.gasAmount.toStringAsFixed(8)}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(wordSpacing: 1.25),
-                                  ),
-                                  UIHelper.horizontalSpaceSmall,
-                                  MaterialButton(
-                                    minWidth: 70.0,
-                                    height: 24,
-                                    color: globals.green,
-                                    padding: EdgeInsets.all(0),
-                                    onPressed: () {},
-                                    child: Text(
-                                      AppLocalizations.of(context).addGas,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6
-                                          .copyWith(color: black),
-                                    ),
-                                  ),
-                                ],
-                              ))
-                          : Row(
-                              children: [
-                                AddGasRow(model: model),
-                                UIHelper.horizontalSpaceSmall,
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () => FocusScope.of(context)
-                                        .requestFocus(FocusNode()),
-                                    child: Container(
-                                      margin: EdgeInsets.only(top: 5),
-                                      height: 30,
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: primaryColor,
-                                                  width: 1),
-                                            ),
-                                            // helperText: 'Search',
-                                            // helperStyle:
-                                            //     Theme.of(context).textTheme.bodyText1,
-                                            suffixIcon: Icon(Icons.search,
-                                                color: white)),
-                                        controller:
-                                            model.searchCoinTextController,
-                                        onChanged: (String value) {
-                                          model.searchCoinsByTickerName(value);
-                                        },
+                                          )
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                )
-                              ],
-                            ),
-                    ),
+                                  ],
+                                ),
+                              ),
+                              //Add free FAB container
+                              !model.isFreeFabNotUsed
+                                  ? Container()
+                                  : Container(
+                                      margin:
+                                          EdgeInsets.symmetric(vertical: 5.0),
+                                      decoration: BoxDecoration(
+                                          color: globals.primaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
+                                      child: SizedBox(
+                                        width: 120,
+                                        height: 20,
+                                        child: OutlineButton.icon(
+                                            padding: EdgeInsets.all(0),
+                                            onPressed: model.getFreeFab,
+                                            icon: Icon(
+                                              Icons.add,
+                                              size: 18,
+                                              color: white,
+                                            ),
+                                            label: Text(
+                                              AppLocalizations.of(context)
+                                                      .getFree +
+                                                  ' FAB',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6,
+                                            )),
+                                      )),
+                              UIHelper.horizontalSpaceMedium,
+                            ],
+                          ),
+                        ),
+                        // Gas Container
+                        Container(
+                          margin: EdgeInsets.only(left: 8.0),
+                          child: model.isBusy
+                              ? Shimmer.fromColors(
+                                  baseColor: globals.primaryColor,
+                                  highlightColor: globals.grey,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 5.0),
+                                        child: Icon(
+                                          Icons.donut_large,
+                                          size: 18,
+                                          color: globals.primaryColor,
+                                        ),
+                                      ),
+                                      UIHelper.horizontalSpaceSmall,
+                                      Text(
+                                        "${AppLocalizations.of(context).gas}: ${model.gasAmount.toStringAsFixed(8)}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .copyWith(wordSpacing: 1.25),
+                                      ),
+                                      UIHelper.horizontalSpaceSmall,
+                                      MaterialButton(
+                                        minWidth: 70.0,
+                                        height: 24,
+                                        color: globals.green,
+                                        padding: EdgeInsets.all(0),
+                                        onPressed: () {},
+                                        child: Text(
+                                          AppLocalizations.of(context).addGas,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6
+                                              .copyWith(color: black),
+                                        ),
+                                      ),
+                                    ],
+                                  ))
+                              : Row(
+                                  children: [
+                                    AddGasRow(model: model),
+                                    UIHelper.horizontalSpaceSmall,
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () => FocusScope.of(context)
+                                            .requestFocus(FocusNode()),
+                                        child: Container(
+                                          margin: EdgeInsets.only(top: 5),
+                                          height: 30,
+                                          child: TextField(
+                                            decoration: InputDecoration(
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: primaryColor,
+                                                      width: 1),
+                                                ),
+                                                // helperText: 'Search',
+                                                // helperStyle:
+                                                //     Theme.of(context).textTheme.bodyText1,
+                                                suffixIcon: Icon(Icons.search,
+                                                    color: white)),
+                                            controller:
+                                                model.searchCoinTextController,
+                                            onChanged: (String value) {
+                                              model.searchCoinsByTickerName(
+                                                  value);
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                        ),
 
-                    UIHelper.verticalSpaceSmall,
+                        UIHelper.verticalSpaceSmall,
 
 /*------------------------------------------------------------------------------
                                 Build Wallet List Container
 -------------------------------------------------------------------------------*/
-                    Expanded(
-                        child: model.busy
-                            ? model.walletInfoCopy == null
-                                ? ShimmerLayout(
-                                    layoutType: 'walletDashboard',
-                                  )
+                        Expanded(
+                            child: model.isBusy
+                                ? model.walletInfoCopy == null
+                                    ? ShimmerLayout(
+                                        layoutType: 'walletDashboard',
+                                      )
+                                    : Container(
+                                        // margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                        child: ListView.builder(
+                                          //  itemExtent: 100,
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              model.walletInfoCopy.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return _coinDetailsCard(
+                                                model.walletInfoCopy[index]
+                                                    .tickerName
+                                                    .toLowerCase(),
+                                                model.walletInfoCopy[index]
+                                                    .availableBalance,
+                                                model.walletInfoCopy[index]
+                                                    .lockedBalance,
+                                                model.walletInfoCopy[index]
+                                                    .inExchange,
+                                                model.walletInfoCopy[index]
+                                                    .usdValue,
+                                                index,
+                                                model.walletInfoCopy,
+                                                model.elevation,
+                                                context,
+                                                model);
+                                          },
+                                        ),
+                                      )
                                 : Container(
-                                    // margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: ListView.builder(
-                                      itemExtent: 100,
-                                      shrinkWrap: true,
-                                      itemCount: model.walletInfoCopy.length,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return _coinDetailsCard(
-                                            model.walletInfoCopy[index]
-                                                .tickerName
-                                                .toLowerCase(),
-                                            model.walletInfoCopy[index]
-                                                .availableBalance,
-                                            model.walletInfoCopy[index]
-                                                .lockedBalance,
-                                            model.walletInfoCopy[index]
-                                                .inExchange,
-                                            model
-                                                .walletInfoCopy[index].usdValue,
-                                            index,
-                                            model.walletInfoCopy,
-                                            model.elevation,
-                                            context,
-                                            model);
-                                      },
-                                    ),
-                                  )
-                            : Container(
-                                //   margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                child: SmartRefresher(
-                                  enablePullDown: true,
-                                  header: Theme.of(context).platform ==
-                                          TargetPlatform.iOS
-                                      ? ClassicHeader()
-                                      : MaterialClassicHeader(),
-                                  controller: model.refreshController,
-                                  onRefresh: model.onRefresh,
-                                  child: ListView.builder(
-                                    controller: model.scrollController,
-                                    itemExtent: 95,
-                                    shrinkWrap: true,
-                                    itemCount: model.walletInfo.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      var name = model
-                                          .walletInfo[index].tickerName
-                                          .toLowerCase();
-                                      var usdVal =
-                                          model.walletInfo[index].usdValue;
+                                    //   margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: SmartRefresher(
+                                      enablePullDown: true,
+                                      header: Theme.of(context).platform ==
+                                              TargetPlatform.iOS
+                                          ? ClassicHeader()
+                                          : MaterialClassicHeader(),
+                                      controller: model.refreshController,
+                                      onRefresh: model.onRefresh,
+                                      child: ListView.builder(
+                                        controller: model.scrollController,
+                                        // itemExtent: 95,
+                                        shrinkWrap: true,
+                                        itemCount: model.walletInfo.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          var name = model
+                                              .walletInfo[index].tickerName
+                                              .toLowerCase();
+                                          var usdVal =
+                                              model.walletInfo[index].usdValue;
 
-                                      return Visibility(
-                                        // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
-                                        visible: usdVal >= 0 &&
-                                            !model.isHideSmallAmountAssets,
-                                        child: _coinDetailsCard(
-                                            '$name',
-                                            model.walletInfo[index]
-                                                .availableBalance,
-                                            model.walletInfo[index]
-                                                .lockedBalance,
-                                            model.walletInfo[index].inExchange,
-                                            model.walletInfo[index].usdValue,
-                                            index,
-                                            model.walletInfo,
-                                            model.elevation,
-                                            context,
-                                            model),
-                                        // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
-                                        replacement: Visibility(
-                                            visible:
-                                                model.isHideSmallAmountAssets &&
-                                                    usdVal != 0,
+                                          return Visibility(
+                                            // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
+                                            visible: usdVal >= 0 &&
+                                                !model.isHideSmallAmountAssets,
                                             child: _coinDetailsCard(
                                                 '$name',
                                                 model.walletInfo[index]
@@ -392,28 +386,48 @@ class WalletDashboardView extends StatelessWidget {
                                                 model.walletInfo,
                                                 model.elevation,
                                                 context,
-                                                model)),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              )),
-                  ],
+                                                model),
+                                            // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
+                                            replacement: Visibility(
+                                                visible: model
+                                                        .isHideSmallAmountAssets &&
+                                                    usdVal != 0,
+                                                child: _coinDetailsCard(
+                                                    '$name',
+                                                    model.walletInfo[index]
+                                                        .availableBalance,
+                                                    model.walletInfo[index]
+                                                        .lockedBalance,
+                                                    model.walletInfo[index]
+                                                        .inExchange,
+                                                    model.walletInfo[index]
+                                                        .usdValue,
+                                                    index,
+                                                    model.walletInfo,
+                                                    model.elevation,
+                                                    context,
+                                                    model)),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  )),
+                      ],
+                    ),
+                  ),
                 ),
               ),
+              bottomNavigationBar: BottomNavBar(count: 0),
+              // floatingActionButton: Container(
+              //   color: white,
+              //   child: IconButton(
+              //     icon: Icon(Icons.arrow_downward),
+              //     onPressed: () => model.jsonTransformation(),
+              //   ),
+              // ),
             ),
-          ),
-          bottomNavigationBar: BottomNavBar(count: 0),
-          // floatingActionButton: Container(
-          //   color: white,
-          //   child: IconButton(
-          //     icon: Icon(Icons.arrow_downward),
-          //     onPressed: () => model.endOfCoinList(),
-          //   ),
-          // ),
-        ),
-      );
-    });
+          );
+        });
   }
 
   /*---------------------------------------------------------------------------------------------------------------------------------------------
@@ -444,7 +458,7 @@ class WalletDashboardView extends StatelessWidget {
           model.onSingleCoinCardClick(index);
         },
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
+          padding: EdgeInsets.symmetric(vertical: 8),
           child: Row(
             // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -488,7 +502,7 @@ class WalletDashboardView extends StatelessWidget {
                             child: Text(AppLocalizations.of(context).available,
                                 style: Theme.of(context).textTheme.headline6),
                           ),
-                          model.busy
+                          model.isBusy
                               ? SizedBox(
                                   child: Shimmer.fromColors(
                                   baseColor: globals.red,
@@ -522,7 +536,7 @@ class WalletDashboardView extends StatelessWidget {
                                     .headline6
                                     .copyWith(color: red)),
                           ),
-                          model.state == ViewState.Busy
+                          model.isBusy
                               ? SizedBox(
                                   child: Shimmer.fromColors(
                                   baseColor: globals.red,
@@ -557,7 +571,7 @@ class WalletDashboardView extends StatelessWidget {
                                   style: Theme.of(context).textTheme.headline6),
                             ),
                           ),
-                          model.state == ViewState.Busy
+                          model.isBusy
                               ? SizedBox(
                                   child: Shimmer.fromColors(
                                   baseColor: globals.primaryColor,
@@ -593,14 +607,22 @@ class WalletDashboardView extends StatelessWidget {
                 child: Container(
                   child: Column(
                     children: <Widget>[
-                      model.state == ViewState.Busy
-                          ? Shimmer.fromColors(
-                              baseColor: globals.grey,
-                              highlightColor: globals.white,
-                              child: Text(
-                                '${usdValue.toStringAsFixed(2)}',
-                                style: TextStyle(color: globals.green),
-                              ),
+                      model.isBusy
+                          ? Row(
+                              children: [
+                                Text('\$',
+                                    style: TextStyle(color: globals.green)),
+                                Expanded(
+                                  child: Shimmer.fromColors(
+                                    baseColor: globals.grey,
+                                    highlightColor: globals.white,
+                                    child: Text(
+                                      '${usdValue.toStringAsFixed(2)}',
+                                      style: TextStyle(color: globals.green),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             )
                           : Row(
                               children: [
@@ -784,7 +806,7 @@ class TotalBalanceWidget extends StatelessWidget {
                                 .headline4
                                 .copyWith(fontWeight: FontWeight.w400)),
                         UIHelper.verticalSpaceSmall,
-                        model.busy
+                        model.isBusy
                             ? Shimmer.fromColors(
                                 baseColor: globals.primaryColor,
                                 highlightColor: globals.white,
@@ -806,7 +828,7 @@ class TotalBalanceWidget extends StatelessWidget {
                       onTap: () async {
                         await model.refreshBalance();
                       },
-                      child: model.busy
+                      child: model.isBusy
                           ? Container(
                               margin: EdgeInsets.only(left: 3.0),
                               child: SizedBox(
@@ -847,8 +869,9 @@ class AddGasRow extends StatelessWidget {
     var begin = Offset(0.0, 1.0);
     var end = Offset.zero;
     var tween = Tween(begin: begin, end: end);
-    model.showcaseEvent(context);
-    return model.storageService.isShowCaseView && model.gasAmount < 0.5
+    if (model.isShowCaseView && model.gasAmount < 0.5)
+      model.showcaseEvent(context);
+    return model.isShowCaseView && model.gasAmount < 0.5
         ? Showcase(
             key: model.globalKeyOne,
             title: AppLocalizations.of(context).note + ':',
@@ -877,7 +900,9 @@ class DepositWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     model.showcaseEvent(context);
     return InkWell(
-        child: tickerName.toUpperCase() == 'FAB'
+        child: tickerName.toUpperCase() == 'FAB' &&
+                model.isShowCaseView &&
+                model.gasAmount < 0.5
             ? Showcase(
                 key: model.globalKeyTwo,
                 descTextStyle: TextStyle(fontSize: 9, color: black),

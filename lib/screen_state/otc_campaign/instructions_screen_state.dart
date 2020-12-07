@@ -10,7 +10,6 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CampaignInstructionsScreenState extends BaseState {
   final log = getLogger('CampaignInstructionsScreenState');
@@ -59,8 +58,7 @@ class CampaignInstructionsScreenState extends BaseState {
       /// if login token is null then
       /// show the svg images
     } else {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      lang = prefs.getString('lang');
+      lang = localStorageService.language;
 
       var eventContent;
 

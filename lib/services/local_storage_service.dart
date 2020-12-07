@@ -30,6 +30,10 @@ class LocalStorageService {
     return _instance;
   }
 
+  void clearStorage() {
+    _preferences.clear();
+  }
+
 /*----------------------------------------------------------------------
             Updated _saveToDisk function that handles all types
 ----------------------------------------------------------------------*/
@@ -60,16 +64,16 @@ class LocalStorageService {
 
   dynamic _getFromDisk(String key) {
     var value = _preferences.get(key);
-   // log.i('key: $key value: $value');
+    // log.i('key: $key value: $value');
+
     return value;
   }
 
 /*----------------------------------------------------------------------
                   Languages getter/setter
 ----------------------------------------------------------------------*/
-  List<String> get languages => _getFromDisk(AppLanguagesKey) ?? List<String>();
-  set languages(List<String> appLanguages) =>
-      _saveToDisk(AppLanguagesKey, appLanguages);
+  String get language => _getFromDisk(AppLanguagesKey) ?? 'en';
+  set language(String appLanguage) => _saveToDisk(AppLanguagesKey, appLanguage);
 
 /*----------------------------------------------------------------------
                 Dark mode getter/setter

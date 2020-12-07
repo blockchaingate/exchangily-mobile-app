@@ -1,7 +1,8 @@
+import 'dart:convert';
+
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
@@ -9,6 +10,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
@@ -23,7 +25,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:bip39/bip39.dart' as bip39;
-import '../packages/bip32/bip32_base.dart' as bip32;
+import 'package:bip32/bip32.dart' as bip32;
 import 'package:hex/hex.dart';
 import 'dart:typed_data';
 import 'package:web3dart/web3dart.dart';
@@ -39,7 +41,6 @@ import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
 import 'dart:io';
-import 'package:bitcoin_flutter/src/models/networks.dart';
 import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
 import 'package:bitcoin_flutter/src/transaction_builder.dart';
 import 'package:bitcoin_flutter/src/transaction.dart' as btcTransaction;
@@ -47,7 +48,7 @@ import 'package:bitcoin_flutter/src/ecpair.dart';
 import 'package:bitcoin_flutter/src/utils/script.dart' as script;
 import '../environments/environment.dart';
 import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
-import 'package:web_socket_channel/io.dart';
+
 import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:decimal/decimal.dart';
@@ -63,6 +64,7 @@ class WalletService {
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
+  final storageService = locator<LocalStorageService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   ApiService _apiService = locator<ApiService>();
@@ -403,6 +405,32 @@ class WalletService {
         log.i("Offline wallet ${_walletInfo[i].toJson()}");
         await walletDatabaseService.insert(_walletInfo[i]);
       }
+      Map<String, dynamic> walletBalancesBody = {
+        'btcAddress': '',
+        'ethAddress': '',
+        'fabAddress': '',
+        'ltcAddress': '',
+        'dogeAddress': '',
+        'bchAddress': '',
+        "showEXGAssets": "true"
+      };
+      _walletInfo.forEach((wallet) {
+        if (wallet.tickerName == 'BTC') {
+          walletBalancesBody['btcAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'ETH') {
+          walletBalancesBody['ethAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'FAB') {
+          walletBalancesBody['fabAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'LTC') {
+          walletBalancesBody['ltcAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'DOGE') {
+          walletBalancesBody['dogeAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'BCH') {
+          walletBalancesBody['bchAddress'] = wallet.address;
+        }
+      });
+
+      storageService.walletBalancesBody = jsonEncode(walletBalancesBody);
       await walletDatabaseService.getAll();
       return _walletInfo;
     } catch (e) {

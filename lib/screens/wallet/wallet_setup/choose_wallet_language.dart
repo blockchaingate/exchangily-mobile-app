@@ -27,7 +27,7 @@ class ChooseWalletLanguageScreen extends StatelessWidget {
     return BaseScreen<ChooseWalletLanguageScreenState>(
       onModelReady: (model) async {
         model.context = context;
-        await model.checkLanguage();
+        //  await model.checkLanguage();
       },
       builder: (context, model, child) => Container(
         padding: orientation == Orientation.portrait

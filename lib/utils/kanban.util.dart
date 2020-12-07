@@ -94,8 +94,7 @@ Future getKanbanErrDeposit(String address) async {
     var response = await client.get(url);
     var json = jsonDecode(response.body);
     print('Kanban.util-getKanbanErrDeposit $json');
-    var res = {"json": json};
-    return res;
+    return json;
   } catch (err) {
     print(
         'Catch getKanbanErrDeposit in kanban util $err'); // Error thrown here will go to onError in them view model

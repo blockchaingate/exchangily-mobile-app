@@ -325,62 +325,40 @@ class SettingsContainer extends StatelessWidget {
                     ),
             ),
             // Show/Hide dialog warning checkbox
-            Card(
-              elevation: 5,
-              color: globals.walletCardColor,
-              child: Container(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(6.0),
-                      child: Icon(Icons.warning, color: yellow, size: 16),
-                    ),
-                    Expanded(
-                      child: Text(
-                          AppLocalizations.of(context).showDialogWarnings,
-                          style: Theme.of(context).textTheme.headline5,
-                          textAlign: TextAlign.left),
-                    ),
-                    SizedBox(
-                      height: 20,
-                      child: Switch(
-                          inactiveThumbColor: grey,
-                          activeTrackColor: white,
-                          activeColor: primaryColor,
-                          inactiveTrackColor: white,
-                          value: model.isDialogDisplay,
-                          onChanged: (value) {
-                            model.setIsDialogWarningValue(value);
-                          }),
-                    ),
-                  ],
-                ),
-              ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: <Widget>[
-              //     Padding(
-              //       padding: const EdgeInsets.only(right: 5.0),
-              //       child: Icon(
-              //         Icons.warning,
-              //         color: yellow,
-              //         size: 18,
-              //       ),
-              //     ),
-              //     Text(AppLocalizations.of(context).showDialogWarnings,
-              //         style: Theme.of(context).textTheme.headline5,
-              //         textAlign: TextAlign.center),
-              //     Checkbox(
-              //         activeColor: globals.primaryColor,
-              //         value: model.isDialogDisplay,
-              //         onChanged: (value) {
-              //           model.setDialogWarningValue(value);
-              //         }),
-              //   ],
-              // )
-            ),
+            // Card(
+            //   elevation: 5,
+            //   color: globals.walletCardColor,
+            //   child: Container(
+            //     padding: EdgeInsets.all(10),
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: <Widget>[
+            //         Padding(
+            //           padding: const EdgeInsets.all(6.0),
+            //           child: Icon(Icons.warning, color: yellow, size: 16),
+            //         ),
+            //         Expanded(
+            //           child: Text(
+            //               AppLocalizations.of(context).showDialogWarnings,
+            //               style: Theme.of(context).textTheme.headline5,
+            //               textAlign: TextAlign.left),
+            //         ),
+            //         SizedBox(
+            //           height: 20,
+            //           child: Switch(
+            //               inactiveThumbColor: grey,
+            //               activeTrackColor: white,
+            //               activeColor: primaryColor,
+            //               inactiveTrackColor: white,
+            //               value: model.isDialogDisplay,
+            //               onChanged: (value) {
+            //                 model.setIsDialogWarningValue(value);
+            //               }),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
 
             // Showcase ON/OFF
             Card(
@@ -454,7 +432,7 @@ class SettingsContainer extends StatelessWidget {
                             inactiveTrackColor: white,
                             value: model.storageService.isHKServer,
                             onChanged: (value) {
-                              model.reloadApp();
+                              model.changeBaseAppUrl();
                             }),
                       ),
                       // ),

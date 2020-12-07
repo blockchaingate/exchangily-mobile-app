@@ -65,8 +65,6 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   Stream tickerStream;
   Stream allPriceStream;
-  StreamSubscription _streamSubscription;
-  StreamController streamController;
 
   @override
   void start() {
@@ -194,12 +192,6 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     try {
       tickerStream =
           getTickerDataChannel(pair, interval).stream.asBroadcastStream();
-      // tickerStream.first.then((element) {
-      //   log.e('ELEMENT $element');
-      //   if (element == null) {
-      //     getTickerDataChannel(pair, interval).sink.close();
-      //   }
-      // });
       return tickerStream.distinct();
     } catch (err) {
       log.e(

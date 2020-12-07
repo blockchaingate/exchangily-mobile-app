@@ -60,7 +60,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                           itemCount: model.data.length,
                           itemBuilder: (BuildContext context, int index) {
                             String tickerName =
-                                model.data[index]["coin"].toString();
+                                model.exchangeBalances[index].ticker;
                             return Container(
                               // color: grey.withAlpha(25),
 
@@ -72,7 +72,7 @@ class MyExchangeAssetsView extends StatelessWidget {
                                     flex: 1,
                                     child: Container(
                                         padding: EdgeInsets.all(8),
-                                        margin: EdgeInsets.only(right: 10.0),
+                                        //margin: EdgeInsets.only(right: 10.0),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(50),
@@ -86,9 +86,10 @@ class MyExchangeAssetsView extends StatelessWidget {
                                   Expanded(
                                       flex: 1,
                                       child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 10),
-                                        child: Text(model.data[index]["coin"],
+                                        padding: const EdgeInsets.only(left: 2),
+                                        child: Text(
+                                            model
+                                                .exchangeBalances[index].ticker,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .headline6),
@@ -97,7 +98,8 @@ class MyExchangeAssetsView extends StatelessWidget {
                                   Expanded(
                                       flex: 2,
                                       child: Text(
-                                          model.data[index]["amount"]
+                                          model.exchangeBalances[index]
+                                              .unlockedAmount
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme
@@ -105,7 +107,8 @@ class MyExchangeAssetsView extends StatelessWidget {
                                   Expanded(
                                       flex: 2,
                                       child: Text(
-                                          model.data[index]["lockedAmount"]
+                                          model.exchangeBalances[index]
+                                              .lockedAmount
                                               .toString(),
                                           style: Theme.of(context)
                                               .textTheme

@@ -11,8 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import '../packages/bip32/bip32_base.dart' as bip32;
-import 'package:bitcoin_flutter/src/models/networks.dart';
+import 'package:bip32/bip32.dart' as bip32;
 import 'package:hex/hex.dart';
 import "package:pointycastle/pointycastle.dart";
 import '../environments/environment.dart';

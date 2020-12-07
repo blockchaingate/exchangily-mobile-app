@@ -11,20 +11,18 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:bip32/bip32.dart' as bip32;
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 
-import '../packages/bip32/bip32_base.dart' as bip32;
+//import '../packages/bip32/bip32_base.dart' as bip32;
 
-import '../packages/bip32/utils/ecurve.dart' as ecc;
-import 'package:bitcoin_flutter/src/models/networks.dart';
+//import '../packages/bip32/utils/ecurve.dart' as ecc;
 import 'package:hex/hex.dart';
 import 'package:web3dart/web3dart.dart';
-import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import '../utils/string_util.dart';
 import '../environments/environment.dart';
 import './btc_util.dart';
@@ -32,7 +30,6 @@ import './eth_util.dart';
 import "package:pointycastle/pointycastle.dart";
 import 'dart:typed_data';
 import 'dart:convert';
-import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 import 'package:web3dart/crypto.dart';
 import "package:pointycastle/api.dart";
 import "package:pointycastle/impl.dart";
@@ -40,10 +37,8 @@ import "package:pointycastle/ecc/curves/secp256k1.dart";
 import "package:pointycastle/digests/sha256.dart";
 import "package:pointycastle/signers/ecdsa_signer.dart";
 import 'package:pointycastle/macs/hmac.dart';
-import 'dart:typed_data';
-import 'dart:convert';
+
 import 'varuint.dart';
-import 'package:bitbox/bitbox.dart' as Bitbox;
 import '../environments/coins.dart' as coinList;
 
 final ECDomainParameters _params = ECCurve_secp256k1();
@@ -56,7 +51,6 @@ final log = getLogger('coin_util');
 
 int convertDecimalToHex(int coinType) {
   var x = coinType.toRadixString(16);
-  // var t = HEX.encode([baseCoin]);
   log.e('basecoin $coinType --  Hex == $x');
   return int.parse(x);
 }

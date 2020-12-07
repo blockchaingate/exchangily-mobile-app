@@ -1,7 +1,7 @@
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../logger.dart';
 import '../../service_locator.dart';
@@ -12,6 +12,7 @@ class MarketPairsTabViewState extends BaseState {
   List images;
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
+  LocalStorageService localStorageService = locator<LocalStorageService>();
   BuildContext context;
   String lang = 'en';
 
@@ -26,10 +27,10 @@ class MarketPairsTabViewState extends BaseState {
   init() async {
     setBusy(true);
     var result = await apiService.getSliderImages();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    lang = prefs.getString('lang');
-    print("Slider from api:");
-    print(result);
+
+    lang = localStorageService.language;
+    log.w("Slider from api: $result");
+
     if (result == "error") {
       images = imagesLocal;
     } else {

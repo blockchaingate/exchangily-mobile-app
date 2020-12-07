@@ -5,7 +5,6 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -15,19 +14,15 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-//import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacked/stacked.dart';
-import '../../environments/coins.dart' as coinList;
 
 class BindpayViewmodel extends FutureViewModel {
   final log = getLogger('BindpayViewmodel');
@@ -52,7 +47,7 @@ class BindpayViewmodel extends FutureViewModel {
   String barcodeRes2 = '';
   var walletBalancesBody;
   bool isShowBottomSheet = false;
-  List<ExchangeBalanceModel> exchangeBalance = [];
+  List<ExchangeBalanceModel> exchangeBalances = [];
 
 /*----------------------------------------------------------------------
                     Default Future to Run
@@ -71,6 +66,26 @@ class BindpayViewmodel extends FutureViewModel {
 
   init() {
     sharedService.context = context;
+  }
+
+/*----------------------------------------------------------------------
+                  After Future Data is ready
+----------------------------------------------------------------------*/
+  @override
+  void onData(data) {
+    setBusyForObject(exchangeBalances, true);
+    exchangeBalances = data;
+    setBusyForObject(exchangeBalances, false);
+    exchangeBalances.forEach((element) {
+      print(element.toJson());
+    });
+
+    setBusyForObject(tickerName, true);
+    exchangeBalances != null || exchangeBalances.isNotEmpty
+        ? tickerName = exchangeBalances[0].ticker
+        : tickerName = '';
+    setBusyForObject(tickerName, false);
+    log.e('tickerName $tickerName');
   }
 
 /*----------------------------------------------------------------------
@@ -216,26 +231,6 @@ class BindpayViewmodel extends FutureViewModel {
   }
 
 /*----------------------------------------------------------------------
-                    After Future Data is ready
-----------------------------------------------------------------------*/
-  @override
-  void onData(data) {
-    setBusyForObject(exchangeBalance, true);
-    exchangeBalance = data;
-    setBusyForObject(exchangeBalance, false);
-    exchangeBalance.forEach((element) {
-      print(element.toJson());
-    });
-
-    setBusyForObject(tickerName, true);
-    exchangeBalance != null || exchangeBalance.isNotEmpty
-        ? tickerName = exchangeBalance[0].ticker
-        : tickerName = '';
-    setBusyForObject(tickerName, false);
-    log.e('tickerName $tickerName');
-  }
-
-/*----------------------------------------------------------------------
                     Update Selected Tickername
 ----------------------------------------------------------------------*/
   updateSelectedTickername(
@@ -270,16 +265,16 @@ class BindpayViewmodel extends FutureViewModel {
                     Refresh Balance
 ----------------------------------------------------------------------*/
   refreshBalance() async {
-    setBusyForObject(exchangeBalance, true);
+    setBusyForObject(exchangeBalances, true);
     await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
-      exchangeBalance.firstWhere((element) {
+      exchangeBalances.firstWhere((element) {
         if (element.ticker == tickerName)
           element.unlockedAmount = res.unlockedAmount;
         log.w('udpated balance check ${element.unlockedAmount}');
         return true;
       });
     });
-    setBusyForObject(exchangeBalance, false);
+    setBusyForObject(exchangeBalances, false);
   }
 
 /*----------------------------------------------------------------------
@@ -549,8 +544,8 @@ class BindpayViewmodel extends FutureViewModel {
         return;
       }
       await refreshBalance();
-      ExchangeBalanceModel _selectedExchangeBal =
-          exchangeBalance.firstWhere((element) => element.ticker == tickerName);
+      ExchangeBalanceModel _selectedExchangeBal = exchangeBalances
+          .firstWhere((element) => element.ticker == tickerName);
       // int coinType = getCoinTypeIdByName(tickerName);
       print(_selectedExchangeBal.coinType);
       if (_selectedExchangeBal.unlockedAmount <= 0.0) {

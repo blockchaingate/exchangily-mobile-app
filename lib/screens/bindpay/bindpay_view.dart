@@ -147,7 +147,7 @@ class BindpayView extends StatelessWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(4.0),
                                 border: Border.all(
-                                    color: model.exchangeBalance.isEmpty
+                                    color: model.exchangeBalances.isEmpty
                                         ? Colors.transparent
                                         : primaryColor,
                                     style: BorderStyle.solid,
@@ -163,15 +163,15 @@ class BindpayView extends StatelessWidget {
                                   ),
                                   iconEnabledColor: primaryColor,
                                   iconDisabledColor:
-                                      model.exchangeBalance.isEmpty
+                                      model.exchangeBalances.isEmpty
                                           ? secondaryColor
                                           : grey,
                                   iconSize: 30,
                                   hint: Padding(
-                                    padding: model.exchangeBalance.isEmpty
+                                    padding: model.exchangeBalances.isEmpty
                                         ? EdgeInsets.all(0)
                                         : const EdgeInsets.only(left: 10.0),
-                                    child: model.exchangeBalance.isEmpty
+                                    child: model.exchangeBalances.isEmpty
                                         ? ListTile(
                                             dense: true,
                                             leading: Icon(
@@ -204,7 +204,7 @@ class BindpayView extends StatelessWidget {
                                   onChanged: (newValue) {
                                     model.updateSelectedTickername(newValue);
                                   },
-                                  items: model.exchangeBalance.map(
+                                  items: model.exchangeBalances.map(
                                     (coin) {
                                       return DropdownMenuItem(
                                         child: Padding(

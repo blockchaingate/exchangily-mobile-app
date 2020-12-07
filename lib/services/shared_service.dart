@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flushbar/flushbar.dart';
@@ -37,6 +38,7 @@ import '../shared/globals.dart' as globals;
 
 class SharedService {
   BuildContext context;
+  final storageService = locator<LocalStorageService>();
   NavigationService navigationService = locator<NavigationService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
@@ -261,7 +263,8 @@ class SharedService {
 
                                 /// user click on do not show which is negative means false
                                 /// so to make it work it needs to be opposite of the orginal value
-                                await setDialogWarningsStatus(!checkBoxValue);
+                                storageService.isNoticeDialogDisplay =
+                                    !checkBoxValue;
                               }),
                           Text(
                             AppLocalizations.of(context).doNotShowTheseWarnings,
@@ -379,8 +382,7 @@ class SharedService {
   Future checkLanguage() async {
     String lang = '';
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    lang = prefs.getString('lang');
+    lang = storageService.language;
     if (lang == null || lang == '') {
       print('language empty');
     } else {
@@ -407,24 +409,6 @@ class SharedService {
       duration: Duration(seconds: 5),
       isDismissible: true,
     ).show(context);
-  }
-
-  /* ---------------------------------------------------
-                get/set DialogWarningsStatus
-    -------------------------------------------------- */
-
-  Future<bool> getDialogWarningsStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var holder = prefs.getBool('isDialogDisplay');
-    log.w('in getDialogWarningsStatus $holder');
-    // when app doesn't find the value in the local storage then by default its true to show dialog warnings
-    if (holder == null) return true;
-    return holder;
-  }
-
-  setDialogWarningsStatus(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isDialogDisplay', value);
   }
 
 /* ---------------------------------------------------

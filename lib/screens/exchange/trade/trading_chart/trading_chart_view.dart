@@ -113,8 +113,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
   }
 
   _loadHtmlFromAssets(TradingChartViewModel model) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var lang = prefs.getString('lang');
+    var lang = model.storageService.language;
     if (lang == 'en') {
       lang = 'en-US';
     } else if (lang == 'zh') {

@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,13 +26,14 @@ class ChooseWalletLanguageScreenState extends BaseState {
   BuildContext context;
 
   final NavigationService navigationService = locator<NavigationService>();
+  final LocalStorageService storageService = locator<LocalStorageService>();
   String errorMessage = '';
 
   Future checkLanguage() async {
     String lang = '';
     setState(ViewState.Busy);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    lang = prefs.getString('lang');
+    //  SharedPreferences prefs = await SharedPreferences.getInstance();
+    lang = storageService.language;
     if (lang == null || lang == '') {
       log.e('language empty');
     } else {
@@ -44,8 +46,8 @@ class ChooseWalletLanguageScreenState extends BaseState {
 
   setLangauge(String languageCode) async {
     setState(ViewState.Busy);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('lang', languageCode);
+    //  SharedPreferences prefs = await SharedPreferences.getInstance();
+    storageService.language = languageCode;
     AppLocalizations.load(Locale(languageCode, languageCode.toUpperCase()));
     setState(ViewState.Idle);
   }

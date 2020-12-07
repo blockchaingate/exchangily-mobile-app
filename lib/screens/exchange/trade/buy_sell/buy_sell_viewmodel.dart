@@ -44,7 +44,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:random_string/random_string.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
-import 'package:web_socket_channel/io.dart';
+// import 'package:web_socket_channel/io.dart';
 
 import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:convert/convert.dart';
@@ -85,8 +85,6 @@ class BuySellViewModel extends ReactiveViewModel {
   double currentPrice = 0;
   double currentQuantity = 0;
   double sliderValue = 10.0;
-  IOWebSocketChannel orderListChannel;
-  IOWebSocketChannel tradeListChannel;
   double price = 0.0;
   double quantity;
 

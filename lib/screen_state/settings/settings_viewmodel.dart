@@ -44,7 +44,7 @@ class SettingsViewmodel extends BaseViewModel {
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
-  var storageService = locator<LocalStorageService>();
+  final storageService = locator<LocalStorageService>();
   final NavigationService navigationService = locator<NavigationService>();
   Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
   String selectedLanguage;
@@ -63,7 +63,7 @@ class SettingsViewmodel extends BaseViewModel {
   GlobalKey one;
   GlobalKey two;
   bool isShowCaseOnce;
-  String test;
+  String baseServerUrl;
   ConfigService configService = locator<ConfigService>();
   bool isHKServer;
   init() async {
@@ -73,17 +73,15 @@ class SettingsViewmodel extends BaseViewModel {
         ? isShowCaseOnce = false
         : isShowCaseOnce = storageService.isShowCaseView;
 
-    sharedService.getDialogWarningsStatus().then((res) {
-      if (res != null) isDialogDisplay = res;
-    });
     getAppVersion();
     await selectDefaultWalletLanguage();
-    test = configService.getKanbanBaseUrl();
+    baseServerUrl = configService.getKanbanBaseUrl();
     // if (selectedLanguage == '')
     //   selectedLanguage = getSetLocalStorageDataByKey('lang');
     setBusy(false);
   }
 
+// Not in use
   convertDecimalToHex() {
     int baseCoin = getCoinTypeIdByName('USDT');
     var x = baseCoin.toRadixString(16);
@@ -95,7 +93,7 @@ class SettingsViewmodel extends BaseViewModel {
                       Reload app
 -------------------------------------------------------------------------------------*/
 
-  reloadApp() {
+  changeBaseAppUrl() {
     setBusy(true);
     //  log.i('1');
     storageService.isHKServer = !storageService.isHKServer;
@@ -103,9 +101,9 @@ class SettingsViewmodel extends BaseViewModel {
     storageService.isUSServer = storageService.isHKServer ? false : true;
     // Phoenix.rebirth(context);
     //  log.i('2');
-    test = configService.getKanbanBaseUrl();
+    baseServerUrl = configService.getKanbanBaseUrl();
     isHKServer = storageService.isHKServer;
-    log.e('GLobal kanban url $test');
+    log.e('GLobal kanban url $baseServerUrl');
     setBusy(false);
   }
 
@@ -153,7 +151,8 @@ class SettingsViewmodel extends BaseViewModel {
   Future<String> selectDefaultWalletLanguage() async {
     setBusy(true);
     if (selectedLanguage == '' || selectedLanguage == null) {
-      String key = await getSetLocalStorageDataByKey('lang');
+      String key = storageService.language;
+      // await getSetLocalStorageDataByKey('lang');
       // log.w('key in init $key');
 
       // /// Created Map of languages because in dropdown if i want to show
@@ -198,11 +197,27 @@ class SettingsViewmodel extends BaseViewModel {
         isDeleting = true;
         log.w('deleting wallet');
         await walletDatabaseService.deleteDb();
+        log.i('1');
         await transactionHistoryDatabaseService.deleteDb();
+        log.i('2');
         await walletService.deleteEncryptedData();
+        log.i('3');
+        storageService.walletBalancesBody = '';
+        log.i('4');
+        storageService.isShowCaseView = true;
+        log.i('5');
+
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.remove('lang');
+        log.i('6');
+        log.e('before lanf removal ${prefs.getKeys()}');
+        log.i('7');
+        // prefs.remove('lang');
+        storageService.clearStorage();
+        log.e('before local storage clear ${prefs.getKeys()}');
+        log.i('8');
         prefs.clear();
+        log.e('all keys after clearing ${prefs.getKeys()}');
+        log.i('9');
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed') {
         log.e('Dialog Closed By User');
@@ -274,19 +289,19 @@ class SettingsViewmodel extends BaseViewModel {
 /*-------------------------------------------------------------------------------------
                       Get stored data by keys
 -------------------------------------------------------------------------------------*/
-  getSetLocalStorageDataByKey(String key,
-      {bool isSetData = false, dynamic value}) async {
-    print('key $key -- isData $isSetData -- value $value');
+  // getSetLocalStorageDataByKey(String key,
+  //     {bool isSetData = false, dynamic value}) async {
+  //   print('key $key -- isData $isSetData -- value $value');
 
-    setBusy(true);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setBusy(true);
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (isSetData) prefs.setBool(key, value);
-    log.e('key-- $key-- value ${prefs.get(key)}');
+  //   if (isSetData) prefs.setBool(key, value);
+  //   log.e('key-- $key-- value ${prefs.get(key)}');
 
-    setBusy(false);
-    return prefs.get(key);
-  }
+  //   setBusy(false);
+  //   return prefs.get(key);
+  // }
 
 /*-------------------------------------------------------------------------------------
                       Change wallet language
@@ -302,7 +317,7 @@ class SettingsViewmodel extends BaseViewModel {
           .firstWhere((k) => languages[k] == updatedLanguageValue);
       log.i('key in changeWalletLanguage $key');
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     selectedLanguage = key.isEmpty ? updatedLanguageValue : languages[key];
     log.w('selectedLanguage $selectedLanguage');
     if (updatedLanguageValue == 'Chinese' ||
@@ -310,15 +325,14 @@ class SettingsViewmodel extends BaseViewModel {
         key == 'zh') {
       log.e('in zh');
       AppLocalizations.load(Locale('zh', 'ZH'));
-      prefs.setString('lang', key);
+      storageService.language = key;
     } else if (updatedLanguageValue == 'English' ||
         updatedLanguageValue == 'en' ||
         key == 'en') {
       log.e('in en');
       AppLocalizations.load(Locale('en', 'EN'));
-      prefs.setString('lang', key);
+      storageService.language = key;
     }
-    //  log.w('langGlobal: ' + getlangGlobal());
     setBusy(false);
   }
 

@@ -1,11 +1,13 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CarouselWidgetState extends BaseState {
   final log = getLogger('CarouselWidgetState');
- 
+  final storageService = locator<LocalStorageService>();
 
   BuildContext context;
 
@@ -13,11 +15,7 @@ class CarouselWidgetState extends BaseState {
   // Init state
   initState() async {
     setBusy(true);
-    log.e(busy);
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    lang = prefs.getString('lang');
-
+    lang = storageService.language;
     setBusy(false);
   }
 }

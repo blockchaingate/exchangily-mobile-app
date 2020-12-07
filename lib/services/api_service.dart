@@ -72,7 +72,8 @@ class ApiService {
                     Get All coin exchange balance
 ----------------------------------------------------------------------*/
   Future<List<ExchangeBalanceModel>> getAssetsBalance(String exgAddress) async {
-    exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+    if (exgAddress.isEmpty)
+      exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     ExchangeBalanceModelList exchangeBalanceList;
     String url =
         configService.getKanbanBaseUrl() + AssetsBalanceApiRoute + exgAddress;
@@ -83,7 +84,6 @@ class ApiService {
         var json = jsonDecode(res.body) as List;
         log.w('getAssetsBalance json $json');
         exchangeBalanceList = ExchangeBalanceModelList.fromJson(json);
-        log.w('getAssetsBalance model data ${exchangeBalanceList.balances}');
       }
       return exchangeBalanceList.balances;
     } catch (e) {

@@ -1,7 +1,8 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 1.4.1+58
+version: 2.0.0+59
+
 environment:
   sdk: '>=2.3.2 <3.0.0'
 
@@ -13,17 +14,48 @@ dependencies:
     sdk: flutter
   flutter_cupertino_localizations: ^1.0.1
 
-  # Cupertino Icons
-  cupertino_icons: ^0.1.2
 
+
+  # ----- Bitcoin -- Addresses -- Bip 
+
+
+  # BIP 32
+  # bip32: ^1.0.8
   # Bip39
-  bip39: ^1.0.3
-  bs58check: ^1.0.1
-  # # bitcoin Flutter
-  # bitcoin_flutter: ^1.0.7
 
   # Pointy Castle
   # pointycastle: ^1.0.1
+
+  #bip39: ^1.0.3
+  bs58check: ^1.0.1
+
+  # bch address
+  bitbox: ^0.0.1
+
+  # Generate LTC and DOGE coin address
+  bitcoin_flutter: ^2.0.1
+
+
+  # ----- ICONS ---------
+
+  # Cupertino Icons
+  cupertino_icons: ^0.1.2
+
+  # Font Awesome
+  font_awesome_flutter: 8.8.0
+
+  # ----- COMMUNICATION --------
+
+  # Http
+  http: ^0.12.0+2
+
+  # Rxdart
+  #rxdart: ^0.22.0
+
+  # Web Sockets
+  web_socket_channel: ^1.1.0
+
+  # ----- SECURITY --------
 
   # Encrypt
   encrypt: ^3.3.0
@@ -34,20 +66,14 @@ dependencies:
   # Web 3 Dart
   web3dart: ^1.2.1
 
-  # Http
-  http: ^0.12.0+2
 
-  # Rxdart
-  rxdart: ^0.22.0
-
-  # Font Awesome
-  font_awesome_flutter: 8.8.0
+    # ----- ARCHITECTURE --------
 
   # A wrapper around InheritedWidget to make them easier to use and more reusable.
   provider: ^4.0.1
 
   # Pattern Formatter
-  pattern_formatter: ^1.0.0
+  #pattern_formatter: ^1.0.0
 
   # Path Provider
   path_provider: 1.4.2
@@ -58,8 +84,6 @@ dependencies:
   # Keccak
   keccak: ^1.0.3
 
-  # Web Sockets
-  web_socket_channel: ^1.1.0
 
   # Json Serialization
   # json_serializable: ^2.2.1
@@ -92,7 +116,7 @@ dependencies:
   device_preview:
 
   #webview_flutter
-  webview_flutter: ^0.3.19+4
+  #webview_flutter: ^0.3.19+4
 
   # rflutter Alert
   rflutter_alert: ^1.0.3
@@ -122,7 +146,7 @@ dependencies:
   stacked: ^1.7.6
 
   #flutter_beautiful_popup
-  flutter_beautiful_popup: ^1.5.0
+  #flutter_beautiful_popup: ^1.5.0
 
   # Carousel
   flutter_swiper: ^1.1.6
@@ -134,13 +158,9 @@ dependencies:
   cached_network_image: ^2.0.0
 
   # fancy_bottom_navigation
-  fancy_bottom_navigation: ^0.3.2
+  #fancy_bottom_navigation: ^0.3.2
 
-  # bch address
-  bitbox: ^0.0.1
 
-  # Generate LTC and DOGE coin address
-  bitcoin_flutter: ^2.0.1
 
   #gradient_text
   gradient_text: ^1.0.2
@@ -192,13 +212,15 @@ dependencies:
   observable_ish:
 
   # Pagination
-  pagination_view: ^1.0.3+2
+  #pagination_view: ^1.0.3+2
 
   # Overlay notification
   overlay_support: ^1.0.5
 
   # Reload app
   flutter_phoenix: ^0.1.0
+
+
 
 dev_dependencies:
   intl_translation: '^0.17.0'

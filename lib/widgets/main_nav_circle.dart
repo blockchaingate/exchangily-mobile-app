@@ -1,5 +1,5 @@
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
-import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
+// import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/market/main.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
@@ -31,29 +31,30 @@ class _MainNavCircleState extends State<MainNavCircle> {
             child: _getPage(currentPage),
           ),
         ),
-        bottomNavigationBar: FancyBottomNavigation(
-          tabs: [
-            TabData(
-                iconData: FontAwesomeIcons.wallet,
-                title: AppLocalizations.of(context).wallet),
-            TabData(
-                iconData: FontAwesomeIcons.coins,
-                title: AppLocalizations.of(context).trade),
-            TabData(
-                iconData: Icons.event,
-                title: AppLocalizations.of(context).event),
-            TabData(
-                iconData: FontAwesomeIcons.cog,
-                title: AppLocalizations.of(context).settings)
-          ],
-          initialSelection: 0,
-          key: bottomNavigationKey,
-          onTabChangedListener: (position) {
-            setState(() {
-              currentPage = position;
-            });
-          },
-        ),
+        bottomNavigationBar: BottomNavigationBar(items: null),
+        // FancyBottomNavigation(
+        //   tabs: [
+        //     TabData(
+        //         iconData: FontAwesomeIcons.wallet,
+        //         title: AppLocalizations.of(context).wallet),
+        //     TabData(
+        //         iconData: FontAwesomeIcons.coins,
+        //         title: AppLocalizations.of(context).trade),
+        //     TabData(
+        //         iconData: Icons.event,
+        //         title: AppLocalizations.of(context).event),
+        //     TabData(
+        //         iconData: FontAwesomeIcons.cog,
+        //         title: AppLocalizations.of(context).settings)
+        //   ],
+        //   initialSelection: 0,
+        //   key: bottomNavigationKey,
+        //   onTabChangedListener: (position) {
+        //     setState(() {
+        //       currentPage = position;
+        //     });
+        //   },
+        // ),
         drawer: Drawer(
           child: ListView(
             children: <Widget>[Text("Hello"), Text("World")],

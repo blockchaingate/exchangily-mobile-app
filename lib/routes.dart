@@ -31,7 +31,7 @@ import 'package:exchangilymobileapp/screens/otc_campaign/order_details_screen.da
 import 'package:exchangilymobileapp/screens/otc_campaign/team/team_referral_view.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/team/team_rewards_details_view.dart';
 
-import 'package:exchangilymobileapp/screens/settings/language.dart';
+//import 'package:exchangilymobileapp/screens/settings/language.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard_view.dart';
@@ -203,8 +203,8 @@ class RouteGenerator {
         return MaterialPageRoute(
             builder: (_) => CampaignRegisterAccountScreen());
 
-      case '/switchLanguage':
-        return MaterialPageRoute(builder: (_) => LanguageScreen());
+      // case '/switchLanguage':
+      //   return MaterialPageRoute(builder: (_) => LanguageScreen());
 /*----------------------------------------------------------------------
                       Bindpay Routes
 ----------------------------------------------------------------------*/

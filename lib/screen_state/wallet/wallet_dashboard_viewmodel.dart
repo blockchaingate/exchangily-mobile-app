@@ -39,11 +39,12 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:stacked/stacked.dart';
 import '../../environments/coins.dart' as coinList;
 
 import 'package:json_diff/json_diff.dart';
 
-class WalletDashboardViewModel extends BaseState {
+class WalletDashboardViewModel extends BaseViewModel {
   final log = getLogger('WalletDahsboardScreenState');
 
   BuildContext context;
@@ -94,6 +95,8 @@ class WalletDashboardViewModel extends BaseState {
   double totalBalanceContainerWidth = 100.0;
   final scrollController = ScrollController();
 
+  bool _isShowCaseView = false;
+  get isShowCaseView => _isShowCaseView;
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -112,6 +115,7 @@ class WalletDashboardViewModel extends BaseState {
     setBusy(false);
   }
 
+// not in use
   void endOfCoinList() async {
     scrollController.jumpTo(
       scrollController.position.maxScrollExtent,
@@ -124,7 +128,7 @@ class WalletDashboardViewModel extends BaseState {
 
   checkAnnouncement() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    lang = prefs.getString('lang');
+    lang = storageService.language;
     setlangGlobal(lang);
     log.w('langGlobal: ' + getlangGlobal());
 
@@ -277,12 +281,16 @@ class WalletDashboardViewModel extends BaseState {
 /*----------------------------------------------------------------------
                         Showcase Feature
 ----------------------------------------------------------------------*/
-  showcaseEvent(BuildContext test) async {
+  showcaseEvent(BuildContext ctx) async {
     log.e(
-        'Is showvcase ${storageService.isShowCaseView} -gas amount $gasAmount');
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ShowCaseWidget.of(test).startShowCase([globalKeyOne, globalKeyTwo]);
-    });
+        'Is showvcase: ${storageService.isShowCaseView} --- gas amount: $gasAmount');
+    setBusyForObject(isShowCaseView, true);
+    _isShowCaseView = storageService.isShowCaseView;
+    setBusyForObject(isShowCaseView, false);
+    if (isShowCaseView)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(ctx).startShowCase([globalKeyOne, globalKeyTwo]);
+      });
   }
 
 /*----------------------------------------------------------------------
@@ -402,7 +410,6 @@ class WalletDashboardViewModel extends BaseState {
 ----------------------------------------------------------------------*/
 
   getFreeFab() async {
-    setBusy(true);
     String address = await getExgAddressFromWalletDatabase();
     await apiService.getFreeFab(address).then((res) {
       if (res != null) {
@@ -540,14 +547,13 @@ class WalletDashboardViewModel extends BaseState {
                                                   } else {
                                                     walletService
                                                         .showInfoFlushbar(
-                                                            AppLocalizations
-                                                                    .of(context)
+                                                            AppLocalizations.of(
+                                                                    context)
                                                                 .freeFabUpdate,
                                                             AppLocalizations.of(
                                                                     context)
                                                                 .incorrectAnswer,
-                                                            Icons
-                                                                .account_balance,
+                                                            Icons.cancel,
                                                             red,
                                                             context);
                                                   }
@@ -588,7 +594,6 @@ class WalletDashboardViewModel extends BaseState {
           isFreeFabNotUsed = res['ok'];
           print(isFreeFabNotUsed);
 
-          print(isFreeFabNotUsed);
           walletService.showInfoFlushbar(
               AppLocalizations.of(context).notice,
               AppLocalizations.of(context).freeFabUsedAlready,
@@ -598,7 +603,6 @@ class WalletDashboardViewModel extends BaseState {
         }
       }
     });
-    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
@@ -626,9 +630,9 @@ class WalletDashboardViewModel extends BaseState {
 // Hide Small Amount Assets
 
   hideSmallAmountAssets() {
-    setState(ViewState.Busy);
+    setBusyForObject(isHideSmallAmountAssets, true);
     isHideSmallAmountAssets = !isHideSmallAmountAssets;
-    setState(ViewState.Idle);
+    setBusyForObject(isHideSmallAmountAssets, false);
   }
 
 // Calculate Total Usd Balance of Coins
@@ -639,9 +643,7 @@ class WalletDashboardViewModel extends BaseState {
       holder = holder + walletInfo[i].usdValue;
     }
     totalUsdBalance = NumberUtil.currencyFormat(holder, 2);
-    // totalUsdBalance =
-    //     NumberFormat.simpleCurrency(decimalDigits: 2).format(holder);
-    // totalUsdBalance = totalUsdBalance.substring(1);
+    ;
     log.i('Total usd balance $totalUsdBalance');
   }
 
@@ -692,13 +694,13 @@ class WalletDashboardViewModel extends BaseState {
         log.e('Pending deposit coin $name');
         await walletDatabaseService.getBytickerName(name).then((res) {
           if (res != null) {
-            setBusy(true);
             confirmDepositCoinWallet = res;
             isConfirmDeposit = true;
-            setBusy(false);
           }
         });
       }
+    }).catchError((err) {
+      log.e('getConfirmDepositStatus $err');
     });
   }
 /*----------------------------------------------------------------------
@@ -708,25 +710,17 @@ class WalletDashboardViewModel extends BaseState {
   showDialogWarning() {
     log.w('in showDialogWarning isConfirmDeposit $isConfirmDeposit');
     if (gasAmount < 0.5) {
-      sharedService.getDialogWarningsStatus().then((value) {
-        {
-          if (value)
-            sharedService.alertDialog(
-                AppLocalizations.of(context).insufficientGasAmount,
-                AppLocalizations.of(context).pleaseAddGasToTrade);
-        }
-      });
+      sharedService.alertDialog(
+          AppLocalizations.of(context).insufficientGasAmount,
+          AppLocalizations.of(context).pleaseAddGasToTrade);
     }
     if (isConfirmDeposit) {
-      sharedService.getDialogWarningsStatus().then((value) {
-        if (value)
-          sharedService.alertDialog(
-              AppLocalizations.of(context).pendingConfirmDeposit,
-              '${AppLocalizations.of(context).pleaseConfirmYour} ${confirmDepositCoinWallet.tickerName} ${AppLocalizations.of(context).deposit}',
-              path: '/walletFeatures',
-              arguments: confirmDepositCoinWallet,
-              isWarning: true);
-      });
+      sharedService.alertDialog(
+          AppLocalizations.of(context).pendingConfirmDeposit,
+          '${AppLocalizations.of(context).pleaseConfirmYour} ${confirmDepositCoinWallet.tickerName} ${AppLocalizations.of(context).deposit}',
+          path: '/walletFeatures',
+          arguments: confirmDepositCoinWallet,
+          isWarning: true);
     }
   }
 
@@ -745,6 +739,11 @@ class WalletDashboardViewModel extends BaseState {
     setBusy(false);
   }
 
+  jsonTransformation() {
+    var walletBalancesBody = jsonDecode(storageService.walletBalancesBody);
+    log.i('Coin address body $walletBalancesBody');
+  }
+
 /*-------------------------------------------------------------------------------------
                           Refresh Balances
 -------------------------------------------------------------------------------------*/
@@ -759,33 +758,8 @@ class WalletDashboardViewModel extends BaseState {
     });
     walletInfo = [];
 
-    Map<String, dynamic> walletBalancesBody = {
-      'btcAddress': '',
-      'ethAddress': '',
-      'fabAddress': '',
-      'ltcAddress': '',
-      'dogeAddress': '',
-      'bchAddress': '',
-      "showEXGAssets": "true"
-    };
-    walletInfoCopy.forEach((wallet) {
-      if (wallet.tickerName == 'BTC') {
-        walletBalancesBody['btcAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'ETH') {
-        walletBalancesBody['ethAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'FAB') {
-        walletBalancesBody['fabAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'LTC') {
-        walletBalancesBody['ltcAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'DOGE') {
-        walletBalancesBody['dogeAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'BCH') {
-        walletBalancesBody['bchAddress'] = wallet.address;
-      }
-    });
-
+    var walletBalancesBody = jsonDecode(storageService.walletBalancesBody);
     log.i('Coin address body $walletBalancesBody');
-    storageService.walletBalancesBody = walletBalancesBody.toString();
 
     // ----------------------------------------
     // Calling walletBalances in wallet service
@@ -957,7 +931,7 @@ class WalletDashboardViewModel extends BaseState {
           // })
 
           catchError((error) async {
-        setState(ViewState.Idle);
+        setBusy(false);
         sharedService.alertDialog(
             '', AppLocalizations.of(context).genericError);
         await retrieveWalletsFromLocalDatabase();
