@@ -20,7 +20,8 @@ import 'package:exchangilymobileapp/services/connectivity_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
+import 'package:flutter/rendering.dart'
+    show debugPaintSizeEnabled, debugRepaintRainbowEnabled;
 import 'package:flutter/services.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:logger/logger.dart';
@@ -33,6 +34,7 @@ import 'localizations.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
+  // debugRepaintRainbowEnabled = true;
   try {
     await serviceLocator();
     Logger.level = Level.info;

@@ -284,10 +284,10 @@ class WalletDashboardViewModel extends BaseViewModel {
   showcaseEvent(BuildContext ctx) async {
     log.e(
         'Is showvcase: ${storageService.isShowCaseView} --- gas amount: $gasAmount');
-    setBusyForObject(isShowCaseView, true);
+    // if (!isBusy) setBusyForObject(isShowCaseView, true);
     _isShowCaseView = storageService.isShowCaseView;
-    setBusyForObject(isShowCaseView, false);
-    if (isShowCaseView)
+    // if (!isBusy) setBusyForObject(isShowCaseView, false);
+    if (isShowCaseView && !isBusy)
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(ctx).startShowCase([globalKeyOne, globalKeyTwo]);
       });
@@ -749,7 +749,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
 
   Future refreshBalance() async {
-    setBusy(true);
+    if (!isBusy) setBusy(true);
 
     await walletDatabaseService.getAll().then((walletList) {
       walletInfoCopy = [];

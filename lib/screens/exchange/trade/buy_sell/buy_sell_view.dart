@@ -58,8 +58,8 @@ class BuySellView extends StatelessWidget {
         },
         builder: (context, model, child) => Scaffold(
             key: _scaffoldKey,
-            endDrawerEnableOpenDragGesture: true,
-            endDrawer: Drawer(child: Container(child: SettingsPortableView())),
+            // endDrawerEnableOpenDragGesture: true,
+            // endDrawer: Drawer(child: Container(child: SettingsPortableView())),
             appBar: buildCupertinoNavigationBar(context),
             backgroundColor: Color(0xFF1F2233),
             body: ShowCaseWidget(
@@ -206,15 +206,15 @@ class BuySellView extends StatelessWidget {
 
   CupertinoNavigationBar buildCupertinoNavigationBar(BuildContext context) {
     return CupertinoNavigationBar(
-      trailing: IconButton(
-        icon: Icon(
-          Icons.settings,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          _scaffoldKey.currentState.openEndDrawer();
-        },
-      ),
+      // trailing: IconButton(
+      //   icon: Icon(
+      //     Icons.settings,
+      //     color: Colors.white,
+      //   ),
+      //   onPressed: () {
+      //     _scaffoldKey.currentState.openEndDrawer();
+      //   },
+      // ),
       padding: EdgeInsetsDirectional.only(start: 0),
       leading: CupertinoButton(
         padding: EdgeInsets.all(0),

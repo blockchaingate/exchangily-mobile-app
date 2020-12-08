@@ -38,22 +38,22 @@ class TradeView extends StatelessWidget {
           model.init();
         },
         builder: (context, model, _) => Scaffold(
-              endDrawerEnableOpenDragGesture: true,
-              endDrawer:
-                  Drawer(child: Container(child: SettingsPortableView())),
+              // endDrawerEnableOpenDragGesture: true,
+              // endDrawer:
+              //     Drawer(child: Container(child: SettingsPortableView())),
               key: _scaffoldKey,
               appBar: AppBar(
-                  actions: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        _scaffoldKey.currentState.openEndDrawer();
-                      },
-                    ),
-                  ],
+                  //actions: [
+                  // IconButton(
+                  //   icon: Icon(
+                  //     Icons.settings,
+                  //     color: Colors.white,
+                  //   ),
+                  //   onPressed: () {
+                  //     _scaffoldKey.currentState.openEndDrawer();
+                  //   },
+                  // ),
+                  //  ],
                   backgroundColor: primaryColor.withOpacity(0.25),
                   leading: IconButton(
                     icon: Icon(Icons.arrow_back_ios),

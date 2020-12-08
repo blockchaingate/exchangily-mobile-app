@@ -869,9 +869,9 @@ class AddGasRow extends StatelessWidget {
     var begin = Offset(0.0, 1.0);
     var end = Offset.zero;
     var tween = Tween(begin: begin, end: end);
-    if (model.isShowCaseView && model.gasAmount < 0.5)
+    if (model.isShowCaseView && model.gasAmount < 0.5 && !model.isBusy)
       model.showcaseEvent(context);
-    return model.isShowCaseView && model.gasAmount < 0.5
+    return model.isShowCaseView || model.gasAmount < 0.5
         ? Showcase(
             key: model.globalKeyOne,
             title: AppLocalizations.of(context).note + ':',
@@ -901,8 +901,8 @@ class DepositWidget extends StatelessWidget {
     model.showcaseEvent(context);
     return InkWell(
         child: tickerName.toUpperCase() == 'FAB' &&
-                model.isShowCaseView &&
-                model.gasAmount < 0.5
+                (model.isShowCaseView || model.gasAmount < 0.5) &&
+                !model.isBusy
             ? Showcase(
                 key: model.globalKeyTwo,
                 descTextStyle: TextStyle(fontSize: 9, color: black),
