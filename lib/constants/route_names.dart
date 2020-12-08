@@ -31,9 +31,9 @@ const String TransactionHistoryViewRoute = '/transactionHistory';
                         Navigation Routes
 ----------------------------------------------------------------------*/
 const String DashboardViewRoute = '/dashboard';
-const String MarketsViewRoute = '/marketsView';
+const String MarketsViewRoute = '/markets';
 const String BindpayViewRoute = '/bindpay';
-const String InstructionsViewRoute = '/instructions';
+const String InstructionsViewRoute = '/campaignInstructions';
 const String SettingViewRoute = '/settings';
 
 /*----------------------------------------------------------------------

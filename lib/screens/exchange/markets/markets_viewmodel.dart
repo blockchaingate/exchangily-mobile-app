@@ -14,6 +14,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
@@ -75,14 +76,14 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   transformData(data) {
     try {
       List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-log.e('json list $jsonDynamicList');
+      log.e('json list $jsonDynamicList');
       PriceList priceList = PriceList.fromJson(jsonDynamicList);
       pairPriceList = priceList.prices;
       log.w('pair price list length ${pairPriceList.length}');
-      pairPriceList.forEach((element) {
-        //  print(element.toJson());
-        if (element.change.isNaN) element.change = 0.0;
-      });
+      // pairPriceList.forEach((element) {
+      //   //  print(element.toJson());
+      //   if (element.change.isNaN) element.change = 0.0;
+      // });
     } catch (err) {
       log.e('transformData Catch error $err');
       print('Cancelling Stream Subsciption');
@@ -97,8 +98,8 @@ log.e('json list $jsonDynamicList');
     errorMessage = error.toString();
 
     sharedService.alertDialog(AppLocalizations.of(context).serverError,
-        AppLocalizations.of(context).marketPriceFetchFailed + errorMessage,
-        path: '/dashboard', isWarning: false);
+        AppLocalizations.of(context).marketPriceFetchFailed,
+        path: DashboardViewRoute, isWarning: false);
   }
 
   @override
@@ -108,6 +109,6 @@ log.e('json list $jsonDynamicList');
   }
 
   onBackButtonPressed() async {
-    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+    navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
   }
 }

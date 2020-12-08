@@ -39,20 +39,33 @@ class Price {
     this._open = open ?? 0.0;
     this._close = close ?? 0.0;
     this._volume = volume ?? 0.0;
-    this._change =
-        //change ?? 0.0;
-        (close - open) / open * 100 ?? 0.0;
+    this._change = change ?? 0.0;
+
     this._changeValue = changeValue ?? 0.0;
   }
 
   factory Price.fromJson(Map<String, dynamic> json) {
+    var symbol = json['s'].toString();
+    var open = json['o'].toDouble();
+    var close = json['c'].toDouble();
+    double cv = ((close - open) / open) * 100;
+    if (!cv.isNaN) print('cv $cv');
+    if (!cv.isNaN)
+      print(
+          'SYMBOL $symbol changePercentage ${(close - open) / open} -- open $open -- close $close');
+    double changePercentage = ((close - open) / open) * 100;
+    if (changePercentage.isInfinite || changePercentage.isNaN)
+      changePercentage = 0.0;
+    print('changePercentage $changePercentage -- open $open -- close $close');
     return Price(
-        symbol: json['s'].toString(),
-        price: json['p'].toDouble() ?? 0.0,
+        changeValue: close - open,
+        change: changePercentage,
+        symbol: symbol,
+        price: json['p'].toDouble(),
         high: json['h'].toDouble(),
         low: json['l'].toDouble(),
-        open: json['o'].toDouble(),
-        close: json['c'].toDouble(),
+        open: open,
+        close: close,
         volume: json['v'].toDouble());
   }
 

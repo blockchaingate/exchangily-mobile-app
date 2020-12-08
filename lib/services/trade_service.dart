@@ -201,8 +201,11 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel getTickerDataChannel(String pair, String interval) {
-    var wsStringUrl =
-        configService.getKanbanBaseWSUrl() + 'ticker@' + pair + '@' + interval;
+    var wsStringUrl = configService.getKanbanBaseWSUrl() +
+        TickerWSRoute +
+        pair +
+        '@' +
+        interval;
     log.e('getTickerDataUrl $wsStringUrl');
     final channel = IOWebSocketChannel.connect(wsStringUrl);
     return channel;
@@ -226,8 +229,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   Stream getAllCoinPriceStream() {
     Stream stream;
     try {
-      allPriceStream = getAllPriceChannel().stream;
-      return allPriceStream.asBroadcastStream().distinct();
+      stream = getAllPriceChannel().stream;
+      return stream.asBroadcastStream().distinct();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
       throw Exception(err);
@@ -235,7 +238,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
   IOWebSocketChannel getAllPriceChannel() {
-    var wsStringUrl = configService.getKanbanBaseWSUrl() + 'allPrices';
+    var wsStringUrl = configService.getKanbanBaseWSUrl() + AllPricesWSRoute;
     log.e('getAllPriceChannelUrl $wsStringUrl');
 
     IOWebSocketChannel channel = IOWebSocketChannel.connect(wsStringUrl);
@@ -262,7 +265,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel getTradeListChannel(String pair) {
     try {
-      var wsString = configService.getKanbanBaseWSUrl() + 'trades' + '@' + pair;
+      var wsString = configService.getKanbanBaseWSUrl() + TradesWSRoute + pair;
       //  log.i('getTradeListUrl $wsString');
       IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
       return channel;
@@ -279,13 +282,6 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   Stream getOrderBookStreamByTickerName(String tickerName) {
     Stream stream;
     try {
-      // var wsString = environment['websocket'] + 'orders' + '@' + tickerName;
-      // log.w(wsString);
-      // log.w('getOrderBookStreamByTickerName $wsString');
-      // if not put the IOWebSoketChannel.connect to variable channel and
-      // directly returns it then in the multiple stream it doesn't work
-      //  IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
-
       stream = getOrderListChannel(tickerName).stream;
 
       return stream.asBroadcastStream().distinct();
@@ -297,7 +293,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   IOWebSocketChannel getOrderListChannel(String pair) {
     try {
-      var wsString = configService.getKanbanBaseWSUrl() + 'orders' + '@' + pair;
+      var wsString = configService.getKanbanBaseWSUrl() + OrdersWSRoute + pair;
       log.i('getOrderListUrl $wsString');
       // if not put the IOWebSoketChannel.connect to variable channel and
       // directly returns it then in the multiple stream it doesn't work

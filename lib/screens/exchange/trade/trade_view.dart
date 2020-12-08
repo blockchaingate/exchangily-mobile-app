@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_view.dart';
@@ -58,8 +59,10 @@ class TradeView extends StatelessWidget {
                   leading: IconButton(
                     icon: Icon(Icons.arrow_back_ios),
                     onPressed: () {
-                      model.setBusy(true);
-                      Navigator.pop(context);
+                      //   model.navigationService.goBack();
+                      model.navigationService.navigateUsingPushReplacementNamed(
+                          MarketsViewRoute,
+                          arguments: false);
                     },
                   ),
                   title: Text(

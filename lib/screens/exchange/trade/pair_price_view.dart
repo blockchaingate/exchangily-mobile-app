@@ -50,9 +50,7 @@ class PairPriceView extends StatelessWidget {
                     //     style: Theme.of(context).textTheme.headline3),
                     Row(
                       children: [
-                        Text(
-                            (pairPrice.close - pairPrice.open)
-                                .toStringAsFixed(2),
+                        Text(pairPrice.changeValue.toStringAsFixed(2),
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5

@@ -51,7 +51,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
   Widget build(BuildContext context) {
     onRowTap(Price itemRow) {
       itemRow.symbol = itemRow.symbol.replaceAll('/', '').toString();
-      navigationService.navigateTo('/exchangeTrade', arguments: itemRow);
+      navigationService.navigateUsingPushReplacementNamed('/exchangeTrade',
+          arguments: itemRow);
     }
 
     return Theme(
