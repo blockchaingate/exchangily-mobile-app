@@ -224,19 +224,19 @@ Map productionConfig = {
       "DRGN": '0x419c4db4b9e25d6db2ad9691ccb832c8d9fda05e'
     },
     'exchangilyOfficial': [
-      {'name': 'EXG', 'address': '0xfd46d4292e1f89c78e9e700a4976c8960d785f8b'},
-      {'name': 'FAB', 'address': '1Q6CooU5zjy5qXdEaNw3u2Rhm3J6Mb5hap'},
-      {'name': 'BTC', 'address': '1Q6CooU5zjy5qXdEaNw3u2Rhm3J6Mb5hap'},
-      {'name': 'ETH', 'address': '0x0dF198C80893c1373a11AdE9ad6454181aE18E73'},
-      {'name': 'USDT', 'address': '0x0dF198C80893c1373a11AdE9ad6454181aE18E73'},
-      {'name': 'DUSD', 'address': '0xfd46d4292e1f89c78e9e700a4976c8960d785f8b'},
+      {'name': 'EXG', 'address': '1GJ9cTDJM93Y9Ug443nLix7b9wYyPnad55'},
+      {'name': 'FAB', 'address': '1GJ9cTDJM93Y9Ug443nLix7b9wYyPnad55'},
+      {'name': 'BTC', 'address': '1GJ9cTDJM93Y9Ug443nLix7b9wYyPnad55'},
+      {'name': 'ETH', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'},
+      {'name': 'USDT', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'},
+      {'name': 'DUSD', 'address': '1GJ9cTDJM93Y9Ug443nLix7b9wYyPnad55'},
       {
         'name': 'BCH',
-        'address': 'bitcoincash:qr75d4pf9c0cn3uwnecq5jtkeztq67zl3v3enf6wh0'
+        'address': 'bitcoincash:qznusftmq4cac0fuj6eyke5vv45njxe6eyafcld37l'
       },
-      {'name': 'LTC', 'address': 'LiKA51mv5QD96LKPkWvMB3VTyFfNVKjFVv'},
-      {'name': 'DOGE', 'address': 'DUEJM4QjJ9sNNXoqJxvcSnbJeB2PgbPCa9'},
-      {'name': 'erc20', 'address': '0x0dF198C80893c1373a11AdE9ad6454181aE18E73'}
+      {'name': 'LTC', 'address': 'LaX6sfX8RoHbQHNDEBmdzyBMN9vFa95FXL'},
+      {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'},
+      {'name': 'erc20', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'}
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },

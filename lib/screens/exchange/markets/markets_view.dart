@@ -34,28 +34,30 @@ class MarketsView extends StatelessWidget {
                 model.onBackButtonPressed();
                 return new Future(() => false);
               },
-              child: Scaffold(
-                body: Container(
-                  margin: EdgeInsets.only(top: 5.0),
-                  //   color: Theme.of(context).tra,
-                  child: Column(
-                    children: [
-                      // Add more widgets here as the market view expands
+              child: SafeArea(
+                child: Scaffold(
+                  body: Container(
+                    margin: EdgeInsets.only(top: 5.0),
+                    //   color: Theme.of(context).tra,
+                    child: Column(
+                      children: [
+                        // Add more widgets here as the market view expands
 
-                      /// Market pairs tab
-                      /// this is a dumb widget so need to provide viewmodel
-                      Flexible(
-                        child: MarketPairsTabView(
-                          marketPairsTabBarView: model.marketPairsTabBar,
-                          priceList: model.btcFabExgUsdtPriceList,
-                          isBusy: !model.dataReady,
-                          hideSlider: hideSlider,
+                        /// Market pairs tab
+                        /// this is a dumb widget so need to provide viewmodel
+                        Flexible(
+                          child: MarketPairsTabView(
+                            marketPairsTabBarView: model.marketPairsTabBar,
+                            priceList: model.btcFabExgUsdtPriceList,
+                            isBusy: !model.dataReady,
+                            hideSlider: hideSlider,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  bottomNavigationBar: BottomNavBar(count: 1),
                 ),
-                bottomNavigationBar: BottomNavBar(count: 1),
               ),
             ),
         viewModelBuilder: () => MarketsViewModel());
