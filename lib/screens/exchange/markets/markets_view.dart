@@ -43,7 +43,7 @@ class MarketsView extends StatelessWidget {
                       // Add more widgets here as the market view expands
 
                       /// Market pairs tab
-                      /// this is a dumb widget so need to provide viewmodel
+                      /// this is a dumb widget so no need to provide viewmodel
                       Flexible(
                         child: MarketPairsTabView(
                           marketPairsTabBarView: model.marketPairsTabBar,
