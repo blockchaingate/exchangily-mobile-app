@@ -405,32 +405,7 @@ class WalletService {
         log.i("Offline wallet ${_walletInfo[i].toJson()}");
         await walletDatabaseService.insert(_walletInfo[i]);
       }
-      Map<String, dynamic> walletBalancesBody = {
-        'btcAddress': '',
-        'ethAddress': '',
-        'fabAddress': '',
-        'ltcAddress': '',
-        'dogeAddress': '',
-        'bchAddress': '',
-        "showEXGAssets": "true"
-      };
-      _walletInfo.forEach((wallet) {
-        if (wallet.tickerName == 'BTC') {
-          walletBalancesBody['btcAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'ETH') {
-          walletBalancesBody['ethAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'FAB') {
-          walletBalancesBody['fabAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'LTC') {
-          walletBalancesBody['ltcAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'DOGE') {
-          walletBalancesBody['dogeAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'BCH') {
-          walletBalancesBody['bchAddress'] = wallet.address;
-        }
-      });
-
-      storageService.walletBalancesBody = jsonEncode(walletBalancesBody);
+ 
       await walletDatabaseService.getAll();
       return _walletInfo;
     } catch (e) {

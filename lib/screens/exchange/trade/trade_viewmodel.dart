@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -303,7 +304,8 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     return exgWallet.address;
   }
 
-  onBackButtonPressed() async {
-    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+  onBackButtonPressed() {
+    navigationService.navigateUsingPushReplacementNamed(MarketsViewRoute,
+        arguments: false);
   }
 }

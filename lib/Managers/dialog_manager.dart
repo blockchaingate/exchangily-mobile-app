@@ -116,6 +116,7 @@ class _DialogManagerState extends State<DialogManager> {
           FocusScope.of(context).requestFocus(FocusNode());
           _dialogService.dialogComplete(
               DialogResponse(returnedText: 'Closed', confirmed: false));
+          controller.text = '';
         },
         content: Column(
           children: <Widget>[

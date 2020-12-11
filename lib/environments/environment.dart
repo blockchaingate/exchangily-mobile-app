@@ -224,12 +224,12 @@ Map productionConfig = {
       "DRGN": '0x419c4db4b9e25d6db2ad9691ccb832c8d9fda05e'
     },
     'exchangilyOfficial': [
-      {'name': 'EXG', 'address': '1GJ9cTDJM93Y9Ug443nLix7b9wYyPnad55'},
+      {'name': 'EXG', 'address': '0xa7c8257b0571dc3d3c96b24b668c6569391b3ac9'},
       {'name': 'FAB', 'address': '1GJ9cTDJM93Y9Ug443nLix7b9wYyPnad55'},
       {'name': 'BTC', 'address': '1GJ9cTDJM93Y9Ug443nLix7b9wYyPnad55'},
       {'name': 'ETH', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'},
       {'name': 'USDT', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'},
-      {'name': 'DUSD', 'address': '1GJ9cTDJM93Y9Ug443nLix7b9wYyPnad55'},
+      {'name': 'DUSD', 'address': '0xa7c8257b0571dc3d3c96b24b668c6569391b3ac9'},
       {
         'name': 'BCH',
         'address': 'bitcoincash:qznusftmq4cac0fuj6eyke5vv45njxe6eyafcld37l'

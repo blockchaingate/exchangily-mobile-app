@@ -130,15 +130,7 @@ class MarketPairsTabView extends StatelessWidget {
                       ? Container(
                           color: Theme.of(context).accentColor,
                           child: Center(
-                            child:
-                                //      ShimmerLayout(
-                                //   layoutType: 'marketPairs',
-                                // )
-                                model.sharedService.loadingIndicator(),
-                            // margin: EdgeInsets.only(top: 10.0),
-                            // child: ShimmerLayout(
-                            //   layoutType: 'marketPairs',
-                            // ),
+                            child: model.sharedService.loadingIndicator(),
                           ))
                       : Container(
                           color: Theme.of(context).accentColor,
