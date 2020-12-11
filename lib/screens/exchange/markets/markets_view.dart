@@ -11,55 +11,46 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/market_pairs_tab_view.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
+import 'package:exchangilymobileapp/shared/carousel/carousel_view.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
-
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
 
 class MarketsView extends StatelessWidget {
-  const MarketsView({Key key, this.hideSlider = true}) : super(key: key);
-  final bool hideSlider;
+  final NavigationService navigationService = locator<NavigationService>();
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<MarketsViewModel>.reactive(
-        onModelReady: (model) {
-          model.context = context;
-        },
-        initialiseSpecialViewModelsOnce: true,
-        builder: (context, model, _) => WillPopScope(
-              onWillPop: () async {
-                model.onBackButtonPressed();
-                return new Future(() => false);
-              },
-              child: SafeArea(
-                child: Scaffold(
-                  body: Container(
-                    margin: EdgeInsets.only(top: 5.0),
-                    //   color: Theme.of(context).tra,
-                    child: Column(
-                      children: [
-                        // Add more widgets here as the market view expands
+    return WillPopScope(
+      onWillPop: () async {
+        navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+        return new Future(() => false);
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            margin: EdgeInsets.only(top: 5.0),
+            //   color: Theme.of(context).tra,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Add more widgets here as the market view expands
+                CarouselView(),
 
-                        /// Market pairs tab
-                        /// this is a dumb widget so need to provide viewmodel
-                        Flexible(
-                          child: MarketPairsTabView(
-                            marketPairsTabBarView: model.marketPairsTabBar,
-                            priceList: model.btcFabExgUsdtPriceList,
-                            isBusy: !model.dataReady,
-                            hideSlider: hideSlider,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  bottomNavigationBar: BottomNavBar(count: 1),
+                /// Market pairs tab
+                /// this is a dumb widget so need to provide viewmodel
+                Flexible(
+                  child: MarketPairsTabView(),
                 ),
-              ),
+              ],
             ),
-        viewModelBuilder: () => MarketsViewModel());
+          ),
+          bottomNavigationBar: BottomNavBar(count: 1),
+        ),
+      ),
+    );
   }
 }

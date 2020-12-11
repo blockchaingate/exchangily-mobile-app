@@ -144,7 +144,7 @@ class RouteGenerator {
       case MarketsViewRoute:
         return MaterialPageRoute(
             settings: RouteSettings(name: 'MarketsView'),
-            builder: (_) => MarketsView(hideSlider: args));
+            builder: (_) => MarketsView());
 
       case '/exchangeTrade':
         return MaterialPageRoute(

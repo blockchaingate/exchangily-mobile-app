@@ -12,7 +12,6 @@
 */
 
 import 'package:exchangilymobileapp/screen_state/announcement/announcement_list_state.dart';
-import 'package:exchangilymobileapp/screen_state/market/MarketPairsTabViewState.dart';
 import 'package:exchangilymobileapp/screen_state/nav/MainNavState.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/campaign_dashboard_screen_state.dart';
@@ -55,7 +54,8 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_pass
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_exchange_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
-import 'package:exchangilymobileapp/widget_state/carousel_state.dart';
+import 'package:exchangilymobileapp/shared/carousel/corousel_viewmodel.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -121,14 +121,13 @@ Future serviceLocator() async {
   locator.registerFactory(() => CampaignRegisterAccountScreenState());
   locator.registerFactory(() => TeamRewardDetailsScreenState());
   locator.registerFactory(() => CampaignSingleScreenState());
-  locator.registerFactory(() => CarouselWidgetState());
   // Trade
   locator.registerFactory(() => MarketsViewModel());
   locator.registerFactory(() => TradeViewModel());
   locator.registerFactory(() => BuySellViewModel());
   locator.registerFactory(() => MyExchangeAssetsViewModel());
-  locator.registerFactory(() => MarketPairsTabViewState());
   locator.registerFactory(() => TradingChartViewModel());
+  locator.registerFactory(() => CarouselViewmodel());
 
   // Bindpay
   locator.registerFactory(() => BindpayViewmodel());

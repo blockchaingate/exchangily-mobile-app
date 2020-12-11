@@ -1,150 +1,140 @@
-import 'package:exchangilymobileapp/screen_state/market/MarketPairsTabViewState.dart';
-import 'package:exchangilymobileapp/screens/base_screen.dart';
+import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
-import 'package:exchangilymobileapp/widgets/carousel.dart';
-import 'package:exchangilymobileapp/widgets/loading_animation.dart';
+
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
 import 'market_pairs_detail_view.dart';
 
 class MarketPairsTabView extends StatelessWidget {
-  final List<List<Price>> marketPairsTabBarView;
-  final List priceList;
-  final bool isBusy;
-  final bool hideSlider;
-  MarketPairsTabView(
-      {Key key,
-      this.marketPairsTabBarView,
-      this.priceList,
-      this.isBusy,
-      this.hideSlider = true})
-      : super(key: key);
   @override
   Widget build(BuildContext context) {
-    List<String> tabNames = [
-      // 'FAV.',
-      'USDT', 'DUSD', 'BTC', 'ETH', 'EXG'
-    ];
-
-    return BaseScreen<MarketPairsTabViewState>(
+    return ViewModelBuilder.reactive(
+        viewModelBuilder: () => MarketsViewModel(),
         onModelReady: (model) {
           model.context = context;
-          model.init();
         },
-        builder: (context, model, child) => DefaultTabController(
-            length: tabNames.length,
-            child: SafeArea(
-              child: Scaffold(
-                body: NestedScrollView(
-                  headerSliverBuilder:
-                      (BuildContext context, bool innerBoxIsScrolled) {
-                    return <Widget>[
-                      model.busy
-                          ? SliverToBoxAdapter(child: LoadingGif())
-                          : SliverToBoxAdapter(
-                              child: Offstage(
-                                offstage: hideSlider,
-                                child: Column(
+        builder: (context, MarketsViewModel model, child) => !model.dataReady ||
+                model.isBusy
+            ? Center(child: model.sharedService.loadingIndicator())
+            : DefaultTabController(
+                length: model.tabNames.length,
+                child: SafeArea(
+                  child: Scaffold(
+                    body: NestedScrollView(
+                      headerSliverBuilder:
+                          (BuildContext context, bool innerBoxIsScrolled) {
+                        return <Widget>[
+                          // model.busy
+                          //     ? SliverToBoxAdapter(child: LoadingGif())
+                          //     : SliverToBoxAdapter(
+                          //         child: Offstage(
+                          //           offstage: hideSlider,
+                          //           child: Column(
+                          //             children: [
+                          //               Carousel(
+                          //                   imageData: model.images,
+                          //                   lang: model.lang),
+                          //               SizedBox(height: 5),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //       ),
+                          SliverToBoxAdapter(
+                            child: Offstage(
+                              offstage: model.isBusy,
+                              child: Container(
+                                margin: EdgeInsets.fromLTRB(10, 0, 10, 5),
+                                height: 40,
+                                child: Row(
                                   children: [
-                                    Carousel(
-                                        imageData: model.images,
-                                        lang: model.lang),
-                                    SizedBox(height: 5),
+                                    for (var pair
+                                        in model.btcFabExgUsdtPriceList)
+                                      Expanded(
+                                        child: Card(
+                                          color: Color(0xff851fff),
+                                          margin: EdgeInsets.all(2),
+                                          elevation: 3,
+                                          child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(pair.symbol.toString(),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                Text(
+                                                    pair.price
+                                                        .toStringAsFixed(2),
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ))
+                                              ]),
+                                        ),
+                                      )
                                   ],
                                 ),
                               ),
                             ),
-                      SliverToBoxAdapter(
-                        child: Offstage(
-                          offstage: isBusy,
-                          child: Container(
-                            margin: EdgeInsets.fromLTRB(10, 0, 10, 5),
-                            height: 40,
-                            child: Row(
-                              children: [
-                                for (var pair in priceList)
-                                  Expanded(
-                                    child: Card(
-                                      color: Color(0xff851fff),
-                                      margin: EdgeInsets.all(2),
-                                      elevation: 3,
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(pair.symbol.toString(),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                            Text(pair.price.toStringAsFixed(2),
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ))
-                                          ]),
-                                    ),
-                                  )
-                              ],
-                            ),
                           ),
-                        ),
-                      ),
-                      SliverPersistentHeader(
-                        delegate: _SliverAppBarDelegate(
-                          TabBar(
-                              indicatorPadding: EdgeInsets.zero,
-                              labelPadding: EdgeInsets.zero,
-                              unselectedLabelColor: Color(0xffaaaaaa),
-                              unselectedLabelStyle: TextStyle(fontSize: 14),
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              indicator: BoxDecoration(
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        globals.primaryColor,
-                                        globals.walletCardColor,
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter),
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10)),
-                                  color: Colors.redAccent),
-                              tabs: [
-                                for (var tab in tabNames)
-                                  Tab(
-                                      child: Align(
-                                    alignment: Alignment.center,
-                                    child: Text(tab,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                  ))
-                              ]),
-                        ),
-                        pinned: true,
-                      ),
-                    ];
-                  },
-                  body: isBusy
-                      ? Container(
-                          color: Theme.of(context).accentColor,
-                          child: Center(
-                            child: model.sharedService.loadingIndicator(),
-                          ))
-                      : Container(
-                          color: Theme.of(context).accentColor,
-                          child: TabBarView(
-                              children: marketPairsTabBarView.map((pairList) {
-                            return Container(
-                              child:
-                                  MarketPairPriceDetailView(pairList: pairList),
-                            );
-                          }).toList()),
-                        ),
-                ),
-              ),
-            )));
+                          SliverPersistentHeader(
+                            delegate: _SliverAppBarDelegate(
+                              TabBar(
+                                  indicatorPadding: EdgeInsets.zero,
+                                  labelPadding: EdgeInsets.zero,
+                                  unselectedLabelColor: Color(0xffaaaaaa),
+                                  unselectedLabelStyle: TextStyle(fontSize: 14),
+                                  indicatorSize: TabBarIndicatorSize.tab,
+                                  indicator: BoxDecoration(
+                                      gradient: LinearGradient(
+                                          colors: [
+                                            globals.primaryColor,
+                                            globals.walletCardColor,
+                                          ],
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter),
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10)),
+                                      color: Colors.redAccent),
+                                  tabs: [
+                                    for (var tab in model.tabNames)
+                                      Tab(
+                                          child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(tab,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            )),
+                                      ))
+                                  ]),
+                            ),
+                            pinned: true,
+                          ),
+                        ];
+                      },
+                      body: model.isBusy
+                          ? Container(
+                              color: Theme.of(context).accentColor,
+                              child: Center(
+                                child: model.sharedService.loadingIndicator(),
+                              ))
+                          : Container(
+                              color: Theme.of(context).accentColor,
+                              child: TabBarView(
+                                  children:
+                                      model.marketPairsTabBar.map((pairList) {
+                                return Container(
+                                  child: MarketPairPriceDetailView(
+                                      pairList: pairList),
+                                );
+                              }).toList()),
+                            ),
+                    ),
+                  ),
+                )));
   }
 }
 
