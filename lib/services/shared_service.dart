@@ -281,24 +281,25 @@ class SharedService {
             // actions: [],
             actions: <Widget>[
               isCopyTxId
-                  ? RaisedButton(
-                      child:
-                          Text(AppLocalizations.of(context).taphereToCopyTxId),
-                      onPressed: () {
-                        Clipboard.setData(new ClipboardData(text: message));
-                      })
-                  // RichText(
-                  //     text: TextSpan(
-                  //         text: AppLocalizations.of(context).taphereToCopyTxId,
-                  //         style: TextStyle(
-                  //             decoration: TextDecoration.underline,
-                  //             color: globals.primaryColor),
-                  //         recognizer: TapGestureRecognizer()
-                  //           ..onTap = () {
-                  //             Clipboard.setData(
-                  //                 new ClipboardData(text: message));
-                  //           }),
-                  //   )
+                  ?
+                  //  RaisedButton(
+                  //     child:
+                  //         Text(AppLocalizations.of(context).taphereToCopyTxId,style:Theme.of(context).textTheme.headline5),
+                  //     onPressed: () {
+                  //       Clipboard.setData(new ClipboardData(text: message));
+                  //     })
+                  RichText(
+                      text: TextSpan(
+                          text: AppLocalizations.of(context).taphereToCopyTxId,
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: globals.primaryColor),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Clipboard.setData(
+                                  new ClipboardData(text: message));
+                            }),
+                    )
                   : Container(),
               isDismissible
                   ? Container(
@@ -323,10 +324,10 @@ class SharedService {
                                 Navigator.of(context).pop(false);
                               } else {
                                 print('PATH $path');
+                                Navigator.of(context).pop(false);
                                 navigationService
                                     .navigateUsingpopAndPushedNamed(path,
                                         arguments: arguments);
-                                Navigator.of(context).pop(false);
                               }
                             },
                           ),

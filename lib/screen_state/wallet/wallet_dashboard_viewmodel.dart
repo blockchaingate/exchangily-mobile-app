@@ -666,7 +666,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         .gasBalance(address)
         .then((data) => gasAmount = data)
         .catchError((onError) => log.e(onError));
-
+    log.w('Gas Amount $gasAmount');
     return gasAmount;
   }
 
@@ -757,8 +757,32 @@ class WalletDashboardViewModel extends BaseViewModel {
       walletInfoCopy = walletList;
     });
     walletInfo = [];
+      Map<String, dynamic> walletBalancesBody = {
+        'btcAddress': '',
+        'ethAddress': '',
+        'fabAddress': '',
+        'ltcAddress': '',
+        'dogeAddress': '',
+        'bchAddress': '',
+        "showEXGAssets": "true"
+      };
+      walletInfoCopy.forEach((wallet) {
+        if (wallet.tickerName == 'BTC') {
+          walletBalancesBody['btcAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'ETH') {
+          walletBalancesBody['ethAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'FAB') {
+          walletBalancesBody['fabAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'LTC') {
+          walletBalancesBody['ltcAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'DOGE') {
+          walletBalancesBody['dogeAddress'] = wallet.address;
+        } else if (wallet.tickerName == 'BCH') {
+          walletBalancesBody['bchAddress'] = wallet.address;
+        }
+      });
 
-    var walletBalancesBody = jsonDecode(storageService.walletBalancesBody);
+    //  storageService.walletBalancesBody = walletBalancesBody;
     log.i('Coin address body $walletBalancesBody');
 
     // ----------------------------------------
@@ -835,11 +859,10 @@ class WalletDashboardViewModel extends BaseViewModel {
         await getGas();
         // check gas and fab balance if 0 then ask for free fab
         if (gasAmount == 0.0 && fabBalance == 0.0) {
-          await apiService.getFreeFab(address).then((res) {
-            if (res != null) {
-              isFreeFabNotUsed = res['ok'];
-            }
-          });
+          var res = await apiService.getFreeFab(address);
+          if (res != null) {
+            isFreeFabNotUsed = res['ok'];
+          }
         } else {
           log.i('Fab or gas balance available already');
           //  storageService.isShowCaseView = true;
@@ -921,16 +944,14 @@ class WalletDashboardViewModel extends BaseViewModel {
             usdValue: usdValue,
             name: name);
         walletInfo.add(wi);
-      }).
-          // .timeout(Duration(seconds: 25), onTimeout: () async {
-          //   sharedService.alertDialog(
-          //       '', AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
-          //   await retrieveWallets();
-          //   log.e('Timeout');
-          //   return;
-          // })
-
-          catchError((error) async {
+        // })
+        // .timeout(Duration(seconds: 25), onTimeout: () async {
+        //   sharedService.alertDialog(
+        //       '', AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+        //   //  await retrieveWallets();
+        //   log.e('Timeout');
+        //   return;
+      }).catchError((error) async {
         setBusy(false);
         sharedService.alertDialog(
             '', AppLocalizations.of(context).genericError);

@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -59,7 +60,7 @@ class AddGas extends StatelessWidget {
           (ret["errMsg"] == '') ? ret['txHash'] : formattedErrorMsg,
           isWarning: false,
           isCopyTxId: ret["errMsg"] == '' ? true : false,
-          path: (ret["errMsg"] == '') ? 'dashboard' : '');
+          path: (ret["errMsg"] == '') ? DashboardViewRoute : '');
     } else {
       if (res.returnedText != 'Closed') {
         wrongPasswordNotification(context);
