@@ -292,6 +292,7 @@ class SharedService {
                       text: TextSpan(
                           text: AppLocalizations.of(context).taphereToCopyTxId,
                           style: TextStyle(
+                              fontSize: 12,
                               decoration: TextDecoration.underline,
                               color: globals.primaryColor),
                           recognizer: TapGestureRecognizer()
