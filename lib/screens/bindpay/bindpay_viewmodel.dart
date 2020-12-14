@@ -81,9 +81,11 @@ class BindpayViewmodel extends FutureViewModel {
     });
 
     setBusyForObject(tickerName, true);
-    exchangeBalances != null || exchangeBalances.isNotEmpty
-        ? tickerName = exchangeBalances[0].ticker
-        : tickerName = '';
+    if(exchangeBalances != null || exchangeBalances.isNotEmpty){
+         tickerName = exchangeBalances[0].ticker;
+         quantity = exchangeBalances[0].unlockedAmount;
+      
+    }
     setBusyForObject(tickerName, false);
     log.e('tickerName $tickerName');
   }
@@ -127,7 +129,7 @@ class BindpayViewmodel extends FutureViewModel {
           ),
           child: ListView.separated(
               separatorBuilder: (context, _) => UIHelper.divider,
-              itemCount: coins.length,
+              itemCount: exchangeBalances.length,
               itemBuilder: (BuildContext context, int index) {
                 //  mainAxisSize: MainAxisSize.max,
                 //mainAxisAlignment: MainAxisAlignment.center,
@@ -143,7 +145,7 @@ class BindpayViewmodel extends FutureViewModel {
                     //   BoxShadow(
                     //       blurRadius: 3, color: Colors.grey[600], spreadRadius: 2)
                     // ]
-                    color: tickerName == coins[index]['tickerName']
+                    color: tickerName == exchangeBalances[index].ticker
                         ? primaryColor
                         : Colors.transparent,
                   ),
@@ -151,7 +153,7 @@ class BindpayViewmodel extends FutureViewModel {
                     onTap: () {
                       //  Platform.isIOS
                       updateSelectedTickernameIOS(
-                          index, coins[index]['quantity'].toDouble());
+                          index, exchangeBalances[index].unlockedAmount);
                       // : updateSelectedTickername(coins[index]['tickerName'],
                       //     coins[index]['quantity'].toDouble());
                     },
@@ -160,11 +162,11 @@ class BindpayViewmodel extends FutureViewModel {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(coins[index]['tickerName'].toString(),
+                          Text(exchangeBalances[index].ticker,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline5),
                           UIHelper.horizontalSpaceSmall,
-                          Text(coins[index]['quantity'].toString(),
+                          Text(exchangeBalances[index].unlockedAmount.toString(),
                               style: Theme.of(context).textTheme.headline5),
                           Divider(
                             color: Colors.white,
@@ -247,9 +249,9 @@ class BindpayViewmodel extends FutureViewModel {
 
   updateSelectedTickernameIOS(int index, double updatedQuantity) {
     setBusy(true);
-    print('INDEX ${index + 1} ---- coins length ${coins.length}');
-    if (index + 1 <= coins.length)
-      tickerName = coins.elementAt(index)['tickerName'];
+    print('INDEX ${index + 1} ---- coins length ${exchangeBalances.length}');
+    if (index + 1 <= exchangeBalances.length)
+      tickerName = exchangeBalances.elementAt(index).ticker;
     quantity = updatedQuantity;
     print('IOS tickerName $tickerName --- quantity $quantity');
     setBusy(false);
@@ -536,7 +538,7 @@ class BindpayViewmodel extends FutureViewModel {
   transfer() async {
     setBusy(true);
     print(walletService.isValidKbAddress(addressController.text));
-    if (walletService.isValidKbAddress(addressController.text)) {
+  //  if (walletService.isValidKbAddress(addressController.text)) {
       if (amountController.text == '') {
         sharedService.alertDialog(AppLocalizations.of(context).validationError,
             AppLocalizations.of(context).amountMissing);
@@ -548,8 +550,14 @@ class BindpayViewmodel extends FutureViewModel {
           .firstWhere((element) => element.ticker == tickerName);
       // int coinType = getCoinTypeIdByName(tickerName);
       print(_selectedExchangeBal.coinType);
-      if (_selectedExchangeBal.unlockedAmount <= 0.0) {
+      double amount = double.parse(amountController.text);
+      double selectedCoinBalance = _selectedExchangeBal.unlockedAmount;
+      if (selectedCoinBalance <= 0.0 || amount > selectedCoinBalance) {
+        sharedService.alertDialog(AppLocalizations.of(context).validationError,
+            AppLocalizations.of(context).invalidAmount);
+        setBusy(false);
         log.e('No exchange balance ${_selectedExchangeBal.unlockedAmount}');
+        return;
       }
       await dialogService
           .showDialog(
@@ -602,11 +610,11 @@ class BindpayViewmodel extends FutureViewModel {
         setBusy(false);
         return false;
       });
-    } else {
-      sharedService.alertDialog(AppLocalizations.of(context).validationError,
-          AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress);
-      setBusy(false);
-    }
+    // } else {
+    //   sharedService.alertDialog(AppLocalizations.of(context).validationError,
+    //       AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress);
+    //   setBusy(false);
+    // }
     setBusy(false);
   }
 

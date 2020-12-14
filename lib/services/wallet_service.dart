@@ -1260,7 +1260,7 @@ class WalletService {
     try {
       fabAddress = toLegacyAddress(kbPaymentAddress);
     } catch (e) {}
-    ;
+    
     return (fabAddress != '');
   }
 
