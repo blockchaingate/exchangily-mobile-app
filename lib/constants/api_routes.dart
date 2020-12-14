@@ -6,7 +6,7 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 ----------------------------------------------------------------------*/
 
 const String baseBlockchainGateV2Url = isProduction
-    ? 'https://blockchaingate.com/v2/'
+    ? 'https://api.blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
 
 /*----------------------------------------------------------------------
