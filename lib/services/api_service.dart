@@ -34,7 +34,7 @@ class ApiService {
   ConfigService configService = locator<ConfigService>();
   SharedService sharedService = locator<SharedService>();
 
-  final blockchaingateUrl = environment['endpoints']['blockchaingate'];
+  //final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
   // Please keep this for future test
   // final kanbanBaseUrl = environment['endpoints']['LocalKanban'];
@@ -677,7 +677,7 @@ class ApiService {
 
   Future getAnnouncement(lang) async {
     final langcode = lang == "en" ? "en" : "cn";
-    final url = blockchaingateUrl + "announcements/" + langcode;
+    final url = baseBlockchainGateV2Url + "announcements/" + langcode;
 
     print("Calling api: getAnnouncement " + lang);
     print("url: " + url);

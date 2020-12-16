@@ -11,6 +11,9 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:flutter/material.dart';
 
 // Wallet Features Model
@@ -96,20 +99,19 @@ class WalletInfo {
   double _availableBalance;
   double _usdValue;
   double _inExchange;
-  //PairDecimalConfig _pairDecimalConfig;
+  PairDecimalConfig _pairDecimalConfig;
 
-  WalletInfo({
-    int id,
-    String tickerName,
-    String tokenType,
-    String address,
-    double lockedBalance,
-    double availableBalance,
-    double usdValue,
-    String name,
-    double inExchange,
-    //PairDecimalConfig pairDecimalConfig
-  }) {
+  WalletInfo(
+      {int id,
+      String tickerName,
+      String tokenType,
+      String address,
+      double lockedBalance,
+      double availableBalance,
+      double usdValue,
+      String name,
+      double inExchange,
+      PairDecimalConfig pairDecimalConfig}) {
     this._id = id;
     this._tickerName = tickerName;
     this._tokenType = tokenType;
@@ -119,35 +121,27 @@ class WalletInfo {
     this._usdValue = usdValue ?? 0.0;
     this._name = name;
     this._inExchange = inExchange ?? 0.0;
-    // this._pairDecimalConfig = pairDecimalConfig ?? new PairDecimalConfig();
+    this._pairDecimalConfig = pairDecimalConfig;
   }
 
   factory WalletInfo.fromJson(Map<String, dynamic> json) {
-    // List<PairDecimalConfig> pairDecimalConfigList = [];
-    // var pairDecimalConfigJsonAsList = json['pairDecimalConfig'] as List;
-    // if (pairDecimalConfigJsonAsList != null) {
-    //   pairDecimalConfigList = pairDecimalConfigJsonAsList
-    //       .map((e) => PairDecimalConfig.fromJson(e))
-    //       .toList();
-    // }
-
-    return new WalletInfo(
-      id: json['id'] as int,
-      tickerName: json['tickerName'] as String,
-      tokenType: json['tokenType'] as String,
-      address: json['address'] as String,
-      lockedBalance: json['lockedBalance'],
-      availableBalance: json['availableBalance'] as double,
-      usdValue: json['usdValue'] as double,
-      name: json['name'] as String,
-      inExchange: json['inExchange'] as double,
-      //  pairDecimalConfig:
-      //   PairDecimalConfig.fromJson(json['pairDecimalConfig'])
-    );
+    PairDecimalConfig pairDecimalConfig;
+    return WalletInfo(
+        id: json['id'] as int,
+        tickerName: json['tickerName'] as String,
+        tokenType: json['tokenType'] as String,
+        address: json['address'] as String,
+        lockedBalance: json['lockedBalance'],
+        availableBalance: json['availableBalance'] as double,
+        usdValue: json['usdValue'] as double,
+        name: json['name'] as String,
+        inExchange: json['inExchange'] as double,
+        pairDecimalConfig: pairDecimalConfig);
   }
 
-  // To json
+// todo: create new wallet balances model
 
+  // To json
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this._id;
@@ -159,9 +153,9 @@ class WalletInfo {
     data['usdValue'] = this._usdValue;
     data['name'] = this._name;
     data['inExchange'] = this._inExchange;
-    // if (this._pairDecimalConfig != null) {
+
     //   data['pairDecimalConfig'] = this._pairDecimalConfig.toJson();
-    // }
+
     return data;
   }
 

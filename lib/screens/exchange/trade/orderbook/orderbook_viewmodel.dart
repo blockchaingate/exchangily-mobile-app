@@ -30,10 +30,15 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
 
   @override
   void onData(data) {
+    if (data == null || data == []) {
+      streamSubscription.cancel().then(
+          (value) => tradeService.getOrderListChannel(tickerName).sink.close());
+      log.e('Orderbook strema and channel closed');
+      return;
+    }
     fillTextFields(orderbook.price, orderbook.quantity);
     log.w('orderbook data ready $dataReady');
-    if(dataReady)
-    tradeService.setOrderbookLoadedStatus(true);
+    if (dataReady) tradeService.setOrderbookLoadedStatus(true);
   }
 
   @override

@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -58,10 +59,8 @@ class CreatePasswordScreenState extends BaseState {
     await _walletService
         .createOfflineWallets(randomMnemonicFromRoute)
         .then((data) {
-      //  _walletInfo = data;
-      // Navigator.pushNamed(context, '/mainNav', arguments: _walletInfo);
-      //  navigationService.navigateTo('/mainNav', arguments: 0);
-      navigationService.navigateUsingPushNamedAndRemoveUntil('/dashboard');
+      navigationService
+          .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);
       randomMnemonicFromRoute = '';
     }).catchError((onError) {
       passwordMatch = false;

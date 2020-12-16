@@ -68,6 +68,7 @@ class ExchangeBalanceModelList {
   factory ExchangeBalanceModelList.fromJson(List<dynamic> parsedJson) {
     List<ExchangeBalanceModel> balances = new List<ExchangeBalanceModel>();
     balances = parsedJson.map((i) => ExchangeBalanceModel.fromJson(i)).toList();
+    print('Exchange balance in exchange balance model $balances');
     return new ExchangeBalanceModelList(balances: balances);
   }
 }

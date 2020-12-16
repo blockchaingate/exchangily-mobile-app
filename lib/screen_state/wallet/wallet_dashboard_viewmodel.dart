@@ -70,6 +70,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   bool isConfirmDeposit = false;
   WalletInfo confirmDepositCoinWallet;
   List<PairDecimalConfig> pairDecimalConfigList = [];
+  PairDecimalConfig singlePairDecimalConfig;
   int priceDecimalConfig = 0;
   int quantityDecimalConfig = 0;
   var lang;
@@ -105,13 +106,13 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
 
     sharedService.context = context;
-    //  await getDecimalPairConfig();
+    await getDecimalPairConfig();
     await refreshBalance();
 
     totalBalanceContainerWidth = 270.0;
-    checkAnnouncement();
     await getConfirmDepositStatus();
     showDialogWarning();
+    //  checkAnnouncement();
     setBusy(false);
   }
 
@@ -127,121 +128,95 @@ class WalletDashboardViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
 
   checkAnnouncement() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    lang = storageService.language;
-    setlangGlobal(lang);
-    log.w('langGlobal: ' + getlangGlobal());
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      lang = storageService.language;
+      setlangGlobal(lang);
+      log.w('langGlobal: ' + getlangGlobal());
 
-    var announceContent;
+      var announceContent;
 
-    announceContent = await apiService.getAnnouncement(lang);
+      announceContent = await apiService.getAnnouncement(lang);
 
-    if (announceContent == "error") {
-      hasApiError = true;
-    } else {
-      // test code///////////////////////////////
-      // prefs.remove("announceData");
-      // log.wtf("announcement: remove cache!!!!");
-      // test code end///////////////////////////////
-      // test code end///////////////////////////////
+      if (announceContent == "error") {
+        hasApiError = true;
+        return;
+      } else {
+        // test code///////////////////////////////
+        // prefs.remove("announceData");
+        // log.wtf("announcement: remove cache!!!!");
+        // test code end///////////////////////////////
+        // test code end///////////////////////////////
 
-      bool checkValue = prefs.containsKey('announceData');
-      List tempAnnounceData = [];
-      if (checkValue) {
-        log.i("announcement: has cache!!!");
-        // var x = prefs.getStringList('announceData');
-        List tempdata = prefs.getStringList('announceData');
-        // tempdata.forEach((e) {
-        //   e = json.decode(e);
-        // });
+        bool checkValue = prefs.containsKey('announceData');
+        List tempAnnounceData = [];
+        if (checkValue) {
+          log.i("announcement: has cache!!!");
+          // var x = prefs.getStringList('announceData');
+          List tempdata = prefs.getStringList('announceData');
+          // tempdata.forEach((e) {
+          //   e = json.decode(e);
+          // });
 
-        tempdata.forEach((element) {
-          tempAnnounceData.add(jsonDecode(element));
-          print('jsonData $tempAnnounceData');
-        });
-        log.i("announceData from prefs: ");
+          tempdata.forEach((element) {
+            tempAnnounceData.add(jsonDecode(element));
+            print('jsonData $tempAnnounceData');
+          });
+          log.i("announceData from prefs: ");
 
-        print(tempAnnounceData);
-        log.i("prefs 0: ");
-        print(tempAnnounceData[0].toString());
-        log.i("prefs 0 id: ");
-        print(tempAnnounceData[0]['_id']);
+          print(tempAnnounceData);
+          log.i("prefs 0: ");
+          print(tempAnnounceData[0].toString());
+          log.i("prefs 0 id: ");
+          print(tempAnnounceData[0]['_id']);
 
-        // tempAnnounceData = tempdata;
-        if (announceContent.length != 0) {
-          log.i("Data from api: ");
-          print(announceContent);
-          log.i("Data 0: ");
-          print(announceContent[0].toString());
-          log.w("Going to map!!");
-          announceContent.map((annNew) {
-            print("Start map");
-            bool hasId = false;
-            // log.i("annNew['_id']: " + annNew['_id']);
-            tempAnnounceData.asMap().entries.map((tempAnn) {
-              int idx = tempAnn.key;
-              var val = tempAnn.value;
-              // log.i("val['_id']: " + val['_id']);
-              if (val['_id'].toString() == annNew['_id'].toString()) {
-                // log.i('has id!!!!');
-                // log.i('Ann id: ' + val['_id']);
-                hasId = true;
-                final differ = JsonDiffer.fromJson(val, annNew);
-                DiffNode diff = differ.diff();
-                print(diff.changed);
-                print("Lenght: " + diff.changed.toString().length.toString());
+          // tempAnnounceData = tempdata;
+          if (announceContent.length != 0) {
+            log.i("Data from api: ");
+            print(announceContent);
+            log.i("Data 0: ");
+            print(announceContent[0].toString());
+            log.w("Going to map!!");
+            announceContent.map((annNew) {
+              print("Start map");
+              bool hasId = false;
+              // log.i("annNew['_id']: " + annNew['_id']);
+              tempAnnounceData.asMap().entries.map((tempAnn) {
+                int idx = tempAnn.key;
+                var val = tempAnn.value;
+                // log.i("val['_id']: " + val['_id']);
+                if (val['_id'].toString() == annNew['_id'].toString()) {
+                  // log.i('has id!!!!');
+                  // log.i('Ann id: ' + val['_id']);
+                  hasId = true;
+                  final differ = JsonDiffer.fromJson(val, annNew);
+                  DiffNode diff = differ.diff();
+                  print(diff.changed);
+                  print("Lenght: " + diff.changed.toString().length.toString());
 
-                if (diff.changed != null &&
-                    diff.changed.toString().length > 3) {
-                  log.w('ann data diff!!!!');
-                  tempAnnounceData[idx] = annNew;
-                  tempAnnounceData[idx]['isRead'] = false;
+                  if (diff.changed != null &&
+                      diff.changed.toString().length > 3) {
+                    log.w('ann data diff!!!!');
+                    tempAnnounceData[idx] = annNew;
+                    tempAnnounceData[idx]['isRead'] = false;
+                  }
                 }
+              }).toList();
+              if (!hasId) {
+                log.i('no id!!!!');
+                log.i('Ann id: ' + annNew['_id']);
+                annNew['isRead'] = false;
+                tempAnnounceData.insert(0, annNew);
               }
             }).toList();
-            if (!hasId) {
-              log.i('no id!!!!');
-              log.i('Ann id: ' + annNew['_id']);
-              annNew['isRead'] = false;
-              tempAnnounceData.insert(0, annNew);
-            }
-          }).toList();
 
-          log.w("tempAnnounceData(from cache): ");
-          // List tempAnnounceData2 = json.decode(json.encode(tempAnnounceData));
-          // log.i(tempAnnounceData2);
+            log.w("tempAnnounceData(from cache): ");
+            // List tempAnnounceData2 = json.decode(json.encode(tempAnnounceData));
+            // log.i(tempAnnounceData2);
 
-        }
+          }
 
-        // prefs.setString('announceData', tempAnnounceData.toString());
-        List<String> jsonData = [];
-        int readedNum = 0;
-        tempAnnounceData.forEach((element) {
-          element["isRead"] == false ? readedNum++ : readedNum = readedNum;
-          jsonData.add(jsonEncode(element));
-          print('jsonData $jsonData');
-        });
-        setunReadAnnouncement(readedNum);
-        print("check status: " + prefs.containsKey('announceData').toString());
-        prefs.setStringList('announceData', jsonData);
-
-        announceList = tempAnnounceData;
-      } else {
-        log.i("announcement: no cache!!!");
-
-        tempAnnounceData = announceContent;
-
-        if (tempAnnounceData.length != 0) {
-          tempAnnounceData.asMap().entries.map((announ) {
-            int idx = announ.key;
-            var val = announ.value;
-            // tempAnnounceData[idx]['isRead']=false;
-            // var tempString = val.toString();
-            // tempString = tempString.substring(0, tempString.length - 1) + 'isRead:false';
-            tempAnnounceData[idx]['isRead'] = false;
-          }).toList();
-
-          prefs.remove("announceData");
+          // prefs.setString('announceData', tempAnnounceData.toString());
           List<String> jsonData = [];
           int readedNum = 0;
           tempAnnounceData.forEach((element) {
@@ -250,31 +225,63 @@ class WalletDashboardViewModel extends BaseViewModel {
             print('jsonData $jsonData');
           });
           setunReadAnnouncement(readedNum);
-
           print(
               "check status: " + prefs.containsKey('announceData').toString());
           prefs.setStringList('announceData', jsonData);
-          print("prefs saved");
-          print("check status saved: " +
-              prefs.containsKey('announceData').toString());
-          // print("prefs announcement data: " + prefs.getString('announceData'));
+
+          announceList = tempAnnounceData;
+        } else {
+          log.i("announcement: no cache!!!");
+
+          tempAnnounceData = announceContent;
+
+          if (tempAnnounceData.length != 0) {
+            tempAnnounceData.asMap().entries.map((announ) {
+              int idx = announ.key;
+              var val = announ.value;
+              // tempAnnounceData[idx]['isRead']=false;
+              // var tempString = val.toString();
+              // tempString = tempString.substring(0, tempString.length - 1) + 'isRead:false';
+              tempAnnounceData[idx]['isRead'] = false;
+            }).toList();
+
+            prefs.remove("announceData");
+            List<String> jsonData = [];
+            int readedNum = 0;
+            tempAnnounceData.forEach((element) {
+              element["isRead"] == false ? readedNum++ : readedNum = readedNum;
+              jsonData.add(jsonEncode(element));
+              print('jsonData $jsonData');
+            });
+            setunReadAnnouncement(readedNum);
+
+            print("check status: " +
+                prefs.containsKey('announceData').toString());
+            prefs.setStringList('announceData', jsonData);
+            print("prefs saved");
+            print("check status saved: " +
+                prefs.containsKey('announceData').toString());
+            // print("prefs announcement data: " + prefs.getString('announceData'));
+          }
+          // tempAnnounceData.map((announ) {
+          //   // announ.add["isRead"] = false;
+          //   announ.addAll({'isRead':false});
+          // });
+
+          // //test code
+          // tempAnnounceData[0]['isRead']=true;
+          // tempAnnounceData[1]['isRead']=false;
+          // tempAnnounceData[2]['isRead']=true;
+
+          // log.i("tempAnnounceData[0]['isRead']: " +
+          //     tempAnnounceData[0]['isRead'].toString());
+
+          announceList = tempAnnounceData;
+          log.i("announcement: exit!!!");
         }
-        // tempAnnounceData.map((announ) {
-        //   // announ.add["isRead"] = false;
-        //   announ.addAll({'isRead':false});
-        // });
-
-        // //test code
-        // tempAnnounceData[0]['isRead']=true;
-        // tempAnnounceData[1]['isRead']=false;
-        // tempAnnounceData[2]['isRead']=true;
-
-        // log.i("tempAnnounceData[0]['isRead']: " +
-        //     tempAnnounceData[0]['isRead'].toString());
-
-        announceList = tempAnnounceData;
-        log.i("announcement: exit!!!");
       }
+    } catch (err) {
+      log.e('announcement catch $err');
     }
   }
 
@@ -615,7 +622,9 @@ class WalletDashboardViewModel extends BaseViewModel {
     await apiService.getPairDecimalConfig().then((res) {
       if (res != null) {
         pairDecimalConfigList = res;
-        log.w('getDecimalPairConfig ${pairDecimalConfigList.length}');
+        // pairDecimalConfigList.forEach((element) {
+        //   log.w('getDecimalPairConfig ${element.toJson()}');
+        // });
       }
     }).catchError((err) => log.e('In get decimal config CATCH. $err'));
     setBusy(false);
@@ -726,22 +735,70 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   // Retrive Wallets From local DB
 
-  retrieveWalletsFromLocalDatabase() async {
-    setBusy(true);
-    await walletDatabaseService.getAll().then((res) {
-      walletInfo = res;
-      calcTotalBal();
-      walletInfoCopy = walletInfo.map((element) => element).toList();
-    }).catchError((error) {
-      log.e('Catch Error retrieveWallets $error');
-      setBusy(false);
-    });
-    setBusy(false);
-  }
+  // retrieveWalletsFromLocalDatabase() async {
+  //   setBusy(true);
+  //   await walletDatabaseService.getAll().then((res) {
+  //     walletInfo = res;
+  //     calcTotalBal();
+  //     walletInfoCopy = walletInfo.map((element) => element).toList();
+  //   }).catchError((error) {
+  //     log.e('Catch Error retrieveWallets $error');
+  //     setBusy(false);
+  //   });
+  //   setBusy(false);
+  // }
 
   jsonTransformation() {
-    var walletBalancesBody = jsonDecode(storageService.walletBalancesBody);
+    var walletBalancesBody = generateWalletBalancesBody();
+
     log.i('Coin address body $walletBalancesBody');
+  }
+
+  generateWalletBalancesBody() async {
+    Map<String, String> walletBalancesBody;
+    await walletDatabaseService.getAll().then((walletList) {
+      walletInfoCopy = [];
+      formattedUsdValueList = [];
+      walletInfoCopy = walletList;
+    });
+    walletInfo = [];
+    walletBalancesBody = {
+      'btcAddress': '',
+      'ethAddress': '',
+      'fabAddress': '',
+      'ltcAddress': '',
+      'dogeAddress': '',
+      'bchAddress': '',
+      "showEXGAssets": "true"
+    };
+    walletInfoCopy.forEach((wallet) {
+      if (wallet.tickerName == 'BTC') {
+        walletBalancesBody['btcAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'ETH') {
+        walletBalancesBody['ethAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'FAB') {
+        walletBalancesBody['fabAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'LTC') {
+        walletBalancesBody['ltcAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'DOGE') {
+        walletBalancesBody['dogeAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'BCH') {
+        walletBalancesBody['bchAddress'] = wallet.address;
+      }
+    });
+    log.i(
+        'walletBalancesBody using walletinfo copy for loop $walletBalancesBody');
+    //  storageService.walletBalancesBody = walletBalancesBody.toString();
+    storageService.walletBalancesBody = jsonEncode(walletBalancesBody);
+    return storageService.walletBalancesBody;
+  }
+
+  // get single pair decimal config
+
+  getSinglePairDecimalConfig(String walletTickerName) {
+    singlePairDecimalConfig = pairDecimalConfigList.firstWhere((element) =>
+        element.name.endsWith('USDT') ??
+        element.name == walletTickerName + 'USDT');
   }
 
 /*-------------------------------------------------------------------------------------
@@ -749,41 +806,21 @@ class WalletDashboardViewModel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
 
   Future refreshBalance() async {
-    if (!isBusy) setBusy(true);
-
-    await walletDatabaseService.getAll().then((walletList) {
-      walletInfoCopy = [];
-      formattedUsdValueList = [];
-      walletInfoCopy = walletList;
-    });
-    walletInfo = [];
-      Map<String, dynamic> walletBalancesBody = {
-        'btcAddress': '',
-        'ethAddress': '',
-        'fabAddress': '',
-        'ltcAddress': '',
-        'dogeAddress': '',
-        'bchAddress': '',
-        "showEXGAssets": "true"
-      };
-      walletInfoCopy.forEach((wallet) {
-        if (wallet.tickerName == 'BTC') {
-          walletBalancesBody['btcAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'ETH') {
-          walletBalancesBody['ethAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'FAB') {
-          walletBalancesBody['fabAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'LTC') {
-          walletBalancesBody['ltcAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'DOGE') {
-          walletBalancesBody['dogeAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'BCH') {
-          walletBalancesBody['bchAddress'] = wallet.address;
-        }
-      });
-
+    setBusy(true);
+    var walletBalancesBody;
+    try {
+      walletBalancesBody = jsonDecode(storageService.walletBalancesBody);
+      walletInfo = [];
+      log.i('walletBalancesBody using storage service $walletBalancesBody');
+    } catch (err) {
+      log.e(err);
+      //setBusy(false);
+    }
+    if (walletBalancesBody == null) {
+      walletBalancesBody = await generateWalletBalancesBody();
+      print(await generateWalletBalancesBody());
+    }
     //  storageService.walletBalancesBody = walletBalancesBody;
-    log.i('Coin address body $walletBalancesBody');
 
     // ----------------------------------------
     // Calling walletBalances in wallet service
@@ -826,6 +863,10 @@ class WalletDashboardViewModel extends BaseViewModel {
               String holder = NumberUtil.currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
+              getSinglePairDecimalConfig(walletTickerName);
+
+              log.w('SINGLE PAIR DECIMAL ${singlePairDecimalConfig.toJson()}');
+
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
                   tickerName: walletTickerName,
@@ -835,7 +876,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                   lockedBalance: lockedBal,
                   usdValue: usdValue,
                   name: wallet.name,
-                  inExchange: walletBalanceList[j].unlockedExchangeBalance);
+                  inExchange: walletBalanceList[j].unlockedExchangeBalance,
+                  pairDecimalConfig: singlePairDecimalConfig);
               walletInfo.add(wi);
               print(wi.toJson());
               if (walletTickerName == 'FAB') {
@@ -850,7 +892,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         }); // wallet info copy for each ends
 
         calcTotalBal();
-        await updateWalletDatabase();
+        // await updateWalletDatabase();
 
         //  if (!isProduction) debugVersionPopup();
 
@@ -867,13 +909,19 @@ class WalletDashboardViewModel extends BaseViewModel {
           log.i('Fab or gas balance available already');
           //  storageService.isShowCaseView = true;
         }
+        if (walletInfo != null) {
+          walletInfoCopy = [];
+          walletInfoCopy = [...walletInfo];
+
+          //  walletInfo.map((element) => element).toList();
+        }
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method
-      else if (walletBalanceList == null) {
-        log.e('---------------------ELSE old way-----------------------');
-        await oldWayToGetBalances(walletService.coinTickers.length);
-      }
+      // else if (walletBalanceList == null) {
+      //   log.e('---------------------ELSE old way-----------------------');
+      //   await oldWayToGetBalances(walletService.coinTickers.length);
+      // }
     }).timeout(Duration(seconds: 25), onTimeout: () {
       log.e('time out');
       walletInfo = walletInfoCopy;
@@ -888,11 +936,6 @@ class WalletDashboardViewModel extends BaseViewModel {
       setBusy(false);
     });
 
-    if (walletInfo != null) {
-      walletInfoCopy = [];
-      walletInfoCopy = walletInfo.map((element) => element).toList();
-    }
-
     if (formattedUsdValueList != null) {
       formattedUsdValueListCopy = [];
       formattedUsdValueListCopy =
@@ -905,10 +948,14 @@ class WalletDashboardViewModel extends BaseViewModel {
   oldWayToGetBalances(int walletInfoCopyLength) async {
     walletInfo = [];
     formattedUsdValueList = [];
-    List<String> coinTokenType = walletService.tokenType;
 
     double walletBal = 0.0;
     double walletLockedBal = 0.0;
+    await walletDatabaseService.getAll().then((walletList) {
+      walletInfoCopy = [];
+      formattedUsdValueList = [];
+      walletInfoCopy = walletList;
+    });
 
     // For loop starts
     for (var i = 0; i < walletInfoCopyLength; i++) {
@@ -917,7 +964,8 @@ class WalletDashboardViewModel extends BaseViewModel {
       String name = walletInfoCopy[i].name;
       // Get coin balance by address
       await walletService
-          .coinBalanceByAddress(tickerName, address, coinTokenType[i])
+          .coinBalanceByAddress(
+              tickerName, address, walletService.setTokenType(tickerName))
           .then((balance) async {
         log.e('bal $balance');
         walletBal = balance['balance'] == -1 ? 0.0 : balance['balance'];
@@ -934,15 +982,19 @@ class WalletDashboardViewModel extends BaseViewModel {
         String holder = NumberUtil.currencyFormat(usdValue, 2);
         formattedUsdValueList.add(holder);
         // Adding each coin details in the wallet
+
+        getSinglePairDecimalConfig(tickerName);
+
         WalletInfo wi = WalletInfo(
             id: walletInfoCopy[i].id,
             tickerName: tickerName,
-            tokenType: coinTokenType[i],
+            //  tokenType: coinTokenType[i],
             address: address,
             availableBalance: walletBal,
             lockedBalance: walletLockedBal,
             usdValue: usdValue,
-            name: name);
+            name: name,
+            pairDecimalConfig: singlePairDecimalConfig);
         walletInfo.add(wi);
         // })
         // .timeout(Duration(seconds: 25), onTimeout: () async {
@@ -955,7 +1007,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         setBusy(false);
         sharedService.alertDialog(
             '', AppLocalizations.of(context).genericError);
-        await retrieveWalletsFromLocalDatabase();
+        //   await retrieveWalletsFromLocalDatabase();
         log.e('Something went wrong  - $error');
         return;
       });
@@ -963,7 +1015,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     calcTotalBal();
     await getExchangeAssetsBalance();
-    await updateWalletDatabase();
+    //  await updateWalletDatabase();
+    await getGas();
     if (!isProduction) debugVersionPopup();
     if (walletInfo != null) {
       walletInfoCopy = [];
@@ -974,20 +1027,21 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   // get exchange asset balance
   getExchangeAssetsBalance() async {
-    String address = await getExgAddressFromWalletDatabase();
-    var res = await walletService.getAllExchangeBalances(address);
+    var res = await apiService.getAssetsBalance('');
+
+    // await walletService.getAllExchangeBalances(address);
     if (res != null) {
       var length = res.length;
       // For loop over asset balance result
       for (var i = 0; i < length; i++) {
         // Get their tickerName to compare with walletInfo tickerName
-        String coin = res[i]['coin'];
+        String coin = res[i].ticker;
         // Second For Loop To check WalletInfo TickerName According to its length and
         // compare it with the same coin tickername from asset balance result until the match or loop ends
         for (var j = 0; j < walletInfo.length; j++) {
           String tickerName = walletInfo[j].tickerName;
           if (coin == tickerName) {
-            walletInfo[j].inExchange = res[i]['amount'];
+            walletInfo[j].inExchange = res[i].unlockedAmount;
             break;
           }
         }

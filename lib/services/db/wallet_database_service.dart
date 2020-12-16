@@ -81,7 +81,6 @@ class WalletDataBaseService {
     //   print(e["id"]);
     //   print(e["name"]);
     // });
-    
 
     List<WalletInfo> list =
         res.isNotEmpty ? res.map((f) => WalletInfo.fromJson(f)).toList() : [];

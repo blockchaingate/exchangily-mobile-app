@@ -144,7 +144,11 @@ class TradeView extends StatelessWidget {
                                 child: PairPriceView(
                                   pairPrice:
                                       model.dataReady(model.tickerStreamKey)
-                                          ? model.currentPairPrice
+                                          ?
+                                          // ? model.currentPairPrice == null
+                                          //     ? model.pairPriceByRoute
+                                          //     :
+                                          model.currentPairPrice
                                           : model.pairPriceByRoute,
                                   isBusy:
                                       !model.dataReady(model.tickerStreamKey),
@@ -154,27 +158,20 @@ class TradeView extends StatelessWidget {
                               ),
 
                               //  Below container contains trading view chart in the trade tab
-                              // model.isTradingChartModelBusy
-                              //     ? Container(
-                              //         child: model.sharedService.loadingIndicator())
-                              //     :
-
-                              // model.isStreamDataNull
-                              //     ? Container(
-                              //         child: Center(
-                              //             child: Text(AppLocalizations.of(context)
-                              //                     .loading +
-                              //                 '...')))
-                              //     :
-                              Container(
-                                child: LoadHTMLFileToWEbView(
-                                  model.updateTickerName(
-                                      pairPriceByRoute.symbol),
-                                ),
-                              ),
-                              //: CircularProgressIndicator(),
-                              // Text(model.interval),
-                              // Text(model.isTradingChartModelBusy.toString()),
+                              model.currentPairPrice == null
+                                  ? Container(
+                                      color: secondaryColor,
+                                      padding: EdgeInsets.all(0),
+                                      margin: EdgeInsets.all(0),
+                                      height: 250,
+                                      child: Center(
+                                          child: CupertinoActivityIndicator()))
+                                  : Container(
+                                      child: LoadHTMLFileToWEbView(
+                                        model.updateTickerName(
+                                            pairPriceByRoute.symbol),
+                                      ),
+                                    ),
 
                               // UIHelper.verticalSpaceMedium,
                               DefaultTabController(

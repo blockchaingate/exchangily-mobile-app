@@ -99,7 +99,11 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   closeConnections() async {
     setBusy(true);
     // isDisposing = true;
-    await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
+    getSubscriptionForKey(tickerStreamKey).cancel().then((value) => tradeService
+        .getTickerDataChannel(pairPriceByRoute.symbol, interval)
+        .sink
+        .close());
+    // await tradeService.closeIOWebSocketConnections(pairPriceByRoute.symbol);
   }
 
   @override
@@ -110,7 +114,18 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 // Change/update stream data before displaying on UI
   @override
   void onData(String key, data) async {
-    log.w('On data $data');
+    log.w('On data $key $data');
+    if (data == null || data == [])
+      getSubscriptionForKey(tickerStreamKey).cancel().then((value) {
+        tradeService
+            .getTickerDataChannel(pairPriceByRoute.symbol, interval)
+            .sink
+            .close();
+        tradeService
+            .getMarketTradesChannel(pairPriceByRoute.symbol)
+            .sink
+            .close();
+      });
   }
 
 /*----------------------------------------------------------------------
@@ -122,7 +137,20 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     log.w('transformData data $data');
 
     try {
-      /// All prices list
+      if (data == null || data == [])
+        getSubscriptionForKey(tickerStreamKey).cancel().then((value) {
+          tradeService
+              .getTickerDataChannel(pairPriceByRoute.symbol, interval)
+              .sink
+              .close();
+          tradeService
+              .getMarketTradesChannel(pairPriceByRoute.symbol)
+              .sink
+              .close();
+          log.e('stream $key and chanel closed');
+          return;
+        });
+      // ticker Stream
       if (key == tickerStreamKey) {
         var jsonDynamic = jsonDecode(data);
         // log.i('ticker json data $jsonDynamic');
@@ -138,12 +166,12 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
         List<dynamic> jsonDynamicList = jsonDecode(data) as List;
         MarketTradeList tradeList = MarketTradeList.fromJson(jsonDynamicList);
         marketTradesList = tradeList.trades;
-        marketTradesList.forEach((element) {});
+        //      marketTradesList.forEach((element) {});
       }
     } catch (err) {
-      log.e('Catch error $err');
+      log.e('Catch error $err -- model has error val: $hasError');
       setBusy(true);
-      isStreamDataNull = true;
+      //   isStreamDataNull = true;
       closeConnections();
       setBusy(false);
     }

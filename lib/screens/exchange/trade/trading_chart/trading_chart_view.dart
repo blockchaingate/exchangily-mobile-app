@@ -43,13 +43,6 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context).textTheme.bodyText1;
-    // isBusy ${widget.isBusy} --
-    // setState(() {
-    //   holder = widget.interval;
-
-    // });
-
     return ViewModelBuilder.reactive(
       // createNewModelOnInsert: true,
       viewModelBuilder: () => TradingChartViewModel(),
@@ -62,7 +55,7 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
         children: [
           model.isTradingChartModelBusy
               ? Container(
-                  color: white,
+                  color: grey,
                   padding: EdgeInsets.all(0),
                   margin: EdgeInsets.all(0),
                   height: 280,

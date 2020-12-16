@@ -196,7 +196,7 @@ Map productionConfig = {
     'doge': 'https://dogeprod.fabcoinapi.com/',
     'fab': 'https://fabprod.fabcoinapi.com/',
     'eth': 'https://ethprod.fabcoinapi.com/',
-    'campaign': 'https://blockchaingate.com/v2/'
+    'campaign': 'https://api.blockchaingate.com/v2/'
   },
   'addresses': {
     "smartContract": {

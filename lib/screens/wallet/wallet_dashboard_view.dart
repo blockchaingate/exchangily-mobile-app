@@ -47,7 +47,7 @@ class WalletDashboardView extends StatelessWidget {
           model.context = context;
           model.globalKeyOne = _one;
           model.globalKeyTwo = _two;
-          await model.retrieveWalletsFromLocalDatabase();
+          // await model.retrieveWalletsFromLocalDatabase();
           await model.init();
         },
         builder: (context, model, child) {
@@ -338,7 +338,6 @@ class WalletDashboardView extends StatelessWidget {
                                                 model.walletInfoCopy[index]
                                                     .usdValue,
                                                 index,
-                                                model.walletInfoCopy,
                                                 model.elevation,
                                                 context,
                                                 model);
@@ -383,7 +382,6 @@ class WalletDashboardView extends StatelessWidget {
                                                 model
                                                     .walletInfo[index].usdValue,
                                                 index,
-                                                model.walletInfo,
                                                 model.elevation,
                                                 context,
                                                 model),
@@ -403,7 +401,6 @@ class WalletDashboardView extends StatelessWidget {
                                                     model.walletInfo[index]
                                                         .usdValue,
                                                     index,
-                                                    model.walletInfo,
                                                     model.elevation,
                                                     context,
                                                     model)),
@@ -441,7 +438,6 @@ class WalletDashboardView extends StatelessWidget {
       double assetsInExchange,
       double usdValue,
       index,
-      walletInfo,
       elevation,
       context,
       WalletDashboardViewModel model) {
@@ -587,7 +583,9 @@ class WalletDashboardView extends StatelessWidget {
                                   child: Text(
                                       assetsInExchange == 0
                                           ? '0.0'
-                                          : assetsInExchange.toStringAsFixed(4),
+                                          : assetsInExchange.toStringAsFixed(
+                                              model.singlePairDecimalConfig
+                                                  .qtyDecimal),
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6

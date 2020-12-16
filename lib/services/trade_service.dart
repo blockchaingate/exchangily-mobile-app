@@ -178,9 +178,9 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   closeIOWebSocketConnections(String pair) {
     getTickerDataChannel(pair, '24').sink.close();
-    getAllPriceChannel().sink.close();
+    //  getAllPriceChannel().sink.close();
     getOrderListChannel(pair).sink.close();
-    getTradeListChannel(pair).sink.close();
+    getMarketTradesChannel(pair).sink.close();
   }
 
 /*----------------------------------------------------------------------
@@ -255,7 +255,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
       // var wsString = environment['websocket'] + 'trades' + '@' + tickerName;
       //  log.w(wsString);
       // IOWebSocketChannel channel = IOWebSocketChannel.connect(wsString);
-      stream = getTradeListChannel(tickerName).stream;
+      stream = getMarketTradesChannel(tickerName).stream;
       return stream.asBroadcastStream().distinct();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
@@ -263,7 +263,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     }
   }
 
-  IOWebSocketChannel getTradeListChannel(String pair) {
+  IOWebSocketChannel getMarketTradesChannel(String pair) {
     try {
       var wsString = configService.getKanbanBaseWSUrl() + TradesWSRoute + pair;
       //  log.i('getTradeListUrl $wsString');

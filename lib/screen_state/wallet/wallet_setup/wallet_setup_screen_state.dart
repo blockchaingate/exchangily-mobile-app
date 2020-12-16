@@ -11,9 +11,11 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -24,7 +26,7 @@ import '../../../service_locator.dart';
 class WalletSetupScreenState extends BaseState {
   final log = getLogger('WalletSetupScreenState');
   SharedService sharedService = locator<SharedService>();
-  WalletDataBaseService dataBaseService = locator<WalletDataBaseService>();
+  final storageService = locator<LocalStorageService>();
 
   final NavigationService navigationService = locator<NavigationService>();
   BuildContext context;
@@ -33,29 +35,15 @@ class WalletSetupScreenState extends BaseState {
 
   Future checkExistingWallet() async {
     setState(ViewState.Busy);
-    await dataBaseService.getAll().then((res) async {
-      if (res == null || res == []) {
-        log.w('Database is null or empty');
-        setState(ViewState.Idle);
-        isWallet = false;
-      } else if (res.isNotEmpty) {
-        setState(ViewState.Idle);
-        isWallet = true;
-        // Navigator.of(context).pushNamed('/mainNav');
-        //  navigationService.navigateTo('/mainNav',arguments: 0);
-        await sharedService.onBackButtonPressed('/dashboard');
-      }
-    }).timeout(Duration(seconds: 20), onTimeout: () {
-      log.e('In time out');
+    if (storageService.walletBalancesBody == null ||
+        storageService.walletBalancesBody == '') {
       isWallet = false;
       setState(ViewState.Idle);
-      errorMessage =
-          AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
-    }).catchError((error) {
+    } else {
+      isWallet = true;
       setState(ViewState.Idle);
-      isWallet = false;
-      log.e(error);
-    });
+      await sharedService.onBackButtonPressed(DashboardViewRoute);
+    }
     setState(ViewState.Idle);
   }
 }

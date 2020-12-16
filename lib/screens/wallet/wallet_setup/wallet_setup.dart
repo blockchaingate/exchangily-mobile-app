@@ -30,7 +30,7 @@ class WalletSetupScreen extends StatelessWidget {
       onModelReady: (model) async {
         model.context = context;
         model.sharedService.context = context;
-        model.dataBaseService.initDb();
+        //  model.dataBaseService.initDb();
         await model.checkExistingWallet();
       },
       builder: (context, model, child) => WillPopScope(
