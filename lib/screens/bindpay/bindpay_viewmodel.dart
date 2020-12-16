@@ -81,10 +81,9 @@ class BindpayViewmodel extends FutureViewModel {
     });
 
     setBusyForObject(tickerName, true);
-    if(exchangeBalances != null || exchangeBalances.isNotEmpty){
-         tickerName = exchangeBalances[0].ticker;
-         quantity = exchangeBalances[0].unlockedAmount;
-      
+    if (exchangeBalances != null || exchangeBalances.isNotEmpty) {
+      tickerName = exchangeBalances[0].ticker;
+      quantity = exchangeBalances[0].unlockedAmount;
     }
     setBusyForObject(tickerName, false);
     log.e('tickerName $tickerName');
@@ -166,7 +165,8 @@ class BindpayViewmodel extends FutureViewModel {
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline5),
                           UIHelper.horizontalSpaceSmall,
-                          Text(exchangeBalances[index].unlockedAmount.toString(),
+                          Text(
+                              exchangeBalances[index].unlockedAmount.toString(),
                               style: Theme.of(context).textTheme.headline5),
                           Divider(
                             color: Colors.white,
@@ -538,7 +538,7 @@ class BindpayViewmodel extends FutureViewModel {
   transfer() async {
     setBusy(true);
     print(walletService.isValidKbAddress(addressController.text));
-  //  if (walletService.isValidKbAddress(addressController.text)) {
+    if (walletService.isValidKbAddress(addressController.text)) {
       if (amountController.text == '') {
         sharedService.alertDialog(AppLocalizations.of(context).validationError,
             AppLocalizations.of(context).amountMissing);
@@ -610,11 +610,11 @@ class BindpayViewmodel extends FutureViewModel {
         setBusy(false);
         return false;
       });
-    // } else {
-    //   sharedService.alertDialog(AppLocalizations.of(context).validationError,
-    //       AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress);
-    //   setBusy(false);
-    // }
+    } else {
+      sharedService.alertDialog(AppLocalizations.of(context).validationError,
+          AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress);
+      setBusy(false);
+    }
     setBusy(false);
   }
 
