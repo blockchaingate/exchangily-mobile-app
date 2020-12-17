@@ -22,7 +22,6 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
   @override
   transformData(data) {
     var jsonDynamic = jsonDecode(data);
-    // log.w('Orderbook $jsonDynamic');
     orderbook = Orderbook.fromJson(jsonDynamic);
     log.e(
         'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
@@ -30,10 +29,17 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
 
   @override
   void onData(data) {
+    if (data == null || data == []) {
+      streamSubscription
+          .cancel()
+          .then((value) => tradeService.ordersChannel(tickerName).sink.close());
+      log.e('orderbook stream and channel closed');
+      setBusy(false);
+      return;
+    }
     fillTextFields(orderbook.price, orderbook.quantity);
     log.w('orderbook data ready $dataReady');
-    if(dataReady)
-    tradeService.setOrderbookLoadedStatus(true);
+    if (dataReady) tradeService.setOrderbookLoadedStatus(true);
   }
 
   @override
@@ -44,6 +50,11 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
   @override
   void onCancel() {
     log.e('Orderbook Stream closed');
+    tradeService
+        .ordersChannel(tickerName)
+        .sink
+        .close()
+        .then((value) => log.e('Orderbook channel closed'));
   }
 
   void init() {

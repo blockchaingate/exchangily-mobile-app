@@ -317,33 +317,33 @@ class BuySellViewModel extends ReactiveViewModel {
 /* ---------------------------------------------------
             Retrieve Wallets
 --------------------------------------------------- */
-  retrieveWallets() async {
-    setBusy(true);
-    await databaseService.getAll().then((walletList) {
-      walletInfo = walletList;
+  // retrieveWallets() async {
+  //   setBusy(true);
+  //   await databaseService.getAll().then((walletList) {
+  //     walletInfo = walletList;
 
-      for (var i = 0; i < walletInfo.length; i++) {
-        coin = walletInfo[i];
-        if (coin.tickerName == targetCoinName.toUpperCase()) {
-          log.e(
-              'Coin from wallet info ${coin.tickerName} ---  Target coin name $targetCoinName');
-          targetCoinWalletData = coin;
-        }
-        if (coin.tickerName == baseCoinName.toUpperCase()) {
-          log.e(
-              'Coin from wallet info ${coin.tickerName} ---  Target coin name $baseCoinName');
-          baseCoinWalletData = coin;
-        }
-        if (coin.tickerName == 'EXG') {
-          exgAddress = coin.address;
-          // this.refresh(exgAddress);
-        }
-      }
-      setBusy(false);
-    }).catchError((error) {
-      setBusy(false);
-    });
-  }
+  //     for (var i = 0; i < walletInfo.length; i++) {
+  //       coin = walletInfo[i];
+  //       if (coin.tickerName == targetCoinName.toUpperCase()) {
+  //         log.e(
+  //             'Coin from wallet info ${coin.tickerName} ---  Target coin name $targetCoinName');
+  //         targetCoinWalletData = coin;
+  //       }
+  //       if (coin.tickerName == baseCoinName.toUpperCase()) {
+  //         log.e(
+  //             'Coin from wallet info ${coin.tickerName} ---  Target coin name $baseCoinName');
+  //         baseCoinWalletData = coin;
+  //       }
+  //       if (coin.tickerName == 'EXG') {
+  //         exgAddress = coin.address;
+  //         // this.refresh(exgAddress);
+  //       }
+  //     }
+  //     setBusy(false);
+  //   }).catchError((error) {
+  //     setBusy(false);
+  //   });
+  // }
 
 /* ---------------------------------------------------
           Generate Order Hash

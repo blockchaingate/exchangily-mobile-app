@@ -104,8 +104,11 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
 
   @override
   void onCancel() {
-    log.e('Stream closed');
-    streamSubscription.cancel().then((value) => print('CANCEL'));
+    tradeService
+        .getAllPriceChannel()
+        .sink
+        .close()
+        .then((value) => log.i('all prices channel closed'));
   }
 
   onBackButtonPressed() async {

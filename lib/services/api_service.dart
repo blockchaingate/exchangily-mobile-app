@@ -677,7 +677,7 @@ class ApiService {
 
   Future getAnnouncement(lang) async {
     final langcode = lang == "en" ? "en" : "cn";
-    final url = blockchaingateUrl + "announcements/" + langcode;
+    final url = baseBlockchainGateV2Url + "announcements/" + langcode;
 
     print("Calling api: getAnnouncement " + lang);
     print("url: " + url);

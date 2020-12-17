@@ -15,8 +15,8 @@ class OrderBookView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<OrderbookViewModel>.reactive(
-      disposeViewModel: true,
-      fireOnModelReadyOnce: true,
+      // disposeViewModel: true,
+      //fireOnModelReadyOnce: true,
 
       // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
       // which is required override

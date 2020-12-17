@@ -143,7 +143,8 @@ class TradeView extends StatelessWidget {
                                 margin: EdgeInsets.only(top: 5.0),
                                 child: PairPriceView(
                                   pairPrice:
-                                      model.dataReady(model.tickerStreamKey)
+                                      model.dataReady(model.tickerStreamKey) &&
+                                              model.currentPairPrice != null
                                           ? model.currentPairPrice
                                           : model.pairPriceByRoute,
                                   isBusy:
@@ -154,24 +155,24 @@ class TradeView extends StatelessWidget {
                               ),
 
                               //  Below container contains trading view chart in the trade tab
-                              // model.isTradingChartModelBusy
-                              //     ? Container(
-                              //         child: model.sharedService.loadingIndicator())
-                              //     :
+                              model.currentPairPrice == null
+                                  //||
 
-                              // model.isStreamDataNull
-                              //     ? Container(
-                              //         child: Center(
-                              //             child: Text(AppLocalizations.of(context)
-                              //                     .loading +
-                              //                 '...')))
-                              //     :
-                              Container(
-                                child: LoadHTMLFileToWEbView(
-                                  model.updateTickerName(
-                                      pairPriceByRoute.symbol),
-                                ),
-                              ),
+                                  // !model.dataReady(model.marketTradesStreamKey)
+                                  //  !model.tradeService.isOrderbookLoaded
+                                  ? Container(
+                                      color: secondaryColor.withAlpha(155),
+                                      padding: EdgeInsets.all(0),
+                                      margin: EdgeInsets.all(0),
+                                      height: 280,
+                                      child: Center(
+                                          child: CupertinoActivityIndicator()))
+                                  : Container(
+                                      child: LoadHTMLFileToWEbView(
+                                        model.updateTickerName(
+                                            pairPriceByRoute.symbol),
+                                      ),
+                                    ),
                               //: CircularProgressIndicator(),
                               // Text(model.interval),
                               // Text(model.isTradingChartModelBusy.toString()),
