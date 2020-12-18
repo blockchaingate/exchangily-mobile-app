@@ -30,6 +30,7 @@ class TradeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<TradeViewModel>.reactive(
         disposeViewModel: true,
+        fireOnModelReadyOnce: true,
         // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
         // which is required override
         viewModelBuilder: () =>
@@ -155,11 +156,9 @@ class TradeView extends StatelessWidget {
                               ),
 
                               //  Below container contains trading view chart in the trade tab
-                              model.currentPairPrice == null
-                                  //||
+                              //   model.currentPairPrice == null
 
-                                  // !model.dataReady(model.marketTradesStreamKey)
-                                  //  !model.tradeService.isOrderbookLoaded
+                              model.currentPairPrice.price == 0.0
                                   ? Container(
                                       color: secondaryColor.withAlpha(155),
                                       padding: EdgeInsets.all(0),
@@ -251,9 +250,14 @@ class TradeView extends StatelessWidget {
                                           children: [
                                             // order book container
                                             Container(
-                                              child: OrderBookView(
-                                                  tickerName:
-                                                      pairPriceByRoute.symbol),
+                                              child:
+                                                  //Text('order book')
+
+                                                  OrderBookView(
+                                                tickerName:
+                                                    pairPriceByRoute.symbol,
+                                                isVerticalOrderbook: false,
+                                              ),
                                             ),
 
                                             // Market trades

@@ -12,8 +12,9 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
   OrderbookViewModel({this.tickerName});
 
   final log = getLogger('OrderbookViewModel');
+
   TradeService tradeService = locator<TradeService>();
-  Orderbook orderbook;
+  Orderbook orderbook = new Orderbook();
   DecimalConfig decimalConfig = new DecimalConfig();
 
   @override
@@ -21,6 +22,7 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
 
   @override
   transformData(data) {
+    log.w('transformData -- data $data');
     var jsonDynamic = jsonDecode(data);
     orderbook = Orderbook.fromJson(jsonDynamic);
     log.e(
@@ -29,14 +31,15 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
 
   @override
   void onData(data) {
-    if (data == null || data == []) {
-      streamSubscription
-          .cancel()
-          .then((value) => tradeService.ordersChannel(tickerName).sink.close());
-      log.e('orderbook stream and channel closed');
-      setBusy(false);
-      return;
-    }
+    setBusy(true);
+    // if (data == null || data == []) {
+    //   streamSubscription
+    //       .cancel()
+    //       .then((value) => tradeService.ordersChannel(tickerName).sink.close());
+    //   log.e('orderbook stream and channel closed in onData');
+    //   setBusy(false);
+    //   return;
+    // }
     fillTextFields(orderbook.price, orderbook.quantity);
     log.w('orderbook data ready $dataReady');
     if (dataReady) tradeService.setOrderbookLoadedStatus(true);
@@ -51,10 +54,10 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
   void onCancel() {
     log.e('Orderbook Stream closed');
     tradeService
-        .ordersChannel(tickerName)
+        .ordersbookChannel(tickerName)
         .sink
         .close()
-        .then((value) => log.e('Orderbook channel closed'));
+        .then((value) => log.w('Orderbook channel closed'));
   }
 
   void init() {

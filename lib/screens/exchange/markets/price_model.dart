@@ -32,7 +32,7 @@ class Price {
       double volume,
       double change,
       double changeValue}) {
-    this._symbol = symbol;
+    this._symbol = symbol ?? '';
     this._price = price ?? 0.0;
     this._high = high ?? 0.0;
     this._low = low ?? 0.0;
@@ -45,10 +45,10 @@ class Price {
   }
 
   factory Price.fromJson(Map<String, dynamic> json) {
-    var symbol = json['s'].toString() ?? '';
+    var symbol = json['s'].toString();
     var open = json['o'].toDouble() ?? 0.0;
     var close = json['c'].toDouble() ?? 0.0;
-    double cv = ((close - open) / open) * 100;
+    // double cv = ((close - open) / open) * 100;
     // if (!cv.isNaN) print('cv $cv');
     // if (!cv.isNaN)
     //   print(
@@ -66,7 +66,7 @@ class Price {
         low: json['l'].toDouble() ?? 0.0,
         open: open,
         close: close,
-        volume: json['v'].toDouble()?? 0.0);
+        volume: json['v'].toDouble() ?? 0.0);
   }
 
   Map<String, dynamic> toJson() {

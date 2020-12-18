@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:flutter/material.dart';
@@ -51,8 +52,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
   Widget build(BuildContext context) {
     onRowTap(Price itemRow) {
       itemRow.symbol = itemRow.symbol.replaceAll('/', '').toString();
-      navigationService.navigateUsingPushReplacementNamed('/exchangeTrade',
-          arguments: itemRow);
+      navigationService.navigateTo(ExchangeTradeViewRoute, arguments: itemRow);
     }
 
     return Theme(

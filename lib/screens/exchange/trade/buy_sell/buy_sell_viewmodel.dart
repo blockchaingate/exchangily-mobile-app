@@ -62,7 +62,7 @@ class BuySellViewModel extends ReactiveViewModel {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
-  OrderService _orderService = locator<OrderService>();
+  //OrderService _orderService = locator<OrderService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   NavigationService navigationService = locator<NavigationService>();
 
@@ -134,6 +134,8 @@ class BuySellViewModel extends ReactiveViewModel {
                     get orderbook loaded status
 ----------------------------------------------------------------------*/
   void getOrderbookLoadedStatus() {
+    int counter = 0;
+
     Timer.periodic(Duration(seconds: 1), (timer) {
       log.i('getOrderbookLoadedStatus timer started');
       _isOrderbookLoaded = tradeService.isOrderbookLoaded;
@@ -146,10 +148,11 @@ class BuySellViewModel extends ReactiveViewModel {
         timer.cancel();
         log.i(
             'getOrderbookLoadedStatus timer cancel -- price $price -- controller ${priceTextController.text}');
-      } else
-        price = 300.0;
+      }
       setBusy(false);
+      counter++;
       log.w('getOrderbookLoadedStatus $isOrderbookLoaded');
+      if (counter == 20) timer.cancel();
     });
   }
 

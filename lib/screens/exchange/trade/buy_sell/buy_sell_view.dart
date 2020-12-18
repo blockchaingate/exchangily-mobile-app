@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -118,8 +119,9 @@ class BuySellView extends StatelessWidget {
                 Orderbook view
  -----------------------------------------------------------*/
                                       // OrderBookView(tickerName: model.tickerName),
-                                      VerticalOrderbook(
-                                          tickerName: model.tickerName)
+                                      OrderBookView(
+                                          tickerName: model.tickerName,
+                                          isVerticalOrderbook: true)
                                   // buildRightSideOrderbookColumn(
                                   //     context, model),
                                   ),
@@ -299,8 +301,14 @@ class VerticalOrderbook extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text('${model.orderbook.price.toString()}',
-                            style: Theme.of(context).textTheme.headline4)
+                        model.orderbook.price != 0
+                            ? Text('${model.orderbook.price.toString()}',
+                                style: Theme.of(context).textTheme.headline4)
+                            : Center(
+                                child: Text('No Orders',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2),
+                              )
                       ],
                     )),
                 buildVerticalOrderbookColumn(
