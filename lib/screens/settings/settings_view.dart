@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -214,6 +215,8 @@ class SettingsContainer extends StatelessWidget {
                                         size: 18,
                                       ),
                                     ),
+
+                                    UIHelper.horizontalSpaceSmall,
                                     Text(
                                       AppLocalizations.of(context)
                                           .changeWalletLanguage,
@@ -233,7 +236,7 @@ class SettingsContainer extends StatelessWidget {
                                   child: Text(
                                     "简体中文",
                                     style:
-                                        Theme.of(context).textTheme.headline5,
+                                        Theme.of(context).textTheme.headline5,textAlign: TextAlign.center,
                                   ),
                                 ),
                               ]),
