@@ -69,14 +69,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   @override
   void start() {
     super.start();
-    log.w('starting service');
+    // log.w('starting service');
     // start subscription again
   }
 
   @override
   void stop() async {
     super.stop();
-    log.w('stopping service');
+    //log.w('stopping service');
+
     //     _streamSubscription = allPriceStream.listen((event) { });
     //     _streamSubscription.cancel();
     //  // await getAllPriceChannel().sink.close();
@@ -231,7 +232,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     Stream stream;
     try {
       stream = getAllPriceChannel().stream;
-      return stream.asBroadcastStream().distinct();
+      return stream.asBroadcastStream();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
       throw Exception(err);

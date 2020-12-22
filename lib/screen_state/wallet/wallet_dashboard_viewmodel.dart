@@ -129,6 +129,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   checkAnnouncement() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = storageService.language;
+    if(lang == '') lang = 'en';
     setlangGlobal(lang);
     log.w('langGlobal: ' + getlangGlobal());
 
