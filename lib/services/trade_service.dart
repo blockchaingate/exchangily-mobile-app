@@ -232,7 +232,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     Stream stream;
     try {
       stream = getAllPriceChannel().stream;
-      return stream.asBroadcastStream();
+      return stream.asBroadcastStream().distinct();
     } catch (err) {
       log.e('$err'); // Error thrown here will go to onError in them view model
       throw Exception(err);
