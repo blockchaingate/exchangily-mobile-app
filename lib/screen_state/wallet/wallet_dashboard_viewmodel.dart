@@ -110,7 +110,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     totalBalanceContainerWidth = 270.0;
     checkAnnouncement();
-    await getConfirmDepositStatus();
+     await getConfirmDepositStatus();
     showDialogWarning();
     setBusy(false);
   }
@@ -129,7 +129,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   checkAnnouncement() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lang = storageService.language;
-    if(lang == '') lang = 'en';
+    if (lang == '') lang = 'en';
     setlangGlobal(lang);
     log.w('langGlobal: ' + getlangGlobal());
 
@@ -156,9 +156,10 @@ class WalletDashboardViewModel extends BaseViewModel {
         //   e = json.decode(e);
         // });
 
-        tempdata.forEach((element) {
+        tempdata.forEach((element) { 
+
           tempAnnounceData.add(jsonDecode(element));
-          print('jsonData $tempAnnounceData');
+          print('tempAnnounceData $tempAnnounceData');
         });
         log.i("announceData from prefs: ");
 
@@ -758,30 +759,30 @@ class WalletDashboardViewModel extends BaseViewModel {
       walletInfoCopy = walletList;
     });
     walletInfo = [];
-      Map<String, dynamic> walletBalancesBody = {
-        'btcAddress': '',
-        'ethAddress': '',
-        'fabAddress': '',
-        'ltcAddress': '',
-        'dogeAddress': '',
-        'bchAddress': '',
-        "showEXGAssets": "true"
-      };
-      walletInfoCopy.forEach((wallet) {
-        if (wallet.tickerName == 'BTC') {
-          walletBalancesBody['btcAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'ETH') {
-          walletBalancesBody['ethAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'FAB') {
-          walletBalancesBody['fabAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'LTC') {
-          walletBalancesBody['ltcAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'DOGE') {
-          walletBalancesBody['dogeAddress'] = wallet.address;
-        } else if (wallet.tickerName == 'BCH') {
-          walletBalancesBody['bchAddress'] = wallet.address;
-        }
-      });
+    Map<String, dynamic> walletBalancesBody = {
+      'btcAddress': '',
+      'ethAddress': '',
+      'fabAddress': '',
+      'ltcAddress': '',
+      'dogeAddress': '',
+      'bchAddress': '',
+      "showEXGAssets": "true"
+    };
+    walletInfoCopy.forEach((wallet) {
+      if (wallet.tickerName == 'BTC') {
+        walletBalancesBody['btcAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'ETH') {
+        walletBalancesBody['ethAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'FAB') {
+        walletBalancesBody['fabAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'LTC') {
+        walletBalancesBody['ltcAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'DOGE') {
+        walletBalancesBody['dogeAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'BCH') {
+        walletBalancesBody['bchAddress'] = wallet.address;
+      }
+    });
 
     //  storageService.walletBalancesBody = walletBalancesBody;
     log.i('Coin address body $walletBalancesBody');
@@ -875,13 +876,14 @@ class WalletDashboardViewModel extends BaseViewModel {
         log.e('---------------------ELSE old way-----------------------');
         await oldWayToGetBalances(walletService.coinTickers.length);
       }
-    }).timeout(Duration(seconds: 25), onTimeout: () {
+    }).timeout(Duration(seconds: 20), onTimeout: () async {
       log.e('time out');
       walletInfo = walletInfoCopy;
-      sharedService.alertDialog(AppLocalizations.of(context).notice,
-          AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+      // sharedService.alertDialog(AppLocalizations.of(context).notice,
+      //     AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+      await oldWayToGetBalances(walletService.coinTickers.length);
       setBusy(false);
-      return;
+      //return;
     }).catchError((err) async {
       log.e('Wallet balance CATCH $err');
       sharedService.alertDialog(AppLocalizations.of(context).notice,
@@ -965,6 +967,18 @@ class WalletDashboardViewModel extends BaseViewModel {
     calcTotalBal();
     await getExchangeAssetsBalance();
     await updateWalletDatabase();
+    String address = await getExgAddressFromWalletDatabase();
+    await getGas();
+    // check gas and fab balance if 0 then ask for free fab
+    if (gasAmount == 0.0 && fabBalance == 0.0) {
+      var res = await apiService.getFreeFab(address);
+      if (res != null) {
+        isFreeFabNotUsed = res['ok'];
+      }
+    } else {
+      log.i('Fab or gas balance available already');
+      //  storageService.isShowCaseView = true;
+    }
     if (!isProduction) debugVersionPopup();
     if (walletInfo != null) {
       walletInfoCopy = [];

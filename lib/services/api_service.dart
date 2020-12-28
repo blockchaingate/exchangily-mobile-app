@@ -676,8 +676,8 @@ class ApiService {
   }
 
   Future getAnnouncement(lang) async {
-    final langcode = lang == "en" ? "en" : "cn";
-    final url = baseBlockchainGateV2Url + "announcements/" + langcode;
+    final langcode = lang == "en" ? "en" : "sc";
+    final url = baseBlockchainGateV2Url + "announcements/language/" + langcode;
 
     print("Calling api: getAnnouncement " + lang);
     print("url: " + url);
@@ -685,7 +685,8 @@ class ApiService {
       final res = await http.get(url);
       log.w(jsonDecode(res.body));
       if (res.statusCode == 200 || res.statusCode == 201) {
-        return jsonDecode(res.body)['body'];
+        var body = jsonDecode(res.body)['body'];
+        return body;
       }
     } catch (e) {
       log.e('getAnnouncement Failed to load the data from the API $e');
