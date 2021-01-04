@@ -142,6 +142,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
       if (announceContent == "error") {
         hasApiError = true;
+        return;
       } else {
         // test code///////////////////////////////
         // prefs.remove("announceData");
