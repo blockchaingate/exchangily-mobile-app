@@ -30,6 +30,7 @@ class TradeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<TradeViewModel>.reactive(
         disposeViewModel: true,
+        fireOnModelReadyOnce: true,
         // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
         // which is required override
         viewModelBuilder: () =>
@@ -143,12 +144,9 @@ class TradeView extends StatelessWidget {
                                 margin: EdgeInsets.only(top: 5.0),
                                 child: PairPriceView(
                                   pairPrice:
-                                      model.dataReady(model.tickerStreamKey)
-                                          ?
-                                          // ? model.currentPairPrice == null
-                                          //     ? model.pairPriceByRoute
-                                          //     :
-                                          model.currentPairPrice
+                                      model.dataReady(model.tickerStreamKey) &&
+                                              model.currentPairPrice != null
+                                          ? model.currentPairPrice
                                           : model.pairPriceByRoute,
                                   isBusy:
                                       !model.dataReady(model.tickerStreamKey),
@@ -158,12 +156,14 @@ class TradeView extends StatelessWidget {
                               ),
 
                               //  Below container contains trading view chart in the trade tab
-                              model.currentPairPrice == null
+                              //   model.currentPairPrice == null
+
+                              model.currentPairPrice.price == 0.0
                                   ? Container(
-                                      color: secondaryColor,
+                                      color: secondaryColor.withAlpha(155),
                                       padding: EdgeInsets.all(0),
                                       margin: EdgeInsets.all(0),
-                                      height: 250,
+                                      height: 280,
                                       child: Center(
                                           child: CupertinoActivityIndicator()))
                                   : Container(
@@ -172,6 +172,9 @@ class TradeView extends StatelessWidget {
                                             pairPriceByRoute.symbol),
                                       ),
                                     ),
+                              //: CircularProgressIndicator(),
+                              // Text(model.interval),
+                              // Text(model.isTradingChartModelBusy.toString()),
 
                               // UIHelper.verticalSpaceMedium,
                               DefaultTabController(
@@ -247,9 +250,14 @@ class TradeView extends StatelessWidget {
                                           children: [
                                             // order book container
                                             Container(
-                                              child: OrderBookView(
-                                                  tickerName:
-                                                      pairPriceByRoute.symbol),
+                                              child:
+                                                  //Text('order book')
+
+                                                  OrderBookView(
+                                                tickerName:
+                                                    pairPriceByRoute.symbol,
+                                                isVerticalOrderbook: false,
+                                              ),
                                             ),
 
                                             // Market trades

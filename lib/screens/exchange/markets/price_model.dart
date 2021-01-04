@@ -32,7 +32,7 @@ class Price {
       double volume,
       double change,
       double changeValue}) {
-    this._symbol = symbol;
+    this._symbol = symbol ?? '';
     this._price = price ?? 0.0;
     this._high = high ?? 0.0;
     this._low = low ?? 0.0;
@@ -46,27 +46,27 @@ class Price {
 
   factory Price.fromJson(Map<String, dynamic> json) {
     var symbol = json['s'].toString();
-    var open = json['o'].toDouble();
-    var close = json['c'].toDouble();
-    double cv = ((close - open) / open) * 100;
-    if (!cv.isNaN) print('cv $cv');
-    if (!cv.isNaN)
-      print(
-          'SYMBOL $symbol changePercentage ${(close - open) / open} -- open $open -- close $close');
+    var open = json['o'].toDouble() ?? 0.0;
+    var close = json['c'].toDouble() ?? 0.0;
+    // double cv = ((close - open) / open) * 100;
+    // if (!cv.isNaN) print('cv $cv');
+    // if (!cv.isNaN)
+    //   print(
+    //       'SYMBOL $symbol changePercentage ${(close - open) / open} -- open $open -- close $close');
     double changePercentage = ((close - open) / open) * 100;
     if (changePercentage.isInfinite || changePercentage.isNaN)
       changePercentage = 0.0;
-    print('changePercentage $changePercentage -- open $open -- close $close');
+    //print('changePercentage $changePercentage -- open $open -- close $close');
     return Price(
         changeValue: close - open,
         change: changePercentage,
         symbol: symbol,
-        price: json['p'].toDouble(),
-        high: json['h'].toDouble(),
-        low: json['l'].toDouble(),
+        price: json['p'].toDouble() ?? 0.0,
+        high: json['h'].toDouble() ?? 0.0,
+        low: json['l'].toDouble() ?? 0.0,
         open: open,
         close: close,
-        volume: json['v'].toDouble());
+        volume: json['v'].toDouble() ?? 0.0);
   }
 
   Map<String, dynamic> toJson() {
@@ -133,9 +133,7 @@ class PriceList {
   factory PriceList.fromJson(List<dynamic> parsedJson) {
     List<Price> prices = new List<Price>();
     parsedJson.forEach((i) {
-      // print('0000 ${i}');
       Price price = Price.fromJson(i);
-      //  print('1111 ${price.toJson()}');
       prices.add(price);
     });
 

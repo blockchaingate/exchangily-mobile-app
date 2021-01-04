@@ -67,6 +67,8 @@ class Orderbook {
   }
 
   factory Orderbook.fromJson(Map<String, dynamic> json) {
+    var price = json['p'] ?? 0.0;
+    var qty = json['q'] ?? 0.0;
     List buyOrdersFromJson = json['b'] as List;
     List<OrderType> buyOrders =
         buyOrdersFromJson.map((order) => OrderType.fromJson(order)).toList();
@@ -78,8 +80,8 @@ class Orderbook {
     return Orderbook(
       buyOrders: buyOrders,
       sellOrders: sellOrders,
-      price: json['p'].toDouble(),
-      orderQuantity: json['q'].toDouble(),
+      price: price.toDouble(),
+      orderQuantity: qty.toDouble(),
     );
   }
 

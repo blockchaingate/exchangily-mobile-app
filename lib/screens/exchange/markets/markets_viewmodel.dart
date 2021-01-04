@@ -45,6 +45,14 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
     super.start();
     log.w('market view model starting service');
     // start subscription again
+    // if (streamSubscription != null && streamSubscription.isPaused)
+    //   streamSubscription.resume();
+    // if (streamSubscription != null)
+    //   log.w(
+    //       'market view model starting service ${streamSubscription.isPaused}');
+    // else {
+    //   print(streamSubscription);
+    // }
   }
 
   @override
@@ -52,8 +60,15 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
     super.stop();
     log.w(' mvm stopping service');
     log.e('is empty ${stream.isEmpty} -- is broadcasr ${stream.isBroadcast}');
-    if (streamSubscription != null) streamSubscription.pause();
-    log.w('mvm all price closed');
+    // print(streamSubscription);
+    // // if (streamSubscription != null && !streamSubscription.isPaused)
+    // streamSubscription.pause();
+
+    // if (streamSubscription != null)
+    //   log.w('mvm all price closed ${streamSubscription.isPaused}');
+    // else {
+    //   print(streamSubscription);
+    // }
     // cancel stream subscription
   }
 
@@ -76,7 +91,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   transformData(data) {
     try {
       List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-      log.e('json list $jsonDynamicList');
+      // log.e('json list $jsonDynamicList');
       PriceList priceList = PriceList.fromJson(jsonDynamicList);
       pairPriceList = priceList.prices;
       log.w('pair price list length ${pairPriceList.length}');
@@ -104,8 +119,11 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
 
   @override
   void onCancel() {
-    log.e('Stream closed');
-    streamSubscription.cancel().then((value) => print('CANCEL'));
+    tradeService
+        .getAllPriceChannel()
+        .sink
+        .close()
+        .then((value) => log.i('all prices channel closed'));
   }
 
   onBackButtonPressed() async {

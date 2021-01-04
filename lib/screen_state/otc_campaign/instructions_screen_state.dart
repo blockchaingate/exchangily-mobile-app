@@ -59,7 +59,8 @@ class CampaignInstructionsScreenState extends BaseState {
       /// show the svg images
     } else {
       lang = localStorageService.language;
-
+      if (lang == '') lang = 'en';
+      print('lang $lang');
       var eventContent;
 
       eventContent = await apiService.getEvents();

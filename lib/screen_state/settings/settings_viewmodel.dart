@@ -325,13 +325,13 @@ class SettingsViewmodel extends BaseViewModel {
         key == 'zh') {
       log.e('in zh');
       AppLocalizations.load(Locale('zh', 'ZH'));
-      storageService.language = key;
+      storageService.language = 'zh';
     } else if (updatedLanguageValue == 'English' ||
         updatedLanguageValue == 'en' ||
         key == 'en') {
       log.e('in en');
       AppLocalizations.load(Locale('en', 'EN'));
-      storageService.language = key;
+      storageService.language = 'en';
     }
     setBusy(false);
   }

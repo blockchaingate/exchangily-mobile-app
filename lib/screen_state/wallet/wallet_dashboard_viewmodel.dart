@@ -110,6 +110,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     await refreshBalance();
 
     totalBalanceContainerWidth = 270.0;
+    checkAnnouncement();
     await getConfirmDepositStatus();
     showDialogWarning();
     //  checkAnnouncement();
@@ -131,6 +132,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       lang = storageService.language;
+      if (lang == '') lang = 'en';
       setlangGlobal(lang);
       log.w('langGlobal: ' + getlangGlobal());
 
@@ -140,7 +142,6 @@ class WalletDashboardViewModel extends BaseViewModel {
 
       if (announceContent == "error") {
         hasApiError = true;
-        return;
       } else {
         // test code///////////////////////////////
         // prefs.remove("announceData");
@@ -160,7 +161,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
           tempdata.forEach((element) {
             tempAnnounceData.add(jsonDecode(element));
-            print('jsonData $tempAnnounceData');
+            print('tempAnnounceData $tempAnnounceData');
           });
           log.i("announceData from prefs: ");
 
@@ -918,17 +919,18 @@ class WalletDashboardViewModel extends BaseViewModel {
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method
-      // else if (walletBalanceList == null) {
-      //   log.e('---------------------ELSE old way-----------------------');
-      //   await oldWayToGetBalances(walletService.coinTickers.length);
-      // }
-    }).timeout(Duration(seconds: 25), onTimeout: () {
+      else if (walletBalanceList == null) {
+        log.e('---------------------ELSE old way-----------------------');
+        await oldWayToGetBalances(walletService.coinTickers.length);
+      }
+    }).timeout(Duration(seconds: 20), onTimeout: () async {
       log.e('time out');
       walletInfo = walletInfoCopy;
-      sharedService.alertDialog(AppLocalizations.of(context).notice,
-          AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+      // sharedService.alertDialog(AppLocalizations.of(context).notice,
+      //     AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+      await oldWayToGetBalances(walletService.coinTickers.length);
       setBusy(false);
-      return;
+      //return;
     }).catchError((err) async {
       log.e('Wallet balance CATCH $err');
       sharedService.alertDialog(AppLocalizations.of(context).notice,
@@ -1015,8 +1017,19 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     calcTotalBal();
     await getExchangeAssetsBalance();
-    //  await updateWalletDatabase();
+    await updateWalletDatabase();
+    String address = await getExgAddressFromWalletDatabase();
     await getGas();
+    // check gas and fab balance if 0 then ask for free fab
+    if (gasAmount == 0.0 && fabBalance == 0.0) {
+      var res = await apiService.getFreeFab(address);
+      if (res != null) {
+        isFreeFabNotUsed = res['ok'];
+      }
+    } else {
+      log.i('Fab or gas balance available already');
+      //  storageService.isShowCaseView = true;
+    }
     if (!isProduction) debugVersionPopup();
     if (walletInfo != null) {
       walletInfoCopy = [];
