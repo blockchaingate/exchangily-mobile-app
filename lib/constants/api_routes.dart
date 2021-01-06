@@ -49,6 +49,7 @@ const String RedepositCheckStatusApiRoute = 'checkstatus/';
 const String GetUtxosApiRoute = 'getutxos/';
 const String GetNonceApiRoute = 'getnonce/';
 const String PostRawTxApiRoute = 'postrawtransaction';
+const String GetTokenListUpdatesApiRoute = 'tokenListUpdates';
 
 /*----------------------------------------------------------------------
                             Exchange

@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -26,6 +27,7 @@ import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 import 'package:flutter/material.dart';
@@ -110,7 +112,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     totalBalanceContainerWidth = 270.0;
     checkAnnouncement();
-     await getConfirmDepositStatus();
+    await getConfirmDepositStatus();
     showDialogWarning();
     setBusy(false);
   }
@@ -156,8 +158,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         //   e = json.decode(e);
         // });
 
-        tempdata.forEach((element) { 
-
+        tempdata.forEach((element) {
           tempAnnounceData.add(jsonDecode(element));
           print('tempAnnounceData $tempAnnounceData');
         });
@@ -746,6 +747,12 @@ class WalletDashboardViewModel extends BaseViewModel {
     log.i('Coin address body $walletBalancesBody');
   }
 
+/*----------------------------------------------------------------------
+                      Build coin list
+----------------------------------------------------------------------*/
+
+  buildCoinList(WalletBalance walletBalanceSingleCoin, j) {}
+
 /*-------------------------------------------------------------------------------------
                           Refresh Balances
 -------------------------------------------------------------------------------------*/
@@ -785,7 +792,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
 
     //  storageService.walletBalancesBody = walletBalancesBody;
-    log.i('Coin address body $walletBalancesBody');
 
     // ----------------------------------------
     // Calling walletBalances in wallet service
@@ -796,8 +802,8 @@ class WalletDashboardViewModel extends BaseViewModel {
         .then((walletBalanceList) async {
       if (walletBalanceList != null) {
         // Loop wallet info list to udpate balances
-        // log.e(
-        //     'copy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
+        log.e(
+            'copy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
         walletInfoCopy.forEach((wallet) async {
           // Loop wallet balance list from api
           for (var j = 0; j <= walletBalanceList.length; j++) {
@@ -813,15 +819,12 @@ class WalletDashboardViewModel extends BaseViewModel {
               // Check if market price error from api then show the notification with ticker name
               // so that user know why USD val for that ticker is 0
 
-              // removed getCoinPriceByTickername from here and use the market price value only now
               if (marketPrice.isNegative) {
                 marketPrice = 0.0;
               }
               if (availableBal.isNegative) {
-                print(availableBal);
                 availableBal = 0.0;
               }
-
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
                   marketPrice, availableBal, lockedBal);
@@ -844,12 +847,56 @@ class WalletDashboardViewModel extends BaseViewModel {
                 fabBalance = 0.0;
                 fabBalance = wi.availableBalance;
               }
+
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
 
           } // For loop j ends
-        }); // wallet info copy for each ends
+
+          // second if start to add new coins in wallet info list
+          // if (walletInfoCopy.length + 2 != walletBalanceList.length &&
+          //     walletBalanceSingleCoin.coin != 'CAD' &&
+          //     walletBalanceSingleCoin.coin != 'RMB') {
+          //   await apiService.getTokenListUpdates().then((newTokenList) {
+          //     newTokenList.forEach((newToken) {
+          //       if (newToken.tickerName == walletBalanceSingleCoin.coin) {
+          //         String newCoinAddress = '';
+          //         walletInfo.firstWhere((wallet) {
+          //           if (wallet.tickerName == newToken.chainName) {
+          //             newCoinAddress = wallet.address;
+          //             return true;
+          //           }
+          //           return false;
+          //         });
+          //         double marketPrice =
+          //             walletBalanceSingleCoin.usdValue.usd ?? 0.0;
+          //         double availableBal = walletBalanceSingleCoin.balance ?? 0.0;
+          //         double lockedBal = walletBalanceSingleCoin.lockBalance ?? 0.0;
+
+          //         double usdValue = walletService.calculateCoinUsdBalance(
+          //             marketPrice, availableBal, lockedBal);
+          //         String holder = NumberUtil.currencyFormat(usdValue, 2);
+          //         formattedUsdValueList.add(holder);
+          //         WalletInfo wi = WalletInfo(
+          //             id: null,
+          //             tickerName: newToken.tickerName,
+          //             tokenType: newToken.chainName,
+          //             address: newCoinAddress,
+          //             availableBalance: walletBalanceSingleCoin.balance,
+          //             lockedBalance:
+          //                 walletBalanceSingleCoin.lockedExchangeBalance,
+          //             usdValue: usdValue,
+          //             name: newToken.name,
+          //             inExchange:
+          //                 walletBalanceSingleCoin.unlockedExchangeBalance);
+          //         walletInfo.add(wi);
+          //         log.e('new coins added ${wi.toJson()}');
+          //       }
+          //     });
+          //   });
+          // } // second if ends
+        }); // walletInfo for each ends
 
         calcTotalBal();
         await updateWalletDatabase();
@@ -874,14 +921,14 @@ class WalletDashboardViewModel extends BaseViewModel {
       // in else if walletBalances is null then check balance with old method
       else if (walletBalanceList == null) {
         log.e('---------------------ELSE old way-----------------------');
-        await oldWayToGetBalances(walletService.coinTickers.length);
+        //  await oldWayToGetBalances(walletService.coinTickers.length);
       }
     }).timeout(Duration(seconds: 20), onTimeout: () async {
       log.e('time out');
       walletInfo = walletInfoCopy;
       // sharedService.alertDialog(AppLocalizations.of(context).notice,
       //     AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
-      await oldWayToGetBalances(walletService.coinTickers.length);
+      //  await oldWayToGetBalances(walletService.coinTickers.length);
       setBusy(false);
       //return;
     }).catchError((err) async {

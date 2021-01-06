@@ -73,18 +73,21 @@ class WalletService {
     'BTC',
     'ETH',
     'FAB',
-    'BCH',
-    'USDT',
     'EXG',
+    'USDT',
     'DUSD',
+    'BCH',
     'LTC',
     'DOGE',
+    'INB',
+    'REP',
     'DRGN',
     'HOT',
     'CEL',
     'MATIC',
     'IOST',
     'MANA',
+    'FUN',
     'WAX',
     'ELF',
     'GNO',
@@ -92,19 +95,21 @@ class WalletService {
     'WINGS',
     'MTL',
     'KNC',
-    'GVT'
+    'GVT',
+    'NVZN',
+    'CNB'
   ];
 
   List<String> tokenType = [
     '',
     '',
     '',
-    '',
+    'FAB',
     'ETH',
     'FAB',
-    'FAB',
     '',
     '',
+    '',
     'ETH',
     'ETH',
     'ETH',
@@ -118,33 +123,43 @@ class WalletService {
     'ETH',
     'ETH',
     'ETH',
-    'ETH'
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
+    'FAB'
   ];
 
   List<String> coinNames = [
-    'bitcoin',
-    'ethereum',
-    'fabcoin',
-    'bitcoin cash',
-    'tether',
-    'exchangily',
-    'dusd',
-    'litecoin',
-    'dogecoin',
-    'dragon',
+    'Bitcoin',
+    'Ethereum',
+    'Fabcoin',
+    'Exchangily',
+    'Tether',
+    'DUSD',
+    'Bitcoin Cash',
+    'Litecoin',
+    'Dogecoin',
+    'Insight chain',
+    'Augur',
+    'Dragonchain',
     'Holo',
     'Celsius',
     'Matic Network',
     'IOST',
     'Decentraland',
-    'wax',
+    'FunFair',
+    'Wax',
     'aelf',
     'Gnosis',
-    'powr',
     'Power Ledger',
+    'Wings',
     'Metal',
     'Kyber Network',
-    'Genesis Vision'
+    'Genesis Vision',
+    'Invizion',
+    'cnb'
   ];
 
   Completer<DialogResponse> _completer;
@@ -405,8 +420,8 @@ class WalletService {
         log.i("Offline wallet ${_walletInfo[i].toJson()}");
         await walletDatabaseService.insert(_walletInfo[i]);
       }
- 
-      await walletDatabaseService.getAll();
+
+      //  await walletDatabaseService.getAll();
       return _walletInfo;
     } catch (e) {
       log.e(e);
@@ -1260,7 +1275,7 @@ class WalletService {
     try {
       fabAddress = toLegacyAddress(kbPaymentAddress);
     } catch (e) {}
-    
+
     return (fabAddress != '');
   }
 

@@ -119,6 +119,28 @@ class ApiService {
       throw Exception(err);
     }
   }
+
+/*----------------------------------------------------------------------
+                    Get Token List Updates
+----------------------------------------------------------------------*/
+
+  Future<List<Token>> getTokenListUpdates() async {
+    String url = configService.getKanbanBaseUrl() + GetTokenListUpdatesApiRoute;
+    log.i('getTokenListUpdates url $url');
+    try {
+      var response = await client.get(url);
+      var json = jsonDecode(response.body);
+      var data = json['data'];
+      var parsedTokenList = data as List;
+      log.w('getTokenListUpdates  $parsedTokenList');
+      TokenList tokenList = TokenList.fromJson(parsedTokenList);
+      return tokenList.tokens;
+    } catch (err) {
+      log.e('getTokenList CATCH $err');
+      throw Exception(err);
+    }
+  }
+
 /*----------------------------------------------------------------------
                     Get Token List
 ----------------------------------------------------------------------*/
@@ -246,15 +268,30 @@ class ApiService {
   Future<List<WalletBalance>> getWalletBalance(body) async {
     String url = configService.getKanbanBaseUrl() + WalletBalancesApiRoute;
     log.i('getWalletBalance URL $url');
+    log.i('getWalletBalance body $body');
+    // var body1 = {
+    //   "btcAddress": "1BQZuZHXzuNdGe2ofaNV2rRnZDKo1sASCK",
+    //   "ethAddress": "0x87c6fd8216804ab2227a6429606c3cceee7c0ac5",
+    //   "fabAddress": "1HiNTKeGsv9jXpnzQnqMxMaxYf3gJGE9tZ",
+    //   "ltcAddress": "LNVGHW2ZQLiU6WNpp73oSqtPjr5vLsTBCd",
+    //   "dogeAddress": "DHgKoRHELn86L1V3VWKk38bJEbT9hTNrq5",
+    //   "bchAddress": "bitcoincash:qp02uzs04xmekc5xshw0ljusrefptfxjfuvtxvvv5l",
+    // };
+    // log.w('getWalletBalance body $body1');
+    // log.i('getWalletBalance body ${jsonEncode(body1)}');
     WalletBalanceList balanceList;
     try {
       var response = await client.post(url, body: body);
       bool success = jsonDecode(response.body)['success'];
       if (success == true) {
-        print(success);
-        var jsonList = jsonDecode(response.body)['data'];
-        log.w(' getWalletBalance $jsonList');
-        balanceList = WalletBalanceList.fromJson(jsonList);
+        var jsonList = jsonDecode(response.body)['data'] as List;
+        //  log.i('json list getWalletBalance $jsonList');
+        List newList = [];
+        jsonList.forEach((element) {
+          if (element['balance'] != null) newList.add(element);
+        });
+        log.i('newList getWalletBalance $newList');
+        balanceList = WalletBalanceList.fromJson(newList);
       } else {
         log.e('get wallet balances returning null');
         return null;

@@ -14,6 +14,7 @@
 class Token {
   int _decimal;
   String _name;
+  String _chainName;
   String _tickerName;
   int _tokenType;
   String _contract;
@@ -23,6 +24,7 @@ class Token {
   Token(
       {int decimal,
       String name,
+      String chainName,
       String tickerName,
       int tokenType,
       String contract,
@@ -30,6 +32,7 @@ class Token {
       String feeWithdraw}) {
     this._decimal = decimal;
     this._name = name;
+    this._chainName = chainName;
     this._tickerName = tickerName;
     this._tokenType = tokenType;
     this._contract = contract;
@@ -49,6 +52,7 @@ class Token {
     return new Token(
         decimal: json['decimal'] as int,
         tickerName: json['tickerName'] as String,
+        chainName: json['chainName'] as String,
         tokenType: json['type'] as int,
         contract: json['contract'] as String,
         minWithdraw: json['minWithdraw'],
@@ -61,6 +65,8 @@ class Token {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['decimal'] = this._decimal;
     data['tickerName'] = this._tickerName;
+    data['coinName'] = this._name;
+    data['chainName'] = this._chainName;
     data['type'] = this._tokenType;
     data['contract'] = this._contract;
     data['minWithdraw'] = this._minWithdraw;
@@ -77,7 +83,13 @@ class Token {
   String get name => _name;
 
   set name(String name) {
-    this.name = name;
+    this._name = name;
+  }
+
+  String get chainName => _chainName;
+
+  set chainName(String chainName) {
+    this._chainName = chainName;
   }
 
   String get tickerName => _tickerName;
@@ -98,16 +110,16 @@ class Token {
     this._contract = contract;
   }
 
-  String get minWithdraw => minWithdraw;
+  String get minWithdraw => _minWithdraw;
 
   set minWithdraw(String minWithdraw) {
-    this.minWithdraw = minWithdraw;
+    this._minWithdraw = minWithdraw;
   }
 
-  String get feeWithdraw => feeWithdraw;
+  String get feeWithdraw => _feeWithdraw;
 
   set feeWithdraw(String feeWithdraw) {
-    this.feeWithdraw = feeWithdraw;
+    this._feeWithdraw = feeWithdraw;
   }
 }
 

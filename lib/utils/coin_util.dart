@@ -501,6 +501,8 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
 }
 
 getOfficalAddress(String coinName) {
+  if (coinName == 'CNB')
+    return environment['addresses']['exchangilyOfficial']['EXG'];
   var address = environment['addresses']['exchangilyOfficial']
       .where((addr) => addr['name'] == coinName)
       .toList();

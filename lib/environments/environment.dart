@@ -81,7 +81,8 @@ Map devConfig = {
       "MTL": '0x1c9b5afa112b42b12fb06b62e5f1e159af49dfa7',
       "KNC": '0x3aad796ceb3a1063f727c6d0c698e37053292d10',
       "GVT": '0x3e610d9fb322063e50d185e2cc1b45f007e7180c',
-      "DRGN": '0xbbdd7a557a0d8a9bf166dcc2730ae3ccec7df05c'
+      "DRGN": '0xbbdd7a557a0d8a9bf166dcc2730ae3ccec7df05c',
+      "CNB": "466bc642fdd001b49aa8fa76c8058934bd428526"
     },
     'exchangilyOfficial': [
       {'name': 'EXG', 'address': '0xed76be271bb47a6df055bbc2039733c26fdecc82'},
@@ -221,7 +222,8 @@ Map productionConfig = {
       "MTL": '0xF433089366899D83a9f26A773D59ec7eCF30355e',
       "KNC": '0xdd974d5c2e2928dea5f71b9825b8b646686bd200',
       "GVT": '0x103c3A209da59d3E7C4A89307e66521e081CFDF0',
-      "DRGN": '0x419c4db4b9e25d6db2ad9691ccb832c8d9fda05e'
+      "DRGN": '0x419c4db4b9e25d6db2ad9691ccb832c8d9fda05e',
+      "CNB": "ceb9a838c3f3ee6e3168c06734f9188f2693999f"
     },
     'exchangilyOfficial': [
       {'name': 'EXG', 'address': '0xa7c8257b0571dc3d3c96b24b668c6569391b3ac9'},
