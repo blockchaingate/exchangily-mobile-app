@@ -322,7 +322,7 @@ Future getFabTokenBalanceByAddress(String address, String coinName) async {
       environment["addresses"]["smartContract"][coinName];
   var tokenBalance = 0.0;
   var tokenLockedBalance = 0.0;
-  if (coinName == 'EXG') {
+  if (coinName == 'EXG' || coinName == 'CNB') {
     String balanceInfoABI = '70a08231';
     tokenBalance = await getFabTokenBalanceForABI(
         balanceInfoABI, smartContractAddress, address);

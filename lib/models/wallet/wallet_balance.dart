@@ -9,6 +9,7 @@ class UsdValue {
   }
 
   factory UsdValue.fromJson(Map<String, dynamic> json) {
+    print('2 ${json['USD']}');
     return UsdValue(usd: json['USD'].toDouble());
   }
 
@@ -24,7 +25,10 @@ class UsdValue {
   }
 }
 
-// deposit err
+/*----------------------------------------------------------------------
+                        deposit err
+----------------------------------------------------------------------*/
+
 class DepositErr {
   int _coinType;
   String _transactionID;
@@ -72,6 +76,10 @@ class DepositErr {
   }
 }
 
+/*----------------------------------------------------------------------
+                    Wallet Balance
+----------------------------------------------------------------------*/
+
 class WalletBalance {
   static final log = getLogger('WalletBalance');
 
@@ -108,6 +116,12 @@ class WalletBalance {
           depositErrFromJsonAsList.map((e) => DepositErr.fromJson(e)).toList();
     }
 
+    var usdVal;
+    if (json['usdValue'] != null) {
+      usdVal = UsdValue.fromJson(json['usdValue']);
+    } else {
+      usdVal = UsdValue(usd: 0.0);
+    }
     return WalletBalance(
       coin: json['coin'],
       balance: json['balance'] != null
@@ -116,7 +130,7 @@ class WalletBalance {
       lockBalance: json['lockBalance'] != null
           ? (NumberUtil().parsedDouble(json['lockBalance']))
           : 0.0,
-      usdValue: UsdValue.fromJson(json['usdValue']),
+      usdValue: usdVal,
       depositErr: depositErrList,
       unlockedExchangeBalance: json['unlockedExchangeBalance'] != null
           ? (NumberUtil().parsedDouble(json['unlockedExchangeBalance']))

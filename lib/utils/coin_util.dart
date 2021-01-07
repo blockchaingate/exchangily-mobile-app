@@ -501,6 +501,11 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
 }
 
 getOfficalAddress(String coinName) {
+  if (coinName == 'CNB') {
+    print('CoinName $coinName');
+    print('EXG offcial address for CNB ${environment['addresses']['exchangilyOfficial'][0]['address']}');
+    return environment['addresses']['exchangilyOfficial'][0]['address'].toString();
+  }
   var address = environment['addresses']['exchangilyOfficial']
       .where((addr) => addr['name'] == coinName)
       .toList();

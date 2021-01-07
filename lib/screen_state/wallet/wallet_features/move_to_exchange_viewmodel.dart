@@ -2,12 +2,10 @@ import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -16,11 +14,12 @@ import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
 import '../../../shared/globals.dart' as globals;
 
-class MoveToExchangeViewModel extends BaseState {
-  final log = getLogger('MoveToExchangeScreenState');
+class MoveToExchangeViewModel extends BaseViewModel {
+  final log = getLogger('MoveToExchangeViewModel');
 
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
@@ -38,15 +37,26 @@ class MoveToExchangeViewModel extends BaseState {
   bool transFeeAdvance = false;
   String coinName = '';
   String tokenType = '';
+  String message = '';
   final myController = TextEditingController();
   bool isValid = false;
   double gasAmount = 0.0;
 
   void initState() async {
-    setState(ViewState.Busy);
+    setBusy(true);
+    coinName=walletInfo.tickerName;
     coinName = walletInfo.tickerName;
     tokenType = walletInfo.tokenType;
-    print('coinName==' + coinName);
+    setFee();
+    await getGas();
+    setBusy(false);
+  }
+
+/*---------------------------------------------------
+                      Set fee
+--------------------------------------------------- */
+
+  setFee() async {
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
@@ -83,9 +93,6 @@ class MoveToExchangeViewModel extends BaseState {
         environment["chains"]["KANBAN"]["gasPrice"].toString();
     kanbanGasLimitTextController.text =
         environment["chains"]["KANBAN"]["gasLimit"].toString();
-
-    await getGas();
-    setState(ViewState.Idle);
   }
 
 /*---------------------------------------------------
@@ -112,13 +119,13 @@ class MoveToExchangeViewModel extends BaseState {
 --------------------------------------------------- */
 
   checkPass() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     if (gasAmount == 0.0 || gasAmount < 0.5) {
       sharedService.alertDialog(
         AppLocalizations.of(context).notice,
         AppLocalizations.of(context).insufficientGasAmount,
       );
-      setState(ViewState.Idle);
+      setBusy(false);
       return;
     }
     var amount = double.tryParse(myController.text);
@@ -132,7 +139,7 @@ class MoveToExchangeViewModel extends BaseState {
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
-      setState(ViewState.Idle);
+      setBusy(false);
       return;
     }
     // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
@@ -145,8 +152,7 @@ class MoveToExchangeViewModel extends BaseState {
     //   setState(ViewState.Idle);
     //   return;
     // }
-    setMessage('');
-
+message = '';
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -176,7 +182,7 @@ class MoveToExchangeViewModel extends BaseState {
         'kanbanGasPrice': kanbanGasPrice,
         'kanbanGasLimit': kanbanGasLimit,
         'tokenType': walletInfo.tokenType,
-        'contractAddress': environment["addresses"]["smartContract"]
+        'contractAddress': environment["addresses"]["smartContract"]// add dyanamic logic to get smart contract address for updating new coins using api
             [walletInfo.tickerName]
       };
       log.i(
@@ -194,7 +200,9 @@ class MoveToExchangeViewModel extends BaseState {
 
           var allTxids = ret["txids"];
           walletService.addTxids(allTxids);
-          setMessage(txId);
+          
+          message = txId.toString();
+          // setMessage(txId);
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
               id: null,
@@ -241,6 +249,7 @@ class MoveToExchangeViewModel extends BaseState {
         //     isWarning: false);
       }).catchError((onError) {
         log.e('Deposit Catch $onError');
+        
         sharedService.alertDialog(
             AppLocalizations.of(context).depositTransactionFailed,
             AppLocalizations.of(context).serverError,
@@ -251,14 +260,14 @@ class MoveToExchangeViewModel extends BaseState {
         showNotification(context);
       }
     }
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
                     Refresh Balance
 ----------------------------------------------------------------------*/
   refreshBalance() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     await walletService
         .coinBalanceByAddress(
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
@@ -267,35 +276,35 @@ class MoveToExchangeViewModel extends BaseState {
       walletInfo.availableBalance = data['balance'];
     }).catchError((err) {
       log.e(err);
-      setState(ViewState.Idle);
+      setBusy(false);
       throw Exception(err);
     });
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 /*----------------------------------------------------------------------
                     ShowNotification
 ----------------------------------------------------------------------*/
 
   showNotification(context) {
-    setState(ViewState.Busy);
+    setBusy(true);
     sharedService.showInfoFlushbar(
         AppLocalizations.of(context).passwordMismatch,
         AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
         Icons.cancel,
         globals.red,
         context);
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
                     Update Transaction Fee
 ----------------------------------------------------------------------*/
   updateTransFee() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     var to = getOfficalAddress(coinName);
     var amount = double.tryParse(myController.text);
     if (to == null || amount == null || amount <= 0) {
-      setState(ViewState.Idle);
+      setBusy(false);
       return;
     }
     isValid = true;
@@ -333,14 +342,14 @@ class MoveToExchangeViewModel extends BaseState {
       if (ret != null && ret['transFee'] != null) {
         transFee = ret['transFee'];
         kanbanTransFee = kanbanTransFeeDouble;
-        setState(ViewState.Idle);
+        setBusy(false);
       }
     }).catchError((onError) {
-      setState(ViewState.Idle);
+      setBusy(false);
       log.e(onError);
     });
 
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
 // Copy txid and display flushbar
