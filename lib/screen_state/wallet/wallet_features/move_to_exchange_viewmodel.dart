@@ -249,6 +249,7 @@ message = '';
         //     isWarning: false);
       }).catchError((onError) {
         log.e('Deposit Catch $onError');
+        
         sharedService.alertDialog(
             AppLocalizations.of(context).depositTransactionFailed,
             AppLocalizations.of(context).serverError,
