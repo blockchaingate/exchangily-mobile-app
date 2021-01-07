@@ -2,12 +2,10 @@ import 'dart:typed_data';
 
 import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -39,12 +37,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
   bool transFeeAdvance = false;
   String coinName = '';
   String tokenType = '';
+  String message = '';
   final myController = TextEditingController();
   bool isValid = false;
   double gasAmount = 0.0;
 
   void initState() async {
     setBusy(true);
+    coinName=walletInfo.tickerName;
     coinName = walletInfo.tickerName;
     tokenType = walletInfo.tokenType;
     setFee();
@@ -152,7 +152,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     //   setState(ViewState.Idle);
     //   return;
     // }
-
+message = '';
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -182,7 +182,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
         'kanbanGasPrice': kanbanGasPrice,
         'kanbanGasLimit': kanbanGasLimit,
         'tokenType': walletInfo.tokenType,
-        'contractAddress': environment["addresses"]["smartContract"]
+        'contractAddress': environment["addresses"]["smartContract"]// add dyanamic logic to get smart contract address for updating new coins using api
             [walletInfo.tickerName]
       };
       log.i(
@@ -200,6 +200,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
           var allTxids = ret["txids"];
           walletService.addTxids(allTxids);
+          
+          message = txId.toString();
           // setMessage(txId);
           String date = DateTime.now().toString();
           TransactionHistory transactionHistory = new TransactionHistory(

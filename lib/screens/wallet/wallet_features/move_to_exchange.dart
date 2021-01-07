@@ -7,14 +7,13 @@
 *      https://www.apache.org/licenses/LICENSE-2.0
 *
 *----------------------------------------------------------------------
-* Author: ken.qiu@exchangily.com
+* Author: ken.qiu@exchangily.com and barry_ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +21,7 @@ import 'package:flutter/services.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:flutter/gestures.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_exchange_viewmodel.dart';
-
+import 'package:stacked/stacked.dart';
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
 class MoveToExchangeScreen extends StatelessWidget {
   final WalletInfo walletInfo;
@@ -30,10 +29,9 @@ class MoveToExchangeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bal = walletInfo.availableBalance;
-    String coinName = walletInfo.tickerName;
 
-    return BaseScreen<MoveToExchangeViewModel>(
+    return ViewModelBuilder.reactive(
+      viewModelBuilder: () => MoveToExchangeViewModel(),
       onModelReady: (model) {
         model.context = context;
         model.walletInfo = walletInfo;
@@ -102,7 +100,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                       horizontal: 3,
                     ),
-                    child: Text('$coinName'.toUpperCase(),
+                    child: Text('${model.coinName}'.toUpperCase(),
                         style: Theme.of(context).textTheme.subtitle2),
                   )
                 ],
@@ -176,7 +174,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       Visibility(
-                          visible: (coinName == 'ETH' ||
+                          visible: (model.coinName == 'ETH' ||
                               model.tokenType == 'ETH' ||
                               model.tokenType == 'FAB'),
                           child: Row(
@@ -222,7 +220,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                             ],
                           )),
                       Visibility(
-                          visible: (coinName == 'ETH' ||
+                          visible: (model.coinName == 'ETH' ||
                               model.tokenType == 'ETH' ||
                               model.tokenType == 'FAB'),
                           child: Row(
@@ -268,8 +266,8 @@ class MoveToExchangeScreen extends StatelessWidget {
                             ],
                           )),
                       Visibility(
-                          visible: (coinName == 'BTC' ||
-                              coinName == 'FAB' ||
+                          visible: (model.coinName == 'BTC' ||
+                              model.coinName == 'FAB' ||
                               model.tokenType == 'FAB'),
                           child: Row(
                             children: <Widget>[
@@ -397,12 +395,12 @@ class MoveToExchangeScreen extends StatelessWidget {
               // Success/Error container
               Container(
                   child: Visibility(
-                      visible: model.hasMessage,
+                      visible: model.message.isNotEmpty,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(model.message != null ? model.message : ''),
+                          Text(model.message),
                           UIHelper.verticalSpaceSmall,
                           RichText(
                             text: TextSpan(
@@ -413,6 +411,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     color: globals.primaryColor),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
+                                    print('1');
+                                    print(model.message);
+                                    print('2');
                                     model
                                         .copyAndShowNotification(model.message);
                                   }),
@@ -430,7 +431,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                 onPressed: () {
                   model.checkPass();
                 },
-                child: model.state == ViewState.Busy
+                child: model.isBusy
                     ? SizedBox(
                         width: 20,
                         height: 20,
