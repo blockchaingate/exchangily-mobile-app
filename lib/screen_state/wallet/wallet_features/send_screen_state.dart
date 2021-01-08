@@ -178,7 +178,7 @@ class SendScreenState extends BaseState {
       }
 
       // Convert FAB to EXG format
-      if (walletInfo.tickerName == 'EXG' || walletInfo.tickerName == 'DUSD') {
+      if (walletInfo.tickerName == 'EXG' || walletInfo.tickerName == 'DUSD' || walletInfo.tickerName=='CNB') {
         if (!toAddress.startsWith('0x')) toAddress = fabToExgAddress(toAddress);
       }
 

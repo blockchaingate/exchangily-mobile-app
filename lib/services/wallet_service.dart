@@ -933,7 +933,7 @@ class WalletService {
     var resST = await sendTransaction(
         coinName, seed, [0], [], officalAddress, amount, option, false);
     log.i('after send transaction');
-    if (resST != null) log.w(resST);
+    if (resST != null) log.w('res $resST');
     if (resST['errMsg'] != '') {
       errRes['data'] = resST['errMsg'];
       return errRes;
@@ -960,9 +960,9 @@ class WalletService {
       errRes['data'] = 'incorrect amount for two transactions';
       return errRes;
     }
-
+print('a');
     var subString = amountInLinkString.substring(amountInTxString.length);
-
+print('b');
     if (subString != null && subString != '') {
       var zero = int.parse(subString);
       if (zero != 0) {
@@ -970,9 +970,9 @@ class WalletService {
         return errRes;
       }
     }
-
+print('c');
     var coinType = getCoinTypeIdByName(coinName);
-
+log.i('coin type $coinType');
     if (coinType == 0) {
       errRes['data'] = 'invalid coinType for ' + coinName;
       return errRes;
@@ -1918,12 +1918,13 @@ class WalletService {
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(stringUtils.trimHexPrefix(amountSentHex), 64);
 
-      contractAddress = stringUtils.trimHexPrefix(contractAddress);
+      contractAddress =  stringUtils.trimHexPrefix(contractAddress);
 
+      log.i(coin);
       var contractInfo = await getFabSmartContract(
           contractAddress, fxnCallHex, gasLimit, gasPrice);
-
       if (addressList != null && addressList.length > 0) {
+      
         addressList[0] = exgToFabAddress(addressList[0]);
       }
 
@@ -2090,7 +2091,7 @@ class WalletService {
 
     var totalFee = totalAmount;
     var chunks = new List<dynamic>();
-    log.w('Address $contractAddress');
+    log.w('Smart contract Address $contractAddress');
     chunks.add(84);
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasLimit)));
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasPrice)));
