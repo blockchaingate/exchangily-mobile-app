@@ -5,10 +5,12 @@ import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
+import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -58,9 +60,10 @@ import 'package:exchangilymobileapp/utils/exaddr.dart';
 
 class WalletService {
   final log = getLogger('Wallet Service');
+
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
   ApiService _api = locator<ApiService>();
-  double currentTickerUsdValue;
-  var txids = [];
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
@@ -68,6 +71,10 @@ class WalletService {
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   ApiService _apiService = locator<ApiService>();
+
+  double currentTickerUsdValue;
+  var txids = [];
+
   double coinUsdBalance;
   List<String> coinTickers = [
     'BTC',
@@ -163,6 +170,27 @@ class WalletService {
   ];
 
   Completer<DialogResponse> _completer;
+
+/*----------------------------------------------------------------------
+                Get Random Mnemonic
+----------------------------------------------------------------------*/
+  Future<List<Token>> getTokenListUpdates() async {
+    List<Token> newTokens = [];
+    await _apiService.getTokenListUpdates().then((tokenList) {
+      if (tokenList != null) {
+        tokenList.forEach((token) {
+          log.w('getTokenListUpdates single token ${token.toJson()}');
+          tokenListDatabaseService.insert(token);
+        });
+        newTokens = tokenList;
+        tokenListDatabaseService.getAll();
+      }
+    }).catchError((err) {
+      log.e('getTokenListUpdates Catch $err');
+      return null;
+    });
+    return newTokens;
+  }
 
   addTxids(allTxids) {
     txids = [...txids, ...allTxids].toSet().toList();
@@ -875,6 +903,7 @@ class WalletService {
       addressInWallet = btcToBase58Address(addressInWallet);
     }
     var coinType = getCoinTypeIdByName(coinName);
+
     var abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
 
     var coinPoolAddress = await getCoinPoolAddress();
@@ -960,9 +989,7 @@ class WalletService {
       errRes['data'] = 'incorrect amount for two transactions';
       return errRes;
     }
-print('a');
     var subString = amountInLinkString.substring(amountInTxString.length);
-print('b');
     if (subString != null && subString != '') {
       var zero = int.parse(subString);
       if (zero != 0) {
@@ -970,9 +997,9 @@ print('b');
         return errRes;
       }
     }
-print('c');
+
     var coinType = getCoinTypeIdByName(coinName);
-log.i('coin type $coinType');
+    log.i('coin type $coinType');
     if (coinType == 0) {
       errRes['data'] = 'invalid coinType for ' + coinName;
       return errRes;
@@ -1918,13 +1945,12 @@ log.i('coin type $coinType');
           stringUtils.fixLength(stringUtils.trimHexPrefix(toAddress), 64) +
           stringUtils.fixLength(stringUtils.trimHexPrefix(amountSentHex), 64);
 
-      contractAddress =  stringUtils.trimHexPrefix(contractAddress);
+      contractAddress = stringUtils.trimHexPrefix(contractAddress);
 
       log.i(coin);
       var contractInfo = await getFabSmartContract(
           contractAddress, fxnCallHex, gasLimit, gasPrice);
       if (addressList != null && addressList.length > 0) {
-      
         addressList[0] = exgToFabAddress(addressList[0]);
       }
 

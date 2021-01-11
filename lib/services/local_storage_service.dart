@@ -1,4 +1,5 @@
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalStorageService {

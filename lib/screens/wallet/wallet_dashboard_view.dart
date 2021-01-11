@@ -422,7 +422,10 @@ class WalletDashboardView extends StatelessWidget {
               //   color: white,
               //   child: IconButton(
               //     icon: Icon(Icons.arrow_downward),
-              //     onPressed: () => model.jsonTransformation(),
+              //     onPressed: () {
+              //       print('1');
+              //       model.walletService.getTokenListUpdates();
+              //     },
               //   ),
               // ),
             ),

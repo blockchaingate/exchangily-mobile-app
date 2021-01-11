@@ -916,6 +916,9 @@ class WalletDashboardViewModel extends BaseViewModel {
           log.i('Fab or gas balance available already');
           //  storageService.isShowCaseView = true;
         }
+// check if any new coins added in api
+        //await walletService.getTokenListUpdates();
+
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method

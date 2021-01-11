@@ -338,7 +338,7 @@ message = '';
             options,
             false)
         .then((ret) {
-      log.w(ret);
+      log.w(' updateTransFee $ret');
       if (ret != null && ret['transFee'] != null) {
         transFee = ret['transFee'];
         kanbanTransFee = kanbanTransFeeDouble;

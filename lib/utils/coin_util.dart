@@ -14,6 +14,9 @@
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
@@ -69,6 +72,8 @@ Uint8List hash256(Uint8List buffer) {
 ----------------------------------------------------------------------*/
 
 getCoinTypeIdByName(String coinName) {
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
   var newCoinList = coinList.newCoinTypeMap.entries
       .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
   // var coins =
@@ -76,6 +81,13 @@ getCoinTypeIdByName(String coinName) {
   if (newCoinList != null) {
     log.w('New Coin list ${newCoinList.key}');
     return newCoinList.key;
+  } else {
+    var tokenList = tokenListDatabaseService.getAll();
+    if (tokenList != null) {
+      return tokenList.then((res) {
+        res.firstWhere((token) => token.coinName == coinName).tokenType;
+      });
+    }
   }
   return 0;
 }
@@ -503,8 +515,10 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
 getOfficalAddress(String coinName) {
   if (coinName == 'CNB') {
     print('CoinName $coinName');
-    print('EXG offcial address for CNB ${environment['addresses']['exchangilyOfficial'][0]['address']}');
-    return environment['addresses']['exchangilyOfficial'][0]['address'].toString();
+    print(
+        'EXG offcial address for CNB ${environment['addresses']['exchangilyOfficial'][0]['address']}');
+    return environment['addresses']['exchangilyOfficial'][0]['address']
+        .toString();
   }
   var address = environment['addresses']['exchangilyOfficial']
       .where((addr) => addr['name'] == coinName)
