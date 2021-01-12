@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -36,6 +37,8 @@ class CampaignPaymentScreenState extends BaseState {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   CampaignService campaignService = locator<CampaignService>();
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
   CampaignUserDatabaseService campaignUserDatabaseService =
       locator<CampaignUserDatabaseService>();
   WalletDataBaseService walletDataBaseService =
@@ -92,7 +95,7 @@ class CampaignPaymentScreenState extends BaseState {
 ----------------------------------------------------------------------*/
   initState() async {
     var gasPriceReal = await walletService.getEthGasPrice();
-    if(gasPrice < gasPriceReal) {
+    if (gasPrice < gasPriceReal) {
       gasPrice = gasPriceReal;
     }
     setBusy(true);
@@ -164,11 +167,17 @@ class CampaignPaymentScreenState extends BaseState {
       } else if (tickerName == 'EXG') {
         tokenType = 'FAB';
       }
+      String contractAddr =
+          environment["addresses"]["smartContract"][tickerName];
+      if (contractAddr == null) {
+        await tokenListDatabaseService
+            .getContractAddressByTickerName(tickerName)
+            .then((value) => contractAddr = '0x' + value);
+      }
 
       options = {
         'tokenType': tokenType,
-        'contractAddress': environment["addresses"]["smartContract"]
-            [tickerName],
+        'contractAddress': contractAddr,
         'gasPrice': gasPrice,
         'gasLimit': gasLimit,
         'satoshisPerBytes': satoshisPerBytes

@@ -71,25 +71,24 @@ Uint8List hash256(Uint8List buffer) {
                 Get Coin Type Id By Name
 ----------------------------------------------------------------------*/
 
-getCoinTypeIdByName(String coinName) {
+getCoinTypeIdByName(String coinName) async {
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
-  var newCoinList = coinList.newCoinTypeMap.entries
-      .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
+  int coinType = 0;
+  var newCoinList;
+  if (coinList.newCoinTypeMap.containsKey(coinName))
+    newCoinList = coinList.newCoinTypeMap.entries
+        .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
   // var coins =
   //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
   if (newCoinList != null) {
     log.w('New Coin list ${newCoinList.key}');
-    return newCoinList.key;
+    coinType = newCoinList.key;
   } else {
-    var tokenList = tokenListDatabaseService.getAll();
-    if (tokenList != null) {
-      return tokenList.then((res) {
-        res.firstWhere((token) => token.coinName == coinName).tokenType;
-      });
-    }
+    coinType = await tokenListDatabaseService.getCoinTypeByTickerName(coinName);
+    print('ticker $coinName -- coin type $coinType');
   }
-  return 0;
+  return coinType;
 }
 
 encodeSignature(signature, recovery, compressed, segwitType) {

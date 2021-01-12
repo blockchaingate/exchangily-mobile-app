@@ -72,7 +72,7 @@ class Token {
     data['tickerName'] = this._tickerName;
     data['coinName'] = this._coinName;
     data['chainName'] = this._chainName;
-    data['tokenType'] = this._tokenType;
+    data['type'] = this._tokenType;
     data['contract'] = this._contract;
     data['minWithdraw'] = this._minWithdraw;
     data['feeWithdraw'] = this._feeWithdraw;

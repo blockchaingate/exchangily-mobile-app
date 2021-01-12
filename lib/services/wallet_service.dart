@@ -175,10 +175,12 @@ class WalletService {
     List<Token> newTokens = [];
     await _apiService.getTokenListUpdates().then((tokenList) {
       if (tokenList != null) {
-        tokenList.forEach((token) {
+        tokenList.forEach((token) async {
           log.w('getTokenListUpdates single token ${token.toJson()}');
           var checkIfTokenExists =
-              tokenListDatabaseService.getByName(token.tickerName);
+              await tokenListDatabaseService.getByName(token.tickerName);
+
+          //  print('check if token exists ${checkIfTokenExists.toJson()}');
           if (checkIfTokenExists == null)
             tokenListDatabaseService.insert(token);
           else
@@ -1000,7 +1002,7 @@ class WalletService {
       }
     }
 
-    var coinType = getCoinTypeIdByName(coinName);
+    var coinType = await getCoinTypeIdByName(coinName);
     log.i('coin type $coinType');
     if (coinType == 0) {
       errRes['data'] = 'invalid coinType for ' + coinName;

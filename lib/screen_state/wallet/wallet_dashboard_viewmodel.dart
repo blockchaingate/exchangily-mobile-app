@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -29,6 +30,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 import 'package:flutter/material.dart';
@@ -757,6 +759,24 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   buildCoinList(WalletBalance walletBalanceSingleCoin, j) {}
 
+/*----------------------------------------------------------------------
+                      Assign New Token Address
+----------------------------------------------------------------------*/
+  String assignNewTokenAddress(Token newToken) {
+    String newCoinAddress = '';
+    walletInfo.firstWhere((wallet) {
+      if (wallet.tickerName == newToken.chainName) {
+        if (newToken.chainName == 'FAB')
+          newCoinAddress = fabToExgAddress(wallet.address);
+        else
+          newCoinAddress = wallet.address;
+        log.w('new token ${newToken.tickerName} address $newCoinAddress');
+        return true;
+      }
+      return false;
+    });
+    return newCoinAddress;
+  }
 /*-------------------------------------------------------------------------------------
                           Refresh Balances
 -------------------------------------------------------------------------------------*/
@@ -860,24 +880,18 @@ class WalletDashboardViewModel extends BaseViewModel {
         }); // walletInfo for each ends
         //  second if start to add new coins in wallet info list
         if (walletInfoCopy.length + 2 != walletBalanceList.length) {
-          await walletService.getTokenListUpdates();
           walletBalanceList.forEach((walletBalanceObj) async {
             // bool isNew =
             bool isNewTicker = tickerNames.contains(walletBalanceObj.coin);
-
-            if (!isNewTicker)
+            print('is new ticker $isNewTicker');
+            if (!isNewTicker) {
+              await walletService.getTokenListUpdates();
               await tokenListDatabaseService
                   .getByName(walletBalanceObj.coin)
                   .then((newToken) {
                 String newCoinAddress = '';
 
-                walletInfo.firstWhere((wallet) {
-                  if (wallet.tickerName == newToken.chainName) {
-                    newCoinAddress = wallet.address;
-                    return true;
-                  }
-                  return false;
-                });
+                newCoinAddress = assignNewTokenAddress(newToken);
                 double marketPrice = walletBalanceObj.usdValue.usd ?? 0.0;
                 double availableBal = walletBalanceObj.balance ?? 0.0;
                 double lockedBal = walletBalanceObj.lockBalance ?? 0.0;
@@ -897,8 +911,9 @@ class WalletDashboardViewModel extends BaseViewModel {
                     name: newToken.coinName,
                     inExchange: walletBalanceObj.unlockedExchangeBalance);
                 walletInfo.add(wi);
-                log.e('new coins added ${wi.toJson()}');
+                log.e('new coin ${wi.tickerName} added ${wi.toJson()}');
               });
+            }
           });
         } // second if ends
 

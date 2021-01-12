@@ -33,12 +33,12 @@ class TokenListDatabaseService {
   final String columnMinWithdraw = 'minWithdraw';
   final String columnFeeWithdraw = 'feeWithdraw';
 
-  static final _databaseVersion = 3;
+  static final _databaseVersion = 4;
   static Future<Database> _database;
   String path = '';
 
   Future<Database> initDb() async {
-    //deleteDb();
+    //  deleteDb();
     if (_database != null) return _database;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
@@ -57,7 +57,7 @@ class TokenListDatabaseService {
         $columnCoinName TEXT,
         $columnChainName TEXT,
         $columnTickerName TEXT,
-        $columnTokenType TEXT,
+        $columnTokenType INTEGER,
         $columnContract TEXT,
         $columnMinWithdraw INTEGER,
         $columnFeeWithdraw INTEGER) ''');
@@ -109,6 +109,26 @@ class TokenListDatabaseService {
     log.w('Name - $tickerName - res-- $res');
 
     if (res.isNotEmpty) return Token.fromJson(res.first).contract;
+    return null;
+    // return TransactionHistory.fromJson((res.first));
+  }
+
+  // Get Single transaction By Name
+  getCoinTypeByTickerName(String tickerName) async {
+    await initDb();
+    final Database db = await _database;
+    List<Map> res = await db.query(tableName,
+        distinct: true,
+        where: 'tickerName= ?',
+        whereArgs: [tickerName],
+        limit: 1);
+    log.w('Name - $tickerName - res-- $res');
+    String addr = Token.fromJson(res.first).contract;
+    log.e('address $addr');
+    int tt = Token.fromJson(res.first).minWithdraw;
+    log.e('mw $tt');
+    if (res.isNotEmpty) return Token.fromJson(res.first).tokenType;
+
     return null;
     // return TransactionHistory.fromJson((res.first));
   }

@@ -186,7 +186,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             .getContractAddressByTickerName(tickerName)
             .then((value) => contractAddr = '0x' + value);
       }
-      log.w('$tickerName contract address $contractAddr using ticker db');
+      log.i('$tickerName contract address $contractAddr using ticker db');
       var option = {
         "gasPrice": gasPrice ?? 0,
         "gasLimit": gasLimit ?? 0,
