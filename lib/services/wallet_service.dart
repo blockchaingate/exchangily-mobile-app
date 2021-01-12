@@ -103,8 +103,7 @@ class WalletService {
     'MTL',
     'KNC',
     'GVT',
-    'NVZN',
-    'CNB'
+    'NVZN'
   ];
 
   List<String> tokenType = [
@@ -134,8 +133,7 @@ class WalletService {
     'ETH',
     'ETH',
     'ETH',
-    'ETH',
-    'FAB'
+    'ETH'
   ];
 
   List<String> coinNames = [
@@ -165,8 +163,7 @@ class WalletService {
     'Metal',
     'Kyber Network',
     'Genesis Vision',
-    'Invizion',
-    'cnb'
+    'Invizion'
   ];
 
   Completer<DialogResponse> _completer;
@@ -180,7 +177,12 @@ class WalletService {
       if (tokenList != null) {
         tokenList.forEach((token) {
           log.w('getTokenListUpdates single token ${token.toJson()}');
-          tokenListDatabaseService.insert(token);
+          var checkIfTokenExists =
+              tokenListDatabaseService.getByName(token.tickerName);
+          if (checkIfTokenExists == null)
+            tokenListDatabaseService.insert(token);
+          else
+            log.e('${token.tickerName} Token already in the database');
         });
         newTokens = tokenList;
         tokenListDatabaseService.getAll();

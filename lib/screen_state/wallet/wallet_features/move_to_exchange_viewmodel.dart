@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -24,6 +25,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
 
   WalletInfo walletInfo;
   BuildContext context;
@@ -44,7 +47,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
   void initState() async {
     setBusy(true);
-    coinName=walletInfo.tickerName;
+    coinName = walletInfo.tickerName;
     coinName = walletInfo.tickerName;
     tokenType = walletInfo.tokenType;
     setFee();
@@ -152,7 +155,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     //   setState(ViewState.Idle);
     //   return;
     // }
-message = '';
+    message = '';
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -174,7 +177,16 @@ message = '';
       var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
       var kanbanGasPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
-
+      String tickerName = walletInfo.tickerName;
+      String contractAddr =
+          environment["addresses"]["smartContract"][tickerName];
+      if (contractAddr == null) {
+        log.i('$tickerName contract is null so fetching from token database');
+        await tokenListDatabaseService
+            .getContractAddressByTickerName(tickerName)
+            .then((value) => contractAddr = '0x' + value);
+      }
+      log.w('$tickerName contract address $contractAddr using ticker db');
       var option = {
         "gasPrice": gasPrice ?? 0,
         "gasLimit": gasLimit ?? 0,
@@ -182,8 +194,7 @@ message = '';
         'kanbanGasPrice': kanbanGasPrice,
         'kanbanGasLimit': kanbanGasLimit,
         'tokenType': walletInfo.tokenType,
-        'contractAddress': environment["addresses"]["smartContract"]// add dyanamic logic to get smart contract address for updating new coins using api
-            [walletInfo.tickerName]
+        'contractAddress': contractAddr
       };
       log.i(
           '3 - -$seed, -- ${walletInfo.tickerName}, -- ${walletInfo.tokenType}, --   $amount, - - $option');
@@ -200,7 +211,7 @@ message = '';
 
           var allTxids = ret["txids"];
           walletService.addTxids(allTxids);
-          
+
           message = txId.toString();
           // setMessage(txId);
           String date = DateTime.now().toString();
@@ -249,7 +260,7 @@ message = '';
         //     isWarning: false);
       }).catchError((onError) {
         log.e('Deposit Catch $onError');
-        
+
         sharedService.alertDialog(
             AppLocalizations.of(context).depositTransactionFailed,
             AppLocalizations.of(context).serverError,

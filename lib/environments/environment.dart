@@ -81,8 +81,7 @@ Map devConfig = {
       "MTL": '0x1c9b5afa112b42b12fb06b62e5f1e159af49dfa7',
       "KNC": '0x3aad796ceb3a1063f727c6d0c698e37053292d10',
       "GVT": '0x3e610d9fb322063e50d185e2cc1b45f007e7180c',
-      "DRGN": '0xbbdd7a557a0d8a9bf166dcc2730ae3ccec7df05c',
-      "CNB": "0x466bc642fdd001b49aa8fa76c8058934bd428526"
+      "DRGN": '0xbbdd7a557a0d8a9bf166dcc2730ae3ccec7df05c'
     },
     'exchangilyOfficial': [
       {'name': 'EXG', 'address': '0xed76be271bb47a6df055bbc2039733c26fdecc82'},

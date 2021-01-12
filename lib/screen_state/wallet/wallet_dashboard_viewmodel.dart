@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -49,9 +50,6 @@ import 'package:json_diff/json_diff.dart';
 class WalletDashboardViewModel extends BaseViewModel {
   final log = getLogger('WalletDahsboardScreenState');
 
-  BuildContext context;
-  List<WalletInfo> walletInfo;
-  List<WalletInfo> walletInfoCopy = [];
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
 
@@ -59,6 +57,12 @@ class WalletDashboardViewModel extends BaseViewModel {
   ApiService apiService = locator<ApiService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
+
+  BuildContext context;
+  List<WalletInfo> walletInfo;
+  List<WalletInfo> walletInfoCopy = [];
 
   final double elevation = 5;
   String totalUsdBalance = '';
@@ -759,7 +763,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   Future refreshBalance() async {
     if (!isBusy) setBusy(true);
-
+    List<String> tickerNames = [];
     await walletDatabaseService.getAll().then((walletList) {
       walletInfoCopy = [];
       formattedUsdValueList = [];
@@ -847,56 +851,56 @@ class WalletDashboardViewModel extends BaseViewModel {
                 fabBalance = 0.0;
                 fabBalance = wi.availableBalance;
               }
-
+              tickerNames.add(walletTickerName);
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
 
           } // For loop j ends
-
-          // second if start to add new coins in wallet info list
-          // if (walletInfoCopy.length + 2 != walletBalanceList.length &&
-          //     walletBalanceSingleCoin.coin != 'CAD' &&
-          //     walletBalanceSingleCoin.coin != 'RMB') {
-          //   await apiService.getTokenListUpdates().then((newTokenList) {
-          //     newTokenList.forEach((newToken) {
-          //       if (newToken.tickerName == walletBalanceSingleCoin.coin) {
-          //         String newCoinAddress = '';
-          //         walletInfo.firstWhere((wallet) {
-          //           if (wallet.tickerName == newToken.chainName) {
-          //             newCoinAddress = wallet.address;
-          //             return true;
-          //           }
-          //           return false;
-          //         });
-          //         double marketPrice =
-          //             walletBalanceSingleCoin.usdValue.usd ?? 0.0;
-          //         double availableBal = walletBalanceSingleCoin.balance ?? 0.0;
-          //         double lockedBal = walletBalanceSingleCoin.lockBalance ?? 0.0;
-
-          //         double usdValue = walletService.calculateCoinUsdBalance(
-          //             marketPrice, availableBal, lockedBal);
-          //         String holder = NumberUtil.currencyFormat(usdValue, 2);
-          //         formattedUsdValueList.add(holder);
-          //         WalletInfo wi = WalletInfo(
-          //             id: null,
-          //             tickerName: newToken.tickerName,
-          //             tokenType: newToken.chainName,
-          //             address: newCoinAddress,
-          //             availableBalance: walletBalanceSingleCoin.balance,
-          //             lockedBalance:
-          //                 walletBalanceSingleCoin.lockedExchangeBalance,
-          //             usdValue: usdValue,
-          //             name: newToken.name,
-          //             inExchange:
-          //                 walletBalanceSingleCoin.unlockedExchangeBalance);
-          //         walletInfo.add(wi);
-          //         log.e('new coins added ${wi.toJson()}');
-          //       }
-          //     });
-          //   });
-          // } // second if ends
         }); // walletInfo for each ends
+        //  second if start to add new coins in wallet info list
+        if (walletInfoCopy.length + 2 != walletBalanceList.length) {
+          await walletService.getTokenListUpdates();
+          walletBalanceList.forEach((walletBalanceObj) async {
+            // bool isNew =
+            bool isNewTicker = tickerNames.contains(walletBalanceObj.coin);
+
+            if (!isNewTicker)
+              await tokenListDatabaseService
+                  .getByName(walletBalanceObj.coin)
+                  .then((newToken) {
+                String newCoinAddress = '';
+
+                walletInfo.firstWhere((wallet) {
+                  if (wallet.tickerName == newToken.chainName) {
+                    newCoinAddress = wallet.address;
+                    return true;
+                  }
+                  return false;
+                });
+                double marketPrice = walletBalanceObj.usdValue.usd ?? 0.0;
+                double availableBal = walletBalanceObj.balance ?? 0.0;
+                double lockedBal = walletBalanceObj.lockBalance ?? 0.0;
+
+                double usdValue = walletService.calculateCoinUsdBalance(
+                    marketPrice, availableBal, lockedBal);
+                String holder = NumberUtil.currencyFormat(usdValue, 2);
+                formattedUsdValueList.add(holder);
+                WalletInfo wi = WalletInfo(
+                    id: null,
+                    tickerName: newToken.tickerName,
+                    tokenType: newToken.chainName,
+                    address: newCoinAddress,
+                    availableBalance: walletBalanceObj.balance,
+                    lockedBalance: walletBalanceObj.lockedExchangeBalance,
+                    usdValue: usdValue,
+                    name: newToken.coinName,
+                    inExchange: walletBalanceObj.unlockedExchangeBalance);
+                walletInfo.add(wi);
+                log.e('new coins added ${wi.toJson()}');
+              });
+          });
+        } // second if ends
 
         calcTotalBal();
         await updateWalletDatabase();
@@ -917,8 +921,7 @@ class WalletDashboardViewModel extends BaseViewModel {
           //  storageService.isShowCaseView = true;
         }
 // check if any new coins added in api
-        //await walletService.getTokenListUpdates();
-
+        await walletService.getTokenListUpdates();
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method

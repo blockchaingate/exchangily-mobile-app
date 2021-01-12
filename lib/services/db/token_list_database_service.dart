@@ -88,16 +88,28 @@ class TokenListDatabaseService {
   }
 
   // Get Single transaction By Name
-  Future<List<Token>> getByName(String name) async {
+  Future<Token> getByName(String tickerName) async {
     await initDb();
     final Database db = await _database;
-    List<Map> res =
-        await db.query(tableName, where: 'tickerName= ?', whereArgs: [name]);
-    log.w('Name - $name --- $res');
+    List<Map> res = await db
+        .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
+    log.w('Name - $tickerName - res-- $res');
 
-    List<Token> list =
-        res.isNotEmpty ? res.map((f) => Token.fromJson(f)).toList() : [];
-    return list;
+    if (res.isNotEmpty) return Token.fromJson(res.first);
+    return null;
+    // return TransactionHistory.fromJson((res.first));
+  }
+
+  // Get Single transaction By Name
+  Future<String> getContractAddressByTickerName(String tickerName) async {
+    await initDb();
+    final Database db = await _database;
+    List<Map> res = await db
+        .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
+    log.w('Name - $tickerName - res-- $res');
+
+    if (res.isNotEmpty) return Token.fromJson(res.first).contract;
+    return null;
     // return TransactionHistory.fromJson((res.first));
   }
 
