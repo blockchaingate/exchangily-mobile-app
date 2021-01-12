@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 
 class MoveToWalletViewmodel extends BaseState {
   final log = getLogger('MoveToWalletViewmodel');
@@ -24,6 +25,8 @@ class MoveToWalletViewmodel extends BaseState {
   WalletService walletService = locator<WalletService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
 
   WalletInfo walletInfo;
   BuildContext context;
@@ -37,12 +40,16 @@ class MoveToWalletViewmodel extends BaseState {
   var minimumAmount;
   bool transFeeAdvance = false;
   double gasAmount = 0.0;
+  var withdrawLimit;
 
+/*---------------------------------------------------
+                      INIT
+--------------------------------------------------- */
   void initState() {
     setBusy(true);
     var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
     var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
-    minimumAmount = environment['minimumWithdraw'][walletInfo.tickerName];
+    setWithdrawLimit();
     kanbanGasPriceTextController.text = gasPrice.toString();
     kanbanGasLimitTextController.text = gasLimit.toString();
 
@@ -59,6 +66,21 @@ class MoveToWalletViewmodel extends BaseState {
   }
 
   /*---------------------------------------------------
+                      Set Withdraw Limit
+--------------------------------------------------- */
+  setWithdrawLimit() async {
+    setBusy(true);
+    withdrawLimit = environment["minimumWithdraw"][walletInfo.tickerName];
+    if (withdrawLimit == null) {
+      await tokenListDatabaseService
+          .getByName(walletInfo.tickerName)
+          .then((token) => withdrawLimit = token.minWithdraw);
+    }
+    log.i('withdrawLimit $withdrawLimit');
+    setBusy(false);
+  }
+
+/*---------------------------------------------------
                       Get gas
 --------------------------------------------------- */
 
@@ -92,7 +114,18 @@ class MoveToWalletViewmodel extends BaseState {
       setBusy(false);
       return;
     }
+
     var amount = double.tryParse(amountController.text);
+    if (amount < withdrawLimit) {
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).minimumAmountError,
+          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+          Icons.cancel,
+          red,
+          context);
+      setBusy(false);
+      return;
+    }
     await apiService
         .getSingleCoinExchangeBalance(walletInfo.tickerName)
         .then((res) {
@@ -110,16 +143,6 @@ class MoveToWalletViewmodel extends BaseState {
       return;
     }
 
-    // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-    //   sharedService.showInfoFlushbar(
-    //       AppLocalizations.of(context).minimumAmountError,
-    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-    //       Icons.cancel,
-    //       red,
-    //       context);
-    //   setBusy(false);
-    //   return;
-    // }
     setMessage('');
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -153,7 +176,7 @@ class MoveToWalletViewmodel extends BaseState {
           .then((ret) {
         log.w(ret);
         bool success = ret["success"];
-        if (success) {
+        if (success && ret['transactionHash'] != null) {
           String txId = ret['transactionHash'];
           log.e('txid $txId');
           amountController.text = '';
@@ -189,7 +212,7 @@ class MoveToWalletViewmodel extends BaseState {
           }
         }
         sharedService.alertDialog(
-            success
+            success && ret['transactionHash'] != null
                 ? AppLocalizations.of(context).withdrawTransactionSuccessful
                 : AppLocalizations.of(context).withdrawTransactionFailed,
             success ? "" : AppLocalizations.of(context).serverError,

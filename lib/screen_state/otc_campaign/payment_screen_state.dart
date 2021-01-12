@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/constants.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';

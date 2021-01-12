@@ -71,23 +71,26 @@ Uint8List hash256(Uint8List buffer) {
                 Get Coin Type Id By Name
 ----------------------------------------------------------------------*/
 
-getCoinTypeIdByName(String coinName) async {
+Future<int> getCoinTypeIdByName(String coinName) async {
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
   int coinType = 0;
-  var newCoinList;
-  if (coinList.newCoinTypeMap.containsKey(coinName))
-    newCoinList = coinList.newCoinTypeMap.entries
+  var hardCodedCoinList;
+  bool isOldToken = coinList.newCoinTypeMap.containsValue(coinName);
+  print('is old token value $isOldToken');
+  if (isOldToken)
+    hardCodedCoinList = coinList.newCoinTypeMap.entries
         .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
   // var coins =
   //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
-  if (newCoinList != null) {
-    log.w('New Coin list ${newCoinList.key}');
-    coinType = newCoinList.key;
+  if (hardCodedCoinList != null) {
+    coinType = hardCodedCoinList.key;
   } else {
-    coinType = await tokenListDatabaseService.getCoinTypeByTickerName(coinName);
-    print('ticker $coinName -- coin type $coinType');
+    await tokenListDatabaseService
+        .getCoinTypeByTickerName(coinName)
+        .then((value) => coinType = value);
   }
+  print('ticker $coinName -- coin type $coinType');
   return coinType;
 }
 

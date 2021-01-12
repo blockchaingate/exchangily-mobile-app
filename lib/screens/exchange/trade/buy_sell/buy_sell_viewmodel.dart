@@ -405,9 +405,12 @@ class BuySellViewModel extends ReactiveViewModel {
     setBusy(true);
     var timeBeforeExpiration = 423434342432;
     var orderType = 1;
-    int baseCoin = getCoinTypeIdByName(baseCoinName);
+    int baseCoin = 0;
+    await getCoinTypeIdByName(baseCoinName).then((value) => baseCoin = value);
     log.e('basecoin Hex ==' + baseCoin.toRadixString(16));
-    var targetCoin = getCoinTypeIdByName(targetCoinName);
+    int targetCoin = 0;
+    await getCoinTypeIdByName(targetCoinName)
+        .then((value) => targetCoin = value);
 
     if (!bidOrAsk) {
       var tmp = baseCoin;

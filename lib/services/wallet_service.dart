@@ -906,8 +906,9 @@ class WalletService {
       addressInWallet = exgToFabAddress(addressInWallet);
       addressInWallet = btcToBase58Address(addressInWallet);
     }
-    var coinType = getCoinTypeIdByName(coinName);
-
+    int coinType;
+    await getCoinTypeIdByName(coinName).then((value) => coinType = value);
+    log.i('cointype $coinType');
     var abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
 
     var coinPoolAddress = await getCoinPoolAddress();

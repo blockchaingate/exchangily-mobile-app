@@ -82,8 +82,9 @@ class SettingsViewmodel extends BaseViewModel {
   }
 
 // Not in use
-  convertDecimalToHex() {
-    int baseCoin = getCoinTypeIdByName('USDT');
+  convertDecimalToHex() async {
+    int baseCoin = 0;
+    await getCoinTypeIdByName('USDT').then((value) => baseCoin = value);
     var x = baseCoin.toRadixString(16);
     var t = HEX.encode([baseCoin]);
     log.e('basecoin $baseCoin --  Hex == $t');

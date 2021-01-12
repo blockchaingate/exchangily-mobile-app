@@ -123,10 +123,9 @@ class TokenListDatabaseService {
         whereArgs: [tickerName],
         limit: 1);
     log.w('Name - $tickerName - res-- $res');
-    String addr = Token.fromJson(res.first).contract;
-    log.e('address $addr');
-    int tt = Token.fromJson(res.first).minWithdraw;
-    log.e('mw $tt');
+    int tt = Token.fromJson(res.first).tokenType;
+    log.i('token type $tt');
+
     if (res.isNotEmpty) return Token.fromJson(res.first).tokenType;
 
     return null;
