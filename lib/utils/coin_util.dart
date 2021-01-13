@@ -14,6 +14,9 @@
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
@@ -68,16 +71,27 @@ Uint8List hash256(Uint8List buffer) {
                 Get Coin Type Id By Name
 ----------------------------------------------------------------------*/
 
-getCoinTypeIdByName(String coinName) {
-  var newCoinList = coinList.newCoinTypeMap.entries
-      .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
+Future<int> getCoinTypeIdByName(String coinName) async {
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
+  int coinType = 0;
+  var hardCodedCoinList;
+  bool isOldToken = coinList.newCoinTypeMap.containsValue(coinName);
+  print('is old token value $isOldToken');
+  if (isOldToken)
+    hardCodedCoinList = coinList.newCoinTypeMap.entries
+        .firstWhere((coinTypeMap) => coinTypeMap.value == coinName);
   // var coins =
   //     coinList.coin_list.where((coin) => coin['name'] == coinName).toList();
-  if (newCoinList != null) {
-    log.w('New Coin list ${newCoinList.key}');
-    return newCoinList.key;
+  if (hardCodedCoinList != null) {
+    coinType = hardCodedCoinList.key;
+  } else {
+    await tokenListDatabaseService
+        .getCoinTypeByTickerName(coinName)
+        .then((value) => coinType = value);
   }
-  return 0;
+  print('ticker $coinName -- coin type $coinType');
+  return coinType;
 }
 
 encodeSignature(signature, recovery, compressed, segwitType) {
@@ -501,6 +515,13 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
 }
 
 getOfficalAddress(String coinName) {
+  if (coinName == 'CNB') {
+    print('CoinName $coinName');
+    print(
+        'EXG offcial address for CNB ${environment['addresses']['exchangilyOfficial'][0]['address']}');
+    return environment['addresses']['exchangilyOfficial'][0]['address']
+        .toString();
+  }
   var address = environment['addresses']['exchangilyOfficial']
       .where((addr) => addr['name'] == coinName)
       .toList();

@@ -81,7 +81,6 @@ class WalletDataBaseService {
     //   print(e["id"]);
     //   print(e["name"]);
     // });
-    
 
     List<WalletInfo> list =
         res.isNotEmpty ? res.map((f) => WalletInfo.fromJson(f)).toList() : [];
@@ -113,7 +112,7 @@ class WalletDataBaseService {
     final Database db = await _database;
     List<Map> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
-    log.w('ID - $tickerName --- $res');
+    log.w('tickerName - $tickerName --res - $res');
     if (res.length > 0) {
       return WalletInfo.fromJson((res.first));
     }

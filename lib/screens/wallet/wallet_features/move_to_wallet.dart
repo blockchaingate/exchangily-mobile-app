@@ -78,8 +78,7 @@ class MoveToWalletScreen extends StatelessWidget {
                             suffix: Text(
                                 AppLocalizations.of(context).minimumAmount +
                                     ': ' +
-                                    environment['minimumWithdraw'][coinName]
-                                        .toString(),
+                                    model.withdrawLimit.toString(),
                                 style: Theme.of(context).textTheme.headline6),
                             enabledBorder: OutlineInputBorder(
                                 borderSide: new BorderSide(

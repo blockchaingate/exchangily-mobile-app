@@ -5,10 +5,12 @@ import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
+import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -58,9 +60,10 @@ import 'package:exchangilymobileapp/utils/exaddr.dart';
 
 class WalletService {
   final log = getLogger('Wallet Service');
+
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
   ApiService _api = locator<ApiService>();
-  double currentTickerUsdValue;
-  var txids = [];
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
@@ -68,23 +71,30 @@ class WalletService {
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   ApiService _apiService = locator<ApiService>();
+
+  double currentTickerUsdValue;
+  var txids = [];
+
   double coinUsdBalance;
   List<String> coinTickers = [
     'BTC',
     'ETH',
     'FAB',
-    'BCH',
-    'USDT',
     'EXG',
+    'USDT',
     'DUSD',
+    'BCH',
     'LTC',
     'DOGE',
+    'INB',
+    'REP',
     'DRGN',
     'HOT',
     'CEL',
     'MATIC',
     'IOST',
     'MANA',
+    'FUN',
     'WAX',
     'ELF',
     'GNO',
@@ -92,19 +102,24 @@ class WalletService {
     'WINGS',
     'MTL',
     'KNC',
-    'GVT'
+    'GVT',
+    'NVZN'
   ];
 
   List<String> tokenType = [
     '',
     '',
     '',
-    '',
+    'FAB',
     'ETH',
     'FAB',
-    'FAB',
     '',
     '',
+    '',
+    'ETH',
+    'ETH',
+    'ETH',
+    'ETH',
     'ETH',
     'ETH',
     'ETH',
@@ -122,32 +137,66 @@ class WalletService {
   ];
 
   List<String> coinNames = [
-    'bitcoin',
-    'ethereum',
-    'fabcoin',
-    'bitcoin cash',
-    'tether',
-    'exchangily',
-    'dusd',
-    'litecoin',
-    'dogecoin',
-    'dragon',
+    'Bitcoin',
+    'Ethereum',
+    'Fabcoin',
+    'Exchangily',
+    'Tether',
+    'DUSD',
+    'Bitcoin Cash',
+    'Litecoin',
+    'Dogecoin',
+    'Insight chain',
+    'Augur',
+    'Dragonchain',
     'Holo',
     'Celsius',
     'Matic Network',
     'IOST',
     'Decentraland',
-    'wax',
+    'FunFair',
+    'Wax',
     'aelf',
     'Gnosis',
-    'powr',
     'Power Ledger',
+    'Wings',
     'Metal',
     'Kyber Network',
-    'Genesis Vision'
+    'Genesis Vision',
+    'Invizion'
   ];
 
   Completer<DialogResponse> _completer;
+
+/*----------------------------------------------------------------------
+                Get Random Mnemonic
+----------------------------------------------------------------------*/
+  Future<List<Token>> getTokenListUpdates() async {
+    List<Token> newTokens = [];
+    await _apiService.getTokenListUpdates().then((tokenList) {
+      if (tokenList != null) {
+        tokenList.forEach((token) async {
+          log.w('getTokenListUpdates single token ${token.toJson()}');
+          var checkIfTokenExists =
+              await tokenListDatabaseService.getByName(token.tickerName);
+
+          //  print('check if token exists ${checkIfTokenExists.toJson()}');
+          if (checkIfTokenExists == null) {
+            tokenListDatabaseService.insert(token).whenComplete(() =>
+                log.w('${token.tickerName} has been inserted in the token db'));
+          } else
+            log.e(
+                '${token.tickerName} Token already in the database so not saving again');
+        });
+        newTokens = tokenList;
+        tokenListDatabaseService.getAll();
+      }
+    }).catchError((err) {
+      log.e('getTokenListUpdates Catch $err');
+      return null;
+    });
+    return newTokens;
+  }
 
   addTxids(allTxids) {
     txids = [...txids, ...allTxids].toSet().toList();
@@ -405,8 +454,8 @@ class WalletService {
         log.i("Offline wallet ${_walletInfo[i].toJson()}");
         await walletDatabaseService.insert(_walletInfo[i]);
       }
- 
-      await walletDatabaseService.getAll();
+
+      //  await walletDatabaseService.getAll();
       return _walletInfo;
     } catch (e) {
       log.e(e);
@@ -859,7 +908,9 @@ class WalletService {
       addressInWallet = exgToFabAddress(addressInWallet);
       addressInWallet = btcToBase58Address(addressInWallet);
     }
-    var coinType = getCoinTypeIdByName(coinName);
+    int coinType;
+    await getCoinTypeIdByName(coinName).then((value) => coinType = value);
+    log.i('cointype $coinType');
     var abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
 
     var coinPoolAddress = await getCoinPoolAddress();
@@ -918,7 +969,7 @@ class WalletService {
     var resST = await sendTransaction(
         coinName, seed, [0], [], officalAddress, amount, option, false);
     log.i('after send transaction');
-    if (resST != null) log.w(resST);
+    if (resST != null) log.w('res $resST');
     if (resST['errMsg'] != '') {
       errRes['data'] = resST['errMsg'];
       return errRes;
@@ -945,9 +996,7 @@ class WalletService {
       errRes['data'] = 'incorrect amount for two transactions';
       return errRes;
     }
-
     var subString = amountInLinkString.substring(amountInTxString.length);
-
     if (subString != null && subString != '') {
       var zero = int.parse(subString);
       if (zero != 0) {
@@ -956,8 +1005,8 @@ class WalletService {
       }
     }
 
-    var coinType = getCoinTypeIdByName(coinName);
-
+    var coinType = await getCoinTypeIdByName(coinName);
+    log.i('coin type $coinType');
     if (coinType == 0) {
       errRes['data'] = 'invalid coinType for ' + coinName;
       return errRes;
@@ -1260,7 +1309,7 @@ class WalletService {
     try {
       fabAddress = toLegacyAddress(kbPaymentAddress);
     } catch (e) {}
-    ;
+
     return (fabAddress != '');
   }
 
@@ -1905,9 +1954,9 @@ class WalletService {
 
       contractAddress = stringUtils.trimHexPrefix(contractAddress);
 
+      log.i(coin);
       var contractInfo = await getFabSmartContract(
           contractAddress, fxnCallHex, gasLimit, gasPrice);
-
       if (addressList != null && addressList.length > 0) {
         addressList[0] = exgToFabAddress(addressList[0]);
       }
@@ -2075,7 +2124,7 @@ class WalletService {
 
     var totalFee = totalAmount;
     var chunks = new List<dynamic>();
-    log.w('Address $contractAddress');
+    log.w('Smart contract Address $contractAddress');
     chunks.add(84);
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasLimit)));
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasPrice)));

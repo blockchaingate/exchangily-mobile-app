@@ -39,6 +39,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/red
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -109,6 +110,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => MoveToWalletViewmodel());
   locator.registerFactory(() => TransactionHistoryViewmodel());
   locator.registerFactory(() => RedepositViewModel());
+  locator.registerFactory(() => TokenListDatabaseService());
   // OTC
   locator.registerFactory(() => OtcScreenState());
   locator.registerFactory(() => OtcDetailsScreenState());

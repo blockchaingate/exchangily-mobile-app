@@ -30,6 +30,7 @@ class TradeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<TradeViewModel>.reactive(
         disposeViewModel: true,
+        fireOnModelReadyOnce: true,
         // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
         // which is required override
         viewModelBuilder: () =>
@@ -143,7 +144,8 @@ class TradeView extends StatelessWidget {
                                 margin: EdgeInsets.only(top: 5.0),
                                 child: PairPriceView(
                                   pairPrice:
-                                      model.dataReady(model.tickerStreamKey)
+                                      model.dataReady(model.tickerStreamKey) &&
+                                              model.currentPairPrice != null
                                           ? model.currentPairPrice
                                           : model.pairPriceByRoute,
                                   isBusy:
@@ -154,24 +156,22 @@ class TradeView extends StatelessWidget {
                               ),
 
                               //  Below container contains trading view chart in the trade tab
-                              // model.isTradingChartModelBusy
-                              //     ? Container(
-                              //         child: model.sharedService.loadingIndicator())
-                              //     :
+                              //   model.currentPairPrice == null
 
-                              // model.isStreamDataNull
-                              //     ? Container(
-                              //         child: Center(
-                              //             child: Text(AppLocalizations.of(context)
-                              //                     .loading +
-                              //                 '...')))
-                              //     :
-                              Container(
-                                child: LoadHTMLFileToWEbView(
-                                  model.updateTickerName(
-                                      pairPriceByRoute.symbol),
-                                ),
-                              ),
+                              model.currentPairPrice.price == 0.0
+                                  ? Container(
+                                      color: secondaryColor.withAlpha(155),
+                                      padding: EdgeInsets.all(0),
+                                      margin: EdgeInsets.all(0),
+                                      height: 280,
+                                      child: Center(
+                                          child: CupertinoActivityIndicator()))
+                                  : Container(
+                                      child: LoadHTMLFileToWEbView(
+                                        model.updateTickerName(
+                                            pairPriceByRoute.symbol),
+                                      ),
+                                    ),
                               //: CircularProgressIndicator(),
                               // Text(model.interval),
                               // Text(model.isTradingChartModelBusy.toString()),
@@ -250,9 +250,14 @@ class TradeView extends StatelessWidget {
                                           children: [
                                             // order book container
                                             Container(
-                                              child: OrderBookView(
-                                                  tickerName:
-                                                      pairPriceByRoute.symbol),
+                                              child:
+                                                  //Text('order book')
+
+                                                  OrderBookView(
+                                                tickerName:
+                                                    pairPriceByRoute.symbol,
+                                                isVerticalOrderbook: false,
+                                              ),
                                             ),
 
                                             // Market trades

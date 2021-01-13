@@ -12,6 +12,8 @@
 */
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:keccak/keccak.dart';
 import 'package:hex/hex.dart';
@@ -67,8 +69,16 @@ Future getEthBalanceByAddress(String address) async {
 }
 
 Future getEthTokenBalanceByAddress(String address, String coinName) async {
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
   var smartContractAddress =
       environment["addresses"]["smartContract"][coinName];
+  if (smartContractAddress == null) {
+    print('$coinName contract is null so fetching from token database');
+    await tokenListDatabaseService
+        .getContractAddressByTickerName(coinName)
+        .then((value) => smartContractAddress = '0x' + value);
+  }
   var url = ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
   var tokenBalance = 0.0;
   try {

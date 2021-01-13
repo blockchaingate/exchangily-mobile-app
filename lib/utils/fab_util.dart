@@ -12,6 +12,8 @@
 */
 
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 import './string_util.dart';
@@ -318,11 +320,19 @@ Future getSmartContractABI(String smartContractAddress) async {
 }
 
 Future getFabTokenBalanceByAddress(String address, String coinName) async {
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
   var smartContractAddress =
       environment["addresses"]["smartContract"][coinName];
+  if (smartContractAddress == null) {
+    print('$coinName contract is null so fetching from token database');
+    await tokenListDatabaseService
+        .getContractAddressByTickerName(coinName)
+        .then((value) => smartContractAddress = '0x' + value);
+  }
   var tokenBalance = 0.0;
   var tokenLockedBalance = 0.0;
-  if (coinName == 'EXG') {
+  if (coinName == 'EXG' || coinName == 'CNB') {
     String balanceInfoABI = '70a08231';
     tokenBalance = await getFabTokenBalanceForABI(
         balanceInfoABI, smartContractAddress, address);

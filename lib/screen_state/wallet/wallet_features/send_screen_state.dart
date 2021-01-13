@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -46,6 +47,8 @@ class SendScreenState extends BaseState {
       locator<TransactionHistoryDatabaseService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
   BuildContext context;
   var options = {};
   String txHash = '';
@@ -160,10 +163,16 @@ class SendScreenState extends BaseState {
             (tickerName != '') &&
             (tokenType != null) &&
             (tokenType != '')) {
+          String contractAddr =
+              environment["addresses"]["smartContract"][tickerName];
+          if (contractAddr == null) {
+            await tokenListDatabaseService
+                .getContractAddressByTickerName(tickerName)
+                .then((value) => contractAddr = '0x' + value);
+          }
           options = {
             'tokenType': tokenType,
-            'contractAddress': environment["addresses"]["smartContract"]
-                [tickerName],
+            'contractAddress': contractAddr,
             'gasPrice': gasPrice,
             'gasLimit': gasLimit,
             'satoshisPerBytes': satoshisPerBytes
@@ -178,7 +187,9 @@ class SendScreenState extends BaseState {
       }
 
       // Convert FAB to EXG format
-      if (walletInfo.tickerName == 'EXG' || walletInfo.tickerName == 'DUSD') {
+      if (walletInfo.tickerName == 'EXG' ||
+          walletInfo.tickerName == 'DUSD' ||
+          walletInfo.tickerName == 'CNB') {
         if (!toAddress.startsWith('0x')) toAddress = fabToExgAddress(toAddress);
       }
 

@@ -25,44 +25,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadHTMLFileToWEbView extends StatefulWidget {
   final String pair;
-  // final String interval;
-  //final bool isBusy;
+
   LoadHTMLFileToWEbView(
     this.pair,
-    //   this.interval,
-//  this.isBusy
   );
   @override
   _LoadHTMLFileToWEbViewState createState() => _LoadHTMLFileToWEbViewState();
 }
 
 class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
-  // String interval = '1m';
-//  WebViewController _controller;
-  //ConfigService configService = locator<ConfigService>();
-
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context).textTheme.bodyText1;
-    // isBusy ${widget.isBusy} --
-    // setState(() {
-    //   holder = widget.interval;
-
-    // });
-
     return ViewModelBuilder.reactive(
-      // createNewModelOnInsert: true,
       viewModelBuilder: () => TradingChartViewModel(),
       onModelReady: (model) {
-        //  model.context = context;
-
         model.init();
       },
       builder: (context, model, _) => Column(
         children: [
           model.isTradingChartModelBusy
               ? Container(
-                  color: white,
+                  color: grey,
                   padding: EdgeInsets.all(0),
                   margin: EdgeInsets.all(0),
                   height: 280,
@@ -76,16 +59,10 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
                     javascriptMode: JavascriptMode.unrestricted,
                     onWebViewCreated: (WebViewController webViewController) {
                       model.webViewController = webViewController;
-                      // model.isBusy && model.isIntervalUpdated
-                      //     ? _loadHtmlFromAssets(model)
-                      //     :
-
                       _loadHtmlFromAssets(model);
                     },
                   ),
                 ),
-          // Text(model.tradingChartInterval),
-          // Text(model.isTradingChartModelBusy.toString()),
           SizedBox(
               height: 50,
               child: Center(

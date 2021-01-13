@@ -399,18 +399,20 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
             child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Padding(
                 padding: const EdgeInsets.only(right: 5.0),
-                child: model.coins.isEmpty
+                child: model.exchangeBalances.isEmpty
                     ? Text(AppLocalizations.of(context).noCoinBalance)
-                    : Text(model.tickerName == ''
-                        ? AppLocalizations.of(context).selectCoin
-                        : model.tickerName),
+                    : Text(
+                      //model.tickerName == ''
+                       // ? AppLocalizations.of(context).selectCoin
+                       // :
+                         model.tickerName),
               ),
               Text(model.quantity == 0.0 ? '' : model.quantity.toString()),
-              model.coins.isNotEmpty ? Icon(Icons.arrow_drop_down) : Container()
+              model.exchangeBalances.isNotEmpty ? Icon(Icons.arrow_drop_down) : Container()
             ]),
           ),
           onPressed: () {
-            if (model.coins.isNotEmpty) model.coinListBottomSheet(context);
+            if (model.exchangeBalances.isNotEmpty) model.coinListBottomSheet(context);
           }),
     );
   }

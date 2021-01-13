@@ -6,7 +6,7 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 ----------------------------------------------------------------------*/
 
 const String baseBlockchainGateV2Url = isProduction
-    ? 'https://blockchaingate.com/v2/'
+    ? 'https://api.blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
 
 /*----------------------------------------------------------------------
@@ -49,6 +49,7 @@ const String RedepositCheckStatusApiRoute = 'checkstatus/';
 const String GetUtxosApiRoute = 'getutxos/';
 const String GetNonceApiRoute = 'getnonce/';
 const String PostRawTxApiRoute = 'postrawtransaction';
+const String GetTokenListUpdatesApiRoute = 'tokenListUpdates';
 
 /*----------------------------------------------------------------------
                             Exchange

@@ -12,24 +12,30 @@
 */
 
 class Token {
+  int _id;
   int _decimal;
-  String _name;
+  String _coinName;
+  String _chainName;
   String _tickerName;
   int _tokenType;
   String _contract;
-  String _minWithdraw;
-  String _feeWithdraw;
+  int _minWithdraw;
+  int _feeWithdraw;
 
   Token(
-      {int decimal,
-      String name,
+      {int id,
+      int decimal,
+      String coinName,
       String tickerName,
+      String chainName,
       int tokenType,
       String contract,
-      String minWithdraw,
-      String feeWithdraw}) {
+      int minWithdraw,
+      int feeWithdraw}) {
+    this._id = id;
     this._decimal = decimal;
-    this._name = name;
+    this._coinName = coinName;
+    this._chainName = chainName;
     this._tickerName = tickerName;
     this._tokenType = tokenType;
     this._contract = contract;
@@ -49,6 +55,8 @@ class Token {
     return new Token(
         decimal: json['decimal'] as int,
         tickerName: json['tickerName'] as String,
+        coinName: json['coinName'] as String,
+        chainName: json['chainName'] as String,
         tokenType: json['type'] as int,
         contract: json['contract'] as String,
         minWithdraw: json['minWithdraw'],
@@ -59,13 +67,22 @@ class Token {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+
     data['decimal'] = this._decimal;
     data['tickerName'] = this._tickerName;
+    data['coinName'] = this._coinName;
+    data['chainName'] = this._chainName;
     data['type'] = this._tokenType;
     data['contract'] = this._contract;
     data['minWithdraw'] = this._minWithdraw;
     data['feeWithdraw'] = this._feeWithdraw;
     return data;
+  }
+
+  int get id => _id;
+
+  set id(int id) {
+    this._id = id;
   }
 
   int get decimal => _decimal;
@@ -74,10 +91,16 @@ class Token {
     this._decimal = decimal;
   }
 
-  String get name => _name;
+  String get coinName => _coinName;
 
-  set name(String name) {
-    this.name = name;
+  set coinName(String coinName) {
+    this._coinName = coinName;
+  }
+
+  String get chainName => _chainName;
+
+  set chainName(String chainName) {
+    this._chainName = chainName;
   }
 
   String get tickerName => _tickerName;
@@ -98,16 +121,16 @@ class Token {
     this._contract = contract;
   }
 
-  String get minWithdraw => minWithdraw;
+  int get minWithdraw => _minWithdraw;
 
-  set minWithdraw(String minWithdraw) {
-    this.minWithdraw = minWithdraw;
+  set minWithdraw(int minWithdraw) {
+    this._minWithdraw = minWithdraw;
   }
 
-  String get feeWithdraw => feeWithdraw;
+  int get feeWithdraw => _feeWithdraw;
 
-  set feeWithdraw(String feeWithdraw) {
-    this.feeWithdraw = feeWithdraw;
+  set feeWithdraw(int feeWithdraw) {
+    this._feeWithdraw = feeWithdraw;
   }
 }
 

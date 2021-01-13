@@ -82,8 +82,9 @@ class SettingsViewmodel extends BaseViewModel {
   }
 
 // Not in use
-  convertDecimalToHex() {
-    int baseCoin = getCoinTypeIdByName('USDT');
+  convertDecimalToHex() async {
+    int baseCoin = 0;
+    await getCoinTypeIdByName('USDT').then((value) => baseCoin = value);
     var x = baseCoin.toRadixString(16);
     var t = HEX.encode([baseCoin]);
     log.e('basecoin $baseCoin --  Hex == $t');
@@ -325,13 +326,13 @@ class SettingsViewmodel extends BaseViewModel {
         key == 'zh') {
       log.e('in zh');
       AppLocalizations.load(Locale('zh', 'ZH'));
-      storageService.language = key;
+      storageService.language = 'zh';
     } else if (updatedLanguageValue == 'English' ||
         updatedLanguageValue == 'en' ||
         key == 'en') {
       log.e('in en');
       AppLocalizations.load(Locale('en', 'EN'));
-      storageService.language = key;
+      storageService.language = 'en';
     }
     setBusy(false);
   }

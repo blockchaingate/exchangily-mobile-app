@@ -62,7 +62,7 @@ class BuySellViewModel extends ReactiveViewModel {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
-  OrderService _orderService = locator<OrderService>();
+  //OrderService _orderService = locator<OrderService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   NavigationService navigationService = locator<NavigationService>();
 
@@ -134,6 +134,8 @@ class BuySellViewModel extends ReactiveViewModel {
                     get orderbook loaded status
 ----------------------------------------------------------------------*/
   void getOrderbookLoadedStatus() {
+    int counter = 0;
+
     Timer.periodic(Duration(seconds: 1), (timer) {
       log.i('getOrderbookLoadedStatus timer started');
       _isOrderbookLoaded = tradeService.isOrderbookLoaded;
@@ -146,10 +148,11 @@ class BuySellViewModel extends ReactiveViewModel {
         timer.cancel();
         log.i(
             'getOrderbookLoadedStatus timer cancel -- price $price -- controller ${priceTextController.text}');
-      } else
-        price = 300.0;
+      }
       setBusy(false);
+      counter++;
       log.w('getOrderbookLoadedStatus $isOrderbookLoaded');
+      if (counter == 20) timer.cancel();
     });
   }
 
@@ -317,33 +320,33 @@ class BuySellViewModel extends ReactiveViewModel {
 /* ---------------------------------------------------
             Retrieve Wallets
 --------------------------------------------------- */
-  retrieveWallets() async {
-    setBusy(true);
-    await databaseService.getAll().then((walletList) {
-      walletInfo = walletList;
+  // retrieveWallets() async {
+  //   setBusy(true);
+  //   await databaseService.getAll().then((walletList) {
+  //     walletInfo = walletList;
 
-      for (var i = 0; i < walletInfo.length; i++) {
-        coin = walletInfo[i];
-        if (coin.tickerName == targetCoinName.toUpperCase()) {
-          log.e(
-              'Coin from wallet info ${coin.tickerName} ---  Target coin name $targetCoinName');
-          targetCoinWalletData = coin;
-        }
-        if (coin.tickerName == baseCoinName.toUpperCase()) {
-          log.e(
-              'Coin from wallet info ${coin.tickerName} ---  Target coin name $baseCoinName');
-          baseCoinWalletData = coin;
-        }
-        if (coin.tickerName == 'EXG') {
-          exgAddress = coin.address;
-          // this.refresh(exgAddress);
-        }
-      }
-      setBusy(false);
-    }).catchError((error) {
-      setBusy(false);
-    });
-  }
+  //     for (var i = 0; i < walletInfo.length; i++) {
+  //       coin = walletInfo[i];
+  //       if (coin.tickerName == targetCoinName.toUpperCase()) {
+  //         log.e(
+  //             'Coin from wallet info ${coin.tickerName} ---  Target coin name $targetCoinName');
+  //         targetCoinWalletData = coin;
+  //       }
+  //       if (coin.tickerName == baseCoinName.toUpperCase()) {
+  //         log.e(
+  //             'Coin from wallet info ${coin.tickerName} ---  Target coin name $baseCoinName');
+  //         baseCoinWalletData = coin;
+  //       }
+  //       if (coin.tickerName == 'EXG') {
+  //         exgAddress = coin.address;
+  //         // this.refresh(exgAddress);
+  //       }
+  //     }
+  //     setBusy(false);
+  //   }).catchError((error) {
+  //     setBusy(false);
+  //   });
+  // }
 
 /* ---------------------------------------------------
           Generate Order Hash
@@ -402,9 +405,12 @@ class BuySellViewModel extends ReactiveViewModel {
     setBusy(true);
     var timeBeforeExpiration = 423434342432;
     var orderType = 1;
-    int baseCoin = getCoinTypeIdByName(baseCoinName);
+    int baseCoin = 0;
+    await getCoinTypeIdByName(baseCoinName).then((value) => baseCoin = value);
     log.e('basecoin Hex ==' + baseCoin.toRadixString(16));
-    var targetCoin = getCoinTypeIdByName(targetCoinName);
+    int targetCoin = 0;
+    await getCoinTypeIdByName(targetCoinName)
+        .then((value) => targetCoin = value);
 
     if (!bidOrAsk) {
       var tmp = baseCoin;

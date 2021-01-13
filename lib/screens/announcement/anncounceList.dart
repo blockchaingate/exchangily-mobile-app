@@ -31,7 +31,11 @@ class AnnouncementList extends StatelessWidget {
         },
         builder: (context, model, child) => Scaffold(
             appBar: AppBar(
-              title: Text(getlangGlobal()=="en"?'Announcement List':"公告列表"),
+              title: Text(
+               getlangGlobal()=="en"?
+                'Announcement List'
+               :"公告列表"
+                ),
               centerTitle: true,
             ),
             body: model.busy
@@ -47,11 +51,11 @@ class AnnouncementList extends StatelessWidget {
                             padding: EdgeInsets.all(10),
                             itemCount: model.announceList.length,
                             itemBuilder: (context, index) {
-                              print("index: " + index.toString());
-                              print(model.announceList[index].toString());
-                              print("isRead: " +
-                                  model.announceList[index]['isRead']
-                                      .toString());
+                              // print("index: " + index.toString());
+                              // print(model.announceList[index].toString());
+                              // print("isRead: " +
+                              //     model.announceList[index]['isRead']
+                              //         .toString());
                               // model.announceList[index].forEach((k,v){
                               //   print("key: " +k);
                               //   print("value: " +v.toString());
@@ -137,7 +141,7 @@ class AnnouncementList extends StatelessWidget {
                                           Text(
                                               convertDateFormat(
                                                   model.announceList[index]
-                                                      ["postedDate"]),
+                                                      ["dateCreated"]),
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5),

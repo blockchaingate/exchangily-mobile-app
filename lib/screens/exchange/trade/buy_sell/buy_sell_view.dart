@@ -15,15 +15,15 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:flutter/foundation.dart';
-import 'package:exchangilymobileapp/shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -119,8 +119,9 @@ class BuySellView extends StatelessWidget {
                 Orderbook view
  -----------------------------------------------------------*/
                                       // OrderBookView(tickerName: model.tickerName),
-                                      VerticalOrderbook(
-                                          tickerName: model.tickerName)
+                                      OrderBookView(
+                                          tickerName: model.tickerName,
+                                          isVerticalOrderbook: true)
                                   // buildRightSideOrderbookColumn(
                                   //     context, model),
                                   ),
@@ -162,7 +163,7 @@ class BuySellView extends StatelessWidget {
             decoration: BoxDecoration(
               border: Border(
                   bottom: model.bidOrAsk
-                      ? BorderSide(width: 2.0, color: globals.primaryColor)
+                      ? BorderSide(width: 2.0, color: primaryColor)
                       : BorderSide.none),
             ),
             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -247,6 +248,9 @@ class VerticalOrderbook extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<OrderbookViewModel>.reactive(
+      disposeViewModel: false,
+      fireOnModelReadyOnce: true,
+
       // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
       // which is required override
       viewModelBuilder: () => OrderbookViewModel(tickerName: tickerName),
@@ -262,8 +266,7 @@ class VerticalOrderbook extends StatelessWidget {
                       height: 20,
                       width: 20,
                       child: Container(
-                          color: globals.white,
-                          child: CupertinoActivityIndicator()))))
+                          color: white, child: CupertinoActivityIndicator()))))
           : Column(
               children: <Widget>[
                 Row(
@@ -298,8 +301,14 @@ class VerticalOrderbook extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Text('${model.orderbook.price.toString()}',
-                            style: Theme.of(context).textTheme.headline4)
+                        model.orderbook.price != 0
+                            ? Text('${model.orderbook.price.toString()}',
+                                style: Theme.of(context).textTheme.headline4)
+                            : Center(
+                                child: Text('No Orders',
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2),
+                              )
                       ],
                     )),
                 buildVerticalOrderbookColumn(
@@ -490,7 +499,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         Slider(
           divisions: 100,
           label: '${model.sliderValue.toStringAsFixed(2)}%',
-          activeColor: globals.primaryColor,
+          activeColor: primaryColor,
           min: 0.0,
           max: 100.0,
           onChanged: (newValue) {
@@ -606,11 +615,10 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                                 decimal: true), // numnber keyboard
                             decoration: InputDecoration(
                                 focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: globals.primaryColor)),
-                                enabledBorder: UnderlineInputBorder(
                                     borderSide:
-                                        BorderSide(color: globals.grey)),
+                                        BorderSide(color: primaryColor)),
+                                enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: grey)),
                                 hintText: '0.00000',
                                 hintStyle:
                                     Theme.of(context).textTheme.headline5),
@@ -635,10 +643,9 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                           decimal: true), // numnber keyboard
                       decoration: InputDecoration(
                           focusedBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: globals.primaryColor)),
+                              borderSide: BorderSide(color: primaryColor)),
                           enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: globals.grey)),
+                              borderSide: BorderSide(color: grey)),
                           hintText: '0.00000',
                           hintStyle: Theme.of(context).textTheme.headline5),
                       style: Theme.of(context).textTheme.headline5,
@@ -693,7 +700,7 @@ class BalanceRowWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(AppLocalizations.of(context).balance,
-            style: TextStyle(color: globals.primaryColor, fontSize: 13.0)),
+            style: TextStyle(color: primaryColor, fontSize: 13.0)),
         // First Check if Object is null
         // model.targetCoinExchangeBalance == null ||
         //         model.baseCoinExchangeBalance == null ||  model.baseCoinExchangeBalance.unlockedAmount == null
@@ -709,14 +716,14 @@ class BalanceRowWidget extends StatelessWidget {
                 "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
                     " " +
                     model.baseCoinName,
-                style: TextStyle(color: globals.primaryColor, fontSize: 13.0))
+                style: TextStyle(color: primaryColor, fontSize: 13.0))
             :
             // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
             Text(
                 "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal) ?? 0.0}" +
                     " " +
                     model.targetCoinName,
-                style: TextStyle(color: globals.primaryColor, fontSize: 13.0))
+                style: TextStyle(color: primaryColor, fontSize: 13.0))
       ],
     );
   }
