@@ -52,6 +52,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     tokenType = walletInfo.tokenType;
     setFee();
     await getGas();
+    refreshBalance();
     setBusy(false);
   }
 
@@ -180,7 +181,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       String tickerName = walletInfo.tickerName;
       String contractAddr =
           environment["addresses"]["smartContract"][tickerName];
-      if (contractAddr == null) {
+      if (contractAddr == null && tickerName != 'ETH' && tickerName != 'BTC') {
         log.i('$tickerName contract is null so fetching from token database');
         await tokenListDatabaseService
             .getContractAddressByTickerName(tickerName)

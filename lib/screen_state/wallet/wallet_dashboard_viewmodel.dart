@@ -878,13 +878,16 @@ class WalletDashboardViewModel extends BaseViewModel {
 
           } // For loop j ends
         }); // walletInfo for each ends
+
         //  second if start to add new coins in wallet info list
         if (walletInfoCopy.length + 2 != walletBalanceList.length) {
           walletBalanceList.forEach((walletBalanceObj) async {
-            // bool isNew =
-            bool isNewTicker = tickerNames.contains(walletBalanceObj.coin);
-            print('is new ticker $isNewTicker');
-            if (!isNewTicker) {
+            bool isOldTicker = tickerNames.contains(walletBalanceObj.coin);
+            print(
+                'wallet info contains ${walletBalanceObj.coin}? => $isOldTicker');
+            if (!isOldTicker &&
+                walletBalanceObj.coin != 'RMB' &&
+                walletBalanceObj.coin != 'CAD') {
               await walletService.getTokenListUpdates();
               await tokenListDatabaseService
                   .getByName(walletBalanceObj.coin)
@@ -915,6 +918,8 @@ class WalletDashboardViewModel extends BaseViewModel {
               });
             }
           });
+          calcTotalBal();
+          await updateWalletDatabase();
         } // second if ends
 
         calcTotalBal();

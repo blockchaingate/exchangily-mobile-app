@@ -62,6 +62,7 @@ class MoveToWalletViewmodel extends BaseState {
       feeMeasurement = '10^(-8)';
     }
     checkGasBalance();
+    getSingleCoinExchangeBal();
     setBusy(false);
   }
 
@@ -100,6 +101,18 @@ class MoveToWalletViewmodel extends BaseState {
     return gasAmount;
   }
 
+  // Check single coin exchange balance
+  getSingleCoinExchangeBal() async {
+    setBusy(true);
+    await apiService
+        .getSingleCoinExchangeBalance(walletInfo.tickerName)
+        .then((res) {
+      walletInfo.inExchange = res.unlockedAmount;
+      log.w('exchange balance check ${walletInfo.inExchange}');
+    });
+    setBusy(false);
+  }
+
 /*----------------------------------------------------------------------
                       Verify Wallet Password
 ----------------------------------------------------------------------*/
@@ -126,12 +139,7 @@ class MoveToWalletViewmodel extends BaseState {
       setBusy(false);
       return;
     }
-    await apiService
-        .getSingleCoinExchangeBalance(walletInfo.tickerName)
-        .then((res) {
-      walletInfo.inExchange = res.unlockedAmount;
-      log.w('exchange balance check ${walletInfo.inExchange}');
-    });
+    getSingleCoinExchangeBal();
     if (amount == null ||
         amount > walletInfo.inExchange ||
         amount == 0 ||
