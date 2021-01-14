@@ -250,14 +250,24 @@ class TradeView extends StatelessWidget {
                                           children: [
                                             // order book container
                                             Container(
-                                              child:
-                                                  //Text('order book')
-
-                                                  OrderBookView(
-                                                tickerName:
-                                                    pairPriceByRoute.symbol,
-                                                isVerticalOrderbook: false,
-                                              ),
+                                              child: !model.dataReady(model
+                                                          .orderbookStreamKey) &&
+                                                      model.singlePairDecimalConfig !=
+                                                          null
+                                                  ? ShimmerLayout(
+                                                      layoutType: 'orderbook',
+                                                    )
+                                                  : OrderBookView(
+                                                      // tickerName:
+                                                      //     pairPriceByRoute
+                                                      //         .symbol,
+                                                      isVerticalOrderbook:
+                                                          false,
+                                                      orderbook:
+                                                          model.orderbook,
+                                                      decimalConfig: model
+                                                          .singlePairDecimalConfig,
+                                                    ),
                                             ),
 
                                             // Market trades
@@ -277,19 +287,7 @@ class TradeView extends StatelessWidget {
                                                 tickerName:
                                                     pairPriceByRoute.symbol),
                                             // My Exchange Asssets
-                                            model.busy(model.myExchangeAssets)
-                                                ? Container(
-                                                    margin:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 5.0,
-                                                            vertical: 5),
-                                                    height: 150,
-                                                    child: ShimmerLayout(
-                                                      layoutType:
-                                                          'marketTrades',
-                                                    ),
-                                                  )
-                                                : MyExchangeAssetsView()
+                                            MyExchangeAssetsView()
                                           ],
                                         ),
                                       ),
@@ -346,11 +344,8 @@ class TradeView extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => BuySellView(
-                                              //   orderbook: model.orderbook,
-                                              pairSymbolWithSlash:
-                                                  model.pairSymbolWithSlash,
-                                              bidOrAsk: true)),
+                                          builder: (context) =>
+                                              BuySellView(bidOrAsk: true)),
                                     );
                                 },
                                 child: Text(AppLocalizations.of(context).buy,
@@ -373,11 +368,8 @@ class TradeView extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => BuySellView(
-                                            //  orderbook: model.orderbook,
-                                            pairSymbolWithSlash:
-                                                model.pairSymbolWithSlash,
-                                            bidOrAsk: false)),
+                                        builder: (context) =>
+                                            BuySellView(bidOrAsk: false)),
                                   );
                               },
                               child: Text(AppLocalizations.of(context).sell,

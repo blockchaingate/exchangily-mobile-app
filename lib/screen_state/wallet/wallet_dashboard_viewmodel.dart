@@ -884,46 +884,55 @@ class WalletDashboardViewModel extends BaseViewModel {
           walletBalanceList.forEach((walletBalanceObj) async {
             bool isOldTicker = tickerNames.contains(walletBalanceObj.coin);
             print(
-                'wallet info contains ${walletBalanceObj.coin}? => $isOldTicker');
+                'wallet info contains ${walletBalanceObj.coin} => $isOldTicker');
             if (!isOldTicker &&
                 walletBalanceObj.coin != 'RMB' &&
                 walletBalanceObj.coin != 'CAD') {
-              await walletService.getTokenListUpdates();
-              await tokenListDatabaseService
-                  .getByName(walletBalanceObj.coin)
-                  .then((newToken) {
-                String newCoinAddress = '';
+              await walletService.getTokenListUpdates().whenComplete(() async {
+                await tokenListDatabaseService
+                    .getByName(walletBalanceObj.coin)
+                    .then((newToken) {
+                  String newCoinAddress = '';
 
-                newCoinAddress = assignNewTokenAddress(newToken);
-                double marketPrice = walletBalanceObj.usdValue.usd ?? 0.0;
-                double availableBal = walletBalanceObj.balance ?? 0.0;
-                double lockedBal = walletBalanceObj.lockBalance ?? 0.0;
+                  newCoinAddress = assignNewTokenAddress(newToken);
+                  double marketPrice = walletBalanceObj.usdValue.usd ?? 0.0;
+                  double availableBal = walletBalanceObj.balance ?? 0.0;
+                  double lockedBal = walletBalanceObj.lockBalance ?? 0.0;
 
-                double usdValue = walletService.calculateCoinUsdBalance(
-                    marketPrice, availableBal, lockedBal);
-                String holder = NumberUtil.currencyFormat(usdValue, 2);
-                formattedUsdValueList.add(holder);
-                WalletInfo wi = WalletInfo(
-                    id: null,
-                    tickerName: newToken.tickerName,
-                    tokenType: newToken.chainName,
-                    address: newCoinAddress,
-                    availableBalance: walletBalanceObj.balance,
-                    lockedBalance: walletBalanceObj.lockedExchangeBalance,
-                    usdValue: usdValue,
-                    name: newToken.coinName,
-                    inExchange: walletBalanceObj.unlockedExchangeBalance);
-                walletInfo.add(wi);
-                log.e('new coin ${wi.tickerName} added ${wi.toJson()}');
+                  double usdValue = walletService.calculateCoinUsdBalance(
+                      marketPrice, availableBal, lockedBal);
+                  String holder = NumberUtil.currencyFormat(usdValue, 2);
+                  formattedUsdValueList.add(holder);
+                  WalletInfo wi = WalletInfo(
+                      id: null,
+                      tickerName: newToken.tickerName,
+                      tokenType: newToken.chainName,
+                      address: newCoinAddress,
+                      availableBalance: walletBalanceObj.balance,
+                      lockedBalance: walletBalanceObj.lockedExchangeBalance,
+                      usdValue: usdValue,
+                      name: newToken.coinName,
+                      inExchange: walletBalanceObj.unlockedExchangeBalance);
+                  walletInfo.add(wi);
+                  print('1 Wallet info length ${walletInfo.length}');
+                  log.e('new coin ${wi.tickerName} added ${wi.toJson()}');
+                });
               });
             }
           });
+          print('2 Wallet info length ${walletInfo.length}');
           calcTotalBal();
           await updateWalletDatabase();
         } // second if ends
 
-        calcTotalBal();
-        await updateWalletDatabase();
+        if (walletInfo.length == walletBalanceList.length) {
+          print(
+              'calc total bal and update wallet database when no new coin in api');
+          calcTotalBal();
+          await updateWalletDatabase();
+          print(
+              'calc total bal and update wallet database when no new coin in api');
+        }
 
         //  if (!isProduction) debugVersionPopup();
 
@@ -1088,6 +1097,8 @@ class WalletDashboardViewModel extends BaseViewModel {
     for (int i = 0; i < walletInfo.length; i++) {
       await walletDatabaseService.update(walletInfo[i]);
     }
+    walletDatabaseService.getAll().then(
+        (res) => log.i('total wallet database coin entries ${res.length} '));
   }
 
 // test version pop up

@@ -84,6 +84,7 @@ class TokenListDatabaseService {
     final Database db = await _database;
     int id = await db.insert(tableName, token.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+
     return id;
   }
 
@@ -113,7 +114,6 @@ class TokenListDatabaseService {
     // return TransactionHistory.fromJson((res.first));
   }
 
-  // Get Single transaction By Name
   getCoinTypeByTickerName(String tickerName) async {
     await initDb();
     final Database db = await _database;
@@ -127,6 +127,22 @@ class TokenListDatabaseService {
     log.i('token type $tt');
 
     if (res.isNotEmpty) return Token.fromJson(res.first).tokenType;
+
+    return null;
+    // return TransactionHistory.fromJson((res.first));
+  }
+
+  // Get Single transaction By Name
+  getTickerNameByCoinType(int coinType) async {
+    await initDb();
+    final Database db = await _database;
+    List<Map> res = await db.query(tableName,
+        distinct: true, where: 'type= ?', whereArgs: [coinType], limit: 1);
+    log.w('Name - $coinType - res-- $res');
+    String ticker = Token.fromJson(res.first).tickerName;
+    log.i('ticker $ticker');
+
+    if (res.isNotEmpty) return Token.fromJson(res.first).tickerName;
 
     return null;
     // return TransactionHistory.fromJson((res.first));

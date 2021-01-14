@@ -77,7 +77,7 @@ class ApiService {
     ExchangeBalanceModelList exchangeBalanceList;
     String url =
         configService.getKanbanBaseUrl() + AssetsBalanceApiRoute + exgAddress;
-    log.w('get assets balance url $url');
+    log.i('get assets balance url $url');
     try {
       final res = await client.get(url);
       if (res.statusCode == 200 || res.statusCode == 201) {

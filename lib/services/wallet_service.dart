@@ -184,6 +184,14 @@ class WalletService {
           if (checkIfTokenExists == null) {
             tokenListDatabaseService.insert(token).whenComplete(() =>
                 log.w('${token.tickerName} has been inserted in the token db'));
+            List<String> tokenList = [];
+            Map<int, String> singleTokenData = {
+              token.tokenType: token.tickerName
+            };
+
+            tokenList.add(jsonEncode(singleTokenData));
+            log.i('tokenList $tokenList');
+            storageService.tokenList = tokenList;
           } else
             log.e(
                 '${token.tickerName} Token already in the database so not saving again');

@@ -44,7 +44,7 @@ class _MainNavState extends State<MainNav> {
           physics: new NeverScrollableScrollPhysics(),
           children: <Widget>[
             WalletDashboardView(),
-            MarketsView(hideSlider: false),
+            //  MarketsView(hideSlider: false),
             CampaignInstructionScreen(),
             SettingsView()
           ],

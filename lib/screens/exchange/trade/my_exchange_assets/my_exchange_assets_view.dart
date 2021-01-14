@@ -15,7 +15,7 @@ class MyExchangeAssetsView extends StatelessWidget {
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => MyExchangeAssetsViewModel(),
       builder: (context, model, _) => Container(
-        child: model.isBusy
+        child: !model.dataReady
             ? ShimmerLayout(
                 layoutType: 'marketTrades',
               )

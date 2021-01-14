@@ -1,3 +1,5 @@
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 
 import '../../environments/coins.dart' as coinList;
@@ -20,7 +22,16 @@ class ExchangeBalanceModel {
   }
 
   factory ExchangeBalanceModel.fromJson(Map<String, dynamic> json) {
+    TokenListDatabaseService tokenListDatabaseService =
+        locator<TokenListDatabaseService>();
+    int coinType = json['coinType'];
     String tickerName = coinList.newCoinTypeMap[json['coinType']];
+    if (tickerName == null) {
+      // get ticker name from local storage rather than from database to avoid future await in here
+      var ticker = tokenListDatabaseService.getTickerNameByCoinType(coinType);
+      print('Ticker in exchange balance model $ticker');
+      tickerName = ticker;
+    }
     //print('Ticker Name -- $tickerName --- coin type ${json['coinType']}');
 
     return ExchangeBalanceModel(

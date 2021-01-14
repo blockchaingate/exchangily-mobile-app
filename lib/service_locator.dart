@@ -32,7 +32,7 @@ import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
+
 import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
@@ -70,6 +70,7 @@ Future serviceLocator() async {
   // Wallet
   locator.registerLazySingleton(() => WalletService());
   locator.registerLazySingleton(() => WalletDataBaseService());
+  locator.registerLazySingleton(() => TokenListDatabaseService());
   locator.registerLazySingleton(() => VaultService());
   // Shared
   locator.registerLazySingleton(() => ApiService());
@@ -83,9 +84,8 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => TradeService());
   locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
 
-  locator.registerLazySingleton(() => PdfViewerService());
-
   locator.registerLazySingleton(() => OrderService());
+  locator.registerLazySingleton(() => PdfViewerService());
 
   locator.registerLazySingleton(() => ConfigService());
 
@@ -110,7 +110,6 @@ Future serviceLocator() async {
   locator.registerFactory(() => MoveToWalletViewmodel());
   locator.registerFactory(() => TransactionHistoryViewmodel());
   locator.registerFactory(() => RedepositViewModel());
-  locator.registerFactory(() => TokenListDatabaseService());
   // OTC
   locator.registerFactory(() => OtcScreenState());
   locator.registerFactory(() => OtcDetailsScreenState());
@@ -126,7 +125,6 @@ Future serviceLocator() async {
   // Trade
   locator.registerFactory(() => MarketsViewModel());
   locator.registerFactory(() => TradeViewModel());
-  locator.registerFactory(() => BuySellViewModel());
   locator.registerFactory(() => MyExchangeAssetsViewModel());
   locator.registerFactory(() => TradingChartViewModel());
   locator.registerFactory(() => CarouselViewmodel());
