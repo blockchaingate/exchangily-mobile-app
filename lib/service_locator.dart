@@ -71,6 +71,7 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => WalletService());
   locator.registerLazySingleton(() => WalletDataBaseService());
   locator.registerLazySingleton(() => VaultService());
+  locator.registerLazySingleton(() => TokenListDatabaseService());
   // Shared
   locator.registerLazySingleton(() => ApiService());
   locator.registerLazySingleton(() => SharedService());
@@ -110,7 +111,6 @@ Future serviceLocator() async {
   locator.registerFactory(() => MoveToWalletViewmodel());
   locator.registerFactory(() => TransactionHistoryViewmodel());
   locator.registerFactory(() => RedepositViewModel());
-  locator.registerFactory(() => TokenListDatabaseService());
   // OTC
   locator.registerFactory(() => OtcScreenState());
   locator.registerFactory(() => OtcDetailsScreenState());

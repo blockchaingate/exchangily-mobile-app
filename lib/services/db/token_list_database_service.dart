@@ -33,7 +33,7 @@ class TokenListDatabaseService {
   final String columnMinWithdraw = 'minWithdraw';
   final String columnFeeWithdraw = 'feeWithdraw';
 
-  static final _databaseVersion = 4;
+  static final _databaseVersion = 5;
   static Future<Database> _database;
   String path = '';
 
@@ -132,6 +132,22 @@ class TokenListDatabaseService {
     // return TransactionHistory.fromJson((res.first));
   }
 
+  // Get Single transaction By Name
+  getTickerNameByCoinType(int coinType) async {
+    await initDb();
+    final Database db = await _database;
+    List<Map> res = await db.query(tableName,
+        distinct: true, where: 'type= ?', whereArgs: [coinType], limit: 1);
+    log.w('Name - $coinType - res-- $res');
+    String ticker = Token.fromJson(res.first).tickerName;
+    log.i('ticker $ticker');
+
+    if (res.isNotEmpty) return Token.fromJson(res.first).tickerName;
+
+    return null;
+    // return TransactionHistory.fromJson((res.first));
+  }
+
   // Get Single transaction By Id
   Future getById(int id) async {
     final Database db = await _database;
@@ -153,6 +169,13 @@ class TokenListDatabaseService {
       whereArgs: [token.id],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  // delete single token
+  Future<void> deleteByTickerName(String tickerName) async {
+    final db = await _database;
+    await db
+        .delete(tableName, where: "tickerName = ?", whereArgs: [tickerName]);
   }
 
   // Close Database

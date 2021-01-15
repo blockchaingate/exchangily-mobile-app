@@ -424,7 +424,7 @@ class WalletDashboardView extends StatelessWidget {
               //     icon: Icon(Icons.arrow_downward),
               //     onPressed: () {
               //       print('1');
-              //       model.walletService.getTokenListUpdates();
+              //       model.saveTokenLocally();
               //     },
               //   ),
               // ),

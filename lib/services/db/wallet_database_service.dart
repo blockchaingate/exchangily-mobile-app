@@ -90,8 +90,10 @@ class WalletDataBaseService {
 // Insert Data In The Database
   Future insert(WalletInfo walletInfo) async {
     final Database db = await _database;
-    int id = await db.insert(tableName, walletInfo.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    int id = await db
+        .insert(tableName, walletInfo.toJson(),
+            conflictAlgorithm: ConflictAlgorithm.replace)
+        .whenComplete(() => getBytickerName(walletInfo.tickerName));
     return id;
   }
 
@@ -134,6 +136,13 @@ class WalletDataBaseService {
   Future<void> deleteWallet(int id) async {
     final db = await _database;
     await db.delete(tableName, where: "id = ?", whereArgs: [id]);
+  }
+
+  // Delete Single Object From Database By tickerName
+  Future<void> deleteWalletByTickerName(String tickerName) async {
+    final db = await _database;
+    await db
+        .delete(tableName, where: "tickerName = ?", whereArgs: [tickerName]);
   }
 
   // Update database

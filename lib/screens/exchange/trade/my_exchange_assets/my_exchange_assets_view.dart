@@ -77,8 +77,12 @@ class MyExchangeAssetsView extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(50),
                                         ),
-                                        child: Image.asset(
-                                            'assets/images/wallet-page/${tickerName.toLowerCase()}.png'),
+                                        child:
+                                            // Image.asset(
+                                            // 'assets/images/wallet-page/${tickerName.toLowerCase()}.png') ??
+                                            Image.network(model.logoUrl +
+                                                tickerName.toLowerCase() +
+                                                '.png'),
                                         width: 35,
                                         height: 35),
                                   ),

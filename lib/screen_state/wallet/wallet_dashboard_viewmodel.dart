@@ -784,11 +784,13 @@ class WalletDashboardViewModel extends BaseViewModel {
   Future refreshBalance() async {
     if (!isBusy) setBusy(true);
     List<String> tickerNames = [];
+
     await walletDatabaseService.getAll().then((walletList) {
       walletInfoCopy = [];
       formattedUsdValueList = [];
       walletInfoCopy = walletList;
     });
+
     walletInfo = [];
     Map<String, dynamic> walletBalancesBody = {
       'btcAddress': '',
@@ -867,11 +869,15 @@ class WalletDashboardViewModel extends BaseViewModel {
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
               print(wi.toJson());
+              walletDatabaseService.update(wi);
               if (walletTickerName == 'FAB') {
                 fabBalance = 0.0;
                 fabBalance = wi.availableBalance;
               }
-              tickerNames.add(walletTickerName);
+              if (!tickerNames.contains(walletTickerName))
+                tickerNames.add(walletTickerName);
+
+              print('wallet db tickerNames length ${tickerNames.length}');
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
@@ -880,7 +886,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         }); // walletInfo for each ends
 
         //  second if start to add new coins in wallet info list
-        if (walletInfoCopy.length + 2 != walletBalanceList.length) {
+        if (tickerNames.length != walletBalanceList.length) {
           walletBalanceList.forEach((walletBalanceObj) async {
             bool isOldTicker = tickerNames.contains(walletBalanceObj.coin);
             print(
@@ -915,15 +921,23 @@ class WalletDashboardViewModel extends BaseViewModel {
                     inExchange: walletBalanceObj.unlockedExchangeBalance);
                 walletInfo.add(wi);
                 log.e('new coin ${wi.tickerName} added ${wi.toJson()}');
+                walletDatabaseService.insert(wi).then((value) =>
+                    print('${wi.tickerName} has been added in the wallet db'));
+
+                // save data locally
+                List<String> tokenList = [];
+
+                var x = jsonEncode(newToken);
+                ;
+                tokenList.add(x);
+                log.i('tokenList $tokenList');
+                storageService.tokenList = tokenList;
               });
             }
           });
-          calcTotalBal();
-          await updateWalletDatabase();
+          //  calcTotalBal();
+          //  await updateWalletDatabase();
         } // second if ends
-
-        calcTotalBal();
-        await updateWalletDatabase();
 
         //  if (!isProduction) debugVersionPopup();
 
@@ -940,8 +954,12 @@ class WalletDashboardViewModel extends BaseViewModel {
           log.i('Fab or gas balance available already');
           //  storageService.isShowCaseView = true;
         }
+
+        calcTotalBal();
+        print(storageService.tokenList);
+        //  await updateWalletDatabase();
 // check if any new coins added in api
-        await walletService.getTokenListUpdates();
+        // await walletService.getTokenListUpdates();
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method
@@ -975,6 +993,38 @@ class WalletDashboardViewModel extends BaseViewModel {
           formattedUsdValueList.map((element) => element).toList();
     }
     setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                Save Locally
+----------------------------------------------------------------------*/
+  saveTokenLocally() async {
+    // await tokenListDatabaseService.getByName('CNB').then((newToken) {
+    //   List<String> tokenList = [];
+
+    //   var x = jsonEncode(newToken);
+    //   print('encode $x');
+    //   tokenList.add(x);
+    //   log.i('tokenList $tokenList');
+    //   storageService.tokenList = tokenList;
+    //   storageService.tokenList.forEach((element) {
+    //     print(element);
+    //     var t = jsonDecode(element);
+    //     Token token = Token.fromJson(t);
+    //     print(token.tickerName);
+    //   });
+    // });
+
+    var x = storageService.tokenList;
+    print(x);
+
+    storageService.tokenList.forEach((element) {
+      print(element);
+      var json = jsonDecode(element);
+      Token token = Token.fromJson(json);
+      if (token.tokenType == 131075) print(token.tickerName);
+      // tickerName = token.tickerName;
+    });
   }
 
   // Old way to get balances
@@ -1039,7 +1089,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     calcTotalBal();
     await getExchangeAssetsBalance();
-    await updateWalletDatabase();
+    // await updateWalletDatabase();
     String address = await getExgAddressFromWalletDatabase();
     await getGas();
     // check gas and fab balance if 0 then ask for free fab
@@ -1084,11 +1134,11 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
   // Update wallet database
-  updateWalletDatabase() async {
-    for (int i = 0; i < walletInfo.length; i++) {
-      await walletDatabaseService.update(walletInfo[i]);
-    }
-  }
+  // updateWalletDatabase() async {
+  //   for (int i = 0; i < walletInfo.length; i++) {
+  //     await walletDatabaseService.update(walletInfo[i]);
+  //   }
+  // }
 
 // test version pop up
   debugVersionPopup() async {

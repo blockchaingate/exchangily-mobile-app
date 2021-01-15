@@ -182,11 +182,12 @@ class WalletService {
 
           //  print('check if token exists ${checkIfTokenExists.toJson()}');
           if (checkIfTokenExists == null) {
-            tokenListDatabaseService.insert(token).whenComplete(() =>
-                log.w('${token.tickerName} has been inserted in the token db'));
+            tokenListDatabaseService.insert(token).whenComplete(() {
+              log.w('${token.tickerName} has been inserted in the token db');
+            });
           } else
             log.e(
-                '${token.tickerName} Token already in the database so not saving again');
+                '${token.tickerName} Token already in the token database so not saving again');
         });
         newTokens = tokenList;
         tokenListDatabaseService.getAll();

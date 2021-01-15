@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -15,6 +16,7 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
   ApiService apiService = locator<ApiService>();
   ExchangeBalanceModel exchangeBalance = new ExchangeBalanceModel();
   List<ExchangeBalanceModel> exchangeBalances = [];
+  String logoUrl = WalletCoinsLogoUrl;
   @override
   Future futureToRun() async {
     log.e('In get exchange assets');
