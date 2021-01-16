@@ -40,7 +40,7 @@ class MoveToWalletViewmodel extends BaseState {
   var minimumAmount;
   bool transFeeAdvance = false;
   double gasAmount = 0.0;
-  var withdrawLimit;
+  double withdrawLimit;
 
 /*---------------------------------------------------
                       INIT
@@ -74,8 +74,8 @@ class MoveToWalletViewmodel extends BaseState {
     withdrawLimit = environment["minimumWithdraw"][walletInfo.tickerName];
     if (withdrawLimit == null) {
       await tokenListDatabaseService
-          .getByName(walletInfo.tickerName)
-          .then((token) => withdrawLimit = token.minWithdraw);
+          .getByTickerName(walletInfo.tickerName)
+          .then((token) => withdrawLimit = double.parse(token.minWithdraw));
     }
     log.i('withdrawLimit $withdrawLimit');
     setBusy(false);

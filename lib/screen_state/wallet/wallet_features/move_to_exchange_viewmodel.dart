@@ -179,13 +179,17 @@ class MoveToExchangeViewModel extends BaseViewModel {
       var kanbanGasPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
       String tickerName = walletInfo.tickerName;
+      int decimal = 0;
       String contractAddr =
           environment["addresses"]["smartContract"][tickerName];
-      if (contractAddr == null && tickerName != 'ETH' && tickerName != 'BTC') {
+      if (contractAddr == null && (tokenType == 'FAB' || tokenType == 'ETH')) {
         log.i('$tickerName contract is null so fetching from token database');
         await tokenListDatabaseService
-            .getContractAddressByTickerName(tickerName)
-            .then((value) => contractAddr = '0x' + value);
+            .getByTickerName(tickerName)
+            .then((token) {
+          contractAddr = token.contract;
+          decimal = token.decimal;
+        });
       }
       log.i('$tickerName contract address $contractAddr using ticker db');
       var option = {
@@ -195,10 +199,11 @@ class MoveToExchangeViewModel extends BaseViewModel {
         'kanbanGasPrice': kanbanGasPrice,
         'kanbanGasLimit': kanbanGasLimit,
         'tokenType': walletInfo.tokenType,
-        'contractAddress': contractAddr
+        'contractAddress': contractAddr,
+        'decimal': decimal
       };
       log.i(
-          '3 - -$seed, -- ${walletInfo.tickerName}, -- ${walletInfo.tokenType}, --   $amount, - - $option');
+          '3 - -$seed, -- ${walletInfo.tickerName}, --   $amount, - - $option');
       await walletService
           .depositDo(
               seed, walletInfo.tickerName, walletInfo.tokenType, amount, option)
@@ -313,7 +318,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
   updateTransFee() async {
     setBusy(true);
-    var to = getOfficalAddress(coinName);
+    var to = getOfficalAddress(coinName, tokenType: tokenType);
     var amount = double.tryParse(myController.text);
     if (to == null || amount == null || amount <= 0) {
       setBusy(false);

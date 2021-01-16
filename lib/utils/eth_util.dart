@@ -77,9 +77,13 @@ Future getEthTokenBalanceByAddress(String address, String coinName) async {
     print('$coinName contract is null so fetching from token database');
     await tokenListDatabaseService
         .getContractAddressByTickerName(coinName)
-        .then((value) => smartContractAddress = '0x' + value);
+        .then((String value) {
+        //  if(!value.startsWith('0x'))
+          smartContractAddress =  value;
+        });
   }
   var url = ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
+  print('eth_util - getEthTokenBalanceByAddress - $url ');
   var tokenBalance = 0.0;
   try {
     var response = await http.get(url);

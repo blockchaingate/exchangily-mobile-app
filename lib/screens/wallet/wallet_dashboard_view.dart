@@ -75,7 +75,7 @@ class WalletDashboardView extends StatelessWidget {
                   },
                   onFinish: () {
                     model.storageService.isShowCaseView = false;
-                    model.showcaseEvent(context);
+                    //  model.showcaseEvent(context);
                   },
                   builder: Builder(
                     builder: (context) => Column(
@@ -872,8 +872,8 @@ class AddGasRow extends StatelessWidget {
     var begin = Offset(0.0, 1.0);
     var end = Offset.zero;
     var tween = Tween(begin: begin, end: end);
-    // if (model.isShowCaseView && model.gasAmount < 0.5 && !model.isBusy)
-    //   model.showcaseEvent(context);
+    if (model.isShowCaseView && model.gasAmount < 0.5 && !model.isBusy)
+      model.showcaseEvent(context);
     return model.isShowCaseView || model.gasAmount < 0.5
         ? Showcase(
             key: model.globalKeyOne,
@@ -901,7 +901,7 @@ class DepositWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    model.showcaseEvent(context);
+    // model.showcaseEvent(context);
     return InkWell(
         child: tickerName.toUpperCase() == 'FAB' &&
                 (model.isShowCaseView || model.gasAmount < 0.5) &&

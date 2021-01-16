@@ -163,19 +163,24 @@ class SendScreenState extends BaseState {
             (tickerName != '') &&
             (tokenType != null) &&
             (tokenType != '')) {
+          int decimal = 0;
           String contractAddr =
               environment["addresses"]["smartContract"][tickerName];
           if (contractAddr == null) {
             await tokenListDatabaseService
-                .getContractAddressByTickerName(tickerName)
-                .then((value) => contractAddr = '0x' + value);
+                .getByTickerName(tickerName)
+                .then((token) {
+              contractAddr = token.contract;
+              decimal = token.decimal;
+            });
           }
           options = {
             'tokenType': tokenType,
             'contractAddress': contractAddr,
             'gasPrice': gasPrice,
             'gasLimit': gasLimit,
-            'satoshisPerBytes': satoshisPerBytes
+            'satoshisPerBytes': satoshisPerBytes,
+            'decimal': decimal
           };
         }
       } else {
@@ -187,9 +192,7 @@ class SendScreenState extends BaseState {
       }
 
       // Convert FAB to EXG format
-      if (walletInfo.tickerName == 'EXG' ||
-          walletInfo.tickerName == 'DUSD' ||
-          walletInfo.tickerName == 'CNB') {
+      if (walletInfo.tokenType == 'FAB') {
         if (!toAddress.startsWith('0x')) toAddress = fabToExgAddress(toAddress);
       }
 
@@ -371,7 +374,8 @@ class SendScreenState extends BaseState {
   updateTransFee() async {
     setState(ViewState.Busy);
     setBusy(true);
-    var to = getOfficalAddress(walletInfo.tickerName.toUpperCase());
+    var to = getOfficalAddress(walletInfo.tickerName.toUpperCase(),
+        tokenType: walletInfo.tokenType.toUpperCase());
     var amount = double.tryParse(sendAmountTextController.text);
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);

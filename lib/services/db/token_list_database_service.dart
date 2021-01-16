@@ -59,8 +59,8 @@ class TokenListDatabaseService {
         $columnTickerName TEXT,
         $columnTokenType INTEGER,
         $columnContract TEXT,
-        $columnMinWithdraw INTEGER,
-        $columnFeeWithdraw INTEGER) ''');
+        $columnMinWithdraw TEXT,
+        $columnFeeWithdraw TEXT) ''');
   }
 
   // Get All Records From The Database
@@ -81,19 +81,31 @@ class TokenListDatabaseService {
 // Insert Data In The Database
   Future insert(Token token) async {
     await initDb();
+    // int id;
+    // bool isDuplicate = false;
+    // await getAll().then((walletList) {
+    //   walletList.forEach((wallet) {
+    //     if (wallet.tickerName == token.tickerName)
+    //       isDuplicate = true;
+    //     else
+    //       print('${token.tickerName} new entry in the db');
+    //   });
+    // });
+    //  if (!isDuplicate) {
     final Database db = await _database;
     int id = await db.insert(tableName, token.toJson(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+    // }
     return id;
   }
 
   // Get Single transaction By Name
-  Future<Token> getByName(String tickerName) async {
+  Future<Token> getByTickerName(String tickerName) async {
     await initDb();
     final Database db = await _database;
     List<Map> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
-    log.w('Name - $tickerName - res-- $res');
+    log.i('Name - $tickerName - res-- $res');
 
     if (res.isNotEmpty) return Token.fromJson(res.first);
     return null;

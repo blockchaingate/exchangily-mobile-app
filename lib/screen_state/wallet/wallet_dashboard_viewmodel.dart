@@ -139,7 +139,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     lang = storageService.language;
     if (lang == '') lang = 'en';
     setlangGlobal(lang);
-    log.w('langGlobal: ' + getlangGlobal());
+    // log.w('langGlobal: ' + getlangGlobal());
 
     var announceContent;
 
@@ -157,7 +157,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       bool checkValue = prefs.containsKey('announceData');
       List tempAnnounceData = [];
       if (checkValue) {
-        log.i("announcement: has cache!!!");
+        //log.i("announcement: has cache!!!");
         // var x = prefs.getStringList('announceData');
         List tempdata = prefs.getStringList('announceData');
         // tempdata.forEach((e) {
@@ -166,25 +166,25 @@ class WalletDashboardViewModel extends BaseViewModel {
 
         tempdata.forEach((element) {
           tempAnnounceData.add(jsonDecode(element));
-          print('tempAnnounceData $tempAnnounceData');
+          //   print('tempAnnounceData $tempAnnounceData');
         });
-        log.i("announceData from prefs: ");
+        // log.i("announceData from prefs: ");
 
-        print(tempAnnounceData);
-        log.i("prefs 0: ");
-        print(tempAnnounceData[0].toString());
-        log.i("prefs 0 id: ");
-        print(tempAnnounceData[0]['_id']);
+        // print(tempAnnounceData);
+        // log.i("prefs 0: ");
+        // print(tempAnnounceData[0].toString());
+        // log.i("prefs 0 id: ");
+        // print(tempAnnounceData[0]['_id']);
 
         // tempAnnounceData = tempdata;
         if (announceContent.length != 0) {
-          log.i("Data from api: ");
-          print(announceContent);
-          log.i("Data 0: ");
-          print(announceContent[0].toString());
-          log.w("Going to map!!");
+          //   log.i("Data from api: ");
+          // print(announceContent);
+          // log.i("Data 0: ");
+          // print(announceContent[0].toString());
+          // log.w("Going to map!!");
           announceContent.map((annNew) {
-            print("Start map");
+            //    print("Start map");
             bool hasId = false;
             // log.i("annNew['_id']: " + annNew['_id']);
             tempAnnounceData.asMap().entries.map((tempAnn) {
@@ -197,20 +197,20 @@ class WalletDashboardViewModel extends BaseViewModel {
                 hasId = true;
                 final differ = JsonDiffer.fromJson(val, annNew);
                 DiffNode diff = differ.diff();
-                print(diff.changed);
-                print("Lenght: " + diff.changed.toString().length.toString());
+                // print(diff.changed);
+                // print("Lenght: " + diff.changed.toString().length.toString());
 
                 if (diff.changed != null &&
                     diff.changed.toString().length > 3) {
-                  log.w('ann data diff!!!!');
+                  //   log.w('ann data diff!!!!');
                   tempAnnounceData[idx] = annNew;
                   tempAnnounceData[idx]['isRead'] = false;
                 }
               }
             }).toList();
             if (!hasId) {
-              log.i('no id!!!!');
-              log.i('Ann id: ' + annNew['_id']);
+              // log.i('no id!!!!');
+              // log.i('Ann id: ' + annNew['_id']);
               annNew['isRead'] = false;
               tempAnnounceData.insert(0, annNew);
             }
@@ -228,10 +228,10 @@ class WalletDashboardViewModel extends BaseViewModel {
         tempAnnounceData.forEach((element) {
           element["isRead"] == false ? readedNum++ : readedNum = readedNum;
           jsonData.add(jsonEncode(element));
-          print('jsonData $jsonData');
+          //   print('jsonData $jsonData');
         });
         setunReadAnnouncement(readedNum);
-        print("check status: " + prefs.containsKey('announceData').toString());
+        // print("check status: " + prefs.containsKey('announceData').toString());
         prefs.setStringList('announceData', jsonData);
 
         announceList = tempAnnounceData;
@@ -256,16 +256,16 @@ class WalletDashboardViewModel extends BaseViewModel {
           tempAnnounceData.forEach((element) {
             element["isRead"] == false ? readedNum++ : readedNum = readedNum;
             jsonData.add(jsonEncode(element));
-            print('jsonData $jsonData');
+            //    print('jsonData $jsonData');
           });
           setunReadAnnouncement(readedNum);
 
-          print(
-              "check status: " + prefs.containsKey('announceData').toString());
+          // print(
+          //     "check status: " + prefs.containsKey('announceData').toString());
           prefs.setStringList('announceData', jsonData);
-          print("prefs saved");
-          print("check status saved: " +
-              prefs.containsKey('announceData').toString());
+          //     print("prefs saved");
+          // print("check status saved: " +
+          //     prefs.containsKey('announceData').toString());
           // print("prefs announcement data: " + prefs.getString('announceData'));
         }
         // tempAnnounceData.map((announ) {
@@ -649,10 +649,9 @@ class WalletDashboardViewModel extends BaseViewModel {
     totalUsdBalance = '';
     double holder = 0.0;
     for (var i = 0; i < walletInfo.length; i++) {
-      holder = holder + walletInfo[i].usdValue;
+      holder += walletInfo[i].usdValue;
     }
     totalUsdBalance = NumberUtil.currencyFormat(holder, 2);
-    ;
     log.i('Total usd balance $totalUsdBalance');
   }
 
@@ -757,7 +756,76 @@ class WalletDashboardViewModel extends BaseViewModel {
                       Build coin list
 ----------------------------------------------------------------------*/
 
-  buildCoinList(WalletBalance walletBalanceSingleCoin, j) {}
+  buildNewWalletObject(Token newToken, WalletBalance newTokenWalletBalance) {
+    String newCoinAddress = '';
+
+    newCoinAddress = assignNewTokenAddress(newToken);
+    double marketPrice = newTokenWalletBalance.usdValue.usd ?? 0.0;
+    double availableBal = newTokenWalletBalance.balance ?? 0.0;
+    double lockedBal = newTokenWalletBalance.lockBalance ?? 0.0;
+
+    double usdValue = walletService.calculateCoinUsdBalance(
+        marketPrice, availableBal, lockedBal);
+    String holder = NumberUtil.currencyFormat(usdValue, 2);
+    formattedUsdValueList.add(holder);
+    WalletInfo wi = WalletInfo(
+        id: null,
+        tickerName: newToken.tickerName,
+        tokenType: newToken.chainName,
+        address: newCoinAddress,
+        availableBalance: newTokenWalletBalance.balance,
+        lockedBalance: newTokenWalletBalance.lockedExchangeBalance,
+        usdValue: usdValue,
+        name: newToken.coinName,
+        inExchange: newTokenWalletBalance.unlockedExchangeBalance);
+    walletInfo.add(wi);
+    log.e('new coin ${wi.tickerName} added ${wi.toJson()}');
+    walletDatabaseService.insert(wi).then(
+        (value) => print('${wi.tickerName} has been added in the wallet db'));
+
+    // save data locally
+    List<String> tokenList = [];
+
+    var x = jsonEncode(newToken);
+
+    tokenList.add(x);
+    log.i('tokenList $tokenList');
+    storageService.tokenList = tokenList;
+  }
+
+/*----------------------------------------------------------------------
+                      Add New Token In Db
+----------------------------------------------------------------------*/
+
+  addNewTokenInTokenListDb(List<Token> newTokenList) async {
+    var tokenListFromDb = await tokenListDatabaseService.getAll();
+    if (tokenListFromDb != null) {
+      newTokenList.forEach((newToken) {
+        tokenListFromDb.forEach((tokenFromDb) async {
+          if (tokenFromDb.tickerName != newToken.tickerName) {
+            await insertToken(newToken);
+          } else {
+            log.e(
+                '${newToken.tickerName} Token already in the token database so not saving again');
+          }
+        });
+      });
+    } else {
+      newTokenList.forEach((newToken) async {
+        await insertToken(newToken);
+      });
+    }
+  }
+
+  insertToken(Token newToken) async {
+    if (newToken.chainName == 'FAB') {
+      newToken.contract = '0x' + newToken.contract;
+    }
+    await tokenListDatabaseService.insert(newToken).whenComplete(() {
+      log.w('${newToken.tickerName} has been inserted in the token db');
+      tokenListDatabaseService.getByTickerName(newToken.tickerName);
+    });
+  }
 
 /*----------------------------------------------------------------------
                       Assign New Token Address
@@ -777,6 +845,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
     return newCoinAddress;
   }
+
 /*-------------------------------------------------------------------------------------
                           Refresh Balances
 -------------------------------------------------------------------------------------*/
@@ -788,9 +857,15 @@ class WalletDashboardViewModel extends BaseViewModel {
     await walletDatabaseService.getAll().then((walletList) {
       walletInfoCopy = [];
       formattedUsdValueList = [];
+      log.e('wallet list from db length ${walletList.length}');
+      final tickers = walletList.map((e) => e.tickerName).toSet();
+
+      walletList.retainWhere((element) => tickers.remove(element.tickerName));
       walletInfoCopy = walletList;
     });
+    log.i('walletInfo copy list  length ${walletInfoCopy.length}');
 
+    walletInfoCopy.removeLast();
     walletInfo = [];
     Map<String, dynamic> walletBalancesBody = {
       'btcAddress': '',
@@ -829,7 +904,8 @@ class WalletDashboardViewModel extends BaseViewModel {
       if (walletBalanceList != null) {
         // Loop wallet info list to udpate balances
         log.e(
-            'copy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
+            'walletInfoCopy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
+
         walletInfoCopy.forEach((wallet) async {
           // Loop wallet balance list from api
           for (var j = 0; j <= walletBalanceList.length; j++) {
@@ -887,56 +963,41 @@ class WalletDashboardViewModel extends BaseViewModel {
 
         //  second if start to add new coins in wallet info list
         if (tickerNames.length != walletBalanceList.length) {
+          List<String> newTokenList = [];
+          List<WalletBalance> newTokenBalanceList = [];
           walletBalanceList.forEach((walletBalanceObj) async {
             bool isOldTicker = tickerNames.contains(walletBalanceObj.coin);
             print(
                 'wallet info contains ${walletBalanceObj.coin}? => $isOldTicker');
-            if (!isOldTicker &&
-                walletBalanceObj.coin != 'RMB' &&
-                walletBalanceObj.coin != 'CAD') {
-              await walletService.getTokenListUpdates();
-              await tokenListDatabaseService
-                  .getByName(walletBalanceObj.coin)
-                  .then((newToken) {
-                String newCoinAddress = '';
-
-                newCoinAddress = assignNewTokenAddress(newToken);
-                double marketPrice = walletBalanceObj.usdValue.usd ?? 0.0;
-                double availableBal = walletBalanceObj.balance ?? 0.0;
-                double lockedBal = walletBalanceObj.lockBalance ?? 0.0;
-
-                double usdValue = walletService.calculateCoinUsdBalance(
-                    marketPrice, availableBal, lockedBal);
-                String holder = NumberUtil.currencyFormat(usdValue, 2);
-                formattedUsdValueList.add(holder);
-                WalletInfo wi = WalletInfo(
-                    id: null,
-                    tickerName: newToken.tickerName,
-                    tokenType: newToken.chainName,
-                    address: newCoinAddress,
-                    availableBalance: walletBalanceObj.balance,
-                    lockedBalance: walletBalanceObj.lockedExchangeBalance,
-                    usdValue: usdValue,
-                    name: newToken.coinName,
-                    inExchange: walletBalanceObj.unlockedExchangeBalance);
-                walletInfo.add(wi);
-                log.e('new coin ${wi.tickerName} added ${wi.toJson()}');
-                walletDatabaseService.insert(wi).then((value) =>
-                    print('${wi.tickerName} has been added in the wallet db'));
-
-                // save data locally
-                List<String> tokenList = [];
-
-                var x = jsonEncode(newToken);
-                ;
-                tokenList.add(x);
-                log.i('tokenList $tokenList');
-                storageService.tokenList = tokenList;
-              });
+            if (!isOldTicker) {
+              newTokenList.add(walletBalanceObj.coin);
+              newTokenBalanceList.add(walletBalanceObj);
+              log.i(
+                  'new ticker list $newTokenList --- new wallet balance $newTokenBalanceList');
             }
           });
-          //  calcTotalBal();
-          //  await updateWalletDatabase();
+          if (newTokenList.isNotEmpty) {
+            await walletService
+                .getTokenListUpdates()
+                .then((apiTokenList) async {
+              newTokenBalanceList.forEach((newTokenWalletBalance) async {
+                // compare tickername of api token balance against api tokenList
+                apiTokenList.forEach((newToken) async {
+                  if (newTokenWalletBalance.coin == newToken.tickerName) {
+                    buildNewWalletObject(newToken, newTokenWalletBalance);
+                    await insertToken(newToken);
+                  }
+                });
+              });
+              //   await addNewTokenInTokenListDb(apiTokenList);
+            }).catchError((err) {
+              log.e('Token list api call fails in api service');
+            });
+          } else {
+            log.w('No new tokens');
+            print(walletInfoCopy.length);
+            print(walletBalanceList.length);
+          }
         } // second if ends
 
         //  if (!isProduction) debugVersionPopup();
@@ -946,18 +1007,19 @@ class WalletDashboardViewModel extends BaseViewModel {
         await getGas();
         // check gas and fab balance if 0 then ask for free fab
         if (gasAmount == 0.0 && fabBalance == 0.0) {
+          storageService.isShowCaseView = true;
+          _isShowCaseView = true;
           var res = await apiService.getFreeFab(address);
           if (res != null) {
             isFreeFabNotUsed = res['ok'];
           }
         } else {
           log.i('Fab or gas balance available already');
-          //  storageService.isShowCaseView = true;
+          // storageService.isShowCaseView = false;
         }
 
         calcTotalBal();
-        print(storageService.tokenList);
-        //  await updateWalletDatabase();
+
 // check if any new coins added in api
         // await walletService.getTokenListUpdates();
       } // if wallet balance list != null ends
@@ -967,7 +1029,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         log.e('---------------------ELSE old way-----------------------');
         //  await oldWayToGetBalances(walletService.coinTickers.length);
       }
-    }).timeout(Duration(seconds: 20), onTimeout: () async {
+    }).timeout(Duration(seconds: 60), onTimeout: () async {
       log.e('time out');
       walletInfo = walletInfoCopy;
       // sharedService.alertDialog(AppLocalizations.of(context).notice,

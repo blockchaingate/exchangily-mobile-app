@@ -90,10 +90,22 @@ class WalletDataBaseService {
 // Insert Data In The Database
   Future insert(WalletInfo walletInfo) async {
     final Database db = await _database;
-    int id = await db
-        .insert(tableName, walletInfo.toJson(),
-            conflictAlgorithm: ConflictAlgorithm.replace)
-        .whenComplete(() => getBytickerName(walletInfo.tickerName));
+    int id;
+    bool isDuplicate = false;
+    await getAll().then((walletList) {
+      walletList.forEach((wallet) {
+        if (wallet.tickerName == walletInfo.tickerName)
+          isDuplicate = true;
+        else
+          print('${walletInfo.tickerName} new entry in the db');
+      });
+    });
+    if (!isDuplicate) {
+      id = await db
+          .insert(tableName, walletInfo.toJson(),
+              conflictAlgorithm: ConflictAlgorithm.replace)
+          .whenComplete(() => getBytickerName(walletInfo.tickerName));
+    }
     return id;
   }
 

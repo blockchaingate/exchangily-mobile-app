@@ -32,6 +32,7 @@ import '../../logger.dart';
 import '../../service_locator.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import "package:hex/hex.dart";
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 
 class SettingsViewmodel extends BaseViewModel {
   bool isVisible = false;
@@ -41,6 +42,9 @@ class SettingsViewmodel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
+        TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
+
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   SharedService sharedService = locator<SharedService>();
@@ -197,28 +201,29 @@ class SettingsViewmodel extends BaseViewModel {
       if (res.confirmed) {
         isDeleting = true;
         log.w('deleting wallet');
-        await walletDatabaseService.deleteDb();
-        log.i('1');
-        await transactionHistoryDatabaseService.deleteDb();
-        log.i('2');
-        await walletService.deleteEncryptedData();
-        log.i('3');
+        await walletDatabaseService.deleteDb().whenComplete(()=>log.e('wallet database deleted!!'));
+
+        await transactionHistoryDatabaseService.deleteDb().whenComplete(()=>log.e('trnasaction history database deleted!!'));
+       
+        await walletService.deleteEncryptedData().whenComplete(()=>log.e('encrypted data deleted!!'));
+
+        await tokenListDatabaseService.deleteDb().whenComplete(()=>log.e('Token list database deleted!!'));
+ 
         storageService.walletBalancesBody = '';
-        log.i('4');
+    
         storageService.isShowCaseView = true;
-        log.i('5');
+       
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        log.i('6');
-        log.e('before lanf removal ${prefs.getKeys()}');
-        log.i('7');
-        // prefs.remove('lang');
+      
+        log.e('before wallet removal, local storage has ${prefs.getKeys()}');
+    
         storageService.clearStorage();
         log.e('before local storage clear ${prefs.getKeys()}');
-        log.i('8');
+     
         prefs.clear();
         log.e('all keys after clearing ${prefs.getKeys()}');
-        log.i('9');
+    
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed') {
         log.e('Dialog Closed By User');
