@@ -78,16 +78,18 @@ class WalletFeaturesViewModel extends BaseState {
         .coinBalanceByAddress(
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
         .then((data) async {
-      log.e('data $data');
+      if (data != null) {
+        log.e('data $data');
 
-      walletBalance = data['balance'];
-      double walletLockedBal = data['lockbalance'];
-      walletInfo.availableBalance = walletBalance;
-      double currentUsdValue = await walletService
-          .getCoinMarketPriceByTickerName(walletInfo.tickerName);
-      walletService.calculateCoinUsdBalance(
-          currentUsdValue, walletBalance, walletLockedBal);
-      walletInfo.usdValue = walletService.coinUsdBalance;
+        walletBalance = data['balance'];
+        double walletLockedBal = data['lockbalance'];
+        walletInfo.availableBalance = walletBalance;
+        double currentUsdValue = await walletService
+            .getCoinMarketPriceByTickerName(walletInfo.tickerName);
+        walletService.calculateCoinUsdBalance(
+            currentUsdValue, walletBalance, walletLockedBal);
+        walletInfo.usdValue = walletService.coinUsdBalance;
+      }
       await getExchangeBal();
     }).catchError((err) {
       log.e(err);
@@ -103,7 +105,7 @@ class WalletFeaturesViewModel extends BaseState {
         .getSingleCoinExchangeBalance(walletInfo.tickerName)
         .then((res) {
       if (res != null) {
-        walletInfo.inExchange = res.unlockedAmount;
+        walletInfo.inExchange = res;
         log.w('exchange bal ${walletInfo.inExchange}');
       }
     });

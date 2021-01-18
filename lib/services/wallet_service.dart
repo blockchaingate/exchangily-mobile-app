@@ -331,10 +331,12 @@ class WalletService {
     log.w(' coinBalanceByAddress $name $address $tokenType');
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
-    // log.w('coinBalanceByAddress $name - $bal');
-    if (bal['balance'].isNaN || bal['balance'] == null) {
-      return 0.0;
-    }
+     log.w('coinBalanceByAddress $name - $bal');
+    
+    // if (bal == null) {
+    //   print('coinBalanceByAddress $name- bal $bal');
+    //   return 0.0;
+    // }
     return bal;
   }
 

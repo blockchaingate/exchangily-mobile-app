@@ -124,6 +124,17 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
   checkPass() async {
     setBusy(true);
+
+       if(myController.text.isEmpty){
+        sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).minimumAmountError,
+          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+          Icons.cancel,
+          red,
+          context);
+      setBusy(false);
+      return;
+    }
     if (gasAmount == 0.0 || gasAmount < 0.5) {
       sharedService.alertDialog(
         AppLocalizations.of(context).notice,
@@ -290,6 +301,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
         .then((data) async {
       log.w('data $data');
+      if(data != null)
       walletInfo.availableBalance = data['balance'];
     }).catchError((err) {
       log.e(err);

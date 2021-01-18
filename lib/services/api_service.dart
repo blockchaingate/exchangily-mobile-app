@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
@@ -95,8 +96,7 @@ class ApiService {
 /*----------------------------------------------------------------------
                     Get single coin exchange balance
 ----------------------------------------------------------------------*/
-  Future<ExchangeBalanceModel> getSingleCoinExchangeBalance(
-      String tickerName) async {
+  Future getSingleCoinExchangeBalance(String tickerName) async {
     String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     //  String exgAddress = await getExchangilyAddress();
     String url = configService.getKanbanBaseUrl() +
@@ -105,15 +105,16 @@ class ApiService {
         '/' +
         tickerName;
     log.e('getSingleCoinExchangeBalance url $url');
-    ExchangeBalanceModel exchangeBalance;
+
     try {
       var response = await client.get(url);
       var json = jsonDecode(response.body);
       if (json != null) {
-        exchangeBalance = ExchangeBalanceModel.fromJson(json);
-        log.e('exchangeBalance ${exchangeBalance.toJson()}');
+        log.w('getSingleCoinExchangeBalance json $json');
+        var res = bigNum2Double(json['unlockedAmount']).toDouble();
+        log.i('get single coin exchange $res');
+        return res;
       }
-      return exchangeBalance;
     } catch (err) {
       log.e('getSingleCoinExchangeBalance CATCH $err');
       throw Exception(err);

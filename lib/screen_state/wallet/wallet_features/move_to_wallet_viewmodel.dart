@@ -40,7 +40,7 @@ class MoveToWalletViewmodel extends BaseState {
   var minimumAmount;
   bool transFeeAdvance = false;
   double gasAmount = 0.0;
-  double withdrawLimit;
+  var withdrawLimit;
 
 /*---------------------------------------------------
                       INIT
@@ -72,6 +72,7 @@ class MoveToWalletViewmodel extends BaseState {
   setWithdrawLimit() async {
     setBusy(true);
     withdrawLimit = environment["minimumWithdraw"][walletInfo.tickerName];
+    print('wl $withdrawLimit');
     if (withdrawLimit == null) {
       await tokenListDatabaseService
           .getByTickerName(walletInfo.tickerName)
@@ -107,7 +108,7 @@ class MoveToWalletViewmodel extends BaseState {
     await apiService
         .getSingleCoinExchangeBalance(walletInfo.tickerName)
         .then((res) {
-      walletInfo.inExchange = res.unlockedAmount;
+      walletInfo.inExchange = res;
       log.w('exchange balance check ${walletInfo.inExchange}');
     });
     setBusy(false);
@@ -118,6 +119,16 @@ class MoveToWalletViewmodel extends BaseState {
 ----------------------------------------------------------------------*/
   checkPass() async {
     setBusy(true);
+    if (amountController.text.isEmpty) {
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).minimumAmountError,
+          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+          Icons.cancel,
+          red,
+          context);
+      setBusy(false);
+      return;
+    }
     await checkGasBalance();
     if (gasAmount == 0.0 || gasAmount < 0.5) {
       sharedService.alertDialog(

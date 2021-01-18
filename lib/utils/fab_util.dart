@@ -287,10 +287,10 @@ Future getFabTokenBalanceForABI(
   };
   var tokenBalance = 0.0;
   var url = fabBaseUrl + 'callcontract';
+  print(
+      'Fab_util -- getFabTokenBalanceForABI balance by address url -- $url -- body $body');
   try {
     var response = await http.post(url, body: body);
-    print(
-        'Fab_util -- getFabTokenBalanceForABI balance by address url -- $url -- body $body');
     var json = jsonDecode(response.body);
     var unlockBalance = json['executionResult']['output'];
 
