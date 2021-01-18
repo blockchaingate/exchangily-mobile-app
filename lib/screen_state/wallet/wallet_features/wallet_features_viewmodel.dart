@@ -90,7 +90,7 @@ class WalletFeaturesViewModel extends BaseState {
             currentUsdValue, walletBalance, walletLockedBal);
         walletInfo.usdValue = walletService.coinUsdBalance;
       }
-      await getExchangeBal();
+        await getExchangeBal();
     }).catchError((err) {
       log.e(err);
       setState(ViewState.Idle);
@@ -105,7 +105,7 @@ class WalletFeaturesViewModel extends BaseState {
         .getSingleCoinExchangeBalance(walletInfo.tickerName)
         .then((res) {
       if (res != null) {
-        walletInfo.inExchange = res;
+        walletInfo.inExchange = res.unlockedAmount;
         log.w('exchange bal ${walletInfo.inExchange}');
       }
     });

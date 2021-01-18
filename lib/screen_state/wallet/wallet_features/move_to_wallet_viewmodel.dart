@@ -108,7 +108,7 @@ class MoveToWalletViewmodel extends BaseState {
     await apiService
         .getSingleCoinExchangeBalance(walletInfo.tickerName)
         .then((res) {
-      walletInfo.inExchange = res;
+      walletInfo.inExchange = res.unlockedAmount;
       log.w('exchange balance check ${walletInfo.inExchange}');
     });
     setBusy(false);
@@ -119,8 +119,8 @@ class MoveToWalletViewmodel extends BaseState {
 ----------------------------------------------------------------------*/
   checkPass() async {
     setBusy(true);
-    if (amountController.text.isEmpty) {
-      sharedService.showInfoFlushbar(
+    if(amountController.text.isEmpty){
+        sharedService.showInfoFlushbar(
           AppLocalizations.of(context).minimumAmountError,
           AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
           Icons.cancel,

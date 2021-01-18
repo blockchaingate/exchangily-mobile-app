@@ -27,9 +27,12 @@ class ExchangeBalanceModel {
   factory ExchangeBalanceModel.fromJson(Map<String, dynamic> json) {
     LocalStorageService storageService = locator<LocalStorageService>();
     var type = json['coinType'];
-    String tickerName = coinList.newCoinTypeMap[type];
-    print('Ticker Name -- $tickerName --- coin type ${json['coinType']}');
-    if (tickerName == null) {
+    String tickerName = '';
+    if (type != null) {
+      tickerName = coinList.newCoinTypeMap[type];
+      print('Ticker Name -- $tickerName --- coin type ${json['coinType']}');
+    }
+    if (type != null && tickerName == null) {
       storageService.tokenList.forEach((element) {
         print(element);
         var json = jsonDecode(element);
