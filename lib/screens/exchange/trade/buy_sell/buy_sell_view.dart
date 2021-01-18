@@ -559,7 +559,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
               padding: EdgeInsets.only(
                   left: 5), // padding left to keep some space from the text
               child: Text(
-                '${model.kanbanTransFee.toStringAsFixed(model.priceDecimal)}',
+                '${model.kanbanTransFee.toStringAsFixed(2)}',
                 style: new TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
             )

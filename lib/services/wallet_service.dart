@@ -1344,7 +1344,7 @@ class WalletService {
     var receivePrivateKeyArr = [];
 
     var tokenType = options['tokenType'] ?? '';
-    var decimal = options['decimal'];
+    var decimal = options['decimal'] ?? 18;
     var contractAddress = options['contractAddress'] ?? '';
     var changeAddress = '';
 

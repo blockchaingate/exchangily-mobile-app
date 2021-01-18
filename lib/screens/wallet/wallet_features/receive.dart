@@ -43,8 +43,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   void initState() {
     super.initState();
     // log.w(widget.walletInfo.toJson());
-    if (widget.walletInfo.tickerName == 'EXG' ||
-        widget.walletInfo.tickerName == 'DUSD') {
+    if (widget.walletInfo.tokenType=='FAB') {
       convertedToFabAddress = exgToFabAddress(widget.walletInfo.address);
       log.w(
           'convertedToFabAddress from ${widget.walletInfo.address} to $convertedToFabAddress');
