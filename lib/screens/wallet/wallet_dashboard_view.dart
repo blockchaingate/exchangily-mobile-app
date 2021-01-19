@@ -756,7 +756,9 @@ class TotalBalanceWidget extends StatelessWidget {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      AnnouncementList()));
+                                                      AnnouncementList())).then((value) {
+                                                        model.updateAnnce();
+                                        });
                                         else
                                           print("API has error");
                                       },
@@ -772,7 +774,7 @@ class TotalBalanceWidget extends StatelessWidget {
                                     )),
                               ),
                             ),
-                            getunReadAnnouncement() < 1
+                            model.unreadMsgNum < 1
                                 ? Container()
                                 : Positioned(
                                     top: 8,
@@ -789,7 +791,7 @@ class TotalBalanceWidget extends StatelessWidget {
                                           //     .announceList
                                           //     .length
                                           //     .toString(),
-                                          getunReadAnnouncement().toString(),
+                                          model.unreadMsgNum.toString(),
                                           style: TextStyle(
                                               fontSize: 10,
                                               color: Colors.white),
