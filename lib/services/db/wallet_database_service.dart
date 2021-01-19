@@ -70,17 +70,10 @@ class WalletDataBaseService {
     await initDb();
     final Database db = await _database;
     log.w('getall $db');
-    // print("getalldata: ");
-    // print("$db");
+
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
     log.w('res $res');
-    // print("getresdata: ");
-    // print("$res");
-    // res.forEach((e) {
-    //   print(e["id"]);
-    //   print(e["name"]);
-    // });
 
     List<WalletInfo> list =
         res.isNotEmpty ? res.map((f) => WalletInfo.fromJson(f)).toList() : [];
@@ -90,25 +83,12 @@ class WalletDataBaseService {
 // Insert Data In The Database
   Future insert(WalletInfo walletInfo) async {
     final Database db = await _database;
-    int id;
-    bool isDuplicate = false;
-    await getAll().then((walletList) {
-      walletList.forEach((wallet) {
-        if (wallet.tickerName == walletInfo.tickerName) {
-          isDuplicate = true;
-          log.e(
-              '${walletInfo.tickerName} is Already in the WALLET db so duplicate entry');
-          return;
-        }
-      });
-    });
-    if (!isDuplicate) {
-      id = await db
-          .insert(tableName, walletInfo.toJson(),
-              conflictAlgorithm: ConflictAlgorithm.replace)
-          .whenComplete(() =>
-              log.w('${walletInfo.tickerName} new entry in the wallet db'));
-    }
+
+
+    int id = await db
+        .insert(tableName, walletInfo.toJson(),
+            conflictAlgorithm: ConflictAlgorithm.replace);
+
     return id;
   }
 
