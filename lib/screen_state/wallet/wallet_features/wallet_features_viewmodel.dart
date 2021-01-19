@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/enums/screen_state.dart';
+import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -23,8 +24,9 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
-class WalletFeaturesViewModel extends BaseState {
+class WalletFeaturesViewModel extends BaseViewModel {
   final log = getLogger('WalletFeaturesViewModel');
 
   WalletInfo walletInfo;
@@ -41,6 +43,11 @@ class WalletFeaturesViewModel extends BaseState {
   var errDepositItem;
 
   List<WalletFeatureName> features = new List();
+
+  init() {
+    getWalletFeatures();
+    getErrDeposit();
+  }
 
   getWalletFeatures() {
     return features = [
@@ -63,17 +70,31 @@ class WalletFeaturesViewModel extends BaseState {
     ];
   }
 
-  refreshErrDeposit() async {}
-
   Future getErrDeposit() async {
     var address = await this.sharedService.getExgAddressFromWalletDatabase();
-    var result = await walletService.getErrDeposit(address);
-    log.i('getErrDeposit $result');
-    return result;
+    await walletService.getErrDeposit(address).then((result) {
+      if (result != null) {
+        for (var i = 0; i < result.length; i++) {
+          var item = result[i];
+          var coinType = item['coinType'];
+          String tickerNameByCointype = newCoinTypeMap[coinType];
+          log.w('tickerNameByCointype $tickerNameByCointype');
+          if (tickerNameByCointype == walletInfo.tickerName) {
+            setBusy(true);
+            errDepositItem = item;
+            log.w('err deposit item $errDepositItem');
+            setBusy(false);
+            break;
+          }
+        }
+
+        log.i('getErrDeposit $result');
+      }
+    });
   }
 
   refreshBalance() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     await walletService
         .coinBalanceByAddress(
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
@@ -90,13 +111,13 @@ class WalletFeaturesViewModel extends BaseState {
             currentUsdValue, walletBalance, walletLockedBal);
         walletInfo.usdValue = walletService.coinUsdBalance;
       }
-        await getExchangeBal();
+      await getExchangeBal();
     }).catchError((err) {
       log.e(err);
-      setState(ViewState.Idle);
+      setBusy(false);
       throw Exception(err);
     });
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
   // get exchange balance for single coin

@@ -40,6 +40,26 @@ class ApiService {
   // final kanbanBaseUrl = environment['endpoints']['LocalKanban'];
   // final blockchaingateUrl = environment['endpoints']['blockchaingateLocal'];
 
+/*----------------------------------------------------------------------
+                Get Banner
+----------------------------------------------------------------------*/
+
+  getBanner() async {
+    log.i('getBanner url $BannerApiUrl');
+
+    try {
+      var response = await client.get(BannerApiUrl);
+      var json = jsonDecode(response.body);
+      if (json != null) {
+        log.e('getBanner $json}');
+        return json;
+      }
+    } catch (err) {
+      log.e('getBanner CATCH $err');
+      throw Exception(err);
+    }
+  }
+
   /*<---    ------------------------------------    --------------->                
                             WALLET Futures
     <---   -------------------------------------    --------------->*/
@@ -701,9 +721,10 @@ class ApiService {
     try {
       final res = await http
           .get(configService.getKanbanBaseUrl() + "kanban/getadvconfig");
-      log.w(jsonDecode(res.body));
+      log.w(' get slider images ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
-        return jsonDecode(res.body);
+        var json = jsonDecode(res.body) as List;
+        return json;
       }
     } catch (e) {
       log.e('getSliderImages Failed to load the data from the API $e');
@@ -716,11 +737,11 @@ class ApiService {
     final langcode = lang == "en" ? "en" : "sc";
     final url = baseBlockchainGateV2Url + "announcements/language/" + langcode;
 
-    print("Calling api: getAnnouncement " + lang);
-    print("url: " + url);
+    log.w("Calling api: getAnnouncement " + lang);
+    log.i("url: " + url);
     try {
       final res = await http.get(url);
-      log.w(jsonDecode(res.body));
+      log.w('getAnnouncement ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         var body = jsonDecode(res.body)['body'];
         return body;
@@ -733,18 +754,19 @@ class ApiService {
   }
 
   Future getEvents() async {
-    print("Calling api: getEvents");
-    print("Url: " + configService.getKanbanBaseUrl() + "kanban/getCampaigns");
+    log.i("getEvents Url: " +
+        configService.getKanbanBaseUrl() +
+        "kanban/getCampaigns");
     try {
       final res = await http.get(
           // "http://192.168.0.12:4000/kanban/getCampaigns"
           configService.getKanbanBaseUrl() + "kanban/getCampaigns");
-      log.w(jsonDecode(res.body));
+      log.w('getEvents ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         print("success");
         return jsonDecode(res.body);
       } else {
-        print("error: " + res.body);
+        log.e("error: " + res.body);
         return "error";
       }
     } catch (e) {

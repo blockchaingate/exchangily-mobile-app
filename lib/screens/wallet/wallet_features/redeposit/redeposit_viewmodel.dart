@@ -56,13 +56,12 @@ class RedepositViewModel extends FutureViewModel {
         var item = errDepositData[i];
         log.w('errDepositData single occurance $item');
         var coinType = item['coinType'];
-        if (newCoinTypeMap[coinType.toString()] == walletInfo.tickerName) {
+        if (newCoinTypeMap[coinType] == walletInfo.tickerName) {
           errDepositList.add(item);
-          break;
         }
       }
     });
-
+    log.i(' errDepositList ${errDepositList.length}');
     var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
     var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
     kanbanGasPriceTextController.text = gasPrice.toString();
@@ -139,34 +138,46 @@ class RedepositViewModel extends FutureViewModel {
           nonce, coinType, transactionID, signedMess);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
+        log.w('resRedeposit $resRedeposit');
         var newTransactionId = resRedeposit['data']['transactionID'];
-        print(
-            'NEW REDEPOSIT TXID $newTransactionId --Old txid $transactionID ');
-        sharedService.alertDialog(
-            AppLocalizations.of(context).redepositCompleted,
-            AppLocalizations.of(context).transactionId + newTransactionId,
-            path: '/dashboard');
 
         // get transaction from database
-        transactionByTxId =
-            await transactionHistoryDatabaseService.getByTxId(transactionID);
 
-        // update transaction history status with new txid
-        String date = DateTime.now().toString();
-        TransactionHistory transactionHistory = new TransactionHistory(
-            id: transactionByTxId.id,
-            tickerName: walletInfo.tickerName,
-            address: '',
-            amount: 0.0,
-            date: date.toString(),
-            txId: newTransactionId,
-            status: 'pending',
-            quantity: transactionByTxId.quantity,
-            tag: transactionByTxId.tag);
+        await transactionHistoryDatabaseService
+            .getByTxId(transactionID)
+            .then((transactionByTxId) async {
+          if (transactionByTxId != null) {
+            // update transaction history status with new txid
+            log.i(
+                'updating ${transactionByTxId.tickerName} in transaction history db');
+            String date = DateTime.now().toString();
+            TransactionHistory transactionHistory = new TransactionHistory(
+                id: transactionByTxId.id,
+                tickerName: walletInfo.tickerName,
+                address: '',
+                amount: 0.0,
+                date: date.toString(),
+                txId: newTransactionId,
+                status: 'pending',
+                quantity: transactionByTxId.quantity,
+                tag: transactionByTxId.tag);
 
-        await transactionHistoryDatabaseService.update(transactionHistory);
-        await transactionHistoryDatabaseService.getByTxId(newTransactionId);
-        walletService.checkDepositTransactionStatus(transactionHistory);
+            await transactionHistoryDatabaseService.update(transactionHistory);
+            walletService.checkDepositTransactionStatus(transactionHistory);
+          } else {
+            log.e(
+                'transactionID $transactionID not found in transaction history db');
+            await transactionHistoryDatabaseService.getAll().then((res) {
+              List<String> txIdList = [];
+              if (res != null) {
+                res.forEach((element) {
+                  txIdList.add(element.txId);
+                });
+              }
+              log.e('transaction history tx id list $txIdList');
+            });
+          }
+        });
 
         // sharedService.showInfoFlushbar(
         //     '${AppLocalizations.of(context).redepositCompleted}',
@@ -175,6 +186,10 @@ class RedepositViewModel extends FutureViewModel {
         //     Icons.cancel,
         //     globals.white,
         //     context);
+        sharedService.alertDialog(
+            AppLocalizations.of(context).redepositCompleted,
+            AppLocalizations.of(context).transactionId + newTransactionId,
+            path: '/dashboard');
       } else {
         sharedService.showInfoFlushbar(
             AppLocalizations.of(context).redepositFailedError,

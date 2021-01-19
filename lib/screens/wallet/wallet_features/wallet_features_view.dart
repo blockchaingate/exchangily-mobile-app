@@ -16,14 +16,13 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/base_screen.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
-import '../../../environments/coins.dart';
 
 class WalletFeaturesView extends StatelessWidget {
   final WalletInfo walletInfo;
@@ -32,12 +31,12 @@ class WalletFeaturesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen<WalletFeaturesViewModel>(
+    return ViewModelBuilder.reactive(
+      viewModelBuilder: () => WalletFeaturesViewModel(),
       onModelReady: (model) {
         model.walletInfo = walletInfo;
         model.context = context;
-        model.getWalletFeatures();
-        model.getErrDeposit();
+        model.init();
       },
       builder: (context, model, child) => Scaffold(
         // appBar: AppBar(),
@@ -175,28 +174,12 @@ class WalletFeaturesView extends StatelessWidget {
                           child: _featuresCard(context, 3, model),
                         ),
                       ]),
-                  FutureBuilder(
-                      future: model.getErrDeposit(),
-                      initialData: [],
-                      builder: (context, snapShot) {
-                        var errDepositData = snapShot.data;
-                        if (snapShot.data != null) {
-                          for (var i = 0; i < errDepositData.length; i++) {
-                            var item = errDepositData[i];
-                            var coinType = item['coinType'];
-                            if (newCoinTypeMap[coinType.toString()] ==
-                                walletInfo.tickerName) {
-                              model.errDepositItem = item;
-                              break;
-                            }
-                          }
-                        }
-                        if (model.errDepositItem != null) {
-                          if (walletInfo.tickerName == 'FAB') {
-                            return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
+
+                  model.errDepositItem != null
+                      ? walletInfo.tickerName == 'FAB'
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
                                   GestureDetector(
                                       onTap: () async {
                                         // model.checkPass(context);
@@ -211,12 +194,10 @@ class WalletFeaturesView extends StatelessWidget {
                                     height: model.containerHeight,
                                     child: _featuresCard(context, 5, model),
                                   )
-                                ]);
-                          } else {
-                            return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
+                                ])
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
                                   GestureDetector(
                                       onTap: () async {
                                         // model.checkPass(context);
@@ -225,39 +206,20 @@ class WalletFeaturesView extends StatelessWidget {
                                         width: model.containerWidth,
                                         height: model.containerHeight,
                                         child: _featuresCard(context, 4, model),
-                                      )),
-                                  Opacity(
-                                      opacity: 0.0,
-                                      child: Container(
-                                        width: model.containerWidth,
-                                        height: model.containerHeight,
-                                        child: _featuresCard(context, 5, model),
                                       ))
-                                ]);
-                          }
-                        } else {
-                          if (walletInfo.tickerName == 'FAB') {
-                            return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
+                                ])
+                      : walletInfo.tickerName == 'FAB'
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
                                   Container(
                                     width: model.containerWidth,
                                     height: model.containerHeight,
                                     child: _featuresCard(context, 5, model),
-                                  ),
-                                  Opacity(
-                                      opacity: 0.0,
-                                      child: Container(
-                                        width: model.containerWidth,
-                                        height: model.containerHeight,
-                                        child: _featuresCard(context, 4, model),
-                                      ))
-                                ]);
-                          }
-                        }
-                        return Row();
-                      }),
+                                  )
+                                ])
+                          : Container(),
+
                   UIHelper.horizontalSpaceSmall,
                   // Transaction History Column
                   Container(
@@ -345,10 +307,9 @@ class WalletFeaturesView extends StatelessWidget {
                     flex: 2,
                     child: InkWell(
                       onTap: () async {
-                        await model.refreshErrDeposit();
                         await model.refreshBalance();
                       },
-                      child: model.state == ViewState.Busy
+                      child: model.isBusy
                           ? model.sharedService.loadingIndicator()
                           : Center(
                               child: Icon(

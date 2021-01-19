@@ -55,6 +55,10 @@ const String GetTokenListUpdatesApiRoute = 'tokenListUpdates';
                             Exchange
 ----------------------------------------------------------------------*/
 
+// banner
+const String BannerApiUrl =
+    'https://api.blockchaingate.com/v2/banners/app/5b6a8688905612106e976a69';
+
 // /ordersbyaddresspaged/:address/:start?/:count?/:status?
 // /getordersbytickernamepaged/:address/:tickerName/:start?/:count?/:status?
 

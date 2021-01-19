@@ -16,6 +16,7 @@ import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
+import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
@@ -40,6 +41,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -684,31 +686,31 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   getConfirmDepositStatus() async {
     String address = await walletService.getExgAddressFromWalletDatabase();
-    await walletService.getErrDeposit(address).then((res) async {
-      if (res['json'] == []) {
-        log.e('getConfirmDepositStatus res not good');
-        return;
-      }
-      log.w('getConfirmDepositStatus $res');
-      var singleTransaction = res[0];
-      int coinType = singleTransaction['coinType'];
-
-      var name = coinList.newCoinTypeMap[coinType.toString()];
-      // .keys.firstWhere((element) {
-      //   log.i('test $element -- ${coinType.toString()}');
-      //   return element == coinType.toString();
-      // });
-      if (name != null) {
-        log.e('Pending deposit coin $name');
-        await walletDatabaseService.getBytickerName(name).then((res) {
-          if (res != null) {
-            confirmDepositCoinWallet = res;
-            isConfirmDeposit = true;
-          }
-        });
+    await walletService.getErrDeposit(address).then((result) async {
+      List<String> pendingDepositCoins = [];
+      if (result != null) {
+        log.w('getConfirmDepositStatus reesult $result');
+        for (var i = 0; i < result.length; i++) {
+          var item = result[i];
+          var coinType = item['coinType'];
+          String tickerNameByCointype = newCoinTypeMap[coinType];
+          log.w('tickerNameByCointype $tickerNameByCointype');
+          if (tickerNameByCointype != null &&
+              !pendingDepositCoins.contains(tickerNameByCointype))
+            pendingDepositCoins.add(tickerNameByCointype);
+        }
+        var json = jsonEncode(pendingDepositCoins);
+        var listCoinsToString = jsonDecode(json);
+        String holder = listCoinsToString.toString();
+        String f = holder.substring(1, holder.length - 1);
+        if (pendingDepositCoins.isNotEmpty)
+          showSimpleNotification(
+              Text('${AppLocalizations.of(context).requireRedeposit}: $f'),
+              position: NotificationPosition.bottom,
+              background: primaryColor);
       }
     }).catchError((err) {
-      log.e('getConfirmDepositStatus $err');
+      log.e('getConfirmDepositStatus Catch $err');
     });
   }
 /*----------------------------------------------------------------------
@@ -779,9 +781,9 @@ class WalletDashboardViewModel extends BaseViewModel {
         name: newToken.coinName,
         inExchange: newTokenWalletBalance.unlockedExchangeBalance);
     walletInfo.add(wi);
-    log.e('new coin ${wi.tickerName} added ${wi.toJson()}');
-    walletDatabaseService.insert(wi).then(
-        (value) => print('${wi.tickerName} has been added in the wallet db'));
+    log.e(
+        'new coin ${wi.tickerName} added ${wi.toJson()} in wallet info object');
+    walletDatabaseService.insert(wi);
 
     // save data locally
     List<String> tokenList = [];
@@ -789,7 +791,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     var x = jsonEncode(newToken);
 
     tokenList.add(x);
-    log.i('tokenList $tokenList');
     storageService.tokenList = tokenList;
   }
 
@@ -797,34 +798,11 @@ class WalletDashboardViewModel extends BaseViewModel {
                       Add New Token In Db
 ----------------------------------------------------------------------*/
 
-  addNewTokenInTokenListDb(List<Token> newTokenList) async {
-    var tokenListFromDb = await tokenListDatabaseService.getAll();
-    if (tokenListFromDb != null) {
-      newTokenList.forEach((newToken) {
-        tokenListFromDb.forEach((tokenFromDb) async {
-          if (tokenFromDb.tickerName != newToken.tickerName) {
-            await insertToken(newToken);
-          } else {
-            log.e(
-                '${newToken.tickerName} Token already in the token database so not saving again');
-          }
-        });
-      });
-    } else {
-      newTokenList.forEach((newToken) async {
-        await insertToken(newToken);
-      });
-    }
-  }
-
   insertToken(Token newToken) async {
     if (newToken.chainName == 'FAB') {
       newToken.contract = '0x' + newToken.contract;
     }
-    await tokenListDatabaseService.insert(newToken).whenComplete(() {
-      log.w('${newToken.tickerName} has been inserted in the token db');
-      tokenListDatabaseService.getByTickerName(newToken.tickerName);
-    });
+    await tokenListDatabaseService.insert(newToken);
   }
 
 /*----------------------------------------------------------------------
@@ -865,7 +843,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
     log.i('walletInfo copy list  length ${walletInfoCopy.length}');
 
-    walletInfoCopy.removeLast();
+    //  walletInfoCopy.removeLast();
     walletInfo = [];
     Map<String, dynamic> walletBalancesBody = {
       'btcAddress': '',
@@ -980,15 +958,23 @@ class WalletDashboardViewModel extends BaseViewModel {
             await walletService
                 .getTokenListUpdates()
                 .then((apiTokenList) async {
+              if (apiTokenList != null) {
+                await tokenListDatabaseService.deleteDb().whenComplete(() => log
+                    .e('ticker database cleared before inserting update token data from api'));
+                apiTokenList.forEach((tokenToInsert) async {
+                  await tokenListDatabaseService.insert(tokenToInsert);
+                });
+              }
               newTokenBalanceList.forEach((newTokenWalletBalance) async {
                 // compare tickername of api token balance against api tokenList
                 apiTokenList.forEach((newToken) async {
                   if (newTokenWalletBalance.coin == newToken.tickerName) {
                     buildNewWalletObject(newToken, newTokenWalletBalance);
-                    await insertToken(newToken);
+                    // await insertToken(newToken);
                   }
                 });
               });
+
               //   await addNewTokenInTokenListDb(apiTokenList);
             }).catchError((err) {
               log.e('Token list api call fails in api service');

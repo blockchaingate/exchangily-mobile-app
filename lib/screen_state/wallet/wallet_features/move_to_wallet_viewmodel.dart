@@ -119,8 +119,8 @@ class MoveToWalletViewmodel extends BaseState {
 ----------------------------------------------------------------------*/
   checkPass() async {
     setBusy(true);
-    if(amountController.text.isEmpty){
-        sharedService.showInfoFlushbar(
+    if (amountController.text.isEmpty) {
+      sharedService.showInfoFlushbar(
           AppLocalizations.of(context).minimumAmountError,
           AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
           Icons.cancel,
@@ -174,12 +174,6 @@ class MoveToWalletViewmodel extends BaseState {
       var tokenType = walletInfo.tokenType;
       var coinName = walletInfo.tickerName;
       var coinAddress = walletInfo.address;
-      if (coinName == 'USDT') {
-        tokenType = 'ETH';
-      }
-      if (coinName == 'EXG') {
-        tokenType = 'FAB';
-      }
 
       if (coinName == 'BCH') {
         await walletService.getBchAddressDetails(coinAddress).then(

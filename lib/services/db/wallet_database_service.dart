@@ -94,17 +94,20 @@ class WalletDataBaseService {
     bool isDuplicate = false;
     await getAll().then((walletList) {
       walletList.forEach((wallet) {
-        if (wallet.tickerName == walletInfo.tickerName)
+        if (wallet.tickerName == walletInfo.tickerName) {
           isDuplicate = true;
-        else
-          print('${walletInfo.tickerName} new entry in the db');
+          log.e(
+              '${walletInfo.tickerName} is Already in the WALLET db so duplicate entry');
+          return;
+        }
       });
     });
     if (!isDuplicate) {
       id = await db
           .insert(tableName, walletInfo.toJson(),
               conflictAlgorithm: ConflictAlgorithm.replace)
-          .whenComplete(() => getBytickerName(walletInfo.tickerName));
+          .whenComplete(() =>
+              log.w('${walletInfo.tickerName} new entry in the wallet db'));
     }
     return id;
   }

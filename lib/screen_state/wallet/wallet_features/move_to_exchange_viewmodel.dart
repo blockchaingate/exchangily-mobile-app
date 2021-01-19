@@ -125,8 +125,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
   checkPass() async {
     setBusy(true);
 
-       if(myController.text.isEmpty){
-        sharedService.showInfoFlushbar(
+    if (myController.text.isEmpty) {
+      sharedService.showInfoFlushbar(
           AppLocalizations.of(context).minimumAmountError,
           AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
           Icons.cancel,
@@ -190,7 +190,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       var kanbanGasPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
       String tickerName = walletInfo.tickerName;
-      int decimal = 0;
+      var decimal;
       String contractAddr =
           environment["addresses"]["smartContract"][tickerName];
       if (contractAddr == null && (tokenType == 'FAB' || tokenType == 'ETH')) {
@@ -201,8 +201,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
           contractAddr = token.contract;
           decimal = token.decimal;
         });
+        log.i('$tickerName contract address $contractAddr using ticker db');
       }
-      log.i('$tickerName contract address $contractAddr using ticker db');
       var option = {
         "gasPrice": gasPrice ?? 0,
         "gasLimit": gasLimit ?? 0,
@@ -301,8 +301,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
         .then((data) async {
       log.w('data $data');
-      if(data != null)
-      walletInfo.availableBalance = data['balance'];
+      if (data != null) walletInfo.availableBalance = data['balance'];
     }).catchError((err) {
       log.e(err);
       setBusy(false);

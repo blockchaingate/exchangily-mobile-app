@@ -16,7 +16,6 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 
-import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -81,8 +80,11 @@ class Redeposit extends StatelessWidget {
                                   value: data['transactionID'],
                                   groupValue: model.errDepositTransactionID,
                                   onChanged: (val) {
+                                    model.setBusy(true);
                                     model.errDepositTransactionID = val;
-                                    print('valllll=' + val);
+                                    print('valllll=' +
+                                        model.errDepositTransactionID);
+                                    model.setBusy(false);
                                   },
                                 ))
                             .toList(),
@@ -134,7 +136,9 @@ class Redeposit extends StatelessWidget {
                           dragStartBehavior: DragStartBehavior.start,
                           activeColor: primaryColor,
                           onChanged: (bool isOn) {
+                            model.setBusy(true);
                             model.transFeeAdvance = isOn;
+                            model.setBusy(false);
                           },
                         )
                       ],

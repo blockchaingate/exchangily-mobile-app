@@ -163,7 +163,7 @@ class SendScreenState extends BaseState {
             (tickerName != '') &&
             (tokenType != null) &&
             (tokenType != '')) {
-          int decimal = 0;
+          var decimal;
           String contractAddr =
               environment["addresses"]["smartContract"][tickerName];
           if (contractAddr == null) {

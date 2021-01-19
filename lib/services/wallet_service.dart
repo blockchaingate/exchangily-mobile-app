@@ -331,8 +331,8 @@ class WalletService {
     log.w(' coinBalanceByAddress $name $address $tokenType');
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
-     log.w('coinBalanceByAddress $name - $bal');
-    
+    log.w('coinBalanceByAddress $name - $bal');
+
     // if (bal == null) {
     //   print('coinBalanceByAddress $name- bal $bal');
     //   return 0.0;
@@ -781,7 +781,7 @@ class WalletService {
         var unlockedAmount = res[i].unlockedAmount;
         var lockedAmount = res[i].lockedAmount;
         var finalBal = {
-          'coin': coinList.newCoinTypeMap[coinType.toString()],
+          'coin': coinList.newCoinTypeMap[coinType],
           'amount': unlockedAmount,
           'lockedAmount': lockedAmount
         };
@@ -1346,7 +1346,7 @@ class WalletService {
     var receivePrivateKeyArr = [];
 
     var tokenType = options['tokenType'] ?? '';
-    var decimal = options['decimal'] ?? 18;
+    var decimal = options['decimal'];
     var contractAddress = options['contractAddress'] ?? '';
     var changeAddress = '';
 
@@ -1908,6 +1908,9 @@ class WalletService {
     // Token FAB
 
     else if (tokenType == 'FAB') {
+      if (decimal == null) {
+        decimal = 18;
+      }
       if (bytesPerInput == 0) {
         bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
       }
