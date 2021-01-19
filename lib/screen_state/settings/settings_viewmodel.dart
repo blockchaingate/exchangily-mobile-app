@@ -314,6 +314,11 @@ class SettingsViewmodel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
   changeWalletLanguage(updatedLanguageValue) async {
     setBusy(true);
+    
+    //remove cached announcement Data in different language
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("announceData");
+
     // Get the Map key using value
     // String key = languages.keys.firstWhere((k) => languages[k] == lang);
     String key = '';
@@ -339,6 +344,9 @@ class SettingsViewmodel extends BaseViewModel {
       AppLocalizations.load(Locale('en', 'EN'));
       storageService.language = 'en';
     }
+
+    
+
     setBusy(false);
   }
 

@@ -107,6 +107,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   bool _isShowCaseView = false;
   get isShowCaseView => _isShowCaseView;
+
+  int unreadMsgNum = 0;
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -233,6 +235,7 @@ class WalletDashboardViewModel extends BaseViewModel {
           //   print('jsonData $jsonData');
         });
         setunReadAnnouncement(readedNum);
+        unreadMsgNum = readedNum;
         // print("check status: " + prefs.containsKey('announceData').toString());
         prefs.setStringList('announceData', jsonData);
 
@@ -261,7 +264,7 @@ class WalletDashboardViewModel extends BaseViewModel {
             //    print('jsonData $jsonData');
           });
           setunReadAnnouncement(readedNum);
-
+          unreadMsgNum = readedNum;
           // print(
           //     "check status: " + prefs.containsKey('announceData').toString());
           prefs.setStringList('announceData', jsonData);
@@ -286,7 +289,16 @@ class WalletDashboardViewModel extends BaseViewModel {
         announceList = tempAnnounceData;
         log.i("announcement: exit!!!");
       }
+      (context as Element).markNeedsBuild();
     }
+  }
+
+  updateAnnce(){
+    // setState();
+    unreadMsgNum = getunReadAnnouncement();
+    
+    print("Update unread annmoucement number:"+ unreadMsgNum.toString());
+    (context as Element).markNeedsBuild();
   }
 
 /*----------------------------------------------------------------------
