@@ -293,12 +293,13 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
   }
 
-  updateAnnce(){
-    // setState();
+  updateAnnce() {
+    setBusy(true);
     unreadMsgNum = getunReadAnnouncement();
-    
-    print("Update unread annmoucement number:"+ unreadMsgNum.toString());
+
+    print("Update unread annmoucement number:" + unreadMsgNum.toString());
     (context as Element).markNeedsBuild();
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
