@@ -19,10 +19,12 @@ import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -58,6 +60,8 @@ class WalletDashboardViewModel extends BaseViewModel {
   SharedService sharedService = locator<SharedService>();
 
   final NavigationService navigationService = locator<NavigationService>();
+  final DecimalConfigDatabaseService decimalConfigDatabaseService =
+      locator<DecimalConfigDatabaseService>();
   ApiService apiService = locator<ApiService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
@@ -117,13 +121,13 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
 
     sharedService.context = context;
-    //  await getDecimalPairConfig();
     await refreshBalance();
 
     totalBalanceContainerWidth = 270.0;
     checkAnnouncement();
     await getConfirmDepositStatus();
     showDialogWarning();
+      getDecimalPairConfig();
     setBusy(false);
   }
 
@@ -636,10 +640,18 @@ class WalletDashboardViewModel extends BaseViewModel {
   getDecimalPairConfig() async {
     setBusy(true);
     pairDecimalConfigList.clear();
-    await apiService.getPairDecimalConfig().then((res) {
+    await apiService.getPairDecimalConfig().then((res) async{
       if (res != null) {
         pairDecimalConfigList = res;
         log.w('getDecimalPairConfig ${pairDecimalConfigList.length}');
+        var data = await decimalConfigDatabaseService.getAll();
+         if(data.length != pairDecimalConfigList.length){ 
+         await decimalConfigDatabaseService.deleteDb();
+        
+        pairDecimalConfigList.forEach((element) async {
+          await decimalConfigDatabaseService.insert(element);
+        });
+      }
       }
     }).catchError((err) => log.e('In get decimal config CATCH. $err'));
     setBusy(false);

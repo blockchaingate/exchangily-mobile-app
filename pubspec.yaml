@@ -63,7 +63,7 @@ dependencies:
   provider: ^4.0.1
 
   # Dependency injection
-  get_it: ^1.0.3
+  get_it: ^5.0.4
 
   # State Management
   stacked: ^1.7.6
@@ -120,7 +120,7 @@ dependencies:
   shimmer: ^1.0.1
 
   # Sqflite
-  sqflite: ^1.1.7
+  sqflite: ^1.3.2+2
 
   # Path
   path: ^1.6.4

@@ -1,6 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -265,7 +265,7 @@ class OrderBookView extends StatelessWidget {
                         color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                         child: Text(
                             order.quantity.toStringAsFixed(
-                                model.decimalConfig.quantityDecimal),
+                                model.decimalConfig.qtyDecimal),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 13.0)))
                   ],
@@ -279,7 +279,7 @@ class OrderBookView extends StatelessWidget {
 class OrderDetailsView extends StatelessWidget {
   final int index;
   final bool isBuy;
-  final DecimalConfig decimalConfig;
+  final PairDecimalConfig decimalConfig;
   final List<OrderType> orders;
   const OrderDetailsView(
       {Key key,
@@ -302,7 +302,7 @@ class OrderDetailsView extends StatelessWidget {
                   orderRow(
                       orders[index]
                           .quantity
-                          .toStringAsFixed(decimalConfig.quantityDecimal),
+                          .toStringAsFixed(decimalConfig.qtyDecimal),
                       TextAlign.start,
                       grey),
                   orderRow(
@@ -324,7 +324,7 @@ class OrderDetailsView extends StatelessWidget {
                   orderRow(
                       orders[index]
                           .quantity
-                          .toStringAsFixed(decimalConfig.quantityDecimal),
+                          .toStringAsFixed(decimalConfig.qtyDecimal),
                       TextAlign.end,
                       grey),
                 ],

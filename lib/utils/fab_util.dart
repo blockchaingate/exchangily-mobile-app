@@ -335,26 +335,23 @@ Future getFabTokenBalanceByAddress(String address, String coinName) async {
       else
         smartContractAddress = value;
     });
-    var tokenBalance = 0.0;
-    var tokenLockedBalance = 0.0;
-    if (coinName == 'EXG' || coinName == 'CNB') {
-      String balanceInfoABI = '70a08231';
-      tokenBalance = await getFabTokenBalanceForABI(
-          balanceInfoABI, smartContractAddress, address);
-      balanceInfoABI = '6ff95d25';
-      tokenLockedBalance = await getFabTokenBalanceForABI(
-          balanceInfoABI, smartContractAddress, address);
-    } else {
-      // print('smartContractAddress for' + coinName + ':' + smartContractAddress);
-      String balanceInfoABI = '70a08231';
-      tokenBalance = await getFabTokenBalanceForABI(
-          balanceInfoABI, smartContractAddress, address, 6);
-      //  print('tokenBalance===');
-      //  print(tokenBalance);
-    }
-
-    // print('address=' + address.toString());
-    // print('tokenLockedBalance=' + tokenLockedBalance.toString());
-    return {'balance': tokenBalance, 'lockbalance': tokenLockedBalance};
   }
+  var tokenBalance = 0.0;
+  var tokenLockedBalance = 0.0;
+  if (coinName == 'EXG' || coinName == 'CNB') {
+    String balanceInfoABI = '70a08231';
+    tokenBalance = await getFabTokenBalanceForABI(
+        balanceInfoABI, smartContractAddress, address);
+    balanceInfoABI = '6ff95d25';
+    tokenLockedBalance = await getFabTokenBalanceForABI(
+        balanceInfoABI, smartContractAddress, address);
+  } else {
+    String balanceInfoABI = '70a08231';
+    tokenBalance = await getFabTokenBalanceForABI(
+        balanceInfoABI, smartContractAddress, address, 6);
+  }
+
+  // print('address=' + address.toString());
+  // print('tokenLockedBalance=' + tokenLockedBalance.toString());
+  return {'balance': tokenBalance, 'lockbalance': tokenLockedBalance};
 }

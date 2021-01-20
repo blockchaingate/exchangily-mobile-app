@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:stacked/stacked.dart';
 
@@ -14,8 +15,9 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
   final log = getLogger('OrderbookViewModel');
 
   TradeService tradeService = locator<TradeService>();
+  SharedService sharedService = locator<SharedService>();
   Orderbook orderbook = new Orderbook();
-  DecimalConfig decimalConfig = new DecimalConfig();
+  PairDecimalConfig decimalConfig = new PairDecimalConfig();
 
   @override
   Stream get stream => tradeService.getOrderBookStreamByTickerName(tickerName);
@@ -69,12 +71,12 @@ class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
 ----------------------------------------------------------------------*/
 
   getDecimalPairConfig() async {
-    await tradeService
+    await sharedService
         .getSinglePairDecimalConfig(tickerName)
         .then((decimalValues) {
       decimalConfig = decimalValues;
       log.i(
-          'decimal values, quantity: ${decimalConfig.quantityDecimal} -- price: ${decimalConfig.priceDecimal}');
+          'decimal values, quantity: ${decimalConfig.qtyDecimal} -- price: ${decimalConfig.priceDecimal}');
     }).catchError((err) {
       log.e('getDecimalPairConfig $err');
     });

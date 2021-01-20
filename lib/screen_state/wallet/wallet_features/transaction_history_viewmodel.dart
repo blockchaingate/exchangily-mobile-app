@@ -1,7 +1,6 @@
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -18,7 +17,7 @@ class TransactionHistoryViewmodel extends BaseState {
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   SharedService sharedService = locator<SharedService>();
-  DecimalConfig decimalConfig = new DecimalConfig();
+  PairDecimalConfig decimalConfig = new PairDecimalConfig();
   TradeService tradeService = locator<TradeService>();
 
   getTransaction(String tickerName) async {
@@ -28,7 +27,7 @@ class TransactionHistoryViewmodel extends BaseState {
         .getByName(tickerName)
         .then((data) async {
       transactionHistory = data;
-      await tradeService
+      await sharedService
           .getSinglePairDecimalConfig(tickerName)
           .then((decimalConfig) => decimalConfig = decimalConfig);
     }).catchError((onError) {

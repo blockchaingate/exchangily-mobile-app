@@ -16,9 +16,8 @@ import 'dart:convert';
 import 'package:bs58check/bs58check.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/stoppable_service.dart';
@@ -26,7 +25,7 @@ import 'package:observable_ish/observable_ish.dart';
 import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
-import 'package:exchangilymobileapp/environments/environment.dart';
+
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import "package:hex/hex.dart";
@@ -149,28 +148,6 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     //  int length = hexString.length;
     String trimmedString = '0x' + hexString.substring(2, 42);
     return trimmedString;
-  }
-
-/*----------------------------------------------------------------------
-                    getPairDecimalConfig
-----------------------------------------------------------------------*/
-
-  Future<DecimalConfig> getSinglePairDecimalConfig(String pairName) async {
-    List<PairDecimalConfig> pairDecimalConfigList = [];
-    DecimalConfig singlePairDecimalConfig = new DecimalConfig();
-    await _api.getPairDecimalConfig().then((res) {
-      if (res != null) {
-        pairDecimalConfigList = res;
-        for (PairDecimalConfig pair in pairDecimalConfigList) {
-          if (pair.name == pairName) {
-            singlePairDecimalConfig = DecimalConfig(
-                priceDecimal: pair.priceDecimal,
-                quantityDecimal: pair.qtyDecimal);
-          }
-        }
-      }
-    });
-    return singlePairDecimalConfig;
   }
 
 /*----------------------------------------------------------------------

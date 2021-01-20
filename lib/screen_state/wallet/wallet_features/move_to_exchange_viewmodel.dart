@@ -56,6 +56,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  getData() {
+    sharedService.getAllPairDecimalConfig();
+  }
+
 /*---------------------------------------------------
                       Set fee
 --------------------------------------------------- */

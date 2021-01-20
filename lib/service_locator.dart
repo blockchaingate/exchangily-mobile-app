@@ -35,11 +35,11 @@ import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/trade/place_order/order_list_screen_state.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
+import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -62,7 +62,7 @@ import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.da
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
 
-GetIt locator = GetIt();
+GetIt locator = GetIt.instance;
 
 Future serviceLocator() async {
   // Singleton returns the old instance
@@ -77,18 +77,16 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => SharedService());
   locator.registerLazySingleton(() => NavigationService());
   locator.registerLazySingleton(() => DialogService());
+  locator.registerLazySingleton(() => ConfigService());
+  locator.registerLazySingleton(() => DecimalConfigDatabaseService());
   // Campaign
   locator.registerLazySingleton(() => CampaignService());
   locator.registerLazySingleton(() => CampaignUserDatabaseService());
   // Trade
   locator.registerLazySingleton(() => TradeService());
   locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
-
   locator.registerLazySingleton(() => PdfViewerService());
-
   locator.registerLazySingleton(() => OrderService());
-
-  locator.registerLazySingleton(() => ConfigService());
 
   // LocalStorageService Singelton
   var instance = await LocalStorageService.getInstance();
@@ -114,7 +112,6 @@ Future serviceLocator() async {
   // OTC
   locator.registerFactory(() => OtcScreenState());
   locator.registerFactory(() => OtcDetailsScreenState());
-  locator.registerFactory(() => OrderListScreenState());
   // Campaign
   locator.registerFactory(() => CampaignInstructionsScreenState());
   locator.registerFactory(() => CampaignPaymentScreenState());

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/market_trades/market_trade_model.dart';
@@ -54,7 +54,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   String marketTradesStreamKey = 'marketTradesList';
 
   List myExchangeAssets = [];
-  DecimalConfig singlePairDecimalConfig = new DecimalConfig();
+  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   bool isDisposing = false;
   double usdValue = 0.0;
   String pairSymbolWithSlash = '';
@@ -237,12 +237,12 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 ----------------------------------------------------------------------*/
 
   getDecimalPairConfig() async {
-    await _tradeService
+    await sharedService
         .getSinglePairDecimalConfig(pairPriceByRoute.symbol)
         .then((decimalValues) {
       singlePairDecimalConfig = decimalValues;
       log.i(
-          'decimal values, quantity: ${singlePairDecimalConfig.quantityDecimal} -- price: ${singlePairDecimalConfig.priceDecimal}');
+          'decimal values, quantity: ${singlePairDecimalConfig.qtyDecimal} -- price: ${singlePairDecimalConfig.priceDecimal}');
     }).catchError((err) {
       log.e('getDecimalPairConfig $err');
     });

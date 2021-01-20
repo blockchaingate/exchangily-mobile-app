@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 
@@ -291,19 +292,13 @@ class BuySellViewModel extends ReactiveViewModel {
 --------------------------------------------------- */
   getDecimalPairConfig() async {
     setBusy(true);
-    await apiService.getPairDecimalConfig().then((res) {
-      pairDecimalConfigList = res;
-      String currentCoinName = targetCoinName + baseCoinName;
-      log.w('Current coin name in get decimal config $currentCoinName');
-      for (PairDecimalConfig pair in pairDecimalConfigList) {
-        if (pair.name == currentCoinName) {
-          priceDecimal = pair.priceDecimal;
-          quantityDecimal = pair.qtyDecimal;
-          log.e('Price and quantity decimal $priceDecimal -- $quantityDecimal');
-        }
-      }
+    String currentCoinName = targetCoinName + baseCoinName;
+    await sharedService.getSinglePairDecimalConfig(currentCoinName).then((res) {
+      log.w('Current coin $currentCoinName in get decimal config $res');
+      priceDecimal = res.priceDecimal;
+      quantityDecimal = res.qtyDecimal;
+      log.e('Price and quantity decimal $priceDecimal -- $quantityDecimal');
     });
-    log.w(pairDecimalConfigList.length);
     setBusy(false);
   }
 

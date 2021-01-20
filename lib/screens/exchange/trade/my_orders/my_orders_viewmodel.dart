@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -66,7 +66,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   bool isFutureError = false;
 
   String onClickOrderHash = '';
-  DecimalConfig decimalConfig = new DecimalConfig();
+  PairDecimalConfig decimalConfig = new PairDecimalConfig();
   //bool get isShowAllOrders => _orderService.isShowAllOrders;
   bool isShowAllOrders = false;
 
@@ -84,10 +84,10 @@ class MyOrdersViewModel extends ReactiveViewModel {
   String _orderCancelledText;
   TextStyle orderCancelledTextStyle;
 
-  init() {
+  init() async {
     log.i('INIT');
     getMyOrdersByTickerName();
-    tradeService
+    await sharedService
         .getSinglePairDecimalConfig(tickerName)
         .then((decimalConfig) => decimalConfig = decimalConfig);
 

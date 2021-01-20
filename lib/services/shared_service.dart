@@ -11,13 +11,18 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -30,7 +35,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
 import '../localizations.dart';
@@ -38,12 +42,85 @@ import '../shared/globals.dart' as globals;
 
 class SharedService {
   BuildContext context;
-  final storageService = locator<LocalStorageService>();
-  NavigationService navigationService = locator<NavigationService>();
-  WalletDataBaseService walletDataBaseService =
-      locator<WalletDataBaseService>();
   final log = getLogger('SharedService');
 
+  final storageService = locator<LocalStorageService>();
+  NavigationService navigationService = locator<NavigationService>();
+  DecimalConfigDatabaseService decimalConfigDatabaseService =
+      locator<DecimalConfigDatabaseService>();
+  WalletDataBaseService walletDataBaseService =
+      locator<WalletDataBaseService>();
+
+/*--------------------------------------------------------------------------
+                        getPairDecimalConfig
+------------------------------------------------------------------------- */
+
+  Future<PairDecimalConfig> getSinglePairDecimalConfig(String pairName) async {
+    PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+    await getAllPairDecimalConfig().then((res) {
+      if (res != null) {
+        singlePairDecimalConfig =
+            res.firstWhere((element) => element.name == pairName);
+
+        // if firstWhere fails
+        if (singlePairDecimalConfig != null) {
+          log.w(
+              'single pair decimal config for $pairName result ${singlePairDecimalConfig.toJson()}');
+          return singlePairDecimalConfig;
+        } else {
+          log.i('single pair config using for loop');
+          for (PairDecimalConfig pair in res) {
+            if (pair.name == pairName) {
+              singlePairDecimalConfig = PairDecimalConfig(
+                  priceDecimal: pair.priceDecimal, qtyDecimal: pair.qtyDecimal);
+            }
+          }
+        }
+      }
+    });
+    return singlePairDecimalConfig;
+  }
+
+// -------------- all pair ---------------------
+
+/*----------------------------------------------------------------------
+                  Get Decimal configuration for the coins
+----------------------------------------------------------------------*/
+  // Future<List<PairDecimalConfig>> getPairDecimalConfig() async {
+  //   List<PairDecimalConfig> result = [];
+  //   var url = configService.getKanbanBaseUrl() + GetDecimalPairConfigApiRoute;
+  //   log.e('getPairDecimalConfig $url');
+  //   try {
+  //     var response = await client.get(url);
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       var jsonList = jsonDecode(response.body) as List;
+  //       log.w(' getPairDecimalConfig $jsonList');
+  //       PairDecimalConfigList pairList =
+  //           PairDecimalConfigList.fromJson(jsonList);
+  //       result = pairList.pairList;
+  //     }
+  //     return result;
+  //   } catch (err) {
+  //     log.e('In getPairDecimalConfig catch $err');
+  //     return null;
+  //   }
+  // }
+
+  Future<List<PairDecimalConfig>> getAllPairDecimalConfig() async {
+    ApiService apiService = locator<ApiService>();
+    List<PairDecimalConfig> result = [];
+    result = await decimalConfigDatabaseService.getAll();
+    log.e('decimal configs length in db ${result.length}');
+    if (result == null || result.isEmpty) {
+      await apiService.getPairDecimalConfig().then((res) async {
+        if (res == null) 
+          return null;
+        else 
+          result = res;
+      });
+    }
+    return result;
+  }
 /*---------------------------------------------------
       Get EXG address from wallet database
 --------------------------------------------------- */

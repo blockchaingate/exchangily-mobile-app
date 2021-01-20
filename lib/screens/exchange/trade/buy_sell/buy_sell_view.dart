@@ -365,8 +365,8 @@ Column buildVerticalOrderbookColumn(
                           EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                       child: Text(
-                          order.quantity.toStringAsFixed(
-                              model.decimalConfig.quantityDecimal),
+                          order.quantity
+                              .toStringAsFixed(model.decimalConfig.qtyDecimal),
                           style:
                               TextStyle(color: Colors.white, fontSize: 13.0)))
                 ],

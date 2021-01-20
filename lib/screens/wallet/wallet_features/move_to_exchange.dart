@@ -22,6 +22,7 @@ import '../../../shared/globals.dart' as globals;
 import 'package:flutter/gestures.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_exchange_viewmodel.dart';
 import 'package:stacked/stacked.dart';
+
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
 class MoveToExchangeScreen extends StatelessWidget {
   final WalletInfo walletInfo;
@@ -29,7 +30,6 @@ class MoveToExchangeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return ViewModelBuilder.reactive(
       viewModelBuilder: () => MoveToExchangeViewModel(),
       onModelReady: (model) {
@@ -146,7 +146,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                   )
                 ],
               ),
-
+// test
+              Container(
+                child: ElevatedButton(
+                    onPressed: () => model.getData(), child: Text('click me')),
+              ),
               // Switch Row
               Row(
                 children: <Widget>[
@@ -429,7 +433,6 @@ class MoveToExchangeScreen extends StatelessWidget {
                 color: globals.primaryColor,
                 textColor: Colors.white,
                 onPressed: () {
-                 
                   model.checkPass();
                 },
                 child: model.isBusy

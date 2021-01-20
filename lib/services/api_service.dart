@@ -13,6 +13,7 @@
 
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
@@ -694,19 +695,23 @@ class ApiService {
     return nonce;
   }
 
-  // Get Decimal configuration for the coins
+/*----------------------------------------------------------------------
+                  Get Decimal configuration for the coins
+----------------------------------------------------------------------*/
   Future<List<PairDecimalConfig>> getPairDecimalConfig() async {
+    List<PairDecimalConfig> result = [];
     var url = configService.getKanbanBaseUrl() + GetDecimalPairConfigApiRoute;
     log.e('getPairDecimalConfig $url');
     try {
       var response = await client.get(url);
       if (response.statusCode == 200 || response.statusCode == 201) {
         var jsonList = jsonDecode(response.body) as List;
-        //log.w(' getPairDecimalConfig $jsonList');
+        log.w(' getPairDecimalConfig $jsonList');
         PairDecimalConfigList pairList =
             PairDecimalConfigList.fromJson(jsonList);
-        return pairList.pairList;
+        result = pairList.pairList;
       }
+      return result;
     } catch (err) {
       log.e('In getPairDecimalConfig catch $err');
       return null;
