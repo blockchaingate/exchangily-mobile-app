@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 
 class MoveToWalletViewmodel extends BaseState {
   final log = getLogger('MoveToWalletViewmodel');
@@ -41,6 +42,7 @@ class MoveToWalletViewmodel extends BaseState {
   bool transFeeAdvance = false;
   double gasAmount = 0.0;
   var withdrawLimit;
+ PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
 
 /*---------------------------------------------------
                       INIT
@@ -63,7 +65,15 @@ class MoveToWalletViewmodel extends BaseState {
     }
     checkGasBalance();
     getSingleCoinExchangeBal();
+    getData();
     setBusy(false);
+  }
+
+    getData() async{
+setBusy(true);
+  singlePairDecimalConfig = await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
+  log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
+   setBusy(false);
   }
 
   /*---------------------------------------------------

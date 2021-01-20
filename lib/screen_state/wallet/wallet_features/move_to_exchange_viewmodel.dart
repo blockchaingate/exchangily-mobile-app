@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MoveToExchangeViewModel extends BaseViewModel {
@@ -44,6 +45,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   final myController = TextEditingController();
   bool isValid = false;
   double gasAmount = 0.0;
+  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
 
   void initState() async {
     setBusy(true);
@@ -53,11 +55,15 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setFee();
     await getGas();
     refreshBalance();
+   await getData();
     setBusy(false);
   }
 
-  getData() {
-    sharedService.getAllPairDecimalConfig();
+  getData() async{
+setBusy(true);
+  singlePairDecimalConfig = await sharedService.getSinglePairDecimalConfig(coinName);
+  log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
+   setBusy(false);
   }
 
 /*---------------------------------------------------
@@ -155,22 +161,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
         amount > walletInfo.availableBalance ||
         amount == 0 ||
         amount.isNegative) {
+          log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
       setBusy(false);
       return;
     }
-    // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-    //   sharedService.showInfoFlushbar(
-    //       AppLocalizations.of(context).minimumAmountError,
-    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-    //       Icons.cancel,
-    //       globals.red,
-    //       context);
-    //   setState(ViewState.Idle);
-    //   return;
-    // }
+  
     message = '';
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,

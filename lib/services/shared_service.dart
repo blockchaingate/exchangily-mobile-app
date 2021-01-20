@@ -10,13 +10,9 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
-
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
-
-import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
@@ -55,12 +51,16 @@ class SharedService {
                         getPairDecimalConfig
 ------------------------------------------------------------------------- */
 
-  Future<PairDecimalConfig> getSinglePairDecimalConfig(String pairName) async {
+  Future<PairDecimalConfig> getSinglePairDecimalConfig(String pairName, {String base =''}) async {
     PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+    
+    if((!pairName.endsWith('USDT') || !pairName.endsWith('BTC') || !pairName.endsWith('ETH')) && base .isEmpty)
+    base = 'USDT';
     await getAllPairDecimalConfig().then((res) {
       if (res != null) {
+         print('returning result $singlePairDecimalConfig -- name $pairName -- base $base');
         singlePairDecimalConfig =
-            res.firstWhere((element) => element.name == pairName);
+            res.firstWhere((element) => element.name == pairName+base);
 
         // if firstWhere fails
         if (singlePairDecimalConfig != null) {
@@ -83,29 +83,6 @@ class SharedService {
 
 // -------------- all pair ---------------------
 
-/*----------------------------------------------------------------------
-                  Get Decimal configuration for the coins
-----------------------------------------------------------------------*/
-  // Future<List<PairDecimalConfig>> getPairDecimalConfig() async {
-  //   List<PairDecimalConfig> result = [];
-  //   var url = configService.getKanbanBaseUrl() + GetDecimalPairConfigApiRoute;
-  //   log.e('getPairDecimalConfig $url');
-  //   try {
-  //     var response = await client.get(url);
-  //     if (response.statusCode == 200 || response.statusCode == 201) {
-  //       var jsonList = jsonDecode(response.body) as List;
-  //       log.w(' getPairDecimalConfig $jsonList');
-  //       PairDecimalConfigList pairList =
-  //           PairDecimalConfigList.fromJson(jsonList);
-  //       result = pairList.pairList;
-  //     }
-  //     return result;
-  //   } catch (err) {
-  //     log.e('In getPairDecimalConfig catch $err');
-  //     return null;
-  //   }
-  // }
-
   Future<List<PairDecimalConfig>> getAllPairDecimalConfig() async {
     ApiService apiService = locator<ApiService>();
     List<PairDecimalConfig> result = [];
@@ -119,6 +96,7 @@ class SharedService {
           result = res;
       });
     }
+    print('returning result');
     return result;
   }
 /*---------------------------------------------------

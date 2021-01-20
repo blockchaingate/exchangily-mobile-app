@@ -10,8 +10,8 @@ class PairDecimalConfig {
     int priceDecimal,
     int qtyDecimal,
   }) {
-    this._priceDecimal = priceDecimal ?? 0;
-    this._qtyDecimal = qtyDecimal ?? 0;
+    this._priceDecimal = priceDecimal ?? 4;
+    this._qtyDecimal = qtyDecimal ?? 6;
 
     this._name = name;
   }

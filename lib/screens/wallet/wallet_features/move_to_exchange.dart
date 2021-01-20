@@ -94,7 +94,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                 children: <Widget>[
                   Text(
                       AppLocalizations.of(context).walletbalance +
-                          '  ${model.walletInfo.availableBalance.toString()}',
+                          '  ${model.walletInfo.availableBalance.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
                       style: Theme.of(context).textTheme.subtitle2),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -117,7 +117,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                     padding: EdgeInsets.only(
                         left:
                             5), // padding left to keep some space from the text
-                    child: Text('${model.transFee}',
+                    child: Text('${model.transFee.toStringAsFixed(4)}',
                         style: Theme.of(context)
                             .textTheme
                             .headline5
@@ -138,7 +138,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                     padding: EdgeInsets.only(
                         left:
                             5), // padding left to keep some space from the text
-                    child: Text('${model.kanbanTransFee}',
+                    child: Text('${model.kanbanTransFee.toStringAsFixed(4)}',
                         style: Theme.of(context)
                             .textTheme
                             .headline5
@@ -147,10 +147,10 @@ class MoveToExchangeScreen extends StatelessWidget {
                 ],
               ),
 // test
-              Container(
-                child: ElevatedButton(
-                    onPressed: () => model.getData(), child: Text('click me')),
-              ),
+              // Container(
+              //   child: ElevatedButton(
+              //       onPressed: () => model.getData(), child: Text('click me')),
+              // ),
               // Switch Row
               Row(
                 children: <Widget>[
