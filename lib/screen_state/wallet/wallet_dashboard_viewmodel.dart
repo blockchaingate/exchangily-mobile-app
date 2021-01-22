@@ -67,6 +67,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       locator<WalletDataBaseService>();
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
+  var storageService = locator<LocalStorageService>();
 
   BuildContext context;
   List<WalletInfo> walletInfo;
@@ -105,7 +106,6 @@ class WalletDashboardViewModel extends BaseViewModel {
   List announceList;
   GlobalKey globalKeyOne;
   GlobalKey globalKeyTwo;
-  var storageService = locator<LocalStorageService>();
   double totalBalanceContainerWidth = 100.0;
   final scrollController = ScrollController();
 
@@ -126,7 +126,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     totalBalanceContainerWidth = 270.0;
     checkAnnouncement();
     showDialogWarning();
-      getDecimalPairConfig();
+    getDecimalPairConfig();
     setBusy(false);
   }
 
@@ -400,7 +400,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   getAppVersion() async {
     setBusy(true);
-    String localAppVersion = await sharedService.getLocalAppVersion();
+    Map<String, String> localAppVersion =
+        await sharedService.getLocalAppVersion();
     String store = '';
     String appDownloadLinkOnWebsite =
         'http://exchangily.com/download/latest.apk';
@@ -411,12 +412,12 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     await apiService.getApiAppVersion().then((apiAppVersion) {
       if (apiAppVersion != null) {
-        log.e('condition ${localAppVersion.compareTo(apiAppVersion)}');
+        log.e('condition ${localAppVersion['name'].compareTo(apiAppVersion)}');
 
         log.i(
             'api app version $apiAppVersion -- local version $localAppVersion');
 
-        if (localAppVersion.compareTo(apiAppVersion) == -1) {
+        if (localAppVersion['name'].compareTo(apiAppVersion) == -1) {
           sharedService.alertDialog(
               AppLocalizations.of(context).appUpdateNotice,
               '${AppLocalizations.of(context).pleaseUpdateYourAppFrom} $localAppVersion ${AppLocalizations.of(context).toLatestBuild} $apiAppVersion ${AppLocalizations.of(context).inText} $store ${AppLocalizations.of(context).clickOnWebsiteButton}',
@@ -639,18 +640,18 @@ class WalletDashboardViewModel extends BaseViewModel {
   getDecimalPairConfig() async {
     setBusy(true);
     pairDecimalConfigList.clear();
-    await apiService.getPairDecimalConfig().then((res) async{
+    await apiService.getPairDecimalConfig().then((res) async {
       if (res != null) {
         pairDecimalConfigList = res;
         log.w('getDecimalPairConfig ${pairDecimalConfigList.length}');
         var data = await decimalConfigDatabaseService.getAll();
-         if(data.length != pairDecimalConfigList.length){ 
-         await decimalConfigDatabaseService.deleteDb();
-        
-        pairDecimalConfigList.forEach((element) async {
-          await decimalConfigDatabaseService.insert(element);
-        });
-      }
+        if (data.length != pairDecimalConfigList.length) {
+          await decimalConfigDatabaseService.deleteDb();
+
+          pairDecimalConfigList.forEach((element) async {
+            await decimalConfigDatabaseService.insert(element);
+          });
+        }
       }
     }).catchError((err) => log.e('In get decimal config CATCH. $err'));
     setBusy(false);

@@ -22,7 +22,10 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:stacked/stacked.dart';
+
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 
 class BindpayViewmodel extends FutureViewModel {
   final log = getLogger('BindpayViewmodel');
@@ -31,8 +34,11 @@ class BindpayViewmodel extends FutureViewModel {
   final addressController = TextEditingController();
   ApiService apiService = locator<ApiService>();
   NavigationService navigationService = locator<NavigationService>();
+  TokenListDatabaseService tokenListDatabaseService =
+      locator<TokenListDatabaseService>();
   SharedService sharedService = locator<SharedService>();
   DialogService dialogService = locator<DialogService>();
+  LocalStorageService storageService = locator<LocalStorageService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
   WalletService walletService = locator<WalletService>();
@@ -60,6 +66,9 @@ class BindpayViewmodel extends FutureViewModel {
     //apiService.getTokenList();
   }
 
+  test() {
+    print(storageService.tokenList.length);
+  }
 /*----------------------------------------------------------------------
                           INIT
 ----------------------------------------------------------------------*/
@@ -75,10 +84,26 @@ class BindpayViewmodel extends FutureViewModel {
   void onData(data) {
     setBusyForObject(exchangeBalances, true);
     exchangeBalances = data;
-    setBusyForObject(exchangeBalances, false);
-    exchangeBalances.forEach((element) {
+    exchangeBalances.forEach((element) async {
       print(element.toJson());
+      if (element.ticker.isEmpty) {
+        await tokenListDatabaseService
+            .getTickerNameByCoinType(element.coinType)
+            .then((ticker) {
+          //storageService.tokenList.forEach((newToken){
+          print(ticker);
+          // var json = jsonDecode(newToken);
+          // Token token = Token.fromJson(json);
+          // if (token.tokenType == element.coinType){ print(token.tickerName);
+          setBusy(true);
+          element.ticker = ticker; //}
+          setBusy(false);
+        });
+//element.ticker =tradeService.setTickerNameByType(element.coinType);
+        print('exchanageBalanceModel tickerName ${element.ticker}');
+      }
     });
+    setBusyForObject(exchangeBalances, false);
 
     setBusyForObject(tickerName, true);
     if (exchangeBalances != null || exchangeBalances.isNotEmpty) {

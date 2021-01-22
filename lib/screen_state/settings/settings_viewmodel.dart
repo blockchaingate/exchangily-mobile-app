@@ -42,7 +42,7 @@ class SettingsViewmodel extends BaseViewModel {
   WalletService walletService = locator<WalletService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
-        TokenListDatabaseService tokenListDatabaseService =
+  TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
 
   WalletDataBaseService walletDatabaseService =
@@ -57,7 +57,7 @@ class SettingsViewmodel extends BaseViewModel {
   DialogResponse dialogResponse;
   BuildContext context;
   String versionName = '';
-  String versionCode = '';
+  String buildNumber = '';
   static int initialLanguageValue = 0;
   final FixedExtentScrollController fixedScrollController =
       FixedExtentScrollController(initialItem: initialLanguageValue);
@@ -70,6 +70,8 @@ class SettingsViewmodel extends BaseViewModel {
   String baseServerUrl;
   ConfigService configService = locator<ConfigService>();
   bool isHKServer;
+  Map<String, String> versionInfo;
+
   init() async {
     setBusy(true);
 
@@ -201,29 +203,35 @@ class SettingsViewmodel extends BaseViewModel {
       if (res.confirmed) {
         isDeleting = true;
         log.w('deleting wallet');
-        await walletDatabaseService.deleteDb().whenComplete(()=>log.e('wallet database deleted!!'));
+        await walletDatabaseService
+            .deleteDb()
+            .whenComplete(() => log.e('wallet database deleted!!'));
 
-        await transactionHistoryDatabaseService.deleteDb().whenComplete(()=>log.e('trnasaction history database deleted!!'));
-       
-        await walletService.deleteEncryptedData().whenComplete(()=>log.e('encrypted data deleted!!'));
+        await transactionHistoryDatabaseService.deleteDb().whenComplete(
+            () => log.e('trnasaction history database deleted!!'));
 
-        await tokenListDatabaseService.deleteDb().whenComplete(()=>log.e('Token list database deleted!!'));
- 
+        await walletService
+            .deleteEncryptedData()
+            .whenComplete(() => log.e('encrypted data deleted!!'));
+
+        await tokenListDatabaseService
+            .deleteDb()
+            .whenComplete(() => log.e('Token list database deleted!!'));
+
         storageService.walletBalancesBody = '';
-    
+
         storageService.isShowCaseView = true;
-       
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
-      
+
         log.e('before wallet removal, local storage has ${prefs.getKeys()}');
-    
+
         storageService.clearStorage();
         log.e('before local storage clear ${prefs.getKeys()}');
-     
+
         prefs.clear();
         log.e('all keys after clearing ${prefs.getKeys()}');
-    
+
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed') {
         log.e('Dialog Closed By User');
@@ -314,7 +322,7 @@ class SettingsViewmodel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
   changeWalletLanguage(updatedLanguageValue) async {
     setBusy(true);
-    
+
     //remove cached announcement Data in different language
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("announceData");
@@ -345,8 +353,6 @@ class SettingsViewmodel extends BaseViewModel {
       storageService.language = 'en';
     }
 
-    
-
     setBusy(false);
   }
 
@@ -361,7 +367,12 @@ class SettingsViewmodel extends BaseViewModel {
   getAppVersion() async {
     setBusy(true);
     log.w('in app getappver');
-    versionName = await sharedService.getLocalAppVersion();
+    versionInfo = await sharedService.getLocalAppVersion();
+    log.i('getAppVersion $versionInfo');
+    versionName = versionInfo['name'];
+    buildNumber = versionInfo['buildNumber'];
+    log.i('getAppVersion name $versionName');
+
     setBusy(false);
   }
 

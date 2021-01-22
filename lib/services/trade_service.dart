@@ -25,12 +25,13 @@ import 'package:observable_ish/observable_ish.dart';
 import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
 import 'dart:async';
-
+import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import "package:hex/hex.dart";
 
 import 'package:http/http.dart' as http;
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
@@ -41,6 +42,8 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   final log = getLogger('TradeService');
   ApiService _api = locator<ApiService>();
   ConfigService configService = locator<ConfigService>();
+
+  LocalStorageService storageService = locator<LocalStorageService>();
   final client = new http.Client();
   //static String basePath = environment['websocket'];
 
@@ -82,6 +85,22 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     //  // await getAllPriceChannel().sink.close();
     //     log.w('all price closed');
     //   // cancel stream subscription
+  }
+
+  String setTickerNameByType(type) {
+    String res = '';
+    //return
+    //  await tokenListDatabaseService.getTickerNameByCoinType(type).then((token) {
+    storageService.tokenList.forEach((element) {
+      var json = jsonDecode(element);
+      Token token = Token.fromJson(json);
+      if (token.tokenType == type) {
+        print(token.tickerName);
+        res = token.tickerName;
+      }
+    });
+
+    return res;
   }
 
 /*----------------------------------------------------------------------

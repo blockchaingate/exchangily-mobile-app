@@ -51,16 +51,25 @@ class SharedService {
                         getPairDecimalConfig
 ------------------------------------------------------------------------- */
 
-  Future<PairDecimalConfig> getSinglePairDecimalConfig(String pairName, {String base =''}) async {
+  Future<PairDecimalConfig> getSinglePairDecimalConfig(String pairName,
+      {String base = ''}) async {
     PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
-    
-    if((!pairName.endsWith('USDT') || !pairName.endsWith('BTC') || !pairName.endsWith('ETH')) && base .isEmpty)
-    base = 'USDT';
+    log.i('tickername $pairName -- endswith usdt ${pairName.endsWith('USDT')}');
+    // if (pairName.endsWith("USDT")) {
+    // } else if (pairName.endsWith("DUSD")) {
+    // } else if (pairName.endsWith("BTC")) {
+    // } else if (pairName.endsWith("ETH")) {
+    // } else if (pairName.endsWith("EXG")) {}
+    if ((!pairName.endsWith('USDT') &&
+        !pairName.endsWith('BTC') &&
+        !pairName.endsWith('ETH') &&
+        !pairName.endsWith("EXG"))) base = 'USDT';
     await getAllPairDecimalConfig().then((res) {
       if (res != null) {
-         print('returning result $singlePairDecimalConfig -- name $pairName -- base $base');
+        print(
+            'returning result $singlePairDecimalConfig -- name $pairName -- base $base');
         singlePairDecimalConfig =
-            res.firstWhere((element) => element.name == pairName+base);
+            res.firstWhere((element) => element.name == pairName + base);
 
         // if firstWhere fails
         if (singlePairDecimalConfig != null) {
@@ -90,9 +99,9 @@ class SharedService {
     log.e('decimal configs length in db ${result.length}');
     if (result == null || result.isEmpty) {
       await apiService.getPairDecimalConfig().then((res) async {
-        if (res == null) 
+        if (res == null)
           return null;
-        else 
+        else
           result = res;
       });
     }
@@ -180,10 +189,15 @@ class SharedService {
                 Get app version Code
 --------------------------------------------------- */
 
-  Future<String> getLocalAppVersion() async {
+  Future<Map<String, String>> getLocalAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     String versionName = packageInfo.version;
-    return versionName;
+    String buildNumber = packageInfo.buildNumber;
+    Map<String, String> versionInfo = {
+      "name": versionName,
+      "buildNumber": buildNumber
+    };
+    return versionInfo;
   }
 
 /*-------------------------------------------------------------------------------------

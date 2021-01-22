@@ -195,16 +195,16 @@ setBusy(true);
       var decimal;
       String contractAddr =
           environment["addresses"]["smartContract"][tickerName];
-      if (contractAddr == null && (tokenType == 'FAB' || tokenType == 'ETH')) {
-        log.i('$tickerName contract is null so fetching from token database');
+      if (contractAddr == null && tokenType != '') {
+        log.i('$tickerName with token type $tokenType contract is null so fetching from token database');
         await tokenListDatabaseService
             .getByTickerName(tickerName)
             .then((token) {
           contractAddr = token.contract;
           decimal = token.decimal;
         });
-        log.i('$tickerName contract address $contractAddr using ticker db');
       }
+       
       var option = {
         "gasPrice": gasPrice ?? 0,
         "gasLimit": gasLimit ?? 0,
@@ -260,8 +260,8 @@ setBusy(true);
                           .depositTransactionFailed),
                   success
                       ? Text("")
-                      : ret.containsKey("error") && ret["error"] != null
-                          ? Text(ret["error"])
+                      : ret["data"] != null
+                          ? Text(ret["data"])
                           : Text(AppLocalizations.of(context).serverError),
                 ]),
             position: NotificationPosition.bottom,

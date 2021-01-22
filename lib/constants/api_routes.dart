@@ -21,8 +21,7 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 ----------------------------------------------------------------------*/
 const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
 
-// Add wallet Hex Fab address or kanban address in the end
-const String WithdrawTxStatusApiRoute = 'withdrawrequestsbyaddress/';
+
 
 // Free Fab
 final String getFreeFabUrl =
@@ -44,7 +43,12 @@ const String GetAppVersionRoute = 'getappversion';
 const String GetTokenListApiRoute = 'exchangily/getTokenList';
 const String GetDecimalPairConfigApiRoute = 'kanban/getpairconfig';
 //final String pairDecimalConfigRoute = 'kanban/getpairconfig';
+
+
 const String RedepositCheckStatusApiRoute = 'checkstatus/';
+// Add wallet Hex Fab address or kanban address in the end
+const String WithdrawTxStatusApiRoute = 'withdrawrequestsbyaddress/';
+const String DepositTxStatusApiRoute = 'getdepositrequestsbyaddress/';
 
 const String GetUtxosApiRoute = 'getutxos/';
 const String GetNonceApiRoute = 'getnonce/';

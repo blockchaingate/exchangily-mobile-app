@@ -98,7 +98,7 @@ class ApiService {
     ExchangeBalanceModelList exchangeBalanceList;
     String url =
         configService.getKanbanBaseUrl() + AssetsBalanceApiRoute + exgAddress;
-    log.w('get assets balance url $url');
+    log.i('get assets balance url $url');
     try {
       final res = await client.get(url);
       if (res.statusCode == 200 || res.statusCode == 201) {
@@ -106,7 +106,7 @@ class ApiService {
         log.w('getAssetsBalance json $json');
         exchangeBalanceList = ExchangeBalanceModelList.fromJson(json);
       }
-      return exchangeBalanceList.balances;
+    return exchangeBalanceList.balances;
     } catch (e) {
       log.e('getAssetsBalance Failed to load the data from the API, $e');
       return null;
