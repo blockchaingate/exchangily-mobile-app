@@ -6,9 +6,11 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:stacked/stacked.dart';import 'dart:convert';
+import 'package:stacked/stacked.dart';
+import 'dart:convert';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+
 class MyExchangeAssetsViewModel extends FutureViewModel {
   final log = getLogger('MyExchangeAssetsViewModel');
   List myExchangeAssets = [];
@@ -20,7 +22,7 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
   ApiService apiService = locator<ApiService>();
   ExchangeBalanceModel exchangeBalance = new ExchangeBalanceModel();
   List<ExchangeBalanceModel> exchangeBalances = [];
-    var storageService = locator<LocalStorageService>();
+  var storageService = locator<LocalStorageService>();
 
   String logoUrl = WalletCoinsLogoUrl;
   @override
@@ -42,19 +44,20 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
         await tokenListDatabaseService
             .getTickerNameByCoinType(element.coinType)
             .then((ticker) {
-          storageService.tokenList.forEach((newToken){
-            log.e('new token $newToken');
-          var json = jsonDecode(newToken);
-          Token token = Token.fromJson(json);
-          if (token.tokenType == element.coinType){ log.e(token.tickerName);}
-          });
-         
+          // storageService.tokenList.forEach((newToken){
+          //   log.e('new token $newToken');
+          // var json = jsonDecode(newToken);
+          // Token token = Token.fromJson(json);
+          // if (token.tokenType == element.coinType){ log.e(token.tickerName);}
+          // });
+
           setBusy(true);
           element.ticker = ticker; //}
           setBusy(false);
         });
 //element.ticker =tradeService.setTickerNameByType(element.coinType);
-        log.i('exchanageBalanceModel null tickerName added ${element.toJson()}');
+        log.i(
+            'exchanageBalanceModel null tickerName added ${element.toJson()}');
       }
     });
     setBusyForObject(exchangeBalance, false);

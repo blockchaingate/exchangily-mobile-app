@@ -1908,9 +1908,6 @@ class WalletService {
     // Token FAB
 
     else if (tokenType == 'FAB') {
-      if (decimal == null) {
-        decimal = 18;
-      }
       if (bytesPerInput == 0) {
         bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
       }
