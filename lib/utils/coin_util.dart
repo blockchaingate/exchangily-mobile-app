@@ -514,46 +514,26 @@ signedMessage(String originalMessage, seed, coinName, tokenType) async {
   return {'r': r, 's': s, 'v': v};
 }
 
-getOfficalAddress(String coinName) {
-  if (coinName == 'CNB') {
-    print('CoinName $coinName');
-    print(
-        'EXG offcial address for CNB ${environment['addresses']['exchangilyOfficial'][0]['address']}');
-    return environment['addresses']['exchangilyOfficial'][0]['address']
-        .toString();
-  }
-  var address = environment['addresses']['exchangilyOfficial']
-      .where((addr) => addr['name'] == coinName)
-      .toList();
+getOfficalAddress(String coinName, {String tokenType = ''}) {
+  if (tokenType == 'FAB') {
+    String fabTokensOfficialAddress =
+        environment['addresses']['exchangilyOfficial'][0]['address'];
+    print('fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
+    return fabTokensOfficialAddress;
+  } else if (coinName == 'ETH' || tokenType == 'ETH') {
+    var ethTokenOfficialAddress =
+        environment['addresses']['exchangilyOfficial'][3]['address'];
 
-  if ((address != null) && (address.length > 0)) {
-    return address[0]['address'];
-  } else if (coinName == 'BNB' ||
-      coinName == 'INB' ||
-      coinName == 'REP' ||
-      coinName == 'HOT' ||
-      coinName == 'MATIC' ||
-      coinName == 'IOST' ||
-      coinName == 'MANA' ||
-      coinName == 'ELF' ||
-      coinName == 'GNO' ||
-      coinName == 'WINGS' ||
-      coinName == 'KNC' ||
-      coinName == 'GVT' ||
-      coinName == 'DRGN' ||
-      coinName == 'FUN' ||
-      coinName == 'WAX' ||
-      coinName == 'MTL' ||
-      coinName == 'POWR' ||
-      coinName == 'CEL') {
-    var address1 = environment['addresses']['exchangilyOfficial']
-        .where((addr) => addr['name'] == 'erc20')
+    print('ethTokenOfficialAddress $ethTokenOfficialAddress for $coinName');
+    return ethTokenOfficialAddress;
+  } else {
+    var address = environment['addresses']['exchangilyOfficial']
+        .where((addr) => addr['name'] == coinName)
         .toList();
-
-    print('address1 $address1');
-    return address1[0]['address'];
+    String majorsOfficialAddress = address[0]['address'];
+    print('majors official address $majorsOfficialAddress for $coinName');
+    return majorsOfficialAddress;
   }
-  return null;
 }
 
 /*

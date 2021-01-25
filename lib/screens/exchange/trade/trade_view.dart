@@ -280,13 +280,28 @@ class TradeView extends StatelessWidget {
                                                     )
                                                   : MarketTradesView(
                                                       marketTrades: model
-                                                          .marketTradesList),
+                                                          .marketTradesList,
+                                                      decimalConfig: model
+                                                          .singlePairDecimalConfig),
                                             ),
 
                                             MyOrdersView(
                                                 tickerName:
                                                     pairPriceByRoute.symbol),
                                             // My Exchange Asssets
+                                            // model.busy(model.myExchangeAssets)
+                                            //     ? Container(
+                                            //         margin:
+                                            //             EdgeInsets.symmetric(
+                                            //                 horizontal: 5.0,
+                                            //                 vertical: 5),
+                                            //         height: 150,
+                                            //         child: ShimmerLayout(
+                                            //           layoutType:
+                                            //               'marketTrades',
+                                            //         ),
+                                            //       )
+                                            //     :
                                             MyExchangeAssetsView()
                                           ],
                                         ),

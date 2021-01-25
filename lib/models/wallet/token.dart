@@ -19,8 +19,8 @@ class Token {
   String _tickerName;
   int _tokenType;
   String _contract;
-  int _minWithdraw;
-  int _feeWithdraw;
+  String _minWithdraw;
+  String _feeWithdraw;
 
   Token(
       {int id,
@@ -30,8 +30,8 @@ class Token {
       String chainName,
       int tokenType,
       String contract,
-      int minWithdraw,
-      int feeWithdraw}) {
+      String minWithdraw,
+      String feeWithdraw}) {
     this._id = id;
     this._decimal = decimal;
     this._coinName = coinName;
@@ -44,13 +44,11 @@ class Token {
   }
 
   factory Token.fromJson(Map<String, dynamic> json) {
-    // List<PairDecimalConfig> pairDecimalConfigList = [];
-    // var pairDecimalConfigJsonAsList = json['pairDecimalConfig'] as List;
-    // if (pairDecimalConfigJsonAsList != null) {
-    //   pairDecimalConfigList = pairDecimalConfigJsonAsList
-    //       .map((e) => PairDecimalConfig.fromJson(e))
-    //       .toList();
-    // }
+  var mw = json['minWithdraw'];
+  String minWithdraw = mw.toString();
+
+  var fw = json['minWithdraw'];
+  String feeWithdraw = fw.toString();
 
     return new Token(
         decimal: json['decimal'] as int,
@@ -59,8 +57,8 @@ class Token {
         chainName: json['chainName'] as String,
         tokenType: json['type'] as int,
         contract: json['contract'] as String,
-        minWithdraw: json['minWithdraw'],
-        feeWithdraw: json['feeWithdraw']);
+        minWithdraw: minWithdraw,
+        feeWithdraw: feeWithdraw);
   }
 
   // To json
@@ -121,15 +119,15 @@ class Token {
     this._contract = contract;
   }
 
-  int get minWithdraw => _minWithdraw;
+  String get minWithdraw => _minWithdraw;
 
-  set minWithdraw(int minWithdraw) {
+  set minWithdraw(String minWithdraw) {
     this._minWithdraw = minWithdraw;
   }
 
-  int get feeWithdraw => _feeWithdraw;
+  String get feeWithdraw => _feeWithdraw;
 
-  set feeWithdraw(int feeWithdraw) {
+  set feeWithdraw(String feeWithdraw) {
     this._feeWithdraw = feeWithdraw;
   }
 }

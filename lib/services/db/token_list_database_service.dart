@@ -33,7 +33,7 @@ class TokenListDatabaseService {
   final String columnMinWithdraw = 'minWithdraw';
   final String columnFeeWithdraw = 'feeWithdraw';
 
-  static final _databaseVersion = 4;
+  static final _databaseVersion = 5;
   static Future<Database> _database;
   String path = '';
 
@@ -59,8 +59,8 @@ class TokenListDatabaseService {
         $columnTickerName TEXT,
         $columnTokenType INTEGER,
         $columnContract TEXT,
-        $columnMinWithdraw INTEGER,
-        $columnFeeWithdraw INTEGER) ''');
+        $columnMinWithdraw TEXT,
+        $columnFeeWithdraw TEXT) ''');
   }
 
   // Get All Records From The Database
@@ -79,22 +79,39 @@ class TokenListDatabaseService {
   }
 
 // Insert Data In The Database
-  Future insert(Token token) async {
+  Future insert(Token passedToken) async {
     await initDb();
+    int id;
+    // bool isDuplicate = false;
+    // await getAll().then((tokenList) {
+    //   print(tokenList.length);
+    //   tokenList.forEach((token) {
+    //     if (token.tickerName == passedToken.tickerName) {
+    //       isDuplicate = true;
+    //       log.e(
+    //           '${token.tickerName} == ${passedToken.tickerName} coin already present in the token db');
+    //       return;
+    //     }
+    //   });
+    // });
+    // if (!isDuplicate) {
     final Database db = await _database;
-    int id = await db.insert(tableName, token.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-
+    id = await db
+        .insert(tableName, passedToken.toJson(),
+            conflictAlgorithm: ConflictAlgorithm.replace)
+        .whenComplete(
+            () => log.w('${passedToken.tickerName} new entry in the token db'));
+    // }
     return id;
   }
 
   // Get Single transaction By Name
-  Future<Token> getByName(String tickerName) async {
+  Future<Token> getByTickerName(String tickerName) async {
     await initDb();
     final Database db = await _database;
     List<Map> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);
-    log.w('Name - $tickerName - res-- $res');
+    log.i('Name - $tickerName - res-- $res');
 
     if (res.isNotEmpty) return Token.fromJson(res.first);
     return null;
@@ -169,6 +186,13 @@ class TokenListDatabaseService {
       whereArgs: [token.id],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+  }
+
+  // delete single token
+  Future<void> deleteByTickerName(String tickerName) async {
+    final db = await _database;
+    await db
+        .delete(tableName, where: "tickerName = ?", whereArgs: [tickerName]);
   }
 
   // Close Database

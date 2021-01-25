@@ -13,6 +13,7 @@
 
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
@@ -39,6 +40,26 @@ class ApiService {
   // Please keep this for future test
   // final kanbanBaseUrl = environment['endpoints']['LocalKanban'];
   // final blockchaingateUrl = environment['endpoints']['blockchaingateLocal'];
+
+/*----------------------------------------------------------------------
+                Get Banner
+----------------------------------------------------------------------*/
+
+  getBanner() async {
+    log.i('getBanner url $BannerApiUrl');
+
+    try {
+      var response = await client.get(BannerApiUrl);
+      var json = jsonDecode(response.body);
+      if (json != null) {
+        log.e('getBanner $json}');
+        return json;
+      }
+    } catch (err) {
+      log.e('getBanner CATCH $err');
+      throw Exception(err);
+    }
+  }
 
   /*<---    ------------------------------------    --------------->                
                             WALLET Futures
@@ -85,7 +106,7 @@ class ApiService {
         log.w('getAssetsBalance json $json');
         exchangeBalanceList = ExchangeBalanceModelList.fromJson(json);
       }
-      return exchangeBalanceList.balances;
+    return exchangeBalanceList.balances;
     } catch (e) {
       log.e('getAssetsBalance Failed to load the data from the API, $e');
       return null;
@@ -674,19 +695,23 @@ class ApiService {
     return nonce;
   }
 
-  // Get Decimal configuration for the coins
+/*----------------------------------------------------------------------
+                  Get Decimal configuration for the coins
+----------------------------------------------------------------------*/
   Future<List<PairDecimalConfig>> getPairDecimalConfig() async {
+    List<PairDecimalConfig> result = [];
     var url = configService.getKanbanBaseUrl() + GetDecimalPairConfigApiRoute;
     log.e('getPairDecimalConfig $url');
     try {
       var response = await client.get(url);
       if (response.statusCode == 200 || response.statusCode == 201) {
         var jsonList = jsonDecode(response.body) as List;
-        //log.w(' getPairDecimalConfig $jsonList');
+        log.w(' getPairDecimalConfig $jsonList');
         PairDecimalConfigList pairList =
             PairDecimalConfigList.fromJson(jsonList);
-        return pairList.pairList;
+        result = pairList.pairList;
       }
+      return result;
     } catch (err) {
       log.e('In getPairDecimalConfig catch $err');
       return null;
@@ -701,9 +726,10 @@ class ApiService {
     try {
       final res = await http
           .get(configService.getKanbanBaseUrl() + "kanban/getadvconfig");
-      log.w(jsonDecode(res.body));
+      log.w(' get slider images ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
-        return jsonDecode(res.body);
+        var json = jsonDecode(res.body) as List;
+        return json;
       }
     } catch (e) {
       log.e('getSliderImages Failed to load the data from the API $e');
@@ -716,11 +742,11 @@ class ApiService {
     final langcode = lang == "en" ? "en" : "sc";
     final url = baseBlockchainGateV2Url + "announcements/language/" + langcode;
 
-    print("Calling api: getAnnouncement " + lang);
-    print("url: " + url);
+    log.w("Calling api: getAnnouncement " + lang);
+    log.i("url: " + url);
     try {
       final res = await http.get(url);
-      log.w(jsonDecode(res.body));
+      log.w('getAnnouncement ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         var body = jsonDecode(res.body)['body'];
         return body;
@@ -733,18 +759,19 @@ class ApiService {
   }
 
   Future getEvents() async {
-    print("Calling api: getEvents");
-    print("Url: " + configService.getKanbanBaseUrl() + "kanban/getCampaigns");
+    log.i("getEvents Url: " +
+        configService.getKanbanBaseUrl() +
+        "kanban/getCampaigns");
     try {
       final res = await http.get(
           // "http://192.168.0.12:4000/kanban/getCampaigns"
           configService.getKanbanBaseUrl() + "kanban/getCampaigns");
-      log.w(jsonDecode(res.body));
+      log.w('getEvents ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         print("success");
         return jsonDecode(res.body);
       } else {
-        print("error: " + res.body);
+        log.e("error: " + res.body);
         return "error";
       }
     } catch (e) {

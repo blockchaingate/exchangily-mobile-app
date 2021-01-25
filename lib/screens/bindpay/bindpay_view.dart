@@ -77,17 +77,17 @@ class BindpayView extends StatelessWidget {
                                         Coin list dropdown
 ----------------------------------------------------------------------------------------------------*/
 
-                      // InkWell(
-                      //   onTap: () {
-
-                      //   },
-                      //   child: Row(
-                      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //       children: [
-                      //         Text('Choose Coin'),
-                      //         Icon(Icons.arrow_drop_down)
-                      //       ]),
-                      // ),
+//                       InkWell(
+//                         onTap: () {
+// model.test();
+//                         },
+//                         child: Row(
+//                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                             children: [
+//                               Text('Choose Coin'),
+//                               Icon(Icons.arrow_drop_down)
+//                             ]),
+//                       ),
                       Platform.isIOS
                           ? CoinListBottomSheetFloatingActionButton(
                               model: model)

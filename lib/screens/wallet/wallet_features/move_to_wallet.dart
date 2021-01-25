@@ -99,7 +99,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       children: <Widget>[
                         Text(
                             AppLocalizations.of(context).inExchange +
-                                ' ${walletInfo.inExchange.toString()}',
+                                ' ${walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
                             style: Theme.of(context).textTheme.subtitle2),
                         Padding(
                           padding: EdgeInsets.symmetric(
@@ -124,7 +124,7 @@ class MoveToWalletScreen extends StatelessWidget {
                           padding: EdgeInsets.only(
                               left:
                                   5), // padding left to keep some space from the text
-                          child: Text('${model.kanbanTransFee}',
+                          child: Text('${model.kanbanTransFee.toStringAsFixed(4)}',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline5

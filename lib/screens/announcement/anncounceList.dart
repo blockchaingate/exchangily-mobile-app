@@ -116,10 +116,11 @@ class AnnouncementList extends StatelessWidget {
                                                   child: SizedBox(width: 5)),
                                               Text(
                                                   model.announceList[index]
-                                                          ["category"] +
-                                                      model.announceList[index]
-                                                              ['isRead']
-                                                          .toString(),
+                                                          ["category"],
+                                                      //     +
+                                                      // model.announceList[index]
+                                                      //         ['isRead']
+                                                      //     .toString(),
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                   )),

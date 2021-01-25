@@ -101,7 +101,7 @@ class UserSettingsDatabaseService {
   }
 
   // Delete Single Object From Database By Id
-  Future<void> deleteWallet(int id) async {
+  Future<void> delete(int id) async {
     final db = await _database;
     await db.delete(tableName, where: "id = ?", whereArgs: [id]);
   }
@@ -130,12 +130,4 @@ class UserSettingsDatabaseService {
     await deleteDatabase(path);
     _database = null;
   }
-
-  // Storing TxID
-  // Future insertTxId(String txId) async{
-  //   final Database db = await _database;
-  //   int id = await db.insert('transaction', txid,
-  //       conflictAlgorithm: ConflictAlgorithm.replace);
-  //   return id;
-  // }
 }

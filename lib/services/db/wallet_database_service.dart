@@ -70,17 +70,10 @@ class WalletDataBaseService {
     await initDb();
     final Database db = await _database;
     log.w('getall $db');
-    // print("getalldata: ");
-    // print("$db");
+
     // res is giving me the same output in the log whether i map it or just take var res
     final List<Map<String, dynamic>> res = await db.query(tableName);
     log.w('res $res');
-    // print("getresdata: ");
-    // print("$res");
-    // res.forEach((e) {
-    //   print(e["id"]);
-    //   print(e["name"]);
-    // });
 
     List<WalletInfo> list =
         res.isNotEmpty ? res.map((f) => WalletInfo.fromJson(f)).toList() : [];
@@ -90,8 +83,12 @@ class WalletDataBaseService {
 // Insert Data In The Database
   Future insert(WalletInfo walletInfo) async {
     final Database db = await _database;
-    int id = await db.insert(tableName, walletInfo.toJson(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+
+
+    int id = await db
+        .insert(tableName, walletInfo.toJson(),
+            conflictAlgorithm: ConflictAlgorithm.replace);
+
     return id;
   }
 
@@ -134,6 +131,13 @@ class WalletDataBaseService {
   Future<void> deleteWallet(int id) async {
     final db = await _database;
     await db.delete(tableName, where: "id = ?", whereArgs: [id]);
+  }
+
+  // Delete Single Object From Database By tickerName
+  Future<void> deleteWalletByTickerName(String tickerName) async {
+    final db = await _database;
+    await db
+        .delete(tableName, where: "tickerName = ?", whereArgs: [tickerName]);
   }
 
   // Update database

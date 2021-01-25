@@ -293,8 +293,8 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                 Expanded(
                     flex: 2,
                     child: Text(
-                        order.totalOrderQuantity.toStringAsFixed(
-                            model.decimalConfig.quantityDecimal),
+                        order.totalOrderQuantity
+                            .toStringAsFixed(model.decimalConfig.qtyDecimal),
                         style: Theme.of(context).textTheme.headline6)),
                 Expanded(
                     flex: 2,
@@ -302,7 +302,7 @@ class MyOrderDetailsView extends ViewModelWidget<MyOrdersViewModel> {
                       children: [
                         Text(
                             order.filledQuantity.toStringAsFixed(
-                                model.decimalConfig.quantityDecimal),
+                                model.decimalConfig.qtyDecimal),
                             style: Theme.of(context).textTheme.headline6),
                         Text(
                             order.filledPercentage.isNaN

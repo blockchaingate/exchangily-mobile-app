@@ -87,14 +87,12 @@ class WalletService {
     'LTC',
     'DOGE',
     'INB',
-    'REP',
     'DRGN',
     'HOT',
     'CEL',
     'MATIC',
     'IOST',
     'MANA',
-    'FUN',
     'WAX',
     'ELF',
     'GNO',
@@ -102,8 +100,7 @@ class WalletService {
     'WINGS',
     'MTL',
     'KNC',
-    'GVT',
-    'NVZN'
+    'GVT'
   ];
 
   List<String> tokenType = [
@@ -116,9 +113,6 @@ class WalletService {
     '',
     '',
     '',
-    'ETH',
-    'ETH',
-    'ETH',
     'ETH',
     'ETH',
     'ETH',
@@ -147,14 +141,12 @@ class WalletService {
     'Litecoin',
     'Dogecoin',
     'Insight chain',
-    'Augur',
     'Dragonchain',
     'Holo',
     'Celsius',
     'Matic Network',
     'IOST',
     'Decentraland',
-    'FunFair',
     'Wax',
     'aelf',
     'Gnosis',
@@ -162,8 +154,7 @@ class WalletService {
     'Wings',
     'Metal',
     'Kyber Network',
-    'Genesis Vision',
-    'Invizion'
+    'Genesis Vision'
   ];
 
   Completer<DialogResponse> _completer;
@@ -175,29 +166,9 @@ class WalletService {
     List<Token> newTokens = [];
     await _apiService.getTokenListUpdates().then((tokenList) {
       if (tokenList != null) {
-        tokenList.forEach((token) async {
-          log.w('getTokenListUpdates single token ${token.toJson()}');
-          var checkIfTokenExists =
-              await tokenListDatabaseService.getByName(token.tickerName);
-
-          //  print('check if token exists ${checkIfTokenExists.toJson()}');
-          if (checkIfTokenExists == null) {
-            tokenListDatabaseService.insert(token).whenComplete(() =>
-                log.w('${token.tickerName} has been inserted in the token db'));
-            List<String> tokenList = [];
-            Map<int, String> singleTokenData = {
-              token.tokenType: token.tickerName
-            };
-
-            tokenList.add(jsonEncode(singleTokenData));
-            log.i('tokenList $tokenList');
-            storageService.tokenList = tokenList;
-          } else
-            log.e(
-                '${token.tickerName} Token already in the database so not saving again');
-        });
+        log.w(
+            'getTokenListUpdates token list from api length ${tokenList.length}');
         newTokens = tokenList;
-        tokenListDatabaseService.getAll();
       }
     }).catchError((err) {
       log.e('getTokenListUpdates Catch $err');
@@ -360,10 +331,12 @@ class WalletService {
     log.w(' coinBalanceByAddress $name $address $tokenType');
     var bal =
         await getCoinBalanceByAddress(name, address, tokenType: tokenType);
-    // log.w('coinBalanceByAddress $name - $bal');
-    if (bal['balance'].isNaN || bal['balance'] == null) {
-      return 0.0;
-    }
+    log.w('coinBalanceByAddress $name - $bal');
+
+    // if (bal == null) {
+    //   print('coinBalanceByAddress $name- bal $bal');
+    //   return 0.0;
+    // }
     return bal;
   }
 
@@ -808,7 +781,7 @@ class WalletService {
         var unlockedAmount = res[i].unlockedAmount;
         var lockedAmount = res[i].lockedAmount;
         var finalBal = {
-          'coin': coinList.newCoinTypeMap[coinType.toString()],
+          'coin': coinList.newCoinTypeMap[coinType],
           'amount': unlockedAmount,
           'lockedAmount': lockedAmount
         };
@@ -953,7 +926,7 @@ class WalletService {
     Map<String, dynamic> errRes = new Map<String, dynamic>();
     errRes['success'] = false;
 
-    var officalAddress = getOfficalAddress(coinName);
+    var officalAddress = getOfficalAddress(coinName, tokenType: tokenType);
     print('official address in wallet service deposit do $officalAddress');
     if (officalAddress == null) {
       errRes['data'] = 'no official address';
@@ -1373,6 +1346,7 @@ class WalletService {
     var receivePrivateKeyArr = [];
 
     var tokenType = options['tokenType'] ?? '';
+    var decimal = options['decimal'];
     var contractAddress = options['contractAddress'] ?? '';
     var changeAddress = '';
 
@@ -1947,7 +1921,7 @@ class WalletService {
         gasLimit = environment["chains"]["FAB"]["gasLimit"];
       }
       var transferAbi = 'a9059cbb';
-      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount));
+      var amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, decimal));
 
       if (coin == 'DUSD') {
         amountSentInt = BigInt.parse(NumberUtil.toBigInt(amount, 6));
@@ -2067,6 +2041,9 @@ class WalletService {
         convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 6));
       } else if (coin == 'CEL') {
         convertedDecimalAmount = BigInt.parse(NumberUtil.toBigInt(amount, 4));
+      } else {
+        convertedDecimalAmount =
+            BigInt.parse(NumberUtil.toBigInt(amount, decimal));
       }
 
       amountInTx = convertedDecimalAmount;

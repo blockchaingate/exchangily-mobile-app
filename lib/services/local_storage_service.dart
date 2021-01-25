@@ -126,6 +126,5 @@ class LocalStorageService {
 ----------------------------------------------------------------------  */
   List<String> get tokenList => _getFromDisk(TokenListKey) ?? false;
 
-  set tokenList(List<String> value) =>
-      _saveToDisk(WalletBalancesBodyKey, value);
+  set tokenList(List<String> value) => _saveToDisk(TokenListKey, value);
 }

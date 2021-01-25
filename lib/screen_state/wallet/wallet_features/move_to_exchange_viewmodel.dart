@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import '../../../shared/globals.dart' as globals;
 
 class MoveToExchangeViewModel extends BaseViewModel {
@@ -44,6 +45,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   final myController = TextEditingController();
   bool isValid = false;
   double gasAmount = 0.0;
+  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
 
   void initState() async {
     setBusy(true);
@@ -53,7 +55,15 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setFee();
     await getGas();
     refreshBalance();
+   await getData();
     setBusy(false);
+  }
+
+  getData() async{
+setBusy(true);
+  singlePairDecimalConfig = await sharedService.getSinglePairDecimalConfig(coinName);
+  log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
+   setBusy(false);
   }
 
 /*---------------------------------------------------
@@ -124,6 +134,17 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
   checkPass() async {
     setBusy(true);
+
+    if (myController.text.isEmpty) {
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).minimumAmountError,
+          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+          Icons.cancel,
+          red,
+          context);
+      setBusy(false);
+      return;
+    }
     if (gasAmount == 0.0 || gasAmount < 0.5) {
       sharedService.alertDialog(
         AppLocalizations.of(context).notice,
@@ -140,22 +161,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
         amount > walletInfo.availableBalance ||
         amount == 0 ||
         amount.isNegative) {
+          log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
       setBusy(false);
       return;
     }
-    // if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-    //   sharedService.showInfoFlushbar(
-    //       AppLocalizations.of(context).minimumAmountError,
-    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-    //       Icons.cancel,
-    //       globals.red,
-    //       context);
-    //   setState(ViewState.Idle);
-    //   return;
-    // }
+  
     message = '';
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -179,15 +192,19 @@ class MoveToExchangeViewModel extends BaseViewModel {
       var kanbanGasPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
       String tickerName = walletInfo.tickerName;
+      var decimal;
       String contractAddr =
           environment["addresses"]["smartContract"][tickerName];
-      if (contractAddr == null && tickerName != 'ETH' && tickerName != 'BTC') {
-        log.i('$tickerName contract is null so fetching from token database');
+      if (contractAddr == null && tokenType != '') {
+        log.i('$tickerName with token type $tokenType contract is null so fetching from token database');
         await tokenListDatabaseService
-            .getContractAddressByTickerName(tickerName)
-            .then((value) => contractAddr = '0x' + value);
+            .getByTickerName(tickerName)
+            .then((token) {
+          contractAddr = token.contract;
+          decimal = token.decimal;
+        });
       }
-      log.i('$tickerName contract address $contractAddr using ticker db');
+       
       var option = {
         "gasPrice": gasPrice ?? 0,
         "gasLimit": gasLimit ?? 0,
@@ -195,10 +212,11 @@ class MoveToExchangeViewModel extends BaseViewModel {
         'kanbanGasPrice': kanbanGasPrice,
         'kanbanGasLimit': kanbanGasLimit,
         'tokenType': walletInfo.tokenType,
-        'contractAddress': contractAddr
+        'contractAddress': contractAddr,
+        'decimal': decimal
       };
       log.i(
-          '3 - -$seed, -- ${walletInfo.tickerName}, -- ${walletInfo.tokenType}, --   $amount, - - $option');
+          '3 - -$seed, -- ${walletInfo.tickerName}, --   $amount, - - $option');
       await walletService
           .depositDo(
               seed, walletInfo.tickerName, walletInfo.tokenType, amount, option)
@@ -242,8 +260,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
                           .depositTransactionFailed),
                   success
                       ? Text("")
-                      : ret.containsKey("error") && ret["error"] != null
-                          ? Text(ret["error"])
+                      : ret["data"] != null
+                          ? Text(ret["data"])
                           : Text(AppLocalizations.of(context).serverError),
                 ]),
             position: NotificationPosition.bottom,
@@ -285,7 +303,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
         .then((data) async {
       log.w('data $data');
-      walletInfo.availableBalance = data['balance'];
+      if (data != null) walletInfo.availableBalance = data['balance'];
     }).catchError((err) {
       log.e(err);
       setBusy(false);
@@ -313,7 +331,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
   updateTransFee() async {
     setBusy(true);
-    var to = getOfficalAddress(coinName);
+    var to = getOfficalAddress(coinName, tokenType: tokenType);
     var amount = double.tryParse(myController.text);
     if (to == null || amount == null || amount <= 0) {
       setBusy(false);

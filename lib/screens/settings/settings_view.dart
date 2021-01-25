@@ -215,7 +215,6 @@ class SettingsContainer extends StatelessWidget {
                                         size: 18,
                                       ),
                                     ),
-
                                     UIHelper.horizontalSpaceSmall,
                                     Text(
                                       AppLocalizations.of(context)
@@ -236,7 +235,8 @@ class SettingsContainer extends StatelessWidget {
                                   child: Text(
                                     "简体中文",
                                     style:
-                                        Theme.of(context).textTheme.headline5,textAlign: TextAlign.center,
+                                        Theme.of(context).textTheme.headline5,
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ]),
@@ -456,7 +456,7 @@ class SettingsContainer extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'v ${model.versionName}',
+                      'v ${model.versionName}.${model.buildNumber}',
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     if (!isProduction)

@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ import 'package:shimmer/shimmer.dart';
 class PairPriceView extends StatelessWidget {
   final Price pairPrice;
   final bool isBusy;
-  final DecimalConfig decimalConfig;
+  final PairDecimalConfig decimalConfig;
   final double usdValue;
   const PairPriceView(
       {Key key, this.pairPrice, this.isBusy, this.decimalConfig, this.usdValue})

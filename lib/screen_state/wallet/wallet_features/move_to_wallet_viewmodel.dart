@@ -17,6 +17,7 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 
 class MoveToWalletViewmodel extends BaseState {
   final log = getLogger('MoveToWalletViewmodel');
@@ -41,6 +42,7 @@ class MoveToWalletViewmodel extends BaseState {
   bool transFeeAdvance = false;
   double gasAmount = 0.0;
   var withdrawLimit;
+ PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
 
 /*---------------------------------------------------
                       INIT
@@ -63,7 +65,15 @@ class MoveToWalletViewmodel extends BaseState {
     }
     checkGasBalance();
     getSingleCoinExchangeBal();
+    getData();
     setBusy(false);
+  }
+
+    getData() async{
+setBusy(true);
+  singlePairDecimalConfig = await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
+  log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
+   setBusy(false);
   }
 
   /*---------------------------------------------------
@@ -72,10 +82,11 @@ class MoveToWalletViewmodel extends BaseState {
   setWithdrawLimit() async {
     setBusy(true);
     withdrawLimit = environment["minimumWithdraw"][walletInfo.tickerName];
+    print('wl $withdrawLimit');
     if (withdrawLimit == null) {
       await tokenListDatabaseService
-          .getByName(walletInfo.tickerName)
-          .then((token) => withdrawLimit = token.minWithdraw);
+          .getByTickerName(walletInfo.tickerName)
+          .then((token) => withdrawLimit = double.parse(token.minWithdraw));
     }
     log.i('withdrawLimit $withdrawLimit');
     setBusy(false);
@@ -118,6 +129,16 @@ class MoveToWalletViewmodel extends BaseState {
 ----------------------------------------------------------------------*/
   checkPass() async {
     setBusy(true);
+    if (amountController.text.isEmpty) {
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).minimumAmountError,
+          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+          Icons.cancel,
+          red,
+          context);
+      setBusy(false);
+      return;
+    }
     await checkGasBalance();
     if (gasAmount == 0.0 || gasAmount < 0.5) {
       sharedService.alertDialog(
@@ -163,12 +184,6 @@ class MoveToWalletViewmodel extends BaseState {
       var tokenType = walletInfo.tokenType;
       var coinName = walletInfo.tickerName;
       var coinAddress = walletInfo.address;
-      if (coinName == 'USDT') {
-        tokenType = 'ETH';
-      }
-      if (coinName == 'EXG') {
-        tokenType = 'FAB';
-      }
 
       if (coinName == 'BCH') {
         await walletService.getBchAddressDetails(coinAddress).then(

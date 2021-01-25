@@ -95,11 +95,7 @@ Map devConfig = {
         'address': 'bchtest:qrkhd038rw685m0s2kauyquhx0pxlhkvsg6dydtwn9 ',
       },
       {'name': 'LTC', 'address': 'n3AYguoFtN7SqsfAJPx6Ky8FTTZUkeKbvc'},
-      {'name': 'DOGE', 'address': 'nqqkf8PqJj3CUjwLMEcjJDfpiU5NDcMUrB'},
-      {
-        'name': 'erc20',
-        'address': '0x450C53c50F8c0413a5829B0A9ab9Fa7e38f3eD2E'
-      },
+      {'name': 'DOGE', 'address': 'nqqkf8PqJj3CUjwLMEcjJDfpiU5NDcMUrB'}
     ],
   },
   "websocket": {
@@ -236,8 +232,7 @@ Map productionConfig = {
         'address': 'bitcoincash:qznusftmq4cac0fuj6eyke5vv45njxe6eyafcld37l'
       },
       {'name': 'LTC', 'address': 'LaX6sfX8RoHbQHNDEBmdzyBMN9vFa95FXL'},
-      {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'},
-      {'name': 'erc20', 'address': '0x4983f8634255762A18D854790E6d35A522E2633a'}
+      {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'}
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },

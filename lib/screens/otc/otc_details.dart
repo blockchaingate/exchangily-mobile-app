@@ -1,9 +1,7 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/screens/trade/place_order/textfield_text.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../shared/globals.dart' as globals;
@@ -224,7 +222,8 @@ class OtcDetailsScreen extends StatelessWidget {
                               children: <Widget>[
                                 Container(
                                     //  width: 50,
-                                    child: Text(AppLocalizations.of(context).quantity,
+                                    child: Text(
+                                        AppLocalizations.of(context).quantity,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),
@@ -270,7 +269,8 @@ class OtcDetailsScreen extends StatelessWidget {
                               children: <Widget>[
                                 Container(
                                     //  width: 50,
-                                    child: Text(AppLocalizations.of(context).amount,
+                                    child: Text(
+                                        AppLocalizations.of(context).amount,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5)),

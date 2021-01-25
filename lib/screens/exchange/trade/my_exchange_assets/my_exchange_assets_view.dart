@@ -43,10 +43,14 @@ class MyExchangeAssetsView extends StatelessWidget {
                               style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
+                      UIHelper.horizontalSpaceSmall,
                       Expanded(
                         flex: 2,
-                        child: Text(AppLocalizations.of(context).amount,
-                            style: Theme.of(context).textTheme.subtitle2),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(AppLocalizations.of(context).amount,
+                              style: Theme.of(context).textTheme.subtitle2),
+                        ),
                       ),
                       Expanded(
                           flex: 2,
@@ -66,22 +70,28 @@ class MyExchangeAssetsView extends StatelessWidget {
 
                               child: Row(
                                 children: [
-                                  UIHelper.horizontalSpaceMedium,
+                                  UIHelper.horizontalSpaceSmall,
                                   // Card logo container
                                   Expanded(
                                     flex: 1,
                                     child: Container(
-                                        padding: EdgeInsets.all(8),
-                                        //margin: EdgeInsets.only(right: 10.0),
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 7),
+                                        //  margin: EdgeInsets.only(right: 10.0),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(50),
                                         ),
-                                        child: Image.asset(
-                                            'assets/images/wallet-page/${tickerName.toLowerCase()}.png'),
+                                        child:
+                                            // Image.asset(
+                                            // 'assets/images/wallet-page/${tickerName.toLowerCase()}.png') ??
+                                            Image.network(model.logoUrl +
+                                                tickerName.toLowerCase() +
+                                                '.png'),
                                         width: 35,
                                         height: 35),
                                   ),
+                                  UIHelper.horizontalSpaceSmall,
                                   UIHelper.horizontalSpaceSmall,
                                   Expanded(
                                       flex: 1,
