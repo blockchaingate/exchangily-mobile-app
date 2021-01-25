@@ -55,7 +55,6 @@ class MyExchangeAssetsViewModel extends FutureViewModel {
           element.ticker = ticker; //}
           setBusy(false);
         });
-//element.ticker =tradeService.setTickerNameByType(element.coinType);
         log.i(
             'exchanageBalanceModel null tickerName added ${element.toJson()}');
       }
