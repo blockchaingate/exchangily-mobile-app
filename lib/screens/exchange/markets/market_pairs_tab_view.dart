@@ -148,59 +148,59 @@ class MarketPairsTabView extends StatelessWidget {
   }
 }
 
-class HeaderRow extends StatelessWidget {
-  const HeaderRow({
-    Key key,
-  }) : super(key: key);
+// class HeaderRow extends StatelessWidget {
+//   const HeaderRow({
+//     Key key,
+//   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return
-        // Container();
+//   @override
+//   Widget build(BuildContext context) {
+//     return
+//         // Container();
 
-        Row(
-      children: <Widget>[
-        Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10.0),
-              child: Text(
-                'Ticker',
-                style: Theme.of(context).textTheme.subtitle2,
-              ),
-            )),
-        Expanded(
-          flex: 2,
-          child: Text(
-            'Price',
-            style: Theme.of(context).textTheme.subtitle2,
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Text(
-            'High',
-            style: Theme.of(context).textTheme.subtitle2,
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Text(
-            'Low',
-            style: Theme.of(context).textTheme.subtitle2,
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Text(
-            'Change',
-            style: Theme.of(context).textTheme.subtitle2,
-          ),
-        ),
-      ],
-    );
-  }
-}
+//         Row(
+//       children: <Widget>[
+//         Expanded(
+//             flex: 3,
+//             child: Padding(
+//               padding: const EdgeInsets.only(left: 10.0),
+//               child: Text(
+//                 'Ticker',
+//                 style: Theme.of(context).textTheme.subtitle2,
+//               ),
+//             )),
+//         Expanded(
+//           flex: 2,
+//           child: Text(
+//             'Price',
+//             style: Theme.of(context).textTheme.subtitle2,
+//           ),
+//         ),
+//         Expanded(
+//           flex: 2,
+//           child: Text(
+//             'High',
+//             style: Theme.of(context).textTheme.subtitle2,
+//           ),
+//         ),
+//         Expanded(
+//           flex: 2,
+//           child: Text(
+//             'Low',
+//             style: Theme.of(context).textTheme.subtitle2,
+//           ),
+//         ),
+//         Expanded(
+//           flex: 1,
+//           child: Text(
+//             'Change',
+//             style: Theme.of(context).textTheme.subtitle2,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate(this._tabBar);

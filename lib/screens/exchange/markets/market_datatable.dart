@@ -207,7 +207,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  itemRow.symbol.toString(),
+                                  itemRow.symbol.split('/')[0],
                                   style: Theme.of(context)
                                       .textTheme
                                       .headline3

@@ -270,7 +270,9 @@ class TradeView extends StatelessWidget {
                                                     )
                                                   : MarketTradesView(
                                                       marketTrades: model
-                                                          .marketTradesList),
+                                                          .marketTradesList,
+                                                      decimalConfig: model
+                                                          .singlePairDecimalConfig),
                                             ),
 
                                             MyOrdersView(
