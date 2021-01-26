@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_v
 import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -30,10 +31,12 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 
 class BuySellView extends StatelessWidget {
-  BuySellView({Key key, this.bidOrAsk, this.pairSymbolWithSlash})
+  BuySellView(
+      {Key key, this.bidOrAsk, this.pairSymbolWithSlash, this.tickerName})
       : super(key: key);
   final bool bidOrAsk;
   final String pairSymbolWithSlash;
+  final tickerName;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
@@ -41,7 +44,9 @@ class BuySellView extends StatelessWidget {
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
     return ViewModelBuilder<BuySellViewModel>.reactive(
-        viewModelBuilder: () => BuySellViewModel(),
+        disposeViewModel: false,
+        viewModelBuilder: () =>
+            BuySellViewModel(tickerNameFromRoute: tickerName),
         onModelReady: (model) async {
           model.context = context;
           model.globalKeyOne = _one;
@@ -119,9 +124,128 @@ class BuySellView extends StatelessWidget {
                 Orderbook view
  -----------------------------------------------------------*/
                                       // OrderBookView(tickerName: model.tickerName),
-                                      OrderBookView(
-                                          tickerName: model.tickerName,
-                                          isVerticalOrderbook: true)
+                                      !model.dataReady
+                                          ? Container(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  2.7,
+                                              child: Center(
+                                                  child: SizedBox(
+                                                      height: 20,
+                                                      width: 20,
+                                                      child: Container(
+                                                          color: white,
+                                                          child:
+                                                              CupertinoActivityIndicator()))))
+                                          :
+
+/*----------------------------------------------------------------------
+                      Vertical Orderbook
+----------------------------------------------------------------------*/
+
+                                          Column(
+                                              children: <Widget>[
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    // Heading Price
+                                                    Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                0, 0, 0, 5),
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          border: Border(
+                                                            bottom: BorderSide(
+                                                                width: 1.0,
+                                                                color: Colors
+                                                                    .grey),
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .price,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline6)),
+                                                    // Heading Quantity
+                                                    Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .fromLTRB(
+                                                                0, 0, 0, 5),
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          border: Border(
+                                                            bottom: BorderSide(
+                                                                width: 1.0,
+                                                                color: Colors
+                                                                    .grey),
+                                                          ),
+                                                        ),
+                                                        child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .quantity,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline6))
+                                                  ],
+                                                ),
+                                                buildVerticalOrderbookColumn(
+                                                    model.orderbook.sellOrders,
+                                                    false,
+                                                    model),
+                                                Container(
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            0, 8, 0, 8),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: <Widget>[
+                                                        model.orderbook.buyOrders !=
+                                                                    [] &&
+                                                                model.orderbook
+                                                                        .sellOrders !=
+                                                                    []
+                                                            ? Text(
+                                                                '${model.orderbook.price.toString()}',
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline4)
+                                                            : Center(
+                                                                child: Text(
+                                                                    'No Orders',
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .bodyText2),
+                                                              )
+                                                      ],
+                                                    )),
+                                                buildVerticalOrderbookColumn(
+                                                    model.orderbook.buyOrders,
+                                                    true,
+                                                    model)
+                                              ],
+                                            )
+
+                                  //  OrderBookView(
+                                  //     orderbook: model.orderbook,
+                                  //     decimalConfig:
+                                  //         model.singlePairDecimalConfig,
+                                  //     isVerticalOrderbook: true,
+                                  //   )
                                   // buildRightSideOrderbookColumn(
                                   //     context, model),
                                   ),
@@ -239,91 +363,91 @@ class BuySellView extends StatelessWidget {
                       Orderbook rightside
 ----------------------------------------------------------------------*/
 
-/// Using orderDetail here in this buy and sell screen to fill the price
-///  and quanity in text fields when user click on the order
-class VerticalOrderbook extends StatelessWidget {
-  final String tickerName;
-  VerticalOrderbook({this.tickerName});
+// /// Using orderDetail here in this buy and sell screen to fill the price
+// ///  and quanity in text fields when user click on the order
+// class VerticalOrderbook extends StatelessWidget {
+//   final String tickerName;
+//   VerticalOrderbook({this.tickerName});
 
-  @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder<OrderbookViewModel>.reactive(
-      disposeViewModel: false,
-      fireOnModelReadyOnce: true,
+//   @override
+//   Widget build(BuildContext context) {
+//     return ViewModelBuilder<OrderbookViewModel>.reactive(
+//       disposeViewModel: false,
+//       fireOnModelReadyOnce: true,
 
-      // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
-      // which is required override
-      viewModelBuilder: () => OrderbookViewModel(tickerName: tickerName),
-      onModelReady: (model) {
-        // model.context = context;
-        model.init();
-      },
-      builder: (context, model, _) => !model.dataReady
-          ? Container(
-              height: MediaQuery.of(context).size.height / 2.7,
-              child: Center(
-                  child: SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: Container(
-                          color: white, child: CupertinoActivityIndicator()))))
-          : Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    // Heading Price
-                    Container(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(width: 1.0, color: Colors.grey),
-                          ),
-                        ),
-                        child: Text(AppLocalizations.of(context).price,
-                            style: Theme.of(context).textTheme.headline6)),
-                    // Heading Quantity
-                    Container(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(width: 1.0, color: Colors.grey),
-                          ),
-                        ),
-                        child: Text(AppLocalizations.of(context).quantity,
-                            style: Theme.of(context).textTheme.headline6))
-                  ],
-                ),
-                buildVerticalOrderbookColumn(
-                    model.orderbook.sellOrders, false, model),
-                Container(
-                    padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        model.orderbook.price != 0
-                            ? Text('${model.orderbook.price.toString()}',
-                                style: Theme.of(context).textTheme.headline4)
-                            : Center(
-                                child: Text('No Orders',
-                                    style:
-                                        Theme.of(context).textTheme.bodyText2),
-                              )
-                      ],
-                    )),
-                buildVerticalOrderbookColumn(
-                    model.orderbook.buyOrders, true, model),
-              ],
-            ),
-    );
-  }
-}
+//       // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
+//       // which is required override
+//       viewModelBuilder: () => OrderbookViewModel(tickerName: tickerName),
+//       onModelReady: (model) {
+//         // model.context = context;
+//         model.init();
+//       },
+//       builder: (context, model, _) => !model.dataReady
+//           ? Container(
+//               height: MediaQuery.of(context).size.height / 2.7,
+//               child: Center(
+//                   child: SizedBox(
+//                       height: 20,
+//                       width: 20,
+//                       child: Container(
+//                           color: white, child: CupertinoActivityIndicator()))))
+//           : Column(
+//               children: <Widget>[
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: <Widget>[
+//                     // Heading Price
+//                     Container(
+//                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+//                         decoration: const BoxDecoration(
+//                           border: Border(
+//                             bottom: BorderSide(width: 1.0, color: Colors.grey),
+//                           ),
+//                         ),
+//                         child: Text(AppLocalizations.of(context).price,
+//                             style: Theme.of(context).textTheme.headline6)),
+//                     // Heading Quantity
+//                     Container(
+//                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+//                         decoration: const BoxDecoration(
+//                           border: Border(
+//                             bottom: BorderSide(width: 1.0, color: Colors.grey),
+//                           ),
+//                         ),
+//                         child: Text(AppLocalizations.of(context).quantity,
+//                             style: Theme.of(context).textTheme.headline6))
+//                   ],
+//                 ),
+//                 buildVerticalOrderbookColumn(
+//                     model.orderbook.sellOrders, false, model),
+//                 Container(
+//                     padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: <Widget>[
+//                         model.orderbook.price != 0
+//                             ? Text('${model.orderbook.price.toString()}',
+//                                 style: Theme.of(context).textTheme.headline4)
+//                             : Center(
+//                                 child: Text('No Orders',
+//                                     style:
+//                                         Theme.of(context).textTheme.bodyText2),
+//                               )
+//                       ],
+//                     )),
+//                 buildVerticalOrderbookColumn(
+//                     model.orderbook.buyOrders, true, model),
+//               ],
+//             ),
+//     );
+//   }
+// }
 /*----------------------------------------------------------------------
                       Order Detail
 ----------------------------------------------------------------------*/
 
 Column buildVerticalOrderbookColumn(
-    List<OrderType> orderArray, final bool bidOrAsk, OrderbookViewModel model) {
+    List<OrderType> orderArray, final bool bidOrAsk, BuySellViewModel model) {
   // List<OrderType> sellOrders = [];
   print('OrderArray $bidOrAsk length before ${orderArray.length}');
   if (orderArray.length > 7) orderArray = orderArray.sublist(0, 7);
@@ -337,7 +461,8 @@ Column buildVerticalOrderbookColumn(
         InkWell(
           onTap: () {
             print('trying filling values ${order.price} --  ${order.quantity}');
-            model.fillTextFields(order.price, order.quantity);
+
+            model.fillPriceAndQuantityTextFields(order.price, order.quantity);
             // model.setBusy(true);
             // model.quantityTextController.text =
             //     order.quantity.toStringAsFixed(model.quantityDecimal);
@@ -355,8 +480,8 @@ Column buildVerticalOrderbookColumn(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                      order.price
-                          .toStringAsFixed(model.decimalConfig.priceDecimal),
+                      order.price.toStringAsFixed(
+                          model.singlePairDecimalConfig.priceDecimal),
                       style: TextStyle(
                           color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
                           fontSize: 13.0)),
@@ -365,8 +490,8 @@ Column buildVerticalOrderbookColumn(
                           EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                       child: Text(
-                          order.quantity
-                              .toStringAsFixed(model.decimalConfig.qtyDecimal),
+                          order.quantity.toStringAsFixed(
+                              model.singlePairDecimalConfig.qtyDecimal),
                           style:
                               TextStyle(color: Colors.white, fontSize: 13.0)))
                 ],
@@ -454,11 +579,11 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
               DecimalTextInputFormatter(
-                  decimalRange: model.priceDecimal,
+                  decimalRange: model.singlePairDecimalConfig.priceDecimal,
                   activatedNegativeValues: false)
             ],
             onTap: () {
-              model.priceTextController.text = '';
+              //  model.priceTextController.text = '';
             },
             onChanged: (value) {
               if (value.isNotEmpty) model.handleTextChanged('price', value);
@@ -478,11 +603,11 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
               DecimalTextInputFormatter(
-                  decimalRange: model.quantityDecimal,
+                  decimalRange: model.singlePairDecimalConfig.qtyDecimal,
                   activatedNegativeValues: false)
             ],
             onTap: () {
-              model.quantityTextController.text = '';
+              //  model.quantityTextController.text = '';
             },
             onChanged: (value) {
               if (value.isNotEmpty) model.handleTextChanged('quantity', value);
@@ -523,13 +648,13 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             Expanded(
               child: model.bidOrAsk == true
                   ? Text(
-                      "${model.transactionAmount.toStringAsFixed(model.priceDecimal)}" +
+                      "${model.transactionAmount.toStringAsFixed(model.singlePairDecimalConfig.priceDecimal)}" +
                           " " +
                           model.baseCoinName,
                       textAlign: TextAlign.end,
                       style: TextStyle(color: Colors.grey, fontSize: 12.0))
                   : Text(
-                      "${model.transactionAmount.toStringAsFixed(model.priceDecimal)}" +
+                      "${model.transactionAmount.toStringAsFixed(model.singlePairDecimalConfig.priceDecimal)}" +
                           " " +
                           model.baseCoinName,
                       textAlign: TextAlign.end,
@@ -713,14 +838,14 @@ class BalanceRowWidget extends StatelessWidget {
             ?
             // ?  model.baseCoinExchangeBalance.unlockAmount == null?textDemoWidget():
             Text(
-                "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal)}" +
+                "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.singlePairDecimalConfig.priceDecimal)}" +
                     " " +
                     model.baseCoinName,
                 style: TextStyle(color: primaryColor, fontSize: 13.0))
             :
             // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
             Text(
-                "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.priceDecimal) ?? 0.0}" +
+                "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.singlePairDecimalConfig.priceDecimal) ?? 0.0}" +
                     " " +
                     model.targetCoinName,
                 style: TextStyle(color: primaryColor, fontSize: 13.0))

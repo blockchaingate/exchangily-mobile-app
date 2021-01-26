@@ -52,6 +52,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   List<List<Price>> marketPairsTabBar = [];
   String tickerStreamKey = 'ticker';
   String marketTradesStreamKey = 'marketTradesList';
+  String orderbookStreamKey = 'orderbook';
 
   List myExchangeAssets = [];
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
@@ -66,6 +67,8 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   Map<String, StreamData> get streamsMap => {
         tickerStreamKey: StreamData<dynamic>(
             _tradeService.getTickerDataStream(pairPriceByRoute.symbol)),
+        orderbookStreamKey: StreamData<dynamic>(_tradeService
+            .getOrderBookStreamByTickerName(pairPriceByRoute.symbol)),
         marketTradesStreamKey: StreamData<dynamic>(_tradeService
             .getMarketTradesStreamByTickerName(pairPriceByRoute.symbol))
       };
@@ -139,6 +142,12 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
         }
         // log.w('TICKER PRICE ${currentPairPrice.toJson()}');
 
+      } else if (key == orderbookStreamKey) {
+        log.w('transformData -- data $data');
+        var jsonDynamic = jsonDecode(data);
+        orderbook = Orderbook.fromJson(jsonDynamic);
+        log.e(
+            'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
       }
 /*----------------------------------------------------------------------
                     Market trade list

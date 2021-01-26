@@ -12,6 +12,7 @@
 */
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -23,6 +24,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -52,9 +54,14 @@ import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 import 'dart:core';
 
-class BuySellViewModel extends ReactiveViewModel {
-  @override
-  List<ReactiveServiceMixin> get reactiveServices => [tradeService];
+class BuySellViewModel extends StreamViewModel {
+  final tickerNameFromRoute;
+  BuySellViewModel({this.tickerNameFromRoute});
+
+  // @override
+  // List<ReactiveServiceMixin> get reactiveServices => [tradeService];
+  // double get priceFromTradeService => tradeService.price;
+  // double get quantityFromTradeService => tradeService.quantity;
 
   final log = getLogger('BuySellViewModel');
   List<WalletInfo> walletInfo;
@@ -63,11 +70,11 @@ class BuySellViewModel extends ReactiveViewModel {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TradeService tradeService = locator<TradeService>();
-  //OrderService _orderService = locator<OrderService>();
   WalletDataBaseService databaseService = locator<WalletDataBaseService>();
   NavigationService navigationService = locator<NavigationService>();
 
   BuildContext context;
+
   bool bidOrAsk;
   String baseCoinName;
   String targetCoinName;
@@ -80,8 +87,6 @@ class BuySellViewModel extends ReactiveViewModel {
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
 
-  List<OrderModel> sell;
-  List<OrderModel> buy;
   DialogService _dialogService = locator<DialogService>();
   double currentPrice = 0;
   double currentQuantity = 0;
@@ -89,18 +94,12 @@ class BuySellViewModel extends ReactiveViewModel {
   double price = 0.0;
   double quantity;
 
-  double get priceFromTradeService => tradeService.price;
-  double get quantityFromTradeService => tradeService.quantity;
   String exgAddress;
-  WalletInfo coin;
-  // final GlobalKey<MyOrdersState> myordersState = new GlobalKey<MyOrdersState>();
-  List<OrderModel> orderList;
+
   double transactionAmount = 0;
-  List<PairDecimalConfig> pairDecimalConfigList = [];
-  int priceDecimal = 0;
-  int quantityDecimal = 0;
+
   ApiService apiService = locator<ApiService>();
-  String pair = '';
+
   String tickerName = '';
 
   //Price passedPair;
@@ -116,17 +115,53 @@ class BuySellViewModel extends ReactiveViewModel {
 
   bool _isOrderbookLoaded = false;
   bool get isOrderbookLoaded => _isOrderbookLoaded;
+  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+  Orderbook orderbook = new Orderbook();
+
+  @override
+  Stream get stream =>
+      tradeService.getOrderBookStreamByTickerName(tickerNameFromRoute);
+
+  @override
+  transformData(data) {
+    log.w('transformData -- data $data');
+    var jsonDynamic = jsonDecode(data);
+    orderbook = Orderbook.fromJson(jsonDynamic);
+    log.e(
+        'OrderBook result  -- ${orderbook.buyOrders.length} ${orderbook.sellOrders.length}');
+  }
+
+  @override
+  void onData(data) {
+    log.i('data ready $dataReady');
+    initialTextfieldsFill();
+  }
+
+  @override
+  void onError(error) {
+    log.e('Orderbook Stream Error $error');
+  }
+
+  @override
+  void onCancel() {
+    log.e('Orderbook Stream closed');
+    tradeService
+        .ordersbookChannel(tickerName)
+        .sink
+        .close()
+        .then((value) => log.w('Orderbook channel closed'));
+  }
 
   init() async {
     setBusy(true);
     setDefaultGasPrice();
     sharedService.context = context;
-    getOrderbookLoadedStatus();
+    // getOrderbookLoadedStatus();
 
     exgAddress = await sharedService.getExgAddressFromWalletDatabase();
 
     await getDecimalPairConfig();
-    fillPriceAndQuantityTextFields();
+
     transFeeAdvance = false;
     setBusy(false);
   }
@@ -142,10 +177,10 @@ class BuySellViewModel extends ReactiveViewModel {
       _isOrderbookLoaded = tradeService.isOrderbookLoaded;
       if (_isOrderbookLoaded) {
         setBusy(true);
-        price = priceFromTradeService;
-        quantity = quantityFromTradeService;
+        // price = priceFromTradeService;
+        //  quantity = quantityFromTradeService;
         priceTextController.text = price.toString();
-        quantityTextController.text = quantityFromTradeService.toString();
+        //   quantityTextController.text = quantityFromTradeService.toString();
         timer.cancel();
         log.i(
             'getOrderbookLoadedStatus timer cancel -- price $price -- controller ${priceTextController.text}');
@@ -218,15 +253,24 @@ class BuySellViewModel extends ReactiveViewModel {
       });
   }
 
+  fillPriceAndQuantityTextFields(p, q) {
+    setBusy(true);
+    priceTextController.text = p.toString();
+    price = p;
+    quantityTextController.text = q.toString();
+    quantity = q;
+    setBusy(false);
+  }
+
   /*----------------------------------------------------------------------
                         Fill text fields
 ----------------------------------------------------------------------*/
-  fillPriceAndQuantityTextFields() {
+  initialTextfieldsFill() {
     setBusy(true);
-    // priceTextController.text = priceFromTradeService.toString();
-    // price = priceFromTradeService;
-    // quantityTextController.text = quantityFromTradeService.toString();
-    // quantity = quantityFromTradeService;
+    priceTextController.text = orderbook.price.toString();
+    price = orderbook.price;
+    quantityTextController.text = orderbook.quantity.toString();
+    quantity = orderbook.quantity;
     setBusy(false);
   }
 
@@ -290,14 +334,18 @@ class BuySellViewModel extends ReactiveViewModel {
 /* ---------------------------------------------------
             getPairDecimalConfig
 --------------------------------------------------- */
+
+/*----------------------------------------------------------------------
+                  Get Decimal Pair Configuration
+----------------------------------------------------------------------*/
   getDecimalPairConfig() async {
     setBusy(true);
     String currentCoinName = targetCoinName + baseCoinName;
     await sharedService.getSinglePairDecimalConfig(currentCoinName).then((res) {
       log.w('Current coin $currentCoinName in get decimal config $res');
-      priceDecimal = res.priceDecimal;
-      quantityDecimal = res.qtyDecimal;
-      log.e('Price and quantity decimal $priceDecimal -- $quantityDecimal');
+      singlePairDecimalConfig = res;
+
+      log.e('Price and quantity decimal ${singlePairDecimalConfig.toJson()}');
     });
     setBusy(false);
   }
@@ -635,7 +683,8 @@ class BuySellViewModel extends ReactiveViewModel {
         print('changeQuantityWithSlider $changeQuantityWithSlider');
         quantity = changeQuantityWithSlider;
         transactionAmount = quantity * price;
-        quantityTextController.text = quantity.toStringAsFixed(quantityDecimal);
+        quantityTextController.text =
+            quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
         updateTransFee();
         log.i(transactionAmount);
         log.e(changeQuantityWithSlider);
@@ -643,7 +692,8 @@ class BuySellViewModel extends ReactiveViewModel {
         var changeBalanceWithSlider = baseCoinbalance * sliderValue / 100;
         quantity = changeBalanceWithSlider / price;
         transactionAmount = quantity * price;
-        quantityTextController.text = quantity.toStringAsFixed(quantityDecimal);
+        quantityTextController.text =
+            quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
         updateTransFee();
         log.w('Slider value $sliderValue');
         log.i('calculated tx amount $transactionAmount');

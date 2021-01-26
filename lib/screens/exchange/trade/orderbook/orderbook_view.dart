@@ -2,218 +2,182 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_viewmodel.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/trade_service.dart';
+
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
 
 class OrderBookView extends StatelessWidget {
-  final String tickerName;
   final bool isVerticalOrderbook;
-  OrderBookView({Key key, this.tickerName, this.isVerticalOrderbook});
+  final Orderbook orderbook;
+  final PairDecimalConfig decimalConfig;
+  OrderBookView(
+      {Key key, this.isVerticalOrderbook, this.orderbook, this.decimalConfig});
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<OrderbookViewModel>.reactive(
-      //  disposeViewModel: false,
-      // fireOnModelReadyOnce: true,
-      // initialiseSpecialViewModelsOnce: true,
-      // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
-      // which is required override
-      viewModelBuilder: () => OrderbookViewModel(tickerName: tickerName),
-      onModelReady: (model) {
-        // model.context = context;
-        model.init();
-      },
-      builder: (context, model, _) => !model.dataReady
-          ? !isVerticalOrderbook
-              ? ShimmerLayout(
-                  layoutType: 'orderbook',
-                )
-              : Container(
-                  height: MediaQuery.of(context).size.height / 2.7,
-                  child: Center(
-                      child: SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: Container(
-                              color: white,
-                              child: CupertinoActivityIndicator()))))
-          : isVerticalOrderbook
-              ?
+    final tradeService = locator<TradeService>();
+    return isVerticalOrderbook
+        ?
 
 /*----------------------------------------------------------------------
                       Vertical Orderbook
 ----------------------------------------------------------------------*/
 
-              Column(
+        Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  // Heading Price
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(width: 1.0, color: Colors.grey),
+                        ),
+                      ),
+                      child: Text(AppLocalizations.of(context).price,
+                          style: Theme.of(context).textTheme.headline6)),
+                  // Heading Quantity
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(width: 1.0, color: Colors.grey),
+                        ),
+                      ),
+                      child: Text(AppLocalizations.of(context).quantity,
+                          style: Theme.of(context).textTheme.headline6))
+                ],
+              ),
+              buildVerticalOrderbookColumn(
+                  orderbook.sellOrders, false, decimalConfig, tradeService),
+              Container(
+                  padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      orderbook.buyOrders != [] && orderbook.sellOrders != []
+                          ? Text('${orderbook.price.toString()}',
+                              style: Theme.of(context).textTheme.headline4)
+                          : Center(
+                              child: Text('No Orders',
+                                  style: Theme.of(context).textTheme.bodyText2),
+                            )
+                    ],
+                  )),
+              buildVerticalOrderbookColumn(
+                  orderbook.buyOrders, true, decimalConfig, tradeService)
+            ],
+          )
+        : Container(
+            color: secondaryColor.withAlpha(250),
+            padding: EdgeInsets.all(5.0),
+            child: ListView(
+              //   mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                // Heading Buy Sell Orders Row
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        child: Text(AppLocalizations.of(context).buyOrders,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline6),
+                      ),
+                      Container(
+                        child: Text(AppLocalizations.of(context).sellOrders,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline6),
+                      ),
+                    ]),
+                UIHelper.verticalSpaceSmall,
+                // quanity/price text Row
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        // Heading Price
-                        Container(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom:
-                                    BorderSide(width: 1.0, color: Colors.grey),
-                              ),
-                            ),
-                            child: Text(AppLocalizations.of(context).price,
-                                style: Theme.of(context).textTheme.headline6)),
-                        // Heading Quantity
-                        Container(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom:
-                                    BorderSide(width: 1.0, color: Colors.grey),
-                              ),
-                            ),
-                            child: Text(AppLocalizations.of(context).quantity,
-                                style: Theme.of(context).textTheme.headline6))
-                      ],
-                    ),
-                    buildVerticalOrderbookColumn(
-                        model.orderbook.sellOrders, false, model),
-                    Container(
-                        padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    Flexible(
+                      flex: 1,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 7),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            model.orderbook.buyOrders != [] &&
-                                    model.orderbook.sellOrders != []
-                                ? Text('${model.orderbook.price.toString()}',
-                                    style:
-                                        Theme.of(context).textTheme.headline4)
-                                : Center(
-                                    child: Text('No Orders',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText2),
-                                  )
+                            Text(AppLocalizations.of(context).quantity,
+                                textAlign: TextAlign.start,
+                                style: TextStyle(fontSize: 9, color: grey)),
+                            Text(AppLocalizations.of(context).price,
+                                style: TextStyle(fontSize: 9, color: grey))
                           ],
-                        )),
-                    buildVerticalOrderbookColumn(
-                        model.orderbook.buyOrders, true, model),
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 7),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(AppLocalizations.of(context).price,
+                                style: TextStyle(fontSize: 9, color: grey)),
+                            Text(AppLocalizations.of(context).quantity,
+                                style: TextStyle(fontSize: 9, color: grey)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                // Buy/Sell Orders List View
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Buy orders
+                    Expanded(
+                      flex: 1,
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: orderbook.buyOrders.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return OrderDetailsView(
+                            decimalConfig: decimalConfig,
+                            orders: orderbook.buyOrders,
+                            index: index,
+                            isBuy: true,
+                          );
+                        },
+                      ),
+                    ),
+
+                    // Sell Orders
+                    Expanded(
+                      flex: 1,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: orderbook.sellOrders.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return OrderDetailsView(
+                            decimalConfig: decimalConfig,
+                            orders: orderbook.sellOrders,
+                            index: index,
+                            isBuy: false,
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 )
-              : Container(
-                  color: secondaryColor.withAlpha(250),
-                  padding: EdgeInsets.all(5.0),
-                  child: ListView(
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      // Heading Buy Sell Orders Row
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                              child: Text(
-                                  AppLocalizations.of(context).buyOrders,
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline6),
-                            ),
-                            Container(
-                              child: Text(
-                                  AppLocalizations.of(context).sellOrders,
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context).textTheme.headline6),
-                            ),
-                          ]),
-                      UIHelper.verticalSpaceSmall,
-                      // quanity/price text Row
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 7),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(AppLocalizations.of(context).quantity,
-                                      textAlign: TextAlign.start,
-                                      style:
-                                          TextStyle(fontSize: 9, color: grey)),
-                                  Text(AppLocalizations.of(context).price,
-                                      style:
-                                          TextStyle(fontSize: 9, color: grey))
-                                ],
-                              ),
-                            ),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 7),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  Text(AppLocalizations.of(context).price,
-                                      style:
-                                          TextStyle(fontSize: 9, color: grey)),
-                                  Text(AppLocalizations.of(context).quantity,
-                                      style:
-                                          TextStyle(fontSize: 9, color: grey)),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Buy/Sell Orders List View
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Buy orders
-                          Expanded(
-                            flex: 1,
-                            child: ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: model.orderbook.buyOrders.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return OrderDetailsView(
-                                  decimalConfig: model.decimalConfig,
-                                  orders: model.orderbook.buyOrders,
-                                  index: index,
-                                  isBuy: true,
-                                );
-                              },
-                            ),
-                          ),
-
-                          // Sell Orders
-                          Expanded(
-                            flex: 1,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: model.orderbook.sellOrders.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return OrderDetailsView(
-                                  decimalConfig: model.decimalConfig,
-                                  orders: model.orderbook.sellOrders,
-                                  index: index,
-                                  isBuy: false,
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-    );
+              ],
+            ),
+          );
   }
 
   /*----------------------------------------------------------------------
@@ -221,7 +185,7 @@ class OrderBookView extends StatelessWidget {
 ----------------------------------------------------------------------*/
 
   Column buildVerticalOrderbookColumn(List<OrderType> orderArray,
-      final bool bidOrAsk, OrderbookViewModel model) {
+      final bool bidOrAsk, deciamlConfig, TradeService tradeService) {
     // List<OrderType> sellOrders = [];
     print('OrderArray $bidOrAsk length before ${orderArray.length}');
     if (orderArray.length > 7) orderArray = orderArray.sublist(0, 7);
@@ -236,7 +200,8 @@ class OrderBookView extends StatelessWidget {
             onTap: () {
               print(
                   'trying filling values ${order.price} --  ${order.quantity}');
-              model.fillTextFields(order.price, order.quantity);
+              tradeService.setPriceQuantityValues(order.price, order.quantity);
+              // model.fillTextFields(order.price, order.quantity);
               // model.setBusy(true);
               // model.quantityTextController.text =
               //     order.quantity.toStringAsFixed(model.quantityDecimal);
@@ -254,8 +219,7 @@ class OrderBookView extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                        order.price
-                            .toStringAsFixed(model.decimalConfig.priceDecimal),
+                        order.price.toStringAsFixed(decimalConfig.priceDecimal),
                         style: TextStyle(
                             color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
                             fontSize: 13.0)),
@@ -264,8 +228,8 @@ class OrderBookView extends StatelessWidget {
                             EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                         color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                         child: Text(
-                            order.quantity.toStringAsFixed(
-                                model.decimalConfig.qtyDecimal),
+                            order.quantity
+                                .toStringAsFixed(decimalConfig.qtyDecimal),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 13.0)))
                   ],
