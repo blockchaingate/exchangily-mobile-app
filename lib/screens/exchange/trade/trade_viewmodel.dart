@@ -39,10 +39,14 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:hex/hex.dart';
 import 'package:convert/convert.dart';
 
-class TradeViewModel extends MultipleStreamViewModel with StoppableService {
+class TradeViewModel extends MultipleStreamViewModel
+    with StoppableService
+    implements ReactiveViewModel {
   final Price pairPriceByRoute;
   TradeViewModel({this.pairPriceByRoute});
 
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [tradeService];
   final log = getLogger('TradeViewModal');
 
   BuildContext context;
@@ -54,7 +58,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
   ApiService apiService = locator<ApiService>();
-  TradeService _tradeService = locator<TradeService>();
+  TradeService tradeService = locator<TradeService>();
   WalletService walletService = locator<WalletService>();
   ConfigService configService = locator<ConfigService>();
   List<PairDecimalConfig> pairDecimalConfigList = [];
@@ -81,7 +85,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   bool isDisposing = false;
   double usdValue = 0.0;
   String pairSymbolWithSlash = '';
-  String get interval => _tradeService.interval;
+  String get interval => tradeService.interval;
 
   WebViewController webViewController;
   bool isStreamDataNull = false;
@@ -133,17 +137,20 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   ExchangeBalanceModel targetCoinExchangeBalance;
   ExchangeBalanceModel baseCoinExchangeBalance;
   bool isReloadMyOrders = false;
+  get priceFromTradeService => tradeService.price;
+  get quantityFromTradeService => tradeService.quantity;
 
 /* ---------------------------------------------------
                 Streams
 --------------------------------------------------- */
+
   @override
   Map<String, StreamData> get streamsMap => {
         tickerStreamKey: StreamData<dynamic>(
-            _tradeService.getTickerDataStream(pairPriceByRoute.symbol)),
-        marketTradesStreamKey: StreamData<dynamic>(_tradeService
+            tradeService.getTickerDataStream(pairPriceByRoute.symbol)),
+        marketTradesStreamKey: StreamData<dynamic>(tradeService
             .getMarketTradesStreamByTickerName(pairPriceByRoute.symbol)),
-        orderbookStreamKey: StreamData<dynamic>(_tradeService
+        orderbookStreamKey: StreamData<dynamic>(tradeService
             .getOrderBookStreamByTickerName(pairPriceByRoute.symbol))
       };
   // Map<String, StreamData> res =
@@ -151,6 +158,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
   /// Initialize when model ready
   init() async {
+    log.e('one');
     await getDecimalPairConfig();
     String holder = updateTickerName(pairPriceByRoute.symbol);
     pairSymbolWithSlash = holder;
@@ -217,8 +225,9 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
       else if (key == orderbookStreamKey) {
         var jsonDynamic = jsonDecode(data);
-        Orderbook orderbook = Orderbook.fromJson(jsonDynamic);
-        orderbook = orderbook;
+        Orderbook orderbookHolder = Orderbook.fromJson(jsonDynamic);
+
+        orderbook = orderbookHolder;
       } else {
         log.i('$key Data is null or empty');
       }
@@ -248,21 +257,21 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   void onCancel(String key) {
     log.e('Stream $key closed');
     if (key == tickerStreamKey) {
-      _tradeService
+      tradeService
           .tickerDataChannel(pairPriceByRoute.symbol)
           .sink
           .close()
           .then((value) => log.i('tickerDataChannel closed'));
     }
     if (key == marketTradesStreamKey) {
-      _tradeService
+      tradeService
           .marketTradesChannel(pairPriceByRoute.symbol)
           .sink
           .close()
           .then((value) => log.i('marketTradesChannel closed'));
     }
     if (key == orderbookStreamKey) {
-      _tradeService
+      tradeService
           .ordersbookChannel(pairPriceByRoute.symbol)
           .sink
           .close()
@@ -390,7 +399,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   }
 
   String updateTickerName(String tickerName) {
-    return _tradeService.seperateBasePair(tickerName);
+    return tradeService.seperateBasePair(tickerName);
   }
 
   // getMyOrders() async {
@@ -415,6 +424,9 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
         arguments: false);
   }
 
+  ///----------------------------------------------------------------------
+  ///----------------------------------------------------------------------
+
 /*-------------------------------------------------------------------------------------
                                 Buy/Sel Viewmodel functions
 -------------------------------------------------------------------------------------*/
@@ -427,8 +439,24 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     exgAddress = await sharedService.getExgAddressFromWalletDatabase();
 
     transFeeAdvance = false;
-    splitPair(pairSymbolWithSlash);
+    log.e('two');
+    splitPair(updateTickerName(pairPriceByRoute.symbol));
     setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                    Set price and quantity
+----------------------------------------------------------------------*/
+  void setPriceQuantityValues(double p, double q) {
+    setBusyForObject(quantityTextController, true);
+    setBusyForObject(priceTextController, true);
+    setBusy(true);
+    priceTextController.text = p.toString();
+    quantityTextController.text = q.toString();
+    log.w('${priceTextController.text}, ${quantityTextController.text}');
+    setBusy(false);
+    setBusyForObject(quantityTextController, false);
+    setBusyForObject(priceTextController, false);
   }
 
 /*----------------------------------------------------------------------
@@ -735,7 +763,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
         // });
         Timer.periodic(Duration(seconds: 3), (timer) async {
           var res =
-              await _tradeService.getTxStatus(resKanban["transactionHash"]);
+              await tradeService.getTxStatus(resKanban["transactionHash"]);
           if (res != null) {
             log.i('RES $res');
             String status = res['status'];

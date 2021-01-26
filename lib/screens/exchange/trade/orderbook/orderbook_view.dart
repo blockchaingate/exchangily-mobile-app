@@ -1,7 +1,10 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/shared/decimal_config.dart';
+
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +12,13 @@ import 'package:flutter/material.dart';
 class OrderBookView extends StatelessWidget {
   final bool isVerticalOrderbook;
   final Orderbook orderbook;
-  final DecimalConfig decimalConfig;
+  final PairDecimalConfig decimalConfig;
   OrderBookView(
       {Key key, this.isVerticalOrderbook, this.orderbook, this.decimalConfig});
 
   @override
   Widget build(BuildContext context) {
+    final tradeService = locator<TradeService>();
     return isVerticalOrderbook
         ?
 
@@ -24,50 +28,52 @@ class OrderBookView extends StatelessWidget {
 
         Column(
             children: <Widget>[
-              Center(
-                child: Text('Hello vertical'),
-              )
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: <Widget>[
-              //     // Heading Price
-              //     Container(
-              //         padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-              //         decoration: const BoxDecoration(
-              //           border: Border(
-              //             bottom: BorderSide(width: 1.0, color: Colors.grey),
-              //           ),
-              //         ),
-              //         child: Text(AppLocalizations.of(context).price,
-              //             style: Theme.of(context).textTheme.headline6)),
-              //     // Heading Quantity
-              //     Container(
-              //         padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-              //         decoration: const BoxDecoration(
-              //           border: Border(
-              //             bottom: BorderSide(width: 1.0, color: Colors.grey),
-              //           ),
-              //         ),
-              //         child: Text(AppLocalizations.of(context).quantity,
-              //             style: Theme.of(context).textTheme.headline6))
-              //   ],
-              // ),
-              // buildVerticalOrderbookColumn(orderbook.sellOrders, false),
-              // Container(
-              //     padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //       children: <Widget>[
-              //         orderbook.buyOrders != [] && orderbook.sellOrders != []
-              //             ? Text('${orderbook.price.toString()}',
-              //                 style: Theme.of(context).textTheme.headline4)
-              //             : Center(
-              //                 child: Text('No Orders',
-              //                     style: Theme.of(context).textTheme.bodyText2),
-              //               )
-              //       ],
-              //     )),
-              // buildVerticalOrderbookColumn(orderbook.buyOrders, true),
+              // Center(
+              //   child: Text('Hello vertical'),
+              // )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  // Heading Price
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(width: 1.0, color: Colors.grey),
+                        ),
+                      ),
+                      child: Text(AppLocalizations.of(context).price,
+                          style: Theme.of(context).textTheme.headline6)),
+                  // Heading Quantity
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(width: 1.0, color: Colors.grey),
+                        ),
+                      ),
+                      child: Text(AppLocalizations.of(context).quantity,
+                          style: Theme.of(context).textTheme.headline6))
+                ],
+              ),
+              buildVerticalOrderbookColumn(
+                  orderbook.sellOrders, false, tradeService),
+              Container(
+                  padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      orderbook.buyOrders != [] && orderbook.sellOrders != []
+                          ? Text('${orderbook.price.toString()}',
+                              style: Theme.of(context).textTheme.headline4)
+                          : Center(
+                              child: Text('No Orders',
+                                  style: Theme.of(context).textTheme.bodyText2),
+                            )
+                    ],
+                  )),
+              buildVerticalOrderbookColumn(
+                  orderbook.buyOrders, true, tradeService),
             ],
           )
         :
@@ -184,8 +190,8 @@ class OrderBookView extends StatelessWidget {
                       Order Detail
 ----------------------------------------------------------------------*/
 
-  Column buildVerticalOrderbookColumn(
-      List<OrderType> orderArray, final bool bidOrAsk) {
+  Column buildVerticalOrderbookColumn(List<OrderType> orderArray,
+      final bool bidOrAsk, TradeService tradeService) {
     // List<OrderType> sellOrders = [];
     print('OrderArray $bidOrAsk length before ${orderArray.length}');
     if (orderArray.length > 7) orderArray = orderArray.sublist(0, 7);
@@ -200,7 +206,7 @@ class OrderBookView extends StatelessWidget {
             onTap: () {
               print(
                   'trying filling values ${order.price} --  ${order.quantity}');
-
+              tradeService.setPriceQuantityValues(order.price, order.quantity);
               // model.setBusy(true);
               // model.quantityTextController.text =
               //     order.quantity.toStringAsFixed(model.quantityDecimal);
@@ -228,7 +234,7 @@ class OrderBookView extends StatelessWidget {
                         color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                         child: Text(
                             order.quantity
-                                .toStringAsFixed(decimalConfig.quantityDecimal),
+                                .toStringAsFixed(decimalConfig.qtyDecimal),
                             style:
                                 TextStyle(color: Colors.white, fontSize: 13.0)))
                   ],
@@ -242,7 +248,7 @@ class OrderBookView extends StatelessWidget {
 class OrderDetailsView extends StatelessWidget {
   final int index;
   final bool isBuy;
-  final DecimalConfig decimalConfig;
+  final PairDecimalConfig decimalConfig;
   final List<OrderType> orders;
   const OrderDetailsView(
       {Key key,
@@ -265,7 +271,7 @@ class OrderDetailsView extends StatelessWidget {
                   orderRow(
                       orders[index]
                           .quantity
-                          .toStringAsFixed(decimalConfig.quantityDecimal),
+                          .toStringAsFixed(decimalConfig.qtyDecimal),
                       TextAlign.start,
                       grey),
                   orderRow(
@@ -287,7 +293,7 @@ class OrderDetailsView extends StatelessWidget {
                   orderRow(
                       orders[index]
                           .quantity
-                          .toStringAsFixed(decimalConfig.quantityDecimal),
+                          .toStringAsFixed(decimalConfig.qtyDecimal),
                       TextAlign.end,
                       grey),
                 ],

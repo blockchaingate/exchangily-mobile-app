@@ -29,8 +29,9 @@ class TradeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<TradeViewModel>.reactive(
-        disposeViewModel: true,
         fireOnModelReadyOnce: true,
+        initialiseSpecialViewModelsOnce: true,
+        createNewModelOnInsert: false,
         // passing tickername in the constructor of the viewmodal so that we can pass it to the streamMap
         // which is required override
         viewModelBuilder: () =>
@@ -258,9 +259,6 @@ class TradeView extends StatelessWidget {
                                                       layoutType: 'orderbook',
                                                     )
                                                   : OrderBookView(
-                                                      // tickerName:
-                                                      //     pairPriceByRoute
-                                                      //         .symbol,
                                                       isVerticalOrderbook:
                                                           false,
                                                       orderbook:
@@ -359,8 +357,11 @@ class TradeView extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>
-                                              BuySellView(bidOrAsk: true)),
+                                          builder: (context) => BuySellView(
+                                                bidOrAsk: true,
+                                                pairPriceByRoute:
+                                                    pairPriceByRoute,
+                                              )),
                                     );
                                 },
                                 child: Text(AppLocalizations.of(context).buy,
@@ -383,8 +384,11 @@ class TradeView extends StatelessWidget {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            BuySellView(bidOrAsk: false)),
+                                        builder: (context) => BuySellView(
+                                              bidOrAsk: false,
+                                              pairPriceByRoute:
+                                                  pairPriceByRoute,
+                                            )),
                                   );
                               },
                               child: Text(AppLocalizations.of(context).sell,

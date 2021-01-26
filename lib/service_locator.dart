@@ -70,7 +70,6 @@ Future serviceLocator() async {
   // Wallet
   locator.registerLazySingleton(() => WalletService());
   locator.registerLazySingleton(() => WalletDataBaseService());
-  locator.registerLazySingleton(() => TokenListDatabaseService());
   locator.registerLazySingleton(() => VaultService());
   locator.registerLazySingleton(() => TokenListDatabaseService());
   // Shared
@@ -88,7 +87,6 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => TransactionHistoryDatabaseService());
   locator.registerLazySingleton(() => PdfViewerService());
   locator.registerLazySingleton(() => OrderService());
-  locator.registerLazySingleton(() => PdfViewerService());
 
   // LocalStorageService Singelton
   var instance = await LocalStorageService.getInstance();

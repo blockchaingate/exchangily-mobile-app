@@ -12,15 +12,13 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-
+import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
-
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
-import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 
@@ -31,7 +29,10 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 
 class BuySellView extends StatelessWidget {
-  BuySellView({Key key, this.bidOrAsk}) : super(key: key);
+  final Price pairPriceByRoute;
+
+  BuySellView({Key key, this.bidOrAsk, this.pairPriceByRoute})
+      : super(key: key);
   final bool bidOrAsk;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -40,7 +41,12 @@ class BuySellView extends StatelessWidget {
     GlobalKey _one = GlobalKey();
     GlobalKey _two = GlobalKey();
     return ViewModelBuilder<TradeViewModel>.reactive(
-        viewModelBuilder: () => TradeViewModel(),
+        initialiseSpecialViewModelsOnce: true,
+        fireOnModelReadyOnce: true,
+        createNewModelOnInsert: false,
+        disposeViewModel: false,
+        viewModelBuilder: () =>
+            TradeViewModel(pairPriceByRoute: pairPriceByRoute),
         onModelReady: (model) async {
           model.globalKeyOne = _one;
           model.globalKeyTwo = _two;
@@ -94,7 +100,7 @@ class BuySellView extends StatelessWidget {
                                 child: Container(
                                   padding: EdgeInsets.only(right: 4, left: 1),
                                   // LeftSideColumnWidgets View model widget
-                                  child: LeftSideColumnWidgets(),
+                                  child: LeftSideColumnWidgets(model: model),
                                 )),
                             // Buy Sell Button
                             UIHelper.verticalSpaceSmall,
@@ -109,35 +115,13 @@ class BuySellView extends StatelessWidget {
 /*----------------------------------------------------------
                 Orderbook view
  -----------------------------------------------------------*/
-                                      // !model.dataReady(model.orderbookStreamKey)
-                                      //     ? !model.isVerticalOrderbook
-                                      //         ? ShimmerLayout(
-                                      //             layoutType: 'orderbook',
-                                      //           )
-                                      //         : Container(
-                                      //             height: MediaQuery.of(context)
-                                      //                     .size
-                                      //                     .height /
-                                      //                 2.7,
-                                      //             child: Center(
-                                      //                 child: SizedBox(
-                                      //                     height: 20,
-                                      //                     width: 20,
-                                      //                     child: Container(
-                                      //                         color: white,
-                                      //                         child:
-                                      //                             CupertinoActivityIndicator()))))
-                                      //     :
+
                                       OrderBookView(
-                                    //    tickerName: model.tickerName,
                                     isVerticalOrderbook: true,
                                     orderbook: model.orderbook,
                                     decimalConfig:
                                         model.singlePairDecimalConfig,
-                                  )
-                                  // buildRightSideOrderbookColumn(
-                                  //     context, model),
-                                  ),
+                                  )),
                             ),
                           ],
                         ),
@@ -146,14 +130,14 @@ class BuySellView extends StatelessWidget {
 /*----------------------------------------------------------
                 My Orders view
  -----------------------------------------------------------*/
-                      // model.isReloadMyOrders
-                      //     ? Container(
-                      //         height: MediaQuery.of(context).size.height * 0.20,
-                      //         margin: EdgeInsets.all(5),
-                      //         child: Center(child: CircularProgressIndicator()))
-                      //     : MyOrdersView(
-                      //         tickerName: model.tickerName,
-                      //       ),
+                      model.isReloadMyOrders
+                          ? Container(
+                              height: MediaQuery.of(context).size.height * 0.20,
+                              margin: EdgeInsets.all(5),
+                              child: Center(child: CircularProgressIndicator()))
+                          : MyOrdersView(
+                              tickerName: model.tickerName,
+                            ),
                     ]),
                     model.isBusy
                         ? model.sharedService.stackFullScreenLoadingIndicator()
@@ -252,14 +236,13 @@ class BuySellView extends StatelessWidget {
 /*----------------------------------------------------------------------
                       Left Side Column Widgets
 ----------------------------------------------------------------------*/
-class LeftSideColumnWidgets extends ViewModelWidget<TradeViewModel> {
-  // const LeftSideColumnWidgets({
-  //   Key key,
-  // }) : super(key: key);
+class LeftSideColumnWidgets extends StatelessWidget {
+  final TradeViewModel model;
+  const LeftSideColumnWidgets({Key key, this.model});
 
   @override
-  Widget build(BuildContext context, TradeViewModel model) {
-    //  model.priceTextController.text = model.priceFromTradeService.toString();
+  Widget build(BuildContext context) {
+    // model.priceTextController.text = model.priceFromTradeService.toString();
     // model.quantityTextController.text =
     //     model.quantityFromTradeService.toString();
     return Column(
@@ -275,9 +258,11 @@ class LeftSideColumnWidgets extends ViewModelWidget<TradeViewModel> {
                   activatedNegativeValues: false)
             ],
             onTap: () {
-              model.priceTextController.text = '';
+              print('tap');
+              // model.priceTextController.text = '';
             },
             onChanged: (value) {
+              print(value);
               if (value.isNotEmpty) model.handleTextChanged('price', value);
             },
             maxLines: 1,
