@@ -157,15 +157,15 @@ class BuySellView extends StatelessWidget {
                                                             const EdgeInsets
                                                                     .fromLTRB(
                                                                 0, 0, 0, 5),
-                                                        decoration:
-                                                            const BoxDecoration(
-                                                          border: Border(
-                                                            bottom: BorderSide(
-                                                                width: 1.0,
-                                                                color: Colors
-                                                                    .grey),
-                                                          ),
-                                                        ),
+                                                        // decoration:
+                                                        //     const BoxDecoration(
+                                                        //   border: Border(
+                                                        //     bottom: BorderSide(
+                                                        //         width: 1.0,
+                                                        //         color: Colors
+                                                        //             .grey),
+                                                        //   ),
+                                                        // ),
                                                         child: Text(
                                                             AppLocalizations.of(
                                                                     context)
@@ -180,15 +180,15 @@ class BuySellView extends StatelessWidget {
                                                             const EdgeInsets
                                                                     .fromLTRB(
                                                                 0, 0, 0, 5),
-                                                        decoration:
-                                                            const BoxDecoration(
-                                                          border: Border(
-                                                            bottom: BorderSide(
-                                                                width: 1.0,
-                                                                color: Colors
-                                                                    .grey),
-                                                          ),
-                                                        ),
+                                                        // decoration:
+                                                        //     const BoxDecoration(
+                                                        //   border: Border(
+                                                        //     bottom: BorderSide(
+                                                        //         width: 1.0,
+                                                        //         color: Colors
+                                                        //             .grey),
+                                                        //   ),
+                                                        // ),
                                                         child: Text(
                                                             AppLocalizations.of(
                                                                     context)
@@ -455,7 +455,6 @@ Column buildVerticalOrderbookColumn(
 
   print('OrderArray $bidOrAsk length after ${orderArray.length}');
   return Column(
-    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: <Widget>[
       for (var order in orderArray)
         InkWell(
@@ -475,7 +474,7 @@ Column buildVerticalOrderbookColumn(
             // model.setBusy(false);
           },
           child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 3, 0, 3),
+              padding: EdgeInsets.fromLTRB(0, 2, 0, 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -483,6 +482,7 @@ Column buildVerticalOrderbookColumn(
                       order.price.toStringAsFixed(
                           model.singlePairDecimalConfig.priceDecimal),
                       style: TextStyle(
+                          fontWeight: FontWeight.w600,
                           color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
                           fontSize: 13.0)),
                   Container(
@@ -492,8 +492,10 @@ Column buildVerticalOrderbookColumn(
                       child: Text(
                           order.quantity.toStringAsFixed(
                               model.singlePairDecimalConfig.qtyDecimal),
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 13.0)))
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontSize: 13.0)))
                 ],
               )),
         )

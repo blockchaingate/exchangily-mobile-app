@@ -109,21 +109,7 @@ class OrderBookView extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Text(AppLocalizations.of(context).quantity,
-                                textAlign: TextAlign.start,
                                 style: TextStyle(fontSize: 9, color: grey)),
-                            Text(AppLocalizations.of(context).price,
-                                style: TextStyle(fontSize: 9, color: grey))
-                          ],
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 7),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
                             Text(AppLocalizations.of(context).price,
                                 style: TextStyle(fontSize: 9, color: grey)),
                             Text(AppLocalizations.of(context).quantity,
@@ -131,7 +117,7 @@ class OrderBookView extends StatelessWidget {
                           ],
                         ),
                       ),
-                    ),
+                    )
                   ],
                 ),
                 // Buy/Sell Orders List View
@@ -221,6 +207,7 @@ class OrderBookView extends StatelessWidget {
                     Text(
                         order.price.toStringAsFixed(decimalConfig.priceDecimal),
                         style: TextStyle(
+                            fontWeight: FontWeight.bold,
                             color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
                             fontSize: 13.0)),
                     Container(
@@ -230,8 +217,10 @@ class OrderBookView extends StatelessWidget {
                         child: Text(
                             order.quantity
                                 .toStringAsFixed(decimalConfig.qtyDecimal),
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 13.0)))
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 13.0)))
                   ],
                 )),
           )
@@ -256,7 +245,7 @@ class OrderDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.only(bottom: 2.0),
+        // margin: EdgeInsets.only(bottom: 2.0),
         padding: EdgeInsets.all(3.0),
         color: isBuy ? buyOrders : sellOrders,
         child: isBuy
@@ -299,6 +288,7 @@ class OrderDetailsView extends StatelessWidget {
     return Expanded(
         child: Text(textValue,
             textAlign: textAlign,
-            style: TextStyle(fontSize: 12, color: colorValue)));
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 12, color: colorValue)));
   }
 }
