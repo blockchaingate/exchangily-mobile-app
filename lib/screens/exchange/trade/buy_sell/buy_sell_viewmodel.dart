@@ -146,7 +146,7 @@ class BuySellViewModel extends StreamViewModel {
   void onCancel() {
     log.e('Orderbook Stream closed');
     tradeService
-        .ordersbookChannel(tickerName)
+        .orderbookChannel(tickerName)
         .sink
         .close()
         .then((value) => log.w('Orderbook channel closed'));

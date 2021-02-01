@@ -66,7 +66,7 @@ dependencies:
   get_it: ^5.0.4
 
   # State Management
-  stacked: ^1.7.6
+  stacked: ^1.7.7
 
   # Path Provider
   path_provider: 1.4.2

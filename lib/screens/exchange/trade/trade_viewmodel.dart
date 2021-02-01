@@ -19,6 +19,10 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+const String _tickerStreamKey = 'ticker';
+const String _marketTradesStreamKey = 'marketTradesList';
+const String _orderbookStreamKey = 'orderbook';
+
 class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   final Price pairPriceByRoute;
   TradeViewModel({this.pairPriceByRoute});
@@ -43,16 +47,15 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
   List<MarketTrades> marketTradesList = [];
 
-  // List<Order> myOrders = [];
+  bool get hasStreamTickerData => dataReady(_tickerStreamKey);
+  bool get hasStreamMarketTrades => dataReady(_marketTradesStreamKey);
+  bool get hasStreamOrderbook => dataReady(_orderbookStreamKey);
 
   Price currentPairPrice = new Price();
   List<dynamic> ordersViewTabBody = [];
 
   List<Price> pairPriceList = [];
   List<List<Price>> marketPairsTabBar = [];
-  String tickerStreamKey = 'ticker';
-  String marketTradesStreamKey = 'marketTradesList';
-  String orderbookStreamKey = 'orderbook';
 
   List myExchangeAssets = [];
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
@@ -65,11 +68,11 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
   bool isStreamDataNull = false;
   @override
   Map<String, StreamData> get streamsMap => {
-        tickerStreamKey: StreamData<dynamic>(
+        _tickerStreamKey: StreamData<dynamic>(
             _tradeService.getTickerDataStream(pairPriceByRoute.symbol)),
-        orderbookStreamKey: StreamData<dynamic>(_tradeService
+        _orderbookStreamKey: StreamData<dynamic>(_tradeService
             .getOrderBookStreamByTickerName(pairPriceByRoute.symbol)),
-        marketTradesStreamKey: StreamData<dynamic>(_tradeService
+        _marketTradesStreamKey: StreamData<dynamic>(_tradeService
             .getMarketTradesStreamByTickerName(pairPriceByRoute.symbol))
       };
   // Map<String, StreamData> res =
@@ -132,7 +135,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     log.w('transformData key $key  -- data $data');
     try {
       /// Ticker WS
-      if (key == tickerStreamKey) {
+      if (key == _tickerStreamKey) {
         if (data != null && data != []) {
           var jsonDynamic = jsonDecode(data);
           // log.i('ticker json data $jsonDynamic');
@@ -142,7 +145,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
         }
         // log.w('TICKER PRICE ${currentPairPrice.toJson()}');
 
-      } else if (key == orderbookStreamKey) {
+      } else if (key == _orderbookStreamKey) {
         log.w('transformData -- data $data');
         var jsonDynamic = jsonDecode(data);
         orderbook = Orderbook.fromJson(jsonDynamic);
@@ -153,7 +156,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
                     Market trade list
 ----------------------------------------------------------------------*/
 
-      else if (key == marketTradesStreamKey) {
+      else if (key == _marketTradesStreamKey) {
         if (data != null && data != []) {
           List<dynamic> jsonDynamicList = jsonDecode(data) as List;
           MarketTradeList tradeList = MarketTradeList.fromJson(jsonDynamicList);
@@ -171,6 +174,19 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     }
   }
 
+  // @override
+  // void dispose() {
+  //   print('dispose $streamsMap');
+  //   streamsMap.forEach((key, value) {
+  //     //  value.dispose();
+  //     getSubscriptionForKey(key).cancel().then((x) {
+  //       log.w('$key stream cancelled');
+  //       onCancel(key);
+  //     });
+  //   });
+  //   super.dispose();
+  // }
+
 /*----------------------------------------------------------------------
                 onError
 ----------------------------------------------------------------------*/
@@ -186,19 +202,37 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 ----------------------------------------------------------------------*/
   @override
   void onCancel(String key) {
-    log.e('Stream $key closed');
-    if (key == marketTradesStreamKey) {
-      _tradeService
-          .tickerDataChannel(pairPriceByRoute.symbol)
-          .sink
-          .close()
-          .then((value) => log.i('tickerDataChannel closed'));
+    // log.e('on cancel Stream $key closed');
 
-      _tradeService
-          .marketTradesChannel(pairPriceByRoute.symbol)
-          .sink
-          .close()
-          .then((value) => log.i('marketTradesChannel closed'));
+    if (key == _tickerStreamKey) {
+      getSubscriptionForKey(key).cancel().whenComplete(() {
+        log.e('on cancel Stream $key closed');
+        _tradeService
+            .tickerDataChannel(pairPriceByRoute.symbol)
+            .sink
+            .close()
+            .then((value) => log.i('tickerDataChannel closed'));
+      });
+    }
+    if (key == _marketTradesStreamKey) {
+      getSubscriptionForKey(key).cancel().whenComplete(() {
+        log.e('on cancel Stream $key closed');
+        _tradeService
+            .marketTradesChannel(pairPriceByRoute.symbol)
+            .sink
+            .close()
+            .then((value) => log.i('marketTradesChannel closed'));
+      });
+    }
+    if (key == _orderbookStreamKey) {
+      getSubscriptionForKey(key).cancel().whenComplete(() {
+        log.e('on cancel Stream $key closed');
+        _tradeService
+            .orderbookChannel(pairPriceByRoute.symbol)
+            .sink
+            .close()
+            .then((value) => log.i('orderbookChannel closed'));
+      });
     }
   }
 
@@ -276,12 +310,12 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
     print('Pause/Resume streams $index');
 
     if (index == 0) {
-      pauseStream(marketTradesStreamKey);
+      pauseStream(_marketTradesStreamKey);
       //  getSubscriptionForKey(orderBookStreamKey).resume();
       notifyListeners();
     } else if (index == 1) {
       //  pauseStream(orderBookStreamKey);
-      getSubscriptionForKey(marketTradesStreamKey).resume();
+      getSubscriptionForKey(_marketTradesStreamKey).resume();
       notifyListeners();
     } else if (index == 2) {
       pauseAllStreams();
@@ -293,7 +327,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 
   pauseAllStreams() {
     log.e('Stream pause');
-    getSubscriptionForKey(marketTradesStreamKey).pause();
+    getSubscriptionForKey(_marketTradesStreamKey).pause();
     // getSubscriptionForKey(orderBookStreamKey).pause();
     notifyListeners();
   }

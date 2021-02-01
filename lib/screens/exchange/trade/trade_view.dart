@@ -143,13 +143,11 @@ class TradeView extends StatelessWidget {
                               Container(
                                 margin: EdgeInsets.only(top: 5.0),
                                 child: PairPriceView(
-                                  pairPrice:
-                                      model.dataReady(model.tickerStreamKey) &&
-                                              model.currentPairPrice != null
-                                          ? model.currentPairPrice
-                                          : model.pairPriceByRoute,
-                                  isBusy:
-                                      !model.dataReady(model.tickerStreamKey),
+                                  pairPrice: model.hasStreamTickerData &&
+                                          model.currentPairPrice != null
+                                      ? model.currentPairPrice
+                                      : model.pairPriceByRoute,
+                                  isBusy: !model.hasStreamTickerData,
                                   decimalConfig: model.singlePairDecimalConfig,
                                   usdValue: model.usdValue,
                                 ),
@@ -250,8 +248,7 @@ class TradeView extends StatelessWidget {
                                           children: [
                                             // order book container
                                             Container(
-                                              child: !model.dataReady(
-                                                      model.orderbookStreamKey)
+                                              child: !model.hasStreamOrderbook
                                                   ? ShimmerLayout(
                                                       layoutType: 'orderbook',
                                                     )
@@ -267,8 +264,8 @@ class TradeView extends StatelessWidget {
 
                                             // Market trades
                                             Container(
-                                              child: !model.dataReady(model
-                                                      .marketTradesStreamKey)
+                                              child: !model
+                                                      .hasStreamMarketTrades
                                                   ? ShimmerLayout(
                                                       layoutType:
                                                           'marketTrades',
