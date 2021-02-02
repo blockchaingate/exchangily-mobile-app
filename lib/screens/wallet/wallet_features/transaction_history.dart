@@ -1,4 +1,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
+import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
@@ -7,6 +9,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
 class TransactionHistoryView extends StatelessWidget {
   final String tickerName;
@@ -14,11 +17,12 @@ class TransactionHistoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double customFontSize = 12;
-    return BaseScreen<TransactionHistoryViewmodel>(
+    return ViewModelBuilder<TransactionHistoryViewmodel>.reactive(
+      viewModelBuilder: () =>
+          TransactionHistoryViewmodel(tickerName: tickerName),
       onModelReady: (model) async {
-        //  model.transactionHistory = [];
         model.context = context;
-        await model.getTransaction(tickerName);
+        model.getWalletFromDb();
       },
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
@@ -28,7 +32,7 @@ class TransactionHistoryView extends StatelessWidget {
           backgroundColor: colors.secondaryColor,
         ),
         body: SingleChildScrollView(
-          child: model.busy
+          child: !model.dataReady
               ? Container(
                   width: double.infinity,
                   height: 300,
@@ -43,7 +47,7 @@ class TransactionHistoryView extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       for (var transaction in model.transactionHistory.reversed)
-                        model.state == ViewState.Busy
+                        model.isBusy
                             ? CircularProgressIndicator()
                             : Card(
                                 elevation: 4,
@@ -230,16 +234,40 @@ class TransactionHistoryView extends StatelessWidget {
                                                           'Require redeposit')
                                                         SizedBox(
                                                           width: 80,
-                                                          child: Text(
-                                                              firstCharToUppercase(
-                                                                  AppLocalizations.of(
-                                                                          context)
-                                                                      .requireRedeposit),
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      customFontSize,
-                                                                  color: colors
-                                                                      .yellow)),
+                                                          child: RichText(
+                                                            text: TextSpan(
+                                                                text: AppLocalizations.of(
+                                                                        context)
+                                                                    .redeposit,
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        12,
+                                                                    decoration:
+                                                                        TextDecoration
+                                                                            .underline,
+                                                                    color: colors
+                                                                        .red),
+                                                                recognizer:
+                                                                    TapGestureRecognizer()
+                                                                      ..onTap =
+                                                                          () {
+                                                                        model.navigationService.navigateTo(
+                                                                            RedepositViewRoute,
+                                                                            arguments:
+                                                                                model.walletInfo);
+                                                                      }),
+                                                          ),
+
+                                                          //  Text(
+                                                          //     firstCharToUppercase(
+                                                          //         AppLocalizations.of(
+                                                          //                 context)
+                                                          //             .requireRedeposit),
+                                                          //     style: TextStyle(
+                                                          //         fontSize:
+                                                          //             customFontSize,
+                                                          //         color: colors
+                                                          //             .yellow)),
                                                         )
                                                       else if (transaction
                                                               .status ==

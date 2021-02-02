@@ -11,7 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -22,7 +21,6 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 

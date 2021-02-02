@@ -127,6 +127,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     checkAnnouncement();
     showDialogWarning();
     getDecimalPairConfig();
+    getConfirmDepositStatus();
     setBusy(false);
   }
 
@@ -984,7 +985,7 @@ class WalletDashboardViewModel extends BaseViewModel {
               newTokenList.add(walletBalanceObj.coin);
               newTokenBalanceList.add(walletBalanceObj);
               log.i(
-                  'new ticker list $newTokenList --- new wallet balance $newTokenBalanceList');
+                  'new ticker list $newTokenList --- new wallet balance object ${walletBalanceObj.toJson}');
             }
           });
           if (newTokenList.isNotEmpty) {
@@ -992,11 +993,38 @@ class WalletDashboardViewModel extends BaseViewModel {
                 .getTokenListUpdates()
                 .then((apiTokenList) async {
               if (apiTokenList != null) {
-                //  await tokenListDatabaseService.deleteDb().whenComplete(() => log
-                //    .e('ticker database cleared before inserting update token data from api'));
-                apiTokenList.forEach((tokenToInsert) async {
-                  await tokenListDatabaseService.insert(tokenToInsert);
-                });
+                var x = await tokenListDatabaseService.getAll();
+                log.i(
+                    'new token update list length ${x.length} -- token list database list length ${apiTokenList.length}');
+                if (x != null) if (x.length != apiTokenList.length) {
+                  await tokenListDatabaseService.deleteDb().whenComplete(() =>
+                      log.e(
+                          'ticker database cleared before inserting update token data from api'));
+                  print('x ${x.length}');
+
+                  apiTokenList.forEach((tokenFromApi) async {
+                    await tokenListDatabaseService.insert(tokenFromApi);
+                  });
+                }
+                // var existingToken;
+                // apiTokenList.forEach((tokenToInsert) async {
+                //   log.e(
+                //       'if ${tokenToInsert.tickerName} is already present? ${x.length} token in database}');
+                //   if (x != null)
+                //     existingToken = x.firstWhere(
+                //         (t) => (t.tickerName == tokenToInsert.tickerName),
+                //         orElse: () => null);
+                //   if (existingToken != null)
+                //     log.w('existing token ${existingToken.toJson()}');
+                //   if (existingToken == null) {
+                //     tokenListDatabaseService.insert(tokenToInsert);
+                //     log.i(
+                //         '${tokenToInsert.toJson()} is not present so now adding}');
+                //   }
+                // });
+                // await tokenListDatabaseService.deleteByTickerName('CNB');
+                var t = await tokenListDatabaseService.getAll();
+                print('t ${t.length}');
               }
               newTokenBalanceList.forEach((newTokenWalletBalance) async {
                 // compare tickername of api token balance against api tokenList

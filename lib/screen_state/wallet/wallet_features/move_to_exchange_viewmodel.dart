@@ -12,6 +12,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -55,15 +56,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setFee();
     await getGas();
     refreshBalance();
-   await getData();
+    await getData();
     setBusy(false);
   }
 
-  getData() async{
-setBusy(true);
-  singlePairDecimalConfig = await sharedService.getSinglePairDecimalConfig(coinName);
-  log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
-   setBusy(false);
+  getData() async {
+    setBusy(true);
+    singlePairDecimalConfig =
+        await sharedService.getSinglePairDecimalConfig(coinName);
+    log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
+    setBusy(false);
   }
 
 /*---------------------------------------------------
@@ -161,14 +163,14 @@ setBusy(true);
         amount > walletInfo.availableBalance ||
         amount == 0 ||
         amount.isNegative) {
-          log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
+      log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
       setBusy(false);
       return;
     }
-  
+
     message = '';
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -196,7 +198,8 @@ setBusy(true);
       String contractAddr =
           environment["addresses"]["smartContract"][tickerName];
       if (contractAddr == null && tokenType != '') {
-        log.i('$tickerName with token type $tokenType contract is null so fetching from token database');
+        log.i(
+            '$tickerName with token type $tokenType contract is null so fetching from token database');
         await tokenListDatabaseService
             .getByTickerName(tickerName)
             .then((token) {
@@ -204,7 +207,7 @@ setBusy(true);
           decimal = token.decimal;
         });
       }
-       
+
       var option = {
         "gasPrice": gasPrice ?? 0,
         "gasLimit": gasLimit ?? 0,
@@ -303,7 +306,10 @@ setBusy(true);
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
         .then((data) async {
       log.w('data $data');
-      if (data != null) walletInfo.availableBalance = data['balance'];
+      if (data != null) if (data['balance'] != -1.0)
+        walletInfo.availableBalance = data['balance'];
+      else
+        walletInfo.availableBalance = 0.0;
     }).catchError((err) {
       log.e(err);
       setBusy(false);
@@ -368,7 +374,7 @@ setBusy(true);
             options,
             false)
         .then((ret) {
-      log.w(' updateTransFee $ret');
+      log.w('updateTransFee $ret');
       if (ret != null && ret['transFee'] != null) {
         transFee = ret['transFee'];
         kanbanTransFee = kanbanTransFeeDouble;

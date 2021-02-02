@@ -210,8 +210,8 @@ class RouteGenerator {
 ----------------------------------------------------------------------*/
       case BindpayViewRoute:
         return MaterialPageRoute(
-          settings: RouteSettings(name:'BindpayView'),
-          builder: (_) => BindpayView());
+            settings: RouteSettings(name: 'BindpayView'),
+            builder: (_) => BindpayView());
 
 /*----------------------------------------------------------------------
                       Navigation Routes

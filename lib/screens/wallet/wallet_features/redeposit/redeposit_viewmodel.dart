@@ -4,15 +4,18 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/abi_util.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
@@ -21,9 +24,11 @@ import 'package:stacked/stacked.dart';
 import 'package:hex/hex.dart';
 
 class RedepositViewModel extends FutureViewModel {
+  final log = getLogger('RedepositVM');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
+  final tokenListDatabaseService = locator<TokenListDatabaseService>();
 
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
@@ -51,12 +56,22 @@ class RedepositViewModel extends FutureViewModel {
   Future getErrDeposit() async {
     setBusy(true);
     var address = await this.sharedService.getExgAddressFromWalletDatabase();
-    await walletService.getErrDeposit(address).then((errDepositData) {
+    await walletService.getErrDeposit(address).then((errDepositData) async {
       for (var i = 0; i < errDepositData.length; i++) {
         var item = errDepositData[i];
         log.w('errDepositData single occurance $item');
         var coinType = item['coinType'];
-        if (newCoinTypeMap[coinType] == walletInfo.tickerName) {
+        String tickerNameByCointype = newCoinTypeMap[coinType];
+        if (tickerNameByCointype == null)
+          await tokenListDatabaseService.getAll().then((tokenList) {
+            if (tokenList != null)
+              tickerNameByCointype = tokenList
+                  .firstWhere((element) => element.tokenType == coinType)
+                  .tickerName;
+            if (tickerNameByCointype == walletInfo.tickerName)
+              errDepositList.add(item);
+          });
+        else if (newCoinTypeMap[coinType] == walletInfo.tickerName) {
           errDepositList.add(item);
         }
       }
@@ -70,6 +85,7 @@ class RedepositViewModel extends FutureViewModel {
     var kanbanTransFee = bigNum2Double(gasPrice * gasLimit);
 
     log.w('errDepositList=== $errDepositList');
+    // if there is only one redeposit entry
     if (errDepositList != null && errDepositList.length > 0) {
       this.errDepositList = errDepositList;
       this.errDepositTransactionID = errDepositList[0]["transactionID"];
@@ -115,9 +131,9 @@ class RedepositViewModel extends FutureViewModel {
             context);
       }
 
-      print('errDepositItem $errDepositItem');
-      num errDepositAmount = num.parse(errDepositItem['amount']);
-      print('errDepositAmount $errDepositAmount');
+      log.w('errDepositItem $errDepositItem');
+      num errDepositAmount = double.parse(errDepositItem['amount']);
+      log.i('errDepositAmount $errDepositAmount');
       var amountInLink = BigInt.from(errDepositAmount);
       print('amountInLink $amountInLink');
       var coinType = errDepositItem['coinType'];
