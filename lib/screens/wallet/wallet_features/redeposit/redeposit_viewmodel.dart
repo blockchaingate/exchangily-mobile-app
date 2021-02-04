@@ -101,7 +101,7 @@ class RedepositViewModel extends FutureViewModel {
 ----------------------------------------------------------------------*/
 
   checkPass() async {
-    TransactionHistory transactionByTxId = new TransactionHistory();
+    //TransactionHistory transactionByTxId = new TransactionHistory();
     var res = await dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -132,7 +132,7 @@ class RedepositViewModel extends FutureViewModel {
       }
 
       log.w('errDepositItem $errDepositItem');
-      num errDepositAmount = double.parse(errDepositItem['amount']);
+      var errDepositAmount = double.parse(errDepositItem['amount']);
       log.i('errDepositAmount $errDepositAmount');
       var amountInLink = BigInt.from(errDepositAmount);
       print('amountInLink $amountInLink');

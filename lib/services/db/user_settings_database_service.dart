@@ -45,10 +45,9 @@ class UserSettingsDatabaseService {
     log.e('in on create $db');
     await db.execute(''' CREATE TABLE $tableName
         (
-        $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+        $columnId INTEGER PRIMARY KEY,
         $columnLanguage TEXT,    
-        $columnTheme TEXT,
-       ) ''');
+        $columnTheme TEXT) ''');
   }
 
   // Get All Records From The Database
@@ -75,22 +74,8 @@ class UserSettingsDatabaseService {
     return id;
   }
 
-  // Get Single Setting By Name
-  Future<List<UserSettings>> getByName(String name) async {
-    await initDb();
-    final Database db = await _database;
-    List<Map> res =
-        await db.query(tableName, where: 'tickerName= ?', whereArgs: [name]);
-    log.w('Name - $name --- $res');
-
-    List<UserSettings> list =
-        res.isNotEmpty ? res.map((f) => UserSettings.fromJson(f)).toList() : [];
-    return list;
-    // return TransactionHistory.fromJson((res.first));
-  }
-
   // Get Single Wallet By Id
-  Future getById(int id) async {
+  Future<UserSettings> getById(int id) async {
     final Database db = await _database;
     List<Map> res = await db.query(tableName, where: 'id= ?', whereArgs: [id]);
     log.w('ID - $id --- $res');

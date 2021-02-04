@@ -5,8 +5,8 @@ class UserSettings {
 
   UserSettings({int id, String language, String theme}) {
     this._id = id;
-    this._language = language;
-    this._theme = theme;
+    this._language = language ?? '';
+    this._theme = theme ?? '';
   }
 
   Map<String, dynamic> toJson() =>
@@ -25,7 +25,6 @@ class UserSettings {
   }
 
   String get language => _language;
-
   set language(String language) {
     this._language = language;
   }

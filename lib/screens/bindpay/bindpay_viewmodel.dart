@@ -24,7 +24,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share/share.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:stacked/stacked.dart';
-
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 
 class BindpayViewmodel extends FutureViewModel {
@@ -605,8 +605,18 @@ class BindpayViewmodel extends FutureViewModel {
                   Text(AppLocalizations.of(context).sendTransactionComplete),
                   position: NotificationPosition.bottom,
                   background: primaryColor);
-              // sharedService.alertDialog(
-              //     "", AppLocalizations.of(context).sendTransactionComplete);
+              String date = DateTime.now().toString();
+              TransactionHistory transactionHistory = new TransactionHistory(
+                  id: null,
+                  tickerName: tickerName,
+                  address: '',
+                  amount: 0.0,
+                  date: date.toString(),
+                  txId: res['transactionHash'],
+                  status: '',
+                  quantity: amount,
+                  tag: 'bindpay');
+              walletService.insertTransactionInDatabase(transactionHistory);
               Future.delayed(Duration(seconds: 3), () async {
                 await refreshBalance();
                 log.i('balance updated');

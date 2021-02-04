@@ -70,6 +70,9 @@ class RouteGenerator {
 /*----------------------------------------------------------------------
                           Wallet Setup
 ----------------------------------------------------------------------*/
+
+      case ChooseWalletLanguageViewRoute:
+        return MaterialPageRoute(builder: (_) => ChooseWalletLanguageView());
       case WalletSetupViewRoute:
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
 

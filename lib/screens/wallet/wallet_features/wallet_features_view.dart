@@ -11,7 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -39,7 +38,7 @@ class WalletFeaturesView extends StatelessWidget {
         model.init();
       },
       builder: (context, model, child) => Scaffold(
-        // appBar: AppBar(),
+        //  appBar: AppBar(),
         key: key,
         body: ListView(
           children: <Widget>[
@@ -68,17 +67,17 @@ class WalletFeaturesView extends StatelessWidget {
                           ),
                         ),
                         Align(
-                            alignment: Alignment.centerRight,
+                            alignment: Alignment.centerLeft,
                             child: IconButton(
                                 icon: Icon(
-                                  Icons.close,
+                                  Icons.arrow_back,
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  //  Navigator.pop(context);
+                                  Navigator.pop(context);
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
-                                  model.navigationService
-                                      .navigateTo('/dashboard');
+                                  // model.navigationService
+                                  //     .navigateTo('/dashboard');
                                 }))
                       ],
                     ),

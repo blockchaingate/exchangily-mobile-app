@@ -3,14 +3,17 @@ import 'dart:convert';
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
+import 'package:exchangilymobileapp/models/wallet/user_settings.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -179,6 +182,36 @@ class WalletService {
 
   addTxids(allTxids) {
     txids = [...txids, ...allTxids].toSet().toList();
+  }
+
+  /*----------------------------------------------------------------------
+                    Check Language
+----------------------------------------------------------------------*/
+  Future checkLanguage() async {
+    UserSettingsDatabaseService userSettingsDatabaseService =
+        locator<UserSettingsDatabaseService>();
+    //lang = storageService.language;
+
+    await userSettingsDatabaseService.getAll().then((res) {
+      if (res == null || res == []) {
+        log.e('language empty- setting english');
+        AppLocalizations.load(Locale('en', 'EN'));
+      } else {
+        String languageFromDb = res[0].language;
+        AppLocalizations.load(
+            Locale(languageFromDb, languageFromDb.toUpperCase()));
+        log.i('language $languageFromDb found');
+      }
+    }).catchError((err) => log.e('user setting db empty'));
+  }
+
+  updateUserSettingsDb(UserSettings us, isUserSettingsEmpty) async {
+    UserSettingsDatabaseService userSettingsDatabaseService =
+        locator<UserSettingsDatabaseService>();
+    isUserSettingsEmpty
+        ? await userSettingsDatabaseService.insert(us)
+        : await userSettingsDatabaseService.update(us);
+    await userSettingsDatabaseService.getAll();
   }
 
 /*----------------------------------------------------------------------

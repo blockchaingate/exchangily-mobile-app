@@ -72,7 +72,7 @@ class SettingsView extends StatelessWidget {
               //         ),
               //       )
               : SettingsContainer(model: model),
-          bottomNavigationBar: BottomNavBar(count: 4),
+          bottomNavigationBar: BottomNavBar(count: 3),
         ),
       ),
     );
@@ -327,6 +327,7 @@ class SettingsContainer extends StatelessWidget {
                       ),
                     ),
             ),
+
             // Show/Hide dialog warning checkbox
             // Card(
             //   elevation: 5,

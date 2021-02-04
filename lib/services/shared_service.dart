@@ -39,7 +39,6 @@ import '../shared/globals.dart' as globals;
 class SharedService {
   BuildContext context;
   final log = getLogger('SharedService');
-
   final storageService = locator<LocalStorageService>();
   NavigationService navigationService = locator<NavigationService>();
   DecimalConfigDatabaseService decimalConfigDatabaseService =
@@ -226,7 +225,7 @@ class SharedService {
 
   onBackButtonPressed(String route) async {
     log.w(
-        'back button pressed, is final route ${navigationService.isFinalRoute()}');
+        'back button pressed, is final route ${navigationService.isFinalRoute()} - $route');
 
     navigationService.navigateUsingpopAndPushedNamed(route);
   }

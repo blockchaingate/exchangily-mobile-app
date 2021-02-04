@@ -70,7 +70,7 @@ class TransactionHistoryView extends StatelessWidget {
                                                     .textTheme
                                                     .subtitle2),
                                             // icon
-                                            transaction.tag == 'deposit'
+                                            transaction.tag == model.deposit
                                                 ? Icon(
                                                     Icons.arrow_downward,
                                                     size: 24,
@@ -82,7 +82,8 @@ class TransactionHistoryView extends StatelessWidget {
                                                     color: colors.sellPrice,
                                                   ),
 
-                                            if (transaction.tag == 'withdraw')
+                                            if (transaction.tag ==
+                                                model.withdraw)
                                               Text(
                                                 AppLocalizations.of(context)
                                                     .withdraw,
@@ -91,7 +92,8 @@ class TransactionHistoryView extends StatelessWidget {
                                                     .subtitle2,
                                                 textAlign: TextAlign.center,
                                               )
-                                            else if (transaction.tag == 'send')
+                                            else if (transaction.tag ==
+                                                model.send)
                                               Text(
                                                 AppLocalizations.of(context)
                                                     .send,
@@ -101,7 +103,17 @@ class TransactionHistoryView extends StatelessWidget {
                                                 textAlign: TextAlign.center,
                                               )
                                             else if (transaction.tag ==
-                                                'deposit')
+                                                model.bindpay)
+                                              Text(
+                                                AppLocalizations.of(context)
+                                                    .bindpay,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .subtitle2,
+                                                textAlign: TextAlign.center,
+                                              )
+                                            else if (transaction.tag ==
+                                                model.deposit)
                                               Text(
                                                 AppLocalizations.of(context)
                                                     .deposit,
@@ -204,7 +216,9 @@ class TransactionHistoryView extends StatelessWidget {
                                                         FontWeight.w400),
                                           ),
                                           UIHelper.verticalSpaceSmall,
-                                          transaction.tag != 'send'
+                                          transaction.tag != model.send &&
+                                                  transaction.tag !=
+                                                      model.bindpay
                                               ? Container(
                                                   child: Column(
                                                     crossAxisAlignment:
@@ -231,7 +245,8 @@ class TransactionHistoryView extends StatelessWidget {
                                                                     .buyPrice))
                                                       else if (transaction
                                                               .status ==
-                                                          'Require redeposit')
+                                                          model
+                                                              .requireRedeposit)
                                                         SizedBox(
                                                           width: 80,
                                                           child: RichText(
