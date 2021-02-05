@@ -25,7 +25,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   TransactionHistoryViewmodel({this.tickerName});
   final log = getLogger('TransactionHistoryViewmodel');
   BuildContext context;
-  List<TransactionHistory> transactionHistory;
+  List<TransactionHistory> transactionHistory = [];
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   WalletDataBaseService walletDataBaseService =
@@ -39,6 +39,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
 
   @override
   Future futureToRun() async =>
+      // tickerName.isEmpty ?
       await transactionHistoryDatabaseService.getByName(tickerName);
 
 /*----------------------------------------------------------------------
@@ -48,17 +49,15 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   void onData(data) async {
     setBusy(true);
     log.i('tx length ${data.length}');
-    transactionHistory = data;
+    List<TransactionHistory> txHistory = [];
+    txHistory = data;
     await sharedService
         .getSinglePairDecimalConfig(tickerName)
         .then((decimalConfig) => decimalConfig = decimalConfig);
     setBusy(false);
     if (transactionHistory != null)
-      transactionHistory.forEach((t) async {
-        if (t.tag == 'bindpay') {
-          print('bindpay');
-        } else
-          log.i('no tranaction with binpday');
+      txHistory.forEach((t) async {
+        if (t.tag != 'bindpay') transactionHistory.add(t);
 
         if (t.status == 'pending' && t.tag != 'send' && t.tag != 'bindpay') {
           print('pending tx found ${t.toJson}');

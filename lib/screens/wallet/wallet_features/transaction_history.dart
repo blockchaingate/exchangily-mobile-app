@@ -4,7 +4,6 @@ import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/gestures.dart';
@@ -42,10 +41,15 @@ class TransactionHistoryView extends StatelessWidget {
                     ),
                   ),
                 )
-              : Container(
+              : 
+              model.transactionHistory.isEmpty ? Container(
+                margin:EdgeInsets.only(top:20),
+                child:Center(child: Icon(Icons.article,color:white))) :
+              Container(
                   padding: EdgeInsets.all(4.0),
                   child: Column(
                     children: <Widget>[
+                      
                       for (var transaction in model.transactionHistory.reversed)
                         model.isBusy
                             ? CircularProgressIndicator()
@@ -102,16 +106,16 @@ class TransactionHistoryView extends StatelessWidget {
                                                     .subtitle2,
                                                 textAlign: TextAlign.center,
                                               )
-                                            else if (transaction.tag ==
-                                                model.bindpay)
-                                              Text(
-                                                AppLocalizations.of(context)
-                                                    .bindpay,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subtitle2,
-                                                textAlign: TextAlign.center,
-                                              )
+                                            // else if (transaction.tag ==
+                                            //     model.bindpay)
+                                            //   Text(
+                                            //     AppLocalizations.of(context)
+                                            //         .bindpay,
+                                            //     style: Theme.of(context)
+                                            //         .textTheme
+                                            //         .subtitle2,
+                                            //     textAlign: TextAlign.center,
+                                            //   )
                                             else if (transaction.tag ==
                                                 model.deposit)
                                               Text(
@@ -216,9 +220,10 @@ class TransactionHistoryView extends StatelessWidget {
                                                         FontWeight.w400),
                                           ),
                                           UIHelper.verticalSpaceSmall,
-                                          transaction.tag != model.send &&
-                                                  transaction.tag !=
-                                                      model.bindpay
+                                          transaction.tag != model.send 
+                                          // &&
+                                          //         transaction.tag !=
+                                          //             model.bindpay
                                               ? Container(
                                                   child: Column(
                                                     crossAxisAlignment:

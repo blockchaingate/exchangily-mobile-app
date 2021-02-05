@@ -2,10 +2,14 @@ import 'dart:io';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
 class BindpayView extends StatelessWidget {
@@ -349,6 +353,24 @@ class BindpayView extends StatelessWidget {
                                   style: Theme.of(context).textTheme.headline4),
                             ),
                           ),
+                          IconButton(
+                            //  borderSide: BorderSide(color: primaryColor),
+                            padding: EdgeInsets.all(15),
+                            color: primaryColor,
+                            // textColor: Colors.white,
+                            onPressed: () async {
+                              await model.getBindpayTxs();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => TxHistoryView(
+                                          transactionHistory:
+                                              model.transactionHistory)));
+                            },
+                            icon: Icon(Icons.history, color: white, size: 24),
+                            // child: Text('History',
+                            //     style: Theme.of(context).textTheme.headline4),
+                          ),
                         ],
                       ),
                     ],
@@ -402,18 +424,167 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
                 child: model.exchangeBalances.isEmpty
                     ? Text(AppLocalizations.of(context).noCoinBalance)
                     : Text(
-                      //model.tickerName == ''
-                       // ? AppLocalizations.of(context).selectCoin
-                       // :
-                         model.tickerName),
+                        //model.tickerName == ''
+                        // ? AppLocalizations.of(context).selectCoin
+                        // :
+                        model.tickerName),
               ),
               Text(model.quantity == 0.0 ? '' : model.quantity.toString()),
-              model.exchangeBalances.isNotEmpty ? Icon(Icons.arrow_drop_down) : Container()
+              model.exchangeBalances.isNotEmpty
+                  ? Icon(Icons.arrow_drop_down)
+                  : Container()
             ]),
           ),
           onPressed: () {
-            if (model.exchangeBalances.isNotEmpty) model.coinListBottomSheet(context);
+            if (model.exchangeBalances.isNotEmpty)
+              model.coinListBottomSheet(context);
           }),
+    );
+  }
+}
+
+// transaction history
+
+class TxHistoryView extends StatelessWidget {
+  final transactionHistory;
+
+  TxHistoryView({this.transactionHistory});
+  @override
+  Widget build(BuildContext context) {
+    SharedService sharedService = locator<SharedService>();
+    /*----------------------------------------------------------------------
+                    Copy Order
+----------------------------------------------------------------------*/
+
+    copyAddress(String txId) {
+      Clipboard.setData(new ClipboardData(text: txId));
+      sharedService.alertDialog(AppLocalizations.of(context).transactionId,
+          AppLocalizations.of(context).copiedSuccessfully,
+          isWarning: false);
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(AppLocalizations.of(context).transactionHistory,
+            style: Theme.of(context).textTheme.headline3),
+        backgroundColor: secondaryColor,
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+            padding: EdgeInsets.all(4.0),
+            child: Column(
+              children: <Widget>[
+                for (var transaction in transactionHistory.reversed)
+                  Card(
+                    elevation: 4,
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                      color: walletCardColor,
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 45,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text('${transaction.tickerName}',
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2),
+                                // icon
+                                Icon(
+                                  Icons.arrow_upward,
+                                  size: 24,
+                                  color: sellPrice,
+                                ),
+
+                                Text(
+                                  AppLocalizations.of(context).bindpay,
+                                  style: Theme.of(context).textTheme.subtitle2,
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ),
+                          ),
+                          UIHelper.horizontalSpaceSmall,
+                          Container(
+                            // width: 200,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 5.0),
+                                  child: SizedBox(
+                                    width: 200,
+                                    child: Text('${transaction.txId}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: transaction.txId != '',
+                                  child: RichText(
+                                    text: TextSpan(
+                                        text: AppLocalizations.of(context)
+                                            .taphereToCopyTxId,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2
+                                            .copyWith(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                color: primaryColor),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            copyAddress(transaction.txId);
+                                          }),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: Text(
+                                    transaction.date.substring(0, 19),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(fontWeight: FontWeight.w400),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          UIHelper.horizontalSpaceSmall,
+                          UIHelper.horizontalSpaceSmall,
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(AppLocalizations.of(context).quantity,
+                                  style: Theme.of(context).textTheme.subtitle2),
+                              Text(
+                                transaction.quantity.toStringAsFixed(
+                                    // model
+                                    //   .decimalConfig
+                                    //   .quantityDecimal
+                                    2),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline5
+                                    .copyWith(fontWeight: FontWeight.w400),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
+            )),
+      ),
     );
   }
 }

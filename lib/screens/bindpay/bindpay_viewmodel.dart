@@ -8,6 +8,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -39,6 +40,8 @@ class BindpayViewmodel extends FutureViewModel {
   SharedService sharedService = locator<SharedService>();
   DialogService dialogService = locator<DialogService>();
   LocalStorageService storageService = locator<LocalStorageService>();
+  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+      locator<TransactionHistoryDatabaseService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
   WalletService walletService = locator<WalletService>();
@@ -54,6 +57,8 @@ class BindpayViewmodel extends FutureViewModel {
   var walletBalancesBody;
   bool isShowBottomSheet = false;
   List<ExchangeBalanceModel> exchangeBalances = [];
+
+  List<TransactionHistory> transactionHistory = [];
 
 /*----------------------------------------------------------------------
                     Default Future to Run
@@ -112,6 +117,21 @@ class BindpayViewmodel extends FutureViewModel {
     }
     setBusyForObject(tickerName, false);
     log.e('tickerName $tickerName');
+    getBindpayTxs();
+  }
+
+  // get all bindpay transactions
+
+  getBindpayTxs() async {
+    transactionHistory = [];
+    await transactionHistoryDatabaseService.getAll().then((res) {
+      res.forEach((tx) {
+        if (tx.tag == 'bindpay') {
+          transactionHistory.add(tx);
+        }
+      });
+      log.w('bindpay txs ${transactionHistory.length}');
+    });
   }
 
 /*----------------------------------------------------------------------
