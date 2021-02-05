@@ -115,7 +115,8 @@ class MarketPairsTabView extends StatelessWidget {
                                     alignment: Alignment.center,
                                     child: Text(tab,
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontSize:13,
+                                          fontWeight: FontWeight.w500,
                                         )),
                                   ))
                               ]),
