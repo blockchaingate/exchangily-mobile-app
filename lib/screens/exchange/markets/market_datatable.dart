@@ -64,12 +64,12 @@ class _MarketDataTableState extends State<MarketDataTable> {
           sortAscending: _sortAsc,
           sortColumnIndex: _sortColumnIndex,
           horizontalMargin: 5,
-          columnSpacing: 5,
+          columnSpacing: 40,
           columns: [
             DataColumn(
               label: Container(
                 padding: EdgeInsets.only(left: 6),
-                width: MediaQuery.of(context).size.width * 3 / 15,
+                // width: MediaQuery.of(context).size.width * 3 / 15,
                 child: Text(
                   AppLocalizations.of(context).ticker,
                   style: Theme.of(context).textTheme.headline6,
@@ -97,7 +97,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
             ),
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 2 / 11,
+                // width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context).price,
                   style: Theme.of(context).textTheme.headline6,
@@ -123,7 +123,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
             ),
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 2 / 11,
+                //   width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context).volume,
                   style: Theme.of(context).textTheme.headline6,
@@ -171,7 +171,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
             // ),
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 2 / 15,
+                //  width: MediaQuery.of(context).size.width * 2 / 15,
                 child: Text(
                   AppLocalizations.of(context).change,
                   style: Theme.of(context).textTheme.headline6,
