@@ -36,6 +36,8 @@ const String BindpayViewRoute = '/bindpay';
 const String InstructionsViewRoute = '/campaignInstructions';
 const String SettingViewRoute = '/settings';
 
+const String ShopRoute = '/shop';
+
 /*----------------------------------------------------------------------
                       Campaign Routes
 ----------------------------------------------------------------------*/

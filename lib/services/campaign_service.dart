@@ -22,6 +22,7 @@ class CampaignService {
 
   final String appName = 'eXchangily';
   final String appId = '5b6a8688905612106e976a69';
+  final String ecombarAppId = '5f80c3b09577e8dc2f8db596';
   final String campaignId = '1';
   Campaign campaign;
 
@@ -130,6 +131,30 @@ class CampaignService {
     Map<String, dynamic> body =
         user.toJson(); // Assign user data to Map type json variable
     body.addAll({'appId': appId}); // Add another key/pair value
+
+    try {
+      log.i('login url $loginUrl');
+      var response = await client.post(loginUrl, body: body);
+      var json = jsonDecode(response.body);
+      log.w('login $json');
+      return json;
+    }
+    // when i use then here and return the response variable it was showing output in console for service but not in the login state
+    catch (err) {
+      log.e(err);
+    }
+  }
+
+
+/*-------------------------------------------------------------------------------------
+                                Ecombar Login
+-------------------------------------------------------------------------------------*/
+
+  Future loginEcombar(User user) async {
+    // You cannot add key/pair directly to user object
+    Map<String, dynamic> body =
+        user.toJson(); // Assign user data to Map type json variable
+    body.addAll({'appId': ecombarAppId}); // Add another key/pair value
 
     try {
       log.i('login url $loginUrl');

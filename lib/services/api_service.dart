@@ -106,7 +106,7 @@ class ApiService {
         log.w('getAssetsBalance json $json');
         exchangeBalanceList = ExchangeBalanceModelList.fromJson(json);
       }
-    return exchangeBalanceList.balances;
+      return exchangeBalanceList.balances;
     } catch (e) {
       log.e('getAssetsBalance Failed to load the data from the API, $e');
       return null;
@@ -804,6 +804,185 @@ class ApiService {
       }
     } catch (e) {
       log.e('getEventSingle failed to load the data from the API $e');
+    }
+    return {};
+  }
+
+  /*----------------------------------------------------------------------
+                            Shop
+  ----------------------------------------------------------------------*/
+
+  Future getShopCollection() async {
+    log.i("Get collections Url: " +
+        configService.getKanbanBaseUrl() +
+        "product-collections");
+    try {
+      final res =
+          await http.get(baseBlockchainGateV2Url + "product-collections");
+      log.w('get collections ${jsonDecode(res.body)}');
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        log.e("error: " + res.body);
+        return "error";
+      }
+    } catch (e) {
+      log.e('Shop collections failed to load the data from the API $e');
+      return "error";
+    }
+  }
+
+  Future getCategory() async {
+    print("Calling api: getCategory");
+
+    try {
+      final res =
+          await http.get(baseBlockchainGateV2Url + "product-categories/admin");
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return ["error"];
+      }
+    } catch (e) {
+      log.e('getCategory failed to load the data from the API $e');
+    }
+    return {};
+  }
+
+  Future shopLogin(String email, String password) async {
+    print("Calling api: shopLogin");
+    try {
+      final res = await http.post(
+        baseBlockchainGateV2Url + "members/login",
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          "appId": "5f80c3b09577e8dc2f8db596",
+          "email": email,
+          "password": password
+        }),
+      );
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return ["error"];
+      }
+    } catch (e) {
+      log.e('ShopLogin failed to load the data from the API $e');
+    }
+    return {};
+  }
+
+  Future postCreateOrder(data, token) async {
+    print("Calling api: postCreateOrder");
+
+    try {
+      final res = await http.post(
+        baseBlockchainGateV2Url + "orders/create",
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-access-token': token
+        },
+        body: jsonEncode(data),
+      );
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return ["error"];
+      }
+    } catch (e) {
+      log.e('getEventSingle failed to load the data from the API $e');
+    }
+    return {};
+  }
+
+  Future getOrders(token) async {
+    print("Calling api: postCreateOrder");
+
+    try {
+      final res = await http.get(baseBlockchainGateV2Url + "orders",
+          headers: <String, String>{'x-access-token': token});
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return ["error"];
+      }
+    } catch (e) {
+      log.e('getEventSingle failed to load the data from the API $e');
+    }
+    return {};
+  }
+
+  Future getShopMe(token) async {
+    print("Calling api: getShopMe");
+
+    try {
+      final res = await http.get(baseBlockchainGateV2Url + "members/me",
+          headers: <String, String>{'x-access-token': token});
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return ["error"];
+      }
+    } catch (e) {
+      log.e('getShopMe failed to load the data from the API $e');
+    }
+    return {};
+  }
+
+  Future getShopAddress(addId, token) async {
+    print("Calling api: getShopAddress");
+
+    try {
+      final res = await http.get(baseBlockchainGateV2Url + "addresses/" + addId,
+          headers: <String, String>{'x-access-token': token});
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return ["error"];
+      }
+    } catch (e) {
+      log.e('getShopAddress failed to load the data from the API $e');
+    }
+    return {};
+  }
+
+  Future getSingleOrder(orderId, token) async {
+    print("Calling api: getSingleOrder");
+
+    try {
+      final res = await http.get(baseBlockchainGateV2Url + "orders/" + orderId,
+          headers: <String, String>{'x-access-token': token});
+      log.w(jsonDecode(res.body));
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        print("success");
+        return jsonDecode(res.body);
+      } else {
+        print("error");
+        return ["error"];
+      }
+    } catch (e) {
+      log.e('getSingleOrder failed to load the data from the API $e');
     }
     return {};
   }

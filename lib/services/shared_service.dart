@@ -16,6 +16,7 @@ import 'dart:ui';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
+import 'package:exchangilymobileapp/screens/shop/shopNav.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
@@ -444,6 +445,119 @@ class SharedService {
                       ),
                     )
                   : Container(),
+            ],
+          );
+        });
+  }
+
+
+
+  /*-------------------------------------------------------------------------------------
+                          Shop Alert dialog
+-------------------------------------------------------------------------------------*/
+  shopAlertDialog(String title, String message,
+      {bool isWarning = false,
+      String path,
+      dynamic arguments,
+      bool isCopyTxId = false,
+      bool isDismissible = true,
+      bool isUpdate = false,
+      bool isLater = false,
+      bool isWebsite = false,
+      String stringData}) async {
+    showDialog(
+        barrierDismissible: isDismissible,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            titlePadding: EdgeInsets.all(0),
+            actionsPadding: EdgeInsets.all(0),
+            elevation: 5,
+            backgroundColor: globals.walletCardColor.withOpacity(0.95),
+            title: title == ""
+                ? Container()
+                : Container(
+                    color: globals.primaryColor.withOpacity(0.1),
+                    padding: EdgeInsets.all(10),
+                    child: Text(title),
+                  ),
+            titleTextStyle: Theme.of(context).textTheme.headline5,
+            contentTextStyle: TextStyle(color: globals.grey),
+            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+            content: Visibility(
+              visible: message != '',
+              child: StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    UIHelper.verticalSpaceMedium,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 6.0),
+                      child: Text(
+                          // add here cupertino widget to check in these small widgets first then the entire app
+                          message,
+                          textAlign: TextAlign.left,
+                          style: Theme.of(context).textTheme.headline3),
+                    ),
+                    SizedBox(height: 20),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return ShopNav( pagenum:0);
+                        }));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Container(
+                          height: 30,
+                          width: 200,
+                          color: Colors.pinkAccent,
+                          child: Center(
+                              child: Text(
+                            'Continue Shopping',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return ShopNav( pagenum:2);
+                        }));
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Container(
+                          height: 30,
+                          width: 200,
+                          color: Colors.pinkAccent,
+                          child: Center(
+                              child: Text(
+                            'View Cart',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                );
+              }),
+            ),
+            // actions: [],
+            actions: <Widget>[
             ],
           );
         });

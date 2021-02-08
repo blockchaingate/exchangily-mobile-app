@@ -45,10 +45,10 @@ class BottomNavBar extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.wallet, size: iconSize),
-            title:Text( AppLocalizations.of(context).wallet)),
+            title: Text(AppLocalizations.of(context).wallet)),
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.coins, size: iconSize),
-            title:Text( AppLocalizations.of(context).trade)),
+            title: Text(AppLocalizations.of(context).trade)),
         BottomNavigationBarItem(
           icon: Image.asset(
             'assets/images/bindpay/bindpay.png',
@@ -56,20 +56,16 @@ class BottomNavBar extends StatelessWidget {
             height: 30,
             color: grey,
           ),
-          title:Text(AppLocalizations.of(context).bindpay) ,
+          title: Text(AppLocalizations.of(context).bindpay),
         ),
-        // BottomNavigationBarItem(
-        //     icon: Icon(Icons.branding_watermark, size: iconSize),
-        //     title: Padding(
-        //         padding: EdgeInsets.only(top: paddingValue),
-        //         child: Text('OTC'))),
         BottomNavigationBarItem(
             icon: Icon(Icons.event, size: iconSize),
             title:Text( AppLocalizations.of(context).event)),
-
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.cog, size: iconSize),
-            title:Text( AppLocalizations.of(context).settings)),
+            title: Text(AppLocalizations.of(context).settings)),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.shop, size: iconSize), title: Text("Shop")),
       ].toList(),
       onTap: (int idx) {
         String currentRouteName = sharedService.getCurrentRouteName(context);
@@ -98,8 +94,7 @@ class BottomNavBar extends StatelessWidget {
           //   break;
           case 3:
             if (currentRouteName != 'CampaignInstructionScreen')
-              navigationService
-                  .navigateUsingPushReplacementNamed(InstructionsViewRoute);
+            navigationService.navigateUsingPushReplacementNamed(InstructionsViewRoute);
             break;
           case 4:
             if (currentRouteName != 'SettingsScreen')
@@ -107,6 +102,12 @@ class BottomNavBar extends StatelessWidget {
                   .navigateUsingpopAndPushedNamed(SettingViewRoute);
             else if (ModalRoute.of(context).settings.name == 'SettingsScreen')
               return null;
+            break;
+
+            case 5:
+            // navigationService.navigateUsingPushReplacementNamed(ShopRoute);
+            navigationService
+                  .navigateUsingpopAndPushedNamed(ShopRoute);
             break;
         }
       },

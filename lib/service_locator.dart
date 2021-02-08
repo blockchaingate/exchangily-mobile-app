@@ -62,6 +62,19 @@ import 'package:exchangilymobileapp/screen_state/otc/otc_details_screen_state.da
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/screen_state/otc_campaign/team_reward_details_screen_state.dart';
 
+//Ecombar Shop
+import 'package:exchangilymobileapp/screen_state/shop/shopHome_state.dart';
+import 'package:exchangilymobileapp/screen_state/shop/cart_state.dart';
+import 'package:exchangilymobileapp/screen_state/shop/productDetail_state.dart';
+import 'package:exchangilymobileapp/screen_state/shop/productSelectOption_state.dart';
+import 'package:exchangilymobileapp/services/shop/cart_store_service.dart';
+import 'package:exchangilymobileapp/screen_state/shop/order_state.dart';
+import 'package:exchangilymobileapp/screen_state/shop/shopLogin_state.dart';
+import 'package:exchangilymobileapp/screen_state/shop/wishList_state.dart';
+import 'package:exchangilymobileapp/screen_state/shop/shopAccount_state.dart';
+import 'package:exchangilymobileapp/screen_state/shop/checkout_state.dart';
+import 'package:exchangilymobileapp/screen_state/shop/address_state.dart';
+
 GetIt locator = GetIt.instance;
 
 Future serviceLocator() async {
@@ -133,4 +146,17 @@ Future serviceLocator() async {
   locator.registerFactory(() => BindpayViewmodel());
   // Navigation
   locator.registerFactory(() => MainNavState());
+
+   // Shop
+  locator.registerFactory(() => ShopHomeState());
+  locator.registerFactory(() => ProductDetailState());
+  locator.registerFactory(() => ProductSelectOptionState());
+  locator.registerFactory(() => CartState());
+  locator.registerFactory(() => CartStoreService());
+  locator.registerFactory(() => OrderState());
+  locator.registerFactory(() => ShopLoginScreenState());
+  locator.registerFactory(() => WishListState());
+  locator.registerFactory(() => ShopAccountState());
+  locator.registerFactory(() => CheckoutState());
+  locator.registerFactory(() => AddressState());
 }

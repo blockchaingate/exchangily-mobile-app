@@ -30,6 +30,7 @@ import 'package:exchangilymobileapp/screens/otc_campaign/my_reward/my_reward_det
 import 'package:exchangilymobileapp/screens/otc_campaign/order_details_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/team/team_referral_view.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/team/team_rewards_details_view.dart';
+import 'package:exchangilymobileapp/screens/shop/checkout.dart';
 
 //import 'package:exchangilymobileapp/screens/settings/language.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
@@ -54,6 +55,8 @@ import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'screens/otc_campaign/token_details_screen.dart';
+import 'package:exchangilymobileapp/screens/shop/shopNav.dart';
+import 'package:exchangilymobileapp/screens/shop/shopLogin.dart';
 
 final log = getLogger('Routes');
 
@@ -210,8 +213,21 @@ class RouteGenerator {
 ----------------------------------------------------------------------*/
       case BindpayViewRoute:
         return MaterialPageRoute(
-          settings: RouteSettings(name:'BindpayView'),
-          builder: (_) => BindpayView());
+            settings: RouteSettings(name: 'BindpayView'),
+            builder: (_) => BindpayView());
+
+/*----------------------------------------------------------------------
+                      Shop Routes
+----------------------------------------------------------------------*/
+
+      case '/shop':
+        return MaterialPageRoute(builder: (_) => ShopNav());
+
+      case '/shopLogin':
+        return MaterialPageRoute(builder: (_) => ShopLoginScreen());
+        
+      case '/checkout':
+        return MaterialPageRoute(builder: (_) => Checkout(id: args));
 
 /*----------------------------------------------------------------------
                       Navigation Routes
