@@ -34,31 +34,33 @@ class CampaignInstructionScreen extends StatelessWidget {
         child: SafeArea(
           child: Scaffold(
               // appBar: AppBar(title: Text("instruction")),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: Container(
-                decoration: BoxDecoration(
-                    color: white.withOpacity(.90),
-                    borderRadius: BorderRadius.circular(25),
-                    border: Border.all(
-                        color: primaryColor.withAlpha(145), width: 1.5)),
-                constraints: BoxConstraints(minWidth: 250),
-                margin: EdgeInsets.symmetric(horizontal: 60, vertical: 80),
-                child: FlatButton(
-                  //   borderSide: BorderSide(color: primaryColor),
-                  // color: primaryColor,
-                  padding: EdgeInsets.all(0),
-                  child: Text(
-                      AppLocalizations.of(context).tapHereToEnterInCampaign,
-                      style: Theme.of(context).textTheme.headline5.copyWith(
-                          color: primaryColor, fontWeight: FontWeight.bold)),
-                  onPressed: () {
-                    model.busy
-                        ? print('loading...')
-                        : Navigator.pushNamed(context, '/campaignLogin');
-                  },
-                ),
-              ),
+
+              
+              // floatingActionButtonLocation:
+              //     FloatingActionButtonLocation.centerDocked,
+              // floatingActionButton: Container(
+              //   decoration: BoxDecoration(
+              //       color: white.withOpacity(.90),
+              //       borderRadius: BorderRadius.circular(25),
+              //       border: Border.all(
+              //           color: primaryColor.withAlpha(145), width: 1.5)),
+              //   constraints: BoxConstraints(minWidth: 250),
+              //   margin: EdgeInsets.symmetric(horizontal: 60, vertical: 80),
+              //   child: FlatButton(
+              //     //   borderSide: BorderSide(color: primaryColor),
+              //     // color: primaryColor,
+              //     padding: EdgeInsets.all(0),
+              //     child: Text(
+              //         AppLocalizations.of(context).tapHereToEnterInCampaign,
+              //         style: Theme.of(context).textTheme.headline5.copyWith(
+              //             color: primaryColor, fontWeight: FontWeight.bold)),
+              //     onPressed: () {
+              //       model.busy
+              //           ? print('loading...')
+              //           : Navigator.pushNamed(context, '/campaignLogin');
+              //     },
+              //   ),
+              // ),
               key: key,
               body: model.busy
                   ? LoadingGif()

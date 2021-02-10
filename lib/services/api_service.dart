@@ -38,6 +38,7 @@ class ApiService {
   final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
   // Please keep this for future test
+  final String kanbanBaseUrl = "http://192.168.0.64:4000";
   // final kanbanBaseUrl = environment['endpoints']['LocalKanban'];
   // final blockchaingateUrl = environment['endpoints']['blockchaingateLocal'];
 
@@ -725,7 +726,10 @@ class ApiService {
   Future getSliderImages() async {
     try {
       final res = await http
-          .get(configService.getKanbanBaseUrl() + "kanban/getadvconfig");
+          .get(
+            // configService.getKanbanBaseUrl() + "kanban/getadvconfig"
+            kanbanBaseUrl + "/kanban/getadvconfig"
+            );
       log.w(' get slider images ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         var json = jsonDecode(res.body) as List;
