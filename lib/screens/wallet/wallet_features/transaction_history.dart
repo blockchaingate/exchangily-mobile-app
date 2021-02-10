@@ -44,7 +44,7 @@ class TransactionHistoryView extends StatelessWidget {
               : 
               model.transactionHistory.isEmpty ? Container(
                 margin:EdgeInsets.only(top:20),
-                child:Center(child: Icon(Icons.article,color:white))) :
+                child:Center(child: Icon(Icons.insert_drive_file,color:white))) :
               Container(
                   padding: EdgeInsets.all(4.0),
                   child: Column(

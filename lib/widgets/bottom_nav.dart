@@ -45,10 +45,10 @@ class BottomNavBar extends StatelessWidget {
       items: [
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.wallet, size: iconSize),
-            label: AppLocalizations.of(context).wallet),
+            title: Text(AppLocalizations.of(context).wallet)),
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.coins, size: iconSize),
-            label: AppLocalizations.of(context).trade),
+            title: Text(AppLocalizations.of(context).trade)),
         BottomNavigationBarItem(
           icon: Image.asset(
             'assets/images/bindpay/bindpay.png',
@@ -56,20 +56,20 @@ class BottomNavBar extends StatelessWidget {
             height: 30,
             color: grey,
           ),
-          label: AppLocalizations.of(context).bindpay,
+          title: Text(AppLocalizations.of(context).bindpay),
         ),
         // BottomNavigationBarItem(
         //     icon: Icon(Icons.branding_watermark, size: iconSize),
         //     title: Padding(
         //         padding: EdgeInsets.only(top: paddingValue),
         //         child: Text('OTC'))),
-        // BottomNavigationBarItem(
-        //     icon: Icon(Icons.event, size: iconSize),
-        //     title:Text( AppLocalizations.of(context).event)),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.event, size: iconSize),
+            title: Text(AppLocalizations.of(context).event)),
 
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.cog, size: iconSize),
-            label: AppLocalizations.of(context).settings),
+            title: Text(AppLocalizations.of(context).settings)),
       ].toList(),
       onTap: (int idx) {
         String currentRouteName = sharedService.getCurrentRouteName(context);
@@ -96,11 +96,11 @@ class BottomNavBar extends StatelessWidget {
           // if (currentRouteName != 'OtcScreen')
           //   Navigator.pushNamed(context, '/otc');
           //   break;
-          // case 3:
-          //   if (currentRouteName != 'CampaignInstructionScreen')
-          //     navigationService
-          //         .navigateUsingPushReplacementNamed(InstructionsViewRoute);
-          //   break;
+          case 3:
+            if (currentRouteName != 'CampaignInstructionScreen')
+              navigationService
+                  .navigateUsingPushReplacementNamed(InstructionsViewRoute);
+            break;
           case 3:
             if (currentRouteName != 'SettingsScreen')
               navigationService
