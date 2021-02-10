@@ -43,7 +43,7 @@ const String GetAppVersionRoute = 'getappversion';
 const String GetTokenListApiRoute = 'exchangily/getTokenList';
 const String GetDecimalPairConfigApiRoute = 'kanban/getpairconfig';
 //final String pairDecimalConfigRoute = 'kanban/getpairconfig';
-
+const String GetWithDrawDepositTxHistoryApiRoute = '/getTransactionsHistoryEvents';
 
 const String RedepositCheckStatusApiRoute = 'checkstatus/';
 // Add wallet Hex Fab address or kanban address in the end
