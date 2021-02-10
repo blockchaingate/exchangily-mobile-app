@@ -230,7 +230,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                           model.campaignInfoList[
                                                                       index]
                                                                   [model.lang]
-                                                              ["title"],
+                                                              ["title"]?? '',
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
@@ -256,7 +256,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                                       [
                                                                       model
                                                                           .lang]
-                                                                  ["endDate"],
+                                                                  ["endDate"]?? '',
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                           )),
@@ -267,7 +267,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                           model.campaignInfoList[
                                                                       index]
                                                                   [model.lang]
-                                                              ["desc"],
+                                                              ["desc"]?? '',
                                                           maxLines: 4,
                                                           overflow: TextOverflow
                                                               .ellipsis,

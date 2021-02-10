@@ -359,7 +359,7 @@ class SettingsViewmodel extends BaseViewModel {
         key == 'zh') {
       log.e('in zh');
       AppLocalizations.load(Locale('zh', 'ZH'));
-      //    storageService.language = 'zh';
+      storageService.language = 'zh';
 
       UserSettings us = new UserSettings(id: 1, language: 'zh', theme: '');
       await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
@@ -368,7 +368,7 @@ class SettingsViewmodel extends BaseViewModel {
         key == 'en') {
       log.e('in en');
       AppLocalizations.load(Locale('en', 'EN'));
-      // storageService.language = 'en';
+      storageService.language = 'en';
       UserSettings us = new UserSettings(id: 1, language: 'en', theme: '');
       await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
     }

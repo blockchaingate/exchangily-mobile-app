@@ -101,7 +101,7 @@ class BottomNavBar extends StatelessWidget {
               navigationService
                   .navigateUsingPushReplacementNamed(InstructionsViewRoute);
             break;
-          case 3:
+          case 4:
             if (currentRouteName != 'SettingsScreen')
               navigationService
                   .navigateUsingpopAndPushedNamed(SettingViewRoute);
