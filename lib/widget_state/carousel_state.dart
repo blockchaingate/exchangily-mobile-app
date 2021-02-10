@@ -15,6 +15,8 @@ class CarouselWidgetState extends BaseState {
   // Init state
   initState() async {
     setBusy(true);
+    // lang = storageService.language;
+
     lang = storageService.language;
     setBusy(false);
   }
