@@ -32,14 +32,13 @@ class Redeposit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder.reactive(
+    return ViewModelBuilder<RedepositViewModel>.reactive(
       onModelReady: (model) {
         model.context = context;
         model.walletInfo = walletInfo;
       },
       viewModelBuilder: () => RedepositViewModel(),
-      builder: (BuildContext context, RedepositViewModel model, child) =>
-          Scaffold(
+      builder: (BuildContext context, model, child) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(
@@ -53,8 +52,8 @@ class Redeposit extends StatelessWidget {
           padding: EdgeInsets.all(20.0),
           child: ListView(
             children: <Widget>[
-              !model.dataReady
-                  ? Container()
+              model.isBusy
+                  ? model.sharedService.loadingIndicator()
                   : Container(
                       color: grey.withOpacity(.2),
                       child: Column(

@@ -24,8 +24,8 @@ class _MarketDataTableState extends State<MarketDataTable> {
 
   bool _sortNameAsc = true;
   bool _sortPriceAsc = true;
-  bool _sortHighAsc = true;
-  bool _sortLowAsc = true;
+  bool _sortVolAsc = true;
+  // bool _sortLowAsc = true;
   bool _sortChangeAsc = true;
 
   bool _sortAsc = true;
@@ -60,15 +60,16 @@ class _MarketDataTableState extends State<MarketDataTable> {
       //Use the theme to change data table sort icon color
       data: ThemeData.dark(),
       child: DataTable(
-          dataRowHeight: 55,
+          dataRowHeight: 50,
           sortAscending: _sortAsc,
           sortColumnIndex: _sortColumnIndex,
           horizontalMargin: 5,
-          columnSpacing: 5,
+          columnSpacing: 40,
           columns: [
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 3 / 15,
+                padding: EdgeInsets.only(left: 6),
+                // width: MediaQuery.of(context).size.width * 3 / 15,
                 child: Text(
                   AppLocalizations.of(context).ticker,
                   style: Theme.of(context).textTheme.headline6,
@@ -96,7 +97,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
             ),
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 2 / 11,
+                // width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
                   AppLocalizations.of(context).price,
                   style: Theme.of(context).textTheme.headline6,
@@ -122,55 +123,55 @@ class _MarketDataTableState extends State<MarketDataTable> {
             ),
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 2 / 11,
+                //   width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
-                  AppLocalizations.of(context).high,
+                  AppLocalizations.of(context).volume,
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
               onSort: (columnIndex, sortAscending) {
                 setState(() {
                   if (columnIndex == _sortColumnIndex) {
-                    _sortAsc = _sortHighAsc = sortAscending;
+                    _sortAsc = _sortVolAsc = sortAscending;
                   } else {
                     _sortColumnIndex = columnIndex;
-                    _sortAsc = _sortHighAsc;
+                    _sortAsc = _sortVolAsc;
                   }
                   if (sortAscending) {
-                    pairList.sort((a, b) => a.high.compareTo(b.high));
+                    pairList.sort((a, b) => a.volume.compareTo(b.volume));
                   } else {
-                    pairList.sort((a, b) => b.high.compareTo(a.high));
+                    pairList.sort((a, b) => b.volume.compareTo(a.volume));
                   }
                 });
               },
             ),
+            // DataColumn(
+            //   label: Container(
+            //     width: MediaQuery.of(context).size.width * 2 / 11,
+            //     child: Text(
+            //       AppLocalizations.of(context).low,
+            //       style: Theme.of(context).textTheme.headline6,
+            //     ),
+            //   ),
+            //   onSort: (columnIndex, sortAscending) {
+            //     setState(() {
+            //       if (columnIndex == _sortColumnIndex) {
+            //         _sortAsc = _sortLowAsc = sortAscending;
+            //       } else {
+            //         _sortColumnIndex = columnIndex;
+            //         _sortAsc = _sortLowAsc;
+            //       }
+            //       if (sortAscending) {
+            //         pairList.sort((a, b) => a.low.compareTo(b.low));
+            //       } else {
+            //         pairList.sort((a, b) => b.low.compareTo(a.low));
+            //       }
+            //     });
+            //   },
+            // ),
             DataColumn(
               label: Container(
-                width: MediaQuery.of(context).size.width * 2 / 11,
-                child: Text(
-                  AppLocalizations.of(context).low,
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-              ),
-              onSort: (columnIndex, sortAscending) {
-                setState(() {
-                  if (columnIndex == _sortColumnIndex) {
-                    _sortAsc = _sortLowAsc = sortAscending;
-                  } else {
-                    _sortColumnIndex = columnIndex;
-                    _sortAsc = _sortLowAsc;
-                  }
-                  if (sortAscending) {
-                    pairList.sort((a, b) => a.low.compareTo(b.low));
-                  } else {
-                    pairList.sort((a, b) => b.low.compareTo(a.low));
-                  }
-                });
-              },
-            ),
-            DataColumn(
-              label: Container(
-                width: MediaQuery.of(context).size.width * 2 / 15,
+                //  width: MediaQuery.of(context).size.width * 2 / 15,
                 child: Text(
                   AppLocalizations.of(context).change,
                   style: Theme.of(context).textTheme.headline6,
@@ -198,32 +199,16 @@ class _MarketDataTableState extends State<MarketDataTable> {
                     cells: <DataCell>[
                       DataCell(
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 6),
+                          padding: EdgeInsets.only(left: 6),
                           // width: MediaQuery.of(context).size.width * 3 / 11,
                           // color: Colors.green,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  itemRow.symbol.split('/')[0],
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline3
-                                      .copyWith(
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  AppLocalizations.of(context).vol +
-                                      ': ${itemRow.volume.toStringAsFixed(2)}',
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                ),
-                              )
-                            ],
+                          child: Text(
+                            itemRow.symbol.split('/')[0],
+                            style:
+                                Theme.of(context).textTheme.headline5.copyWith(
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
                         onTap: () {
@@ -235,10 +220,10 @@ class _MarketDataTableState extends State<MarketDataTable> {
                           child: Text(itemRow.price.toStringAsFixed(6),
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline6
+                                  .headline5
                                   .copyWith(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16),
+                                    fontWeight: FontWeight.w500,
+                                  ),
                               textAlign: TextAlign.start),
                         ),
                         onTap: () {
@@ -246,36 +231,51 @@ class _MarketDataTableState extends State<MarketDataTable> {
                         },
                       ),
                       DataCell(
-                        Text(
-                          itemRow.high.toString(),
-                          style: Theme.of(context).textTheme.headline6.copyWith(
-                              fontWeight: FontWeight.w400, fontSize: 16),
+                        Container(
+                          child: Text(itemRow.volume.toStringAsFixed(2),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                              textAlign: TextAlign.start),
                         ),
                         onTap: () {
                           onRowTap(itemRow);
                         },
                       ),
-                      DataCell(
-                        Text(
-                          itemRow.low.toString(),
-                          style: Theme.of(context).textTheme.headline6.copyWith(
-                              fontWeight: FontWeight.w400, fontSize: 16),
-                        ),
-                        onTap: () {
-                          onRowTap(itemRow);
-                        },
-                      ),
+                      // DataCell(
+                      //   Text(
+                      //     itemRow.high.toString(),
+                      //     style: Theme.of(context).textTheme.headline6.copyWith(
+                      //         fontWeight: FontWeight.w400, fontSize: 16),
+                      //   ),
+                      //   onTap: () {
+                      //     onRowTap(itemRow);
+                      //   },
+                      // ),
+                      // DataCell(
+                      //   Text(
+                      //     itemRow.low.toString(),
+                      //     style: Theme.of(context).textTheme.headline6.copyWith(
+                      //         fontWeight: FontWeight.w400, fontSize: 16),
+                      //   ),
+                      //   onTap: () {
+                      //     onRowTap(itemRow);
+                      //   },
+                      // ),
                       DataCell(
                         Text(
                           itemRow.change >= 0
                               ? "+" + itemRow.change.toStringAsFixed(2) + '%'
                               : itemRow.change.toStringAsFixed(2) + '%',
-                          style: Theme.of(context).textTheme.headline6.copyWith(
-                              color: Color(itemRow.change >= 0
-                                  ? 0XFF0da88b
-                                  : 0XFFe2103c),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16),
+                          style: Theme.of(context).textTheme.headline5.copyWith(
+                                color: Color(itemRow.change >= 0
+                                    ? 0XFF0da88b
+                                    : 0XFFe2103c),
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                         onTap: () {
                           onRowTap(itemRow);

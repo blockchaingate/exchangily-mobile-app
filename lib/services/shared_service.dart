@@ -39,7 +39,6 @@ import '../shared/globals.dart' as globals;
 class SharedService {
   BuildContext context;
   final log = getLogger('SharedService');
-
   final storageService = locator<LocalStorageService>();
   NavigationService navigationService = locator<NavigationService>();
   DecimalConfigDatabaseService decimalConfigDatabaseService =
@@ -55,38 +54,47 @@ class SharedService {
       {String base = ''}) async {
     PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
     log.i('tickername $pairName -- endswith usdt ${pairName.endsWith('USDT')}');
-    // if (pairName.endsWith("USDT")) {
-    // } else if (pairName.endsWith("DUSD")) {
-    // } else if (pairName.endsWith("BTC")) {
-    // } else if (pairName.endsWith("ETH")) {
-    // } else if (pairName.endsWith("EXG")) {}
-    if ((!pairName.endsWith('USDT') &&
-        !pairName.endsWith('BTC') &&
-        !pairName.endsWith('ETH') &&
-        !pairName.endsWith("EXG"))) base = 'USDT';
-    await getAllPairDecimalConfig().then((res) {
-      if (res != null) {
-        print(
-            'returning result $singlePairDecimalConfig -- name $pairName -- base $base');
-        singlePairDecimalConfig =
-            res.firstWhere((element) => element.name == pairName + base);
 
-        // if firstWhere fails
-        if (singlePairDecimalConfig != null) {
-          log.w(
-              'single pair decimal config for $pairName result ${singlePairDecimalConfig.toJson()}');
-          return singlePairDecimalConfig;
-        } else {
-          log.i('single pair config using for loop');
-          for (PairDecimalConfig pair in res) {
-            if (pair.name == pairName) {
-              singlePairDecimalConfig = PairDecimalConfig(
-                  priceDecimal: pair.priceDecimal, qtyDecimal: pair.qtyDecimal);
+    // if (pairName == 'BTC' || pairName == 'ETH' || pairName == 'EXG')
+    //   base = 'USDT';
+    // else
+    if ((pairName == 'BTC' || pairName == 'ETH' || pairName == 'EXG') ||
+        !pairName.endsWith('USDT') &&
+            !pairName.endsWith('DUSD') &&
+            !pairName.endsWith('BTC') &&
+            !pairName.endsWith('ETH') &&
+            !pairName.endsWith("EXG")) base = 'USDT';
+
+    if (pairName == 'USDT' || pairName == 'DUSD') {
+      return singlePairDecimalConfig =
+          new PairDecimalConfig(name: pairName, priceDecimal: 2, qtyDecimal: 2);
+    } else {
+      log.i('base $base');
+      await getAllPairDecimalConfig().then((res) {
+        if (res != null) {
+          singlePairDecimalConfig =
+              res.firstWhere((element) => element.name == pairName + base);
+          log.i(
+              'returning result $singlePairDecimalConfig -- name $pairName -- base $base');
+
+          // if firstWhere fails
+          if (singlePairDecimalConfig != null) {
+            log.w(
+                'single pair decimal config for $pairName result ${singlePairDecimalConfig.toJson()}');
+            return singlePairDecimalConfig;
+          } else {
+            log.i('single pair config using for loop');
+            for (PairDecimalConfig pair in res) {
+              if (pair.name == pairName) {
+                singlePairDecimalConfig = PairDecimalConfig(
+                    priceDecimal: pair.priceDecimal,
+                    qtyDecimal: pair.qtyDecimal);
+              }
             }
           }
         }
-      }
-    });
+      }).catchError((err) => log.e('getSinglePairDecimalConfig CATCH $err'));
+    }
     return singlePairDecimalConfig;
   }
 
@@ -217,7 +225,7 @@ class SharedService {
 
   onBackButtonPressed(String route) async {
     log.w(
-        'back button pressed, is final route ${navigationService.isFinalRoute()}');
+        'back button pressed, is final route ${navigationService.isFinalRoute()} - $route');
 
     navigationService.navigateUsingpopAndPushedNamed(route);
   }

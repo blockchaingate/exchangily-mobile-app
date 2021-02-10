@@ -82,19 +82,7 @@ class TokenListDatabaseService {
   Future insert(Token passedToken) async {
     await initDb();
     int id;
-    // bool isDuplicate = false;
-    // await getAll().then((tokenList) {
-    //   print(tokenList.length);
-    //   tokenList.forEach((token) {
-    //     if (token.tickerName == passedToken.tickerName) {
-    //       isDuplicate = true;
-    //       log.e(
-    //           '${token.tickerName} == ${passedToken.tickerName} coin already present in the token db');
-    //       return;
-    //     }
-    //   });
-    // });
-    // if (!isDuplicate) {
+
     final Database db = await _database;
     id = await db
         .insert(tableName, passedToken.toJson(),

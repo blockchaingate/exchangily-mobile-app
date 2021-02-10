@@ -20,13 +20,14 @@ import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;
 import '../../base_screen.dart';
 
-class ChooseWalletLanguageScreen extends StatelessWidget {
+class ChooseWalletLanguageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var orientation = MediaQuery.of(context).orientation;
     return BaseScreen<ChooseWalletLanguageScreenState>(
       onModelReady: (model) async {
         model.context = context;
+        await model.walletService.checkLanguage();
         //  await model.checkLanguage();
       },
       builder: (context, model, child) => Container(

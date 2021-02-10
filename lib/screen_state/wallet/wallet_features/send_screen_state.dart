@@ -224,7 +224,7 @@ class SendScreenState extends BaseState {
               amount: 0.0,
               date: date.toString(),
               txId: txHash,
-              status: 'pending',
+              status: '',
               quantity: amount,
               tag: 'send');
           walletService.insertTransactionInDatabase(transactionHistory);

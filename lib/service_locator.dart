@@ -42,6 +42,7 @@ import 'package:exchangilymobileapp/services/db/campaign_user_database_service.d
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
+import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -72,6 +73,7 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => WalletDataBaseService());
   locator.registerLazySingleton(() => VaultService());
   locator.registerLazySingleton(() => TokenListDatabaseService());
+  locator.registerLazySingleton(() => UserSettingsDatabaseService());
   // Shared
   locator.registerLazySingleton(() => ApiService());
   locator.registerLazySingleton(() => SharedService());
@@ -103,7 +105,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => SendScreenState());
   locator.registerFactory(() => SettingsViewmodel());
   //locator.registerFactory(() => LanguageScreenState());
-  locator.registerFactory(() => WalletSetupScreenState());
+  locator.registerFactory(() => WalletSetupViewmodel());
   locator.registerFactory(() => ChooseWalletLanguageScreenState());
   locator.registerFactory(() => MoveToExchangeViewModel());
   locator.registerFactory(() => MoveToWalletViewmodel());

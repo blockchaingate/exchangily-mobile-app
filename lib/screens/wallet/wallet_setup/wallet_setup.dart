@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
 
 class WalletSetupScreen extends StatelessWidget {
@@ -26,8 +27,10 @@ class WalletSetupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen<WalletSetupScreenState>(
+    return ViewModelBuilder<WalletSetupViewmodel>.reactive(
+      viewModelBuilder: () => WalletSetupViewmodel(),
       onModelReady: (model) async {
+        await model.walletService.checkLanguage();
         model.context = context;
         model.sharedService.context = context;
         model.dataBaseService.initDb();
@@ -70,7 +73,7 @@ class WalletSetupScreen extends StatelessWidget {
                 UIHelper.verticalSpaceLarge,
 
                 // Button Container
-                model.state == ViewState.Busy
+                model.isBusy
                     ? Shimmer.fromColors(
                         baseColor: globals.primaryColor,
                         highlightColor: globals.white,

@@ -70,6 +70,9 @@ class RouteGenerator {
 /*----------------------------------------------------------------------
                           Wallet Setup
 ----------------------------------------------------------------------*/
+
+      case ChooseWalletLanguageViewRoute:
+        return MaterialPageRoute(builder: (_) => ChooseWalletLanguageView());
       case WalletSetupViewRoute:
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
 
@@ -210,8 +213,8 @@ class RouteGenerator {
 ----------------------------------------------------------------------*/
       case BindpayViewRoute:
         return MaterialPageRoute(
-          settings: RouteSettings(name:'BindpayView'),
-          builder: (_) => BindpayView());
+            settings: RouteSettings(name: 'BindpayView'),
+            builder: (_) => BindpayView());
 
 /*----------------------------------------------------------------------
                       Navigation Routes

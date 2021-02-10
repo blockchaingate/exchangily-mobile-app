@@ -92,23 +92,21 @@ class MarketPairsTabView extends StatelessWidget {
                       SliverPersistentHeader(
                         delegate: _SliverAppBarDelegate(
                           TabBar(
-                              indicatorPadding: EdgeInsets.zero,
-                              labelPadding: EdgeInsets.zero,
                               unselectedLabelColor: Color(0xffaaaaaa),
                               unselectedLabelStyle: TextStyle(fontSize: 14),
                               indicatorSize: TabBarIndicatorSize.tab,
                               indicator: BoxDecoration(
                                   gradient: LinearGradient(
                                       colors: [
-                                        globals.primaryColor,
+                                        globals.walletCardColor,
                                         globals.walletCardColor,
                                       ],
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter),
                                   shape: BoxShape.rectangle,
                                   borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(10),
-                                      topRight: Radius.circular(10)),
+                                      topLeft: Radius.circular(5),
+                                      topRight: Radius.circular(5)),
                                   color: Colors.redAccent),
                               tabs: [
                                 for (var tab in tabNames)
@@ -117,7 +115,8 @@ class MarketPairsTabView extends StatelessWidget {
                                     alignment: Alignment.center,
                                     child: Text(tab,
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
                                         )),
                                   ))
                               ]),

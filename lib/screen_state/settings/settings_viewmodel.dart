@@ -12,8 +12,10 @@
 */
 
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
+import 'package:exchangilymobileapp/models/wallet/user_settings.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
+import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
@@ -50,7 +52,10 @@ class SettingsViewmodel extends BaseViewModel {
   SharedService sharedService = locator<SharedService>();
   final storageService = locator<LocalStorageService>();
   final NavigationService navigationService = locator<NavigationService>();
-  Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
+  UserSettingsDatabaseService userSettingsDatabaseService =
+      locator<UserSettingsDatabaseService>();
+
+  final Map<String, String> languages = {'en': 'English', 'zh': '简体中文'};
   String selectedLanguage;
   // bool result = false;
   String errorMessage = '';
@@ -71,6 +76,8 @@ class SettingsViewmodel extends BaseViewModel {
   ConfigService configService = locator<ConfigService>();
   bool isHKServer;
   Map<String, String> versionInfo;
+  UserSettings userSettings = new UserSettings();
+  bool isUserSettingsEmpty = false;
 
   init() async {
     setBusy(true);
@@ -80,12 +87,64 @@ class SettingsViewmodel extends BaseViewModel {
         : isShowCaseOnce = storageService.isShowCaseView;
 
     getAppVersion();
-    await selectDefaultWalletLanguage();
     baseServerUrl = configService.getKanbanBaseUrl();
-    // if (selectedLanguage == '')
-    //   selectedLanguage = getSetLocalStorageDataByKey('lang');
+    await setLanguageFromDb();
+    await selectDefaultWalletLanguage();
     setBusy(false);
   }
+
+/*-------------------------------------------------------------------------------------
+                      setLanguageFromDb
+-------------------------------------------------------------------------------------*/
+  setLanguageFromDb() async {
+    setBusy(true);
+    await userSettingsDatabaseService.getById(1).then((res) {
+      if (res != null) {
+        userSettings.language = res.language;
+        log.i('user settings db not null');
+      } else {
+        userSettings.language = 'en';
+        isUserSettingsEmpty = true;
+        log.i(
+            'user settings db null-- isUserSettingsEmpty $isUserSettingsEmpty');
+      }
+    }).catchError((err) => log.e('user settings db empty ${err}'));
+    setBusy(false);
+  }
+
+/*-------------------------------------------------------------------------------------
+                      selectDefaultWalletLanguage
+-------------------------------------------------------------------------------------*/
+
+  Future<String> selectDefaultWalletLanguage() async {
+    setBusy(true);
+    if (selectedLanguage == '' || selectedLanguage == null) {
+      String key = userSettings.language ?? 'en';
+      // await getSetLocalStorageDataByKey('lang');
+      // log.w('key in init $key');
+
+      // /// Created Map of languages because in dropdown if i want to show
+      // /// first default value as whichever language is currently the app
+      // /// is in then default value that i want to show should match with one
+      // /// of the dropdownMenuItem's value
+
+      if (languages.containsKey(key)) {
+        selectedLanguage = languages[key];
+      }
+      // else if (languages.containsValue(key)) {
+      //   String keyIsValue = key;
+
+      //   selectedLanguage =
+      //       languages.keys.firstWhere((k) => languages[k] == keyIsValue);
+      // }
+      log.i('selectedLanguage $selectedLanguage');
+    }
+    setBusy(false);
+    return selectedLanguage;
+  }
+/*-------------------------------------------------------------------------------------
+                    convertDecimalToHex
+-------------------------------------------------------------------------------------*/
 
 // Not in use
   convertDecimalToHex() async {
@@ -151,37 +210,6 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
-/*-------------------------------------------------------------------------------------
-                      Get coin currency Usd Prices
--------------------------------------------------------------------------------------*/
-
-  Future<String> selectDefaultWalletLanguage() async {
-    setBusy(true);
-    if (selectedLanguage == '' || selectedLanguage == null) {
-      String key = storageService.language;
-      // await getSetLocalStorageDataByKey('lang');
-      // log.w('key in init $key');
-
-      // /// Created Map of languages because in dropdown if i want to show
-      // /// first default value as whichever language is currently the app
-      // /// is in then default value that i want to show should match with one
-      // /// of the dropdownMenuItem's value
-
-      if (languages.containsKey(key)) {
-        selectedLanguage = languages[key];
-      }
-      // else if (languages.containsValue(key)) {
-      //   String keyIsValue = key;
-
-      //   selectedLanguage =
-      //       languages.keys.firstWhere((k) => languages[k] == keyIsValue);
-      // }
-      print('selectedLanguage $selectedLanguage');
-    }
-    setBusy(false);
-    return selectedLanguage;
-  }
-
   void showMnemonic() async {
     await displayMnemonic();
     isVisible = !isVisible;
@@ -217,6 +245,10 @@ class SettingsViewmodel extends BaseViewModel {
         await tokenListDatabaseService
             .deleteDb()
             .whenComplete(() => log.e('Token list database deleted!!'));
+
+        await userSettingsDatabaseService
+            .deleteDb()
+            .whenComplete(() => log.e('User settings database deleted!!'));
 
         storageService.walletBalancesBody = '';
 
@@ -301,23 +333,6 @@ class SettingsViewmodel extends BaseViewModel {
   }
 
 /*-------------------------------------------------------------------------------------
-                      Get stored data by keys
--------------------------------------------------------------------------------------*/
-  // getSetLocalStorageDataByKey(String key,
-  //     {bool isSetData = false, dynamic value}) async {
-  //   print('key $key -- isData $isSetData -- value $value');
-
-  //   setBusy(true);
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //   if (isSetData) prefs.setBool(key, value);
-  //   log.e('key-- $key-- value ${prefs.get(key)}');
-
-  //   setBusy(false);
-  //   return prefs.get(key);
-  // }
-
-/*-------------------------------------------------------------------------------------
                       Change wallet language
 -------------------------------------------------------------------------------------*/
   changeWalletLanguage(updatedLanguageValue) async {
@@ -336,7 +351,7 @@ class SettingsViewmodel extends BaseViewModel {
           .firstWhere((k) => languages[k] == updatedLanguageValue);
       log.i('key in changeWalletLanguage $key');
     }
-
+// selected language should be English,Chinese or other language selected not its lang code
     selectedLanguage = key.isEmpty ? updatedLanguageValue : languages[key];
     log.w('selectedLanguage $selectedLanguage');
     if (updatedLanguageValue == 'Chinese' ||
@@ -344,13 +359,18 @@ class SettingsViewmodel extends BaseViewModel {
         key == 'zh') {
       log.e('in zh');
       AppLocalizations.load(Locale('zh', 'ZH'));
-      storageService.language = 'zh';
+      //    storageService.language = 'zh';
+
+      UserSettings us = new UserSettings(id: 1, language: 'zh', theme: '');
+      await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
     } else if (updatedLanguageValue == 'English' ||
         updatedLanguageValue == 'en' ||
         key == 'en') {
       log.e('in en');
       AppLocalizations.load(Locale('en', 'EN'));
-      storageService.language = 'en';
+      // storageService.language = 'en';
+      UserSettings us = new UserSettings(id: 1, language: 'en', theme: '');
+      await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
     }
 
     setBusy(false);

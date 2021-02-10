@@ -4,6 +4,7 @@ const String HomeViewRoute = '/home';
                           Wallet Routes
 ----------------------------------------------------------------------*/
 // Setup
+const String ChooseWalletLanguageViewRoute = '/chooseWalletLanguage';
 const String WalletSetupViewRoute = '/walletSetup';
 const String ImportWalletViewRoute = '/importWallet';
 const String ConfirmMnemonicViewRoute = '/confirmMnemonic';
