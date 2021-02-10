@@ -17,9 +17,7 @@ import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
-import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
-import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/network_status.dart';
@@ -753,12 +751,13 @@ class TotalBalanceWidget extends StatelessWidget {
                                       onTap: () {
                                         if (!model.hasApiError)
                                           Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      AnnouncementList())).then((value) {
-                                                        model.updateAnnce();
-                                        });
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AnnouncementList()))
+                                              .then((value) {
+                                            model.updateAnnce();
+                                          });
                                         else
                                           print("API has error");
                                       },

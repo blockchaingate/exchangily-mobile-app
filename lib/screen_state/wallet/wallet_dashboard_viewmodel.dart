@@ -1121,16 +1121,19 @@ class WalletDashboardViewModel extends BaseViewModel {
     //   });
     // });
 
-    var x = storageService.tokenList;
-    print(x);
+    // var x = storageService.tokenList;
+    // print(x);
 
-    storageService.tokenList.forEach((element) {
-      print(element);
-      var json = jsonDecode(element);
-      Token token = Token.fromJson(json);
-      if (token.tokenType == 131075) print(token.tickerName);
-      // tickerName = token.tickerName;
-    });
+    // storageService.tokenList.forEach((element) {
+    //   print(element);
+    //   var json = jsonDecode(element);
+    //   Token token = Token.fromJson(json);
+    //   if (token.tokenType == 131075) print(token.tickerName);
+    // tickerName = token.tickerName;
+    // });
+
+    String mne = "";
+    walletService.generateTrxAddress(mne);
   }
 
   // Old way to get balances

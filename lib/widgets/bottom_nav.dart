@@ -63,9 +63,9 @@ class BottomNavBar extends StatelessWidget {
         //     title: Padding(
         //         padding: EdgeInsets.only(top: paddingValue),
         //         child: Text('OTC'))),
-        // BottomNavigationBarItem(
-        //     icon: Icon(Icons.event, size: iconSize),
-        //     title:Text( AppLocalizations.of(context).event)),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.event, size: iconSize),
+            label: AppLocalizations.of(context).event),
 
         BottomNavigationBarItem(
             icon: Icon(FontAwesomeIcons.cog, size: iconSize),
@@ -96,12 +96,12 @@ class BottomNavBar extends StatelessWidget {
           // if (currentRouteName != 'OtcScreen')
           //   Navigator.pushNamed(context, '/otc');
           //   break;
-          // case 3:
-          //   if (currentRouteName != 'CampaignInstructionScreen')
-          //     navigationService
-          //         .navigateUsingPushReplacementNamed(InstructionsViewRoute);
-          //   break;
           case 3:
+            if (currentRouteName != 'CampaignInstructionScreen')
+              navigationService
+                  .navigateUsingPushReplacementNamed(InstructionsViewRoute);
+            break;
+          case 4:
             if (currentRouteName != 'SettingsScreen')
               navigationService
                   .navigateUsingpopAndPushedNamed(SettingViewRoute);

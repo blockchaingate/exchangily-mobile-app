@@ -286,6 +286,21 @@ class WalletService {
     return root;
   }
 
+  generateTrxAddress(String mnemonic) {
+    var seed = generateSeed(mnemonic);
+    var root = generateBip32Root(seed);
+    var node = root.derivePath("m/44'/195'/0'/0/");
+    var privKey = node.privateKey;
+    // var buffer = wif.decode(node.toWIF());
+    var a = getAddressFromPrivKey(privKey);
+    String addr = getBase58CheckAddress(a);
+    debugPrint('trx address $addr');
+  }
+
+  getAddressFromPrivKey(privKey) {}
+
+  getBase58CheckAddress(privKeyAddr) {}
+
   // Generate BCH address
   String generateBchAddress(String mnemonic) {
     String tickerName = 'BCH';
@@ -313,7 +328,7 @@ class WalletService {
   // Generate LTC address
   generateDogeAddress(String mnemonic, {index = 0}) async {
     String tickerName = 'DOGE';
-    ;
+
     var seed = generateSeed(mnemonic);
     var root = generateBip32Root(seed);
     // var coinType = environment["CoinType"]["$tickerName"].toString();
