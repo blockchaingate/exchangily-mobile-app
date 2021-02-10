@@ -195,11 +195,13 @@ class WalletService {
     await userSettingsDatabaseService.getAll().then((res) {
       if (res == null || res == []) {
         log.e('language empty- setting english');
+        storageService.language = "en";
         AppLocalizations.load(Locale('en', 'EN'));
       } else {
         String languageFromDb = res[0].language;
         AppLocalizations.load(
             Locale(languageFromDb, languageFromDb.toUpperCase()));
+        storageService.language = languageFromDb;
         log.i('language $languageFromDb found');
       }
     }).catchError((err) => log.e('user setting db empty'));
