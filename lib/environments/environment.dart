@@ -45,7 +45,7 @@ Map devConfig = {
   'endpoints': {
     //for local test
     'blockchaingateLocal': 'http://192.168.0.12:3002/v2/',
-    'localKanban': "http://192.168.0.12:4000/",
+    'localKanban': "http://192.168.0.64:4000/",
     //for server
     'blockchaingate': 'https://test.blockchaingate.com/v2/',
     'kanban': 'https://kanbantest.fabcoinapi.com/',
