@@ -50,7 +50,7 @@ class TransactionHistoryView extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       
-                      for (var transaction in model.transactionHistory.reversed)
+                      for (var transaction in model.transactionHistory)
                         model.isBusy
                             ? CircularProgressIndicator()
                             : Card(

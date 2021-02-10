@@ -91,8 +91,11 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   transformData(data) {
     try {
       List<dynamic> jsonDynamicList = jsonDecode(data) as List;
-      // log.e('json list $jsonDynamicList');
+      log.e('TRX json list ${jsonDynamicList.length}');
+
       PriceList priceList = PriceList.fromJson(jsonDynamicList);
+      // priceList.prices.forEach((t) => log.i(t.symbol));
+      priceList.prices.removeWhere((item) => item.symbol.contains('TRX'));
       pairPriceList = priceList.prices;
       log.w('pair price list length ${pairPriceList.length}');
       // pairPriceList.forEach((element) {

@@ -116,6 +116,21 @@ class TransactionHistoryDatabaseService {
     // return TransactionHistory.fromJson((res.first));
   }
 
+  // Get Single Wallet By Name
+  Future<List<TransactionHistory>> getByNameOrderByDate(String name) async {
+    await initDb();
+    final Database db = await _database;
+    List<Map> res = await db.query(tableName,
+        where: 'tickerName= ?', whereArgs: [name], orderBy: columnDate);
+    log.w('Name - $name --- $res');
+
+    List<TransactionHistory> list = res.isNotEmpty
+        ? res.map((f) => TransactionHistory.fromJson(f)).toList()
+        : [];
+    return list;
+    // return TransactionHistory.fromJson((res.first));
+  }
+
   // Get Single Wallet By Id
   Future getById(int id) async {
     final Database db = await _database;

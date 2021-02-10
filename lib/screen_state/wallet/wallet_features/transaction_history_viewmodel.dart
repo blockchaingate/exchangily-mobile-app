@@ -79,7 +79,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     setBusy(true);
     transactionHistory = [];
     await transactionHistoryDatabaseService
-        .getByName(tickerName)
+        .getByNameOrderByDate(tickerName)
         .then((data) async {
       transactionHistory = data;
       await sharedService
