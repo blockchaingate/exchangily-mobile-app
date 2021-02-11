@@ -62,7 +62,7 @@ class TransactionHistoryView extends StatelessWidget {
                                   child: Row(
                                     children: <Widget>[
                                       Container(
-                                        width: 50,
+                                        width: 55,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,

@@ -121,7 +121,7 @@ class TransactionHistoryDatabaseService {
     await initDb();
     final Database db = await _database;
     List<Map> res = await db.query(tableName,
-        where: 'tickerName= ?', whereArgs: [name], orderBy: columnDate);
+        where: 'tickerName= ?', orderBy: columnDate, whereArgs: [name]);
     log.w('Name - $name --- $res');
 
     List<TransactionHistory> list = res.isNotEmpty
