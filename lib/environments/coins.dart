@@ -55,5 +55,6 @@ const Map<int, String> newCoinTypeMap = {
   262144: "BCH",
   327680: "LTC",
   393216: "DOGE",
-  65536: "BTC"
+  65536: "BTC",
+  458752: "TRX"
 };

@@ -41,7 +41,15 @@ Map devConfig = {
     },
     "KANBAN": {"chainId": 212, "gasPrice": 50000000, "gasLimit": 20000000}
   },
-  "CoinType": {"BTC": 1, "ETH": 60, "FAB": 1150, "BCH": 1, "LTC": 1, "DOGE": 1},
+  "CoinType": {
+    "BTC": 1,
+    "ETH": 60,
+    "FAB": 1150,
+    "BCH": 1,
+    "LTC": 1,
+    "DOGE": 1,
+    "TRX": 195
+  },
   'endpoints': {
     //for local test
     'blockchaingateLocal': 'http://192.168.0.12:3002/v2/',
@@ -180,7 +188,8 @@ Map productionConfig = {
     "FAB": 1150,
     "BCH": 145,
     "LTC": 2,
-    "DOGE": 3
+    "DOGE": 3,
+    "TRX": 195
   },
   'endpoints': {
     'blockchaingate': 'https://www.blockchaingate.com/v2/',

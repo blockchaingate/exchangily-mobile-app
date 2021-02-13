@@ -160,7 +160,7 @@ class RedepositViewModel extends FutureViewModel {
         // get transaction from database
 
         await transactionHistoryDatabaseService
-            .getByTxId(transactionID)
+            .getByKanbanTxId(transactionID)
             .then((transactionByTxId) async {
           if (transactionByTxId != null) {
             // update transaction history status with new txid
@@ -173,8 +173,8 @@ class RedepositViewModel extends FutureViewModel {
                 address: '',
                 amount: 0.0,
                 date: date.toString(),
-                txId: newTransactionId,
-                status: 'pending',
+                tickerChainTxId: newTransactionId,
+                tickerChainTxStatus: 'pending',
                 quantity: transactionByTxId.quantity,
                 tag: transactionByTxId.tag);
 
@@ -187,7 +187,7 @@ class RedepositViewModel extends FutureViewModel {
               List<String> txIdList = [];
               if (res != null) {
                 res.forEach((element) {
-                  txIdList.add(element.txId);
+                  txIdList.add(element.kanbanTxId);
                 });
               }
               log.e('transaction history tx id list $txIdList');

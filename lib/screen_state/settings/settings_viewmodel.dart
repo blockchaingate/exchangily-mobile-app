@@ -12,7 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
-import 'package:exchangilymobileapp/models/wallet/user_settings.dart';
+import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -8,7 +6,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/models/wallet/user_settings.dart';
+import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -288,22 +286,61 @@ class WalletService {
     return root;
   }
 
+/*----------------------------------------------------------------------
+                Generate TRX address
+----------------------------------------------------------------------*/
+
   generateTrxAddress(String mnemonic) {
     var seed = generateSeed(mnemonic);
     var root = generateBip32Root(seed);
     var node = root.derivePath("m/44'/195'/0'/0/");
     var privKey = node.privateKey;
+    var pubKey = node.publicKey;
     // var buffer = wif.decode(node.toWIF());
     var a = getAddressFromPrivKey(privKey);
     String addr = getBase58CheckAddress(a);
     debugPrint('trx address $addr');
   }
 
-  getAddressFromPrivKey(privKey) {}
+// Get address From Private Key
+  getAddressFromPrivKey(privKey) {
+    // generatePubKeyFromPriKey(privKey);
+  }
 
+// Generate Public Key From Private Key
+  // generatePubKeyFromPriKey(privKey) {
+
+  //   const ec = new EC('secp256k1');
+  //   const key = ec.keyFromPrivate(priKeyBytes, 'bytes');
+  //   const pubkey = key.getPublic();
+  //   const x = pubkey.x;
+  //   const y = pubkey.y;
+
+  //   var xHex = x.toString('hex');
+
+  //   while (xHex.length < 64) {
+  //     xHex = '0' + xHex;
+  //   }
+
+  //   var yHex = y.toString('hex');
+
+  //   while (yHex.length < 64) {
+  //     yHex = '0$yHex';
+  //   }
+
+  //   var pubkeyHex = '04' + xHex + yHex;
+  //   var pubkeyBytes = hexStr2byteArray(pubkeyHex);
+
+  //   return pubkeyBytes;
+  // }
+
+  // Base 58 Address Check
   getBase58CheckAddress(privKeyAddr) {}
 
-  // Generate BCH address
+/*----------------------------------------------------------------------
+               Generate BCH address
+----------------------------------------------------------------------*/
+
   String generateBchAddress(String mnemonic) {
     String tickerName = 'BCH';
     var bchSeed = generateSeed(mnemonic);
@@ -509,10 +546,10 @@ class WalletService {
   checkWithdrawTxStatus(TransactionHistory transaction) async {
     int baseTime = 30;
     List result = [];
-    String txid = transaction.txId;
+    String kanbanTxId = transaction.kanbanTxId;
     TransactionHistory transactionByTxid = new TransactionHistory();
     Timer.periodic(Duration(seconds: baseTime), (Timer t) async {
-      log.w('Base time $baseTime -- local t.id ${txid}');
+      log.w('Base time $baseTime -- local t.id ${kanbanTxId}');
       await _apiService.withdrawTxStatus().then((res) async {
         if (res != null) {
           // result = res;
@@ -522,10 +559,10 @@ class WalletService {
           res.forEach((singleTx) async {
             var kanbanTxid = singleTx['kanbanTxid'];
             log.w(
-                'res not null -- condition -- k.id $kanbanTxid -- t.id ${txid}');
+                'res not null -- condition -- k.id $kanbanTxid -- t.id ${kanbanTxId}');
 
             // If kanban txid is equals to local txid
-            if (singleTx['kanbanTxid'] == txid) {
+            if (singleTx['kanbanTxid'] == kanbanTxId) {
               // log.w('single withdraw entry $singleTx');
               baseTime = 60;
               // log.i(
@@ -537,7 +574,7 @@ class WalletService {
                 t.cancel();
 
                 var storedTx = await transactionHistoryDatabaseService
-                    .getByTxId(transaction.txId);
+                    .getByKanbanTxId(transaction.kanbanTxId);
                 showSimpleNotification(
                     Row(
                       children: [
@@ -557,8 +594,8 @@ class WalletService {
                     address: '',
                     amount: 0.0,
                     date: date.toString(),
-                    txId: storedTx.txId,
-                    status: 'Complete',
+                    kanbanTxId: storedTx.kanbanTxId,
+                    tickerChainTxStatus: 'Complete',
                     quantity: storedTx.quantity,
                     tag: storedTx.tag);
                 transactionHistoryDatabaseService.update(transactionByTxid);
@@ -578,7 +615,7 @@ class WalletService {
     Timer.periodic(Duration(minutes: 1), (Timer t) async {
       TransactionHistory transactionHistory = new TransactionHistory();
       TransactionHistory transactionByTxId = new TransactionHistory();
-      var res = await _apiService.getTransactionStatus(transaction.txId);
+      var res = await _apiService.getTransactionStatus(transaction.kanbanTxId);
 
       log.w('checkDepositTransactionStatus $res');
 // 0 is confirmed
@@ -600,7 +637,7 @@ class WalletService {
 
         if (transaction != null) {
           transactionByTxId = await transactionHistoryDatabaseService
-              .getByTxId(transaction.txId);
+              .getByKanbanTxId(transaction.kanbanTxId);
           showSimpleNotification(
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -622,8 +659,8 @@ class WalletService {
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transactionByTxId.txId,
-              status: 'Complete',
+              kanbanTxId: transactionByTxId.kanbanTxId,
+              tickerChainTxStatus: 'Complete',
               quantity: transactionByTxId.quantity,
               tag: transactionByTxId.tag);
 
@@ -639,8 +676,8 @@ class WalletService {
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transactionByTxId.txId,
-              status: 'Error',
+              kanbanTxId: transactionByTxId.kanbanTxId,
+              tickerChainTxStatus: 'Error',
               quantity: transactionByTxId.quantity,
               tag: transactionByTxId.tag);
 
@@ -652,8 +689,8 @@ class WalletService {
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transactionByTxId.txId,
-              status: 'Failed',
+              kanbanTxId: transactionByTxId.kanbanTxId,
+              tickerChainTxStatus: 'Failed',
               quantity: transactionByTxId.quantity,
               tag: transactionByTxId.tag);
 
@@ -665,8 +702,8 @@ class WalletService {
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: transactionByTxId.txId,
-              status: 'Require redeposit',
+              kanbanTxId: transactionByTxId.kanbanTxId,
+              tickerChainTxStatus: 'Require redeposit',
               quantity: transactionByTxId.quantity,
               tag: transactionByTxId.tag);
 
@@ -674,7 +711,8 @@ class WalletService {
         }
       }
       await transactionHistoryDatabaseService.update(transactionHistory);
-      await transactionHistoryDatabaseService.getByTxId(transaction.txId);
+      await transactionHistoryDatabaseService
+          .getByKanbanTxId(transaction.kanbanTxId);
     });
     return result;
     //  return _completer.future;
@@ -789,7 +827,17 @@ class WalletService {
         .then((data) async {
       log.w('Saved in transaction history database $data');
       await transactionHistoryDatabaseService.getAll();
-    }).catchError((onError) => log.e('Could not save in database $onError'));
+    }).catchError((onError) async {
+      log.e('Could not save in database $onError');
+      await transactionHistoryDatabaseService.deleteDb().then((value) async {
+        log.i('transactionHistoryDatabase deleted');
+        await transactionHistoryDatabaseService
+            .insert(transactionHistory)
+            .then((data) async {
+          log.w('Saved in transaction history database $data');
+        });
+      });
+    });
   }
 
 /*----------------------------------------------------------------------

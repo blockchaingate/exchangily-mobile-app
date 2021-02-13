@@ -222,9 +222,9 @@ class WalletFeaturesView extends StatelessWidget {
                   UIHelper.horizontalSpaceSmall,
                   // Transaction History Column
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8.0),
+                    margin: EdgeInsets.symmetric(horizontal: 12.0),
                     padding:
-                        EdgeInsets.symmetric(horizontal: 22.0, vertical: 5.0),
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
                     child: Card(
                       color: globals.walletCardColor,
                       elevation: model.elevation,
@@ -237,7 +237,7 @@ class WalletFeaturesView extends StatelessWidget {
                         },
                         child: Container(
                           padding:
-                              EdgeInsets.symmetric(vertical: 6, horizontal: 3),
+                              EdgeInsets.symmetric(vertical: 9, horizontal: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -255,12 +255,15 @@ class WalletFeaturesView extends StatelessWidget {
                                       ]),
                                   child: Icon(
                                     model.features[6].icon,
-                                    size: 20,
+                                    size: 18,
                                     color: globals.white,
                                   )),
-                              Text(
-                                model.features[6].name,
-                                style: Theme.of(context).textTheme.subtitle1,
+                              Padding(
+                                padding: const EdgeInsets.only(left: 4.0),
+                                child: Text(
+                                  model.features[6].name,
+                                  style: Theme.of(context).textTheme.subtitle1,
+                                ),
                               )
                             ],
                           ),

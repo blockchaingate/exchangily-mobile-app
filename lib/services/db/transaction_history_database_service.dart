@@ -28,12 +28,14 @@ class TransactionHistoryDatabaseService {
   final String columnAddress = 'address';
   final String columnAmount = 'amount';
   final String columnDate = 'date';
-  final String columnTxId = 'txId';
-  final String columnStatus = 'status';
+  final String columnKanabanTxId = 'kanbanTxId';
+  final String columnTickerChainTxId = 'tickerChainTxId';
+  final String columnTickerChainTxStatus = 'tickerChainTxStatus';
+  final String columnKanbanTxStatus = 'kanbanTxStatus';
   final String columnQuantity = 'quantity';
   final String columnTag = 'tag';
 
-  static final _databaseVersion = 3;
+  static final _databaseVersion = 5;
   static Future<Database> _database;
   String path = '';
 
@@ -56,8 +58,10 @@ class TransactionHistoryDatabaseService {
         $columnAddress TEXT,
         $columnAmount REAL,
         $columnDate TEXT,
-        $columnTxId TEXT,
-        $columnStatus TEXT,
+        $columnKanabanTxId TEXT,
+        $columnTickerChainTxId TEXT,
+        $columnTickerChainTxStatus TEXT,
+        $columnKanbanTxStatus TEXT,
         $columnQuantity REAL,
         $columnTag TEXT) ''');
   }
@@ -143,11 +147,11 @@ class TransactionHistoryDatabaseService {
   }
 
   // Get Single Wallet By txId
-  Future<TransactionHistory> getByTxId(String txId) async {
+  Future<TransactionHistory> getByKanbanTxId(String tickerChainTxId) async {
     final Database db = await _database;
-    List<Map> res =
-        await db.query(tableName, where: 'txId= ?', whereArgs: [txId]);
-    log.w('txId - $txId --- $res');
+    List<Map> res = await db.query(tableName,
+        where: 'tickerChainTxId= ?', whereArgs: [tickerChainTxId]);
+    log.w('tickerChainTxId - $tickerChainTxId --- $res');
     if (res.length > 0) {
       return TransactionHistory.fromJson((res.first));
     }
@@ -160,8 +164,8 @@ class TransactionHistoryDatabaseService {
     await db.update(
       tableName,
       transactionHistory.toJson(),
-      where: "txId = ?",
-      whereArgs: [transactionHistory.txId],
+      where: "tickerChainTxId = ?",
+      whereArgs: [transactionHistory.kanbanTxId],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
@@ -170,7 +174,7 @@ class TransactionHistoryDatabaseService {
   Future updateStatus(TransactionHistory transactionHistory) async {
     final Database db = await _database;
     await db.rawUpdate(
-        'UPDATE TransactionHistory SET status = ${transactionHistory.status} where txid = ${transactionHistory.txId}');
+        'UPDATE TransactionHistory SET status = ${transactionHistory.tickerChainTxStatus} where kanbanTxId = ${transactionHistory.tickerChainTxId}');
   }
 
   // Close Database

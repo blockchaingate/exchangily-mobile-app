@@ -12,7 +12,6 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
-import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -237,19 +236,19 @@ class MoveToExchangeViewModel extends BaseViewModel {
           message = txId.toString();
           // setMessage(txId);
           String date = DateTime.now().toString();
-          TransactionHistory transactionHistory = new TransactionHistory(
-              id: null,
-              tickerName: walletInfo.tickerName,
-              address: '',
-              amount: 0.0,
-              date: date.toString(),
-              txId: txId,
-              status: 'pending',
-              quantity: amount,
-              tag: 'deposit');
+          // TransactionHistory transactionHistory = new TransactionHistory(
+          //     id: null,
+          //     tickerName: walletInfo.tickerName,
+          //     address: '',
+          //     amount: 0.0,
+          //     date: date.toString(),
+          //     tickerChainTxId: txId,
+          //     tickerChainTxStatus: 'pending',
+          //     quantity: amount,
+          //     tag: 'deposit');
 
-          walletService.checkDepositTransactionStatus(transactionHistory);
-          walletService.insertTransactionInDatabase(transactionHistory);
+          //  walletService.checkDepositTransactionStatus(transactionHistory);
+          //   walletService.insertTransactionInDatabase(transactionHistory);
         }
         showSimpleNotification(
             Column(

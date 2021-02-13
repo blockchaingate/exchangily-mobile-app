@@ -21,30 +21,32 @@ import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
+import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/globalLang.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/utils/coin_util.dart';
+
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 import 'package:flutter/material.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
+
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/screen_state/base_state.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:provider/provider.dart';
+
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -904,7 +906,12 @@ class WalletDashboardViewModel extends BaseViewModel {
       }
     });
 
-    //  storageService.walletBalancesBody = walletBalancesBody;
+    // UserSettingsDatabaseService userSettingsDatabaseService =
+    //     locator<UserSettingsDatabaseService>();
+    // await userSettingsDatabaseService
+    //     .insert(UserSettings(walletBalancesBody: walletBalancesBody));
+
+    //storageService.walletBalancesBody = json.encode(walletBalancesBody);
 
     // ----------------------------------------
     // Calling walletBalances in wallet service
@@ -1133,7 +1140,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     // });
 
     String mne = "";
-    walletService.generateTrxAddress(mne);
+    // walletService.generateTrxAddress(mne);
   }
 
   // Old way to get balances

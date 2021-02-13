@@ -15,18 +15,22 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history_events/transaction_history_events_model.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 
 /// The service responsible for networking requests
 class ApiService {
@@ -34,14 +38,199 @@ class ApiService {
   final client = new http.Client();
   ConfigService configService = locator<ConfigService>();
   SharedService sharedService = locator<SharedService>();
+  LocalStorageService storageService = locator<LocalStorageService>();
+  WalletDataBaseService walletDatabaseService =
+      locator<WalletDataBaseService>();
 
   final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
-  // Please keep this for future test
-  // final String kanbanBaseUrl = "http://192.168.0.64:4000";
-  // final kanbanBaseUrl = environment['endpoints']['LocalKanban'];
-  // final blockchaingateUrl = environment['endpoints']['blockchaingateLocal'];
+/*----------------------------------------------------------------------
+                Get Tx History for withdraw and deposit
+----------------------------------------------------------------------*/
+  Future<List<TransactionHistory>> getTransactionHistoryEvents() async {
+    String fabAddress = '';
 
+    List<TransactionHistory> transactionHistory = [];
+    await walletDatabaseService
+        .getBytickerName('FAB')
+        .then((value) => fabAddress = value.address);
+
+    String url =
+        configService.getKanbanBaseUrl() + GetWithDrawDepositTxHistoryApiRoute;
+    Map<String, dynamic> body = {"fabAddress": fabAddress};
+
+    log.i('getTransactionHistoryEvents url $url -- body $body');
+
+    try {
+      var response = await client.post(url, body: body);
+
+      var json = jsonDecode(response.body);
+      if (json != null) {
+        //  log.w('getTransactionHistoryEvents json $json}');
+        if (json['success']) {
+          //  log.e('getTransactionHistoryEvents json ${json['data']}');
+          var data = json['data'] as List;
+
+          int index = 1;
+          data.forEach((element) {
+            var tag = element['action'] as String;
+            var ticker = element['coin'] as String;
+            var timestamp = element['timestamp'];
+            var tickerChainTxStatus;
+            var kanbanTxStatus;
+            var kanbanTxId;
+            var tickerTxId;
+            List transactionsInside = element['transactions'] as List;
+            // It has only 2 objects inside
+            transactionsInside.forEach((element) {
+              String chain = element['chain'];
+              if (chain == 'KANBAN') {
+                kanbanTxStatus = element['status'];
+                if (element['transactionId'] != null) {
+                  kanbanTxId = element['transactionId'];
+                }
+              }
+              if (chain == 'FAB' ||
+                  chain == 'ETH' ||
+                  ticker == 'BTC' ||
+                  ticker == 'LTC' ||
+                  ticker == 'ETH' ||
+                  ticker == 'DOGE' ||
+                  ticker == 'FAB' ||
+                  ticker == 'BCH') {
+                tickerChainTxStatus = element['status'];
+                if (element['transactionId'] != null)
+                  tickerTxId = element['transactionId'];
+              }
+            });
+
+            var date =
+                DateTime.fromMillisecondsSinceEpoch(timestamp * 1000).toLocal();
+            String filteredDate =
+                date.toString().substring(0, date.toString().length - 4);
+            var amount = element['quantity'].toString();
+
+            //  print(
+            // 'tag $tag -- ticker $ticker -- date ${date.toLocal()} - amount ${double.parse(amount)}');
+            TransactionHistory tx = new TransactionHistory(
+                id: index,
+                tag: tag,
+                tickerChainTxStatus: tickerChainTxStatus,
+                kanbanTxStatus: kanbanTxStatus,
+                kanbanTxId: kanbanTxId,
+                tickerChainTxId: tickerTxId,
+                date: filteredDate,
+                tickerName: ticker,
+                quantity: double.parse(amount));
+
+            transactionHistory.add(tx);
+            index++;
+          });
+        }
+      }
+      return transactionHistory;
+    } catch (err) {
+      log.e('getTransactionHistoryEvents CATCH $err');
+
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
+                Get Bindpay History
+----------------------------------------------------------------------*/
+  Future getBindpayHistoryEvents() async {
+    String fabAddress = '';
+
+    List<TransactionHistory> transactionHistory = [];
+    await walletDatabaseService
+        .getBytickerName('FAB')
+        .then((value) => fabAddress = value.address);
+
+    String url =
+        configService.getKanbanBaseUrl() + GetWithDrawDepositTxHistoryApiRoute;
+    Map<String, dynamic> body = {"fabAddress": fabAddress};
+
+    log.i('getTransactionHistoryEvents url $url -- body $body');
+
+    try {
+      var response = await client.post(url, body: body);
+
+      var json = jsonDecode(response.body);
+      if (json != null) {
+        log.w('getTransactionHistoryEvents json $json}');
+        if (json['success']) {
+          //   log.e('getTransactionHistoryEvents json ${json['data']}');
+          var data = json['data'] as List;
+
+          int index = 1;
+          data.forEach((element) {
+            var tag = element['action'] as String;
+            var ticker = element['coin'] as String;
+            var timestamp = element['timestamp'];
+            var status;
+            var kanbanTxId;
+            var tickerTxId;
+            List transactionsInside = element['transactions'] as List;
+            // It has only 2 objects inside
+            transactionsInside.forEach((element) {
+              String chain = element['chain'];
+              if (chain == 'KANBAN') {
+                if (element['transactionId'] != null)
+                  kanbanTxId = element['transactionId'];
+              } else if (chain == 'FAB' ||
+                  chain == 'ETH' ||
+                  ticker == 'BTC' ||
+                  ticker == 'LTC' ||
+                  ticker == 'ETH' ||
+                  ticker == 'DOGE' ||
+                  ticker == 'FAB' ||
+                  ticker == 'BCH') {
+                status = element['status'];
+                if (element['transactionId'] != null)
+                  tickerTxId = element['transactionId'];
+              }
+            });
+
+            var date =
+                DateTime.fromMillisecondsSinceEpoch(timestamp * 1000).toLocal();
+            String filteredDate =
+                date.toString().substring(0, date.toString().length - 4);
+            var amount = element['quantity'].toString();
+
+            //  print(
+            // 'tag $tag -- ticker $ticker -- date ${date.toLocal()} - amount ${double.parse(amount)}');
+            TransactionHistory tx = new TransactionHistory(
+                id: index,
+                tag: tag,
+                tickerChainTxStatus: status,
+                kanbanTxId: kanbanTxId,
+                tickerChainTxId: tickerTxId,
+                date: filteredDate,
+                tickerName: ticker,
+                quantity: double.parse(amount));
+
+            transactionHistory.add(tx);
+            index++;
+          });
+          // transactionHistory.sort((a, b) =>
+          //     DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
+          // transactionHistory.forEach((element) {
+          //   log.e('getTransactionHistoryEvents length ${element.toJson()}');
+          // });
+
+          // transactionHistory.forEach((element) {
+          //   log.i('getTransactionHistoryEvents length ${element.toJson()}');
+          // });
+        }
+      }
+      return transactionHistory;
+    } catch (err) {
+      log.e('getTransactionHistoryEvents CATCH $err');
+
+      throw Exception(err);
+    }
+  }
 /*----------------------------------------------------------------------
                 Get Banner
 ----------------------------------------------------------------------*/
@@ -107,7 +296,7 @@ class ApiService {
         log.w('getAssetsBalance json $json');
         exchangeBalanceList = ExchangeBalanceModelList.fromJson(json);
       }
-    return exchangeBalanceList.balances;
+      return exchangeBalanceList.balances;
     } catch (e) {
       log.e('getAssetsBalance Failed to load the data from the API, $e');
       return null;
@@ -725,11 +914,9 @@ class ApiService {
 
   Future getSliderImages() async {
     try {
-      final res = await http
-          .get(
-            // kanbanBaseUrl + "/kanban/getadvconfig"
-            configService.getKanbanBaseUrl() + "kanban/getadvconfig"
-            );
+      final res = await http.get(
+          // kanbanBaseUrl + "/kanban/getadvconfig"
+          configService.getKanbanBaseUrl() + "kanban/getadvconfig");
       log.w(' get slider images ${jsonDecode(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
         var json = jsonDecode(res.body) as List;

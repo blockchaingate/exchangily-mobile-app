@@ -33,7 +33,7 @@ import 'package:exchangilymobileapp/screens/otc_campaign/team/team_referral_view
 import 'package:exchangilymobileapp/screens/otc_campaign/team/team_rewards_details_view.dart';
 
 //import 'package:exchangilymobileapp/screens/settings/language.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic.dart';

@@ -42,7 +42,7 @@ class MoveToWalletViewmodel extends BaseState {
   bool transFeeAdvance = false;
   double gasAmount = 0.0;
   var withdrawLimit;
- PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
 
 /*---------------------------------------------------
                       INIT
@@ -69,11 +69,12 @@ class MoveToWalletViewmodel extends BaseState {
     setBusy(false);
   }
 
-    getData() async{
-setBusy(true);
-  singlePairDecimalConfig = await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
-  log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
-   setBusy(false);
+  getData() async {
+    setBusy(true);
+    singlePairDecimalConfig =
+        await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
+    log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
+    setBusy(false);
   }
 
   /*---------------------------------------------------
@@ -201,23 +202,23 @@ setBusy(true);
         bool success = ret["success"];
         if (success && ret['transactionHash'] != null) {
           String txId = ret['transactionHash'];
-          log.e('txid $txId');
+          log.i('txid $txId');
           amountController.text = '';
           setMessage(txId);
-          String date = DateTime.now().toString();
-          TransactionHistory transactionHistory = new TransactionHistory(
-              id: null,
-              tickerName: coinName,
-              address: '',
-              amount: 0.0,
-              date: date.toString(),
-              txId: txId,
-              status: 'pending',
-              quantity: amount,
-              tag: 'withdraw');
+          // String date = DateTime.now().toString();
+          // TransactionHistory transactionHistory = new TransactionHistory(
+          //     id: null,
+          //     tickerName: coinName,
+          //     address: '',
+          //     amount: 0.0,
+          //     date: date.toString(),
+          //     tickerChainTxId: txId,
+          //     tickerChainTxStatus: 'pending',
+          //     quantity: amount,
+          //     tag: 'withdraw');
 
-          walletService.checkTxStatus(transactionHistory);
-          walletService.insertTransactionInDatabase(transactionHistory);
+          //   walletService.checkTxStatus(transactionHistory);
+          //  walletService.insertTransactionInDatabase(transactionHistory);
           // Future.delayed(Duration(seconds: 10), () async {
           //   await apiService
           //       .getSingleCoinExchangeBalance(walletInfo.tickerName)

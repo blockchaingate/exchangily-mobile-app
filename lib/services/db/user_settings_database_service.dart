@@ -13,7 +13,7 @@
 
 import 'dart:async';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/user_settings.dart';
+import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -26,8 +26,9 @@ class UserSettingsDatabaseService {
   final String columnId = 'id';
   final String columnLanguage = 'language';
   final String columnTheme = 'theme';
+  final String columnWalletBalancesBody = 'walletBalancesBody';
 
-  static final _databaseVersion = 1;
+  static final _databaseVersion = 2;
   static Future<Database> _database;
   String path = '';
 
@@ -47,7 +48,8 @@ class UserSettingsDatabaseService {
         (
         $columnId INTEGER PRIMARY KEY,
         $columnLanguage TEXT,    
-        $columnTheme TEXT) ''');
+        $columnTheme TEXT
+        $columnWalletBalancesBody TEXT) ''');
   }
 
   // Get All Records From The Database

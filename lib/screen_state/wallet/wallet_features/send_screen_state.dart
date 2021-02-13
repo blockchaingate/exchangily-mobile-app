@@ -223,8 +223,9 @@ class SendScreenState extends BaseState {
               address: '',
               amount: 0.0,
               date: date.toString(),
-              txId: txHash,
-              status: '',
+              kanbanTxId: '',
+              tickerChainTxId: txHash,
+              tickerChainTxStatus: '',
               quantity: amount,
               tag: 'send');
           walletService.insertTransactionInDatabase(transactionHistory);

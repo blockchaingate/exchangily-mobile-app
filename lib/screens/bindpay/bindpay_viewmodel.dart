@@ -632,8 +632,8 @@ class BindpayViewmodel extends FutureViewModel {
                   address: '',
                   amount: 0.0,
                   date: date.toString(),
-                  txId: res['transactionHash'],
-                  status: '',
+                  tickerChainTxId: res['transactionHash'],
+                  tickerChainTxStatus: '',
                   quantity: amount,
                   tag: 'bindpay');
               walletService.insertTransactionInDatabase(transactionHistory);

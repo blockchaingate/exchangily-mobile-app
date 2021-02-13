@@ -4,8 +4,10 @@ class TransactionHistory {
   String _address;
   double _amount;
   String _date;
-  String _txId;
-  String _status;
+  String _tickerChainTxId;
+  String _kanbanTxId;
+  String _tickerChainTxStatus; // for deposit look for this one first
+  String _kanbanTxStatus; // for withdraw look for this one first
   double _quantity;
   String _tag;
 
@@ -15,8 +17,10 @@ class TransactionHistory {
       String address,
       double amount,
       String date,
-      String txId,
-      String status,
+      String tickerChainTxId,
+      String kanbanTxId,
+      String tickerChainTxStatus,
+      String kanbanTxStatus,
       double quantity,
       String tag}) {
     this._id = id;
@@ -24,8 +28,10 @@ class TransactionHistory {
     this._address = address ?? '';
     this._amount = amount ?? 0.0;
     this._date = date ?? '';
-    this._txId = txId ?? '';
-    this._status = status ?? '';
+    this._tickerChainTxId = tickerChainTxId ?? '';
+    this._kanbanTxId = kanbanTxId ?? '';
+    this._tickerChainTxStatus = tickerChainTxStatus ?? '';
+    this._kanbanTxStatus = kanbanTxStatus ?? '';
     this._quantity = quantity ?? 0.0;
     this._tag = tag ?? '';
   }
@@ -36,8 +42,10 @@ class TransactionHistory {
         'address': _address,
         'amount': _amount,
         'date': _date,
-        'txId': _txId,
-        'status': _status,
+        'tickerChainTxId': _tickerChainTxId,
+        'kanbanTxId': _kanbanTxId,
+        'tickerChainTxStatus': _tickerChainTxStatus,
+        'kanbanTxStatus': _kanbanTxStatus,
         'quantity': _quantity,
         'tag': _tag
       };
@@ -49,8 +57,10 @@ class TransactionHistory {
         address: json['address'] as String,
         amount: json['amount'],
         date: json['date'] as String,
-        txId: json['txId'],
-        status: json['status'],
+        tickerChainTxId: json['tickerChainTxId'],
+        kanbanTxId: json['kanbanTxId'],
+        tickerChainTxStatus: json['tickerChainTxStatus'],
+        kanbanTxStatus: json['kanbanTxStatus'],
         quantity: json['quantity'],
         tag: json['tag']);
   }
@@ -85,15 +95,26 @@ class TransactionHistory {
     this._date = date;
   }
 
-  String get txId => _txId;
+  String get tickerChainTxId => _tickerChainTxId;
 
-  set txId(String txId) {
-    this._txId = txId;
+  set tickerChainTxId(String tickerChainTxId) {
+    this._tickerChainTxId = tickerChainTxId;
   }
 
-  String get status => _status;
-  set status(String status) {
-    this._status = status;
+  String get kanbanTxId => _kanbanTxId;
+
+  set kanbanTxId(String kanbanTxId) {
+    this._kanbanTxId = kanbanTxId;
+  }
+
+  String get tickerChainTxStatus => _tickerChainTxStatus;
+  set tickerChainTxStatus(String tickerChainTxStatus) {
+    this._tickerChainTxStatus = tickerChainTxStatus;
+  }
+
+  String get kanbanTxStatus => _kanbanTxStatus;
+  set kanbanTxStatus(String kanbanTxStatus) {
+    this._kanbanTxStatus = kanbanTxStatus;
   }
 
   double get quantity => _quantity;
