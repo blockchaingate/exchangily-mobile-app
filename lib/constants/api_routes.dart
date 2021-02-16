@@ -20,7 +20,18 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
                         Wallet
 ----------------------------------------------------------------------*/
 const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
-const String ExchangilyExplorerUrl = "https://exchangily.com/explorer/";
+
+// Transaction history explorer URL's for prod
+const String ExchangilyExplorerUrl =
+    "https://exchangily.com/explorer/explorer/tx-detail/";
+const String BitcoinExplorerUrl = "https://live.blockcypher.com/btc/tx/";
+const String EthereumExplorerUrl = "https://etherscan.io/tx/";
+const String TestnetEthereumExplorerUrl = "https://ropsten.etherscan.io/tx/";
+const String FabExplorerUrl = "https://fabexplorer.info/#/transactions/";
+const String LitecoinExplorerUrl = "https://live.blockcypher.com/ltx/tx/";
+const String DogeExplorerUrl = "https://dogechain.info/tx/";
+const String BitcoinCashExplorerUrl = "https://explorer.bitcoin.com/bch/tx/";
+const String TronExplorerUrl = "https://tronscan.org/#/transaction/";
 
 // Free Fab
 final String getFreeFabUrl =

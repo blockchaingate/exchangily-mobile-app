@@ -34,8 +34,9 @@ class TransactionHistoryDatabaseService {
   final String columnKanbanTxStatus = 'kanbanTxStatus';
   final String columnQuantity = 'quantity';
   final String columnTag = 'tag';
+  final String columnChainName = 'chainName';
 
-  static final _databaseVersion = 5;
+  static final _databaseVersion = 6;
   static Future<Database> _database;
   String path = '';
 
@@ -63,7 +64,8 @@ class TransactionHistoryDatabaseService {
         $columnTickerChainTxStatus TEXT,
         $columnKanbanTxStatus TEXT,
         $columnQuantity REAL,
-        $columnTag TEXT) ''');
+        $columnTag TEXT
+        $columnChainName TEXT) ''');
   }
 
   // Get All Records From The Database

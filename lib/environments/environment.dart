@@ -64,7 +64,7 @@ Map devConfig = {
     'doge': 'https://dogetest.fabcoinapi.com/',
     'fab': 'https://fabtest.fabcoinapi.com/',
     'eth': 'https://ethtest.fabcoinapi.com/',
-    'campaign': 'https://test.blockchaingate.com/v2/',
+    'campaign': 'https://test.blockchaingate.com/v2/'
   },
   "addresses": {
     "smartContract": {

@@ -10,6 +10,7 @@ class TransactionHistory {
   String _kanbanTxStatus; // for withdraw look for this one first
   double _quantity;
   String _tag;
+  String _chainName;
 
   TransactionHistory(
       {int id,
@@ -22,7 +23,8 @@ class TransactionHistory {
       String tickerChainTxStatus,
       String kanbanTxStatus,
       double quantity,
-      String tag}) {
+      String tag,
+      String chainName}) {
     this._id = id;
     this._tickerName = tickerName ?? '';
     this._address = address ?? '';
@@ -34,6 +36,7 @@ class TransactionHistory {
     this._kanbanTxStatus = kanbanTxStatus ?? '';
     this._quantity = quantity ?? 0.0;
     this._tag = tag ?? '';
+    this._chainName = chainName ?? '';
   }
 
   Map<String, dynamic> toJson() => {
@@ -47,7 +50,8 @@ class TransactionHistory {
         'tickerChainTxStatus': _tickerChainTxStatus,
         'kanbanTxStatus': _kanbanTxStatus,
         'quantity': _quantity,
-        'tag': _tag
+        'tag': _tag,
+        'chainName': _chainName
       };
 
   factory TransactionHistory.fromJson(Map<String, dynamic> json) {
@@ -62,7 +66,8 @@ class TransactionHistory {
         tickerChainTxStatus: json['tickerChainTxStatus'],
         kanbanTxStatus: json['kanbanTxStatus'],
         quantity: json['quantity'],
-        tag: json['tag']);
+        tag: json['tag'],
+        chainName: json['chainName']);
   }
 
   int get id => _id;
@@ -126,6 +131,12 @@ class TransactionHistory {
 
   set tag(String tag) {
     this._tag = tag;
+  }
+
+  String get chainName => _chainName;
+
+  set chainName(String chainName) {
+    this._chainName = chainName;
   }
 }
 

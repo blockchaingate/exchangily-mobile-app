@@ -55,7 +55,7 @@ class TransactionHistoryView extends StatelessWidget {
                              Expanded(flex: 1,
                                                             child: Text(
                                                     AppLocalizations.of(context)
-                                                        .date,
+                                                        .date,textAlign: TextAlign.center,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .subtitle2),
@@ -63,7 +63,7 @@ class TransactionHistoryView extends StatelessWidget {
  Expanded(flex: 1,
     child: Text(
                                                     AppLocalizations.of(context)
-                                                        .quantity,
+                                                        .quantity,textAlign: TextAlign.center,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .subtitle2),
@@ -71,7 +71,15 @@ class TransactionHistoryView extends StatelessWidget {
                                                        Expanded(flex: 1,
                                                                                                                 child: Text(
                                                   AppLocalizations.of(context)
-                                                      .status,
+                                                      .status,textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .subtitle2),
+                                                       ),
+                                                           Expanded(flex: 1,
+                                                                                                                child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .details,textAlign: TextAlign.center,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .subtitle2),
@@ -89,77 +97,79 @@ class TransactionHistoryView extends StatelessWidget {
                                       color: colors.walletCardColor,
                                       child: Row(
                                         children: <Widget>[
+                                          UIHelper.horizontalSpaceSmall,
                                           Container(
-                                          //  width: 55,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                             
-                                              children: [
-                                                Text(
-                                                    '${transaction.tickerName}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle2),
-                                                // icon
-                                                transaction.tag.toUpperCase() ==
-                                                        model.deposit
-                                                            .toUpperCase()
-                                                    ? Icon(
-                                                        Icons.arrow_downward,
-                                                        size: 20,
-                                                        color: colors.buyPrice,
-                                                      )
-                                                    : Icon(
-                                                        Icons.arrow_upward,
-                                                        size: 20,
-                                                        color: colors.sellPrice,
-                                                      ),
+                                          // Action with icon
+                                            child: Expanded(flex:1,
+                                                                                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.spaceEvenly,
+                                               
+                                                children: [
+                                                  Text(
+                                                      '${transaction.tickerName}',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .subtitle2),
+                                                  // icon
+                                                  transaction.tag.toUpperCase() ==
+                                                          model.deposit
+                                                              .toUpperCase()
+                                                      ? Icon(
+                                                          Icons.arrow_downward,
+                                                          size: 16,
+                                                          color: colors.buyPrice,
+                                                        )
+                                                      : Icon(
+                                                          Icons.arrow_upward,
+                                                          size: 16,
+                                                          color: colors.sellPrice,
+                                                        ),
 
-                                                if (transaction.tag
-                                                        .toUpperCase() ==
-                                                    model.withdraw
-                                                        .toUpperCase())
-                                                  Text(
-                                                    AppLocalizations.of(context)
-                                                        .withdraw,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle2,
-                                                    textAlign: TextAlign.center,
-                                                  )
-                                                else if (transaction.tag
-                                                        .toUpperCase() ==
-                                                    model.send.toUpperCase())
-                                                  Text(
-                                                    AppLocalizations.of(context)
-                                                        .send,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle2,
-                                                    textAlign: TextAlign.center,
-                                                  )
-                                                else if (transaction.tag
-                                                        .toUpperCase() ==
-                                                    model.deposit.toUpperCase())
-                                                  Text(
-                                                    AppLocalizations.of(context)
-                                                        .deposit,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .subtitle2,
-                                                    textAlign: TextAlign.center,
-                                                  )
-                                              ],
+                                                  if (transaction.tag
+                                                          .toUpperCase() ==
+                                                      model.withdraw
+                                                          .toUpperCase())
+                                                    Text(
+                                                      AppLocalizations.of(context)
+                                                          .withdraw,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .subtitle2,
+                                                      textAlign: TextAlign.center,
+                                                    )
+                                                  else if (transaction.tag
+                                                          .toUpperCase() ==
+                                                      model.send.toUpperCase())
+                                                    Text(
+                                                      AppLocalizations.of(context)
+                                                          .send,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .subtitle2,
+                                                      textAlign: TextAlign.center,
+                                                    )
+                                                  else if (transaction.tag
+                                                          .toUpperCase() ==
+                                                      model.deposit.toUpperCase())
+                                                    Text(
+                                                      AppLocalizations.of(context)
+                                                          .deposit,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .subtitle2,
+                                                      textAlign: TextAlign.center,
+                                                    )
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                          UIHelper.horizontalSpaceMedium,
+                                        //  UIHelper.horizontalSpaceMedium,
                                           // DATE
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(
-                                                    top: 5.0),
-                                            child: Column(
+                                          Expanded(flex: 1,
+                                                                                      child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   transaction.date.split(" ")[0]
@@ -178,7 +188,7 @@ class TransactionHistoryView extends StatelessWidget {
                                                         ,
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline6
+                                                        .subtitle2
                                                         .copyWith(
                                                             fontWeight:
                                                                 FontWeight
@@ -188,110 +198,112 @@ class TransactionHistoryView extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-                                          UIHelper.horizontalSpaceLarge,
+                                         UIHelper.horizontalSpaceMedium,
                                           // Quantity
-                                          Text(
-                                            transaction.quantity
-                                                .toStringAsFixed(
-                                                    // model
-                                                    //   .decimalConfig
-                                                    //   .quantityDecimal
-                                                    2),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline5
-                                                .copyWith(
-                                                    fontWeight:
-                                                        FontWeight.w400),
+                                          Expanded(flex: 1,
+                                                                                      child: Text(
+                                              transaction.quantity
+                                                  .toStringAsFixed(
+                                                      // model
+                                                      //   .decimalConfig
+                                                      //   .quantityDecimal
+                                                      2),textAlign: TextAlign.left,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                            ),
                                           ),
-                                          UIHelper.horizontalSpaceMedium,
-                                          // Tag
+                                       //   UIHelper.horizontalSpaceMedium,
+                                          // Status
                                           transaction.tag != model.send
-                                              ? Container(
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      
-                                                
-                                                      // If deposit is success in both Ticker chain and kanabn chain then show completed
-                                                      if (transaction.tag
-                                                                  .toUpperCase() ==
-                                                              model.deposit
-                                                                  .toUpperCase() &&
-                                                          transaction
-                                                                  .tickerChainTxStatus ==
-                                                              model
-                                                                  .success &&
-                                                          transaction
-                                                                  .kanbanTxStatus ==
-                                                              model.success)
-                                                        Text(
-                                                            firstCharToUppercase(
-                                                                AppLocalizations.of(
-                                                                        context)
-                                                                    .completed),
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    customFontSize,
-                                                                color: colors
-                                                                    .buyPrice))
-                                                                      // If deposit is success in only Ticker chain and not in kanban chain then show sent
-                                                                   else if (transaction.tag
-                                                                  .toUpperCase() ==
-                                                              model.deposit
-                                                                  .toUpperCase() &&
-                                                          transaction
-                                                                  .tickerChainTxStatus ==
-                                                              model
-                                                                  .success &&
-                                                          transaction
-                                                                  .kanbanTxStatus ==
-                                                              model.success)
-                                                        Text(
-                                                            firstCharToUppercase(
-                                                                AppLocalizations.of(
-                                                                        context)
-                                                                    .sent),
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    customFontSize,
-                                                                color: colors
-                                                                    .buyPrice))
-                                                                    // depsoit pending if ticker chain staus is pending
-                                                      else if (transaction.tag
-                                                                  .toUpperCase() ==
-                                                              model.deposit
-                                                                  .toUpperCase()&&transaction
-                                                              .tickerChainTxStatus ==
-                                                          model.pending)
-                                                        Text(
-                                                            firstCharToUppercase(
-                                                                AppLocalizations.of(
-                                                                        context)
-                                                                    .pending),
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    customFontSize,
-                                                                color: colors
-                                                                    .yellow))
-                                                      
-                                                      else if (transaction.tag
-                                                                  .toUpperCase() ==
-                                                              model.deposit
-                                                                  .toUpperCase()&&transaction
-                                                                  .kanbanTxStatus ==
-                                                              model
-                                                                  .rejected ||
-                                                          transaction
-                                                                  .kanbanTxStatus ==
-                                                              model
-                                                                  .rejected)
-                                                           
-                                                        SizedBox(
-                                                          width: 80,
-                                                          child: RichText(
+                                              ? Expanded(
+                                                          flex:1,                                    child: Container(
+                                                    child: Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        
+                                                  
+                                                        // If deposit is success in both Ticker chain and kanabn chain then show completed
+                                                        if (transaction.tag
+                                                                    .toUpperCase() ==
+                                                                model.deposit
+                                                                    .toUpperCase() &&
+                                                            transaction
+                                                                    .tickerChainTxStatus ==
+                                                                model
+                                                                    .success &&
+                                                            transaction
+                                                                    .kanbanTxStatus ==
+                                                                model.success)
+                                                          Text(
+                                                              firstCharToUppercase(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .completed),
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      customFontSize,
+                                                                  color: colors
+                                                                      .buyPrice))
+                                                                        // If deposit is success in only Ticker chain and not in kanban chain then show sent
+                                                                     else if (transaction.tag
+                                                                    .toUpperCase() ==
+                                                                model.deposit
+                                                                    .toUpperCase() &&
+                                                            transaction
+                                                                    .tickerChainTxStatus ==
+                                                                model
+                                                                    .success &&
+                                                            transaction
+                                                                    .kanbanTxStatus ==
+                                                                model.success)
+                                                          Text(
+                                                              firstCharToUppercase(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .sent),
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      customFontSize,
+                                                                  color: colors
+                                                                      .buyPrice))
+                                                                      // depsoit pending if ticker chain staus is pending
+                                                        else if (transaction.tag
+                                                                    .toUpperCase() ==
+                                                                model.deposit
+                                                                    .toUpperCase()&&transaction
+                                                                .tickerChainTxStatus ==
+                                                            model.pending)
+                                                          Text(
+                                                              firstCharToUppercase(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .pending),
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      customFontSize,
+                                                                  color: colors
+                                                                      .yellow))
+                                                        
+                                                        else if (transaction.tag
+                                                                    .toUpperCase() ==
+                                                                model.deposit
+                                                                    .toUpperCase()&&transaction
+                                                                    .kanbanTxStatus ==
+                                                                model
+                                                                    .rejected ||
+                                                            transaction
+                                                                    .kanbanTxStatus ==
+                                                                model
+                                                                    .rejected)
+                                                             
+                                                          RichText(
                                                             text: TextSpan(
                                                                 text: AppLocalizations.of(
                                                                         context)
@@ -311,76 +323,58 @@ class TransactionHistoryView extends StatelessWidget {
                                                                         model.navigationService.navigateTo(RedepositViewRoute,
                                                                             arguments: model.walletInfo);
                                                                       }),
-                                                          ),
-                                                        )            // if withdraw status is success on kanban but null on ticker chain then display sent
-                                                      else if (transaction
-                                                                  .tag
-                                                                  .toUpperCase() ==
-                                                              model
-                                                                  .withdraw
-                                                                  .toUpperCase() &&
-                                                          transaction
-                                                                  .kanbanTxStatus ==
-                                                              model.success && transaction.tickerChainTxId == '')
-                                                        Text(
-                                                            firstCharToUppercase(
-                                                                AppLocalizations.of(
-                                                                        context)
-                                                                    .sent),
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    customFontSize,
-                                                                color: colors
-                                                                    .buyPrice))              // if withdraw status is success on kanban but null on ticker chain then display sent
-                                                      else if (transaction
-                                                                  .tag
-                                                                  .toUpperCase() ==
-                                                              model
-                                                                  .withdraw
-                                                                  .toUpperCase() &&
-                                                          transaction
-                                                                  .kanbanTxStatus ==
-                                                              model.success && transaction.tickerChainTxStatus.startsWith('sent'))
-                                                        Text(
-                                                            firstCharToUppercase(
-                                                                AppLocalizations.of(
-                                                                        context)
-                                                                    .completed),
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    customFontSize,
-                                                                color: colors
-                                                                    .buyPrice)),
-                                                                    
-                                                                           UIHelper.horizontalSpaceSmall,
-                                                                      RichText(
-                                                  text: TextSpan(
-                                                      text: AppLocalizations.of(
-                                                              context)
-                                                          .details,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle2
-                                                          .copyWith(
-                                                              decoration:
-                                                                  TextDecoration
-                                                                      .underline,
-                                                              color: colors
-                                                                  .primaryColor),
-                                                      recognizer:
-                                                          TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              model.showTxDetailDialog(
-                                                                  transaction);
-                                                              // model.copyAddress(
-                                                              //     transaction
-                                                              //         .kanbanTxId);
-                                                            }),
-                                                ),
-                                                    ],
+                                                          )            // if withdraw status is success on kanban but null on ticker chain then display sent
+                                                        else if (transaction
+                                                                    .tag
+                                                                    .toUpperCase() ==
+                                                                model
+                                                                    .withdraw
+                                                                    .toUpperCase() &&
+                                                            transaction
+                                                                    .kanbanTxStatus ==
+                                                                model.success && transaction.tickerChainTxId == '')
+                                                          Text(
+                                                              firstCharToUppercase(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .sent),
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      customFontSize,
+                                                                  color: colors
+                                                                      .buyPrice))              // if withdraw status is success on kanban but null on ticker chain then display sent
+                                                        else if (transaction
+                                                                    .tag
+                                                                    .toUpperCase() ==
+                                                                model
+                                                                    .withdraw
+                                                                    .toUpperCase() &&
+                                                            transaction
+                                                                    .kanbanTxStatus ==
+                                                                model.success && transaction.tickerChainTxStatus.startsWith('sent'))
+                                                          Text(
+                                                              firstCharToUppercase(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .completed),
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      customFontSize,
+                                                                  color: colors
+                                                                      .buyPrice)),
+
+                                                      ],
+                                                    ),
                                                   ),
-                                                )
+                                              )
                                               : Container(),
+                                                  Expanded(flex: 1,
+                                                                                                      child: Container(alignment: Alignment.centerRight,
+                                                                                                        child: IconButton(icon: Icon(Icons.more,color:colors.white,size:18),onPressed: (){ print('tx histoy ${transaction.toJson()}');
+                                                                  model.showTxDetailDialog(
+                                                                      transaction);}),
+                                                                                                      ),
+                                                  )
                                         ],
                                       ),
                                     ),

@@ -1,5 +1,6 @@
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
@@ -21,6 +22,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
 
 class TransactionHistoryViewmodel extends FutureViewModel {
   final String tickerName;
@@ -88,7 +90,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     transactionHistoryToShowInView.sort(
         (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
     setBusy(false);
-    print(transactionHistoryToShowInView.first.toJson());
+    // print(transactionHistoryToShowInView.first.toJson());
   }
 
   getWithdrawDepositTxHistoryEvents() async {
@@ -172,12 +174,13 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       launchUrl(transactionHistory.kanbanTxId,
-                          transactionHistory.tickerName, true);
+                          transactionHistory.chainName, true);
                     },
                   text: transactionHistory.kanbanTxId.isEmpty
                       ? transactionHistory.kanbanTxStatus.isEmpty
                           ? 'In progress'
-                          : transactionHistory.kanbanTxStatus
+                          : firstCharToUppercase(
+                              transactionHistory.kanbanTxStatus)
                       : transactionHistory.kanbanTxId.toString(),
                   style: Theme.of(context)
                       .textTheme
@@ -199,7 +202,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       launchUrl(transactionHistory.tickerChainTxId,
-                          transactionHistory.tickerName, false);
+                          transactionHistory.chainName, false);
                     },
                   text: transactionHistory.tickerChainTxId.isEmpty
                       ? transactionHistory.tickerChainTxStatus.isEmpty
@@ -217,16 +220,52 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         )).show();
   }
 
-  launchUrl(txId, tickerName, bool isKanban) async {
-    ConfigService configService = locator<ConfigService>();
-    String baseServerUrl = configService.getKanbanBaseUrl();
+  launchUrl(String txId, String chain, bool isKanban) async {
     if (isKanban) {
       String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
-      if (await canLaunch(exchangilyExplorerUrl)) {
-        await launch(exchangilyExplorerUrl);
+      log.i('Kanban - chainame $chain explorer url - $exchangilyExplorerUrl');
+      openExplorer(exchangilyExplorerUrl);
+    } else if (chain.toUpperCase() == 'FAB') {
+      String fabExplorerUrl = FabExplorerUrl + txId;
+      log.i('FAB - chainame $chain explorer url - $fabExplorerUrl');
+      openExplorer(fabExplorerUrl);
+    } else if (chain.toUpperCase() == 'BTC') {
+      String bitcoinExplorerUrl = BitcoinExplorerUrl + txId;
+      log.i('BTC - chainame $chain explorer url - $bitcoinExplorerUrl');
+      openExplorer(bitcoinExplorerUrl);
+    } else if (chain.toUpperCase() == 'ETH') {
+      String ethereumExplorerUrl = isProduction
+          ? EthereumExplorerUrl + txId
+          : TestnetEthereumExplorerUrl + txId;
+      log.i('ETH - chainame $chain explorer url - $ethereumExplorerUrl');
+      if (await canLaunch(ethereumExplorerUrl)) {
+        await launch(ethereumExplorerUrl);
       }
+    } else if (chain.toUpperCase() == 'LTC') {
+      String litecoinExplorerUrl = LitecoinExplorerUrl + txId;
+      log.i('LTC - chainame $chain explorer url - $litecoinExplorerUrl');
+      openExplorer(litecoinExplorerUrl);
+    } else if (chain.toUpperCase() == 'DOGE') {
+      String dogeExplorerUrl = DogeExplorerUrl + txId;
+      log.i('doge - chainame $chain explorer url - $dogeExplorerUrl');
+      openExplorer(dogeExplorerUrl);
+    } else if (chain.toUpperCase() == 'TRON') {
+      String tronExplorerUrl = TronExplorerUrl + txId;
+      log.i('tron - chainame $chain explorer url - $tronExplorerUrl');
+      openExplorer(tronExplorerUrl);
+    } else if (chain.toUpperCase() == 'BCH') {
+      String bitcoinCashExplorerUrl = BitcoinCashExplorerUrl + txId;
+      log.i('BCH - chainame $chain explorer url - $bitcoinCashExplorerUrl');
+      openExplorer(bitcoinCashExplorerUrl);
     } else {
       throw 'Could not launch';
+    }
+  }
+
+  // launch url
+  openExplorer(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
     }
   }
 }
