@@ -23,7 +23,6 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 
-import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
 
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -32,7 +31,7 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
-import 'package:exchangilymobileapp/services/order_service.dart';
+
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -255,9 +254,11 @@ class BuySellViewModel extends StreamViewModel {
 
   fillPriceAndQuantityTextFields(p, q) {
     setBusy(true);
-    priceTextController.text = p.toString();
+    priceTextController.text =
+        p.toStringAsFixed(singlePairDecimalConfig.priceDecimal);
     price = p;
-    quantityTextController.text = q.toString();
+    quantityTextController.text =
+        q.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
     quantity = q;
     setBusy(false);
   }
@@ -267,9 +268,11 @@ class BuySellViewModel extends StreamViewModel {
 ----------------------------------------------------------------------*/
   initialTextfieldsFill() {
     setBusy(true);
-    priceTextController.text = orderbook.price.toString();
+    priceTextController.text =
+        orderbook.price.toStringAsFixed(singlePairDecimalConfig.priceDecimal);
     price = orderbook.price;
-    quantityTextController.text = orderbook.quantity.toString();
+    quantityTextController.text =
+        orderbook.quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
     quantity = orderbook.quantity;
     setBusy(false);
   }

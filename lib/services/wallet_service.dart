@@ -830,7 +830,7 @@ class WalletService {
     }).catchError((onError) async {
       log.e('Could not save in database $onError');
       await transactionHistoryDatabaseService.deleteDb().then((value) async {
-        log.i('transactionHistoryDatabase deleted');
+        log.e('transactionHistoryDatabase deleted');
         await transactionHistoryDatabaseService
             .insert(transactionHistory)
             .then((data) async {

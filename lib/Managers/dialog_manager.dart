@@ -117,10 +117,12 @@ class _DialogManagerState extends State<DialogManager> {
           _dialogService.dialogComplete(
               DialogResponse(returnedText: 'Closed', confirmed: false));
           controller.text = '';
+          Navigator.of(context).pop();
         },
         content: Column(
           children: <Widget>[
             TextField(
+              autofocus: true,
               style: TextStyle(color: globals.white),
               controller: controller,
               obscureText: true,

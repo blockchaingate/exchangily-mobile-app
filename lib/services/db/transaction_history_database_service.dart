@@ -36,7 +36,7 @@ class TransactionHistoryDatabaseService {
   final String columnTag = 'tag';
   final String columnChainName = 'chainName';
 
-  static final _databaseVersion = 6;
+  static final _databaseVersion = 7;
   static Future<Database> _database;
   String path = '';
 
@@ -64,7 +64,7 @@ class TransactionHistoryDatabaseService {
         $columnTickerChainTxStatus TEXT,
         $columnKanbanTxStatus TEXT,
         $columnQuantity REAL,
-        $columnTag TEXT
+        $columnTag TEXT,
         $columnChainName TEXT) ''');
   }
 
@@ -188,7 +188,7 @@ class TransactionHistoryDatabaseService {
   // Delete Database
   Future deleteDb() async {
     log.w(path);
-    await deleteDatabase(path);
+    await deleteDatabase(path).then((value) => log.i('database Deleted'));
     _database = null;
   }
 }

@@ -216,18 +216,19 @@ class SendScreenState extends BaseState {
           var allTxids = res["txids"];
           walletService.addTxids(allTxids);
 
-          String date = DateTime.now().toString();
+          String date = DateTime.now().toLocal().toString();
           TransactionHistory transactionHistory = new TransactionHistory(
-              id: null,
-              tickerName: tickerName,
-              address: '',
-              amount: 0.0,
-              date: date.toString(),
-              kanbanTxId: '',
-              tickerChainTxId: txHash,
-              tickerChainTxStatus: '',
-              quantity: amount,
-              tag: 'send');
+            id: null,
+            tickerName: tickerName,
+            address: '',
+            amount: 0.0,
+            date: date,
+            kanbanTxId: '',
+            tickerChainTxId: txHash,
+            quantity: amount,
+            tag: 'send',
+            chainName: tokenType,
+          );
           walletService.insertTransactionInDatabase(transactionHistory);
         } else if (txHash == '' && errorMessage == '') {
           log.e('Both TxHash and Error Message are empty $errorMessage');

@@ -103,6 +103,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     });
   }
 
+/*----------------------------------------------------------------------
+                  Get transaction
+----------------------------------------------------------------------*/
   getTransaction(String tickerName) async {
     setBusy(true);
     transactionHistoryToShowInView = [];
@@ -132,6 +135,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     });
   }
 
+/*----------------------------------------------------------------------
+                  Copy Address
+----------------------------------------------------------------------*/
   copyAddress(String txId) {
     Clipboard.setData(new ClipboardData(text: txId));
     sharedService.alertDialog(AppLocalizations.of(context).transactionId,
@@ -162,33 +168,37 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         // },
         content: Column(
           children: <Widget>[
-            Text(
-              //AppLocalizations.of(context).,
-              'Kanban TxId',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: RichText(
-                text: TextSpan(
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      launchUrl(transactionHistory.kanbanTxId,
-                          transactionHistory.chainName, true);
-                    },
-                  text: transactionHistory.kanbanTxId.isEmpty
-                      ? transactionHistory.kanbanTxStatus.isEmpty
-                          ? 'In progress'
-                          : firstCharToUppercase(
-                              transactionHistory.kanbanTxStatus)
-                      : transactionHistory.kanbanTxId.toString(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      .copyWith(color: Colors.blue),
-                ),
-              ),
-            ),
+            transactionHistory.tag != send
+                ? Text(
+                    //AppLocalizations.of(context).,
+                    'Kanban TxId',
+                    style: Theme.of(context).textTheme.bodyText1,
+                  )
+                : Container(),
+            transactionHistory.tag != send
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: RichText(
+                      text: TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            launchUrl(transactionHistory.kanbanTxId,
+                                transactionHistory.chainName, true);
+                          },
+                        text: transactionHistory.kanbanTxId.isEmpty
+                            ? transactionHistory.kanbanTxStatus.isEmpty
+                                ? 'In progress'
+                                : firstCharToUppercase(
+                                    transactionHistory.kanbanTxStatus)
+                            : transactionHistory.kanbanTxId.toString(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Colors.blue),
+                      ),
+                    ),
+                  )
+                : Container(),
             UIHelper.verticalSpaceMedium,
             Text(
               //AppLocalizations.of(context).quantity,
@@ -220,6 +230,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         )).show();
   }
 
+/*----------------------------------------------------------------------
+                  Launch URL
+----------------------------------------------------------------------*/
   launchUrl(String txId, String chain, bool isKanban) async {
     if (isKanban) {
       String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
@@ -238,9 +251,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
           ? EthereumExplorerUrl + txId
           : TestnetEthereumExplorerUrl + txId;
       log.i('ETH - chainame $chain explorer url - $ethereumExplorerUrl');
-      if (await canLaunch(ethereumExplorerUrl)) {
-        await launch(ethereumExplorerUrl);
-      }
+      openExplorer(ethereumExplorerUrl);
     } else if (chain.toUpperCase() == 'LTC') {
       String litecoinExplorerUrl = LitecoinExplorerUrl + txId;
       log.i('LTC - chainame $chain explorer url - $litecoinExplorerUrl');
@@ -267,5 +278,29 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     if (await canLaunch(url)) {
       await launch(url);
     }
+  }
+
+  Future test() async {
+    String date = DateTime.now().toLocal().toString();
+    TransactionHistory transactionHistory = new TransactionHistory(
+      id: null,
+      tickerName: tickerName,
+      address: '',
+      amount: 0.0,
+      date: date,
+      kanbanTxId: '',
+      tickerChainTxId:
+          '0x32ac8336a8660465413a649e1ae97c7eba84b13cdb057051e7c4fcac44af6da9',
+      quantity: 0.15,
+      tag: 'send',
+      chainName: 'ETH',
+    );
+    // await transactionHistoryDatabaseService.deleteDb();
+    walletService.insertTransactionInDatabase(transactionHistory);
+    // transactionHistoryDatabaseService
+    //     .insert(transactionHistory)
+    //     .then((data) async {
+    //   log.w('Saved in transaction history database $data');
+    // });
   }
 }
