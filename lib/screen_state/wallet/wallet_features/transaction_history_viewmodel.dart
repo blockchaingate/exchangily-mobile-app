@@ -192,7 +192,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
             UIHelper.verticalSpaceMedium,
             Text(
               //AppLocalizations.of(context).quantity,
-              '${transactionHistory.tickerName} Chain TxId',
+              '${transactionHistory.chainName} Chain TxId',
               style: Theme.of(context).textTheme.bodyText1,
             ),
             Padding(

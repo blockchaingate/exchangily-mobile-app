@@ -60,7 +60,7 @@ class TransactionHistoryView extends StatelessWidget {
                                                         .textTheme
                                                         .subtitle2),
                              ),
- Expanded(flex: 1,
+ Expanded(flex: 2,
     child: Text(
                                                     AppLocalizations.of(context)
                                                         .quantity,textAlign: TextAlign.center,
@@ -97,71 +97,83 @@ class TransactionHistoryView extends StatelessWidget {
                                       color: colors.walletCardColor,
                                       child: Row(
                                         children: <Widget>[
-                                          UIHelper.horizontalSpaceSmall,
-                                          Container(
-                                          // Action with icon
-                                            child: Expanded(flex:1,
-                                                                                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.spaceEvenly,
-                                               
-                                                children: [
-                                                  Text(
-                                                      '${transaction.tickerName}',
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle2),
-                                                  // icon
-                                                  transaction.tag.toUpperCase() ==
-                                                          model.deposit
-                                                              .toUpperCase()
-                                                      ? Icon(
+                                         
+                                          Expanded(flex:1,
+                                                                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                              // mainAxisAlignment:
+                                              //     MainAxisAlignment.spaceEvenly,
+                                             
+                                              children: [
+                                                Container(
+                                                
+                                                  margin: EdgeInsets.only(left:4),
+                                                  child: Padding(
+                                                    padding: transaction.tickerName.length > 3?const EdgeInsets.only(left:0.0): const EdgeInsets.only(left:5.0),
+                                                    child: Text(
+                                                        '${transaction.tickerName}',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subtitle2),
+                                                  ),
+                                                ),
+                                             
+                                                // icon
+                                                transaction.tag.toUpperCase() ==
+                                                        model.deposit
+                                                            .toUpperCase()
+                                                    ? Padding(
+                                                      padding: const EdgeInsets.only(left:10.0),
+                                                      child: Icon(
                                                           Icons.arrow_downward,
                                                           size: 16,
                                                           color: colors.buyPrice,
-                                                        )
-                                                      : Icon(
+                                                        ),
+                                                    )
+                                                    : Padding(
+                                                      padding: const EdgeInsets.only(left:10.0),
+                                                      child: Icon(
                                                           Icons.arrow_upward,
                                                           size: 16,
                                                           color: colors.sellPrice,
                                                         ),
+                                                    ),
 
-                                                  if (transaction.tag
-                                                          .toUpperCase() ==
-                                                      model.withdraw
-                                                          .toUpperCase())
-                                                    Text(
-                                                      AppLocalizations.of(context)
-                                                          .withdraw,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle2,
-                                                      textAlign: TextAlign.center,
-                                                    )
-                                                  else if (transaction.tag
-                                                          .toUpperCase() ==
-                                                      model.send.toUpperCase())
-                                                    Text(
-                                                      AppLocalizations.of(context)
-                                                          .send,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle2,
-                                                      textAlign: TextAlign.center,
-                                                    )
-                                                  else if (transaction.tag
-                                                          .toUpperCase() ==
-                                                      model.deposit.toUpperCase())
-                                                    Text(
-                                                      AppLocalizations.of(context)
-                                                          .deposit,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .subtitle2,
-                                                      textAlign: TextAlign.center,
-                                                    )
-                                                ],
-                                              ),
+                                                if (transaction.tag
+                                                        .toUpperCase() ==
+                                                    model.withdraw
+                                                        .toUpperCase())
+                                                  Text(
+                                                    AppLocalizations.of(context)
+                                                        .withdraw,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .subtitle2,
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                                else if (transaction.tag
+                                                        .toUpperCase() ==
+                                                    model.send.toUpperCase())
+                                                  Text(
+                                                    AppLocalizations.of(context)
+                                                        .send,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .subtitle2,
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                                else if (transaction.tag
+                                                        .toUpperCase() ==
+                                                    model.deposit.toUpperCase())
+                                                  Text(
+                                                    AppLocalizations.of(context)
+                                                        .deposit,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .subtitle2,
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                              ],
                                             ),
                                           ),
                                         //  UIHelper.horizontalSpaceMedium,
@@ -198,16 +210,17 @@ class TransactionHistoryView extends StatelessWidget {
                                               ],
                                             ),
                                           ),
-                                         UIHelper.horizontalSpaceMedium,
+                                        
                                           // Quantity
-                                          Expanded(flex: 1,
-                                                                                      child: Text(
+                                          Expanded(flex: 2,
+                                                                                      child: Container(alignment: Alignment.center,
+                                                                                        child: Text(
                                               transaction.quantity
                                                   .toStringAsFixed(
                                                       // model
                                                       //   .decimalConfig
                                                       //   .quantityDecimal
-                                                      2),textAlign: TextAlign.left,
+                                                      2),textAlign: TextAlign.right,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5
@@ -215,7 +228,9 @@ class TransactionHistoryView extends StatelessWidget {
                                                       fontWeight:
                                                           FontWeight.w400),
                                             ),
+                                                                                      ),
                                           ),
+                                         //  UIHelper.horizontalSpaceSmall,
                                        //   UIHelper.horizontalSpaceMedium,
                                           // Status
                                           transaction.tag != model.send
@@ -225,7 +240,7 @@ class TransactionHistoryView extends StatelessWidget {
                                                       crossAxisAlignment:
                                                           CrossAxisAlignment
                                                               .center,
-                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              mainAxisAlignment: MainAxisAlignment.center,
                                                       children: [
                                                         
                                                   

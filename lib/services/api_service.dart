@@ -80,6 +80,7 @@ class ApiService {
             var kanbanTxStatus;
             var kanbanTxId;
             var tickerTxId;
+            var chainName;
             List transactionsInside = element['transactions'] as List;
             // It has only 2 objects inside
             transactionsInside.forEach((element) {
@@ -90,15 +91,17 @@ class ApiService {
                   kanbanTxId = element['transactionId'];
                 }
               }
-              if (chain == 'FAB' ||
-                  chain == 'ETH' ||
-                  ticker == 'BTC' ||
-                  ticker == 'LTC' ||
-                  ticker == 'ETH' ||
-                  ticker == 'DOGE' ||
-                  ticker == 'FAB' ||
-                  ticker == 'BCH') {
+              // if (chain == 'FAB' ||
+              //     chain == 'ETH' ||
+              //     ticker == 'BTC' ||
+              //     ticker == 'LTC' ||
+              //     ticker == 'ETH' ||
+              //     ticker == 'DOGE' ||
+              //     ticker == 'FAB' ||
+              //     ticker == 'BCH')
+              else {
                 tickerChainTxStatus = element['status'];
+                chainName = chain;
                 if (element['transactionId'] != null)
                   tickerTxId = element['transactionId'];
               }
@@ -115,6 +118,7 @@ class ApiService {
             TransactionHistory tx = new TransactionHistory(
                 id: index,
                 tag: tag,
+                chainName: chainName,
                 tickerChainTxStatus: tickerChainTxStatus,
                 kanbanTxStatus: kanbanTxStatus,
                 kanbanTxId: kanbanTxId,
