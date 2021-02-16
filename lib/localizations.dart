@@ -1667,7 +1667,33 @@ class AppLocalizations {
   String get useNorthAmericanNode {
     return Intl.message('Use North American Node',
         name: 'useNorthAmericanNode',
-        desc: ' use_north_american_node_settings_view');
+        desc: 'use_north_american_node_settings_view');
+  }
+
+  String get inProgress {
+    return Intl.message('In Progress',
+        name: 'inProgress', desc: 'progress_transaction_history');
+  }
+
+  String get kanban {
+    return Intl.message('Kanban',
+        name: 'kanban', desc: 'kanban_progress_transaction_history');
+  }
+
+  String get transactionDetails {
+    return Intl.message('Transaction Details',
+        name: 'transactionDetails',
+        desc: 'transaction_details_transactiion_history');
+  }
+
+  String get action {
+    return Intl.message('Action',
+        name: 'action', desc: 'action_transaction_history');
+  }
+
+  String get chain {
+    return Intl.message('Chain',
+        name: 'chain', desc: 'chain_transaction_history');
   }
 
   // Share page pending translation added by Jack

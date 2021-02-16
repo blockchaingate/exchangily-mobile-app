@@ -7,7 +7,6 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -23,6 +22,7 @@ import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
+import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 
 class TransactionHistoryViewmodel extends FutureViewModel {
   final String tickerName;
@@ -46,9 +46,11 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   final apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
   final navigationService = locator<NavigationService>();
+  final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
 
   PairDecimalConfig decimalConfig = new PairDecimalConfig();
   WalletInfo walletInfo = new WalletInfo();
+  bool isChinese = false;
 
   @override
   Future futureToRun() async =>
@@ -70,12 +72,14 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         .then((decimalConfig) => decimalConfig = decimalConfig);
     txHistoryEvents = await getWithdrawDepositTxHistoryEvents();
     txHistoryEvents.forEach((element) {
-      transactionHistoryToShowInView.add(element);
+      if (element.tickerName == tickerName)
+        transactionHistoryToShowInView.add(element);
     });
     print(txHistoryEvents.length);
     if (txHistoryFromDb != null)
       txHistoryFromDb.forEach((t) async {
-        if (t.tag == 'send') transactionHistoryToShowInView.add(t);
+        if (t.tag == 'send' && t.tickerName == tickerName)
+          transactionHistoryToShowInView.add(t);
 
         // if (t.tickerChainTxStatus == 'pending' &&
         //     t.tag != 'send' &&
@@ -89,6 +93,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
       });
     transactionHistoryToShowInView.sort(
         (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
+
+    await userSettingsDatabaseService.getLanguage().then((value) {
+      if (value == 'zh') isChinese = true;
+    });
     setBusy(false);
     // print(transactionHistoryToShowInView.first.toJson());
   }
@@ -162,7 +170,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                 .headline4
                 .copyWith(decoration: TextDecoration.underline)),
         context: context,
-        title: 'Transaction Details',
+        title: AppLocalizations.of(context).transactionDetails,
         // closeFunction: () {
         //   Navigator.of(context).pop();
         // },
@@ -171,7 +179,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
             transactionHistory.tag != send
                 ? Text(
                     //AppLocalizations.of(context).,
-                    'Kanban TxId',
+                    '${AppLocalizations.of(context).kanban} Txid',
                     style: Theme.of(context).textTheme.bodyText1,
                   )
                 : Container(),
@@ -187,7 +195,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                           },
                         text: transactionHistory.kanbanTxId.isEmpty
                             ? transactionHistory.kanbanTxStatus.isEmpty
-                                ? 'In progress'
+                                ? AppLocalizations.of(context).inProgress
                                 : firstCharToUppercase(
                                     transactionHistory.kanbanTxStatus)
                             : transactionHistory.kanbanTxId.toString(),
@@ -202,7 +210,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
             UIHelper.verticalSpaceMedium,
             Text(
               //AppLocalizations.of(context).quantity,
-              '${transactionHistory.chainName} Chain TxId',
+              '${transactionHistory.chainName} ${AppLocalizations.of(context).chain} Txid',
               style: Theme.of(context).textTheme.bodyText1,
             ),
             Padding(
@@ -216,7 +224,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                     },
                   text: transactionHistory.tickerChainTxId.isEmpty
                       ? transactionHistory.tickerChainTxStatus.isEmpty
-                          ? 'In Progress'
+                          ? AppLocalizations.of(context).inProgress
                           : transactionHistory.tickerChainTxStatus
                       : transactionHistory.tickerChainTxId.toString(),
                   style: Theme.of(context)
@@ -236,7 +244,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   launchUrl(String txId, String chain, bool isKanban) async {
     if (isKanban) {
       String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
-      log.i('Kanban - chainame $chain explorer url - $exchangilyExplorerUrl');
+      log.i('Kanban - explorer url - $exchangilyExplorerUrl');
       openExplorer(exchangilyExplorerUrl);
     } else if (chain.toUpperCase() == 'FAB') {
       String fabExplorerUrl = FabExplorerUrl + txId;

@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "action" : MessageLookupByLibrary.simpleMessage("行动"),
     "addGas" : MessageLookupByLibrary.simpleMessage("加燃料"),
     "addGasTransactionFailed" : MessageLookupByLibrary.simpleMessage("加燃料操作失败"),
     "addGasTransactionSuccess" : MessageLookupByLibrary.simpleMessage("加燃料操作提交成功"),
@@ -53,6 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel" : MessageLookupByLibrary.simpleMessage("取消"),
     "cancelOrder" : MessageLookupByLibrary.simpleMessage("取消订单"),
     "cancelledOrders" : MessageLookupByLibrary.simpleMessage("取消的订单"),
+    "chain" : MessageLookupByLibrary.simpleMessage("区块链"),
     "change" : MessageLookupByLibrary.simpleMessage("涨跌"),
     "changeWalletLanguage" : MessageLookupByLibrary.simpleMessage("设置语言"),
     "checkingAccountDetails" : MessageLookupByLibrary.simpleMessage("检查帐户详情"),
@@ -122,6 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "importWallet" : MessageLookupByLibrary.simpleMessage("导入已有钱包"),
     "important" : MessageLookupByLibrary.simpleMessage("重要提示"),
     "inExchange" : MessageLookupByLibrary.simpleMessage("在交易所"),
+    "inProgress" : MessageLookupByLibrary.simpleMessage("正在处理中"),
     "inText" : MessageLookupByLibrary.simpleMessage("于"),
     "incorrectAnswer" : MessageLookupByLibrary.simpleMessage("回答错误"),
     "inputValidation" : MessageLookupByLibrary.simpleMessage("输入验证"),
@@ -131,6 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidAmount" : MessageLookupByLibrary.simpleMessage("数量错误"),
     "invalidMnemonic" : MessageLookupByLibrary.simpleMessage("无效的助记词"),
     "isOnItsWay" : MessageLookupByLibrary.simpleMessage("在区块链处理途中"),
+    "kanban" : MessageLookupByLibrary.simpleMessage("看板"),
     "kanbanGasFee" : MessageLookupByLibrary.simpleMessage("看板燃料费"),
     "kanbanGasLimit" : MessageLookupByLibrary.simpleMessage("看板燃料限额"),
     "kanbanGasPrice" : MessageLookupByLibrary.simpleMessage("看板燃料价格"),
@@ -300,6 +304,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trade" : MessageLookupByLibrary.simpleMessage("交易"),
     "tranfser" : MessageLookupByLibrary.simpleMessage("转账"),
     "transactionAmount" : MessageLookupByLibrary.simpleMessage("交易额"),
+    "transactionDetails" : MessageLookupByLibrary.simpleMessage("交易细节"),
     "transactionHistory" : MessageLookupByLibrary.simpleMessage("交易历史"),
     "transactionId" : MessageLookupByLibrary.simpleMessage("交易号(ID)"),
     "transactions" : MessageLookupByLibrary.simpleMessage("交易"),

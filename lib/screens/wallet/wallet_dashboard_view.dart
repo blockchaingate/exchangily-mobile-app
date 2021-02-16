@@ -416,16 +416,16 @@ class WalletDashboardView extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              floatingActionButton: Container(
-                color: white,
-                child: IconButton(
-                  icon: Icon(Icons.arrow_downward),
-                  onPressed: () {
-                    //  model.saveTokenLocally();
-                    model.apiService.getTransactionHistoryEvents();
-                  },
-                ),
-              ),
+              // floatingActionButton: Container(
+              //   color: white,
+              //   child: IconButton(
+              //     icon: Icon(Icons.arrow_downward),
+              //     onPressed: () {
+              //       //  model.saveTokenLocally();
+              //       model.apiService.getTransactionHistoryEvents();
+              //     },
+              //   ),
+              // ),
             ),
           );
         });

@@ -23,7 +23,7 @@ const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
 
 // Transaction history explorer URL's for prod
 const String ExchangilyExplorerUrl =
-    "https://exchangily.com/explorer/explorer/tx-detail/";
+    "https://exchangily.com/explorer/tx-detail/";
 const String BitcoinExplorerUrl = "https://live.blockcypher.com/btc/tx/";
 const String EthereumExplorerUrl = "https://etherscan.io/tx/";
 const String TestnetEthereumExplorerUrl = "https://ropsten.etherscan.io/tx/";

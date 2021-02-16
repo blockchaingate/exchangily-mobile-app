@@ -49,7 +49,7 @@ class TransactionHistoryView extends StatelessWidget {
                         Row(
                           
                           children: [UIHelper.horizontalSpaceSmall, Text(
-                                                  'Action',
+                                                  AppLocalizations.of(context).action,
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .subtitle2),UIHelper.horizontalSpaceMedium,UIHelper.horizontalSpaceSmall,
@@ -102,347 +102,13 @@ return
 
 TxHisotryCard(customFontSize: customFontSize,transaction: model.transactionHistoryToShowInView[index],model:model);
 
-// return Card(
-//         elevation: 4,
-//         child: Container(
-        
-//           padding: EdgeInsets.symmetric(
-//               vertical: 8.0),
-//           color: colors.walletCardColor,
-//           child: Row(
-//             children: <Widget>[
-           
-//               Expanded(flex:1,
-//                                                             child: Column(
-// crossAxisAlignment: CrossAxisAlignment.start,
-//                   // mainAxisAlignment:
-//                   //     MainAxisAlignment.spaceEvenly,
-               
-//                   children: [
-//                     Container(
-                  
-//                       margin: EdgeInsets.only(left:4),
-//                       child: Padding(
-//                         padding: model.transactionHistoryToShowInView[index].tickerName.length > 3?const EdgeInsets.only(left:0.0): const EdgeInsets.only(left:5.0),
-//                         child: Text(
-//                             '${model.transactionHistoryToShowInView[index].tickerName}',
-//                             style: Theme.of(context)
-//                                 .textTheme
-//                                 .subtitle2),
-//                       ),
-//                     ),
-               
-//                     // icon
-//                     model.transactionHistoryToShowInView[index].tag.toUpperCase() ==
-//                             model.deposit
-//                                 .toUpperCase()
-//                         ? Padding(
-//                           padding: const EdgeInsets.only(left:10.0),
-//                           child: Icon(
-//                               Icons.arrow_downward,
-//                               size: 16,
-//                               color: colors.buyPrice,
-//                             ),
-//                         )
-//                         : Padding(
-//                           padding: const EdgeInsets.only(left:10.0),
-//                           child: Icon(
-//                               Icons.arrow_upward,
-//                               size: 16,
-//                               color: colors.sellPrice,
-//                             ),
-//                         ),
-
-//                     if (model.transactionHistoryToShowInView[index].tag
-//                             .toUpperCase() ==
-//                         model.withdraw
-//                             .toUpperCase())
-//                       Padding(
-//                         padding: const EdgeInsets.only(left:2.0),
-//                         child: Text(
-//                           AppLocalizations.of(context)
-//                               .withdraw,
-//                           style: Theme.of(context)
-//                               .textTheme
-//                               .subtitle2,
-//                           textAlign: TextAlign.center,
-//                         ),
-//                       )
-//                     else if (model.transactionHistoryToShowInView[index].tag
-//                             .toUpperCase() ==
-//                         model.send.toUpperCase())
-//                       Padding(
-//                       padding:  const EdgeInsets.only(left:5.0),
-//                         child: Text(
-//                           AppLocalizations.of(context)
-//                               .send,
-//                           style: Theme.of(context)
-//                               .textTheme
-//                               .subtitle2,
-//                           textAlign: TextAlign.center,
-//                         ),
-//                       )
-//                     else if (model.transactionHistoryToShowInView[index].tag
-//                             .toUpperCase() ==
-//                         model.deposit.toUpperCase())
-//                       Padding(
-//                                                                         padding:  const EdgeInsets.only(left:2.0),
-//                         child: Text(
-//                           AppLocalizations.of(context)
-//                               .deposit,
-//                           style: Theme.of(context)
-//                               .textTheme
-//                               .subtitle2,
-//                           textAlign: TextAlign.center,
-//                         ),
-//                       )
-//                   ],
-//                 ),
-//               ),
-         
-//               // DATE
-//               Expanded(flex: 1,
-//                                                           child: Column(
-//                   mainAxisAlignment: MainAxisAlignment.start,
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     Text(
-//                       model.transactionHistoryToShowInView[index].date.split(" ")[0]
-//                           ,
-//                       style: Theme.of(context)
-//                           .textTheme
-//                           .headline5
-//                           .copyWith(
-//                               fontWeight:
-//                                   FontWeight
-//                                       .w400),
-//                     ),   Padding(
-//                       padding: const EdgeInsets.only(top:4.0),
-//                       child: Text(
-//                       model.transactionHistoryToShowInView[index].tag == model.send? model.transactionHistoryToShowInView[index].date.split(" ")[1].split(".")[0]: 
-//                        model.transactionHistoryToShowInView[index].date.split(" ")[1]
-//                             ,
-//                         style: Theme.of(context)
-//                             .textTheme
-//                             .subtitle2
-//                             .copyWith(
-//                                 fontWeight:
-//                                     FontWeight
-//                                         .bold),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-          
-//               // Quantity
-//               Expanded(flex: 2,
-//                                                           child: Container(
-//                                                             alignment: Alignment.center,
-//                                                             child: Text(
-//                   model.transactionHistoryToShowInView[index].quantity
-//                       .toStringAsFixed(
-//                           // model
-//                           //   .decimalConfig
-//                           //   .quantityDecimal
-//                           2),textAlign: TextAlign.right,
-//                   style: Theme.of(context)
-//                       .textTheme
-//                       .headline5
-//                       .copyWith(
-//                           fontWeight:
-//                               FontWeight.w400),
-//                 ),
-//                                                           ),
-//               ),
-//               UIHelper.horizontalSpaceSmall,
-//            //   UIHelper.horizontalSpaceMedium,
-//               // Status
-//               model.transactionHistoryToShowInView[index].tag != model.send
-//                   ? Expanded(
-//                               flex:1,                                    child: Container(
-//                         child: Row(
-//                           crossAxisAlignment:
-//                               CrossAxisAlignment
-//                                   .center,
-//                                   mainAxisAlignment: MainAxisAlignment.start,
-//                           children: [
-                          
-                    
-//                             // If deposit is success in both Ticker chain and kanabn chain then show completed
-//                             if (model.transactionHistoryToShowInView[index].tag
-//                                         .toUpperCase() ==
-//                                     model.deposit
-//                                         .toUpperCase() &&
-//                                 model.transactionHistoryToShowInView[index]
-//                                         .tickerChainTxStatus ==
-//                                     model
-//                                         .success &&
-//                                 model.transactionHistoryToShowInView[index]
-//                                         .kanbanTxStatus ==
-//                                     model.success)
-//                               Text(
-//                                   firstCharToUppercase(
-//                                       AppLocalizations.of(
-//                                               context)
-//                                           .completed),
-//                                   style: TextStyle(
-//                                       fontSize:
-//                                           customFontSize,
-//                                       color: colors
-//                                           .buyPrice))
-//                                             // If deposit is success in only Ticker chain and not in kanban chain then show sent
-//                                          else if (model.transactionHistoryToShowInView[index].tag
-//                                         .toUpperCase() ==
-//                                     model.deposit
-//                                         .toUpperCase() &&
-//                                 model.transactionHistoryToShowInView[index]
-//                                         .tickerChainTxStatus ==
-//                                     model
-//                                         .success &&
-//                                 model.transactionHistoryToShowInView[index]
-//                                         .kanbanTxStatus ==
-//                                     model.success)
-//                               Text(
-//                                   firstCharToUppercase(
-//                                       AppLocalizations.of(
-//                                               context)
-//                                           .sent),
-//                                   style: TextStyle(
-//                                       fontSize:
-//                                           customFontSize,
-//                                       color: colors
-//                                           .buyPrice))
-//                                           // depsoit pending if ticker chain staus is pending
-//                             else if (model.transactionHistoryToShowInView[index].tag
-//                                         .toUpperCase() ==
-//                                     model.deposit
-//                                         .toUpperCase()&&model.transactionHistoryToShowInView[index]
-//                                     .tickerChainTxStatus ==
-//                                 model.pending)
-//                               Text(
-//                                   firstCharToUppercase(
-//                                       AppLocalizations.of(
-//                                               context)
-//                                           .pending),
-//                                   style: TextStyle(
-//                                       fontSize:
-//                                           customFontSize,
-//                                       color: colors
-//                                           .yellow))
-                          
-//                             else if (model.transactionHistoryToShowInView[index].tag
-//                                         .toUpperCase() ==
-//                                     model.deposit
-//                                         .toUpperCase()&&model.transactionHistoryToShowInView[index]
-//                                         .kanbanTxStatus ==
-//                                     model
-//                                         .rejected ||
-//                                 model.transactionHistoryToShowInView[index]
-//                                         .kanbanTxStatus ==
-//                                     model
-//                                         .rejected)
-                               
-//                               RichText(
-//                                 text: TextSpan(
-//                                     text: AppLocalizations.of(
-//                                             context)
-//                                         .redeposit,
-//                                     style: TextStyle(
-//                                         fontSize:
-//                                             12,
-//                                         decoration:
-//                                             TextDecoration
-//                                                 .underline,
-//                                         color: colors
-//                                             .red),
-//                                     recognizer:
-//                                         TapGestureRecognizer()
-//                                           ..onTap =
-//                                               () {
-//                                             model.navigationService.navigateTo(RedepositViewRoute,
-//                                                 arguments: model.walletInfo);
-//                                           }),
-//                               )            // if withdraw status is success on kanban but null on ticker chain then display sent
-//                             else if (model.transactionHistoryToShowInView[index]
-//                                         .tag
-//                                         .toUpperCase() ==
-//                                     model
-//                                         .withdraw
-//                                         .toUpperCase() &&
-//                                 model.transactionHistoryToShowInView[index]
-//                                         .kanbanTxStatus ==
-//                                     model.success && model.transactionHistoryToShowInView[index].tickerChainTxId == '')
-//                               Text(
-//                                   firstCharToUppercase(
-//                                       AppLocalizations.of(
-//                                               context)
-//                                           .sent),
-//                                   style: TextStyle(
-//                                       fontSize:
-//                                           customFontSize,
-//                                       color: colors
-//                                           .buyPrice))              // if withdraw status is success on kanban but null on ticker chain then display sent
-//                             else if (model.transactionHistoryToShowInView[index]
-//                                         .tag
-//                                         .toUpperCase() ==
-//                                     model
-//                                         .withdraw
-//                                         .toUpperCase() &&
-//                                 model.transactionHistoryToShowInView[index]
-//                                         .kanbanTxStatus ==
-//                                     model.success && model.transactionHistoryToShowInView[index].tickerChainTxStatus.startsWith('sent'))
-//                               Text(
-//                                   firstCharToUppercase(
-//                                       AppLocalizations.of(
-//                                               context)
-//                                           .completed),
-//                                   style: TextStyle(
-//                                       fontSize:
-//                                           customFontSize,
-//                                       color: colors
-//                                           .buyPrice)),
-
-//                           ],
-//                         ),
-//                       ),
-//                   )
-//                   : Expanded(flex:1,
-//                                                                   child: Container(
-                    
-//                       child:Text(
-//                                     firstCharToUppercase(
-//                                         AppLocalizations.of(
-//                                                 context)
-//                                             .sent,),textAlign: TextAlign.start,
-//                                     style: TextStyle(
-//                                         fontSize:
-//                                             customFontSize,
-//                                         color: colors
-//                                             .buyPrice))),
-//                   ),
-//                       Expanded(flex: 1,
-//                                                                           child: Container(alignment: Alignment.centerRight,
-//                                                                             child: IconButton(padding: EdgeInsets.zero, icon: Icon( Icons.more,color:colors.white,size:18),onPressed: (){ print('tx histoy ${model.transactionHistoryToShowInView[index].toJson()}');
-//                                       model.showTxDetailDialog(
-//                                           model.transactionHistoryToShowInView[index]);}),
-//                                                                           ),
-//                       )
-//             ],
-//           ),
-//         ),
-//       );
 
 
 
 
                             }),
                         ),
-                        // for (var transaction
-                        //     in model.transactionHistoryToShowInView)
-                        //   model.isBusy
-                        //       ? CircularProgressIndicator()
-                        //       : TxHisotryCard(transaction: transaction, customFontSize: customFontSize),
+                 
                       ],
                     )),
       ),
@@ -520,7 +186,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
                         model.withdraw
                             .toUpperCase())
                       Padding(
-                        padding: const EdgeInsets.only(left:2.0),
+                        padding: const EdgeInsets.only(left:3.0),
                         child: Text(
                           AppLocalizations.of(context)
                               .withdraw,
@@ -548,7 +214,7 @@ crossAxisAlignment: CrossAxisAlignment.start,
                             .toUpperCase() ==
                         model.deposit.toUpperCase())
                       Padding(
-                                                                        padding:  const EdgeInsets.only(left:2.0),
+                          padding: model.isChinese?const EdgeInsets.only(left:7.0):  const EdgeInsets.only(left:3.0),
                         child: Text(
                           AppLocalizations.of(context)
                               .deposit,
@@ -573,11 +239,11 @@ crossAxisAlignment: CrossAxisAlignment.start,
                           ,
                       style: Theme.of(context)
                           .textTheme
-                          .headline5
+                          .headline6
                           .copyWith(
                               fontWeight:
                                   FontWeight
-                                      .w400),
+                                      .bold),
                     ),   Padding(
                       padding: const EdgeInsets.only(top:4.0),
                       child: Text(

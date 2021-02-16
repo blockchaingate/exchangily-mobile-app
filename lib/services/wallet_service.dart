@@ -205,12 +205,30 @@ class WalletService {
     }).catchError((err) => log.e('user setting db empty'));
   }
 
-  updateUserSettingsDb(UserSettings us, isUserSettingsEmpty) async {
+  updateUserSettingsDb(UserSettings userSettings, isUserSettingsEmpty) async {
     UserSettingsDatabaseService userSettingsDatabaseService =
         locator<UserSettingsDatabaseService>();
     isUserSettingsEmpty
-        ? await userSettingsDatabaseService.insert(us)
-        : await userSettingsDatabaseService.update(us);
+        ? await userSettingsDatabaseService
+            .insert(userSettings)
+            .then((value) => null)
+            .catchError((err) async {
+            log.e(
+                'In updateUserSettingsDb -- INSERT Catch- deleting the database and re-inserting the data');
+            await userSettingsDatabaseService.deleteDb().then((value) => () {
+                  userSettingsDatabaseService.insert(userSettings);
+                });
+          })
+        : await userSettingsDatabaseService
+            .update(userSettings)
+            .then((value) => null)
+            .catchError((err) async {
+            log.e(
+                'In updateUserSettingsDb -- UPDATE Catch- deleting the database and re-inserting the data');
+            await userSettingsDatabaseService.deleteDb().then((value) => () {
+                  userSettingsDatabaseService.update(userSettings);
+                });
+          });
     await userSettingsDatabaseService.getAll();
   }
 

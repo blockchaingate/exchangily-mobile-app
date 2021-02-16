@@ -359,10 +359,10 @@ class SettingsViewmodel extends BaseViewModel {
         key == 'zh') {
       log.e('in zh');
       AppLocalizations.load(Locale('zh', 'ZH'));
-      storageService.language = 'zh';
 
       UserSettings us = new UserSettings(id: 1, language: 'zh', theme: '');
       await walletService.updateUserSettingsDb(us, isUserSettingsEmpty);
+      storageService.language = 'zh';
     } else if (updatedLanguageValue == 'English' ||
         updatedLanguageValue == 'en' ||
         key == 'en') {

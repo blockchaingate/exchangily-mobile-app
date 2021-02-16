@@ -15,15 +15,11 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_orders_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_model.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_view.dart';
-import 'package:exchangilymobileapp/screens/exchange/trade/orderbook/orderbook_viewmodel.dart';
-import 'package:exchangilymobileapp/screens/settings/settings_portable_widget.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:showcaseview/showcase_widget.dart';

@@ -20,7 +20,6 @@ import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
@@ -29,7 +28,7 @@ import '../environments/environment.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
-import 'package:exchangilymobileapp/models/wallet/transaction_history_events/transaction_history_events_model.dart';
+
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 
 /// The service responsible for networking requests

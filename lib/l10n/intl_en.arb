@@ -1919,5 +1919,35 @@
     "description": " use_north_american_node_settings_view",
     "type": "text",
     "placeholders": {}
+  },
+  "inProgress": "In Progress",
+  "@inProgress": {
+    "description": "progress_transaction_history",
+    "type": "text",
+    "placeholders": {}
+  },
+  "kanban": "Kanban",
+  "@kanban": {
+    "description": "kanban_progress_transaction_history",
+    "type": "text",
+    "placeholders": {}
+  },
+  "transactionDetails": "Transaction Details",
+  "@transactionDetails": {
+    "description": "transaction_details_transactiion_history",
+    "type": "text",
+    "placeholders": {}
+  },
+  "action": "Action",
+  "@action": {
+    "description": "action_transaction_history",
+    "type": "text",
+    "placeholders": {}
+  },
+  "chain": "Chain",
+  "@chain": {
+    "description": "chain_transaction_history",
+    "type": "text",
+    "placeholders": {}
   }
 }

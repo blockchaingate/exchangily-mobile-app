@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "action" : MessageLookupByLibrary.simpleMessage("Action"),
     "addGas" : MessageLookupByLibrary.simpleMessage("Add Gas"),
     "addGasTransactionFailed" : MessageLookupByLibrary.simpleMessage("Add gas transaction failed"),
     "addGasTransactionSuccess" : MessageLookupByLibrary.simpleMessage("Add gas transaction was made successfully"),
@@ -54,6 +55,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "cancelOrder" : MessageLookupByLibrary.simpleMessage("Cancel Order"),
     "cancelledOrders" : MessageLookupByLibrary.simpleMessage("Cancelled Orders"),
+    "chain" : MessageLookupByLibrary.simpleMessage("Chain"),
     "change" : MessageLookupByLibrary.simpleMessage("Change"),
     "changeWalletLanguage" : MessageLookupByLibrary.simpleMessage("Change Wallet Language"),
     "checkingAccountDetails" : MessageLookupByLibrary.simpleMessage("Checking account details"),
@@ -123,6 +125,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "importWallet" : MessageLookupByLibrary.simpleMessage("Import Wallet"),
     "important" : MessageLookupByLibrary.simpleMessage("Important"),
     "inExchange" : MessageLookupByLibrary.simpleMessage("In Exchange"),
+    "inProgress" : MessageLookupByLibrary.simpleMessage("In Progress"),
     "inText" : MessageLookupByLibrary.simpleMessage("in"),
     "incorrectAnswer" : MessageLookupByLibrary.simpleMessage("Incorrect Answer"),
     "inputValidation" : MessageLookupByLibrary.simpleMessage("input validation"),
@@ -132,6 +135,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "invalidAmount" : MessageLookupByLibrary.simpleMessage("Invalid Amount"),
     "invalidMnemonic" : MessageLookupByLibrary.simpleMessage("Invalid Mnemonic"),
     "isOnItsWay" : MessageLookupByLibrary.simpleMessage("is on its way"),
+    "kanban" : MessageLookupByLibrary.simpleMessage("Kanban"),
     "kanbanGasFee" : MessageLookupByLibrary.simpleMessage("Kanban Gas Fee"),
     "kanbanGasLimit" : MessageLookupByLibrary.simpleMessage("Kanban Gas Limit"),
     "kanbanGasPrice" : MessageLookupByLibrary.simpleMessage("Kanban Gas Price"),
@@ -305,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trade" : MessageLookupByLibrary.simpleMessage("Trade"),
     "tranfser" : MessageLookupByLibrary.simpleMessage("Transfer"),
     "transactionAmount" : MessageLookupByLibrary.simpleMessage("Transaction Amount"),
+    "transactionDetails" : MessageLookupByLibrary.simpleMessage("Transaction Details"),
     "transactionHistory" : MessageLookupByLibrary.simpleMessage("Transaction History"),
     "transactionId" : MessageLookupByLibrary.simpleMessage("Transaction Id"),
     "transactions" : MessageLookupByLibrary.simpleMessage("Transactions"),

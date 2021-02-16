@@ -1979,5 +1979,35 @@
       "description": " use_north_american_node_settings_view",
       "type": "text",
       "placeholders": {}
+    },
+    "inProgress": "正在处理中",
+    "@inProgress": {
+      "description": "progress_transaction_history",
+      "type": "text",
+      "placeholders": {}
+    },
+    "kanban": "看板",
+    "@kanban": {
+      "description": "kanban_progress_transaction_history",
+      "type": "text",
+      "placeholders": {}
+    },
+    "transactionDetails": "交易细节",
+    "@transactionDetails": {
+      "description": "transaction_details_transactiion_history",
+      "type": "text",
+      "placeholders": {}
+    },
+    "action": "行动",
+    "@action": {
+      "description": "action_transaction_history",
+      "type": "text",
+      "placeholders": {}
+    },
+    "chain": "区块链",
+    "@chain": {
+      "description": "chain_transaction_history",
+      "type": "text",
+      "placeholders": {}
     }
 }

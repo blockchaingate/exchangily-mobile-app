@@ -28,7 +28,7 @@ class UserSettingsDatabaseService {
   final String columnTheme = 'theme';
   final String columnWalletBalancesBody = 'walletBalancesBody';
 
-  static final _databaseVersion = 2;
+  static final _databaseVersion = 3;
   static Future<Database> _database;
   String path = '';
 
@@ -48,7 +48,7 @@ class UserSettingsDatabaseService {
         (
         $columnId INTEGER PRIMARY KEY,
         $columnLanguage TEXT,    
-        $columnTheme TEXT
+        $columnTheme TEXT,
         $columnWalletBalancesBody TEXT) ''');
   }
 
@@ -83,6 +83,17 @@ class UserSettingsDatabaseService {
     log.w('ID - $id --- $res');
     if (res.length > 0) {
       return UserSettings.fromJson((res.first));
+    }
+    return null;
+  }
+
+  // Get Single Wallet By Id
+  Future<String> getLanguage() async {
+    final Database db = await _database;
+    List<Map> res = await db.query(tableName);
+    log.w('res --- $res');
+    if (res.length > 0) {
+      return UserSettings.fromJson((res.first)).language;
     }
     return null;
   }
