@@ -132,6 +132,8 @@ class BindpayViewmodel extends FutureViewModel {
         transactionHistory.add(tx);
       });
       log.w('bindpay txs ${transactionHistory.length}');
+      transactionHistory.sort(
+          (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
     });
     setBusy(false);
   }

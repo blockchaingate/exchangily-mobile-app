@@ -1139,8 +1139,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     // tickerName = token.tickerName;
     // });
 
-    String mne =
-        "dune stem onion cliff equip seek kiwi salute area elegant atom injury";
+    String mne = "";
     walletService.generateTrxAddress(mne);
   }
 

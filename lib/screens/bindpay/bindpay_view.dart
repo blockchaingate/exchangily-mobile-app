@@ -483,9 +483,13 @@ class TxHistoryView extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('${transaction.tickerName}',
-                                    style:
-                                        Theme.of(context).textTheme.subtitle2),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 3.0),
+                                  child: Text('${transaction.tickerName}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .subtitle2),
+                                ),
                                 // icon
                                 transaction.tag == 'send'
                                     ? Icon(
