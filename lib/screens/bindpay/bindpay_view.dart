@@ -11,6 +11,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
+import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
 
 class BindpayView extends StatelessWidget {
   const BindpayView({Key key}) : super(key: key);
@@ -359,13 +361,14 @@ class BindpayView extends StatelessWidget {
                             color: primaryColor,
                             // textColor: Colors.white,
                             onPressed: () async {
-                              await model.getBindpayTxs();
+                              await model.getBindpayTransactionHistory();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (_) => TxHistoryView(
                                           transactionHistory:
-                                              model.transactionHistory)));
+                                              model.transactionHistory,
+                                          model: model)));
                             },
                             icon: Icon(Icons.history, color: white, size: 24),
                             // child: Text('History',
@@ -446,22 +449,14 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
 // transaction history
 
 class TxHistoryView extends StatelessWidget {
-  final transactionHistory;
-
-  TxHistoryView({this.transactionHistory});
+  final List<TransactionHistory> transactionHistory;
+  final BindpayViewmodel model;
+  TxHistoryView({this.transactionHistory, this.model});
   @override
   Widget build(BuildContext context) {
-    SharedService sharedService = locator<SharedService>();
     /*----------------------------------------------------------------------
                     Copy Order
 ----------------------------------------------------------------------*/
-
-    copyAddress(String txId) {
-      Clipboard.setData(new ClipboardData(text: txId));
-      sharedService.alertDialog(AppLocalizations.of(context).transactionId,
-          AppLocalizations.of(context).copiedSuccessfully,
-          isWarning: false);
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -475,7 +470,7 @@ class TxHistoryView extends StatelessWidget {
             padding: EdgeInsets.all(4.0),
             child: Column(
               children: <Widget>[
-                for (var transaction in transactionHistory.reversed)
+                for (var transaction in transactionHistory)
                   Card(
                     elevation: 4,
                     child: Container(
@@ -494,11 +489,17 @@ class TxHistoryView extends StatelessWidget {
                                     style:
                                         Theme.of(context).textTheme.subtitle2),
                                 // icon
-                                Icon(
-                                  Icons.arrow_upward,
-                                  size: 24,
-                                  color: sellPrice,
-                                ),
+                                transaction.tag == 'send'
+                                    ? Icon(
+                                        Icons.arrow_upward,
+                                        size: 18,
+                                        color: sellPrice,
+                                      )
+                                    : Icon(
+                                        Icons.arrow_downward,
+                                        size: 18,
+                                        color: buyPrice,
+                                      ),
 
                                 Text(
                                   AppLocalizations.of(context).bindpay,
@@ -519,31 +520,47 @@ class TxHistoryView extends StatelessWidget {
                                   padding: const EdgeInsets.only(bottom: 5.0),
                                   child: SizedBox(
                                     width: 200,
-                                    child: Text('${transaction.txId}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2),
+                                    child: RichText(
+                                      text: TextSpan(
+                                          text:
+                                              '${transaction.tickerChainTxId}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2
+                                              .copyWith(
+                                                  decoration:
+                                                      TextDecoration.underline,
+                                                  color: primaryColor),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              model.copyAddress(
+                                                  transaction.tickerChainTxId);
+                                              model.openExplorer(
+                                                  transaction.tickerChainTxId);
+                                            }),
+                                    ),
                                   ),
                                 ),
-                                Visibility(
-                                  visible: transaction.txId != '',
-                                  child: RichText(
-                                    text: TextSpan(
-                                        text: AppLocalizations.of(context)
-                                            .taphereToCopyTxId,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .subtitle2
-                                            .copyWith(
-                                                decoration:
-                                                    TextDecoration.underline,
-                                                color: primaryColor),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            copyAddress(transaction.txId);
-                                          }),
-                                  ),
-                                ),
+                                // Visibility(
+                                //   visible: transaction.tickerChainTxId != '',
+                                //   child: RichText(
+                                //     text: TextSpan(
+                                //         text: AppLocalizations.of(context)
+                                //             .taphereToCopyTxId,
+                                //         style: Theme.of(context)
+                                //             .textTheme
+                                //             .subtitle2
+                                //             .copyWith(
+                                //                 decoration:
+                                //                     TextDecoration.underline,
+                                //                 color: primaryColor),
+                                //         recognizer: TapGestureRecognizer()
+                                //           ..onTap = () {
+                                //             copyAddress(
+                                //                 transaction.tickerChainTxId);
+                                //           }),
+                                //   ),
+                                // ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5.0),
                                   child: Text(

@@ -196,6 +196,9 @@ dependencies:
   # Reload app
   flutter_phoenix: ^0.1.0
 
+  # auto size text
+  auto_size_text: ^2.1.0
+
 dev_dependencies:
   intl_translation: "^0.17.0"
   intl: ^0.16.0

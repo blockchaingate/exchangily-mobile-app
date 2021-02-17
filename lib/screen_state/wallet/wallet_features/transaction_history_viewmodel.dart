@@ -75,21 +75,11 @@ class TransactionHistoryViewmodel extends FutureViewModel {
       if (element.tickerName == tickerName)
         transactionHistoryToShowInView.add(element);
     });
-    print(txHistoryEvents.length);
+
     if (txHistoryFromDb != null)
       txHistoryFromDb.forEach((t) async {
         if (t.tag == 'send' && t.tickerName == tickerName)
           transactionHistoryToShowInView.add(t);
-
-        // if (t.tickerChainTxStatus == 'pending' &&
-        //     t.tag != 'send' &&
-        //     t.tag != 'bindpay') {
-        //   print('pending tx found ${t.toJson}');
-        //   await walletService.checkTxStatus(t);
-        //   log.w('called wallet service to check tx');
-        // } else {
-        //   log.e('no tranaction with pending tag');
-        // }
       });
     transactionHistoryToShowInView.sort(
         (a, b) => DateTime.parse(b.date).compareTo(DateTime.parse(a.date)));
@@ -242,6 +232,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   Launch URL
 ----------------------------------------------------------------------*/
   launchUrl(String txId, String chain, bool isKanban) async {
+    copyAddress(txId);
     if (isKanban) {
       String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
       log.i('Kanban - explorer url - $exchangilyExplorerUrl');
@@ -286,29 +277,5 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     if (await canLaunch(url)) {
       await launch(url);
     }
-  }
-
-  Future test() async {
-    String date = DateTime.now().toLocal().toString();
-    TransactionHistory transactionHistory = new TransactionHistory(
-      id: null,
-      tickerName: tickerName,
-      address: '',
-      amount: 0.0,
-      date: date,
-      kanbanTxId: '',
-      tickerChainTxId:
-          '0x32ac8336a8660465413a649e1ae97c7eba84b13cdb057051e7c4fcac44af6da9',
-      quantity: 0.15,
-      tag: 'send',
-      chainName: 'ETH',
-    );
-    // await transactionHistoryDatabaseService.deleteDb();
-    walletService.insertTransactionInDatabase(transactionHistory);
-    // transactionHistoryDatabaseService
-    //     .insert(transactionHistory)
-    //     .then((data) async {
-    //   log.w('Saved in transaction history database $data');
-    // });
   }
 }

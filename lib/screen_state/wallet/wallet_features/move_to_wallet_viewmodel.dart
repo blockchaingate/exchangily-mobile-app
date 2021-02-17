@@ -43,6 +43,9 @@ class MoveToWalletViewmodel extends BaseState {
   double gasAmount = 0.0;
   var withdrawLimit;
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+  bool isShowErrorDetailsButton = false;
+  bool isShowDetailsMessage = false;
+  String serverError = '';
 
 /*---------------------------------------------------
                       INIT
@@ -66,6 +69,12 @@ class MoveToWalletViewmodel extends BaseState {
     checkGasBalance();
     getSingleCoinExchangeBal();
     getData();
+    setBusy(false);
+  }
+
+  showDetailsMessageToggle() {
+    setBusy(true);
+    isShowDetailsMessage = !isShowDetailsMessage;
     setBusy(false);
   }
 
@@ -229,10 +238,11 @@ class MoveToWalletViewmodel extends BaseState {
           //   });
           // });
         } else {
-          var errMsg = ret['data'];
-          if (errMsg == null || errMsg == '') {
-            errMsg = AppLocalizations.of(context).serverError;
+          serverError = ret['data'];
+          if (serverError == null || serverError == '') {
+            var errMsg = AppLocalizations.of(context).serverError;
             setErrorMessage(errMsg);
+            isShowErrorDetailsButton = true;
           }
         }
         sharedService.alertDialog(

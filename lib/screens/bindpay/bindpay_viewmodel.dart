@@ -27,6 +27,8 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 
 class BindpayViewmodel extends FutureViewModel {
   final log = getLogger('BindpayViewmodel');
@@ -117,21 +119,30 @@ class BindpayViewmodel extends FutureViewModel {
     }
     setBusyForObject(tickerName, false);
     log.e('tickerName $tickerName');
-    getBindpayTxs();
+    // getBindpayTransactionHistory();
   }
 
   // get all bindpay transactions
 
-  getBindpayTxs() async {
+  getBindpayTransactionHistory() async {
+    setBusy(true);
     transactionHistory = [];
-    await transactionHistoryDatabaseService.getAll().then((res) {
+    await apiService.getBindpayHistoryEvents().then((res) {
       res.forEach((tx) {
-        if (tx.tag == 'bindpay') {
-          transactionHistory.add(tx);
-        }
+        transactionHistory.add(tx);
       });
       log.w('bindpay txs ${transactionHistory.length}');
     });
+    setBusy(false);
+  }
+
+  // launch url
+  openExplorer(String txId) async {
+    String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
+    log.i('bindpay open explorer - explorer url - $exchangilyExplorerUrl');
+    if (await canLaunch(exchangilyExplorerUrl)) {
+      await launch(exchangilyExplorerUrl);
+    }
   }
 
 /*----------------------------------------------------------------------
@@ -680,5 +691,12 @@ class BindpayViewmodel extends FutureViewModel {
   Future contentPaste() async {
     await Clipboard.getData('text/plain')
         .then((res) => addressController.text = res.text);
+  }
+
+  copyAddress(String txId) {
+    Clipboard.setData(new ClipboardData(text: txId));
+    // sharedService.alertDialog(AppLocalizations.of(context).transactionId,
+    //     AppLocalizations.of(context).copiedSuccessfully,
+    //     isWarning: false);
   }
 }

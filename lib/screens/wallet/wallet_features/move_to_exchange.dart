@@ -10,8 +10,6 @@
 * Author: ken.qiu@exchangily.com and barry_ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
-
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -425,7 +423,42 @@ class MoveToExchangeScreen extends StatelessWidget {
                           UIHelper.verticalSpaceSmall,
                         ],
                       ))),
+              UIHelper.verticalSpaceSmall,
+              model.isShowErrorDetailsButton
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: RichText(
+                            text: TextSpan(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    .copyWith(
+                                        decoration: TextDecoration.underline),
+                                text:
+                                    '${AppLocalizations.of(context).error} ${AppLocalizations.of(context).details}',
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    model.showDetailsMessageToggle();
+                                  }),
+                          ),
+                        ),
+                        !model.isShowDetailsMessage
+                            ? Icon(Icons.arrow_drop_down,
+                                color: Colors.red, size: 18)
+                            : Icon(Icons.arrow_drop_up,
+                                color: Colors.red, size: 18)
+                      ],
+                    )
+                  : Container(),
 
+              model.isShowDetailsMessage
+                  ? Center(
+                      child: Text(model.serverError,
+                          style: Theme.of(context).textTheme.headline6),
+                    )
+                  : Container(),
               UIHelper.verticalSpaceSmall,
               // Confirm Button
               MaterialButton(

@@ -11,7 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -124,7 +123,8 @@ class MoveToWalletScreen extends StatelessWidget {
                           padding: EdgeInsets.only(
                               left:
                                   5), // padding left to keep some space from the text
-                          child: Text('${model.kanbanTransFee.toStringAsFixed(4)}',
+                          child: Text(
+                              '${model.kanbanTransFee.toStringAsFixed(4)}',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline5
@@ -296,6 +296,43 @@ class MoveToWalletScreen extends StatelessWidget {
                                 UIHelper.verticalSpaceSmall,
                               ],
                             ))),
+                    UIHelper.verticalSpaceSmall,
+                    model.isShowErrorDetailsButton
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Center(
+                                child: RichText(
+                                  text: TextSpan(
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(
+                                              decoration:
+                                                  TextDecoration.underline),
+                                      text:
+                                          '${AppLocalizations.of(context).error} ${AppLocalizations.of(context).details}',
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          model.showDetailsMessageToggle();
+                                        }),
+                                ),
+                              ),
+                              !model.isShowDetailsMessage
+                                  ? Icon(Icons.arrow_drop_down,
+                                      color: Colors.red, size: 18)
+                                  : Icon(Icons.arrow_drop_up,
+                                      color: Colors.red, size: 18)
+                            ],
+                          )
+                        : Container(),
+
+                    model.isShowDetailsMessage
+                        ? Center(
+                            child: Text(model.serverError,
+                                style: Theme.of(context).textTheme.headline6),
+                          )
+                        : Container(),
                     UIHelper.verticalSpaceSmall,
                     // Confirm Button
                     MaterialButton(

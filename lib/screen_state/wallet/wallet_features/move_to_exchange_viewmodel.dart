@@ -4,7 +4,6 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -46,6 +45,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
   bool isValid = false;
   double gasAmount = 0.0;
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+  bool isShowErrorDetailsButton = false;
+  bool isShowDetailsMessage = false;
+  String serverError = '';
 
   void initState() async {
     setBusy(true);
@@ -56,6 +58,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
     await getGas();
     refreshBalance();
     await getData();
+    setBusy(false);
+  }
+
+  showDetailsMessageToggle() {
+    setBusy(true);
+    isShowDetailsMessage = !isShowDetailsMessage;
     setBusy(false);
   }
 
@@ -234,21 +242,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
           walletService.addTxids(allTxids);
 
           message = txId.toString();
-          // setMessage(txId);
-          String date = DateTime.now().toString();
-          // TransactionHistory transactionHistory = new TransactionHistory(
-          //     id: null,
-          //     tickerName: walletInfo.tickerName,
-          //     address: '',
-          //     amount: 0.0,
-          //     date: date.toString(),
-          //     tickerChainTxId: txId,
-          //     tickerChainTxStatus: 'pending',
-          //     quantity: amount,
-          //     tag: 'deposit');
-
-          //  walletService.checkDepositTransactionStatus(transactionHistory);
-          //   walletService.insertTransactionInDatabase(transactionHistory);
+        } else {
+          if (ret.containsKey("error") && ret["error"] != null) {
+            serverError = ret['error'];
+            isShowErrorDetailsButton = true;
+          } else if (ret["message"] != null) {
+            serverError = ret['message'];
+            isShowErrorDetailsButton = true;
+          }
         }
         showSimpleNotification(
             Column(
@@ -286,6 +287,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             AppLocalizations.of(context).depositTransactionFailed,
             AppLocalizations.of(context).serverError,
             isWarning: false);
+        serverError = onError.toString();
       });
     } else {
       if (res.returnedText != 'Closed') {

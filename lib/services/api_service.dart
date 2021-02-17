@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
+import 'package:exchangilymobileapp/screens/bindpay/bindpay_history.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -55,7 +56,7 @@ class ApiService {
         .then((value) => fabAddress = value.address);
 
     String url =
-        configService.getKanbanBaseUrl() + GetWithDrawDepositTxHistoryApiRoute;
+        configService.getKanbanBaseUrl() + WithDrawDepositTxHistoryApiRoute;
     Map<String, dynamic> body = {"fabAddress": fabAddress};
 
     log.i('getTransactionHistoryEvents url $url -- body $body');
@@ -150,81 +151,45 @@ class ApiService {
         .getBytickerName('FAB')
         .then((value) => fabAddress = value.address);
 
-    String url =
-        configService.getKanbanBaseUrl() + GetWithDrawDepositTxHistoryApiRoute;
+    String url = configService.getKanbanBaseUrl() + BindpayTxHHistoryApiRoute;
     Map<String, dynamic> body = {"fabAddress": fabAddress};
 
-    log.i('getTransactionHistoryEvents url $url -- body $body');
+    log.i('getBindpayHistoryEvents url $url -- body $body');
 
     try {
       var response = await client.post(url, body: body);
 
       var json = jsonDecode(response.body);
       if (json != null) {
-        log.w('getTransactionHistoryEvents json $json}');
+        log.w('getBindpayHistoryEvents json $json}');
         if (json['success']) {
           //   log.e('getTransactionHistoryEvents json ${json['data']}');
           var data = json['data'] as List;
 
-          int index = 1;
           data.forEach((element) {
-            var tag = element['action'] as String;
-            var ticker = element['coin'] as String;
-            var timestamp = element['timestamp'];
-            var status;
-            var kanbanTxId;
-            var tickerTxId;
-            List transactionsInside = element['transactions'] as List;
-            // It has only 2 objects inside
-            transactionsInside.forEach((element) {
-              String chain = element['chain'];
-              if (chain == 'KANBAN') {
-                if (element['transactionId'] != null)
-                  kanbanTxId = element['transactionId'];
-              } else if (chain == 'FAB' ||
-                  chain == 'ETH' ||
-                  ticker == 'BTC' ||
-                  ticker == 'LTC' ||
-                  ticker == 'ETH' ||
-                  ticker == 'DOGE' ||
-                  ticker == 'FAB' ||
-                  ticker == 'BCH') {
-                status = element['status'];
-                if (element['transactionId'] != null)
-                  tickerTxId = element['transactionId'];
-              }
-            });
+            var holder = BindpayHistory.fromJson(element);
+            print(holder.toJson());
+            var timestamp = holder.time;
 
             var date =
                 DateTime.fromMillisecondsSinceEpoch(timestamp * 1000).toLocal();
             String filteredDate =
                 date.toString().substring(0, date.toString().length - 4);
-            var amount = element['quantity'].toString();
 
-            //  print(
-            // 'tag $tag -- ticker $ticker -- date ${date.toLocal()} - amount ${double.parse(amount)}');
             TransactionHistory tx = new TransactionHistory(
-                id: index,
-                tag: tag,
-                tickerChainTxStatus: status,
-                kanbanTxId: kanbanTxId,
-                tickerChainTxId: tickerTxId,
-                date: filteredDate,
-                tickerName: ticker,
-                quantity: double.parse(amount));
+                tickerChainTxStatus: holder.status.toString() ?? '',
+                tag: holder.type ?? '',
+                tickerChainTxId: holder.txid ?? '',
+                date: filteredDate ?? '',
+                tickerName: holder.coin ?? '',
+                quantity: holder.amount ?? 0.0);
 
             transactionHistory.add(tx);
-            index++;
           });
-          // transactionHistory.sort((a, b) =>
-          //     DateTime.parse(a.date).compareTo(DateTime.parse(b.date)));
-          // transactionHistory.forEach((element) {
-          //   log.e('getTransactionHistoryEvents length ${element.toJson()}');
-          // });
 
-          // transactionHistory.forEach((element) {
-          //   log.i('getTransactionHistoryEvents length ${element.toJson()}');
-          // });
+          transactionHistory.forEach((element) {
+            log.e('getTransactionHistoryEvents length ${element.toJson()}');
+          });
         }
       }
       return transactionHistory;

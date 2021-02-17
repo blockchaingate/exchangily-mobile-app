@@ -53,8 +53,7 @@ const String GetAppVersionRoute = 'getappversion';
 const String GetTokenListApiRoute = 'exchangily/getTokenList';
 const String GetDecimalPairConfigApiRoute = 'kanban/getpairconfig';
 //final String pairDecimalConfigRoute = 'kanban/getpairconfig';
-const String GetWithDrawDepositTxHistoryApiRoute =
-    'getTransactionHistoryEvents';
+const String WithDrawDepositTxHistoryApiRoute = 'getTransactionHistoryEvents';
 // route for getting history for withdraw and deposits
 const String BindpayTxHHistoryApiRoute = 'getTransferHistoryEvents';
 // route for bindpay transfers
