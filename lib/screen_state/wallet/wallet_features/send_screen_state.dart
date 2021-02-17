@@ -195,7 +195,7 @@ class SendScreenState extends BaseState {
       if (walletInfo.tokenType == 'FAB') {
         if (!toAddress.startsWith('0x')) toAddress = fabToExgAddress(toAddress);
       }
-
+      log.i('OPTIONS before send $options');
       await walletService
           .sendTransaction(
               tickerName, seed, [0], [], toAddress, amount, options, true)
@@ -217,6 +217,7 @@ class SendScreenState extends BaseState {
           walletService.addTxids(allTxids);
 
           String date = DateTime.now().toLocal().toString();
+          log.e('wallet service ${walletInfo.toJson()}');
           TransactionHistory transactionHistory = new TransactionHistory(
             id: null,
             tickerName: tickerName,
@@ -227,7 +228,7 @@ class SendScreenState extends BaseState {
             tickerChainTxId: txHash,
             quantity: amount,
             tag: 'send',
-            chainName: tokenType,
+            chainName: walletInfo.tokenType,
           );
           walletService.insertTransactionInDatabase(transactionHistory);
         } else if (txHash == '' && errorMessage == '') {

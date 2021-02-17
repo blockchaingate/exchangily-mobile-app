@@ -58,6 +58,8 @@ import 'package:decimal/decimal.dart';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/utils/exaddr.dart';
+import 'package:web3dart/crypto.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -311,13 +313,42 @@ class WalletService {
   generateTrxAddress(String mnemonic) {
     var seed = generateSeed(mnemonic);
     var root = generateBip32Root(seed);
-    var node = root.derivePath("m/44'/195'/0'/0/");
+    print('root $root');
+    String ct = '195';
+    var node = root.derivePath("m/44'/" + ct + "'/0'/0/" + 0.toString());
+    print('node $node');
     var privKey = node.privateKey;
+    print('priv key $privKey');
     var pubKey = node.publicKey;
+    print('pub key $pubKey');
     // var buffer = wif.decode(node.toWIF());
+    if (pubKey.length == 65) pubKey = pubKey.substring(1);
+
+    var hash = keccakUtf8(pubKey);
+    print('hash $hash');
+
+    //   var addressHex = "41" + hash.substring(24);
+    //   print('address hex $addressHex');
+    // var output = hex.encode(outputHashData);
+    // computeAddress(pubKey);
+
     var a = getAddressFromPrivKey(privKey);
+    print('a  $a');
     String addr = getBase58CheckAddress(a);
     debugPrint('trx address $addr');
+  }
+
+  computeAddress(String pubBytes) {
+    log.i('in compute');
+    if (pubBytes.length == 65) pubBytes = pubBytes.substring(1);
+    // var signature = sign(keccak256(concat), privateKey);
+    print('1 $pubBytes');
+    var hash = keccakUtf8(pubBytes);
+    print('hash $hash');
+    //   var addressHex = "41" + hash.substring(24);
+    //   print('address hex $addressHex');
+    // var output = hex.encode(outputHashData);
+    //  return hexStr2byteArray(addressHex);
   }
 
 // Get address From Private Key

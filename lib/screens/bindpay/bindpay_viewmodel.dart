@@ -695,8 +695,11 @@ class BindpayViewmodel extends FutureViewModel {
 
   copyAddress(String txId) {
     Clipboard.setData(new ClipboardData(text: txId));
-    // sharedService.alertDialog(AppLocalizations.of(context).transactionId,
-    //     AppLocalizations.of(context).copiedSuccessfully,
-    //     isWarning: false);
+    showSimpleNotification(
+        Center(
+            child: Text(AppLocalizations.of(context).copiedSuccessfully,
+                style: Theme.of(context).textTheme.headline5)),
+        position: NotificationPosition.bottom,
+        background: primaryColor);
   }
 }

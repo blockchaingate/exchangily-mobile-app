@@ -23,6 +23,9 @@ import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
+import 'package:overlay_support/overlay_support.dart';
 
 class TransactionHistoryViewmodel extends FutureViewModel {
   final String tickerName;
@@ -138,15 +141,20 @@ class TransactionHistoryViewmodel extends FutureViewModel {
 ----------------------------------------------------------------------*/
   copyAddress(String txId) {
     Clipboard.setData(new ClipboardData(text: txId));
-    sharedService.alertDialog(AppLocalizations.of(context).transactionId,
-        AppLocalizations.of(context).copiedSuccessfully,
-        isWarning: false);
+    showSimpleNotification(
+        Center(
+            child: Text(AppLocalizations.of(context).copiedSuccessfully,
+                style: Theme.of(context).textTheme.headline5)),
+        position: NotificationPosition.bottom,
+        background: primaryColor);
   }
 
 /*----------------------------------------------------------------------
                 Tx Detail Dialog
 ----------------------------------------------------------------------*/
   showTxDetailDialog(TransactionHistory transactionHistory) {
+    if (transactionHistory.chainName.isEmpty)
+      transactionHistory.chainName = transactionHistory.tickerName;
     Alert(
         style: AlertStyle(
             isButtonVisible: false,
@@ -174,27 +182,38 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   )
                 : Container(),
             transactionHistory.tag != send
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: RichText(
-                      text: TextSpan(
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            launchUrl(transactionHistory.kanbanTxId,
-                                transactionHistory.chainName, true);
-                          },
-                        text: transactionHistory.kanbanTxId.isEmpty
-                            ? transactionHistory.kanbanTxStatus.isEmpty
-                                ? AppLocalizations.of(context).inProgress
-                                : firstCharToUppercase(
-                                    transactionHistory.kanbanTxStatus)
-                            : transactionHistory.kanbanTxId.toString(),
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyText1
-                            .copyWith(color: Colors.blue),
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: RichText(
+                            text: TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  launchUrl(transactionHistory.kanbanTxId,
+                                      transactionHistory.chainName, true);
+                                },
+                              text: transactionHistory.kanbanTxId.isEmpty
+                                  ? transactionHistory.kanbanTxStatus.isEmpty
+                                      ? AppLocalizations.of(context).inProgress
+                                      : firstCharToUppercase(
+                                          transactionHistory.kanbanTxStatus)
+                                  : transactionHistory.kanbanTxId.toString(),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(color: Colors.blue),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      IconButton(
+                        icon: Icon(Icons.copy_outlined, color: white, size: 16),
+                        onPressed: () =>
+                            copyAddress(transactionHistory.kanbanTxId),
+                      )
+                    ],
                   )
                 : Container(),
             UIHelper.verticalSpaceMedium,
@@ -203,26 +222,38 @@ class TransactionHistoryViewmodel extends FutureViewModel {
               '${transactionHistory.chainName} ${AppLocalizations.of(context).chain} Txid',
               style: Theme.of(context).textTheme.bodyText1,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: RichText(
-                text: TextSpan(
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      launchUrl(transactionHistory.tickerChainTxId,
-                          transactionHistory.chainName, false);
-                    },
-                  text: transactionHistory.tickerChainTxId.isEmpty
-                      ? transactionHistory.tickerChainTxStatus.isEmpty
-                          ? AppLocalizations.of(context).inProgress
-                          : transactionHistory.tickerChainTxStatus
-                      : transactionHistory.tickerChainTxId.toString(),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyText1
-                      .copyWith(color: Colors.blue),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: RichText(
+                      text: TextSpan(
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            launchUrl(transactionHistory.tickerChainTxId,
+                                transactionHistory.chainName, false);
+                          },
+                        text: transactionHistory.tickerChainTxId.isEmpty
+                            ? transactionHistory.tickerChainTxStatus.isEmpty
+                                ? AppLocalizations.of(context).inProgress
+                                : transactionHistory.tickerChainTxStatus
+                            : transactionHistory.tickerChainTxId.toString(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1
+                            .copyWith(color: Colors.blue),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                IconButton(
+                  icon: Icon(Icons.copy_outlined, color: white, size: 16),
+                  onPressed: () =>
+                      copyAddress(transactionHistory.tickerChainTxId),
+                )
+              ],
             ),
           ],
         )).show();

@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
-import 'package:exchangilymobileapp/service_locator.dart';
-import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class BindpayView extends StatelessWidget {
   const BindpayView({Key key}) : super(key: key);
@@ -491,8 +489,8 @@ class TxHistoryView extends StatelessWidget {
                                 // icon
                                 transaction.tag == 'send'
                                     ? Icon(
-                                        Icons.arrow_upward,
-                                        size: 18,
+                                        FontAwesomeIcons.arrowRight,
+                                        size: 11,
                                         color: sellPrice,
                                       )
                                     : Icon(
@@ -500,67 +498,52 @@ class TxHistoryView extends StatelessWidget {
                                         size: 18,
                                         color: buyPrice,
                                       ),
-
-                                Text(
-                                  AppLocalizations.of(context).bindpay,
-                                  style: Theme.of(context).textTheme.subtitle2,
-                                  textAlign: TextAlign.center,
-                                )
                               ],
                             ),
                           ),
                           UIHelper.horizontalSpaceSmall,
                           Container(
-                            // width: 200,
+                            //  width: 200,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 5.0),
-                                  child: SizedBox(
-                                    width: 200,
-                                    child: RichText(
-                                      text: TextSpan(
-                                          text:
-                                              '${transaction.tickerChainTxId}',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2
-                                              .copyWith(
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                  color: primaryColor),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              model.copyAddress(
-                                                  transaction.tickerChainTxId);
-                                              model.openExplorer(
-                                                  transaction.tickerChainTxId);
-                                            }),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width /
+                                          2.5,
+                                      child: RichText(
+                                        overflow: TextOverflow.ellipsis,
+                                        text: TextSpan(
+                                            text:
+                                                '${transaction.tickerChainTxId}',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2
+                                                .copyWith(
+                                                    decoration: TextDecoration
+                                                        .underline,
+                                                    color: primaryColor),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                model.copyAddress(transaction
+                                                    .tickerChainTxId);
+                                                model.openExplorer(transaction
+                                                    .tickerChainTxId);
+                                              }),
+                                      ),
                                     ),
-                                  ),
+                                    IconButton(
+                                      icon: Icon(Icons.copy_outlined,
+                                          color: white, size: 16),
+                                      onPressed: () => model.copyAddress(
+                                          transaction.tickerChainTxId),
+                                    )
+                                  ],
                                 ),
-                                // Visibility(
-                                //   visible: transaction.tickerChainTxId != '',
-                                //   child: RichText(
-                                //     text: TextSpan(
-                                //         text: AppLocalizations.of(context)
-                                //             .taphereToCopyTxId,
-                                //         style: Theme.of(context)
-                                //             .textTheme
-                                //             .subtitle2
-                                //             .copyWith(
-                                //                 decoration:
-                                //                     TextDecoration.underline,
-                                //                 color: primaryColor),
-                                //         recognizer: TapGestureRecognizer()
-                                //           ..onTap = () {
-                                //             copyAddress(
-                                //                 transaction.tickerChainTxId);
-                                //           }),
-                                //   ),
-                                // ),
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5.0),
                                   child: Text(

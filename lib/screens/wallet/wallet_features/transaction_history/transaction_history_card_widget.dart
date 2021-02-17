@@ -9,6 +9,7 @@ import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class TxHisotryCardWidget extends StatelessWidget {
   final TransactionHistoryViewmodel model;
@@ -55,6 +56,19 @@ class TxHisotryCardWidget extends StatelessWidget {
                                 Icons.arrow_downward,
                                 size: 16,
                                 color: buyPrice,
+                              ),
+                            )
+                          : transaction.tag.toUpperCase()==model.send.toUpperCase()?
+                         
+
+                          Padding(
+                              padding: const EdgeInsets.only(left: 13.0),
+                              child:
+                              
+                               Icon(
+                                FontAwesomeIcons.arrowRight,
+                                size: 11,
+                                color: sellPrice,
                               ),
                             )
                           : Padding(
