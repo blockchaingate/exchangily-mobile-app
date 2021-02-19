@@ -195,16 +195,18 @@ class TxHisotryCardWidget extends StatelessWidget {
                               transaction
                                       .kanbanTxStatus ==
                                   model.success)
-                                AutoSizeText(
-                                  firstCharToUppercase(
-                                    AppLocalizations.of(
-                                            context)
-                                        .completed),
+                                Expanded(
+                                                                  child: AutoSizeText(
+                                    firstCharToUppercase(
+                                      AppLocalizations.of(
+                                              context)
+                                          .completed),
   style: TextStyle(fontSize: customFontSize,color:                                           buyPrice),
   minFontSize: 8,
   maxLines: 1,
   overflow: TextOverflow.ellipsis,
-)
+),
+                                )
                            
                                           // If deposit is success in only Ticker chain and not in kanban chain then show sent
                                        else if (transaction.tag
@@ -303,7 +305,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                               transaction
                                       .kanbanTxStatus ==
                                   model.success && transaction.tickerChainTxStatus.startsWith('sent'))
-                                              AutoSizeText(
+                                              Expanded(
+                                                                                              child: AutoSizeText(
                                   firstCharToUppercase(
                                     AppLocalizations.of(
                                             context)
@@ -312,7 +315,8 @@ class TxHisotryCardWidget extends StatelessWidget {
                                 minFontSize: 8,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                )
+                                ),
+                                              )
  ])))
                         : Expanded(
                             flex: 1,
@@ -332,7 +336,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                         alignment: Alignment.centerRight,
                         child: IconButton(
                             padding: EdgeInsets.zero,
-                            icon: Icon(Icons.arrow_forward, color: white, size: 14),
+                            icon: Icon(Icons.more, color: white, size: 14),
                             onPressed: () {
                               print('tx histoy ${transaction.toJson()}');
                               model.showTxDetailDialog(transaction);

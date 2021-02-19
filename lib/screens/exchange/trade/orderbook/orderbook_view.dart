@@ -207,7 +207,7 @@ class OrderBookView extends StatelessWidget {
                     Text(
                         order.price.toStringAsFixed(decimalConfig.priceDecimal),
                         style: TextStyle(
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w400,
                             color: Color(bidOrAsk ? 0xFF0da88b : 0xFFe2103c),
                             fontSize: 13.0)),
                     Container(
@@ -218,7 +218,7 @@ class OrderBookView extends StatelessWidget {
                             order.quantity
                                 .toStringAsFixed(decimalConfig.qtyDecimal),
                             style: TextStyle(
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w400,
                                 color: Colors.white,
                                 fontSize: 13.0)))
                   ],

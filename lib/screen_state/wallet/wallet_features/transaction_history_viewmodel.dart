@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
@@ -17,6 +19,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -155,24 +158,154 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   showTxDetailDialog(TransactionHistory transactionHistory) {
     if (transactionHistory.chainName.isEmpty)
       transactionHistory.chainName = transactionHistory.tickerName;
-    Alert(
-        style: AlertStyle(
-            isButtonVisible: false,
-            isCloseButton: false,
-            animationType: AnimationType.grow,
-            isOverlayTapDismiss: true,
-            backgroundColor: walletCardColor,
-            descStyle: Theme.of(context).textTheme.bodyText1,
-            titleStyle: Theme.of(context)
-                .textTheme
-                .headline4
-                .copyWith(decoration: TextDecoration.underline)),
+      showDialog(
         context: context,
-        title: AppLocalizations.of(context).transactionDetails,
-        // closeFunction: () {
-        //   Navigator.of(context).pop();
-        // },
-        content: Column(
+        builder: (BuildContext context) {
+      return Platform.isIOS
+              ? Theme(
+            data: ThemeData.dark(),
+                              child: CupertinoAlertDialog(
+                    title: Container(
+                    
+                      child: Center(
+                          child: Text(
+                              '${AppLocalizations.of(context).transactionDetails}',style: Theme.of(context).textTheme.headline4.copyWith(color:primaryColor,fontWeight: FontWeight.w500),)),
+                    ),
+                    content: Container(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            UIHelper.verticalSpaceSmall,
+            transactionHistory.tag != send
+                  ? Text(
+                       
+                        '${AppLocalizations.of(context).kanban} Txid',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      )
+                  : Container(),  
+            transactionHistory.tag != send
+                  ? Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: RichText(
+                                text: TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrl(transactionHistory.kanbanTxId,
+                                          transactionHistory.chainName, true);
+                                    },
+                                  text: transactionHistory.kanbanTxId.isEmpty
+                                      ? transactionHistory.kanbanTxStatus.isEmpty
+                                          ? AppLocalizations.of(context).inProgress
+                                          : firstCharToUppercase(
+                                              transactionHistory.kanbanTxStatus)
+                                      : transactionHistory.kanbanTxId.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1
+                                      .copyWith(color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          CupertinoButton(
+                            child: Icon(FontAwesomeIcons.copy, color: white, size: 16),
+                            onPressed: () =>
+                                copyAddress(transactionHistory.kanbanTxId),
+                          )
+                        ],
+                      )
+                  : Container(),
+            UIHelper.verticalSpaceMedium,
+            Text(
+                //AppLocalizations.of(context).quantity,
+                '${transactionHistory.chainName} ${AppLocalizations.of(context).chain} Txid',
+                style: Theme.of(context).textTheme.bodyText1,
+            ),
+            Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: RichText(
+                          text: TextSpan(
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                launchUrl(transactionHistory.tickerChainTxId,
+                                    transactionHistory.chainName, false);
+                              },
+                            text: transactionHistory.tickerChainTxId.isEmpty
+                                ? transactionHistory.tickerChainTxStatus.isEmpty
+                                    ? AppLocalizations.of(context).inProgress
+                                    : transactionHistory.tickerChainTxStatus
+                                : transactionHistory.tickerChainTxId.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1
+                                .copyWith(color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                  ),
+                  CupertinoButton(
+                      child: Icon(FontAwesomeIcons.copy, color: white, size: 16),
+                      onPressed: () =>
+                          copyAddress(transactionHistory.tickerChainTxId),
+                  )
+                ],
+            ),
+          ],
+        ),
+                    ),
+                    actions: <Widget>[
+                      
+                      Container(
+                        margin: EdgeInsets.all(5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            
+                            CupertinoButton(
+                              padding: EdgeInsets.only(left: 5),
+                              borderRadius: BorderRadius.all(Radius.circular(4)),
+                              child: Text(
+                                AppLocalizations.of(context).close,
+                                style: Theme.of(context).textTheme.bodyText2.copyWith(fontWeight:FontWeight.bold),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop(true);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+              ):
+    AlertDialog(
+           titlePadding: EdgeInsets.zero,
+                  contentPadding: EdgeInsets.all(5.0),
+                 
+                  elevation: 5,
+                  backgroundColor: walletCardColor.withOpacity(0.85),
+                  title: Container(
+                    padding: EdgeInsets.all(10.0),
+                    color: secondaryColor.withOpacity(0.5),
+                    child: Center(
+                        child: Text(
+                            '${AppLocalizations.of(context).transactionDetails}')),
+                  ),
+                  titleTextStyle: Theme.of(context)
+                      .textTheme
+                      .headline4
+                      .copyWith(fontWeight: FontWeight.bold),
+                  contentTextStyle: TextStyle(color: grey),
+
+        content: Column(mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             transactionHistory.tag != send
                 ? Text(
@@ -186,7 +319,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
+                          padding: const EdgeInsets.only(top: 8.0,left:8.0),
                           child: RichText(
                             text: TextSpan(
                               recognizer: TapGestureRecognizer()
@@ -227,7 +360,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.only(top: 8.0,left: 8.0),
                     child: RichText(
                       text: TextSpan(
                         recognizer: TapGestureRecognizer()
@@ -255,8 +388,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                 )
               ],
             ),
+            UIHelper.verticalSpaceMedium
           ],
-        )).show();
+        ));
+        });
   }
 
 /*----------------------------------------------------------------------
