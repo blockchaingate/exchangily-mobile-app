@@ -14,8 +14,6 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:http/http.dart' as http;
 import '../environments/environment.dart';
-import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
-import 'package:bitcoin_flutter/src/models/networks.dart';
 
 final String btcBaseUrl = environment["endpoints"]["btc"];
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -20,6 +22,7 @@ import 'package:exchangilymobileapp/utils/btc_util.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
@@ -59,7 +62,9 @@ import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/utils/exaddr.dart';
 import 'package:web3dart/crypto.dart';
-import 'package:exchangilymobileapp/utils/string_util.dart';
+import 'package:convert/convert.dart';
+import 'package:crypto/crypto.dart';
+import 'package:bs58check/bs58check.dart' as bs58check;
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -86,6 +91,7 @@ class WalletService {
     'EXG',
     'USDT',
     'DUSD',
+    'TRX',
     'BCH',
     'LTC',
     'DOGE',
@@ -116,6 +122,7 @@ class WalletService {
     '',
     '',
     '',
+    '',
     'ETH',
     'ETH',
     'ETH',
@@ -140,6 +147,7 @@ class WalletService {
     'Exchangily',
     'Tether',
     'DUSD',
+    'Tron',
     'Bitcoin Cash',
     'Litecoin',
     'Dogecoin',
@@ -307,7 +315,7 @@ class WalletService {
   }
 
 /*----------------------------------------------------------------------
-                Generate TRX address
+                    Generate TRX address
 ----------------------------------------------------------------------*/
 
   generateTrxAddress(String mnemonic) {
@@ -315,27 +323,62 @@ class WalletService {
     var root = generateBip32Root(seed);
     print('root $root');
     String ct = '195';
-    var node = root.derivePath("m/44'/" + ct + "'/0'/0/" + 0.toString());
+    bip32.BIP32 node =
+        root.derivePath("m/44'/" + ct + "'/0'/0/" + 0.toString());
     print('node $node');
     var privKey = node.privateKey;
-    print('priv key $privKey');
-    var pubKey = node.publicKey;
-    print('pub key $pubKey');
-    // var buffer = wif.decode(node.toWIF());
-    if (pubKey.length == 65) pubKey = pubKey.substring(1);
+    log.i('priv key $privKey -- length ${privKey.length}');
+    log.w('priv Key ${uint8ListToString(privKey)}');
+    //  var pubKey = node.publicKey;
+    //  log.w('pub key $pubKey -- length ${pubKey.length}');
+    var uncompressedPubKey =
+        BitcoinFlutter.ECPair.fromPrivateKey(privKey, compressed: false)
+            .publicKey;
+    log.e('uncompressedPubKey  length ${uncompressedPubKey.length}');
+    log.w('uncompressedPubKey ${uint8ListToString(uncompressedPubKey)}');
 
-    var hash = keccakUtf8(pubKey);
+    if (uncompressedPubKey.length == 65) {
+      uncompressedPubKey = uncompressedPubKey.sublist(1);
+      log.w(
+          'uncompressedPubKey > 65 ${uint8ListToString(uncompressedPubKey)} -- length ${uncompressedPubKey.length}');
+    }
+
+    var hash = keccak256(uncompressedPubKey);
     print('hash $hash');
 
-    //   var addressHex = "41" + hash.substring(24);
-    //   print('address hex $addressHex');
-    // var output = hex.encode(outputHashData);
-    // computeAddress(pubKey);
+    log.e('hex ${uint8ListToString(hash)}');
+// take 20 bytes at the end from hash
+    var last20Bytes = hash.sublist(12);
+    print('last20Bytes $last20Bytes');
+    List<int> updatedHash = [];
+    //  var addressHex = Uint8List.fromList(hash);
+    int i = 1;
+    last20Bytes.forEach((f) {
+      if (i == 1) {
+        updatedHash.add(65);
+        i++;
+      }
+      updatedHash.add(f);
+      i++;
+    });
+    log.w('updatedHash $updatedHash');
+    // take 0x41 or 65 + (hash[12:32] means take last 20 bytes from addressHex)
+    // to do sha256 twice and get 4 bytes checksum
+    var sha256Hash = sha256Twice(updatedHash);
 
-    var a = getAddressFromPrivKey(privKey);
-    print('a  $a');
-    String addr = getBase58CheckAddress(a);
-    debugPrint('trx address $addr');
+    // first 4 bytes checksum
+    var checksum = sha256Hash.bytes.sublist(0, 4);
+    print('checksum  -- $checksum');
+    log.i('checksum hex ${uint8ListToString(checksum)}');
+    updatedHash.addAll(checksum);
+    log.w('updatedHash with checksum $updatedHash');
+
+    // use base58 on (0x41 + hash[12:32] + checksum)
+    // or base 58 on updateHash which first need to convert to Iint8List to get address
+    Uint8List uIntUpdatedHash = Uint8List.fromList(updatedHash);
+    var address = bs58check.base58.encode(uIntUpdatedHash);
+    print('address $address');
+    return address;
   }
 
   computeAddress(String pubBytes) {
@@ -550,19 +593,25 @@ class WalletService {
 
     // BCH address
     String bchAddress = generateBchAddress(mnemonic);
+    String trxAddress = generateTrxAddress(mnemonic);
 
     try {
       for (int i = 0; i < coinTickers.length; i++) {
         String tickerName = coinTickers[i];
         String name = coinNames[i];
         String token = tokenType[i];
-        String addr =
-            await getAddressForCoin(root, tickerName, tokenType: token);
+        String addr = '';
+        if (tickerName == 'BCH') {
+          addr = bchAddress;
+        } else if (tickerName == 'TRX') {
+          addr = trxAddress;
+        } else
+          addr = await getAddressForCoin(root, tickerName, tokenType: token);
         WalletInfo wi = new WalletInfo(
             id: null,
             tickerName: tickerName,
             tokenType: token,
-            address: tickerName == 'BCH' ? bchAddress : addr,
+            address: addr,
             availableBalance: 0.0,
             lockedBalance: 0.0,
             usdValue: 0.0,
