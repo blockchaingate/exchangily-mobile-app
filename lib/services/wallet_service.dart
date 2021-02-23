@@ -314,6 +314,14 @@ class WalletService {
     return root;
   }
 
+  sha256Twice(bytes) {
+    var digest1 = sha256.convert(bytes);
+    var digest2 = sha256.convert(digest1.bytes);
+    //SHA256(addressHex);
+    print('digest2  -- $digest2');
+    return digest2;
+  }
+
 /*----------------------------------------------------------------------
                     Generate TRX address
 ----------------------------------------------------------------------*/
