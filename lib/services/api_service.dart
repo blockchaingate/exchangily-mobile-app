@@ -444,6 +444,47 @@ class ApiService {
                       Get all wallet balance
 -------------------------------------------------------------------------------------*/
 
+  Future<List<WalletBalance>> getSingleWalletBalance(String fabAddress,
+      String tickerName, String thirdPartyChainAddress) async {
+    String url = configService.getKanbanBaseUrl() + SingleWalletBalanceApiRoute;
+    log.i('getWalletBalance URL $url');
+    var body = {
+      "fabAddress": fabAddress,
+      "tickerName": tickerName,
+      "thirdPartyChainAddress": thirdPartyChainAddress,
+      "showEXGAssets": true
+    };
+    log.i('getWalletBalance body $body');
+
+    WalletBalanceList balanceList;
+    try {
+      var response = await client.post(url, body: json.encode(body));
+      bool success = jsonDecode(response.body)['success'];
+      if (success == true) {
+        print(response.body);
+        var jsonList = jsonDecode(response.body)['data'] as List;
+        //  log.i('json list getWalletBalance $jsonList');
+        List newList = [];
+        jsonList.forEach((element) {
+          if (element['balance'] != null) newList.add(element);
+        });
+        log.i('newList getWalletBalance $newList');
+        balanceList = WalletBalanceList.fromJson(newList);
+      } else {
+        log.e('get single wallet balance returning null');
+        return null;
+      }
+      return balanceList.balanceList;
+    } catch (err) {
+      log.e('In getWalletBalance catch $err');
+      return null;
+    }
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Get all wallet balance
+-------------------------------------------------------------------------------------*/
+
   Future<List<WalletBalance>> getWalletBalance(body) async {
     String url = configService.getKanbanBaseUrl() + WalletBalancesApiRoute;
     log.i('getWalletBalance URL $url');

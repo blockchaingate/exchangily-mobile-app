@@ -19,12 +19,18 @@ import 'package:hex/hex.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/src/utils/rlp.dart' as rlp;
 import 'dart:typed_data';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 
 // {"success":true,"data":{"transactionID":"3ba8d681cddea5376c9b6ab2963ff243160fa086ec0681a67a3206ad80284d76"}}
 
-getWithdrawFuncABI(coinType, amountInLink, addressInWallet) {
+getWithdrawFuncABI(coinType, amountInLink, addressInWallet,
+    {String coinName = '', String chain = '', bool isSpecialDeposit = false}) {
   var abiHex = "0x3295d51e";
-  abiHex += fixLength(coinType.toRadixString(16), 64);
+  if (isSpecialDeposit) {
+    var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
+    abiHex += specialFixLength(hexaDecimalCoinType, 64, chain);
+  } else
+    abiHex += fixLength(coinType.toRadixString(16), 64);
 
   var amountHex = amountInLink.toRadixString(16);
   abiHex += fixLength(trimHexPrefix(amountHex), 64);
@@ -48,10 +54,15 @@ getSendCoinFuncABI(coinType, kbPaymentAddress, amount) {
 //0x10c43d65000000000000000000000000dcd0f23125f74ef621dfa3310625f8af0dcd971b0000000000000000000000000000000000000000000000000000000000000005000000000000000000000000000000000000000000000000a688906bd8b00000
 
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
-    String addressInKanban, signedMessage) {
+    String addressInKanban, signedMessage,
+    {String coinName = '', String chain = '', bool isSpecialDeposit = false}) {
   var abiHex = "0x379eb862";
   abiHex += trimHexPrefix(signedMessage["v"]);
-  abiHex += fixLength(coinType.toRadixString(16), 62);
+  if (isSpecialDeposit) {
+    var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
+    abiHex += specialFixLength(hexaDecimalCoinType, 62, chain);
+  } else
+    abiHex += fixLength(coinType.toRadixString(16), 62);
   abiHex += trimHexPrefix(txHash);
   var amountHex = amountInLink.toRadixString(16);
 
@@ -59,8 +70,51 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
   abiHex += fixLength(trimHexPrefix(addressInKanban), 64);
   abiHex += trimHexPrefix(signedMessage["r"]);
   abiHex += trimHexPrefix(signedMessage["s"]);
-  print('getDepositFuncABI $abiHex');
   return abiHex;
+}
+
+specialFixLength(String hexaDecimalCoinType, int length, String chain) {
+  var ethChainHexa = '0003';
+  var tronChainHexa = '0007';
+  var retStr = '';
+  int hexaDecimalCoinTypeLength = hexaDecimalCoinType.length;
+  print('hexaDecimalCoinType $hexaDecimalCoinTypeLength');
+  int len2 = length - hexaDecimalCoinTypeLength;
+  int finalLength = len2 - 4; // subtract chain hexa length
+  if (finalLength > 0) {
+    for (int i = 0; i < finalLength; i++) {
+      retStr += '0';
+    }
+    if (chain == 'ETH') {
+      retStr += ethChainHexa;
+    } else if (chain == 'TRX') {
+      retStr += tronChainHexa;
+    }
+
+    retStr += hexaDecimalCoinType;
+    return retStr;
+  } else if (finalLength < 0) {
+    return hexaDecimalCoinType.substring(0, length - 1);
+  } else {
+    return hexaDecimalCoinType;
+  }
+}
+
+String fix8LengthCoinType(String coinType) {
+  print('fix8LengthCoinType $coinType');
+  String result = '';
+  const int reqLength = 8;
+  int coinTypeLength = coinType.length;
+  int diff = 0;
+  if (coinTypeLength < reqLength) {
+    diff = reqLength - coinTypeLength;
+    for (int i = 0; i < diff; i++) {
+      result += '0';
+    }
+    result += coinType;
+  }
+  print('fix8LengthCoinType result $result');
+  return result;
 }
 
 /*

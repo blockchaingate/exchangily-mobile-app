@@ -23,6 +23,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 
 class WalletFeaturesViewModel extends BaseViewModel {
   final log = getLogger('WalletFeaturesViewModel');
@@ -64,7 +65,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
       WalletFeatureName(AppLocalizations.of(context).smartContract,
           Icons.layers, 'smartContract', Colors.lightBlue),
       WalletFeatureName(AppLocalizations.of(context).transactionHistory,
-          Icons.history, 'transactionHistory', Colors.lightBlue),
+          Icons.history, TransactionHistoryViewRoute, Colors.lightBlue),
     ];
   }
 

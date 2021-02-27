@@ -29,9 +29,12 @@
 //   {'id': 27, 'name': 'DRGN', 'icon': ''}
 // ];
 const Map<int, String> newCoinTypeMap = {
+  65536: "BTC",
   131072: "FAB",
   131073: "EXG",
   131074: "DUSD",
+  131076: "DSC",
+  131077: "BST",
   196608: "ETH",
   196609: "USDT",
   196610: "INB",
@@ -55,6 +58,10 @@ const Map<int, String> newCoinTypeMap = {
   262144: "BCH",
   327680: "LTC",
   393216: "DOGE",
-  65536: "BTC",
-  458752: "TRX"
+  458752: "TRX",
+  458753: "USDTX",
+  196628: "FABE",
+  1996629: "EXGE",
+  196630: "DSCE",
+  196631: "BSTE"
 };

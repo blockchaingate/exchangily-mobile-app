@@ -354,7 +354,7 @@ class BindpayViewmodel extends FutureViewModel {
                   title: Container(
                     child: Center(
                         child: Text(
-                            '${AppLocalizations.of(context).recieveAddress}')),
+                            '${AppLocalizations.of(context).receiveAddress}')),
                   ),
                   content: Column(
                     children: [
@@ -479,7 +479,7 @@ class BindpayViewmodel extends FutureViewModel {
                     color: secondaryColor.withOpacity(0.5),
                     child: Center(
                         child: Text(
-                            '${AppLocalizations.of(context).recieveAddress}')),
+                            '${AppLocalizations.of(context).receiveAddress}')),
                   ),
                   titleTextStyle: Theme.of(context)
                       .textTheme

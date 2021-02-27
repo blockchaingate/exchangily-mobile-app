@@ -33,6 +33,8 @@ import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 //import 'package:url_launcher/url_launcher.dart';
 
+import 'package:exchangilymobileapp/environments/environment.dart';
+
 import '../localizations.dart';
 import '../shared/globals.dart' as globals;
 
@@ -126,6 +128,25 @@ class SharedService {
         .getBytickerName('EXG')
         .then((res) => address = res.address);
     return address;
+  }
+/*---------------------------------------------------
+      Get FAB address from wallet database
+--------------------------------------------------- */
+
+  Future<String> getFABAddressFromWalletDatabase() async {
+    String address = '';
+    await walletDataBaseService
+        .getBytickerName('FAB')
+        .then((res) => address = res.address);
+    return address;
+  }
+
+/*---------------------------------------------------
+      Get EXG Official address
+--------------------------------------------------- */
+
+  String getEXGOfficialAddress() {
+    return environment['addresses']['exchangilyOfficial'][0]['address'];
   }
 
 /*---------------------------------------------------

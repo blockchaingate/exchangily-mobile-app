@@ -33,6 +33,7 @@ import 'dart:async';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:hex/hex.dart';
+import 'package:protobuf/protobuf.dart';
 import 'dart:typed_data';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -404,38 +405,8 @@ class WalletService {
 
 // Get address From Private Key
   getAddressFromPrivKey(privKey) {
-    // generatePubKeyFromPriKey(privKey);
+    //ProtobufEnum.initByValue(byIndex)
   }
-
-// Generate Public Key From Private Key
-  // generatePubKeyFromPriKey(privKey) {
-
-  //   const ec = new EC('secp256k1');
-  //   const key = ec.keyFromPrivate(priKeyBytes, 'bytes');
-  //   const pubkey = key.getPublic();
-  //   const x = pubkey.x;
-  //   const y = pubkey.y;
-
-  //   var xHex = x.toString('hex');
-
-  //   while (xHex.length < 64) {
-  //     xHex = '0' + xHex;
-  //   }
-
-  //   var yHex = y.toString('hex');
-
-  //   while (yHex.length < 64) {
-  //     yHex = '0$yHex';
-  //   }
-
-  //   var pubkeyHex = '04' + xHex + yHex;
-  //   var pubkeyBytes = hexStr2byteArray(pubkeyHex);
-
-  //   return pubkeyBytes;
-  // }
-
-  // Base 58 Address Check
-  getBase58CheckAddress(privKeyAddr) {}
 
 /*----------------------------------------------------------------------
                Generate BCH address
@@ -1096,8 +1067,37 @@ class WalletService {
     int coinType;
     await getCoinTypeIdByName(coinName).then((value) => coinType = value);
     log.i('cointype $coinType');
-    var abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
 
+    var sepcialcoinType;
+    var abiHex;
+    if (coinName == 'DSCE') {
+      sepcialcoinType = await getCoinTypeIdByName('DSC');
+      abiHex = getWithdrawFuncABI(
+          sepcialcoinType, amountInLink, addressInWallet,
+          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else if (coinName == 'BSTE') {
+      sepcialcoinType = await getCoinTypeIdByName('BST');
+      abiHex = getWithdrawFuncABI(
+          sepcialcoinType, amountInLink, addressInWallet,
+          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else if (coinName == 'EXGE') {
+      sepcialcoinType = await getCoinTypeIdByName('EXG');
+      abiHex = getWithdrawFuncABI(
+          sepcialcoinType, amountInLink, addressInWallet,
+          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else if (coinName == 'FABE') {
+      sepcialcoinType = await getCoinTypeIdByName('FAB');
+      abiHex = getWithdrawFuncABI(
+          sepcialcoinType, amountInLink, addressInWallet,
+          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else {
+      abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
+    }
     var coinPoolAddress = await getCoinPoolAddress();
 
     var nonce = await getNonce(addressInKanban);
@@ -1213,9 +1213,44 @@ class WalletService {
     log.w('Original message $originalMessage');
     var coinPoolAddress = await getCoinPoolAddress();
 
-    var abiHex = getDepositFuncABI(
-        coinType, txHash, amountInLink, addressInKanban, signedMess);
+    /// assinging coin type accoringly
+    /// If special deposits then take the coin type of the respective chain coin
+    var sepcialcoinType;
+    var abiHex;
+    if (coinName == 'DSCE') {
+      sepcialcoinType = await getCoinTypeIdByName('DSC');
+      abiHex = getDepositFuncABI(
+          sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
+          coinName: coinName, chain: tokenType, isSpecialDeposit: true);
 
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else if (coinName == 'BSTE') {
+      sepcialcoinType = await getCoinTypeIdByName('BST');
+      abiHex = getDepositFuncABI(
+          sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
+          coinName: coinName, chain: tokenType, isSpecialDeposit: true);
+
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else if (coinName == 'EXGE') {
+      sepcialcoinType = await getCoinTypeIdByName('EXG');
+      abiHex = getDepositFuncABI(
+          sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
+          coinName: coinName, chain: tokenType, isSpecialDeposit: true);
+
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else if (coinName == 'FABE') {
+      sepcialcoinType = await getCoinTypeIdByName('FAB');
+      abiHex = getDepositFuncABI(
+          sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
+          coinName: coinName, chain: tokenType, isSpecialDeposit: true);
+
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else {
+      abiHex = getDepositFuncABI(
+          coinType, txHash, amountInLink, addressInKanban, signedMess,
+          coinName: coinName, chain: tokenType);
+      log.i('cointype $coinType -- abihex $abiHex');
+    }
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(

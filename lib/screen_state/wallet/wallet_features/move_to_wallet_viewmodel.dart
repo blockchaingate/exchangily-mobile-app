@@ -18,6 +18,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
+import 'package:exchangilymobileapp/utils/eth_util.dart';
+import 'dart:convert';
+import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:http/http.dart' as http;
 
 class MoveToWalletViewmodel extends BaseState {
   final log = getLogger('MoveToWalletViewmodel');
@@ -46,6 +51,13 @@ class MoveToWalletViewmodel extends BaseState {
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
   String serverError = '';
+  List<Map<String, dynamic>> chainBalances = [];
+  var ethChainBalance;
+  var fabChainBalance;
+  bool isWithdrawChoice = false;
+  String _groupValue;
+  get groupValue => _groupValue;
+  bool isShowFabChainBalance = true;
 
 /*---------------------------------------------------
                       INIT
@@ -68,7 +80,8 @@ class MoveToWalletViewmodel extends BaseState {
     }
     checkGasBalance();
     getSingleCoinExchangeBal();
-    getData();
+    getDecimalData();
+    _groupValue = 'FAB';
     setBusy(false);
   }
 
@@ -78,7 +91,7 @@ class MoveToWalletViewmodel extends BaseState {
     setBusy(false);
   }
 
-  getData() async {
+  getDecimalData() async {
     setBusy(true);
     singlePairDecimalConfig =
         await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
@@ -125,12 +138,110 @@ class MoveToWalletViewmodel extends BaseState {
   // Check single coin exchange balance
   getSingleCoinExchangeBal() async {
     setBusy(true);
-    await apiService
-        .getSingleCoinExchangeBalance(walletInfo.tickerName)
-        .then((res) {
+    String tickerName = '';
+    if (walletInfo.tickerName == 'DSCE') {
+      tickerName = 'DSC';
+      isWithdrawChoice = true;
+    } else if (walletInfo.tickerName == 'BSTE') {
+      tickerName = 'BST';
+      isWithdrawChoice = true;
+    } else if (walletInfo.tickerName == 'FABE') {
+      tickerName = 'FAB';
+      isWithdrawChoice = true;
+    } else if (walletInfo.tickerName == 'EXGE') {
+      tickerName = 'EXE';
+      isWithdrawChoice = true;
+    } else if (walletInfo.tickerName == 'USDTX') {
+      tickerName = 'TRX';
+      isWithdrawChoice = true;
+    } else
+      tickerName = walletInfo.tickerName;
+    await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
       walletInfo.inExchange = res.unlockedAmount;
       log.w('exchange balance check ${walletInfo.inExchange}');
     });
+    if (isWithdrawChoice) {
+      await getEthChainBalance();
+      await getFabChainBalance(tickerName);
+    }
+    log.w('chainBalances $chainBalances');
+    setBusy(false);
+  }
+
+  getFabChainBalance(String tickerName) async {
+    var address = sharedService.getEXGOfficialAddress();
+
+    var smartContractAddress =
+        environment["addresses"]["smartContract"][tickerName];
+    if (smartContractAddress == null) {
+      print('$tickerName contract is null so fetching from token database');
+      await tokenListDatabaseService
+          .getContractAddressByTickerName(tickerName)
+          .then((value) {
+        if (!value.startsWith('0x'))
+          smartContractAddress = '0x' + value;
+        else
+          smartContractAddress = value;
+      });
+      print('official smart contract address $smartContractAddress');
+    }
+
+    String balanceInfoABI = '70a08231';
+
+    var body = {
+      'address': trimHexPrefix(smartContractAddress),
+      'data': balanceInfoABI + fixLength(trimHexPrefix(address), 64)
+    };
+    var tokenBalance;
+    var url = fabBaseUrl + 'callcontract';
+    print(
+        'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
+
+    var response = await http.post(url, body: body);
+    var json = jsonDecode(response.body);
+    var unlockBalance = json['executionResult']['output'];
+    print('unlocl fab chain balance');
+    // if (unlockBalance == null || unlockBalance == '') {
+    //   return 0.0;
+
+    var unlockInt = BigInt.parse(unlockBalance, radix: 16);
+
+    // if ((decimal != null) && (decimal > 0)) {
+    //   tokenBalance = ((unlockInt) / BigInt.parse(pow(10, decimal).toString()));
+    // } else {
+    tokenBalance = bigNum2Double(unlockInt);
+    //   // print('tokenBalance for EXG==');
+    //   // print(tokenBalance);
+    // }
+
+    // }
+    fabChainBalance = tokenBalance;
+  }
+
+  getEthChainBalance() async {
+    String officialAddress = getOfficalAddress(walletInfo.tokenType);
+    await getEthTokenBalanceByAddress(officialAddress, walletInfo.tickerName)
+        .then((res) {
+      log.e('res $res');
+      ethChainBalance = res['tokenBalanceIe18'];
+      //  chainBalances.add({'eth': res['balance']});
+      // log.w(chainBalances);
+    });
+  }
+
+/*----------------------------------------------------------------------
+                Radio button selection
+----------------------------------------------------------------------*/
+
+  radioButtonSelection(value) async {
+    setBusy(true);
+    print(value);
+    _groupValue = value;
+    if (value == 'FAB') {
+      isShowFabChainBalance = true;
+    } else {
+      isShowFabChainBalance = false;
+    }
     setBusy(false);
   }
 
@@ -181,6 +292,20 @@ class MoveToWalletViewmodel extends BaseState {
       setBusy(false);
       return;
     }
+    if (isShowFabChainBalance && amount > fabChainBalance) {
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          isWarning: false);
+      setBusy(false);
+      return;
+    }
+    if (!isShowFabChainBalance && amount > ethChainBalance) {
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          isWarning: false);
+      setBusy(false);
+      return;
+    }
 
     setMessage('');
     var res = await _dialogService.showDialog(
@@ -214,29 +339,6 @@ class MoveToWalletViewmodel extends BaseState {
           log.i('txid $txId');
           amountController.text = '';
           setMessage(txId);
-          // String date = DateTime.now().toString();
-          // TransactionHistory transactionHistory = new TransactionHistory(
-          //     id: null,
-          //     tickerName: coinName,
-          //     address: '',
-          //     amount: 0.0,
-          //     date: date.toString(),
-          //     tickerChainTxId: txId,
-          //     tickerChainTxStatus: 'pending',
-          //     quantity: amount,
-          //     tag: 'withdraw');
-
-          //   walletService.checkTxStatus(transactionHistory);
-          //  walletService.insertTransactionInDatabase(transactionHistory);
-          // Future.delayed(Duration(seconds: 10), () async {
-          //   await apiService
-          //       .getSingleCoinExchangeBalance(walletInfo.tickerName)
-          //       .then((res) {
-          //         if(navigationService.)
-          //     walletInfo.inExchange = res.unlockedAmount;
-          //     log.w('exchange balance reload ${walletInfo.inExchange}');
-          //   });
-          // });
         } else {
           serverError = ret['data'];
           if (serverError == null || serverError == '') {

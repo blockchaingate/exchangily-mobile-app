@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/services/db/token_list_database_service.dart
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/wallet_coin_address_utils/doge_util.dart';
+import './eth_util.dart';
 
 //import '../packages/bip32/bip32_base.dart' as bip32;
 
@@ -28,7 +29,6 @@ import 'package:web3dart/web3dart.dart';
 import '../utils/string_util.dart';
 import '../environments/environment.dart';
 import './btc_util.dart';
-import './eth_util.dart';
 import "package:pointycastle/pointycastle.dart";
 import 'dart:typed_data';
 import 'dart:convert';

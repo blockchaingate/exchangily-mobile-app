@@ -78,18 +78,24 @@ Future getEthTokenBalanceByAddress(String address, String coinName) async {
     await tokenListDatabaseService
         .getContractAddressByTickerName(coinName)
         .then((String value) {
-        //  if(!value.startsWith('0x'))
-          smartContractAddress =  value;
-        });
+      //  if(!value.startsWith('0x'))
+      smartContractAddress = value;
+    });
   }
   var url = ethBaseUrl + 'callcontract/' + smartContractAddress + '/' + address;
   print('eth_util - getEthTokenBalanceByAddress - $url ');
   var tokenBalance = 0.0;
+  var tokenBalanceIe18 = 0.0;
   try {
     var response = await http.get(url);
     var balance = jsonDecode(response.body);
 
     tokenBalance = double.parse(balance['balance']) / 1e6;
+    tokenBalanceIe18 = double.parse(balance['balance']) / 1e18;
   } catch (e) {}
-  return {'balance': tokenBalance, 'lockbalance': 0.0};
+  return {
+    'balance': tokenBalance,
+    'lockbalance': 0.0,
+    'tokenBalanceIe18': tokenBalanceIe18
+  };
 }

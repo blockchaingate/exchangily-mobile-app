@@ -18,16 +18,20 @@ import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import '../../../shared/globals.dart' as globals;
+import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 
 class MoveToExchangeViewModel extends BaseViewModel {
   final log = getLogger('MoveToExchangeViewModel');
 
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
-
+  WalletDataBaseService walletDatabaseService =
+      locator<WalletDataBaseService>();
   WalletInfo walletInfo;
   BuildContext context;
   final gasPriceTextController = TextEditingController();
@@ -240,7 +244,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
           var allTxids = ret["txids"];
           walletService.addTxids(allTxids);
-
+          isShowErrorDetailsButton = false;
+          isShowDetailsMessage = false;
           message = txId.toString();
         } else {
           if (ret.containsKey("error") && ret["error"] != null) {
@@ -302,6 +307,15 @@ class MoveToExchangeViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
   refreshBalance() async {
     setBusy(true);
+    String fabAddress = '';
+    await walletDatabaseService
+        .getBytickerName('FAB')
+        .then((value) => fabAddress = value.tickerName);
+    await apiService
+        .getSingleWalletBalance(
+            fabAddress, walletInfo.tickerName, walletInfo.address)
+        .then((value) => log.w(value))
+        .catchError((err) => log.e(err));
     await walletService
         .coinBalanceByAddress(
             walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)

@@ -233,7 +233,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "receive" : MessageLookupByLibrary.simpleMessage("Receive"),
     "received" : MessageLookupByLibrary.simpleMessage("Received"),
     "receiverWalletAddress" : MessageLookupByLibrary.simpleMessage("Receiver Wallet Address"),
-    "recieveAddress" : MessageLookupByLibrary.simpleMessage("Recieve Address"),
     "redeposit" : MessageLookupByLibrary.simpleMessage("Redeposit"),
     "redepositCompleted" : MessageLookupByLibrary.simpleMessage("Redeposit Completed"),
     "redepositError" : MessageLookupByLibrary.simpleMessage("Redeposit error"),

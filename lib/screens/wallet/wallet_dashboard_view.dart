@@ -449,6 +449,7 @@ class WalletDashboardView extends StatelessWidget {
     if (tickerName == 'BCH' || tickerName == 'FAB') {
       print('AVAILABLE BAL $available');
     }
+
     return Card(
       color: globals.walletCardColor,
       elevation: elevation,

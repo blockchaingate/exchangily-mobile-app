@@ -975,8 +975,8 @@ class AppLocalizations {
         name: 'bankAccount', desc: 'campaign_bank_account');
   }
 
-  String get recieveAddress {
-    return Intl.message('Recieve Address',
+  String get receiveAddress {
+    return Intl.message('Receive Address',
         name: 'recieveAddress', desc: 'campaign_recieve_address');
   }
 

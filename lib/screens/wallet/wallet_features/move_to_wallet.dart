@@ -269,6 +269,89 @@ class MoveToWalletScreen extends StatelessWidget {
                         )),
 
                     UIHelper.verticalSpaceSmall,
+
+                    model.isWithdrawChoice
+                        ? Container(
+                            child: Row(
+                            children: [
+                              // for (var chainBalance in model.chainBalances)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text('FAB Chain',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                  Radio(
+                                      activeColor: globals.primaryColor,
+                                      onChanged: (value) {
+                                        model.radioButtonSelection(value);
+                                      },
+                                      groupValue: model.groupValue,
+                                      value: 'FAB'),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text('ERC20',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                  Radio(
+                                      activeColor: globals.primaryColor,
+                                      onChanged: (value) {
+                                        model.radioButtonSelection(value);
+                                      },
+                                      groupValue: model.groupValue,
+                                      value: 'ETH'),
+                                ],
+                              ),
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Container(
+                                        child: Row(
+                                      children: [
+                                        Text(
+                                          'TS ${AppLocalizations.of(context).wallet}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2,
+                                        ),
+                                        Text(
+                                          '${AppLocalizations.of(context).balance}: ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subtitle2,
+                                        ),
+                                      ],
+                                    )),
+                                    Container(
+                                        margin: EdgeInsets.only(left: 5.0),
+                                        child: model.fabChainBalance != null
+                                            ? model.isShowFabChainBalance
+                                                ? Text(
+                                                    model.fabChainBalance
+                                                        .toString(),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6,
+                                                  )
+                                                : Text(
+                                                    model.ethChainBalance
+                                                        .toString(),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headline6,
+                                                  )
+                                            : Container()),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ))
+                        : Container(),
                     // Success/Error container
                     Container(
                         child: Visibility(
@@ -296,6 +379,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                 UIHelper.verticalSpaceSmall,
                               ],
                             ))),
+
                     UIHelper.verticalSpaceSmall,
                     model.isShowErrorDetailsButton
                         ? Row(

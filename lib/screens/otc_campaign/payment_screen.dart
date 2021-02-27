@@ -350,7 +350,7 @@ class CampaignPaymentScreen extends StatelessWidget {
                                     children: <Widget>[
                                       Text(
                                         AppLocalizations.of(context)
-                                            .recieveAddress,
+                                            .receiveAddress,
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5,

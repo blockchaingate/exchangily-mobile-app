@@ -19,6 +19,8 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
+const String WalletBalancesApiRoute = 'walletBalances';
+const String SingleWalletBalanceApiRoute = 'singleCoinWalletBalance';
 const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";
 
 // Transaction history explorer URL's for prod
@@ -114,4 +116,3 @@ const String AssetsBalanceApiRoute = 'exchangily/getBalances/';
 
 const String GetBalanceApiRoute = 'kanban/getBalance/';
 const String OrdersByAddrApiRoute = 'ordersbyaddress/';
-const String WalletBalancesApiRoute = 'walletBalances';

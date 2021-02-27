@@ -232,7 +232,7 @@ class WalletFeaturesView extends StatelessWidget {
                         splashColor: globals.primaryColor.withAlpha(30),
                         onTap: () {
                           var route = model.features[6].route;
-                          Navigator.pushNamed(context, '/$route',
+                          Navigator.pushNamed(context, '$route',
                               arguments: walletInfo.tickerName);
                         },
                         child: Container(

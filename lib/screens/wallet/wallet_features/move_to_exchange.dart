@@ -21,6 +21,8 @@ import 'package:flutter/gestures.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_exchange_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
+import 'package:exchangilymobileapp/utils/string_util.dart';
+
 // {"success":true,"data":{"transactionID":"7f9d1b3fad00afa85076d28d46fd3457f66300989086b95c73ed84e9b3906de8"}}
 class MoveToExchangeScreen extends StatelessWidget {
   final WalletInfo walletInfo;
@@ -455,8 +457,11 @@ class MoveToExchangeScreen extends StatelessWidget {
 
               model.isShowDetailsMessage
                   ? Center(
-                      child: Text(model.serverError,
-                          style: Theme.of(context).textTheme.headline6),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(firstCharToUppercase(model.serverError),
+                            style: Theme.of(context).textTheme.headline5),
+                      ),
                     )
                   : Container(),
               UIHelper.verticalSpaceSmall,
