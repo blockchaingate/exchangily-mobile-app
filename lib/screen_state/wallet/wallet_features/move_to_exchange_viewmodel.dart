@@ -45,7 +45,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   String coinName = '';
   String tokenType = '';
   String message = '';
-  final myController = TextEditingController();
+  final amountController = TextEditingController();
   bool isValid = false;
   double gasAmount = 0.0;
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
@@ -148,7 +148,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   checkPass() async {
     setBusy(true);
 
-    if (myController.text.isEmpty) {
+    if (amountController.text.isEmpty) {
       sharedService.showInfoFlushbar(
           AppLocalizations.of(context).minimumAmountError,
           AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
@@ -166,7 +166,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    var amount = double.tryParse(myController.text);
+    var amount = double.tryParse(amountController.text);
 
     await refreshBalance();
 
@@ -206,6 +206,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
       String tickerName = walletInfo.tickerName;
       var decimal;
+      BigInt bigIntAmount = BigInt.tryParse(amountController.text);
+      log.w('Big int amount $bigIntAmount');
       String contractAddr =
           environment["addresses"]["smartContract"][tickerName];
       if (contractAddr == null && tokenType != '') {
@@ -239,7 +241,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
         bool success = ret["success"];
         if (success) {
-          myController.text = '';
+          amountController.text = '';
           String txId = ret['data']['transactionID'];
 
           var allTxids = ret["txids"];
@@ -307,24 +309,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
   refreshBalance() async {
     setBusy(true);
-    String fabAddress = '';
-    await walletDatabaseService
-        .getBytickerName('FAB')
-        .then((value) => fabAddress = value.tickerName);
+
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     await apiService
         .getSingleWalletBalance(
             fabAddress, walletInfo.tickerName, walletInfo.address)
-        .then((value) => log.w(value))
-        .catchError((err) => log.e(err));
-    await walletService
-        .coinBalanceByAddress(
-            walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
-        .then((data) async {
-      log.w('data $data');
-      if (data != null) if (data['balance'] != -1.0)
-        walletInfo.availableBalance = data['balance'];
-      else
-        walletInfo.availableBalance = 0.0;
+        .then((walletBalance) {
+      log.w(walletBalance);
+      walletInfo.availableBalance = walletBalance[0].balance;
     }).catchError((err) {
       log.e(err);
       setBusy(false);
@@ -353,7 +345,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   updateTransFee() async {
     setBusy(true);
     var to = getOfficalAddress(coinName, tokenType: tokenType);
-    var amount = double.tryParse(myController.text);
+    var amount = double.tryParse(amountController.text);
     if (to == null || amount == null || amount <= 0) {
       setBusy(false);
       return;

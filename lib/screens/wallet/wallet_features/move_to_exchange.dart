@@ -82,7 +82,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                   hintText: AppLocalizations.of(context).enterAmount,
                   hintStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
                 ),
-                controller: model.myController,
+                controller: model.amountController,
                 style: Theme.of(context)
                     .textTheme
                     .headline5

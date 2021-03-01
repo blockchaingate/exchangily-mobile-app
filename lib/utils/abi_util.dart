@@ -20,12 +20,12 @@ import 'package:web3dart/crypto.dart';
 import 'package:web3dart/src/utils/rlp.dart' as rlp;
 import 'dart:typed_data';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
-
+import 'package:exchangilymobileapp/constants/constants.dart';
 // {"success":true,"data":{"transactionID":"3ba8d681cddea5376c9b6ab2963ff243160fa086ec0681a67a3206ad80284d76"}}
 
 getWithdrawFuncABI(coinType, amountInLink, addressInWallet,
     {String coinName = '', String chain = '', bool isSpecialDeposit = false}) {
-  var abiHex = "0x3295d51e";
+  var abiHex = Constants.WithdrawSignatureAbi;
   if (isSpecialDeposit) {
     var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
     abiHex += specialFixLength(hexaDecimalCoinType, 64, chain);
@@ -40,7 +40,7 @@ getWithdrawFuncABI(coinType, amountInLink, addressInWallet,
 }
 
 getSendCoinFuncABI(coinType, kbPaymentAddress, amount) {
-  var abiHex = "0x3faf0a66";
+  var abiHex = Constants.SendSignatureAbi;
   var fabAddress = toLegacyAddress(kbPaymentAddress);
 
   var exAddress = fabToExgAddress(fabAddress);
@@ -56,7 +56,7 @@ getSendCoinFuncABI(coinType, kbPaymentAddress, amount) {
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
     String addressInKanban, signedMessage,
     {String coinName = '', String chain = '', bool isSpecialDeposit = false}) {
-  var abiHex = "0x379eb862";
+  var abiHex = Constants.DepositSignatureAbi;
   abiHex += trimHexPrefix(signedMessage["v"]);
   if (isSpecialDeposit) {
     var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
@@ -74,8 +74,6 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
 }
 
 specialFixLength(String hexaDecimalCoinType, int length, String chain) {
-  var ethChainHexa = '0003';
-  var tronChainHexa = '0007';
   var retStr = '';
   int hexaDecimalCoinTypeLength = hexaDecimalCoinType.length;
   print('hexaDecimalCoinType $hexaDecimalCoinTypeLength');
@@ -86,9 +84,11 @@ specialFixLength(String hexaDecimalCoinType, int length, String chain) {
       retStr += '0';
     }
     if (chain == 'ETH') {
-      retStr += ethChainHexa;
+      retStr += Constants.EthChainPrefix;
     } else if (chain == 'TRX') {
-      retStr += tronChainHexa;
+      retStr += Constants.TronChainPrefix;
+    } else if (chain == 'FAB') {
+      retStr += Constants.FabChainPrefix;
     }
 
     retStr += hexaDecimalCoinType;

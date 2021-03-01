@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -94,24 +95,44 @@ class WalletFeaturesViewModel extends BaseViewModel {
 
   refreshBalance() async {
     setBusy(true);
-    await walletService
-        .coinBalanceByAddress(
-            walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
-        .then((data) async {
-      if (data != null) {
-        log.e('data $data');
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    //  await getExchangeBal();
+    await apiService
+        .getSingleWalletBalance(
+            fabAddress, walletInfo.tickerName, walletInfo.address)
+        .then((walletBalance) {
+      log.e(walletBalance[0].coin);
+      var availableBalance = walletBalance[0].balance;
+      walletInfo.availableBalance = availableBalance;
+      var lockedBalance = walletBalance[0].lockBalance;
+      walletInfo.lockedBalance = lockedBalance;
+      walletInfo.inExchange = walletBalance[0].unlockedExchangeBalance;
+      double currentUsdValue = walletBalance[0].usdValue.usd;
+      log.e(
+          'market price $currentUsdValue -- available bal $availableBalance -- locked bal $lockedBalance');
+      walletInfo.usdValue = walletService.calculateCoinUsdBalance(
+          currentUsdValue, availableBalance, lockedBalance);
+      log.w(walletInfo.toJson());
+    })
+        // await walletService
+        //     .coinBalanceByAddress(
+        //         walletInfo.tickerName, walletInfo.address, walletInfo.tokenType)
+        //     .then((data) async {
+        //   if (data != null) {
+        //     log.e('data $data');
 
-        walletBalance = data['balance'];
-        double walletLockedBal = data['lockbalance'];
-        walletInfo.availableBalance = walletBalance;
-        double currentUsdValue = await walletService
-            .getCoinMarketPriceByTickerName(walletInfo.tickerName);
-        walletService.calculateCoinUsdBalance(
-            currentUsdValue, walletBalance, walletLockedBal);
-        walletInfo.usdValue = walletService.coinUsdBalance;
-      }
-      await getExchangeBal();
-    }).catchError((err) {
+        //     walletBalance = data['tokenBalanceIe18'];
+        //     double walletLockedBal = data['lockbalance'];
+        //     walletInfo.availableBalance = walletBalance;
+        //     double currentUsdValue = await walletService
+        //         .getCoinMarketPriceByTickerName(walletInfo.tickerName);
+        //     walletService.calculateCoinUsdBalance(
+        //         currentUsdValue, walletBalance, walletLockedBal);
+        //     walletInfo.usdValue = walletService.coinUsdBalance;
+        //   }
+        //   await getExchangeBal();
+        // })
+        .catchError((err) {
       log.e(err);
       setBusy(false);
       throw Exception(err);

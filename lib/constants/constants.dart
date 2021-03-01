@@ -1,5 +1,4 @@
 class Constants {
-
 /*----------------------------------------------------------------------
                         Campaign
 ----------------------------------------------------------------------*/
@@ -22,4 +21,12 @@ class Constants {
     '4HR': '4h',
     '1D': '24h',
   };
+
+  static const String EthChainPrefix = '0003';
+  static const String TronChainPrefix = '0007';
+  static const String FabChainPrefix = '0002';
+
+  static const String DepositSignatureAbi = "0x379eb862";
+  static const String WithdrawSignatureAbi = "0x3295d51e";
+  static const String SendSignatureAbi = "0x3faf0a66";
 }

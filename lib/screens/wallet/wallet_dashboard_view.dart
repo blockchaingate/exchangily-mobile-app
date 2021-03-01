@@ -416,16 +416,16 @@ class WalletDashboardView extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              floatingActionButton: Container(
-                color: white,
-                child: IconButton(
-                  icon: Icon(Icons.arrow_downward),
-                  onPressed: () {
-                    model.saveTokenLocally();
-                    //model.walletService.anotherTest();
-                  },
-                ),
-              ),
+              // floatingActionButton: Container(
+              //   color: white,
+              //   child: IconButton(
+              //     icon: Icon(Icons.arrow_downward),
+              //     onPressed: () {
+              //       model.saveTokenLocally();
+              //       //model.walletService.anotherTest();
+              //     },
+              //   ),
+              // ),
             ),
           );
         });
@@ -479,7 +479,8 @@ class WalletDashboardView extends StatelessWidget {
                             blurRadius: 10.0,
                             spreadRadius: 1.0),
                       ]),
-                  child: Image.network('$WalletCoinsLogoUrl$tickerName.png'),
+                  child: Image.network(
+                      '$WalletCoinsLogoUrl${tickerName.split('(')[0]}.png'),
                   //asset('assets/images/wallet-page/$tickerName.png'),
                   width: 35,
                   height: 35),

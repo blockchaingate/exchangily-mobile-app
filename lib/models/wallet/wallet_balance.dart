@@ -195,12 +195,12 @@ class WalletBalance {
 }
 
 class WalletBalanceList {
-  final List<WalletBalance> balanceList;
-  WalletBalanceList({this.balanceList});
+  final List<WalletBalance> walletBalances;
+  WalletBalanceList({this.walletBalances});
 
   factory WalletBalanceList.fromJson(List<dynamic> parsedJson) {
     List<WalletBalance> balanceList = new List<WalletBalance>();
     balanceList = parsedJson.map((i) => WalletBalance.fromJson(i)).toList();
-    return new WalletBalanceList(balanceList: balanceList);
+    return new WalletBalanceList(walletBalances: balanceList);
   }
 }

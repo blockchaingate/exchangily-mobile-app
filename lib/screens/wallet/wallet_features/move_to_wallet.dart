@@ -329,7 +329,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                     )),
                                     Container(
                                         margin: EdgeInsets.only(left: 5.0),
-                                        child: model.fabChainBalance != null
+                                        child: model.fabChainBalance != null && model.ethChainBalance != null
                                             ? model.isShowFabChainBalance
                                                 ? Text(
                                                     model.fabChainBalance

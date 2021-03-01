@@ -996,6 +996,8 @@ class WalletService {
   double calculateCoinUsdBalance(
       double marketPrice, double actualWalletBalance, double lockedBalance) {
     if (marketPrice != null) {
+      log.w(
+          'market price $marketPrice -- available bal $actualWalletBalance-- locked bal $lockedBalance');
       coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);
       return coinUsdBalance;
     } else {
@@ -1034,12 +1036,13 @@ class WalletService {
       String coinName,
       String coinAddress,
       String tokenType,
-      double amount,
+      BigInt amount,
       kanbanPrice,
       kanbanGasLimit) async {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
-    var amountInLink = BigInt.from(amount * 1e18);
+    var amountInLink = amount * BigInt.from(1e18);
+    log.i('AMount in link $amountInLink');
 
     var addressInWallet = coinAddress;
     if (coinName == 'BTC' ||

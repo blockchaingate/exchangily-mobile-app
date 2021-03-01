@@ -52,7 +52,6 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
-import '../../environments/coins.dart' as coinList;
 
 import 'package:json_diff/json_diff.dart';
 
@@ -925,7 +924,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         // Loop wallet info list to udpate balances
         log.e(
             'walletInfoCopy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
-
+        walletInfoCopy.removeWhere((element) => element.tickerName == 'TRX');
         walletInfoCopy.forEach((wallet) async {
           // Loop wallet balance list from api
           for (var j = 0; j <= walletBalanceList.length; j++) {
@@ -953,6 +952,16 @@ class WalletDashboardViewModel extends BaseViewModel {
               String holder = NumberUtil.currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
+              if (walletTickerName == 'DSCE') {
+                walletTickerName = 'DSC(ERC20)';
+              } else if (walletTickerName == 'BSTE') {
+                walletTickerName = 'BST(ERC20)';
+              } else if (walletTickerName == 'EXGE') {
+                walletTickerName = 'EXG(ERC20)';
+              } else if (walletTickerName == 'FABE') {
+                walletTickerName = 'FAB(ERC20)';
+              }
+
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
                   tickerName: walletTickerName,
@@ -964,12 +973,9 @@ class WalletDashboardViewModel extends BaseViewModel {
                   name: wallet.name,
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
-              print(wi.toJson());
+              log.i('single wallet info object${wi.toJson()}');
               walletDatabaseService.update(wi);
-              if (walletTickerName == 'FAB') {
-                fabBalance = 0.0;
-                fabBalance = wi.availableBalance;
-              }
+
               if (!tickerNames.contains(walletTickerName))
                 tickerNames.add(walletTickerName);
 

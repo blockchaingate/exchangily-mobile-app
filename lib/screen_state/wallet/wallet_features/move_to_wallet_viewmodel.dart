@@ -57,7 +57,7 @@ class MoveToWalletViewmodel extends BaseState {
   bool isWithdrawChoice = false;
   String _groupValue;
   get groupValue => _groupValue;
-  bool isShowFabChainBalance = true;
+  bool isShowFabChainBalance = false;
 
 /*---------------------------------------------------
                       INIT
@@ -81,7 +81,7 @@ class MoveToWalletViewmodel extends BaseState {
     checkGasBalance();
     getSingleCoinExchangeBal();
     getDecimalData();
-    _groupValue = 'FAB';
+    _groupValue = 'ETH';
     setBusy(false);
   }
 
@@ -168,7 +168,11 @@ class MoveToWalletViewmodel extends BaseState {
     setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                        Fab Chain Balance
+----------------------------------------------------------------------*/
   getFabChainBalance(String tickerName) async {
+    setBusy(true);
     var address = sharedService.getEXGOfficialAddress();
 
     var smartContractAddress =
@@ -215,18 +219,25 @@ class MoveToWalletViewmodel extends BaseState {
     // }
 
     // }
+
     fabChainBalance = tokenBalance;
+    setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                        ETH Chain Balance
+----------------------------------------------------------------------*/
   getEthChainBalance() async {
+    setBusy(true);
     String officialAddress = getOfficalAddress(walletInfo.tokenType);
     await getEthTokenBalanceByAddress(officialAddress, walletInfo.tickerName)
         .then((res) {
-      log.e('res $res');
+      log.e('getEthChainBalance $res');
       ethChainBalance = res['tokenBalanceIe18'];
       //  chainBalances.add({'eth': res['balance']});
       // log.w(chainBalances);
     });
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
@@ -239,8 +250,12 @@ class MoveToWalletViewmodel extends BaseState {
     _groupValue = value;
     if (value == 'FAB') {
       isShowFabChainBalance = true;
+      walletInfo.tokenType = 'FAB';
+      log.i('chain type ${walletInfo.tokenType}');
     } else {
       isShowFabChainBalance = false;
+      walletInfo.tokenType = 'ETH';
+      log.i('chain type ${walletInfo.tokenType}');
     }
     setBusy(false);
   }
@@ -306,7 +321,7 @@ class MoveToWalletViewmodel extends BaseState {
       setBusy(false);
       return;
     }
-
+    String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     setMessage('');
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -318,8 +333,10 @@ class MoveToWalletViewmodel extends BaseState {
       Uint8List seed = walletService.generateSeed(mnemonic);
       var tokenType = walletInfo.tokenType;
       var coinName = walletInfo.tickerName;
-      var coinAddress = walletInfo.address;
-
+      var coinAddress = isShowFabChainBalance ? exgAddress : walletInfo.address;
+      // if (!isShowFabChainBalance) {
+      //   amount = BigInt.tryParse(amountController.text);
+      // }
       if (coinName == 'BCH') {
         await walletService.getBchAddressDetails(coinAddress).then(
             (addressDetails) => coinAddress = addressDetails['legacyAddress']);
@@ -327,9 +344,10 @@ class MoveToWalletViewmodel extends BaseState {
 
       var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
-
+      BigInt bigIntAmount = BigInt.tryParse(amountController.text);
+      log.w('Big int amount $bigIntAmount');
       await walletService
-          .withdrawDo(seed, coinName, coinAddress, tokenType, amount,
+          .withdrawDo(seed, coinName, coinAddress, tokenType, bigIntAmount,
               kanbanPrice, kanbanGasLimit)
           .then((ret) {
         log.w(ret);
@@ -378,6 +396,7 @@ class MoveToWalletViewmodel extends BaseState {
   // update Transaction Fee
 
   updateTransFee() async {
+    setBusy(true);
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
 
@@ -388,6 +407,7 @@ class MoveToWalletViewmodel extends BaseState {
     print('Update trans fee $kanbanTransFeeDouble');
 
     kanbanTransFee = kanbanTransFeeDouble;
+    setBusy(false);
   }
 
 // Copy txid and display flushbar
