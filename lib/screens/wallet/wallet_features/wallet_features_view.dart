@@ -94,7 +94,7 @@ class WalletFeaturesView extends StatelessWidget {
                             padding: EdgeInsets.only(left: 5),
                             child: Row(
                               children: <Widget>[
-                                Text('${walletInfo.tickerName}',
+                                Text('${model.specialTicker}',
                                     style:
                                         Theme.of(context).textTheme.subtitle1),
                                 Icon(

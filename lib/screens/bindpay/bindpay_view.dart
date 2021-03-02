@@ -278,8 +278,8 @@ class BindpayView extends StatelessWidget {
                               enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Color(0XFF871fff), width: 0.5)),
-                              hintText:
-                                  AppLocalizations.of(context).receiveAddress,
+                              hintText: AppLocalizations.of(context)
+                                  .receiverWalletAddress,
                               hintStyle: Theme.of(context).textTheme.headline5),
                           controller: model.addressController,
                           style: Theme.of(context)

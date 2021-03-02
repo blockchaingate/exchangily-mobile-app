@@ -15,7 +15,6 @@ import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -35,18 +34,23 @@ class WalletFeaturesViewModel extends BaseViewModel {
   SharedService sharedService = locator<SharedService>();
   NavigationService navigationService = locator<NavigationService>();
   DialogService dialogService = locator<DialogService>();
+
   final double elevation = 5;
   double containerWidth = 150;
   double containerHeight = 115;
   double walletBalance;
   BuildContext context;
   var errDepositItem;
+  String specialTicker = '';
 
   List<WalletFeatureName> features = new List();
 
   init() {
     getWalletFeatures();
     getErrDeposit();
+    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
+        walletInfo.tickerName)["tickerName"];
+    log.i('wi object to check name ${walletInfo.toJson()}');
   }
 
   getWalletFeatures() {

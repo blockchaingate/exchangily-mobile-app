@@ -229,7 +229,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "receive" : MessageLookupByLibrary.simpleMessage("接收"),
     "received" : MessageLookupByLibrary.simpleMessage("已收到"),
     "receiverWalletAddress" : MessageLookupByLibrary.simpleMessage("接收地址"),
-    "recieveAddress" : MessageLookupByLibrary.simpleMessage("接收地址"),
     "redepositCompleted" : MessageLookupByLibrary.simpleMessage("存款确认完毕"),
     "redepositError" : MessageLookupByLibrary.simpleMessage("存款确认失败"),
     "redepositFailedError" : MessageLookupByLibrary.simpleMessage("向交易所转币确认失败"),
