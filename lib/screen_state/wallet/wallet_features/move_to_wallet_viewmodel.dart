@@ -10,6 +10,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -33,6 +34,8 @@ class MoveToWalletViewmodel extends BaseState {
   SharedService sharedService = locator<SharedService>();
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
+  WalletDataBaseService walletDataBaseService =
+      locator<WalletDataBaseService>();
 
   WalletInfo walletInfo;
   BuildContext context;
@@ -244,7 +247,15 @@ class MoveToWalletViewmodel extends BaseState {
 ----------------------------------------------------------------------*/
   getEthChainBalance() async {
     setBusy(true);
-    String officialAddress = getOfficalAddress(walletInfo.tokenType);
+    String officialAddress = '';
+    if (walletInfo.tickerName != 'FABE')
+    // in case of other eth tokens use eth official address
+      officialAddress = getOfficalAddress(walletInfo.tokenType);
+    else if (walletInfo.tickerName == 'FABE')
+    // in case of fabe use wallets eth address
+      await walletDataBaseService
+          .getBytickerName('ETH')
+          .then((wallet) => officialAddress = wallet.address);
     await getEthTokenBalanceByAddress(officialAddress, walletInfo.tickerName)
         .then((res) {
       log.e('getEthChainBalance $res');
