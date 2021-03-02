@@ -467,7 +467,7 @@ class ApiService {
         jsonList.forEach((element) {
           if (element['balance'] != null) newList.add(element);
         });
-        log.i('single getWalletBalance $newList');
+        // log.i('single getWalletBalance $newList');
         balanceList = WalletBalanceList.fromJson(newList);
       } else {
         log.e('get single wallet balance returning null');

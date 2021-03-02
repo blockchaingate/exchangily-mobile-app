@@ -9,7 +9,6 @@ class UsdValue {
   }
 
   factory UsdValue.fromJson(Map<String, dynamic> json) {
-    print('2 ${json['USD']}');
     return UsdValue(usd: json['USD'].toDouble());
   }
 

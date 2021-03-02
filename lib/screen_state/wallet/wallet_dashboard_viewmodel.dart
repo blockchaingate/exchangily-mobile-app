@@ -806,16 +806,6 @@ class WalletDashboardViewModel extends BaseViewModel {
         marketPrice, availableBal, lockedBal);
     String holder = NumberUtil.currencyFormat(usdValue, 2);
     formattedUsdValueList.add(holder);
-    String walletTickerName = newToken.tickerName;
-    if (walletTickerName == 'DSCE') {
-      walletTickerName = 'DSC(ERC20)';
-    } else if (walletTickerName == 'BSTE') {
-      walletTickerName = 'BST(ERC20)';
-    } else if (walletTickerName == 'EXGE') {
-      walletTickerName = 'EXG(ERC20)';
-    } else if (walletTickerName == 'FABE') {
-      walletTickerName = 'FAB(ERC20)';
-    }
 
     WalletInfo wi = WalletInfo(
         id: null,
@@ -833,12 +823,12 @@ class WalletDashboardViewModel extends BaseViewModel {
     await walletDatabaseService.insert(wi);
 
     // save data locally
-    List<String> tokenList = [];
+    // List<String> tokenList = [];
 
-    var x = jsonEncode(newToken);
+    // var x = jsonEncode(newToken);
 
-    tokenList.add(x);
-    storageService.tokenList = tokenList;
+    // tokenList.add(x);
+    // storageService.tokenList = tokenList;
   }
 
 /*----------------------------------------------------------------------
@@ -877,7 +867,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   Future refreshBalance() async {
     if (!isBusy) setBusy(true);
-    List<String> tickerNames = [];
+    List<String> tickerNamesFromWalletInfoCopy = [];
 
     await walletDatabaseService.getAll().then((walletList) {
       walletInfoCopy = [];
@@ -890,7 +880,12 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
     log.i('walletInfo copy list  length ${walletInfoCopy.length}');
 
-    //  walletInfoCopy.removeLast();
+    // await walletDatabaseService.deleteDb();
+    // walletInfo.forEach((element) async {
+    //   await walletDatabaseService.insert(element);
+    // });
+    // var wd = await walletDatabaseService.getAll();
+    // log.e('wallet list from db length after deleting and adding ${wd.length}');
     walletInfo = [];
     Map<String, dynamic> walletBalancesBody = {
       'btcAddress': '',
@@ -939,11 +934,13 @@ class WalletDashboardViewModel extends BaseViewModel {
         walletInfoCopy.forEach((wallet) async {
           // Loop wallet balance list from api
           for (var j = 0; j <= walletBalanceList.length; j++) {
-            String walletTickerName = wallet.tickerName;
+            // wallet info copy properties assigning to variables for easier use
+            String walletInfoTickerName = wallet.tickerName;
+            // wallet balance list properties assigning to variables for easier use
             String walletBalanceCoinName = walletBalanceList[j].coin;
 
-            // Compare wallet ticker name to wallet balance coin name
-            if (walletTickerName == walletBalanceCoinName) {
+            // Compare wallet info copy ticker name to wallet balance coin name
+            if (walletInfoTickerName == walletBalanceCoinName) {
               double marketPrice = walletBalanceList[j].usdValue.usd ?? 0.0;
               double availableBal = walletBalanceList[j].balance ?? 0.0;
               double lockedBal = walletBalanceList[j].lockBalance ?? 0.0;
@@ -963,30 +960,9 @@ class WalletDashboardViewModel extends BaseViewModel {
               String holder = NumberUtil.currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
-              // if (walletTickerName == 'DSCE') {
-              //   if (!tickerNames.contains(walletTickerName))
-              //     tickerNames.add(walletTickerName);
-              //   walletTickerName = 'DSC(ERC20)';
-              // } else if (walletTickerName == 'BSTE') {
-              //   if (!tickerNames.contains(walletTickerName))
-              //     tickerNames.add(walletTickerName);
-              //   walletTickerName = 'BST(ERC20)';
-              // } else if (walletTickerName == 'EXGE') {
-              //   if (!tickerNames.contains(walletTickerName))
-              //     tickerNames.add(walletTickerName);
-              //   walletTickerName = 'EXG(ERC20)';
-              // } else if (walletTickerName == 'FABE') {
-              //   if (!tickerNames.contains(walletTickerName))
-              //     tickerNames.add(walletTickerName);
-              //   walletTickerName = 'FAB(ERC20)';
-              // } else {
-              //   if (!tickerNames.contains(walletTickerName))
-              //     tickerNames.add(walletTickerName);
-              // }
-
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
-                  tickerName: walletTickerName,
+                  tickerName: walletInfoTickerName,
                   tokenType: wallet.tokenType,
                   address: wallet.address,
                   availableBalance: availableBal,
@@ -997,9 +973,11 @@ class WalletDashboardViewModel extends BaseViewModel {
               walletInfo.add(wi);
               //   log.i('single wallet info object${wi.toJson()}');
               walletDatabaseService.update(wi);
-              if (!tickerNames.contains(walletTickerName))
-                tickerNames.add(walletTickerName);
-              print('wallet db tickerNames length ${tickerNames.length}');
+
+              if (!tickerNamesFromWalletInfoCopy.contains(walletInfoTickerName))
+                tickerNamesFromWalletInfoCopy.add(walletInfoTickerName);
+              print(
+                  'wallet info copy tickerNames length ${tickerNamesFromWalletInfoCopy.length} -- $tickerNamesFromWalletInfoCopy');
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
@@ -1007,71 +985,78 @@ class WalletDashboardViewModel extends BaseViewModel {
           } // For loop j ends
         }); // walletInfo for each ends
 
-        //  second if start to add new coins in wallet info list
-        if (tickerNames.length != walletBalanceList.length) {
-          //  List<String> newTokenList = [];
-          List<WalletBalance> newTokenBalanceList = [];
+        //  second if -- starts to add new coins in wallet info list
+        if (tickerNamesFromWalletInfoCopy.length != walletBalanceList.length) {
+          log.e(
+              'wallet info copy length is ${tickerNamesFromWalletInfoCopy.length} and wallet balances length ${walletBalanceList.length} ');
+          List<WalletBalance> newTokenListFromWalletBalances = [];
           walletBalanceList.forEach((walletBalanceObj) async {
-            bool isOldTicker = tickerNames.contains(walletBalanceObj.coin);
+            bool isOldTicker =
+                tickerNamesFromWalletInfoCopy.contains(walletBalanceObj.coin);
             print(
                 'wallet info contains ${walletBalanceObj.coin}? => $isOldTicker');
             if (!isOldTicker &&
                 walletBalanceObj.coin != 'TRX' &&
                 walletBalanceObj.coin != 'USDTX') {
               //  newTokenList.add(walletBalanceObj.coin);
-              newTokenBalanceList.add(walletBalanceObj);
-              log.i('new token list $newTokenBalanceList');
+              newTokenListFromWalletBalances.add(walletBalanceObj);
+              log.i('new coin to add ${walletBalanceObj.toJson()}');
             }
           });
 
-          if (newTokenBalanceList.isNotEmpty) {
+          /// if new token list from wallet balances is not empty
+          /// then call token list update api
+
+          if (newTokenListFromWalletBalances.isNotEmpty) {
             await walletService
                 .getTokenListUpdates()
-                .then((apiTokenList) async {
-              if (apiTokenList != null) {
-                var x = await tokenListDatabaseService.getAll();
-                log.i(
-                    'new token update list length ${x.length} -- token list database list length ${apiTokenList.length}');
-                if (x != null) if (x.length != apiTokenList.length) {
-                  await tokenListDatabaseService.deleteDb().whenComplete(() =>
-                      log.e(
-                          'ticker database cleared before inserting update token data from api'));
-                  print('x ${x.length}');
+                .then((newTokenListFromTokenUpdateApi) async {
+              if (newTokenListFromTokenUpdateApi != null) {
+                var existingTokensInTokenDatabase =
+                    await tokenListDatabaseService.getAll();
+                if (existingTokensInTokenDatabase != null) {
+                  log.i(
+                      'new token update list length ${newTokenListFromTokenUpdateApi.length} -- token list database list length ${existingTokensInTokenDatabase.length}');
+                  //  if length of token list db and token update list is not same
+                  // then delete the db
+                  if (existingTokensInTokenDatabase.length !=
+                      newTokenListFromTokenUpdateApi.length) {
+                    await tokenListDatabaseService.deleteDb().whenComplete(() =>
+                        log.e(
+                            'ticker database cleared before inserting update token data from api'));
+                    print('x ${existingTokensInTokenDatabase.length}');
+                  }
 
-                  apiTokenList.forEach((tokenFromApi) async {
-                    await tokenListDatabaseService.insert(tokenFromApi);
+                  /// Fill the token list database with new data from the api
+
+                  newTokenListFromTokenUpdateApi
+                      .forEach((singleNewToken) async {
+                    if (singleNewToken.coinName != 'USDTX')
+                      await tokenListDatabaseService.insert(singleNewToken);
                   });
+                  // print the new token list database length
                   var t = await tokenListDatabaseService.getAll();
-                  print('t ${t.length}');
+                  log.i('tokenListDatabaseService length ${t.length}');
                 }
-                // var existingToken;
-                // apiTokenList.forEach((tokenToInsert) async {
-                //   log.e(
-                //       'if ${tokenToInsert.tickerName} is already present? ${x.length} token in database}');
-                //   if (x != null)
-                //     existingToken = x.firstWhere(
-                //         (t) => (t.tickerName == tokenToInsert.tickerName),
-                //         orElse: () => null);
-                //   if (existingToken != null)
-                //     log.w('existing token ${existingToken.toJson()}');
-                //   if (existingToken == null) {
-                //     tokenListDatabaseService.insert(tokenToInsert);
-                //     log.i(
-                //         '${tokenToInsert.toJson()} is not present so now adding}');
-                //   }
-                // });
-                // await tokenListDatabaseService.deleteByTickerName('CNB');
-
               }
-              newTokenBalanceList.forEach((newTokenWalletBalance) async {
-                // compare tickername of api token balance against api tokenList
-                apiTokenList.forEach((newToken) async {
-                  // ************** remove below if when trx usdt is ready
-                  if (newTokenWalletBalance.coin == newToken.tickerName) {
-                    await buildNewWalletObject(newToken, newTokenWalletBalance);
+              newTokenListFromWalletBalances
+                  .forEach((newTokenWalletBalance) async {
+                // compare tickername of wallet balance api token against tokenListUpdate api token tickername
+                newTokenListFromTokenUpdateApi
+                    .forEach((singleNewTokenFromTokenUpdateApi) async {
+                  if (newTokenWalletBalance.coin !=
+                      'USDTX') if (newTokenWalletBalance
+                          .coin ==
+                      singleNewTokenFromTokenUpdateApi.tickerName) {
+                    log.i('----- Building new wallet object -----');
+                    await buildNewWalletObject(singleNewTokenFromTokenUpdateApi,
+                        newTokenWalletBalance);
                   }
                 });
               });
+              var allWalletDatabaseData = await walletDatabaseService.getAll();
+              log.i(
+                  'All wallet database data length ${allWalletDatabaseData.length}');
             }).catchError((err) {
               log.e('Token list api call fails in api service');
             });
@@ -1079,16 +1064,25 @@ class WalletDashboardViewModel extends BaseViewModel {
             log.w('No new tokens');
             print(walletInfoCopy.length);
             print(walletBalanceList.length);
+            var t = await tokenListDatabaseService.getAll();
+            try {
+              int i = 1;
+              t.forEach((element) {
+                log.i('$i -- ${element.toJson()}');
+                i++;
+              });
+            } catch (err) {
+              log.e('something break $err');
+            }
+            print('tokenListDatabaseService length ${t.length}');
           }
         } // second if ends
 
-        //  if (!isProduction) debugVersionPopup();
-
         // get exg address to get free fab
-        String address = await getExgAddressFromWalletDatabase();
         await getGas();
         // check gas and fab balance if 0 then ask for free fab
         if (gasAmount == 0.0 && fabBalance == 0.0) {
+          String address = await getExgAddressFromWalletDatabase();
           storageService.isShowCaseView = true;
           _isShowCaseView = true;
           var res = await apiService.getFreeFab(address);

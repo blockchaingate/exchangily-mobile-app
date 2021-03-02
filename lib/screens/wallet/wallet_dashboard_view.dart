@@ -467,7 +467,6 @@ class WalletDashboardView extends StatelessWidget {
 //     logoTicker = model.walletService
 //         .updateSpecialTokensTickerNameForTxHistory(tickerName)['logoTicker'];
 
-    print('logo ticker $logoTicker');
     return Card(
       color: globals.walletCardColor,
       elevation: elevation,

@@ -179,7 +179,7 @@ class MoveToWalletViewmodel extends BaseState {
 
   getFabBalance() async {
     setBusy(true);
-    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    String fabAddress = getOfficalAddress('FAB');
     await walletService.coinBalanceByAddress('FAB', fabAddress, '').then((res) {
       log.e('fab res $res');
       fabChainBalance = res['balance'];
@@ -248,14 +248,16 @@ class MoveToWalletViewmodel extends BaseState {
   getEthChainBalance() async {
     setBusy(true);
     String officialAddress = '';
-    if (walletInfo.tickerName != 'FABE')
+    // if (walletInfo.tickerName != 'FABE')
     // in case of other eth tokens use eth official address
-      officialAddress = getOfficalAddress(walletInfo.tokenType);
-    else if (walletInfo.tickerName == 'FABE')
-    // in case of fabe use wallets eth address
-      await walletDataBaseService
-          .getBytickerName('ETH')
-          .then((wallet) => officialAddress = wallet.address);
+    officialAddress = getOfficalAddress('ETH');
+    // else if (walletInfo.tickerName == 'FABE') {
+    //   // in case of fabe use wallets eth address
+    //   // await walletDataBaseService
+    //   //     .getBytickerName('ETH')
+    //   //     .then((wallet) => officialAddress = wallet.address);
+    // }
+    // call to get token balance
     await getEthTokenBalanceByAddress(officialAddress, walletInfo.tickerName)
         .then((res) {
       log.e('getEthChainBalance $res');
