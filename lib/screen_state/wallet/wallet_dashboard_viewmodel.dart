@@ -806,6 +806,17 @@ class WalletDashboardViewModel extends BaseViewModel {
         marketPrice, availableBal, lockedBal);
     String holder = NumberUtil.currencyFormat(usdValue, 2);
     formattedUsdValueList.add(holder);
+    String walletTickerName = newToken.tickerName;
+    if (walletTickerName == 'DSCE') {
+      walletTickerName = 'DSC(ERC20)';
+    } else if (walletTickerName == 'BSTE') {
+      walletTickerName = 'BST(ERC20)';
+    } else if (walletTickerName == 'EXGE') {
+      walletTickerName = 'EXG(ERC20)';
+    } else if (walletTickerName == 'FABE') {
+      walletTickerName = 'FAB(ERC20)';
+    }
+
     WalletInfo wi = WalletInfo(
         id: null,
         tickerName: newToken.tickerName,
@@ -952,15 +963,26 @@ class WalletDashboardViewModel extends BaseViewModel {
               String holder = NumberUtil.currencyFormat(usdValue, 2);
               formattedUsdValueList.add(holder);
 
-              if (walletTickerName == 'DSCE') {
-                walletTickerName = 'DSC(ERC20)';
-              } else if (walletTickerName == 'BSTE') {
-                walletTickerName = 'BST(ERC20)';
-              } else if (walletTickerName == 'EXGE') {
-                walletTickerName = 'EXG(ERC20)';
-              } else if (walletTickerName == 'FABE') {
-                walletTickerName = 'FAB(ERC20)';
-              }
+              // if (walletTickerName == 'DSCE') {
+              //   if (!tickerNames.contains(walletTickerName))
+              //     tickerNames.add(walletTickerName);
+              //   walletTickerName = 'DSC(ERC20)';
+              // } else if (walletTickerName == 'BSTE') {
+              //   if (!tickerNames.contains(walletTickerName))
+              //     tickerNames.add(walletTickerName);
+              //   walletTickerName = 'BST(ERC20)';
+              // } else if (walletTickerName == 'EXGE') {
+              //   if (!tickerNames.contains(walletTickerName))
+              //     tickerNames.add(walletTickerName);
+              //   walletTickerName = 'EXG(ERC20)';
+              // } else if (walletTickerName == 'FABE') {
+              //   if (!tickerNames.contains(walletTickerName))
+              //     tickerNames.add(walletTickerName);
+              //   walletTickerName = 'FAB(ERC20)';
+              // } else {
+              //   if (!tickerNames.contains(walletTickerName))
+              //     tickerNames.add(walletTickerName);
+              // }
 
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
@@ -973,12 +995,10 @@ class WalletDashboardViewModel extends BaseViewModel {
                   name: wallet.name,
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
-              log.i('single wallet info object${wi.toJson()}');
+              //   log.i('single wallet info object${wi.toJson()}');
               walletDatabaseService.update(wi);
-
               if (!tickerNames.contains(walletTickerName))
                 tickerNames.add(walletTickerName);
-
               print('wallet db tickerNames length ${tickerNames.length}');
               // break the second j loop of wallet balance list when match found
               break;
@@ -989,20 +1009,22 @@ class WalletDashboardViewModel extends BaseViewModel {
 
         //  second if start to add new coins in wallet info list
         if (tickerNames.length != walletBalanceList.length) {
-          List<String> newTokenList = [];
+          //  List<String> newTokenList = [];
           List<WalletBalance> newTokenBalanceList = [];
           walletBalanceList.forEach((walletBalanceObj) async {
             bool isOldTicker = tickerNames.contains(walletBalanceObj.coin);
             print(
                 'wallet info contains ${walletBalanceObj.coin}? => $isOldTicker');
-            if (!isOldTicker) {
-              newTokenList.add(walletBalanceObj.coin);
+            if (!isOldTicker &&
+                walletBalanceObj.coin != 'TRX' &&
+                walletBalanceObj.coin != 'USDTX') {
+              //  newTokenList.add(walletBalanceObj.coin);
               newTokenBalanceList.add(walletBalanceObj);
-              log.i(
-                  'new ticker list $newTokenList --- new wallet balance object ${walletBalanceObj.toJson}');
+              log.i('new token list $newTokenBalanceList');
             }
           });
-          if (newTokenList.isNotEmpty) {
+
+          if (newTokenBalanceList.isNotEmpty) {
             await walletService
                 .getTokenListUpdates()
                 .then((apiTokenList) async {
@@ -1019,6 +1041,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                   apiTokenList.forEach((tokenFromApi) async {
                     await tokenListDatabaseService.insert(tokenFromApi);
                   });
+                  var t = await tokenListDatabaseService.getAll();
+                  print('t ${t.length}');
                 }
                 // var existingToken;
                 // apiTokenList.forEach((tokenToInsert) async {
@@ -1037,12 +1061,12 @@ class WalletDashboardViewModel extends BaseViewModel {
                 //   }
                 // });
                 // await tokenListDatabaseService.deleteByTickerName('CNB');
-                var t = await tokenListDatabaseService.getAll();
-                print('t ${t.length}');
+
               }
               newTokenBalanceList.forEach((newTokenWalletBalance) async {
                 // compare tickername of api token balance against api tokenList
                 apiTokenList.forEach((newToken) async {
+                  // ************** remove below if when trx usdt is ready
                   if (newTokenWalletBalance.coin == newToken.tickerName) {
                     await buildNewWalletObject(newToken, newTokenWalletBalance);
                   }

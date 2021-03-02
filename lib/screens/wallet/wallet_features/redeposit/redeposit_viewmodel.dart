@@ -5,7 +5,6 @@ import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -57,22 +56,28 @@ class RedepositViewModel extends FutureViewModel {
     setBusy(true);
     var address = await this.sharedService.getExgAddressFromWalletDatabase();
     await walletService.getErrDeposit(address).then((errDepositData) async {
+      debugPrint(
+          'redeposit res length ${errDepositData.length} ---data $errDepositData');
       for (var i = 0; i < errDepositData.length; i++) {
         var item = errDepositData[i];
-        log.w('errDepositData single occurance $item');
+        log.w('errDepositData count $i $item');
         var coinType = item['coinType'];
         String tickerNameByCointype = newCoinTypeMap[coinType];
+        print('tickerNameByCointype $tickerNameByCointype');
         if (tickerNameByCointype == null)
           await tokenListDatabaseService.getAll().then((tokenList) {
-            if (tokenList != null)
+            if (tokenList != null) {
               tickerNameByCointype = tokenList
                   .firstWhere((element) => element.tokenType == coinType)
                   .tickerName;
-            if (tickerNameByCointype == walletInfo.tickerName)
-              errDepositList.add(item);
+              if (tickerNameByCointype == walletInfo.tickerName)
+                errDepositList.add(item);
+            }
           });
-        else if (newCoinTypeMap[coinType] == walletInfo.tickerName) {
+        else if (tickerNameByCointype == walletInfo.tickerName) {
           errDepositList.add(item);
+          log.e(
+              'in else if -- coin type $coinType --  tickerNameByCointype $tickerNameByCointype');
         }
       }
     });
@@ -159,41 +164,41 @@ class RedepositViewModel extends FutureViewModel {
 
         // get transaction from database
 
-        await transactionHistoryDatabaseService
-            .getByKanbanTxId(transactionID)
-            .then((transactionByTxId) async {
-          if (transactionByTxId != null) {
-            // update transaction history status with new txid
-            log.i(
-                'updating ${transactionByTxId.tickerName} in transaction history db');
-            String date = DateTime.now().toString();
-            TransactionHistory transactionHistory = new TransactionHistory(
-                id: transactionByTxId.id,
-                tickerName: walletInfo.tickerName,
-                address: '',
-                amount: 0.0,
-                date: date.toString(),
-                tickerChainTxId: newTransactionId,
-                tickerChainTxStatus: 'pending',
-                quantity: transactionByTxId.quantity,
-                tag: transactionByTxId.tag);
+        // await transactionHistoryDatabaseService
+        //     .getByKanbanTxId(transactionID)
+        //     .then((transactionByTxId) async {
+        //   if (transactionByTxId != null) {
+        //     // update transaction history status with new txid
+        //     log.i(
+        //         'updating ${transactionByTxId.tickerName} in transaction history db');
+        //     // String date = DateTime.now().toString();
+        //     // TransactionHistory transactionHistory = new TransactionHistory(
+        //     //     id: transactionByTxId.id,
+        //     //     tickerName: walletInfo.tickerName,
+        //     //     address: '',
+        //     //     amount: 0.0,
+        //     //     date: date.toString(),
+        //     //     tickerChainTxId: newTransactionId,
+        //     //     tickerChainTxStatus: 'pending',
+        //     //     quantity: transactionByTxId.quantity,
+        //     //     tag: transactionByTxId.tag);
 
-            await transactionHistoryDatabaseService.update(transactionHistory);
-            walletService.checkDepositTransactionStatus(transactionHistory);
-          } else {
-            log.e(
-                'transactionID $transactionID not found in transaction history db');
-            await transactionHistoryDatabaseService.getAll().then((res) {
-              List<String> txIdList = [];
-              if (res != null) {
-                res.forEach((element) {
-                  txIdList.add(element.kanbanTxId);
-                });
-              }
-              log.e('transaction history tx id list $txIdList');
-            });
-          }
-        });
+        //     // await transactionHistoryDatabaseService.update(transactionHistory);
+        //     // walletService.checkDepositTransactionStatus(transactionHistory);
+        //   } else {
+        //     log.e(
+        //         'transactionID $transactionID not found in transaction history db');
+        //     await transactionHistoryDatabaseService.getAll().then((res) {
+        //       List<String> txIdList = [];
+        //       if (res != null) {
+        //         res.forEach((element) {
+        //           txIdList.add(element.kanbanTxId);
+        //         });
+        //       }
+        //       log.e('transaction history tx id list $txIdList');
+        //     });
+        //   }
+        // });
 
         // sharedService.showInfoFlushbar(
         //     '${AppLocalizations.of(context).redepositCompleted}',

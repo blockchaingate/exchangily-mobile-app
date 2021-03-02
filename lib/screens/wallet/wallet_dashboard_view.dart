@@ -446,10 +446,28 @@ class WalletDashboardView extends StatelessWidget {
       elevation,
       context,
       WalletDashboardViewModel model) {
-    if (tickerName == 'BCH' || tickerName == 'FAB') {
-      print('AVAILABLE BAL $available');
+    String logoTicker = '';
+    if (tickerName.toUpperCase() == 'BSTE') {
+      tickerName = 'BST(ERC20)';
+      logoTicker = 'BSTE';
+    } else if (tickerName.toUpperCase() == 'DSCE') {
+      tickerName = 'DSC(ERC20)';
+      logoTicker = 'DSCE';
+    } else if (tickerName.toUpperCase() == 'EXGE') {
+      tickerName = 'EXG(ERC20)';
+      logoTicker = 'EXGE';
+    } else if (tickerName.toUpperCase() == 'FABE') {
+      tickerName = 'FAB(ERC20)';
+      logoTicker = 'FABE';
+    } else {
+      logoTicker = tickerName;
     }
+//  tickerName = model.walletService
+//         .updateSpecialTokensTickerNameForTxHistory(tickerName)['tickerName'];
+//     logoTicker = model.walletService
+//         .updateSpecialTokensTickerNameForTxHistory(tickerName)['logoTicker'];
 
+    print('logo ticker $logoTicker');
     return Card(
       color: globals.walletCardColor,
       elevation: elevation,
@@ -480,7 +498,7 @@ class WalletDashboardView extends StatelessWidget {
                             spreadRadius: 1.0),
                       ]),
                   child: Image.network(
-                      '$WalletCoinsLogoUrl${tickerName.split('(')[0]}.png'),
+                      '$WalletCoinsLogoUrl${logoTicker.toLowerCase()}.png'),
                   //asset('assets/images/wallet-page/$tickerName.png'),
                   width: 35,
                   height: 35),

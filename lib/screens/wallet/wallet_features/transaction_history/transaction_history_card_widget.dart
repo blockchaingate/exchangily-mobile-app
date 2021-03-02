@@ -25,6 +25,10 @@ class TxHisotryCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+  
+      transaction.tickerName = model.updateTickers(transaction.tickerName);
+     
+   
     return Card(
         elevation: 4,
         child: Container(
@@ -42,8 +46,15 @@ class TxHisotryCardWidget extends StatelessWidget {
                           padding: transaction.tickerName.length > 3
                               ? const EdgeInsets.only(left: 0.0)
                               : const EdgeInsets.only(left: 5.0),
-                          child: Text('${transaction.tickerName}',
-                              style: Theme.of(context).textTheme.subtitle2),
+                          child:transaction.tickerName.contains('(')?  Column(
+                            children: [
+                              Text('${transaction.tickerName.split('(')[0]}',
+                                  style: Theme.of(context).textTheme.headline6),
+                                  Text('${transaction.tickerName.split('(')[1].substring(0,transaction.tickerName.split('(')[1].length-1)}',
+                                  style: Theme.of(context).textTheme.subtitle2),
+                            ],
+                          ):Text('${transaction.tickerName}',
+                                  style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
 

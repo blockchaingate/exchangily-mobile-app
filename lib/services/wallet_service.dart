@@ -172,6 +172,31 @@ class WalletService {
   Completer<DialogResponse> _completer;
 
 /*----------------------------------------------------------------------
+                Update special tokens tickername in UI
+----------------------------------------------------------------------*/
+  updateSpecialTokensTickerNameForTxHistory(String tickerName) {
+    String logoTicker = '';
+    if (tickerName.toUpperCase() == 'ETH_BST' ||
+        tickerName.toUpperCase() == 'BSTE') {
+      tickerName = 'BST(ERC20)';
+      logoTicker = 'BSTE';
+    } else if (tickerName.toUpperCase() == 'ETH_DSC' ||
+        tickerName.toUpperCase() == 'DSCE') {
+      tickerName = 'DSC(ERC20)';
+      logoTicker = 'DSCE';
+    } else if (tickerName.toUpperCase() == 'ETH_EXG' ||
+        tickerName.toUpperCase() == 'EXGE') {
+      tickerName = 'EXG(ERC20)';
+      logoTicker = 'EXGE';
+    } else if (tickerName.toUpperCase() == 'ETH_FAB' ||
+        tickerName.toUpperCase() == 'FABE') {
+      tickerName = 'FAB(ERC20)';
+      logoTicker = 'FABE';
+    } else {}
+    return {"tickerName": tickerName, "logoTicker": logoTicker};
+  }
+
+/*----------------------------------------------------------------------
                 Get Random Mnemonic
 ----------------------------------------------------------------------*/
   Future<List<Token>> getTokenListUpdates() async {

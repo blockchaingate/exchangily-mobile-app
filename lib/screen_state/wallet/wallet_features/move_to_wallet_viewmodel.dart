@@ -149,7 +149,7 @@ class MoveToWalletViewmodel extends BaseState {
       tickerName = 'FAB';
       isWithdrawChoice = true;
     } else if (walletInfo.tickerName == 'EXGE') {
-      tickerName = 'EXE';
+      tickerName = 'EXG';
       isWithdrawChoice = true;
     } else if (walletInfo.tickerName == 'USDTX') {
       tickerName = 'TRX';
@@ -162,7 +162,9 @@ class MoveToWalletViewmodel extends BaseState {
     });
     if (isWithdrawChoice) {
       await getEthChainBalance();
-      await getFabChainBalance(tickerName);
+      tickerName == 'FAB'
+          ? await getFabBalance()
+          : await getFabChainBalance(tickerName);
     }
     log.w('chainBalances $chainBalances');
     setBusy(false);
@@ -171,6 +173,17 @@ class MoveToWalletViewmodel extends BaseState {
 /*----------------------------------------------------------------------
                         Fab Chain Balance
 ----------------------------------------------------------------------*/
+
+  getFabBalance() async {
+    setBusy(true);
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    await walletService.coinBalanceByAddress('FAB', fabAddress, '').then((res) {
+      log.e('fab res $res');
+      fabChainBalance = res['balance'];
+    });
+    setBusy(false);
+  }
+
   getFabChainBalance(String tickerName) async {
     setBusy(true);
     var address = sharedService.getEXGOfficialAddress();
@@ -182,10 +195,12 @@ class MoveToWalletViewmodel extends BaseState {
       await tokenListDatabaseService
           .getContractAddressByTickerName(tickerName)
           .then((value) {
-        if (!value.startsWith('0x'))
-          smartContractAddress = '0x' + value;
-        else
-          smartContractAddress = value;
+        if (value != null) {
+          if (!value.startsWith('0x'))
+            smartContractAddress = '0x' + value;
+          else
+            smartContractAddress = value;
+        }
       });
       print('official smart contract address $smartContractAddress');
     }
@@ -233,7 +248,9 @@ class MoveToWalletViewmodel extends BaseState {
     await getEthTokenBalanceByAddress(officialAddress, walletInfo.tickerName)
         .then((res) {
       log.e('getEthChainBalance $res');
-      ethChainBalance = res['tokenBalanceIe18'];
+      ethChainBalance = walletInfo.tickerName == 'FABE'
+          ? res['balance']
+          : res['tokenBalanceIe18'];
       //  chainBalances.add({'eth': res['balance']});
       // log.w(chainBalances);
     });
@@ -307,19 +324,21 @@ class MoveToWalletViewmodel extends BaseState {
       setBusy(false);
       return;
     }
-    if (isShowFabChainBalance && amount > fabChainBalance) {
-      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterValidNumber,
-          isWarning: false);
-      setBusy(false);
-      return;
-    }
-    if (!isShowFabChainBalance && amount > ethChainBalance) {
-      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterValidNumber,
-          isWarning: false);
-      setBusy(false);
-      return;
+    if (isShowFabChainBalance) {
+      if (isShowFabChainBalance && amount > fabChainBalance) {
+        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+            AppLocalizations.of(context).pleaseEnterValidNumber,
+            isWarning: false);
+        setBusy(false);
+        return;
+      }
+      if (!isShowFabChainBalance && amount > ethChainBalance) {
+        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+            AppLocalizations.of(context).pleaseEnterValidNumber,
+            isWarning: false);
+        setBusy(false);
+        return;
+      }
     }
     String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
     setMessage('');

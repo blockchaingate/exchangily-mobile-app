@@ -90,7 +90,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
           tickerName == 'FABE')
         transactionHistoryToShowInView.add(element);
       else if (element.tickerName.toUpperCase() == 'ETH_EXG' &&
-          tickerName == 'EXGE') transactionHistoryToShowInView.add(element);
+          tickerName == 'EXGE') {
+        // element.tickerName = 'EXG(ERC20)';
+        transactionHistoryToShowInView.add(element);
+      }
       // else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
       //     tickerName == 'DSCE') transactionHistoryToShowInView.add(element);
     });
@@ -118,6 +121,14 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     await walletDataBaseService.getBytickerName(tickerName).then((res) {
       walletInfo = res;
     });
+  }
+
+/*----------------------------------------------------------------------
+                  Update special tokens ticker
+----------------------------------------------------------------------*/
+  updateTickers(String ticker) {
+    return walletService
+        .updateSpecialTokensTickerNameForTxHistory(ticker)['tickerName'];
   }
 
 /*----------------------------------------------------------------------
