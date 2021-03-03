@@ -1586,5 +1586,71 @@
         "description": " release_to_load_more",
         "type": "text",
         "placeholders": {}
+    },
+    "useAsiaNode": "連接亞洲節點",
+    "@useAsiaNode": {
+        "description": " use_asia_node_settings_view",
+        "type": "text",
+        "placeholders": {}
+    },
+    "useNorthAmericanNode": "連接北美節點",
+    "@useNorthAmericanNode": {
+        "description": " use_north_american_node_settings_view",
+        "type": "text",
+        "placeholders": {}
+    },
+    "inProgress": "正在處理中",
+    "@inProgress": {
+        "description": "progress_transaction_history",
+        "type": "text",
+        "placeholders": {}
+    },
+    "kanban": "看板",
+    "@kanban": {
+        "description": "kanban_progress_transaction_history",
+        "type": "text",
+        "placeholders": {}
+    },
+    "transactionDetails": "交易細節",
+    "@transactionDetails": {
+        "description": "transaction_details_transactiion_history",
+        "type": "text",
+        "placeholders": {}
+    },
+    "action": "行動",
+    "@action": {
+        "description": "action_transaction_history",
+        "type": "text",
+        "placeholders": {}
+    },
+    "chain": "區塊鏈",
+    "@chain": {
+        "description": "chain_transaction_history",
+        "type": "text",
+        "placeholders": {}
+    },
+    "tsWalletNote": "共識層幣池保存用戶資產，它是由Kanban區塊鏈的礦工控制的，由共識機制決定。",
+    "@tsWalletNote": {
+        "description": "withdraw_ts_wallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "specialWithdrawNote": "對於某些幣種(如USDT)，用戶可以向不同的區塊鏈提幣（如以太坊或波場）。如果多數用戶選擇向某一區塊鏈提幣，幣池中的該條鏈的幣可餘額不足而另一條鏈的該幣種則有多餘，",
+    "@specialWithdrawNote": {
+        "description": "withdraw_special_withdraw_note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "specialWithdrawFailNote": "在這種情況下，向餘額短缺的鏈提幣暫停，您可以提取小一些的數量，或者向另一條鏈提幣。",
+    "@specialWithdrawFailNote": {
+        "description": "special_withdraw_fail_note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "specialExchangeBalanceNote": "顯示的餘額是共識幣池中對應於該鏈的最大可提幣數額，您可以選取您要提幣的區塊鏈。",
+    "@specialExchangeBalanceNote": {
+        "description": "special_exchange_balance_note",
+        "type": "text",
+        "placeholders": {}
     }
 }

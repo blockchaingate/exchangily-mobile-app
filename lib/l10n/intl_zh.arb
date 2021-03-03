@@ -1970,44 +1970,69 @@
     },
     "useAsiaNode": "连接亚洲节点",
     "@useAsiaNode": {
-      "description": " use_asia_node_settings_view",
-      "type": "text",
-      "placeholders": {}
+        "description": " use_asia_node_settings_view",
+        "type": "text",
+        "placeholders": {}
     },
     "useNorthAmericanNode": "连接北美节点",
     "@useNorthAmericanNode": {
-      "description": " use_north_american_node_settings_view",
-      "type": "text",
-      "placeholders": {}
+        "description": " use_north_american_node_settings_view",
+        "type": "text",
+        "placeholders": {}
     },
     "inProgress": "正在处理中",
     "@inProgress": {
-      "description": "progress_transaction_history",
-      "type": "text",
-      "placeholders": {}
+        "description": "progress_transaction_history",
+        "type": "text",
+        "placeholders": {}
     },
     "kanban": "看板",
     "@kanban": {
-      "description": "kanban_progress_transaction_history",
-      "type": "text",
-      "placeholders": {}
+        "description": "kanban_progress_transaction_history",
+        "type": "text",
+        "placeholders": {}
     },
     "transactionDetails": "交易细节",
     "@transactionDetails": {
-      "description": "transaction_details_transactiion_history",
-      "type": "text",
-      "placeholders": {}
+        "description": "transaction_details_transactiion_history",
+        "type": "text",
+        "placeholders": {}
     },
     "action": "行动",
     "@action": {
-      "description": "action_transaction_history",
-      "type": "text",
-      "placeholders": {}
+        "description": "action_transaction_history",
+        "type": "text",
+        "placeholders": {}
     },
     "chain": "区块链",
     "@chain": {
-      "description": "chain_transaction_history",
-      "type": "text",
-      "placeholders": {}
+        "description": "chain_transaction_history",
+        "type": "text",
+        "placeholders": {}
+    },
+    "tsWalletNote": "共识层币池保存用户资产，它是由Kanban区块链的矿工控制的，由共识机制决定。",
+    "@tsWalletNote": {
+        "description": "withdraw_ts_wallet",
+        "type": "text",
+        "placeholders": {}
+    },
+    "specialWithdrawNote": "对于某些币种(如 USDT)，用户可以向不同的区块链提币（如以太坊或波场）。如果多数用户选择向某一区块链提币，币池中的该条链的币可余额不足而另一条链的该币种则有多余，",
+    "@specialWithdrawNote": {
+        "description": "withdraw_special_withdraw_note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "specialWithdrawFailNote": "在这种情况下，向余额短缺的链提币暂停，您可以提取小一些的数量，或者向另一条链提币。",
+    "@specialWithdrawFailNote": {
+        "description": "special_withdraw_fail_note",
+        "type": "text",
+        "placeholders": {}
+    },
+    "specialExchangeBalanceNote": "显示的余额是共识币池中对应于该链的最大可提币数额，您可以选取您要提币的区块链。",
+    "@specialExchangeBalanceNote": {
+        "description": "special_exchange_balance_note",
+        "type": "text",
+        "placeholders": {}
     }
+
 }
