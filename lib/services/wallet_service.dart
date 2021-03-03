@@ -1070,11 +1070,12 @@ class WalletService {
     log.i('AMount in link $amountInLink');
 
     var addressInWallet = coinAddress;
-    if (coinName == 'BTC' ||
-        coinName == 'FAB' ||
-        coinName == 'LTC' ||
-        coinName == 'DOGE' ||
-        coinName == 'BCH') {
+    if ((coinName == 'BTC' ||
+            coinName == 'FAB' ||
+            coinName == 'LTC' ||
+            coinName == 'DOGE' ||
+            coinName == 'BCH') &&
+        tokenType == '') {
       /*
       print('addressInWallet before');
       print(addressInWallet);
@@ -1098,25 +1099,25 @@ class WalletService {
 
     var sepcialcoinType;
     var abiHex;
-    if (coinName == 'DSCE') {
+    if (coinName == 'DSCE' || coinName == 'DSC') {
       sepcialcoinType = await getCoinTypeIdByName('DSC');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType, coinName: coinName);
       log.e('cointype $coinType -- abihex $abiHex');
-    } else if (coinName == 'BSTE') {
+    } else if (coinName == 'BSTE' || coinName == 'BST') {
       sepcialcoinType = await getCoinTypeIdByName('BST');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType, coinName: coinName);
       log.e('cointype $coinType -- abihex $abiHex');
-    } else if (coinName == 'EXGE') {
+    } else if (coinName == 'EXGE' || coinName == 'EXG') {
       sepcialcoinType = await getCoinTypeIdByName('EXG');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType, coinName: coinName);
       log.e('cointype $coinType -- abihex $abiHex');
-    } else if (coinName == 'FABE') {
+    } else if (coinName == 'FABE' || coinName == 'FAB') {
       sepcialcoinType = await getCoinTypeIdByName('FAB');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,

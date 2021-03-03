@@ -61,7 +61,8 @@ class MoveToWalletViewmodel extends BaseState {
   String _groupValue;
   get groupValue => _groupValue;
   bool isShowFabChainBalance = false;
-  String specialTicker ='';
+  String specialTicker = '';
+  String updateTickerForErc = '';
 
 /*---------------------------------------------------
                       INIT
@@ -86,7 +87,16 @@ class MoveToWalletViewmodel extends BaseState {
     getSingleCoinExchangeBal();
     getDecimalData();
     _groupValue = 'ETH';
-    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(walletInfo.tickerName)['tickerName'];
+    if (walletInfo.tickerName == 'FAB' ||
+        walletInfo.tickerName == 'EXG' ||
+        walletInfo.tickerName == 'DSC' ||
+        walletInfo.tickerName == 'BST') {
+      _groupValue = 'FAB';
+      isShowFabChainBalance = true;
+    }
+    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
+        walletInfo.tickerName)['tickerName'];
+
     setBusy(false);
   }
 
@@ -116,7 +126,6 @@ class MoveToWalletViewmodel extends BaseState {
           .getByTickerName(walletInfo.tickerName)
           .then((token) => withdrawLimit = double.parse(token.minWithdraw));
     }
-    log.i('withdrawLimit $withdrawLimit');
     setBusy(false);
   }
 
@@ -144,16 +153,19 @@ class MoveToWalletViewmodel extends BaseState {
   getSingleCoinExchangeBal() async {
     setBusy(true);
     String tickerName = '';
-    if (walletInfo.tickerName == 'DSCE' || walletInfo.tickerName == 'DSC' ) {
+    if (walletInfo.tickerName == 'DSCE' || walletInfo.tickerName == 'DSC') {
       tickerName = 'DSC';
       isWithdrawChoice = true;
-    } else if (walletInfo.tickerName == 'BSTE' || walletInfo.tickerName == 'BST' ) {
+    } else if (walletInfo.tickerName == 'BSTE' ||
+        walletInfo.tickerName == 'BST') {
       tickerName = 'BST';
       isWithdrawChoice = true;
-    } else if (walletInfo.tickerName == 'FABE' || walletInfo.tickerName == 'FAB' ) {
+    } else if (walletInfo.tickerName == 'FABE' ||
+        walletInfo.tickerName == 'FAB') {
       tickerName = 'FAB';
       isWithdrawChoice = true;
-    } else if (walletInfo.tickerName == 'EXGE' || walletInfo.tickerName == 'EXG' ) {
+    } else if (walletInfo.tickerName == 'EXGE' ||
+        walletInfo.tickerName == 'EXG') {
       tickerName = 'EXG';
       isWithdrawChoice = true;
     } else if (walletInfo.tickerName == 'USDTX') {
@@ -166,7 +178,7 @@ class MoveToWalletViewmodel extends BaseState {
       log.w('exchange balance check ${walletInfo.inExchange}');
     });
     if (isWithdrawChoice) {
-     await getEthChainBalance();
+      await getEthChainBalance();
       tickerName == 'FAB'
           ? await getFabBalance()
           : await getFabChainBalance(tickerName);
@@ -250,23 +262,26 @@ class MoveToWalletViewmodel extends BaseState {
   getEthChainBalance() async {
     setBusy(true);
     String officialAddress = '';
-    // if (walletInfo.tickerName != 'FABE')
-    // in case of other eth tokens use eth official address
     officialAddress = getOfficalAddress('ETH');
-    // else if (walletInfo.tickerName == 'FABE') {
-    //   // in case of fabe use wallets eth address
-    //   // await walletDataBaseService
-    //   //     .getBytickerName('ETH')
-    //   //     .then((wallet) => officialAddress = wallet.address);
-    // }
     // call to get token balance
-  
-    await getEthTokenBalanceByAddress(officialAddress,walletInfo.tickerName == "FAB"?'FABE': walletInfo.tickerName)
+    if (walletInfo.tickerName == 'FAB') {
+      updateTickerForErc = 'FABE';
+    } else if (walletInfo.tickerName == 'DSC') {
+      updateTickerForErc = 'DSCE';
+    } else if (walletInfo.tickerName == 'BST') {
+      updateTickerForErc = 'BSTE';
+    } else if (walletInfo.tickerName == 'EXG') {
+      updateTickerForErc = 'EXGE';
+    } else {
+      updateTickerForErc = walletInfo.tickerName;
+    }
+    await getEthTokenBalanceByAddress(officialAddress, updateTickerForErc)
         .then((res) {
       log.e('getEthChainBalance $res');
-      ethChainBalance = walletInfo.tickerName == 'FABE' || walletInfo.tickerName ==  'FAB'
-          ? res['balance']
-          : res['tokenBalanceIe18'];
+      ethChainBalance =
+          walletInfo.tickerName == 'FABE' || walletInfo.tickerName == 'FAB'
+              ? res['balance']
+              : res['tokenBalanceIe18'];
       //  chainBalances.add({'eth': res['balance']});
       // log.w(chainBalances);
     });
@@ -284,13 +299,31 @@ class MoveToWalletViewmodel extends BaseState {
     if (value == 'FAB') {
       isShowFabChainBalance = true;
       walletInfo.tokenType = 'FAB';
+      updateTickerForErc = walletInfo.tickerName;
       log.i('chain type ${walletInfo.tokenType}');
+      setWithdrawLimit();
     } else {
       isShowFabChainBalance = false;
       walletInfo.tokenType = 'ETH';
       log.i('chain type ${walletInfo.tokenType}');
+      if (walletInfo.tickerName == 'FAB' && !isShowFabChainBalance) {
+        await tokenListDatabaseService
+            .getByTickerName('FABE')
+            .then((token) => withdrawLimit = double.parse(token.minWithdraw));
+        log.i('withdrawLimit $withdrawLimit');
+      } else if (walletInfo.tickerName == 'DSC' && !isShowFabChainBalance) {
+        await tokenListDatabaseService
+            .getByTickerName('DSCE')
+            .then((token) => withdrawLimit = double.parse(token.minWithdraw));
+        log.i('withdrawLimit $withdrawLimit');
+      } else if (walletInfo.tickerName == 'BST' && !isShowFabChainBalance) {
+        await tokenListDatabaseService
+            .getByTickerName('BSTE')
+            .then((token) => withdrawLimit = double.parse(token.minWithdraw));
+        log.i('withdrawLimit $withdrawLimit');
+      }
+      setBusy(false);
     }
-    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
@@ -340,23 +373,25 @@ class MoveToWalletViewmodel extends BaseState {
       setBusy(false);
       return;
     }
-    if (isShowFabChainBalance) {
-      if (isShowFabChainBalance && amount > fabChainBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-            AppLocalizations.of(context).pleaseEnterValidNumber,
-            isWarning: false);
-        setBusy(false);
-        return;
-      }
-      if (!isShowFabChainBalance && amount > ethChainBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-            AppLocalizations.of(context).pleaseEnterValidNumber,
-            isWarning: false);
-        setBusy(false);
-        return;
-      }
+
+    if (isShowFabChainBalance && amount > fabChainBalance) {
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          isWarning: false);
+      setBusy(false);
+      return;
     }
-    String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
+
+    /// show warning like amount should be less than ts wallet balance
+    /// instead of displaying the generic error
+    if (!isShowFabChainBalance && amount > ethChainBalance) {
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          isWarning: false);
+      setBusy(false);
+      return;
+    }
+
     setMessage('');
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -364,11 +399,24 @@ class MoveToWalletViewmodel extends BaseState {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
+      String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
       String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
       var tokenType = walletInfo.tokenType;
       var coinName = walletInfo.tickerName;
-      var coinAddress = isShowFabChainBalance ? exgAddress : walletInfo.address;
+      var coinAddress = '';
+      if (isShowFabChainBalance) {
+        coinAddress = exgAddress;
+        log.i('coin address is exg address');
+      } else if (coinName == 'FAB' && !isShowFabChainBalance) {
+        await walletDataBaseService
+            .getBytickerName('ETH')
+            .then((wallet) => coinAddress = wallet.address);
+        log.i('coin address is ETH address');
+      } else {
+        coinAddress = walletInfo.address;
+        log.i('coin address is its own wallet info address');
+      }
       // if (!isShowFabChainBalance) {
       //   amount = BigInt.tryParse(amountController.text);
       // }
@@ -381,6 +429,8 @@ class MoveToWalletViewmodel extends BaseState {
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
       BigInt bigIntAmount = BigInt.tryParse(amountController.text);
       log.w('Big int amount $bigIntAmount');
+
+      // withdraw function
       await walletService
           .withdrawDo(seed, coinName, coinAddress, tokenType, bigIntAmount,
               kanbanPrice, kanbanGasLimit)

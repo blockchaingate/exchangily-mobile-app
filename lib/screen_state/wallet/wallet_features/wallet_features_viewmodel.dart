@@ -113,7 +113,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
       walletInfo.inExchange = walletBalance[0].unlockedExchangeBalance;
       double currentUsdValue = walletBalance[0].usdValue.usd;
       log.e(
-          'market price $currentUsdValue -- available bal $availableBalance -- locked bal $lockedBalance');
+          'market price $currentUsdValue -- available bal $availableBalance -- inExchange ${walletInfo.inExchange} -- locked bal $lockedBalance');
       walletInfo.usdValue = walletService.calculateCoinUsdBalance(
           currentUsdValue, availableBalance, lockedBalance);
       log.w(walletInfo.toJson());

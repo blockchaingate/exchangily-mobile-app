@@ -112,7 +112,7 @@ Map devConfig = {
   },
   "minimumWithdraw": {
     "EXG": 50,
-    "BTC": 0.01,
+    "BTC": 0.02,
     "FAB": 50,
     "ETH": 0.01,
     "USDT": 20,

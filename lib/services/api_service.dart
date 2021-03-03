@@ -462,13 +462,13 @@ class ApiService {
       bool success = jsonDecode(response.body)['success'];
       if (success == true) {
         var jsonList = jsonDecode(response.body)['data'] as List;
-        //  log.i('json list getWalletBalance $jsonList');
-        List newList = [];
-        jsonList.forEach((element) {
-          if (element['balance'] != null) newList.add(element);
-        });
+        log.i('json list getWalletBalance $jsonList');
+        // List newList = [];
+        // jsonList.forEach((element) {
+        //   if (element['balance'] != null) newList.add(element);
+        // });
         // log.i('single getWalletBalance $newList');
-        balanceList = WalletBalanceList.fromJson(newList);
+        balanceList = WalletBalanceList.fromJson(jsonList);
       } else {
         log.e('get single wallet balance returning null');
         return null;
