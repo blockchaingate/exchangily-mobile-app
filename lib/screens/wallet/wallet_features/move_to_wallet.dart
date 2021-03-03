@@ -55,8 +55,8 @@ class MoveToWalletScreen extends StatelessWidget {
               },
             ),
             middle: Text(
-                '${AppLocalizations.of(context).move}  ${walletInfo.tickerName}  ${AppLocalizations.of(context).toWallet}',
-                style: Theme.of(context).textTheme.headline4),
+                '${AppLocalizations.of(context).move}  ${model.specialTicker}  ${AppLocalizations.of(context).toWallet}',
+                style: Theme.of(context).textTheme.headline5),
             backgroundColor: Color(0XFF1f2233),
           ),
           backgroundColor: Color(0xFF1F2233),
@@ -308,10 +308,11 @@ class MoveToWalletScreen extends StatelessWidget {
                                 ],
                               ),
                               Expanded(
-                                child: Row(
+                                child: Column(
                                   children: [
                                     Container(
                                         child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'TS ${AppLocalizations.of(context).wallet}',
@@ -333,14 +334,14 @@ class MoveToWalletScreen extends StatelessWidget {
                                             ? model.isShowFabChainBalance
                                                 ? Text(
                                                     model.fabChainBalance
-                                                        .toString(),
+                                                        .toString(),maxLines: 2,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline6,
                                                   )
                                                 : Text(
                                                     model.ethChainBalance
-                                                        .toString(),
+                                                        .toString(),maxLines: 2,
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .headline6,

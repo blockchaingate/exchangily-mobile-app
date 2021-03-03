@@ -52,13 +52,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
   String serverError = '';
-
+String specialTicker = '';
   void initState() async {
     setBusy(true);
     coinName = walletInfo.tickerName;
     coinName = walletInfo.tickerName;
     tokenType = walletInfo.tokenType;
     setFee();
+    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(walletInfo.tickerName)['tickerName'];
     await getGas();
     refreshBalance();
     await getData();

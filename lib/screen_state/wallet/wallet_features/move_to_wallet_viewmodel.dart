@@ -61,6 +61,7 @@ class MoveToWalletViewmodel extends BaseState {
   String _groupValue;
   get groupValue => _groupValue;
   bool isShowFabChainBalance = false;
+  String specialTicker ='';
 
 /*---------------------------------------------------
                       INIT
@@ -85,6 +86,7 @@ class MoveToWalletViewmodel extends BaseState {
     getSingleCoinExchangeBal();
     getDecimalData();
     _groupValue = 'ETH';
+    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(walletInfo.tickerName)['tickerName'];
     setBusy(false);
   }
 
@@ -142,16 +144,16 @@ class MoveToWalletViewmodel extends BaseState {
   getSingleCoinExchangeBal() async {
     setBusy(true);
     String tickerName = '';
-    if (walletInfo.tickerName == 'DSCE') {
+    if (walletInfo.tickerName == 'DSCE' || walletInfo.tickerName == 'DSC' ) {
       tickerName = 'DSC';
       isWithdrawChoice = true;
-    } else if (walletInfo.tickerName == 'BSTE') {
+    } else if (walletInfo.tickerName == 'BSTE' || walletInfo.tickerName == 'BST' ) {
       tickerName = 'BST';
       isWithdrawChoice = true;
-    } else if (walletInfo.tickerName == 'FABE') {
+    } else if (walletInfo.tickerName == 'FABE' || walletInfo.tickerName == 'FAB' ) {
       tickerName = 'FAB';
       isWithdrawChoice = true;
-    } else if (walletInfo.tickerName == 'EXGE') {
+    } else if (walletInfo.tickerName == 'EXGE' || walletInfo.tickerName == 'EXG' ) {
       tickerName = 'EXG';
       isWithdrawChoice = true;
     } else if (walletInfo.tickerName == 'USDTX') {
@@ -164,7 +166,7 @@ class MoveToWalletViewmodel extends BaseState {
       log.w('exchange balance check ${walletInfo.inExchange}');
     });
     if (isWithdrawChoice) {
-      await getEthChainBalance();
+     await getEthChainBalance();
       tickerName == 'FAB'
           ? await getFabBalance()
           : await getFabChainBalance(tickerName);
@@ -258,10 +260,11 @@ class MoveToWalletViewmodel extends BaseState {
     //   //     .then((wallet) => officialAddress = wallet.address);
     // }
     // call to get token balance
-    await getEthTokenBalanceByAddress(officialAddress, walletInfo.tickerName)
+  
+    await getEthTokenBalanceByAddress(officialAddress,walletInfo.tickerName == "FAB"?'FABE': walletInfo.tickerName)
         .then((res) {
       log.e('getEthChainBalance $res');
-      ethChainBalance = walletInfo.tickerName == 'FABE'
+      ethChainBalance = walletInfo.tickerName == 'FABE' || walletInfo.tickerName ==  'FAB'
           ? res['balance']
           : res['tokenBalanceIe18'];
       //  chainBalances.add({'eth': res['balance']});

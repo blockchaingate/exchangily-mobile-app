@@ -53,8 +53,8 @@ class MoveToExchangeScreen extends StatelessWidget {
             },
           ),
           middle: Text(
-            '${AppLocalizations.of(context).move}  ${walletInfo.tickerName}  ${AppLocalizations.of(context).toExchange}',
-            style: Theme.of(context).textTheme.headline4,
+            '${AppLocalizations.of(context).move}  ${model.specialTicker}  ${AppLocalizations.of(context).toExchange}',
+            style: Theme.of(context).textTheme.headline5,
           ),
           backgroundColor: Color(0XFF1f2233),
         ),
