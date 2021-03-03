@@ -1696,6 +1696,34 @@ class AppLocalizations {
         name: 'chain', desc: 'chain_transaction_history');
   }
 
+  String get tsWalletNote {
+    return Intl.message(
+        'The TS (Threshold) wallet holds deposited funds for withdrawal, and is controlled collectively by the miners of the kanban blockchain.',
+        name: 'tsWalletNote',
+        desc: 'withdraw_ts_wallet');
+  }
+
+  String get specialWithdrawNote {
+    return Intl.message(
+        'For some coins, the exchange allows users to select which blockchain they would like to withdraw. If many users withdraw to the same blockchain, there may be an imbalance of available funds to withdraw between the two chains.',
+        name: 'specialWithdrawNote',
+        desc: 'withdraw_special_withdraw_note');
+  }
+
+  String get specialWithdrawFailNote {
+    return Intl.message(
+        'In this case, withdraws on one chain may be temporarily unavailable, and you may withdraw a smaller amount, withdraw to another chain.',
+        name: 'specialWithdrawFailNote',
+        desc: 'special_withdraw_fail_note');
+  }
+
+  String get specialExchangeBalanceNote {
+    return Intl.message(
+        'The displayed exchange balance is shared for coins that exist on multiple blockchains. Withdraws may be made to the chain of your choice.',
+        name: 'specialExchangeBalanceNote',
+        desc: 'special_exchange_balance_note');
+  }
+
   // Share page pending translation added by Jack
 }
 

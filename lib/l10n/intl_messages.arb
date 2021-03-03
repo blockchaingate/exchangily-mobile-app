@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2021-02-16T17:21:25.288945",
+  "@@last_modified": "2021-03-03T17:21:06.215194",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1134,12 +1134,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "recieveAddress": "Recieve Address",
-  "@recieveAddress": {
-    "description": "campaign_recieve_address",
-    "type": "text",
-    "placeholders": {}
-  },
   "balance": "Balance",
   "@balance": {
     "description": "campaign_balance",
@@ -1947,6 +1941,30 @@
   "chain": "Chain",
   "@chain": {
     "description": "chain_transaction_history",
+    "type": "text",
+    "placeholders": {}
+  },
+  "tsWalletNote": "The TS (Threshold) wallet holds deposited funds for withdrawal, and is controlled collectively by the miners of the kanban blockchain.",
+  "@tsWalletNote": {
+    "description": "withdraw_ts_wallet",
+    "type": "text",
+    "placeholders": {}
+  },
+  "specialWithdrawNote": "For some coins, the exchange allows users to select which blockchain they would like to withdraw. If many users withdraw to the same blockchain, there may be an imbalance of available funds to withdraw between the two chains.",
+  "@specialWithdrawNote": {
+    "description": "withdraw_special_withdraw_note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "specialWithdrawFailNote": "In this case, withdraws on one chain may be temporarily unavailable, and you may withdraw a smaller amount, withdraw to another chain.",
+  "@specialWithdrawFailNote": {
+    "description": "special_withdraw_fail_note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "specialExchangeBalanceNote": "The displayed exchange balance is shared for coins that exist on multiple blockchains. Withdraws may be made to the chain of your choice.",
+  "@specialExchangeBalanceNote": {
+    "description": "special_exchange_balance_note",
     "type": "text",
     "placeholders": {}
   }

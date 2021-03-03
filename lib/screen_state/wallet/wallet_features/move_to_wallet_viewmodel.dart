@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -14,6 +15,7 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +26,9 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class MoveToWalletViewmodel extends BaseState {
   final log = getLogger('MoveToWalletViewmodel');
@@ -63,6 +68,7 @@ class MoveToWalletViewmodel extends BaseState {
   bool isShowFabChainBalance = false;
   String specialTicker = '';
   String updateTickerForErc = '';
+  bool isAlert = false;
 
 /*---------------------------------------------------
                       INIT
@@ -100,12 +106,186 @@ class MoveToWalletViewmodel extends BaseState {
     setBusy(false);
   }
 
+/*---------------------------------------------------
+                Info about TS wallet balance
+--------------------------------------------------- */
+  updateIsAlert(bool value) {
+    setBusy(true);
+    isAlert = value;
+    log.i('update isAlert $isAlert');
+    setBusy(false);
+  }
+
+/*---------------------------------------------------
+          Info dialog
+--------------------------------------------------- */
+  showInfoDialog(bool isTSWalletInfo) {
+    updateIsAlert(true);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Platform.isIOS
+            ? Theme(
+                data: ThemeData.dark(),
+                child: CupertinoAlertDialog(
+                  title: Container(
+                    child: Center(
+                        child: Text(
+                      '${AppLocalizations.of(context).note}',
+                      style: Theme.of(context).textTheme.headline4.copyWith(
+                          color: primaryColor, fontWeight: FontWeight.w500),
+                    )),
+                  ),
+                  content: Container(
+                    child: !isTSWalletInfo
+                        ? Column(children: [
+                            Text(
+                                'The displayed exchange balance is shared for coins that exist on multiple blockchains. Withdraws may be made to the chain of your choice.',
+                                style: Theme.of(context).textTheme.headline4),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text('e.g. FAB and FAB(ERC20)',
+                                  style: Theme.of(context).textTheme.headline4),
+                            ),
+                          ])
+                        : Column(children: [
+                            Text(
+                                'The TS (Threshold) wallet holds deposited funds for withdrawal, and is controlled collectively by the miners of the kanban blockchain.',
+                                style: Theme.of(context).textTheme.headline5),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Text(
+                                  'For some coins, the exchange allows users to select which blockchain they would like to withdraw. If many users withdraw to the same blockchain, there may be an imbalance of available funds to withdraw between the two chains.',
+                                  style: Theme.of(context).textTheme.headline5),
+                            ),
+                            UIHelper.verticalSpaceSmall,
+                            Text(
+                                'In this case, withdraws on one chain may be temporarily unavailable, and you may withdraw a smaller amount, withdraw to another chain.',
+                                style: Theme.of(context).textTheme.headline5),
+                          ]),
+                  ),
+                  actions: <Widget>[
+                    Container(
+                      margin: EdgeInsets.all(5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          CupertinoButton(
+                            padding: EdgeInsets.only(left: 5),
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            child: Text(
+                              AppLocalizations.of(context).close,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText2
+                                  .copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ))
+            : AlertDialog(
+                titlePadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.all(5.0),
+                elevation: 5,
+                backgroundColor: walletCardColor.withOpacity(0.85),
+                title: Container(
+                  padding: EdgeInsets.all(10.0),
+                  color: secondaryColor.withOpacity(0.5),
+                  child: Center(
+                      child: Text('${AppLocalizations.of(context).note}')),
+                ),
+                titleTextStyle: Theme.of(context)
+                    .textTheme
+                    .headline4
+                    .copyWith(fontWeight: FontWeight.bold),
+                contentTextStyle: TextStyle(color: grey),
+                content: Container(
+                  padding: EdgeInsets.all(5.0),
+                  child: !isTSWalletInfo
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                              Text(
+                                  AppLocalizations.of(context)
+                                      .specialExchangeBalanceNote,
+                                  style: Theme.of(context).textTheme.headline4),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text('e.g. FAB and FAB(ERC20)',
+                                    style:
+                                        Theme.of(context).textTheme.headline4),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  updateIsAlert(false);
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context).close,
+                                  style: TextStyle(color: red),
+                                ),
+                              )
+                            ])
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                              Text(AppLocalizations.of(context).tsWalletNote,
+                                  style: Theme.of(context).textTheme.headline5),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text(
+                                    AppLocalizations.of(context)
+                                        .specialWithdrawNote,
+                                    style:
+                                        Theme.of(context).textTheme.headline5),
+                              ),
+                              UIHelper.verticalSpaceSmall,
+                              Text(
+                                  AppLocalizations.of(context)
+                                      .specialWithdrawFailNote,
+                                  style: Theme.of(context).textTheme.headline5),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  updateIsAlert(false);
+                                },
+                                child: Text(
+                                  AppLocalizations.of(context).close,
+                                  style: TextStyle(color: red),
+                                ),
+                              )
+                            ]),
+                ));
+      },
+    );
+  }
+
+/*---------------------------------------------------
+                    Details message toggle
+--------------------------------------------------- */
   showDetailsMessageToggle() {
     setBusy(true);
     isShowDetailsMessage = !isShowDetailsMessage;
     setBusy(false);
   }
 
+/*---------------------------------------------------
+                      Decimal data
+--------------------------------------------------- */
   getDecimalData() async {
     setBusy(true);
     singlePairDecimalConfig =
