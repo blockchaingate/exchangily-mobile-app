@@ -1067,15 +1067,14 @@ class WalletService {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
     var amountInLink = amount * BigInt.from(1e18);
-    log.i('AMount in link $amountInLink');
+    log.i('AMount in link $amountInLink -- coin name $coinName -- token type $tokenType');
 
     var addressInWallet = coinAddress;
     if ((coinName == 'BTC' ||
             coinName == 'FAB' ||
             coinName == 'LTC' ||
             coinName == 'DOGE' ||
-            coinName == 'BCH') &&
-        tokenType == '') {
+            coinName == 'BCH') ) {
       /*
       print('addressInWallet before');
       print(addressInWallet);
@@ -1117,7 +1116,8 @@ class WalletService {
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType, coinName: coinName);
       log.e('cointype $coinType -- abihex $abiHex');
-    } else if (coinName == 'FABE' || coinName == 'FAB') {
+    } else if (coinName == 'FABE' || (coinName == 'FAB' && tokenType == 'ETH')
+    ) {
       sepcialcoinType = await getCoinTypeIdByName('FAB');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,

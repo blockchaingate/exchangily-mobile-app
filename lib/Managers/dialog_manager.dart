@@ -117,7 +117,9 @@ class _DialogManagerState extends State<DialogManager> {
           _dialogService.dialogComplete(
               DialogResponse(returnedText: 'Closed', confirmed: false));
           controller.text = '';
-          Navigator.of(context).pop();
+          print('popping');
+         // Navigator.of(context).pop();
+          print('popped');
         },
         content: Column(
           children: <Widget>[

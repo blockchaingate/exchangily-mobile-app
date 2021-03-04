@@ -75,6 +75,7 @@ class MoveToWalletViewmodel extends BaseState {
 --------------------------------------------------- */
   void initState() {
     setBusy(true);
+    sharedService.context = context;
     var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
     var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
     setWithdrawLimit();
@@ -131,6 +132,7 @@ class MoveToWalletViewmodel extends BaseState {
                 data: ThemeData.dark(),
                 child: CupertinoAlertDialog(
                   title: Container(
+                    margin: EdgeInsets.only(bottom: 5.0),
                     child: Center(
                         child: Text(
                       '${AppLocalizations.of(context).note}',
@@ -142,28 +144,30 @@ class MoveToWalletViewmodel extends BaseState {
                     child: !isTSWalletInfo
                         ? Column(children: [
                             Text(
-                                'The displayed exchange balance is shared for coins that exist on multiple blockchains. Withdraws may be made to the chain of your choice.',
-                                style: Theme.of(context).textTheme.headline4),
+                                AppLocalizations.of(context)
+                                    .specialExchangeBalanceNote,
+                                style: Theme.of(context).textTheme.headline5),
                             Padding(
                               padding: const EdgeInsets.only(top: 8.0),
                               child: Text('e.g. FAB and FAB(ERC20)',
-                                  style: Theme.of(context).textTheme.headline4),
+                                  style: Theme.of(context).textTheme.headline5),
                             ),
                           ])
                         : Column(children: [
-                            Text(
-                                'The TS (Threshold) wallet holds deposited funds for withdrawal, and is controlled collectively by the miners of the kanban blockchain.',
+                            Text(AppLocalizations.of(context).tsWalletNote,
                                 style: Theme.of(context).textTheme.headline5),
                             Padding(
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8.0),
                               child: Text(
-                                  'For some coins, the exchange allows users to select which blockchain they would like to withdraw. If many users withdraw to the same blockchain, there may be an imbalance of available funds to withdraw between the two chains.',
+                                  AppLocalizations.of(context)
+                                      .specialWithdrawNote,
                                   style: Theme.of(context).textTheme.headline5),
                             ),
                             UIHelper.verticalSpaceSmall,
                             Text(
-                                'In this case, withdraws on one chain may be temporarily unavailable, and you may withdraw a smaller amount, withdraw to another chain.',
+                                AppLocalizations.of(context)
+                                    .specialWithdrawFailNote,
                                 style: Theme.of(context).textTheme.headline5),
                           ]),
                   ),
@@ -219,12 +223,12 @@ class MoveToWalletViewmodel extends BaseState {
                               Text(
                                   AppLocalizations.of(context)
                                       .specialExchangeBalanceNote,
-                                  style: Theme.of(context).textTheme.headline4),
+                                  style: Theme.of(context).textTheme.headline5),
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Text('e.g. FAB and FAB(ERC20)',
                                     style:
-                                        Theme.of(context).textTheme.headline4),
+                                        Theme.of(context).textTheme.headline5),
                               ),
                               FlatButton(
                                 onPressed: () {
@@ -478,7 +482,8 @@ class MoveToWalletViewmodel extends BaseState {
     _groupValue = value;
     if (value == 'FAB') {
       isShowFabChainBalance = true;
-      walletInfo.tokenType = 'FAB';
+      if (walletInfo.tickerName != 'FAB') walletInfo.tokenType = 'FAB';
+      if (walletInfo.tickerName == 'FAB') walletInfo.tokenType = '';
       updateTickerForErc = walletInfo.tickerName;
       log.i('chain type ${walletInfo.tokenType}');
       setWithdrawLimit();
@@ -582,10 +587,11 @@ class MoveToWalletViewmodel extends BaseState {
       String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
       String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
+      if (walletInfo.tickerName == 'FAB') walletInfo.tokenType = '';
       var tokenType = walletInfo.tokenType;
       var coinName = walletInfo.tickerName;
       var coinAddress = '';
-      if (isShowFabChainBalance) {
+      if (isShowFabChainBalance && coinName != 'FAB') {
         coinAddress = exgAddress;
         log.i('coin address is exg address');
       } else if (coinName == 'FAB' && !isShowFabChainBalance) {
@@ -639,7 +645,10 @@ class MoveToWalletViewmodel extends BaseState {
       }).catchError((err) {
         print('Withdraw catch $err');
       });
+    } else if (!res.confirmed && res.returnedText == 'Closed') {
+      print('else if close button pressed');
     } else {
+      print('else');
       if (res.returnedText != 'Closed') {
         showNotification(context);
       }
