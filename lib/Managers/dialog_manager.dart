@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
@@ -118,7 +120,7 @@ class _DialogManagerState extends State<DialogManager> {
               DialogResponse(returnedText: 'Closed', confirmed: false));
           controller.text = '';
           print('popping');
-         // Navigator.of(context).pop();
+          if (!Platform.isIOS) Navigator.of(context).pop();
           print('popped');
         },
         content: Column(

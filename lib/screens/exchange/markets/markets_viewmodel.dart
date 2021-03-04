@@ -98,15 +98,15 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
       List<String> coinsToRemove = [
         'TRX',
         'IOST',
-        'REP',
-        'WINGS',
-        'INB',
-        'GNO',
-        'GVT',
-        'MTL',
-        'POWR',
-        'ELF',
-        'HOT'
+        'REPUSDT',
+        'WINGSUSDT',
+        'INBUSDT',
+        'GNOUSDT',
+        'GVTUSDT',
+        'MTLUSDT',
+        'POWRUSDT',
+        'ELFUSDT',
+        'HOTUSDT'
       ];
       priceList.prices.forEach((t) {
         coinsToRemove.forEach((coin) {
