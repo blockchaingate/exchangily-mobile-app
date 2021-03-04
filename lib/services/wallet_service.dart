@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -1061,20 +1059,23 @@ class WalletService {
       String coinName,
       String coinAddress,
       String tokenType,
-      BigInt amount,
+      double amount,
       kanbanPrice,
       kanbanGasLimit) async {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
-    var amountInLink = amount * BigInt.from(1e18);
-    log.i('AMount in link $amountInLink -- coin name $coinName -- token type $tokenType');
+    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
+    //amount * BigInt.from(1e18);
+    log.i(
+        'AMount in link $amountInLink -- coin name $coinName -- token type $tokenType');
 
     var addressInWallet = coinAddress;
     if ((coinName == 'BTC' ||
             coinName == 'FAB' ||
             coinName == 'LTC' ||
             coinName == 'DOGE' ||
-            coinName == 'BCH') ) {
+            coinName == 'BCH') &&
+        tokenType == '') {
       /*
       print('addressInWallet before');
       print(addressInWallet);
@@ -1116,8 +1117,8 @@ class WalletService {
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType, coinName: coinName);
       log.e('cointype $coinType -- abihex $abiHex');
-    } else if (coinName == 'FABE' || (coinName == 'FAB' && tokenType == 'ETH')
-    ) {
+    } else if (coinName == 'FABE' ||
+        (coinName == 'FAB' && tokenType == 'ETH')) {
       sepcialcoinType = await getCoinTypeIdByName('FAB');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,

@@ -587,12 +587,13 @@ class MoveToWalletViewmodel extends BaseState {
       String exgAddress = await sharedService.getExgAddressFromWalletDatabase();
       String mnemonic = res.returnedText;
       Uint8List seed = walletService.generateSeed(mnemonic);
-      if (walletInfo.tickerName == 'FAB') walletInfo.tokenType = '';
+      // if (walletInfo.tickerName == 'FAB' && ) walletInfo.tokenType = '';
       var tokenType = walletInfo.tokenType;
       var coinName = walletInfo.tickerName;
       var coinAddress = '';
       if (isShowFabChainBalance && coinName != 'FAB') {
         coinAddress = exgAddress;
+        tokenType = 'FAB';
         log.i('coin address is exg address');
       } else if (coinName == 'FAB' && !isShowFabChainBalance) {
         await walletDataBaseService
@@ -613,12 +614,15 @@ class MoveToWalletViewmodel extends BaseState {
 
       var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
-      BigInt bigIntAmount = BigInt.tryParse(amountController.text);
-      log.w('Big int amount $bigIntAmount');
-
+      // BigInt bigIntAmount = BigInt.tryParse(amountController.text);
+      // log.w('Big int from amount string $bigIntAmount');
+      // if (bigIntAmount == null) {
+      //   bigIntAmount = BigInt.from(amount);
+      //   log.w('Bigint $bigIntAmount from amount $amount ');
+      // }
       // withdraw function
       await walletService
-          .withdrawDo(seed, coinName, coinAddress, tokenType, bigIntAmount,
+          .withdrawDo(seed, coinName, coinAddress, tokenType, amount,
               kanbanPrice, kanbanGasLimit)
           .then((ret) {
         log.w(ret);
