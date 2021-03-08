@@ -464,7 +464,7 @@ class MoveToWalletViewmodel extends BaseState {
       log.e('getEthChainBalance $res');
       ethChainBalance =
           walletInfo.tickerName == 'FABE' || walletInfo.tickerName == 'FAB'
-              ? res['balance']
+              ? res['balanceIe8']
               : res['tokenBalanceIe18'];
       //  chainBalances.add({'eth': res['balance']});
       // log.w(chainBalances);
