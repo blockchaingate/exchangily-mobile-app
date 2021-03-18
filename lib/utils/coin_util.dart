@@ -47,6 +47,48 @@ final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
 final log = getLogger('coin_util');
 
+
+/*----------------------------------------------------------------------
+                Sign TRX tx
+--------------r--------------------------------------------------------*/
+List<Uint8List> signTrxTx(
+  hash,
+  Uint8List privateKey,
+) {
+  print('sign trx');
+
+  var signature = sign(hash, privateKey);
+
+  // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
+  // be aware that signature.v already is recovery + 27
+
+  print('signature v ${signature.v}');
+
+  final chainIdV = signature.v;
+
+  print('chainIdV $chainIdV');
+  //final chainIdV = signature.v;
+  signature = MsgSignature(signature.r, signature.s, chainIdV);
+
+  //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
+  //print('signature.v====');
+  //print(signature.v);
+  final r = _padTo32(intToBytes(signature.r));
+  final s = _padTo32(intToBytes(signature.s));
+  var v = intToBytes(BigInt.from(signature.v));
+
+  if (signature.v == 0) {
+    v = Uint8List.fromList([0].toList());
+  }
+  List<Uint8List> rsvList = [];
+  var res = r + s + v;
+  rsvList.add(Uint8List.fromList(res));
+  print('rsv list $rsvList');
+  return rsvList;
+}
+
+
+
 /*----------------------------------------------------------------------
                 Convert Decimal to Hex
 ----------------------------------------------------------------------*/

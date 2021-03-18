@@ -31,7 +31,6 @@ import 'dart:async';
 import 'package:bip39/bip39.dart' as bip39;
 import 'package:bip32/bip32.dart' as bip32;
 import 'package:hex/hex.dart';
-import 'package:protobuf/protobuf.dart';
 import 'dart:typed_data';
 import 'package:web3dart/web3dart.dart';
 import 'package:http/http.dart' as http;
@@ -46,13 +45,12 @@ import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
 import 'dart:io';
-import 'package:bitcoin_flutter/src/payments/p2pkh.dart';
-import 'package:bitcoin_flutter/src/transaction_builder.dart';
-import 'package:bitcoin_flutter/src/transaction.dart' as btcTransaction;
-import 'package:bitcoin_flutter/src/ecpair.dart';
+// import 'package:bitcoin_flutter/src/transaction_builder.dart';
+// import 'package:bitcoin_flutter/src/transaction.dart' as btcTransaction;
+// import 'package:bitcoin_flutter/src/ecpair.dart';
 import 'package:bitcoin_flutter/src/utils/script.dart' as script;
 import '../environments/environment.dart';
-import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
+//import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
 
 import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:bs58check/bs58check.dart' as bs58check;
@@ -60,10 +58,8 @@ import 'package:decimal/decimal.dart';
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 import 'db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/utils/exaddr.dart';
-import 'package:web3dart/crypto.dart';
-import 'package:convert/convert.dart';
-import 'package:crypto/crypto.dart';
-import 'package:bs58check/bs58check.dart' as bs58check;
+import 'package:web3dart/crypto.dart' as CryptoWeb3;
+import 'package:crypto/crypto.dart' as CryptoHash;
 
 class WalletService {
   final log = getLogger('Wallet Service');
@@ -339,8 +335,8 @@ class WalletService {
   }
 
   sha256Twice(bytes) {
-    var digest1 = sha256.convert(bytes);
-    var digest2 = sha256.convert(digest1.bytes);
+    var digest1 = CryptoHash.sha256.convert(bytes);
+    var digest2 = CryptoHash.sha256.convert(digest1.bytes);
     //SHA256(addressHex);
     print('digest2  -- $digest2');
     return digest2;
@@ -360,25 +356,25 @@ class WalletService {
     print('node $node');
     var privKey = node.privateKey;
     log.i('priv key $privKey -- length ${privKey.length}');
-    log.w('priv Key ${uint8ListToString(privKey)}');
+    log.w('priv Key ${uint8ListToHex(privKey)}');
     //  var pubKey = node.publicKey;
     //  log.w('pub key $pubKey -- length ${pubKey.length}');
     var uncompressedPubKey =
         BitcoinFlutter.ECPair.fromPrivateKey(privKey, compressed: false)
             .publicKey;
     log.e('uncompressedPubKey  length ${uncompressedPubKey.length}');
-    log.w('uncompressedPubKey ${uint8ListToString(uncompressedPubKey)}');
+    log.w('uncompressedPubKey ${uint8ListToHex(uncompressedPubKey)}');
 
     if (uncompressedPubKey.length == 65) {
       uncompressedPubKey = uncompressedPubKey.sublist(1);
       log.w(
-          'uncompressedPubKey > 65 ${uint8ListToString(uncompressedPubKey)} -- length ${uncompressedPubKey.length}');
+          'uncompressedPubKey > 65 ${uint8ListToHex(uncompressedPubKey)} -- length ${uncompressedPubKey.length}');
     }
 
-    var hash = keccak256(uncompressedPubKey);
+    var hash = CryptoWeb3.keccak256(uncompressedPubKey);
     print('hash $hash');
 
-    log.e('hex ${uint8ListToString(hash)}');
+    log.e('hex ${uint8ListToHex(hash)}');
 // take 20 bytes at the end from hash
     var last20Bytes = hash.sublist(12);
     print('last20Bytes $last20Bytes');
@@ -401,7 +397,7 @@ class WalletService {
     // first 4 bytes checksum
     var checksum = sha256Hash.bytes.sublist(0, 4);
     print('checksum  -- $checksum');
-    log.i('checksum hex ${uint8ListToString(checksum)}');
+    log.i('checksum hex ${uint8ListToHex(checksum)}');
     updatedHash.addAll(checksum);
     log.w('updatedHash with checksum $updatedHash');
 
@@ -418,7 +414,7 @@ class WalletService {
     if (pubBytes.length == 65) pubBytes = pubBytes.substring(1);
     // var signature = sign(keccak256(concat), privateKey);
     print('1 $pubBytes');
-    var hash = keccakUtf8(pubBytes);
+    var hash = CryptoWeb3.keccakUtf8(pubBytes);
     print('hash $hash');
     //   var addressHex = "41" + hash.substring(24);
     //   print('address hex $addressHex');
@@ -468,7 +464,7 @@ class WalletService {
     //  log.w('coin type $coinType');
     var node = root.derivePath("m/44'/3'/0'/0/" + index.toString());
 
-    String address1 = new P2PKH(
+    String address1 = new BitcoinFlutter.P2PKH(
             data: new BitcoinFlutter.PaymentData(pubkey: node.publicKey),
             network: dogeCoinMainnetNetwork)
         .data
@@ -1384,7 +1380,7 @@ class WalletService {
       int satoshisPerBytes,
       addressList,
       getTransFeeOnly) async {
-    final txb = new TransactionBuilder(
+    final txb = new BitcoinFlutter.TransactionBuilder(
         network: environment["chains"]["BTC"]["network"]);
     final root = bip32.BIP32.fromSeed(seed);
     var totalInput = 0;
@@ -1504,7 +1500,7 @@ class WalletService {
 
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
-        var alice = ECPair.fromPrivateKey(privateKey,
+        var alice = BitcoinFlutter.ECPair.fromPrivateKey(privateKey,
             compressed: true, network: environment["chains"]["BTC"]["network"]);
 
         txb.sign(vin: i, keyPair: alice);
@@ -1651,7 +1647,7 @@ class WalletService {
       }
       var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
-      final txb = new TransactionBuilder(
+      final txb = new BitcoinFlutter.TransactionBuilder(
           network: environment["chains"]["BTC"]["network"]);
       // txb.setVersion(1);
 
@@ -1738,7 +1734,7 @@ class WalletService {
       txb.addOutput(toAddress, output2);
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
-        var alice = ECPair.fromPrivateKey(privateKey,
+        var alice = BitcoinFlutter.ECPair.fromPrivateKey(privateKey,
             compressed: true, network: environment["chains"]["BTC"]["network"]);
         txb.sign(vin: i, keyPair: alice);
       }
@@ -1867,7 +1863,7 @@ class WalletService {
       }
       var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
-      final txb = new TransactionBuilder(
+      final txb = new BitcoinFlutter.TransactionBuilder(
           network: environment["chains"]["LTC"]["network"]);
 
       for (var i = 0; i < addressIndexList.length; i++) {
@@ -1943,7 +1939,7 @@ class WalletService {
       txb.addOutput(toAddress, output2);
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
-        var alice = ECPair.fromPrivateKey(privateKey,
+        var alice = BitcoinFlutter.ECPair.fromPrivateKey(privateKey,
             compressed: true, network: environment["chains"]["LTC"]["network"]);
         txb.sign(vin: i, keyPair: alice);
       }
@@ -1970,7 +1966,7 @@ class WalletService {
       }
       var amountNum = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
       amountNum += (2 * 34 + 10) * satoshisPerBytes;
-      final txb = new TransactionBuilder(
+      final txb = new BitcoinFlutter.TransactionBuilder(
           network: environment["chains"]["DOGE"]["network"]);
 
       for (var i = 0; i < addressIndexList.length; i++) {
@@ -2052,7 +2048,7 @@ class WalletService {
 
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];
-        var alice = ECPair.fromPrivateKey(privateKey,
+        var alice = BitcoinFlutter.ECPair.fromPrivateKey(privateKey,
             compressed: true,
             network: environment["chains"]["DOGE"]["network"]);
         txb.sign(vin: i, keyPair: alice);
@@ -2168,7 +2164,7 @@ class WalletService {
           txHash = res['txHash'];
           errMsg = res['errMsg'];
         } else {
-          var tx = btcTransaction.Transaction.fromHex(txHex);
+          var tx = BitcoinFlutter.Transaction.fromHex(txHex);
           txHash = '0x' + tx.getId();
         }
       }
@@ -2245,7 +2241,7 @@ class WalletService {
           txHash = res['txHash'];
           errMsg = res['errMsg'];
         } else {
-          var tx = btcTransaction.Transaction.fromHex(txHex);
+          var tx = BitcoinFlutter.Transaction.fromHex(txHex);
           txHash = '0x' + tx.getId();
         }
       }

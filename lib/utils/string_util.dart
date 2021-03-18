@@ -117,8 +117,16 @@ stringToUint8List(String s) {
   return Uint8List.fromList(list);
 }
 
-uint8ListToString(Uint8List list) {
+uint8ListToHex(Uint8List list) {
   return HEX.encode(list);
+}
+
+hexToUint8List(String source) {
+  return Uint8List.fromList(HEX.decode(source));
+}
+
+hexToBytes(String source) {
+  return HEX.decode(source);
 }
 
 /*

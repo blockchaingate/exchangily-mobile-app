@@ -19,6 +19,9 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
+
+const String BroadcasrTronTransactionUrl  = "https://api.trongrid.io/wallet/broadcasthex";
+const String GetTronLatestBlockUrl = 'https://api.trongrid.io/wallet/getnowblock';
 const String WalletBalancesApiRoute = 'walletBalances';
 const String SingleWalletBalanceApiRoute = 'singleCoinWalletBalance';
 const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";

@@ -45,6 +45,26 @@ class ApiService {
   final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
 /*----------------------------------------------------------------------
+                Get Tron Tx Latest Block
+----------------------------------------------------------------------*/
+
+Future getTronLatestBlock() async {
+    log.i('getBanner url $GetTronLatestBlockUrl');
+
+    try {
+      var response = await client.get(GetTronLatestBlockUrl);
+      var json = jsonDecode(response.body);
+      if (json != null) {
+        log.e('getTronLatestBlock $json}');
+        return json;
+      }
+    } catch (err) {
+      log.e('getTronLatestBlock CATCH $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
                 Get Tx History for withdraw and deposit
 ----------------------------------------------------------------------*/
   Future<List<TransactionHistory>> getTransactionHistoryEvents() async {

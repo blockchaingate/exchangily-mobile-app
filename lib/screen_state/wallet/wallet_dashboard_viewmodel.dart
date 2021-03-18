@@ -894,6 +894,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       'ltcAddress': '',
       'dogeAddress': '',
       'bchAddress': '',
+      'trxAddress': '',
       "showEXGAssets": "true"
     };
     walletInfoCopy.forEach((wallet) {
@@ -909,6 +910,8 @@ class WalletDashboardViewModel extends BaseViewModel {
         walletBalancesBody['dogeAddress'] = wallet.address;
       } else if (wallet.tickerName == 'BCH') {
         walletBalancesBody['bchAddress'] = wallet.address;
+      } else if (wallet.tickerName == 'TRX') {
+        walletBalancesBody['trxAddress'] = wallet.address;
       }
     });
 
@@ -930,7 +933,6 @@ class WalletDashboardViewModel extends BaseViewModel {
         // Loop wallet info list to udpate balances
         log.e(
             'walletInfoCopy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
-        walletInfoCopy.removeWhere((element) => element.tickerName == 'TRX');
         walletInfoCopy.forEach((wallet) async {
           // Loop wallet balance list from api
           for (var j = 0; j <= walletBalanceList.length; j++) {
@@ -995,9 +997,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                 tickerNamesFromWalletInfoCopy.contains(walletBalanceObj.coin);
             print(
                 'wallet info contains ${walletBalanceObj.coin}? => $isOldTicker');
-            if (!isOldTicker &&
-                walletBalanceObj.coin != 'TRX' &&
-                walletBalanceObj.coin != 'USDTX') {
+            if (!isOldTicker) {
               //  newTokenList.add(walletBalanceObj.coin);
               newTokenListFromWalletBalances.add(walletBalanceObj);
               log.i('new coin to add ${walletBalanceObj.toJson()}');
@@ -1031,8 +1031,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
                   newTokenListFromTokenUpdateApi
                       .forEach((singleNewToken) async {
-                    if (singleNewToken.coinName != 'USDTX')
-                      await tokenListDatabaseService.insert(singleNewToken);
+                    await tokenListDatabaseService.insert(singleNewToken);
                   });
                   // print the new token list database length
                   var t = await tokenListDatabaseService.getAll();
@@ -1044,9 +1043,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                 // compare tickername of wallet balance api token against tokenListUpdate api token tickername
                 newTokenListFromTokenUpdateApi
                     .forEach((singleNewTokenFromTokenUpdateApi) async {
-                  if (newTokenWalletBalance.coin !=
-                      'USDTX') if (newTokenWalletBalance
-                          .coin ==
+                  if (newTokenWalletBalance.coin ==
                       singleNewTokenFromTokenUpdateApi.tickerName) {
                     log.i('----- Building new wallet object -----');
                     await buildNewWalletObject(singleNewTokenFromTokenUpdateApi,
