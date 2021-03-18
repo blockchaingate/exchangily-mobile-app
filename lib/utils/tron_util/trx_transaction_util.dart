@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -20,35 +19,22 @@ import 'package:exchangilymobileapp/protos_gen/protos/tron.pb.dart' as Tron;
 import 'package:exchangilymobileapp/utils/coin_util.dart' as CoinUtil;
 import 'package:http/http.dart' as http;
 
-Future broadcastTronTransaction(transactionHex) async {
-  final client = new http.Client();
-  Map<String, dynamic> body = {"transaction": transactionHex};
-  print(
-      'broadcasrTronTransaction $BroadcasrTronTransactionUrl -- body ${jsonEncode(body)}');
-  try {
-    var response =
-        await client.post(BroadcasrTronTransactionUrl, body: jsonEncode(body));
-    var json = jsonDecode(response.body);
-    if (json != null) {
-      print('broadcastTronTransaction $json}');
-      return json;
-    }
-  } catch (err) {
-    print('broadcastTronTransaction CATCH $err');
-    throw Exception(err);
-  }
-}
-
-generateTrxTransactionContract(String fromAddr, String toAddr, double amount,
-    {bool isTrxUsdt = false, tickerName = 'TRX'}) async {
+Future generateTrxTransactionContract(
+    {@required Uint8List privateKey,
+    @required String fromAddr,
+    @required String toAddr,
+    @required double amount,
+    @required bool isTrxUsdt,
+    @required String tickerName}) async {
   int decimal = 0;
-
+  print(
+      'tickername $tickerName -- from $fromAddr -- to $toAddr -- amount $amount --  isTrxUsdt $isTrxUsdt');
   String contractAddress = '';
   final tokenListDatabaseService = locator<TokenListDatabaseService>();
   final apiService = locator<ApiService>();
   List<int> fromAddress = bs58check.decode(fromAddr);
-  //utf8.encode(fromAddr);
-  print(fromAddress);
+
+  print('base58 fromAddress to Hex ${StringUtil.uint8ListToHex(fromAddress)}');
   List<int> toAddress = bs58check.decode(toAddr);
   print(
       'base58 address toAddress to hex ${StringUtil.uint8ListToHex(toAddress)}');
@@ -60,12 +46,6 @@ generateTrxTransactionContract(String fromAddr, String toAddr, double amount,
   print('original amount - $amount and int64 res $bigIntAmountToInt64');
 
   var trans;
-
-//   TriggerSmartContract{
-//    OwnerAddress: fromaddr,
-//    ContractAddress:  contractAddrBytes[:21],
-//    Data:       data,
-// }
 
   if (isTrxUsdt) {
     // get trx-usdt contract address
@@ -116,8 +96,7 @@ generateTrxTransactionContract(String fromAddr, String toAddr, double amount,
 
 // AMOUNT
     var hexDataAmount = NumberUtil().intToHex(amountToBigInt);
-    var dataAmount = StringUtil.fixLength(
-       hexDataAmount.toString(), 64);
+    var dataAmount = StringUtil.fixLength(hexDataAmount.toString(), 64);
 // 00000000000000000000000000000000000000000000000000000000002dc6c0
     print('dataAmount ${dataAmount.length} -- $dataAmount');
     print('bigint amount $amountToBigInt -- hex amount $dataAmount');
@@ -131,11 +110,13 @@ generateTrxTransactionContract(String fromAddr, String toAddr, double amount,
       //  hex address for contract address in config for trx-usdt
       contractAddress: StringUtil.hexToUint8List(contractAddress),
     );
-  } else
+  } else {
+    print('in else $fromAddress -- $toAddress -- $bigIntAmountToInt64 ');
     Tron.TransferContract(
         ownerAddress: fromAddress,
         toAddress: toAddress,
         amount: bigIntAmountToInt64);
+  }
   print('trans $trans');
 //buf, _ := proto.Marshal(&trans)
   var transToUint8List = trans.writeToBuffer();
@@ -167,7 +148,8 @@ generateTrxTransactionContract(String fromAddr, String toAddr, double amount,
   var contractBufferToHex = StringUtil.uint8ListToHex(contractBuffer);
   debugPrint('contractBufferToHex $contractBufferToHex');
   // gen raw tx
-  generateTrxRawTransaction(contract, isTrxUsdt: true);
+  _generateTrxRawTransaction(
+      contract: contract, privateKey: privateKey, isTrxUsdt: true);
 }
 
 sendTrxTx(rawTx, ret, signature) {
@@ -182,8 +164,10 @@ sendTrxTx(rawTx, ret, signature) {
 /*----------------------------------------------------------------------
                   Raw Transaction
 ----------------------------------------------------------------------*/
-generateTrxRawTransaction(Tron.Transaction_Contract contract,
-    {bool isTrxUsdt = false}) async {
+_generateTrxRawTransaction(
+    {@required Tron.Transaction_Contract contract,
+    @required Uint8List privateKey,
+    @required bool isTrxUsdt}) async {
   ApiService _apiService = locator<ApiService>();
 // txRaw.SetRefBlockHash(blkhash)
 // txRaw.SetRefBlockBytes(blk.BlockHeader.Raw.Number)
@@ -247,9 +231,7 @@ generateTrxRawTransaction(Tron.Transaction_Contract contract,
   debugPrint('txRawBufferToHex $txRawBufferToHex');
   var hashedRawTxBuffer = CryptoHash.sha256.convert(txRawBuffer);
   print('hashedRawTxBuffer $hashedRawTxBuffer');
-  String mnemonic =
-      "expire grid drift mosquito cupboard gloom depart veteran volcano indoor olympic century";
-  var privateKey = TrxUtil.generateTrxPrivKey(mnemonic);
+
   // address gen by the priv key TWxNjGUkn2Dc6Avh9zZy8thMt5mBqVWjnP
   print('priv key hex ${StringUtil.uint8ListToHex(privateKey)}');
   // var keyPair = ECPair.fromPrivateKey(privateKey);
@@ -272,6 +254,29 @@ generateTrxRawTransaction(Tron.Transaction_Contract contract,
 
   print('txBufferHex ${txBufferHex}');
   broadcastTronTransaction(txBufferHex);
+}
+
+/*----------------------------------------------------------------------
+                Broadcast Transaction
+----------------------------------------------------------------------*/
+
+Future broadcastTronTransaction(transactionHex) async {
+  final client = new http.Client();
+  Map<String, dynamic> body = {"transaction": transactionHex};
+  print(
+      'broadcasrTronTransaction $BroadcasrTronTransactionUrl -- body ${jsonEncode(body)}');
+  try {
+    var response =
+        await client.post(BroadcasrTronTransactionUrl, body: jsonEncode(body));
+    var json = jsonDecode(response.body);
+    if (json != null) {
+      print('broadcastTronTransaction $json}');
+      return json;
+    }
+  } catch (err) {
+    print('broadcastTronTransaction CATCH $err');
+    throw Exception(err);
+  }
 }
 
 /*----------------------------------------------------------------------

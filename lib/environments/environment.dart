@@ -242,7 +242,8 @@ Map productionConfig = {
         'address': 'bitcoincash:qznusftmq4cac0fuj6eyke5vv45njxe6eyafcld37l'
       },
       {'name': 'LTC', 'address': 'LaX6sfX8RoHbQHNDEBmdzyBMN9vFa95FXL'},
-      {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'}
+      {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'},
+      {'name': 'TRX', 'address': 'TRX:TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'}
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },

@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -43,10 +44,33 @@ class SharedService {
   final log = getLogger('SharedService');
   final storageService = locator<LocalStorageService>();
   NavigationService navigationService = locator<NavigationService>();
+  final tokenListDatabaseService = locator<TokenListDatabaseService>();
   DecimalConfigDatabaseService decimalConfigDatabaseService =
       locator<DecimalConfigDatabaseService>();
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
+
+/*--------------------------------------------------------------------------
+                  Get contract address from database
+------------------------------------------------------------------------- */
+  getContractAddressFromDatabase(String tickerName) async {
+    String smartContractAddress = '';
+    if (smartContractAddress == null) {
+      print('$tickerName contract is null so fetching from token database');
+      await tokenListDatabaseService
+          .getContractAddressByTickerName(tickerName)
+          .then((value) {
+        if (value != null) {
+          if (!value.startsWith('0x'))
+            smartContractAddress = '0x' + value;
+          else
+            smartContractAddress = value;
+        }
+      });
+      print('official smart contract address $smartContractAddress');
+    }
+    return smartContractAddress;
+  }
 
 /*--------------------------------------------------------------------------
                         getPairDecimalConfig

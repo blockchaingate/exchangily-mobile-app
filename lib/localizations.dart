@@ -1724,6 +1724,10 @@ class AppLocalizations {
         desc: 'special_exchange_balance_note');
   }
 
+  String get fee {
+    return Intl.message('Fee', name: 'fee', desc: 'fee');
+  }
+
   // Share page pending translation added by Jack
 }
 

@@ -6,7 +6,6 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -26,9 +25,6 @@ import 'dart:convert';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class MoveToWalletViewmodel extends BaseState {
   final log = getLogger('MoveToWalletViewmodel');

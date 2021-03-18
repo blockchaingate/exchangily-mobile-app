@@ -45,13 +45,9 @@ import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
 import '../utils/coin_util.dart';
 import 'dart:io';
-// import 'package:bitcoin_flutter/src/transaction_builder.dart';
-// import 'package:bitcoin_flutter/src/transaction.dart' as btcTransaction;
-// import 'package:bitcoin_flutter/src/ecpair.dart';
+
 import 'package:bitcoin_flutter/src/utils/script.dart' as script;
 import '../environments/environment.dart';
-//import 'package:bitcoin_flutter/src/bitcoin_flutter_base.dart';
-
 import 'package:encrypt/encrypt.dart' as prefix0;
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:decimal/decimal.dart';

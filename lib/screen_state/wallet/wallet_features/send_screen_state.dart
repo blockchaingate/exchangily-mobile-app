@@ -29,11 +29,15 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
+import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
+    as TronAddressUtil;
+import 'package:exchangilymobileapp/utils/tron_util/trx_transaction_util.dart'
+    as TronTransactionUtil;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart' as CoinUtil;
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:overlay_support/overlay_support.dart';
 
@@ -128,9 +132,11 @@ class SendScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-  // Verify Password
-  Future verifyPassword() async {
-    log.w('dialog called');
+/*----------------------------------------------------------------------
+                      Verify Password
+----------------------------------------------------------------------*/
+
+  Future sendTransaction() async {
     setState(ViewState.Busy);
     var dialogResponse = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -158,31 +164,31 @@ class SendScreenState extends BaseState {
       } else if (tickerName == 'EXG') {
         tokenType = 'FAB';
       }
-      if (tokenType != null && tokenType != '') {
-        if ((tickerName != null) &&
-            (tickerName != '') &&
-            (tokenType != null) &&
-            (tokenType != '')) {
-          var decimal;
-          String contractAddr =
-              environment["addresses"]["smartContract"][tickerName];
-          if (contractAddr == null) {
-            await tokenListDatabaseService
-                .getByTickerName(tickerName)
-                .then((token) {
-              contractAddr = token.contract;
-              decimal = token.decimal;
-            });
-          }
-          options = {
-            'tokenType': tokenType,
-            'contractAddress': contractAddr,
-            'gasPrice': gasPrice,
-            'gasLimit': gasLimit,
-            'satoshisPerBytes': satoshisPerBytes,
-            'decimal': decimal
-          };
+
+      if ((tickerName != null) &&
+          (tickerName != '') &&
+          (tokenType != null) &&
+          (tokenType != '')) {
+        var decimal;
+        String contractAddr =
+            environment["addresses"]["smartContract"][tickerName];
+
+        if (contractAddr == null) {
+          await tokenListDatabaseService
+              .getByTickerName(tickerName)
+              .then((token) {
+            contractAddr = token.contract;
+            decimal = token.decimal;
+          });
         }
+        options = {
+          'tokenType': tokenType,
+          'contractAddress': contractAddr,
+          'gasPrice': gasPrice,
+          'gasLimit': gasLimit,
+          'satoshisPerBytes': satoshisPerBytes,
+          'decimal': decimal
+        };
       } else {
         options = {
           'gasPrice': gasPrice,
@@ -196,64 +202,83 @@ class SendScreenState extends BaseState {
         if (!toAddress.startsWith('0x')) toAddress = fabToExgAddress(toAddress);
       }
       log.i('OPTIONS before send $options');
-      await walletService
-          .sendTransaction(
-              tickerName, seed, [0], [], toAddress, amount, options, true)
-          .then((res) async {
-        log.w('Result $res');
-        txHash = res["txHash"];
-        errorMessage = res["errMsg"];
 
-        if (txHash.isNotEmpty) {
-          log.w('TXhash $txHash');
-          receiverWalletAddressTextController.text = '';
-          sendAmountTextController.text = '';
-
-          sharedService.alertDialog(
-            AppLocalizations.of(context).sendTransactionComplete,
-            '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
-          );
-          var allTxids = res["txids"];
-          walletService.addTxids(allTxids);
-
-          String date = DateTime.now().toLocal().toString();
-          log.e('wallet service ${walletInfo.toJson()}');
-          TransactionHistory transactionHistory = new TransactionHistory(
-            id: null,
-            tickerName: tickerName,
-            address: '',
-            amount: 0.0,
-            date: date,
-            kanbanTxId: '',
-            tickerChainTxId: txHash,
-            quantity: amount,
-            tag: 'send',
-            chainName: walletInfo.tokenType,
-          );
-          walletService.insertTransactionInDatabase(transactionHistory);
-        } else if (txHash == '' && errorMessage == '') {
-          log.e('Both TxHash and Error Message are empty $errorMessage');
-          sharedService.alertDialog(
-            "",
-            '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
-          );
+      // TRON Transaction
+      if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+        log.i('sending tron ${walletInfo.tickerName}');
+        var privateKey = TronAddressUtil.generateTrxPrivKey(mnemonic);
+        await TronTransactionUtil.generateTrxTransactionContract(
+                privateKey: privateKey,
+                fromAddr: walletInfo.address,
+                toAddr: toAddress,
+                amount: amount,
+                isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
+                tickerName: walletInfo.tickerName)
+            .then((res) {
+          log.w('trx tx res $res');
+          // add tx to db
+          addSendTransactionToDB(walletInfo, amount, txHash);
+        }).timeout(Duration(seconds: 25), onTimeout: () {
+          log.e('In time out');
           setState(ViewState.Idle);
-        }
-        setState(ViewState.Idle);
-        return txHash;
-      }).timeout(Duration(seconds: 25), onTimeout: () {
-        log.e('In time out');
-        setState(ViewState.Idle);
-        return errorMessage =
-            AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
-      }).catchError((error) {
-        log.e('In Catch error - $error');
-        sharedService.alertDialog(AppLocalizations.of(context).serverError,
-            '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
-            isWarning: false);
-        //errorMessage = AppLocalizations.of(context).transanctionFailed;
-        setState(ViewState.Idle);
-      });
+          sharedService.alertDialog(AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater,
+              isWarning: false);
+        }).catchError((error) {
+          log.e('In Catch error - $error');
+          sharedService.alertDialog(AppLocalizations.of(context).serverError,
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+              isWarning: false);
+
+          setState(ViewState.Idle);
+        });
+      } else {
+        // Other coins transaction
+        await walletService
+            .sendTransaction(
+                tickerName, seed, [0], [], toAddress, amount, options, true)
+            .then((res) async {
+          log.w('Result $res');
+          txHash = res["txHash"];
+          errorMessage = res["errMsg"];
+
+          if (txHash.isNotEmpty) {
+            log.w('TXhash $txHash');
+            receiverWalletAddressTextController.text = '';
+            sendAmountTextController.text = '';
+
+            sharedService.alertDialog(
+              AppLocalizations.of(context).sendTransactionComplete,
+              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+            );
+            var allTxids = res["txids"];
+            walletService.addTxids(allTxids);
+            // add tx to db
+            addSendTransactionToDB(walletInfo, amount, txHash);
+          } else if (txHash == '' && errorMessage == '') {
+            log.e('Both TxHash and Error Message are empty $errorMessage');
+            sharedService.alertDialog(
+              "",
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+            );
+            setState(ViewState.Idle);
+          }
+          setState(ViewState.Idle);
+          return txHash;
+        }).timeout(Duration(seconds: 25), onTimeout: () {
+          log.e('In time out');
+          setState(ViewState.Idle);
+          return errorMessage =
+              AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
+        }).catchError((error) {
+          log.e('In Catch error - $error');
+          sharedService.alertDialog(AppLocalizations.of(context).serverError,
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+              isWarning: false);
+          //errorMessage = AppLocalizations.of(context).transanctionFailed;
+          setState(ViewState.Idle);
+        });
+      }
     } else if (dialogResponse.returnedText != 'Closed') {
       setState(ViewState.Idle);
       return errorMessage =
@@ -263,8 +288,31 @@ class SendScreenState extends BaseState {
     }
   }
 
-  // Check transaction status not working yet
+/*----------------------------------------------------------------------
+              Add send tx to transaction database  
+----------------------------------------------------------------------*/
+  void addSendTransactionToDB(
+      WalletInfo walletInfo, double amount, String txHash) {
+    String date = DateTime.now().toLocal().toString();
 
+    TransactionHistory transactionHistory = new TransactionHistory(
+      id: null,
+      tickerName: walletInfo.tickerName,
+      address: '',
+      amount: 0.0,
+      date: date,
+      kanbanTxId: '',
+      tickerChainTxId: txHash,
+      quantity: amount,
+      tag: 'send',
+      chainName: walletInfo.tokenType,
+    );
+    walletService.insertTransactionInDatabase(transactionHistory);
+  }
+
+/*----------------------------------------------------------------------
+              Check transaction status not working yet  
+----------------------------------------------------------------------*/
   checkTxStatus(String tickerName, String txHash) async {
     Timer timer;
     if (tickerName == 'FAB') {
@@ -296,9 +344,10 @@ class SendScreenState extends BaseState {
     }
   }
 
-// Check Fields to see if user has filled both address and amount fields correctly
-
-  checkFields(context) async {
+/*-----------------------------------------------------------------------------------
+    Check Fields to see if user has filled both address and amount fields correctly
+------------------------------------------------------------------------------------*/
+  checkFields(context) {
     print('in check fields');
     txHash = '';
     errorMessage = '';
@@ -336,14 +385,15 @@ class SendScreenState extends BaseState {
     else {
       print('else');
       FocusScope.of(context).requestFocus(FocusNode());
-      await verifyPassword();
+      sendTransaction();
       // await updateBalance(widget.walletInfo.address);
       // widget.walletInfo.availableBalance = model.updatedBal['balance'];
     }
   }
 
-  // Check Send Amount
-
+/*----------------------------------------------------------------------
+                    Check Send Amount
+----------------------------------------------------------------------*/
   checkAmount(amount) {
     setState(ViewState.Busy);
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
@@ -354,7 +404,10 @@ class SendScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
-// Copy Address
+/*----------------------------------------------------------------------
+                      Copy Address
+----------------------------------------------------------------------*/
+
   copyAddress(context) {
     Clipboard.setData(new ClipboardData(text: txHash));
     showSimpleNotification(
@@ -373,11 +426,14 @@ class SendScreenState extends BaseState {
     //     isWarning: false);
   }
 
-  // Update Trans Fee
+/*----------------------------------------------------------------------
+                Update Trans Fee
+----------------------------------------------------------------------*/
+
   updateTransFee() async {
     setState(ViewState.Busy);
     setBusy(true);
-    var to = getOfficalAddress(walletInfo.tickerName.toUpperCase(),
+    var to = CoinUtil.getOfficalAddress(walletInfo.tickerName.toUpperCase(),
         tokenType: walletInfo.tokenType.toUpperCase());
     var amount = double.tryParse(sendAmountTextController.text);
     var gasPrice = int.tryParse(gasPriceTextController.text);
@@ -421,9 +477,9 @@ class SendScreenState extends BaseState {
     setBusy(false);
   }
 
-  /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
-                                    Barcode Scan
---------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*--------------------------------------------------------
+                      Barcode Scan
+--------------------------------------------------------*/
 
   Future scan() async {
     log.i("Barcode: going to scan");

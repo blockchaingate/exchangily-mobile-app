@@ -30,7 +30,7 @@ class SendWalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double bal = walletInfo.availableBalance;
-    String coinName = walletInfo.tickerName;
+    String tickerName = walletInfo.tickerName;
     String tokenType = walletInfo.tokenType;
     return BaseScreen<SendScreenState>(
         onModelReady: (model) {
@@ -143,15 +143,15 @@ class SendWalletScreen extends StatelessWidget {
                                 TextField(
                                   controller: model.sendAmountTextController,
                                   onChanged: (String amount) {
-                                    // checkSendAmount does not directly work if you use it in if as condition so setting state here to make it work
-                                    //  setState(() {
                                     model.amount = double.parse(amount);
                                     model.checkAmount(amount);
                                     if (model.checkSendAmount == true &&
                                         model.amount <= bal) {
-                                      model.updateTransFee();
+                                      if (tickerName != 'TRX' ||
+                                          tickerName != 'USDTX') {
+                                        model.updateTransFee();
+                                      }
                                     }
-                                    //  });
                                   },
                                   keyboardType: TextInputType.numberWithOptions(
                                       decimal: true), // numnber keyboard
@@ -187,7 +187,7 @@ class SendWalletScreen extends StatelessWidget {
                                                 fontWeight: FontWeight.w400),
                                       ),
                                       Text(
-                                        '$coinName'.toUpperCase(),
+                                        '$tickerName'.toUpperCase(),
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5
@@ -206,251 +206,287 @@ class SendWalletScreen extends StatelessWidget {
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(top: 15, bottom: 10),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      AppLocalizations.of(context).gasFee,
+                          child: tickerName == 'TRX' || tickerName == 'USDTX'
+                              ? Container(
+                                  padding: EdgeInsets.only(top: 10, bottom: 0),
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                      '${AppLocalizations.of(context).fee}: 15 TRX',
+                                      textAlign: TextAlign.left,
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline5
                                           .copyWith(
-                                              fontWeight: FontWeight.w400),
-                                    ),
+                                              fontWeight: FontWeight.w400)),
+                                )
+                              : Column(
+                                  children: <Widget>[
                                     Padding(
-                                      padding: EdgeInsets.only(
-                                          left:
-                                              5), // padding left to keep some space from the text
-                                      child: model.busy
-                                          ? SizedBox(
-                                              width: 16,
-                                              height: 16,
-                                              child: Theme.of(context)
-                                                          .platform ==
-                                                      TargetPlatform.iOS
-                                                  ? CupertinoActivityIndicator()
-                                                  : CircularProgressIndicator(
-                                                      strokeWidth: 0.75,
-                                                    ))
-                                          : Text(
-                                              '${model.transFee}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline5
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w400),
-                                            ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              // Switch Row Advance
-                              Row(
-                                children: <Widget>[
-                                  Text(
-                                    AppLocalizations.of(context).advance,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(fontWeight: FontWeight.w400),
-                                  ),
-                                  Switch(
-                                    value: model.transFeeAdvance,
-                                    inactiveTrackColor: globals.grey,
-                                    dragStartBehavior: DragStartBehavior.start,
-                                    activeColor: globals.primaryColor,
-                                    onChanged: (bool isOn) {
-                                      model.setBusy(true);
-                                      model.transFeeAdvance = isOn;
-                                      model.setBusy(false);
-                                    },
-                                  )
-                                ],
-                              ),
-                              Visibility(
-                                  visible: model.transFeeAdvance,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Visibility(
-                                          visible: (coinName == 'ETH' ||
-                                              tokenType == 'ETH' ||
-                                              tokenType == 'FAB'),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                flex: 3,
-                                                child: Text(
-                                                    AppLocalizations.of(context)
-                                                        .gasPrice,
+                                      padding:
+                                          EdgeInsets.only(top: 15, bottom: 10),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            AppLocalizations.of(context).gasFee,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline5
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                left:
+                                                    5), // padding left to keep some space from the text
+                                            child: model.busy
+                                                ? SizedBox(
+                                                    width: 16,
+                                                    height: 16,
+                                                    child: Theme.of(context)
+                                                                .platform ==
+                                                            TargetPlatform.iOS
+                                                        ? CupertinoActivityIndicator()
+                                                        : CircularProgressIndicator(
+                                                            strokeWidth: 0.75,
+                                                          ))
+                                                : Text(
+                                                    '${model.transFee}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline6
-                                                        .copyWith(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400)),
-                                              ),
-                                              Expanded(
-                                                  flex: 6,
-                                                  child: TextField(
-                                                      controller: model
-                                                          .gasPriceTextController,
-                                                      onChanged:
-                                                          (String amount) {
-                                                        model.updateTransFee();
-                                                      },
-                                                      keyboardType:
-                                                          TextInputType.numberWithOptions(
-                                                              decimal: true),
-                                                      decoration: InputDecoration(
-                                                          focusedBorder: UnderlineInputBorder(
-                                                              borderSide: BorderSide(
-                                                                  color: globals
-                                                                      .primaryColor)),
-                                                          enabledBorder: UnderlineInputBorder(
-                                                              borderSide: BorderSide(
-                                                                  width: 0.5,
-                                                                  color: globals
-                                                                      .grey)),
-                                                          hintText: '0.00000',
-                                                          hintStyle: Theme.of(context)
-                                                              .textTheme
-                                                              .headline6
-                                                              .copyWith(
-                                                                  fontWeight: FontWeight
-                                                                      .w400)),
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6
-                                                          .copyWith(fontWeight: FontWeight.w400)))
-                                            ],
-                                          )),
-                                      Visibility(
-                                          visible: (coinName == 'ETH' ||
-                                              tokenType == 'ETH' ||
-                                              tokenType == 'FAB'),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                flex: 3,
-                                                child: Text(
-                                                    AppLocalizations.of(context)
-                                                        .gasLimit,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
-                                                        .copyWith(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w400)),
-                                              ),
-                                              Expanded(
-                                                  flex: 6,
-                                                  child: TextField(
-                                                    controller: model
-                                                        .gasLimitTextController,
-                                                    onChanged: (String amount) {
-                                                      model.updateTransFee();
-                                                    },
-                                                    keyboardType: TextInputType
-                                                        .numberWithOptions(
-                                                            decimal: true),
-                                                    decoration: InputDecoration(
-                                                        focusedBorder:
-                                                            UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color: globals
-                                                                        .primaryColor)),
-                                                        enabledBorder:
-                                                            UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    width: 0.5,
-                                                                    color: globals
-                                                                        .grey)),
-                                                        hintText: '0.00000',
-                                                        hintStyle: Theme.of(
-                                                                context)
-                                                            .textTheme
-                                                            .headline6
-                                                            .copyWith(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400)),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
+                                                        .headline5
                                                         .copyWith(
                                                             fontWeight:
                                                                 FontWeight
                                                                     .w400),
-                                                  ))
-                                            ],
-                                          )),
-                                      Visibility(
-                                          visible: (coinName == 'BTC' ||
-                                              coinName == 'FAB' ||
-                                              tokenType == 'FAB'),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Expanded(
-                                                flex: 3,
-                                                child: Text(
-                                                    AppLocalizations.of(context)
-                                                        .satoshisPerByte,
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6),
-                                              ),
-                                              //  UIHelper.horizontalSpaceLarge,
-                                              Expanded(
-                                                  flex: 6,
-                                                  child: TextField(
-                                                    controller: model
-                                                        .satoshisPerByteTextController,
-                                                    onChanged: (String amount) {
-                                                      model.updateTransFee();
-                                                    },
-                                                    keyboardType: TextInputType
-                                                        .numberWithOptions(
-                                                            decimal: true),
-                                                    decoration: InputDecoration(
-                                                        focusedBorder:
-                                                            UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color: globals
-                                                                        .primaryColor)),
-                                                        enabledBorder:
-                                                            UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color: globals
-                                                                        .grey)),
-                                                        hintText: '0.00000',
-                                                        hintStyle: Theme.of(
-                                                                context)
-                                                            .textTheme
-                                                            .headline6
-                                                            .copyWith(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400)),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headline6
-                                                        .copyWith(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w300),
-                                                  ))
-                                            ],
-                                          ))
-                                    ],
-                                  ))
-                            ],
-                          ),
+                                                  ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    // Switch Row Advance
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          AppLocalizations.of(context).advance,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w400),
+                                        ),
+                                        Switch(
+                                          value: model.transFeeAdvance,
+                                          inactiveTrackColor: globals.grey,
+                                          dragStartBehavior:
+                                              DragStartBehavior.start,
+                                          activeColor: globals.primaryColor,
+                                          onChanged: (bool isOn) {
+                                            model.setBusy(true);
+                                            model.transFeeAdvance = isOn;
+                                            model.setBusy(false);
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                    Visibility(
+                                        visible: model.transFeeAdvance,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Visibility(
+                                                visible: (tickerName == 'ETH' ||
+                                                    tokenType == 'ETH' ||
+                                                    tokenType == 'FAB'),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      flex: 3,
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .gasPrice,
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline6
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400)),
+                                                    ),
+                                                    Expanded(
+                                                        flex: 6,
+                                                        child: TextField(
+                                                            controller: model
+                                                                .gasPriceTextController,
+                                                            onChanged: (String
+                                                                amount) {
+                                                              model
+                                                                  .updateTransFee();
+                                                            },
+                                                            keyboardType: TextInputType.numberWithOptions(
+                                                                decimal: true),
+                                                            decoration: InputDecoration(
+                                                                focusedBorder: UnderlineInputBorder(
+                                                                    borderSide: BorderSide(
+                                                                        color: globals
+                                                                            .primaryColor)),
+                                                                enabledBorder: UnderlineInputBorder(
+                                                                    borderSide: BorderSide(
+                                                                        width:
+                                                                            0.5,
+                                                                        color: globals
+                                                                            .grey)),
+                                                                hintText:
+                                                                    '0.00000',
+                                                                hintStyle: Theme.of(context)
+                                                                    .textTheme
+                                                                    .headline6
+                                                                    .copyWith(
+                                                                        fontWeight: FontWeight
+                                                                            .w400)),
+                                                            style: Theme.of(context)
+                                                                .textTheme
+                                                                .headline6
+                                                                .copyWith(
+                                                                    fontWeight: FontWeight.w400)))
+                                                  ],
+                                                )),
+                                            Visibility(
+                                                visible: (tickerName == 'ETH' ||
+                                                    tokenType == 'ETH' ||
+                                                    tokenType == 'FAB'),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      flex: 3,
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .gasLimit,
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline6
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400)),
+                                                    ),
+                                                    Expanded(
+                                                        flex: 6,
+                                                        child: TextField(
+                                                          controller: model
+                                                              .gasLimitTextController,
+                                                          onChanged:
+                                                              (String amount) {
+                                                            model
+                                                                .updateTransFee();
+                                                          },
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .numberWithOptions(
+                                                                      decimal:
+                                                                          true),
+                                                          decoration: InputDecoration(
+                                                              focusedBorder: UnderlineInputBorder(
+                                                                  borderSide: BorderSide(
+                                                                      color: globals
+                                                                          .primaryColor)),
+                                                              enabledBorder: UnderlineInputBorder(
+                                                                  borderSide: BorderSide(
+                                                                      width:
+                                                                          0.5,
+                                                                      color: globals
+                                                                          .grey)),
+                                                              hintText:
+                                                                  '0.00000',
+                                                              hintStyle: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .headline6
+                                                                  .copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400)),
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline6
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400),
+                                                        ))
+                                                  ],
+                                                )),
+                                            Visibility(
+                                                visible: (tickerName == 'BTC' ||
+                                                    tickerName == 'FAB' ||
+                                                    tokenType == 'FAB'),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                      flex: 3,
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)
+                                                              .satoshisPerByte,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline6),
+                                                    ),
+                                                    //  UIHelper.horizontalSpaceLarge,
+                                                    Expanded(
+                                                        flex: 6,
+                                                        child: TextField(
+                                                          controller: model
+                                                              .satoshisPerByteTextController,
+                                                          onChanged:
+                                                              (String amount) {
+                                                            model
+                                                                .updateTransFee();
+                                                          },
+                                                          keyboardType:
+                                                              TextInputType
+                                                                  .numberWithOptions(
+                                                                      decimal:
+                                                                          true),
+                                                          decoration: InputDecoration(
+                                                              focusedBorder: UnderlineInputBorder(
+                                                                  borderSide: BorderSide(
+                                                                      color: globals
+                                                                          .primaryColor)),
+                                                              enabledBorder: UnderlineInputBorder(
+                                                                  borderSide: BorderSide(
+                                                                      color: globals
+                                                                          .grey)),
+                                                              hintText:
+                                                                  '0.00000',
+                                                              hintStyle: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .headline6
+                                                                  .copyWith(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400)),
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .headline6
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w300),
+                                                        ))
+                                                  ],
+                                                ))
+                                          ],
+                                        ))
+                                  ],
+                                ),
                         ),
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -524,7 +560,7 @@ class SendWalletScreen extends StatelessWidget {
                                           .headline4
                                           .copyWith(
                                               fontWeight: FontWeight.w400)),
-                                  onPressed: () async {
+                                  onPressed: () {
                                     print('Send pressed');
                                     model.checkFields(context);
                                   },
