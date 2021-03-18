@@ -52,17 +52,20 @@ class MoveToExchangeViewModel extends BaseViewModel {
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
   String serverError = '';
-String specialTicker = '';
+  String specialTicker = '';
+
+  
   void initState() async {
     setBusy(true);
     coinName = walletInfo.tickerName;
     coinName = walletInfo.tickerName;
     tokenType = walletInfo.tokenType;
-    setFee();
-    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(walletInfo.tickerName)['tickerName'];
+    if (coinName != 'TRX' && coinName != 'USDTX') setFee();
+    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
+        walletInfo.tickerName)['tickerName'];
     await getGas();
     refreshBalance();
-    await getData();
+    await getDecimalData();
     setBusy(false);
   }
 
@@ -72,7 +75,7 @@ String specialTicker = '';
     setBusy(false);
   }
 
-  getData() async {
+  getDecimalData() async {
     setBusy(true);
     singlePairDecimalConfig =
         await sharedService.getSinglePairDecimalConfig(coinName);

@@ -11,7 +11,7 @@ import 'package:exchangilymobileapp/utils/string_util.dart' as StringUtil;
 import 'package:flutter/material.dart';
 import 'package:web3dart/crypto.dart' as CryptoWeb3;
 import 'package:crypto/crypto.dart' as CryptoHash;
-import 'trx_generate_address_util.dart' as TrxUtil;
+// import 'trx_generate_address_util.dart' as TrxUtil;
 import 'package:fixnum/fixnum.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/protos_gen/any.pb.dart';
@@ -28,7 +28,7 @@ Future generateTrxTransactionContract(
     @required String tickerName}) async {
   int decimal = 0;
   print(
-      'tickername $tickerName -- from $fromAddr -- to $toAddr -- amount $amount --  isTrxUsdt $isTrxUsdt');
+      'tickername $tickerName -- from $fromAddr -- to $toAddr -- amount $amount --  isTrxUsdt $isTrxUsdt -- private key $privateKey');
   String contractAddress = '';
   final tokenListDatabaseService = locator<TokenListDatabaseService>();
   final apiService = locator<ApiService>();
@@ -112,7 +112,7 @@ Future generateTrxTransactionContract(
     );
   } else {
     print('in else $fromAddress -- $toAddress -- $bigIntAmountToInt64 ');
-    Tron.TransferContract(
+   trans = Tron.TransferContract(
         ownerAddress: fromAddress,
         toAddress: toAddress,
         amount: bigIntAmountToInt64);
@@ -148,8 +148,9 @@ Future generateTrxTransactionContract(
   var contractBufferToHex = StringUtil.uint8ListToHex(contractBuffer);
   debugPrint('contractBufferToHex $contractBufferToHex');
   // gen raw tx
-  _generateTrxRawTransaction(
+ var res= _generateTrxRawTransaction(
       contract: contract, privateKey: privateKey, isTrxUsdt: true);
+      return res;
 }
 
 sendTrxTx(rawTx, ret, signature) {
@@ -253,7 +254,8 @@ _generateTrxRawTransaction(
   var txBufferHex = StringUtil.uint8ListToHex(txBuffer);
 
   print('txBufferHex ${txBufferHex}');
-  broadcastTronTransaction(txBufferHex);
+ var res =  broadcastTronTransaction(txBufferHex);
+ return res;
 }
 
 /*----------------------------------------------------------------------

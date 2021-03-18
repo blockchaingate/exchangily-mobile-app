@@ -302,9 +302,17 @@ class MoveToWalletViewmodel extends BaseState {
     withdrawLimit = environment["minimumWithdraw"][walletInfo.tickerName];
     print('wl $withdrawLimit');
     if (withdrawLimit == null) {
-      await tokenListDatabaseService
-          .getByTickerName(walletInfo.tickerName)
-          .then((token) => withdrawLimit = double.parse(token.minWithdraw));
+      await apiService.getTokenList().then((token) {
+        token.forEach((token) {
+          if (token.tickerName == walletInfo.tickerName)
+            withdrawLimit = double.parse(token.minWithdraw);
+        });
+      });
+      if (withdrawLimit == null) {
+        await tokenListDatabaseService
+            .getByTickerName(walletInfo.tickerName)
+            .then((token) => withdrawLimit = double.parse(token.minWithdraw));
+      }
     }
     setBusy(false);
   }

@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -45,6 +46,7 @@ class SendScreenState extends BaseState {
   final log = getLogger('SendScreenState');
 
   DialogService _dialogService = locator<DialogService>();
+  final apiService = locator<ApiService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
@@ -215,9 +217,17 @@ class SendScreenState extends BaseState {
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
                 tickerName: walletInfo.tickerName)
             .then((res) {
-          log.w('trx tx res $res');
-          // add tx to db
-          addSendTransactionToDB(walletInfo, amount, txHash);
+          if (res['code'] == 'SUCCESS') {
+            log.w('trx tx res $res');
+            txHash = res['txid'];
+            sharedService.alertDialog(
+              AppLocalizations.of(context).sendTransactionComplete,
+              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+            );
+            // add tx to db
+            addSendTransactionToDB(walletInfo, amount, txHash);
+          } else {}
+          setState(ViewState.Idle);
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           setState(ViewState.Idle);
@@ -344,10 +354,34 @@ class SendScreenState extends BaseState {
     }
   }
 
+  /*----------------------------------------------------------------------
+                    Refresh Balance
+----------------------------------------------------------------------*/
+  refreshBalance() async {
+    setState(ViewState.Busy);
+
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    await apiService
+        .getSingleWalletBalance(
+            fabAddress, walletInfo.tickerName, walletInfo.address)
+        .then((walletBalance) {
+      if (walletBalance != null) {
+        log.w(walletBalance);
+
+        walletInfo.availableBalance = walletBalance[0].balance;
+      }
+    }).catchError((err) {
+      log.e(err);
+      setBusy(false);
+      throw Exception(err);
+    });
+     setState(ViewState.Idle);
+  }
+
 /*-----------------------------------------------------------------------------------
     Check Fields to see if user has filled both address and amount fields correctly
 ------------------------------------------------------------------------------------*/
-  checkFields(context) {
+  checkFields(context) async {
     print('in check fields');
     txHash = '';
     errorMessage = '';
@@ -357,7 +391,7 @@ class SendScreenState extends BaseState {
     gasPrice = int.tryParse(gasPriceTextController.text);
     gasLimit = int.tryParse(gasLimitTextController.text);
     satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
-
+    await refreshBalance();
     if (toAddress == '') {
       print('address empty');
       sharedService.alertDialog(AppLocalizations.of(context).emptyAddress,

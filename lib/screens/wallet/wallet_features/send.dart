@@ -147,8 +147,10 @@ class SendWalletScreen extends StatelessWidget {
                                     model.checkAmount(amount);
                                     if (model.checkSendAmount == true &&
                                         model.amount <= bal) {
-                                      if (tickerName != 'TRX' ||
+                                      if (tickerName != 'TRX' &&
                                           tickerName != 'USDTX') {
+                                            print(tickerName);
+                                            print('not trx');
                                         model.updateTransFee();
                                       }
                                     }
