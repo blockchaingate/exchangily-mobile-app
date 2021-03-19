@@ -25,7 +25,8 @@ Future generateTrxTransactionContract(
     @required String toAddr,
     @required double amount,
     @required bool isTrxUsdt,
-    @required String tickerName}) async {
+    @required String tickerName,
+    @required bool isSend}) async {
   int decimal = 0;
   print(
       'tickername $tickerName -- from $fromAddr -- to $toAddr -- amount $amount --  isTrxUsdt $isTrxUsdt -- private key $privateKey');
@@ -112,7 +113,7 @@ Future generateTrxTransactionContract(
     );
   } else {
     print('in else $fromAddress -- $toAddress -- $bigIntAmountToInt64 ');
-   trans = Tron.TransferContract(
+    trans = Tron.TransferContract(
         ownerAddress: fromAddress,
         toAddress: toAddress,
         amount: bigIntAmountToInt64);
@@ -148,19 +149,22 @@ Future generateTrxTransactionContract(
   var contractBufferToHex = StringUtil.uint8ListToHex(contractBuffer);
   debugPrint('contractBufferToHex $contractBufferToHex');
   // gen raw tx
- var res= _generateTrxRawTransaction(
-      contract: contract, privateKey: privateKey, isTrxUsdt: true);
-      return res;
+  var res = _generateTrxRawTransaction(
+      contract: contract,
+      privateKey: privateKey,
+      isTrxUsdt: isTrxUsdt,
+      isSend: isSend);
+  return res;
 }
 
-sendTrxTx(rawTx, ret, signature) {
-  var transaction =
-      Tron.Transaction(rawData: rawTx, ret: [], signature: signature);
-  var txBuffer = transaction.writeToBuffer();
-  var txBufferHex = StringUtil.uint8ListToHex(txBuffer);
+// sendTrxTx(rawTx, ret, signature) {
+//   var transaction =
+//       Tron.Transaction(rawData: rawTx, ret: [], signature: signature);
+//   var txBuffer = transaction.writeToBuffer();
+//   var txBufferHex = StringUtil.uint8ListToHex(txBuffer);
 
-  print('txBufferHex ${txBufferHex}');
-}
+//   print('txBufferHex ${txBufferHex}');
+// }
 
 /*----------------------------------------------------------------------
                   Raw Transaction
@@ -168,7 +172,8 @@ sendTrxTx(rawTx, ret, signature) {
 _generateTrxRawTransaction(
     {@required Tron.Transaction_Contract contract,
     @required Uint8List privateKey,
-    @required bool isTrxUsdt}) async {
+    @required bool isTrxUsdt,
+    @required bool isSend}) async {
   ApiService _apiService = locator<ApiService>();
 // txRaw.SetRefBlockHash(blkhash)
 // txRaw.SetRefBlockBytes(blk.BlockHeader.Raw.Number)
@@ -251,11 +256,14 @@ _generateTrxRawTransaction(
           //rsvInList
           );
   var txBuffer = transaction.writeToBuffer();
-  var txBufferHex = StringUtil.uint8ListToHex(txBuffer);
+  var rawTxBufferHex = StringUtil.uint8ListToHex(txBuffer);
 
-  print('txBufferHex ${txBufferHex}');
- var res =  broadcastTronTransaction(txBufferHex);
- return res;
+  print('txBufferHex $rawTxBufferHex');
+  var res;
+  isSend
+      ? res = await broadcastTronTransaction(rawTxBufferHex)
+      : res = rawTxBufferHex;
+  return res;
 }
 
 /*----------------------------------------------------------------------

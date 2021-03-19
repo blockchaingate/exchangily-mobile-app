@@ -57,6 +57,11 @@ import 'package:exchangilymobileapp/utils/exaddr.dart';
 import 'package:web3dart/crypto.dart' as CryptoWeb3;
 import 'package:crypto/crypto.dart' as CryptoHash;
 
+import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
+    as TronAddressUtil;
+import 'package:exchangilymobileapp/utils/tron_util/trx_transaction_util.dart'
+    as TronTransactionUtil;
+
 class WalletService {
   final log = getLogger('Wallet Service');
 
@@ -1143,6 +1148,121 @@ class WalletService {
     }
     return res;
   }
+
+/*----------------------------------------------------------------------
+                    Tron Deposit
+----------------------------------------------------------------------*/
+  Future depositTron(
+      {String mnemonic,
+      WalletInfo walletInfo,
+      double amount,
+      bool isTrxUsdt,
+      bool isSend}) async {
+    /// get signed raw transaction hash
+    /// send that to api
+    ///
+    var officalAddress = getOfficalAddress(walletInfo.tickerName,
+        tokenType: walletInfo.tokenType);
+    print('official address in wallet service deposit do $officalAddress');
+    if (officalAddress == null) {
+      //errRes['data'] = 'no official address';
+      return;
+    }
+    var privateKey = TronAddressUtil.generateTrxPrivKey(mnemonic);
+    var rawTxHex = await TronTransactionUtil.generateTrxTransactionContract(
+        privateKey: privateKey,
+        fromAddr: walletInfo.address,
+        toAddr: officalAddress,
+        amount: amount,
+        isTrxUsdt: isTrxUsdt,
+        tickerName: walletInfo.tickerName,
+        isSend: isSend);
+
+    log.w('depositTron signed raw tx $rawTxHex');
+
+    var broadcastTxRes =
+        await TronTransactionUtil.broadcastTronTransaction(rawTxHex);
+
+    log.i('broadcastTxid $broadcastTxRes');
+
+// code  from depositDo
+
+    var coinType = await getCoinTypeIdByName(walletInfo.tickerName);
+    log.i('coin type $coinType');
+
+//var amountInTx = resST['amountInTx'];
+    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
+
+    //var amountInTxString = amountInTx.toString();
+    // var amountInLinkString = amountInLink.toString();
+
+    //  print('amountInTxString===' + amountInTxString);
+    //  print('amountInLinkString===' + amountInLinkString);
+    // if (amountInLinkString.indexOf(amountInTxString) == -1) {
+    //   errRes['data'] = 'incorrect amount for two transactions';
+    //   return errRes;
+    // }
+    //  var subString = amountInLinkString.substring(amountInTxString.length);
+    // if (subString != null && subString != '') {
+    //   var zero = int.parse(subString);
+    //   if (zero != 0) {
+    //     errRes['data'] = 'unequal amount for two transactions';
+    //     return errRes;
+    //   }
+    // }
+
+    // if (coinType == 0) {
+    //   errRes['data'] = 'invalid coinType for ' + coinName;
+    //   return errRes;
+    // }
+    var seed = generateSeed(mnemonic);
+    var keyPairKanban = getExgKeyPair(seed);
+    var addressInKanban = keyPairKanban["address"];
+
+    var originalMessage = getOriginalMessage(
+        coinType,
+        stringUtils.trimHexPrefix(rawTxHex),
+        amountInLink,
+        stringUtils.trimHexPrefix(addressInKanban));
+    log.w('Original message $originalMessage');
+
+    var signedMess = await signedMessage(
+        originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
+    log.e('Signed message $signedMess');
+    var coinPoolAddress = await getCoinPoolAddress();
+
+    /// assinging coin type accoringly
+    /// If special deposits then take the coin type of the respective chain coin
+    var sepcialcoinType;
+    var abiHex;
+    if (walletInfo.tickerName == 'USDTX') {
+      sepcialcoinType = await getCoinTypeIdByName('TRX');
+      abiHex = getDepositFuncABI(
+          sepcialcoinType, rawTxHex, amountInLink, addressInKanban, signedMess,
+          coinName: walletInfo.tickerName,
+          chain: walletInfo.tokenType,
+          isSpecialDeposit: true);
+
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else {
+      abiHex = getDepositFuncABI(coinType, broadcastTxRes['txid'], amountInLink,
+          addressInKanban, signedMess,
+          coinName: walletInfo.tickerName, chain: walletInfo.tokenType);
+      log.i('cointype $coinType -- abihex $abiHex');
+    }
+    var nonce = await getNonce(addressInKanban);
+
+    var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
+        HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, 0, 0);
+
+    var res = await submitDeposit(rawTxHex, txKanbanHex);
+
+    res['txids'] = txids;
+    return res;
+
+    // TRON deposit ends here
+  }
+
 /*----------------------------------------------------------------------
                 Future Deposit Do
 ----------------------------------------------------------------------*/

@@ -243,7 +243,7 @@ Map productionConfig = {
       },
       {'name': 'LTC', 'address': 'LaX6sfX8RoHbQHNDEBmdzyBMN9vFa95FXL'},
       {'name': 'DOGE', 'address': 'DLSF9i9weYwpgUrendmuGiHC35HGoHuvR9'},
-      {'name': 'TRX', 'address': 'TRX:TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'}
+      {'name': 'TRX', 'address': 'TGfvRWxddNoWrghwE5zC1JEcbXyMdPATdo'}
     ],
     "campaignAddress": {'USDT': '0x4e93c47b42d09f61a31f798877329890791077b2'}
   },

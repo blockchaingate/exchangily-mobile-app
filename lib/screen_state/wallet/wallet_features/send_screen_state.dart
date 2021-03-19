@@ -215,7 +215,8 @@ class SendScreenState extends BaseState {
                 toAddr: toAddress,
                 amount: amount,
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
-                tickerName: walletInfo.tickerName)
+                tickerName: walletInfo.tickerName,
+                isSend: true)
             .then((res) {
           if (res['code'] == 'SUCCESS') {
             log.w('trx tx res $res');
@@ -375,7 +376,7 @@ class SendScreenState extends BaseState {
       setBusy(false);
       throw Exception(err);
     });
-     setState(ViewState.Idle);
+    setState(ViewState.Idle);
   }
 
 /*-----------------------------------------------------------------------------------

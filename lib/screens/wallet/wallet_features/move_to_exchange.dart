@@ -68,7 +68,12 @@ class MoveToExchangeScreen extends StatelessWidget {
               TextField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 onChanged: (String amount) {
-                  model.updateTransFee();
+                  if (walletInfo.tickerName != 'TRX' &&
+                      walletInfo.tickerName != 'USDTX') {
+                    print(walletInfo.tickerName);
+                    print('not trx');
+                    model.updateTransFee();
+                  }
                 },
                 decoration: InputDecoration(
                   // suffix: Text(

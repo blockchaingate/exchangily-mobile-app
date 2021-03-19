@@ -42,11 +42,14 @@ import 'package:pointycastle/macs/hmac.dart';
 
 import 'varuint.dart';
 import '../environments/coins.dart' as coinList;
+import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
+    as TronAddressUtil;
+import 'package:exchangilymobileapp/utils/tron_util/trx_transaction_util.dart'
+    as TronTransactionUtil;
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
 final log = getLogger('coin_util');
-
 
 /*----------------------------------------------------------------------
                 Sign TRX tx
@@ -86,8 +89,6 @@ List<Uint8List> signTrxTx(
   print('rsv list $rsvList');
   return rsvList;
 }
-
-
 
 /*----------------------------------------------------------------------
                 Convert Decimal to Hex
@@ -434,13 +435,32 @@ Uint8List magicHashDoge(String message, [NetworkType network]) {
   return hash256(buffer);
 }
 
-signedMessage(String originalMessage, seed, coinName, tokenType) async {
+signedMessage(String originalMessage, seed, coinName, tokenType,
+    {String mnemonic}) async {
   var r = '';
   var s = '';
   var v = '';
 
   var signedMess;
-  if (coinName == 'ETH' || tokenType == 'ETH') {
+  if (coinName == 'TRX' || tokenType == 'TRX') {
+    var privateKey = TronAddressUtil.generateTrxPrivKey(mnemonic);
+    signedMess = signTrxTx(originalMessage, privateKey);
+    String ss = HEX.encode(signedMess);
+
+    r = ss.substring(0, 64);
+    s = ss.substring(64, 128);
+    v = ss.substring(128);
+
+    var recovery = int.parse(v);
+    var compressed = true;
+    var sigwitType;
+    v = encodeSignature(signedMess, recovery, compressed, sigwitType);
+
+    return {'r': r, 's': s, 'v': v};
+  }
+
+  // other coins signed message
+  else if (coinName == 'ETH' || tokenType == 'ETH') {
     final root = bip32.BIP32.fromSeed(seed);
     var coinType = environment["CoinType"]["ETH"];
     final ethCoinChild =

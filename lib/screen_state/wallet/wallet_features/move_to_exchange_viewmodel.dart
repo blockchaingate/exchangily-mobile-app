@@ -54,7 +54,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
   String serverError = '';
   String specialTicker = '';
 
-  
   void initState() async {
     setBusy(true);
     coinName = walletInfo.tickerName;
@@ -237,69 +236,109 @@ class MoveToExchangeViewModel extends BaseViewModel {
       };
       log.i(
           '3 - -$seed, -- ${walletInfo.tickerName}, --   $amount, - - $option');
-      await walletService
-          .depositDo(
-              seed, walletInfo.tickerName, walletInfo.tokenType, amount, option)
-          .then((ret) {
-        log.w(ret);
+      // TRON Transaction
+      if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+        log.i('depositing tron ${walletInfo.tickerName}');
 
-        bool success = ret["success"];
-        if (success) {
-          amountController.text = '';
-          String txId = ret['data']['transactionID'];
+        await walletService
+            .depositTron(
+                mnemonic: mnemonic,
+                walletInfo: walletInfo,
+                amount: amount,
+                isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
+                isSend: false)
+            .then((res) {
+          // if (res['code'] == 'SUCCESS') {
+          //   log.w('trx tx res $res');
+          //   txHash = res['txid'];
+          //   sharedService.alertDialog(
+          //     AppLocalizations.of(context).sendTransactionComplete,
+          //     '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+          //   );
+          // } else {}
+        }).timeout(Duration(seconds: 25), onTimeout: () {
+          log.e('In time out');
+          setBusy(false);
+          sharedService.alertDialog(AppLocalizations.of(context).notice,
+              AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater,
+              isWarning: false);
+        }).catchError((error) {
+          log.e('In Catch error - $error');
+          sharedService.alertDialog(AppLocalizations.of(context).serverError,
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+              isWarning: false);
 
-          var allTxids = ret["txids"];
-          walletService.addTxids(allTxids);
-          isShowErrorDetailsButton = false;
-          isShowDetailsMessage = false;
-          message = txId.toString();
-        } else {
-          if (ret.containsKey("error") && ret["error"] != null) {
-            serverError = ret['error'];
-            isShowErrorDetailsButton = true;
-          } else if (ret["message"] != null) {
-            serverError = ret['message'];
-            isShowErrorDetailsButton = true;
+          setBusy(false);
+        });
+      }
+
+      // Normal DEPOSIT
+
+      else {
+        await walletService
+            .depositDo(seed, walletInfo.tickerName, walletInfo.tokenType,
+                amount, option)
+            .then((ret) {
+          log.w(ret);
+
+          bool success = ret["success"];
+          if (success) {
+            amountController.text = '';
+            String txId = ret['data']['transactionID'];
+
+            var allTxids = ret["txids"];
+            walletService.addTxids(allTxids);
+            isShowErrorDetailsButton = false;
+            isShowDetailsMessage = false;
+            message = txId.toString();
+          } else {
+            if (ret.containsKey("error") && ret["error"] != null) {
+              serverError = ret['error'];
+              isShowErrorDetailsButton = true;
+            } else if (ret["message"] != null) {
+              serverError = ret['message'];
+              isShowErrorDetailsButton = true;
+            }
           }
-        }
-        showSimpleNotification(
-            Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  success
-                      ? Text(AppLocalizations.of(context)
-                          .depositTransactionSuccess)
-                      : Text(AppLocalizations.of(context)
-                          .depositTransactionFailed),
-                  success
-                      ? Text("")
-                      : ret["data"] != null
-                          ? Text(ret["data"])
-                          : Text(AppLocalizations.of(context).serverError),
-                ]),
-            position: NotificationPosition.bottom,
-            background: primaryColor);
+          showSimpleNotification(
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    success
+                        ? Text(AppLocalizations.of(context)
+                            .depositTransactionSuccess)
+                        : Text(AppLocalizations.of(context)
+                            .depositTransactionFailed),
+                    success
+                        ? Text("")
+                        : ret["data"] != null
+                            ? Text(ret["data"])
+                            : Text(AppLocalizations.of(context).serverError),
+                  ]),
+              position: NotificationPosition.bottom,
+              background: primaryColor);
 
-        // sharedService.alertDialog(
-        //     success
-        //         ? AppLocalizations.of(context).depositTransactionSuccess
-        //         : AppLocalizations.of(context).depositTransactionFailed,
-        //     success
-        //         ? ""
-        //         : ret.containsKey("error") && ret["error"] != null
-        //             ? ret["error"]
-        //             : AppLocalizations.of(context).serverError,
-        //     isWarning: false);
-      }).catchError((onError) {
-        log.e('Deposit Catch $onError');
+          // sharedService.alertDialog(
+          //     success
+          //         ? AppLocalizations.of(context).depositTransactionSuccess
+          //         : AppLocalizations.of(context).depositTransactionFailed,
+          //     success
+          //         ? ""
+          //         : ret.containsKey("error") && ret["error"] != null
+          //             ? ret["error"]
+          //             : AppLocalizations.of(context).serverError,
+          //     isWarning: false);
+        }).catchError((onError) {
+          log.e('Deposit Catch $onError');
 
-        sharedService.alertDialog(
-            AppLocalizations.of(context).depositTransactionFailed,
-            AppLocalizations.of(context).serverError,
-            isWarning: false);
-        serverError = onError.toString();
-      });
+          sharedService.alertDialog(
+              AppLocalizations.of(context).depositTransactionFailed,
+              AppLocalizations.of(context).serverError,
+              isWarning: false);
+          serverError = onError.toString();
+        });
+      }
     } else {
       if (res.returnedText != 'Closed') {
         showNotification(context);
@@ -320,7 +359,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             fabAddress, walletInfo.tickerName, walletInfo.address)
         .then((walletBalance) {
       if (walletBalance != null) {
-        log.w(walletBalance);
+        log.w(walletBalance[0].balance);
         walletInfo.availableBalance = walletBalance[0].balance;
       }
     }).catchError((err) {
