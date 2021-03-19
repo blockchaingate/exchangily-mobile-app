@@ -59,10 +59,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
     coinName = walletInfo.tickerName;
     coinName = walletInfo.tickerName;
     tokenType = walletInfo.tokenType;
-    if (coinName != 'TRX' && coinName != 'USDTX') setFee();
+    if (coinName != 'TRX' && coinName != 'USDTX') {
+      setFee();
+      await getGas();
+    }
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
-    await getGas();
     refreshBalance();
     await getDecimalData();
     setBusy(false);
@@ -161,7 +163,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    if (gasAmount == 0.0 || gasAmount < 0.5) {
+    if ((gasAmount == 0.0 || gasAmount < 0.5) &&
+        walletInfo.tickerName != 'TRX' &&
+        walletInfo.tickerName != 'USDTX') {
       sharedService.alertDialog(
         AppLocalizations.of(context).notice,
         AppLocalizations.of(context).insufficientGasAmount,
@@ -192,8 +196,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
             AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
         buttonTitle: AppLocalizations.of(context).confirm);
     if (res.confirmed) {
+      var seed;
       String mnemonic = res.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
+      if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX')
+        seed = walletService.generateSeed(mnemonic);
       log.i('wallet info  ${walletInfo.toJson()}');
       // if (coinName == 'USDT' || coinName == 'HOT') {
       //   tokenType = 'ETH';
@@ -246,7 +252,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
                 walletInfo: walletInfo,
                 amount: amount,
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
-                isSend: false)
+                isBroadcast: false)
             .then((res) {
           // if (res['code'] == 'SUCCESS') {
           //   log.w('trx tx res $res');

@@ -19,7 +19,6 @@ import 'package:hex/hex.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:web3dart/src/utils/rlp.dart' as rlp;
 import 'dart:typed_data';
-import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
 // {"success":true,"data":{"transactionID":"3ba8d681cddea5376c9b6ab2963ff243160fa086ec0681a67a3206ad80284d76"}}
 

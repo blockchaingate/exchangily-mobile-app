@@ -110,52 +110,65 @@ class MoveToExchangeScreen extends StatelessWidget {
                   )
                 ],
               ),
-              UIHelper.verticalSpaceSmall,
-              Row(
-                children: <Widget>[
-                  Text(AppLocalizations.of(context).gasFee,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(fontWeight: FontWeight.w300)),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left:
-                            5), // padding left to keep some space from the text
-                    child: Text('${model.transFee.toStringAsFixed(4)}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(fontWeight: FontWeight.w300)),
-                  )
-                ],
+
+              Container(
+                child: walletInfo.tickerName == 'TRX' ||
+                        walletInfo.tickerName == 'USDTX'
+                    ? Container(
+                        padding: EdgeInsets.only(top: 10, bottom: 0),
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                            '${AppLocalizations.of(context).fee}: 15 TRX',
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.headline6),
+                      )
+                    : Column(
+                        children: [
+                          Row(
+                            children: <Widget>[
+                              Text(AppLocalizations.of(context).gasFee,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .copyWith(fontWeight: FontWeight.w300)),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left:
+                                        5), // padding left to keep some space from the text
+                                child: Text(
+                                    '${model.transFee.toStringAsFixed(4)}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(fontWeight: FontWeight.w300)),
+                              )
+                            ],
+                          ),
+                          // Kanaban Gas Fee Row
+                          Row(
+                            children: <Widget>[
+                              Text(AppLocalizations.of(context).kanbanGasFee,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .copyWith(fontWeight: FontWeight.w300)),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left:
+                                        5), // padding left to keep some space from the text
+                                child: Text(
+                                    '${model.kanbanTransFee.toStringAsFixed(4)}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(fontWeight: FontWeight.w300)),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
               ),
-              UIHelper.verticalSpaceSmall,
-              // Kanaban Gas Fee Row
-              Row(
-                children: <Widget>[
-                  Text(AppLocalizations.of(context).kanbanGasFee,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(fontWeight: FontWeight.w300)),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        left:
-                            5), // padding left to keep some space from the text
-                    child: Text('${model.kanbanTransFee.toStringAsFixed(4)}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5
-                            .copyWith(fontWeight: FontWeight.w300)),
-                  )
-                ],
-              ),
-// test
-              // Container(
-              //   child: ElevatedButton(
-              //       onPressed: () => model.getData(), child: Text('click me')),
-              // ),
+
               // Switch Row
               Row(
                 children: <Widget>[

@@ -39,23 +39,65 @@ import "package:pointycastle/ecc/curves/secp256k1.dart";
 import "package:pointycastle/digests/sha256.dart";
 import "package:pointycastle/signers/ecdsa_signer.dart";
 import 'package:pointycastle/macs/hmac.dart';
-
+import 'package:crypto/crypto.dart' as CryptoHash;
 import 'varuint.dart';
 import '../environments/coins.dart' as coinList;
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as TronAddressUtil;
-import 'package:exchangilymobileapp/utils/tron_util/trx_transaction_util.dart'
-    as TronTransactionUtil;
+import 'package:web3dart/crypto.dart' as CryptoWeb3;
+
+import 'package:exchangilymobileapp/constants/constants.dart';
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
 final log = getLogger('coin_util');
 
 /*----------------------------------------------------------------------
-                Sign TRX tx
+                Sign deposit TRX tx
+--------------r--------------------------------------------------------*/
+List<Uint8List> signTrxMessage(
+  Uint8List hash,
+  Uint8List privateKey,
+) {
+  print('sign trx');
+  String prefix = Constants.TronChainPrefix;
+  var prefixHex = int.tryParse(prefix, radix: 16);
+  var hashedRes = CryptoWeb3.keccak256(hash);
+  var signature = sign(hashedRes, privateKey);
+
+  // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
+  // be aware that signature.v already is recovery + 27
+
+  print('signature v ${signature.v}');
+
+  final chainIdV = signature.v;
+
+  print('chainIdV $chainIdV');
+  //final chainIdV = signature.v;
+  signature = MsgSignature(signature.r, signature.s, chainIdV);
+
+  //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
+  //print('signature.v====');
+  //print(signature.v);
+  final r = _padTo32(intToBytes(signature.r));
+  final s = _padTo32(intToBytes(signature.s));
+  var v = intToBytes(BigInt.from(signature.v));
+
+  if (signature.v == 0) {
+    v = Uint8List.fromList([0].toList());
+  }
+  List<Uint8List> rsvList = [];
+  var res = r + s + v;
+  rsvList.add(Uint8List.fromList(res));
+  print('rsv list $rsvList');
+  return rsvList;
+}
+
+/*----------------------------------------------------------------------
+                Sign TRX transaction for send
 --------------r--------------------------------------------------------*/
 List<Uint8List> signTrxTx(
-  hash,
+  Uint8List hash,
   Uint8List privateKey,
 ) {
   print('sign trx');
@@ -435,16 +477,22 @@ Uint8List magicHashDoge(String message, [NetworkType network]) {
   return hash256(buffer);
 }
 
-signedMessage(String originalMessage, seed, coinName, tokenType,
-    {String mnemonic}) async {
+signedMessage(
+  String originalMessage,
+  seed,
+  coinName,
+  tokenType,
+) async {
   var r = '';
   var s = '';
   var v = '';
 
   var signedMess;
   if (coinName == 'TRX' || tokenType == 'TRX') {
-    var privateKey = TronAddressUtil.generateTrxPrivKey(mnemonic);
-    signedMess = signTrxTx(originalMessage, privateKey);
+    var privateKey = TronAddressUtil.generateTrxPrivKeyBySeed(seed);
+    var bytes = stringToUint8List(originalMessage);
+    print(bytes);
+    signedMess = signTrxMessage(bytes, privateKey);
     String ss = HEX.encode(signedMess);
 
     r = ss.substring(0, 64);

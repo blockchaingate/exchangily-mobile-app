@@ -1157,7 +1157,7 @@ class WalletService {
       WalletInfo walletInfo,
       double amount,
       bool isTrxUsdt,
-      bool isSend}) async {
+      bool isBroadcast}) async {
     /// get signed raw transaction hash
     /// send that to api
     ///
@@ -1168,62 +1168,44 @@ class WalletService {
       //errRes['data'] = 'no official address';
       return;
     }
+    var seed = generateSeed(mnemonic);
+    // var root = generateBip32Root(seed);
     var privateKey = TronAddressUtil.generateTrxPrivKey(mnemonic);
-    var rawTxHex = await TronTransactionUtil.generateTrxTransactionContract(
+    var txRes = await TronTransactionUtil.generateTrxTransactionContract(
         privateKey: privateKey,
         fromAddr: walletInfo.address,
         toAddr: officalAddress,
         amount: amount,
         isTrxUsdt: isTrxUsdt,
         tickerName: walletInfo.tickerName,
-        isSend: isSend);
+        isBroadcast: isBroadcast);
 
-    log.w('depositTron signed raw tx $rawTxHex');
+    log.w('depositTron signed raw tx $txRes');
+    CryptoHash.Digest hashedTxId = txRes["hashedRawTxBufferBeforeSign"];
+    String txId = stringUtils.uint8ListToHex(hashedTxId.bytes);
+    var txHex = txRes["rawTxBufferHexAfterSign"];
 
-    var broadcastTxRes =
-        await TronTransactionUtil.broadcastTronTransaction(rawTxHex);
+    // var broadcastTxRes =
+    //     await TronTransactionUtil.broadcastTronTransaction(rawTxHex);
 
-    log.i('broadcastTxid $broadcastTxRes');
+    //log.i('broadcastTxid $broadcastTxRes');
 
 // code  from depositDo
 
     var coinType = await getCoinTypeIdByName(walletInfo.tickerName);
     log.i('coin type $coinType');
 
-//var amountInTx = resST['amountInTx'];
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
 
-    //var amountInTxString = amountInTx.toString();
-    // var amountInLinkString = amountInLink.toString();
-
-    //  print('amountInTxString===' + amountInTxString);
-    //  print('amountInLinkString===' + amountInLinkString);
-    // if (amountInLinkString.indexOf(amountInTxString) == -1) {
-    //   errRes['data'] = 'incorrect amount for two transactions';
-    //   return errRes;
-    // }
-    //  var subString = amountInLinkString.substring(amountInTxString.length);
-    // if (subString != null && subString != '') {
-    //   var zero = int.parse(subString);
-    //   if (zero != 0) {
-    //     errRes['data'] = 'unequal amount for two transactions';
-    //     return errRes;
-    //   }
-    // }
-
-    // if (coinType == 0) {
-    //   errRes['data'] = 'invalid coinType for ' + coinName;
-    //   return errRes;
-    // }
-    var seed = generateSeed(mnemonic);
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
 
     var originalMessage = getOriginalMessage(
         coinType,
-        stringUtils.trimHexPrefix(rawTxHex),
+        stringUtils.trimHexPrefix(txId),
         amountInLink,
         stringUtils.trimHexPrefix(addressInKanban));
+
     log.w('Original message $originalMessage');
 
     var signedMess = await signedMessage(
@@ -1238,15 +1220,15 @@ class WalletService {
     if (walletInfo.tickerName == 'USDTX') {
       sepcialcoinType = await getCoinTypeIdByName('TRX');
       abiHex = getDepositFuncABI(
-          sepcialcoinType, rawTxHex, amountInLink, addressInKanban, signedMess,
+          sepcialcoinType, txId, amountInLink, addressInKanban, signedMess,
           coinName: walletInfo.tickerName,
           chain: walletInfo.tokenType,
           isSpecialDeposit: true);
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
-      abiHex = getDepositFuncABI(coinType, broadcastTxRes['txid'], amountInLink,
-          addressInKanban, signedMess,
+      abiHex = getDepositFuncABI(
+          coinType, txId, amountInLink, addressInKanban, signedMess,
           coinName: walletInfo.tickerName, chain: walletInfo.tokenType);
       log.i('cointype $coinType -- abihex $abiHex');
     }
@@ -1255,7 +1237,7 @@ class WalletService {
     var txKanbanHex = await signAbiHexWithPrivateKey(abiHex,
         HEX.encode(keyPairKanban["privateKey"]), coinPoolAddress, nonce, 0, 0);
 
-    var res = await submitDeposit(rawTxHex, txKanbanHex);
+    var res = await submitDeposit(txHex, txKanbanHex);
 
     res['txids'] = txids;
     return res;

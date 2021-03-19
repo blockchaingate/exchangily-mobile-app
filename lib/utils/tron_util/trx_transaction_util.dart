@@ -26,7 +26,7 @@ Future generateTrxTransactionContract(
     @required double amount,
     @required bool isTrxUsdt,
     @required String tickerName,
-    @required bool isSend}) async {
+    @required bool isBroadcast}) async {
   int decimal = 0;
   print(
       'tickername $tickerName -- from $fromAddr -- to $toAddr -- amount $amount --  isTrxUsdt $isTrxUsdt -- private key $privateKey');
@@ -153,7 +153,7 @@ Future generateTrxTransactionContract(
       contract: contract,
       privateKey: privateKey,
       isTrxUsdt: isTrxUsdt,
-      isSend: isSend);
+      isBroadcast: isBroadcast);
   return res;
 }
 
@@ -173,7 +173,7 @@ _generateTrxRawTransaction(
     {@required Tron.Transaction_Contract contract,
     @required Uint8List privateKey,
     @required bool isTrxUsdt,
-    @required bool isSend}) async {
+    @required bool isBroadcast}) async {
   ApiService _apiService = locator<ApiService>();
 // txRaw.SetRefBlockHash(blkhash)
 // txRaw.SetRefBlockBytes(blk.BlockHeader.Raw.Number)
@@ -237,9 +237,10 @@ _generateTrxRawTransaction(
   debugPrint('txRawBufferToHex $txRawBufferToHex');
   var hashedRawTxBuffer = CryptoHash.sha256.convert(txRawBuffer);
   print('hashedRawTxBuffer $hashedRawTxBuffer');
+  // 03a26eb816b1f5e16bb0330b2eab776215434c3cc94ac1b2e31435607d18a700
 
   // address gen by the priv key TWxNjGUkn2Dc6Avh9zZy8thMt5mBqVWjnP
-  print('priv key hex ${StringUtil.uint8ListToHex(privateKey)}');
+  // print('priv key hex ${StringUtil.uint8ListToHex(privateKey)}');
   // var keyPair = ECPair.fromPrivateKey(privateKey);
   // print('keypair ${uint8ListToHex(keyPair.privateKey)}');
 
@@ -250,7 +251,7 @@ _generateTrxRawTransaction(
   // var rsvInList = constructTrxSigntureList(signature);
   // fill transaction object
   //  sendTrxTx(rawTx, [], signature);
-
+  print('signature $signature');
   var transaction =
       Tron.Transaction(rawData: rawTx, ret: [], signature: signature
           //rsvInList
@@ -259,11 +260,18 @@ _generateTrxRawTransaction(
   var rawTxBufferHex = StringUtil.uint8ListToHex(txBuffer);
 
   print('txBufferHex $rawTxBufferHex');
-  var res;
-  isSend
-      ? res = await broadcastTronTransaction(rawTxBufferHex)
-      : res = rawTxBufferHex;
-  return res;
+
+  var broadcastTronTransactionRes;
+  if (isBroadcast)
+    broadcastTronTransactionRes =
+        await broadcastTronTransaction(rawTxBufferHex);
+
+  return {
+    "broadcastTronTransactionRes": broadcastTronTransactionRes,
+    "rawTxBufferHexAfterSign": rawTxBufferHex,
+    "hashedRawTxBufferBeforeSign": hashedRawTxBuffer,
+    "rawTxBufferToHexBeforeHash": txRawBufferToHex
+  };
 }
 
 /*----------------------------------------------------------------------
