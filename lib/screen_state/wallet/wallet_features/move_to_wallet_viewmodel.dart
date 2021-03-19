@@ -370,11 +370,21 @@ class MoveToWalletViewmodel extends BaseState {
       tickerName == 'FAB'
           ? await getFabBalance()
           : await getFabChainBalance(tickerName);
+          tickerName == 'TRX'? await getTrxTsWalletBalance(): await getTrx20TsWalletBalance();
     }
     log.w('chainBalances $chainBalances');
     setBusy(false);
   }
 
+/*----------------------------------------------------------------------
+                        TRX 20 Balance
+----------------------------------------------------------------------*/
+getTrxTsWalletBalance() async{
+
+}
+getTrx20TsWalletBalance() async{
+
+}
 /*----------------------------------------------------------------------
                         Fab Chain Balance
 ----------------------------------------------------------------------*/
