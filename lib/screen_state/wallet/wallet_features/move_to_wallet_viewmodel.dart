@@ -58,10 +58,12 @@ class MoveToWalletViewmodel extends BaseState {
   List<Map<String, dynamic>> chainBalances = [];
   var ethChainBalance;
   var fabChainBalance;
+  var trxTsWalletBalance;
   bool isWithdrawChoice = false;
   String _groupValue;
   get groupValue => _groupValue;
   bool isShowFabChainBalance = false;
+  bool isShowTrxTsWalletBalance = false;
   String specialTicker = '';
   String updateTickerForErc = '';
   bool isAlert = false;
@@ -96,6 +98,10 @@ class MoveToWalletViewmodel extends BaseState {
         walletInfo.tickerName == 'BST') {
       _groupValue = 'FAB';
       isShowFabChainBalance = true;
+    }
+    if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+      _groupValue = 'TRX';
+      isShowTrxTsWalletBalance = true;
     }
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
@@ -356,7 +362,8 @@ class MoveToWalletViewmodel extends BaseState {
         walletInfo.tickerName == 'EXG') {
       tickerName = 'EXG';
       isWithdrawChoice = true;
-    } else if (walletInfo.tickerName == 'USDTX') {
+    } else if (walletInfo.tickerName == 'USDTX' ||
+        walletInfo.tickerName == 'TRX') {
       tickerName = 'TRX';
       isWithdrawChoice = true;
     } else
@@ -370,7 +377,9 @@ class MoveToWalletViewmodel extends BaseState {
       tickerName == 'FAB'
           ? await getFabBalance()
           : await getFabChainBalance(tickerName);
-          tickerName == 'TRX'? await getTrxTsWalletBalance(): await getTrx20TsWalletBalance();
+      tickerName == 'TRX'
+          ? await getTrxTsWalletBalance()
+          : await getTrx20TsWalletBalance();
     }
     log.w('chainBalances $chainBalances');
     setBusy(false);
@@ -379,12 +388,17 @@ class MoveToWalletViewmodel extends BaseState {
 /*----------------------------------------------------------------------
                         TRX 20 Balance
 ----------------------------------------------------------------------*/
-getTrxTsWalletBalance() async{
+  getTrxTsWalletBalance() async {
+    setBusy(true);
+    String fabAddress = getOfficalAddress('FAB');
+    await walletService.coinBalanceByAddress('TRX', fabAddress, '').then((res) {
+      log.e('fab res $res');
+      trxTsWalletBalance = res['balance'];
+    });
+    setBusy(false);
+  }
 
-}
-getTrx20TsWalletBalance() async{
-
-}
+  getTrx20TsWalletBalance() async {}
 /*----------------------------------------------------------------------
                         Fab Chain Balance
 ----------------------------------------------------------------------*/
@@ -470,6 +484,8 @@ getTrx20TsWalletBalance() async{
       updateTickerForErc = 'BSTE';
     } else if (walletInfo.tickerName == 'EXG') {
       updateTickerForErc = 'EXGE';
+    } else if (walletInfo.tickerName == 'TRX') {
+      updateTickerForErc = 'USDTX';
     } else {
       updateTickerForErc = walletInfo.tickerName;
     }
@@ -501,6 +517,13 @@ getTrx20TsWalletBalance() async{
       updateTickerForErc = walletInfo.tickerName;
       log.i('chain type ${walletInfo.tokenType}');
       setWithdrawLimit();
+    } else if (value == 'TRX') {
+      isShowTrxTsWalletBalance = true;
+      if (walletInfo.tickerName != 'TRX') walletInfo.tokenType = 'TRX';
+      if (walletInfo.tickerName == 'TRX') walletInfo.tokenType = '';
+      updateTickerForErc = walletInfo.tickerName;
+      log.i('chain type ${walletInfo.tokenType}');
+      setWithdrawLimit();
     } else {
       isShowFabChainBalance = false;
       walletInfo.tokenType = 'ETH';
@@ -518,6 +541,11 @@ getTrx20TsWalletBalance() async{
       } else if (walletInfo.tickerName == 'BST' && !isShowFabChainBalance) {
         await tokenListDatabaseService
             .getByTickerName('BSTE')
+            .then((token) => withdrawLimit = double.parse(token.minWithdraw));
+        log.i('withdrawLimit $withdrawLimit');
+      } else if (walletInfo.tickerName == 'TRX' && !isShowTrxTsWalletBalance) {
+        await tokenListDatabaseService
+            .getByTickerName('USDTX')
             .then((token) => withdrawLimit = double.parse(token.minWithdraw));
         log.i('withdrawLimit $withdrawLimit');
       }

@@ -215,10 +215,11 @@ class MoveToExchangeViewModel extends BaseViewModel {
       var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
       String tickerName = walletInfo.tickerName;
       var decimal;
-      BigInt bigIntAmount = BigInt.tryParse(amountController.text);
-      log.w('Big int amount $bigIntAmount');
-      String contractAddr =
-          environment["addresses"]["smartContract"][tickerName];
+      //  BigInt bigIntAmount = BigInt.tryParse(amountController.text);
+      // log.w('Big int amount $bigIntAmount');
+      String contractAddr = '';
+      if (walletInfo.tokenType.isNotEmpty)
+        contractAddr = environment["addresses"]["smartContract"][tickerName];
       if (contractAddr == null && tokenType != '') {
         log.i(
             '$tickerName with token type $tokenType contract is null so fetching from token database');
@@ -242,6 +243,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       };
       log.i(
           '3 - -$seed, -- ${walletInfo.tickerName}, --   $amount, - - $option');
+
       // TRON Transaction
       if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
         log.i('depositing tron ${walletInfo.tickerName}');
@@ -254,14 +256,30 @@ class MoveToExchangeViewModel extends BaseViewModel {
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
                 isBroadcast: false)
             .then((res) {
-          // if (res['code'] == 'SUCCESS') {
-          //   log.w('trx tx res $res');
-          //   txHash = res['txid'];
-          //   sharedService.alertDialog(
-          //     AppLocalizations.of(context).sendTransactionComplete,
-          //     '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
-          //   );
-          // } else {}
+          bool success = res["success"];
+          if (success) {
+            amountController.text = '';
+            String txId = res['data']['transactionID'];
+
+            var allTxids = res["txids"];
+            walletService.addTxids(allTxids);
+            isShowErrorDetailsButton = false;
+            isShowDetailsMessage = false;
+            message = txId.toString();
+
+            sharedService.alertDialog(
+              AppLocalizations.of(context).sendTransactionComplete,
+              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+            );
+          } else {
+            if (res.containsKey("error") && res["error"] != null) {
+              serverError = res['error'];
+              isShowErrorDetailsButton = true;
+            } else if (res["message"] != null) {
+              serverError = res['message'];
+              isShowErrorDetailsButton = true;
+            }
+          }
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           setBusy(false);

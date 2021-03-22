@@ -32,21 +32,17 @@ import './btc_util.dart';
 import "package:pointycastle/pointycastle.dart";
 import 'dart:typed_data';
 import 'dart:convert';
-import 'package:web3dart/crypto.dart';
 import "package:pointycastle/api.dart";
 import "package:pointycastle/impl.dart";
 import "package:pointycastle/ecc/curves/secp256k1.dart";
 import "package:pointycastle/digests/sha256.dart";
 import "package:pointycastle/signers/ecdsa_signer.dart";
 import 'package:pointycastle/macs/hmac.dart';
-import 'package:crypto/crypto.dart' as CryptoHash;
 import 'varuint.dart';
 import '../environments/coins.dart' as coinList;
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as TronAddressUtil;
 import 'package:web3dart/crypto.dart' as CryptoWeb3;
-
-import 'package:exchangilymobileapp/constants/constants.dart';
 
 final ECDomainParameters _params = ECCurve_secp256k1();
 final BigInt _halfCurveOrder = _params.n >> 1;
@@ -55,15 +51,19 @@ final log = getLogger('coin_util');
 /*----------------------------------------------------------------------
                 Sign deposit TRX tx
 --------------r--------------------------------------------------------*/
-List<Uint8List> signTrxMessage(
+signTrxMessage(
   Uint8List hash,
   Uint8List privateKey,
 ) {
-  print('sign trx');
-  String prefix = Constants.TronChainPrefix;
-  var prefixHex = int.tryParse(prefix, radix: 16);
-  var hashedRes = CryptoWeb3.keccak256(hash);
-  var signature = sign(hashedRes, privateKey);
+  Uint8List prefix = CryptoWeb3.hexToBytes('0x15');
+  print('prefix $prefix');
+  print('hash $hash');
+  var originalMessageWithPrefix = prefix + hash;
+  print(
+      'originalMessageWithPrefix ${CryptoWeb3.bytesToHex(originalMessageWithPrefix)}');
+  var hashedOriginalMessageWithPrefix =
+      CryptoWeb3.keccak256(Uint8List.fromList(originalMessageWithPrefix));
+  var signature = sign(hashedOriginalMessageWithPrefix, privateKey);
 
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
   // be aware that signature.v already is recovery + 27
@@ -74,23 +74,21 @@ List<Uint8List> signTrxMessage(
 
   print('chainIdV $chainIdV');
   //final chainIdV = signature.v;
-  signature = MsgSignature(signature.r, signature.s, chainIdV);
+  signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
 
   //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
   //print('signature.v====');
   //print(signature.v);
-  final r = _padTo32(intToBytes(signature.r));
-  final s = _padTo32(intToBytes(signature.s));
-  var v = intToBytes(BigInt.from(signature.v));
+  final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
+  final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
+  var v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
 
   if (signature.v == 0) {
     v = Uint8List.fromList([0].toList());
   }
-  List<Uint8List> rsvList = [];
-  var res = r + s + v;
-  rsvList.add(Uint8List.fromList(res));
-  print('rsv list $rsvList');
-  return rsvList;
+  var rsv = r + s + v;
+  print('rsv  $rsv');
+  return rsv;
 }
 
 /*----------------------------------------------------------------------
@@ -113,14 +111,14 @@ List<Uint8List> signTrxTx(
 
   print('chainIdV $chainIdV');
   //final chainIdV = signature.v;
-  signature = MsgSignature(signature.r, signature.s, chainIdV);
+  signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
 
   //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
   //print('signature.v====');
   //print(signature.v);
-  final r = _padTo32(intToBytes(signature.r));
-  final s = _padTo32(intToBytes(signature.s));
-  var v = intToBytes(BigInt.from(signature.v));
+  final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
+  final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
+  var v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
 
   if (signature.v == 0) {
     v = Uint8List.fromList([0].toList());
@@ -207,10 +205,10 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
 }
 */
 
-MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
+CryptoWeb3.MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
   final digest = SHA256Digest();
   final signer = ECDSASigner(null, HMac(digest, 64));
-  final key = ECPrivateKey(bytesToInt(privateKey), _params);
+  final key = ECPrivateKey(CryptoWeb3.bytesToInt(privateKey), _params);
 
   signer.init(true, PrivateKeyParameter(key));
   var sig = signer.generateSignature(messageHash) as ECSignature;
@@ -232,7 +230,8 @@ MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
     sig = ECSignature(sig.r, canonicalisedS);
   }
 
-  final publicKey = bytesToInt(privateKeyBytesToPublic(privateKey));
+  final publicKey =
+      CryptoWeb3.bytesToInt(CryptoWeb3.privateKeyBytesToPublic(privateKey));
   print("publicKey: " + publicKey.toString());
 
   //Implementation for calculating v naively taken from there, I don't understand
@@ -253,7 +252,7 @@ MsgSignature sign(Uint8List messageHash, Uint8List privateKey) {
         'Could not construct a recoverable key. This should never happen');
   }
 
-  return MsgSignature(sig.r, sig.s, recId);
+  return CryptoWeb3.MsgSignature(sig.r, sig.s, recId);
 }
 
 BigInt _recoverFromSignature(
@@ -271,7 +270,7 @@ BigInt _recoverFromSignature(
   final R = _decompressKey(x, (recId & 1) == 1, params.curve);
   if (!(R * n).isInfinity) return null;
 
-  final e = bytesToInt(msg);
+  final e = CryptoWeb3.bytesToInt(msg);
 
   final eInv = (BigInt.zero - e) % n;
   final rInv = sig.r.modInverse(n);
@@ -281,7 +280,7 @@ BigInt _recoverFromSignature(
   final q = (params.G * eInvrInv) + (R * srInv);
 
   final bytes = q.getEncoded(false);
-  return bytesToInt(bytes.sublist(1));
+  return CryptoWeb3.bytesToInt(bytes.sublist(1));
 }
 
 const _ethMessagePrefix = '\u0019Ethereum Signed Message:\n';
@@ -295,7 +294,7 @@ Uint8List uint8ListFromList(List<int> data) {
 ECPoint _decompressKey(BigInt xBN, bool yBit, ECCurve c) {
   List<int> x9IntegerToBytes(BigInt s, int qLength) {
     //https://github.com/bcgit/bc-java/blob/master/core/src/main/java/org/bouncycastle/asn1/x9/X9IntegerConverter.java#L45
-    final bytes = intToBytes(s);
+    final bytes = CryptoWeb3.intToBytes(s);
 
     if (qLength < bytes.length) {
       return bytes.sublist(0, bytes.length - qLength);
@@ -347,14 +346,14 @@ Future<Uint8List> signBtcMessageWith(originalMessage, Uint8List privateKey,
 
   //print('signature.vsignature.vsignature.v=' + signature.v.toString());
   final chainIdV = signature.v;
-  signature = MsgSignature(signature.r, signature.s, chainIdV);
+  signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
 
   //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
   //print('signature.v====');
   //print(signature.v);
-  final r = _padTo32(intToBytes(signature.r));
-  final s = _padTo32(intToBytes(signature.s));
-  var v = intToBytes(BigInt.from(signature.v));
+  final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
+  final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
+  var v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
 
   if (signature.v == 0) {
     v = Uint8List.fromList([0].toList());
@@ -386,14 +385,14 @@ Future<Uint8List> signDogeMessageWith(originalMessage, Uint8List privateKey,
 
   //print('signature.vsignature.vsignature.v=' + signature.v.toString());
   final chainIdV = signature.v;
-  signature = MsgSignature(signature.r, signature.s, chainIdV);
+  signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
 
   //print('chainIdVchainIdVchainIdV==' + chainIdV.toString());
   //print('signature.v====');
   //print(signature.v);
-  final r = _padTo32(intToBytes(signature.r));
-  final s = _padTo32(intToBytes(signature.s));
-  var v = intToBytes(BigInt.from(signature.v));
+  final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
+  final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
+  var v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
 
   if (signature.v == 0) {
     v = Uint8List.fromList([0].toList());
@@ -415,7 +414,7 @@ Future<Uint8List> signPersonalMessageWith(
 
   //final signature = await credential.signToSignature(concat, chainId: chainId);
 
-  var signature = sign(keccak256(concat), privateKey);
+  var signature = sign(CryptoWeb3.keccak256(concat), privateKey);
 
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
   // be aware that signature.v already is recovery + 27
@@ -429,11 +428,11 @@ Future<Uint8List> signPersonalMessageWith(
    */
   final chainIdV = signature.v + 27;
   print('chainIdV=' + chainIdV.toString());
-  signature = MsgSignature(signature.r, signature.s, chainIdV);
+  signature = CryptoWeb3.MsgSignature(signature.r, signature.s, chainIdV);
 
-  final r = _padTo32(intToBytes(signature.r));
-  final s = _padTo32(intToBytes(signature.s));
-  final v = intToBytes(BigInt.from(signature.v));
+  final r = _padTo32(CryptoWeb3.intToBytes(signature.r));
+  final s = _padTo32(CryptoWeb3.intToBytes(signature.s));
+  final v = CryptoWeb3.intToBytes(BigInt.from(signature.v));
 
   // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
   return uint8ListFromList(r + s + v);
@@ -490,9 +489,12 @@ signedMessage(
   var signedMess;
   if (coinName == 'TRX' || tokenType == 'TRX') {
     var privateKey = TronAddressUtil.generateTrxPrivKeyBySeed(seed);
-    var bytes = stringToUint8List(originalMessage);
-    print(bytes);
+    var bytes = CryptoWeb3.hexToBytes(originalMessage);
+
     signedMess = signTrxMessage(bytes, privateKey);
+    var signedMessHex = CryptoWeb3.bytesToHex(signedMess);
+    print(' signedMess hex $signedMessHex');
+
     String ss = HEX.encode(signedMess);
 
     r = ss.substring(0, 64);

@@ -13,6 +13,7 @@
 
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -61,6 +62,7 @@ Future<int> getNonce(String address) async {
   var client = new http.Client();
   var response = await client.get(url);
   var json = jsonDecode(response.body);
+  print('getNonce json $json');
   return json["transactionCount"];
 }
 
@@ -68,13 +70,17 @@ Future<Map<String, dynamic>> submitDeposit(
     String rawTransaction, String rawKanbanTransaction) async {
   ConfigService configService = locator<ConfigService>();
   var url = configService.getKanbanBaseUrl() + 'submitDeposit';
-  var data = {
+  print('submitDeposit url $url');
+  var body = {
     'rawTransaction': rawTransaction,
     'rawKanbanTransaction': rawKanbanTransaction
   };
+  print('body $body');
+
+   debugPrint('rawKanbanTransaction $rawKanbanTransaction');
   try {
     var client = new http.Client();
-    var response = await client.post(url, body: data);
+    var response = await client.post(url, body: body);
     print("Kanban_util submitDeposit response body:");
     print(response.body.toString());
     Map<String, dynamic> res = jsonDecode(response.body);

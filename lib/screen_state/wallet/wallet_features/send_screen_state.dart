@@ -216,7 +216,7 @@ class SendScreenState extends BaseState {
                 amount: amount,
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
                 tickerName: walletInfo.tickerName,
-                isSend: true)
+                isBroadcast: true)
             .then((res) {
           if (res['code'] == 'SUCCESS') {
             log.w('trx tx res $res');

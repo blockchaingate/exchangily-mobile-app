@@ -300,22 +300,43 @@ class MoveToWalletScreen extends StatelessWidget {
                               child: Row(
                               children: [
                                 // for (var chainBalance in model.chainBalances)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text('FAB Chain',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                    Radio(
-                                        activeColor: globals.primaryColor,
-                                        onChanged: (value) {
-                                          model.radioButtonSelection(value);
-                                        },
-                                        groupValue: model.groupValue,
-                                        value: 'FAB'),
-                                  ],
-                                ),
+                                model.isShowTrxTsWalletBalance
+                                    ? Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text('TRC20',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6),
+                                          Radio(
+                                              activeColor: globals.primaryColor,
+                                              onChanged: (value) {
+                                                model.radioButtonSelection(
+                                                    value);
+                                              },
+                                              groupValue: model.groupValue,
+                                              value: 'TRX'),
+                                        ],
+                                      )
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text('FAB Chain',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6),
+                                          Radio(
+                                              activeColor: globals.primaryColor,
+                                              onChanged: (value) {
+                                                model.radioButtonSelection(
+                                                    value);
+                                              },
+                                              groupValue: model.groupValue,
+                                              value: 'FAB'),
+                                        ],
+                                      ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -370,29 +391,65 @@ class MoveToWalletScreen extends StatelessWidget {
                                               : Container()
                                         ],
                                       )),
-                                      Container(
-                                          margin: EdgeInsets.only(left: 5.0),
-                                          child: model.fabChainBalance !=
-                                                      null &&
-                                                  model.ethChainBalance != null
-                                              ? model.isShowFabChainBalance
-                                                  ? Text(
-                                                      model.fabChainBalance
-                                                          .toString(),
-                                                      maxLines: 2,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6,
-                                                    )
-                                                  : Text(
-                                                      model.ethChainBalance
-                                                          .toString(),
-                                                      maxLines: 2,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .headline6,
-                                                    )
-                                              : Container()),
+                                      model.walletInfo.tickerName == 'TRX' ||
+                                              model.walletInfo.tickerName ==
+                                                  ' USDTX'
+                                          ? Container(
+                                              margin:
+                                                  EdgeInsets.only(left: 5.0),
+                                              child: model.trxTsWalletBalance !=
+                                                          null &&
+                                                      model.ethChainBalance !=
+                                                          null
+                                                  ? model
+                                                          .isShowTrxTsWalletBalance
+                                                      ? Text(
+                                                          model
+                                                              .trxTsWalletBalance
+                                                              .toString(),
+                                                          maxLines: 2,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline6,
+                                                        )
+                                                      : Text(
+                                                          model.ethChainBalance
+                                                              .toString(),
+                                                          maxLines: 2,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline6,
+                                                        )
+                                                  : Container())
+                                          : Container(
+                                              margin:
+                                                  EdgeInsets.only(left: 5.0),
+                                              child: model.fabChainBalance !=
+                                                          null &&
+                                                      model.ethChainBalance !=
+                                                          null
+                                                  ? model.isShowFabChainBalance
+                                                      ? Text(
+                                                          model.fabChainBalance
+                                                              .toString(),
+                                                          maxLines: 2,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline6,
+                                                        )
+                                                      : Text(
+                                                          model.ethChainBalance
+                                                              .toString(),
+                                                          maxLines: 2,
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .headline6,
+                                                        )
+                                                  : Container()),
                                     ],
                                   ),
                                 ),
