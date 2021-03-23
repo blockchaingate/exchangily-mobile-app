@@ -212,7 +212,7 @@ _generateTrxRawTransaction(
   });
   List<Tron.Transaction_Contract> contractList = [];
   contractList.add(contract);
-  var rawTx;
+  Tron.Transaction_raw rawTx;
   // if trx usdt then add fee limit of 15 trx
   int feeLimit = 15000000;
   isTrxUsdt
@@ -231,18 +231,12 @@ _generateTrxRawTransaction(
           timestamp: timestamp);
 
   debugPrint('txRaw ${rawTx.writeToJson()}');
-  var txRawBuffer = rawTx.writeToBuffer();
+  Uint8List txRawBuffer = rawTx.writeToBuffer();
   debugPrint('txRawBuffer $txRawBuffer');
-  var rawTxBufferToHex = StringUtil.uint8ListToHex(txRawBuffer);
+  String rawTxBufferToHex = StringUtil.uint8ListToHex(txRawBuffer);
   debugPrint('txRawBufferToHex $rawTxBufferToHex');
   var hashedRawTxBuffer = CryptoHash.sha256.convert(txRawBuffer);
   print('hashedRawTxBuffer $hashedRawTxBuffer');
-  // 03a26eb816b1f5e16bb0330b2eab776215434c3cc94ac1b2e31435607d18a700
-
-  // address gen by the priv key TWxNjGUkn2Dc6Avh9zZy8thMt5mBqVWjnP
-  // print('priv key hex ${StringUtil.uint8ListToHex(privateKey)}');
-  // var keyPair = ECPair.fromPrivateKey(privateKey);
-  // print('keypair ${uint8ListToHex(keyPair.privateKey)}');
 
   // CryptoWeb3.MsgSignature
   var signature = //CryptoWeb3.sign(hashedRawTxBuffer.bytes, privateKey);
@@ -269,8 +263,8 @@ _generateTrxRawTransaction(
   return {
     "broadcastTronTransactionRes": broadcastTronTransactionRes,
     "rawTxBufferHexAfterSign": rawTxBufferHex,
-    "hashedRawTxBufferBeforeSign": hashedRawTxBuffer,
-    "rawTxBufferToHexBeforeHash": rawTxBufferToHex
+    "hashedRawTxBufferBeforeSign": hashedRawTxBuffer
+    
   };
 }
 

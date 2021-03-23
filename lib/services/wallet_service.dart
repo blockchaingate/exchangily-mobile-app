@@ -1174,7 +1174,7 @@ class WalletService {
     /// get signed raw transaction hash(txid) and hashed raw tx before sign(txhash)
     /// use that to submit deposit
     ///
-    var rawTxHex = await TronTransactionUtil.generateTrxTransactionContract(
+    var rawTxRes = await TronTransactionUtil.generateTrxTransactionContract(
         privateKey: privateKey,
         fromAddr: walletInfo.address,
         toAddr: officalAddress,
@@ -1183,19 +1183,18 @@ class WalletService {
         tickerName: walletInfo.tickerName,
         isBroadcast: isBroadcast);
 
-    log.w('depositTron signed raw tx $rawTxHex');
+    log.w('depositTron signed raw tx $rawTxRes');
     var txHash;
-    CryptoHash.Digest hashedTxid = rawTxHex["hashedRawTxBufferBeforeSign"];
+    var txHex = rawTxRes["rawTxBufferHexAfterSign"];
+    CryptoHash.Digest hashedTxHash = rawTxRes["hashedRawTxBufferBeforeSign"];
     // txHex is the result of raw tx after sign but we don't broadcast
-    var txHex = rawTxHex["rawTxBufferHexAfterSign"];
-    txHash = CryptoWeb3.bytesToHex(hashedTxid.bytes);
+    txHash = CryptoWeb3.bytesToHex(hashedTxHash.bytes);
 
 // code  from depositDo
 
     var coinType = await getCoinTypeIdByName(walletInfo.tickerName);
     log.i('coin type $coinType');
 
-//var amountInTx = resST['amountInTx'];
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
 
     var seed = generateSeed(mnemonic);
