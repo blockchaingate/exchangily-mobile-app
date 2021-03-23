@@ -1243,7 +1243,8 @@ class WalletService {
         kanbanGasPrice,
         kanbanGasLimit);
     debugPrint('txKanbanHex $txKanbanHex');
-    var res = await submitDeposit(txHex, txKanbanHex);
+    var res 
+    = await submitDeposit(txHex, txKanbanHex);
 
     res['txids'] = txids;
     return res;

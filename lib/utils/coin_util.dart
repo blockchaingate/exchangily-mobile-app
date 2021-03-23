@@ -55,18 +55,24 @@ signTrxMessage(
   Uint8List hash,
   Uint8List privateKey,
 ) {
-  Uint8List prefix = CryptoWeb3.hexToBytes('0x15');
-  print('prefix $prefix');
-  print('hash $hash');
-  var originalMessageWithPrefix = prefix + hash;
+  String messagePrefix = '0x15';
+  final prefixBytes = ascii.encode(messagePrefix);
+  //Uint8List prefix = CryptoWeb3.hexToBytes(messagePrefix);
+  
+  print('prefix $prefixBytes');
+  print('hash $hash --  hash length ${hash.length}');
+
+
+  Uint8List originalMessageWithPrefix = Uint8List.fromList(prefixBytes + hash);
   print(
       'originalMessageWithPrefix ${CryptoWeb3.bytesToHex(originalMessageWithPrefix)}');
-  var hashedOriginalMessageWithPrefix =
-      CryptoWeb3.keccak256(Uint8List.fromList(originalMessageWithPrefix));
-  var signature = sign(hashedOriginalMessageWithPrefix, privateKey);
 
-  // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L26
-  // be aware that signature.v already is recovery + 27
+
+  var hashedOriginalMessageWithPrefix =
+      CryptoWeb3.keccak256(originalMessageWithPrefix);
+
+
+  var signature = sign(hashedOriginalMessageWithPrefix, privateKey);
 
   print('signature v ${signature.v}');
 
@@ -89,6 +95,27 @@ signTrxMessage(
   var rsv = r + s + v;
   print('rsv  $rsv');
   return rsv;
+
+
+
+
+
+  /*
+  final chainIdV =
+      chainId != null ? (signature.v + (chainId * 2 + 35)) : signature.v;
+
+   */
+  // final chainIdV = signature.v + 27;
+  // print('chainIdV=' + chainIdV.toString());
+  
+
+  // // https://github.com/ethereumjs/ethereumjs-util/blob/8ffe697fafb33cefc7b7ec01c11e3a7da787fe0e/src/signature.ts#L63
+  // return uint8ListFromList(r + s + v);
+
+
+
+
+
 }
 
 /*----------------------------------------------------------------------
@@ -490,8 +517,10 @@ signedMessage(
   if (coinName == 'TRX' || tokenType == 'TRX') {
     var privateKey = TronAddressUtil.generateTrxPrivKeyBySeed(seed);
     var bytes = CryptoWeb3.hexToBytes(originalMessage);
-
-    signedMess = signTrxMessage(bytes, privateKey);
+    Uint8List prefix = CryptoWeb3.hexToBytes('0x15');
+    print('prefix $prefix');
+    signedMess = signPersonalMessageWith('0x15', privateKey, bytes);
+    //signTrxMessage(bytes, privateKey);
     var signedMessHex = CryptoWeb3.bytesToHex(signedMess);
     print(' signedMess hex $signedMessHex');
 
@@ -500,11 +529,6 @@ signedMessage(
     r = ss.substring(0, 64);
     s = ss.substring(64, 128);
     v = ss.substring(128);
-
-    var recovery = int.parse(v);
-    var compressed = true;
-    var sigwitType;
-    v = encodeSignature(signedMess, recovery, compressed, sigwitType);
 
     return {'r': r, 's': s, 'v': v};
   }
