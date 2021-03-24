@@ -149,8 +149,8 @@ class SendWalletScreen extends StatelessWidget {
                                         model.amount <= bal) {
                                       if (tickerName != 'TRX' &&
                                           tickerName != 'USDTX') {
-                                            print(tickerName);
-                                            print('not trx');
+                                        print(tickerName);
+                                        print('not trx');
                                         model.updateTransFee();
                                       }
                                     }
@@ -534,6 +534,45 @@ class SendWalletScreen extends StatelessWidget {
                                     model.errorMessage,
                                     style: TextStyle(color: globals.red),
                                   ))),
+                        UIHelper.verticalSpaceSmall,
+                        // show error details
+                        model.isShowErrorDetailsButton
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: RichText(
+                                      text: TextSpan(
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText2
+                                              .copyWith(
+                                                  decoration:
+                                                      TextDecoration.underline),
+                                          text:
+                                              '${AppLocalizations.of(context).error} ${AppLocalizations.of(context).details}',
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              model.showDetailsMessageToggle();
+                                            }),
+                                    ),
+                                  ),
+                                  !model.isShowDetailsMessage
+                                      ? Icon(Icons.arrow_drop_down,
+                                          color: Colors.red, size: 18)
+                                      : Icon(Icons.arrow_drop_up,
+                                          color: Colors.red, size: 18)
+                                ],
+                              )
+                            : Container(),
+                        model.isShowDetailsMessage
+                            ? Center(
+                                child: Text(model.serverError,
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                              )
+                            : Container(),
+                             UIHelper.verticalSpaceSmall,
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                     Send Button Container

@@ -58,31 +58,37 @@ signTrxMessage(
   // const a = "0x15TRON Signed Message:\n";
   // var aToAscii = ascii.encode(a);
   // print('aToAscii $aToAscii');
-  const intBytePrefix = 0x15;
-
-  Uint8List part1PrefixBytes = utf8.encode(intBytePrefix.toString());
   //print('part1HexPrefix $part1PrefixBytes');
   //Uint8List prefixBytes = CryptoWeb3.hexToBytes(messagePrefix);
-
-  print('intBytePrefixToHex ${uint8ListToHex(part1PrefixBytes)}');
 // Uint8List bytePrefixIntToUintList = CryptoWeb3.(
 //   bytePrefixToInt);
 
-  const messagePrefix = "TRON Signed Message:\n";
-  final part2PrefixBytes = ascii.encode(messagePrefix);
-  print('part2PrefixBytes ascii-- $part2PrefixBytes');
-  final prefixBytes = part1PrefixBytes + part2PrefixBytes;
-  print('final prefixBytes bytes ascii-- $prefixBytes');
+
+  // const intBytePrefix = 0x15;
+  // Uint8List part1PrefixBytes = utf8.encode(intBytePrefix.toString());
+  // print('intBytePrefixToHex ${uint8ListToHex(part1PrefixBytes)}');
+
+  const messagePrefix = '\u0015TRON Signed Message:\n';
+  final prefixBytes = ascii.encode(messagePrefix);
+  print('part2PrefixBytes ascii bytes to hex-- ${CryptoWeb3.bytesToHex(prefixBytes)}');
+
+  //final prefixBytes = part1PrefixBytes + part2PrefixBytes;
+  print('final prefixBytes bytes ascii bytes to hex-- ${CryptoWeb3.bytesToHex(prefixBytes)}');
+  
   print('hash $originalMessage --  hash length ${originalMessage.length}');
 
   Uint8List originalMessageWithPrefix =
-      Uint8List.fromList(prefixBytes + CryptoWeb3.hexToBytes(originalMessage));
-  //ascii.encode(originalMessage));
+      Uint8List.fromList(prefixBytes + 
+      //CryptoWeb3.hexToBytes(originalMessage));
+  ascii.encode(originalMessage));
   print(
       'originalMessageWithPrefix ${CryptoWeb3.bytesToHex(originalMessageWithPrefix)}');
 
   var hashedOriginalMessageWithPrefix =
       CryptoWeb3.keccak256(originalMessageWithPrefix);
+
+ print(
+      'hashedOriginalMessageWithPrefix ${CryptoWeb3.bytesToHex(hashedOriginalMessageWithPrefix)}');
 
   var signature = sign(hashedOriginalMessageWithPrefix, privateKey);
 

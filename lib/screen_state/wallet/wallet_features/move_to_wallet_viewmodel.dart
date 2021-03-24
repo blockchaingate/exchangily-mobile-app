@@ -66,6 +66,7 @@ class MoveToWalletViewmodel extends BaseState {
   bool isShowTrxTsWalletBalance = false;
   String specialTicker = '';
   String updateTickerForErc = '';
+   String updateTickerForTrc = '';
   bool isAlert = false;
 
 /*---------------------------------------------------
@@ -362,11 +363,12 @@ class MoveToWalletViewmodel extends BaseState {
         walletInfo.tickerName == 'EXG') {
       tickerName = 'EXG';
       isWithdrawChoice = true;
-    } else if (walletInfo.tickerName == 'USDTX' ||
-        walletInfo.tickerName == 'TRX') {
-      tickerName = 'TRX';
-      isWithdrawChoice = true;
-    } else
+    // } else if (walletInfo.tickerName == 'USDTX' ||
+    //     walletInfo.tickerName == 'TRX') {
+    //   tickerName = 'TRX';
+    //   isWithdrawChoice = true;
+    }
+     else
       tickerName = walletInfo.tickerName;
     await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
       walletInfo.inExchange = res.unlockedAmount;
@@ -485,7 +487,7 @@ class MoveToWalletViewmodel extends BaseState {
     } else if (walletInfo.tickerName == 'EXG') {
       updateTickerForErc = 'EXGE';
     } else if (walletInfo.tickerName == 'TRX') {
-      updateTickerForErc = 'USDTX';
+      updateTickerForTrc = 'USDTX';
     } else {
       updateTickerForErc = walletInfo.tickerName;
     }
@@ -521,7 +523,7 @@ class MoveToWalletViewmodel extends BaseState {
       isShowTrxTsWalletBalance = true;
       if (walletInfo.tickerName != 'TRX') walletInfo.tokenType = 'TRX';
       if (walletInfo.tickerName == 'TRX') walletInfo.tokenType = '';
-      updateTickerForErc = walletInfo.tickerName;
+      updateTickerForTrc = walletInfo.tickerName;
       log.i('chain type ${walletInfo.tokenType}');
       setWithdrawLimit();
     } else {

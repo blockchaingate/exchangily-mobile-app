@@ -67,7 +67,9 @@ class SendScreenState extends BaseState {
   int satoshisPerBytes = 0;
   WalletInfo walletInfo;
   bool checkSendAmount = false;
-
+  bool isShowErrorDetailsButton = false;
+  bool isShowDetailsMessage = false;
+  String serverError = '';
   final scaffoldKey = new GlobalKey<ScaffoldState>();
   final receiverWalletAddressTextController = TextEditingController();
   final sendAmountTextController = TextEditingController();
@@ -109,6 +111,12 @@ class SendScreenState extends BaseState {
           environment["chains"]["FAB"]["gasLimit"].toString();
     }
     //  getGasBalance();
+    setState(ViewState.Idle);
+  }
+
+  showDetailsMessageToggle() {
+    setState(ViewState.Busy);
+    isShowDetailsMessage = !isShowDetailsMessage;
     setState(ViewState.Idle);
   }
 
@@ -221,6 +229,8 @@ class SendScreenState extends BaseState {
           if (res['code'] == 'SUCCESS') {
             log.w('trx tx res $res');
             txHash = res['txid'];
+            isShowErrorDetailsButton = false;
+            isShowDetailsMessage = false;
             sharedService.alertDialog(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
@@ -232,6 +242,8 @@ class SendScreenState extends BaseState {
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           setState(ViewState.Idle);
+          isShowErrorDetailsButton = false;
+          isShowDetailsMessage = false;
           sharedService.alertDialog(AppLocalizations.of(context).notice,
               AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater,
               isWarning: false);
@@ -240,7 +252,9 @@ class SendScreenState extends BaseState {
           sharedService.alertDialog(AppLocalizations.of(context).serverError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
               isWarning: false);
-
+          isShowErrorDetailsButton = true;
+          isShowDetailsMessage = true;
+          serverError = error.toString();
           setState(ViewState.Idle);
         });
       } else {
@@ -254,10 +268,11 @@ class SendScreenState extends BaseState {
           errorMessage = res["errMsg"];
 
           if (txHash.isNotEmpty) {
-            log.w('TXhash $txHash');
+            log.w('Txhash $txHash');
             receiverWalletAddressTextController.text = '';
             sendAmountTextController.text = '';
-
+            isShowErrorDetailsButton = false;
+            isShowDetailsMessage = false;
             sharedService.alertDialog(
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
@@ -272,12 +287,16 @@ class SendScreenState extends BaseState {
               "",
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
             );
+            isShowErrorDetailsButton = false;
+            isShowDetailsMessage = false;
             setState(ViewState.Idle);
           }
           setState(ViewState.Idle);
           return txHash;
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
+          isShowErrorDetailsButton = false;
+          isShowDetailsMessage = false;
           setState(ViewState.Idle);
           return errorMessage =
               AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
@@ -286,7 +305,9 @@ class SendScreenState extends BaseState {
           sharedService.alertDialog(AppLocalizations.of(context).serverError,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
               isWarning: false);
-          //errorMessage = AppLocalizations.of(context).transanctionFailed;
+          isShowErrorDetailsButton = true;
+          isShowDetailsMessage = true;
+          serverError = error.toString();
           setState(ViewState.Idle);
         });
       }
@@ -397,6 +418,13 @@ class SendScreenState extends BaseState {
       print('address empty');
       sharedService.alertDialog(AppLocalizations.of(context).emptyAddress,
           AppLocalizations.of(context).pleaseEnterAnAddress,
+          isWarning: false);
+    } else if ((walletInfo.tickerName == 'TRX' ||
+            walletInfo.tickerName == 'USDTX') &&
+        !walletInfo.address.startsWith('T')) {
+      print('invalid tron address');
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAddress,
+          AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress,
           isWarning: false);
     } else if (amount == null ||
         amount == 0 ||
