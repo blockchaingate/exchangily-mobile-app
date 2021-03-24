@@ -233,8 +233,8 @@ _generateTrxRawTransaction(
   debugPrint('txRaw ${rawTx.writeToJson()}');
   Uint8List txRawBuffer = rawTx.writeToBuffer();
   debugPrint('txRawBuffer $txRawBuffer');
-  String rawTxBufferToHex = StringUtil.uint8ListToHex(txRawBuffer);
-  debugPrint('txRawBufferToHex $rawTxBufferToHex');
+  // String rawTxBufferToHex = StringUtil.uint8ListToHex(txRawBuffer);
+//  debugPrint('txRawBufferToHex $rawTxBufferToHex');
   var hashedRawTxBuffer = CryptoHash.sha256.convert(txRawBuffer);
   print('hashedRawTxBuffer $hashedRawTxBuffer');
 
@@ -264,7 +264,6 @@ _generateTrxRawTransaction(
     "broadcastTronTransactionRes": broadcastTronTransactionRes,
     "rawTxBufferHexAfterSign": rawTxBufferHex,
     "hashedRawTxBufferBeforeSign": hashedRawTxBuffer
-    
   };
 }
 

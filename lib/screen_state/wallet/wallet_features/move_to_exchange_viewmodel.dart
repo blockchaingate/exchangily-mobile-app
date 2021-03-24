@@ -20,6 +20,8 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:web3dart/crypto.dart' as CryptoWeb3;
+import 'dart:convert';
 
 class MoveToExchangeViewModel extends BaseViewModel {
   final log = getLogger('MoveToExchangeViewModel');
@@ -53,6 +55,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   bool isShowDetailsMessage = false;
   String serverError = '';
   String specialTicker = '';
+  var res;
 
   void initState() async {
     setBusy(true);
@@ -149,6 +152,24 @@ class MoveToExchangeViewModel extends BaseViewModel {
 /*---------------------------------------------------
                       Check Pass
 --------------------------------------------------- */
+  convert() {
+    const prefix = 0x15;
+    setBusy(true);
+    Uint8List messagePrefix = utf8.encode(prefix.toString());
+    res = messagePrefix;
+    //CryptoWeb3.hexToDartInt(prefix.toString());
+    var a = CryptoWeb3.bytesToHex(res);
+    print('a $a');
+    setBusy(false);
+
+    var originalMsg =
+        '00070000d9dbc3bd11fc6b7c6b5f20d86efe280be19eb17672db2f1e9eaa35120c149e8200000000000000000000000000000000000000000000000003782dace9d9000000000000000000000000000014dd8fd0efe3d72d7329463a7ff7b18770009f76';
+    var originalMshHexToBytes = CryptoWeb3.hexToBytes(originalMsg);
+    log.w('originalMshHexToBytes $originalMshHexToBytes');
+
+    var originalMshHexToAsciiBytes = ascii.encode(originalMsg);
+    log.e('originalMshHexToAsciiBytes $originalMshHexToAsciiBytes');
+  }
 
   checkPass() async {
     setBusy(true);

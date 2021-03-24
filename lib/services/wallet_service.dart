@@ -1158,7 +1158,8 @@ class WalletService {
       double amount,
       bool isTrxUsdt,
       bool isBroadcast}) async {
-        log.i('menmonic $mnemonic -- amount $amount -- istrxusdt $isTrxUsdt -- isBroadcast $isBroadcast');
+    log.i(
+        'menmonic $mnemonic -- amount $amount -- istrxusdt $isTrxUsdt -- isBroadcast $isBroadcast');
     int kanbanGasPrice = environment['chains']['KANBAN']['gasPrice'];
     int kanbanGasLimit = environment['chains']['KANBAN']['gasLimit'];
     print('kanbanGasPrice $kanbanGasPrice');
@@ -1171,6 +1172,7 @@ class WalletService {
       return;
     }
     var privateKey = TronAddressUtil.generateTrxPrivKey(mnemonic);
+
     /// get signed raw transaction hash(txid) and hashed raw tx before sign(txhash)
     /// use that to submit deposit
     ///
@@ -1243,8 +1245,7 @@ class WalletService {
         kanbanGasPrice,
         kanbanGasLimit);
     debugPrint('txKanbanHex $txKanbanHex');
-    var res 
-    = await submitDeposit(txHex, txKanbanHex);
+    var res = await submitDeposit(txHex, txKanbanHex);
 
     res['txids'] = txids;
     return res;

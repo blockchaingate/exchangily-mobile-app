@@ -504,6 +504,20 @@ class MoveToExchangeScreen extends StatelessWidget {
             ],
           ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: SizedBox(
+          child: Column(
+            children: [
+              FlatButton(
+                child: Text('Click'),
+                onPressed: () {
+                  model.convert();
+                },
+              ),
+              Text(model.res.toString())
+            ],
+          ),
+        ),
       ),
     );
   }
