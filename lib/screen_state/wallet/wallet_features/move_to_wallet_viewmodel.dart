@@ -66,7 +66,7 @@ class MoveToWalletViewmodel extends BaseState {
   bool isShowTrxTsWalletBalance = false;
   String specialTicker = '';
   String updateTickerForErc = '';
-   String updateTickerForTrc = '';
+  String updateTickerForTrc = '';
   bool isAlert = false;
 
 /*---------------------------------------------------
@@ -345,7 +345,7 @@ class MoveToWalletViewmodel extends BaseState {
   }
 
   // Check single coin exchange balance
-  getSingleCoinExchangeBal() async {
+  Future getSingleCoinExchangeBal() async {
     setBusy(true);
     String tickerName = '';
     if (walletInfo.tickerName == 'DSCE' || walletInfo.tickerName == 'DSC') {
@@ -363,12 +363,11 @@ class MoveToWalletViewmodel extends BaseState {
         walletInfo.tickerName == 'EXG') {
       tickerName = 'EXG';
       isWithdrawChoice = true;
-    // } else if (walletInfo.tickerName == 'USDTX' ||
-    //     walletInfo.tickerName == 'TRX') {
-    //   tickerName = 'TRX';
-    //   isWithdrawChoice = true;
-    }
-     else
+      // } else if (walletInfo.tickerName == 'USDTX' ||
+      //     walletInfo.tickerName == 'TRX') {
+      //   tickerName = 'TRX';
+      //   isWithdrawChoice = true;
+    } else
       tickerName = walletInfo.tickerName;
     await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
       walletInfo.inExchange = res.unlockedAmount;
@@ -379,11 +378,11 @@ class MoveToWalletViewmodel extends BaseState {
       tickerName == 'FAB'
           ? await getFabBalance()
           : await getFabChainBalance(tickerName);
-      tickerName == 'TRX'
-          ? await getTrxTsWalletBalance()
-          : await getTrx20TsWalletBalance();
+      // tickerName == 'TRX'
+      //     ? await getTrxTsWalletBalance()
+      //     : await getTrx20TsWalletBalance();
     }
-    log.w('chainBalances $chainBalances');
+    // log.w('chainBalances $chainBalances');
     setBusy(false);
   }
 
@@ -526,7 +525,14 @@ class MoveToWalletViewmodel extends BaseState {
       updateTickerForTrc = walletInfo.tickerName;
       log.i('chain type ${walletInfo.tokenType}');
       setWithdrawLimit();
-    } else {
+    } 
+    // else if (walletInfo.tickerName == 'TRX' && !isShowTrxTsWalletBalance) {
+    //   await tokenListDatabaseService
+    //       .getByTickerName('USDTX')
+    //       .then((token) => withdrawLimit = double.parse(token.minWithdraw));
+    //   log.i('withdrawLimit $withdrawLimit');
+    // } 
+    else {
       isShowFabChainBalance = false;
       walletInfo.tokenType = 'ETH';
       log.i('chain type ${walletInfo.tokenType}');
@@ -543,11 +549,6 @@ class MoveToWalletViewmodel extends BaseState {
       } else if (walletInfo.tickerName == 'BST' && !isShowFabChainBalance) {
         await tokenListDatabaseService
             .getByTickerName('BSTE')
-            .then((token) => withdrawLimit = double.parse(token.minWithdraw));
-        log.i('withdrawLimit $withdrawLimit');
-      } else if (walletInfo.tickerName == 'TRX' && !isShowTrxTsWalletBalance) {
-        await tokenListDatabaseService
-            .getByTickerName('USDTX')
             .then((token) => withdrawLimit = double.parse(token.minWithdraw));
         log.i('withdrawLimit $withdrawLimit');
       }
@@ -591,7 +592,7 @@ class MoveToWalletViewmodel extends BaseState {
       setBusy(false);
       return;
     }
-    getSingleCoinExchangeBal();
+    await getSingleCoinExchangeBal();
     if (amount == null ||
         amount > walletInfo.inExchange ||
         amount == 0 ||
@@ -603,7 +604,7 @@ class MoveToWalletViewmodel extends BaseState {
       return;
     }
 
-    if (isShowFabChainBalance && amount > fabChainBalance) {
+    if (!isShowTrxTsWalletBalance && isShowFabChainBalance && amount > fabChainBalance) {
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
@@ -613,7 +614,7 @@ class MoveToWalletViewmodel extends BaseState {
 
     /// show warning like amount should be less than ts wallet balance
     /// instead of displaying the generic error
-    if (!isShowFabChainBalance && amount > ethChainBalance) {
+    if (!isShowTrxTsWalletBalance && !isShowFabChainBalance && amount > ethChainBalance) {
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
@@ -664,35 +665,43 @@ class MoveToWalletViewmodel extends BaseState {
       //   bigIntAmount = BigInt.from(amount);
       //   log.w('Bigint $bigIntAmount from amount $amount ');
       // }
-      // withdraw function
-      await walletService
-          .withdrawDo(seed, coinName, coinAddress, tokenType, amount,
-              kanbanPrice, kanbanGasLimit)
-          .then((ret) {
-        log.w(ret);
-        bool success = ret["success"];
-        if (success && ret['transactionHash'] != null) {
-          String txId = ret['transactionHash'];
-          log.i('txid $txId');
-          amountController.text = '';
-          setMessage(txId);
-        } else {
-          serverError = ret['data'];
-          if (serverError == null || serverError == '') {
-            var errMsg = AppLocalizations.of(context).serverError;
-            setErrorMessage(errMsg);
-            isShowErrorDetailsButton = true;
+
+      if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+        //      int kanbanGasPrice = environment['chains']['KANBAN']['gasPrice'];
+        // int kanbanGasLimit = environment['chains']['KANBAN']['gasLimit'];
+        await walletService.withdrawTron(seed, coinName, coinAddress, tokenType,
+            amount, kanbanPrice, kanbanGasLimit);
+      } else {
+        // withdraw function
+        await walletService
+            .withdrawDo(seed, coinName, coinAddress, tokenType, amount,
+                kanbanPrice, kanbanGasLimit)
+            .then((ret) {
+          log.w(ret);
+          bool success = ret["success"];
+          if (success && ret['transactionHash'] != null) {
+            String txId = ret['transactionHash'];
+            log.i('txid $txId');
+            amountController.text = '';
+            setMessage(txId);
+          } else {
+            serverError = ret['data'];
+            if (serverError == null || serverError == '') {
+              var errMsg = AppLocalizations.of(context).serverError;
+              setErrorMessage(errMsg);
+              isShowErrorDetailsButton = true;
+            }
           }
-        }
-        sharedService.alertDialog(
-            success && ret['transactionHash'] != null
-                ? AppLocalizations.of(context).withdrawTransactionSuccessful
-                : AppLocalizations.of(context).withdrawTransactionFailed,
-            success ? "" : AppLocalizations.of(context).serverError,
-            isWarning: false);
-      }).catchError((err) {
-        print('Withdraw catch $err');
-      });
+          sharedService.alertDialog(
+              success && ret['transactionHash'] != null
+                  ? AppLocalizations.of(context).withdrawTransactionSuccessful
+                  : AppLocalizations.of(context).withdrawTransactionFailed,
+              success ? "" : AppLocalizations.of(context).serverError,
+              isWarning: false);
+        }).catchError((err) {
+          print('Withdraw catch $err');
+        });
+      }
     } else if (!res.confirmed && res.returnedText == 'Closed') {
       print('else if close button pressed');
     } else {

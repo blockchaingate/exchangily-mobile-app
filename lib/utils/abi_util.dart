@@ -58,6 +58,7 @@ getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
   var abiHex = Constants.DepositSignatureAbi;
   abiHex += trimHexPrefix(signedMessage["v"]);
   if (isSpecialDeposit) {
+    // coin type of coins converting to hex for instance 458753 becomes 00070001
     var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
     abiHex += specialFixLength(hexaDecimalCoinType, 62, chain);
   } else

@@ -248,7 +248,7 @@ _generateTrxRawTransaction(
   print('signature $signature');
   var transaction =
       Tron.Transaction(rawData: rawTx, ret: [], signature: signature
-          //rsvInList
+        
           );
   var txBuffer = transaction.writeToBuffer();
   var rawTxBufferHex = StringUtil.uint8ListToHex(txBuffer);

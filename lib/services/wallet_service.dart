@@ -1150,6 +1150,65 @@ class WalletService {
   }
 
 /*----------------------------------------------------------------------
+                withdraw Tron
+----------------------------------------------------------------------*/
+  Future<Map<String, dynamic>> withdrawTron(
+      seed,
+      String coinName,
+      String coinAddress,
+      String tokenType,
+      double amount,
+      kanbanPrice,
+      kanbanGasLimit) async {
+    var keyPairKanban = getExgKeyPair(seed);
+    var addressInKanban = keyPairKanban["address"];
+    var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
+    //amount * BigInt.from(1e18);
+    log.i(
+        'AMount in link $amountInLink -- coin name $coinName -- token type $tokenType');
+    var addressInWallet = coinAddress;
+  addressInWallet = btcToBase58Address(addressInWallet);
+
+    int coinType;
+    await getCoinTypeIdByName(coinName).then((value) => coinType = value);
+    log.i('cointype $coinType');
+
+    var sepcialcoinType;
+    var abiHex;
+    if (coinName == 'USDTX') {
+      sepcialcoinType = await getCoinTypeIdByName('TRX');
+      abiHex = getWithdrawFuncABI(
+          sepcialcoinType, amountInLink, addressInWallet,
+          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+      log.e('cointype $coinType -- abihex $abiHex');
+    } else {
+      abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
+    }
+    var coinPoolAddress = await getCoinPoolAddress();
+
+    var nonce = await getNonce(addressInKanban);
+
+    var txKanbanHex = await signAbiHexWithPrivateKey(
+        abiHex,
+        HEX.encode(keyPairKanban["privateKey"]),
+        coinPoolAddress,
+        nonce,
+        kanbanPrice,
+        kanbanGasLimit);
+
+    var res = await sendKanbanRawTransaction(txKanbanHex);
+
+    if (res['transactionHash'] != '') {
+      res['success'] = true;
+      res['data'] = res;
+    } else {
+      res['success'] = false;
+      res['data'] = 'error';
+    }
+    return res;
+  }
+
+/*----------------------------------------------------------------------
                     Tron Deposit
 ----------------------------------------------------------------------*/
   Future depositTron(
@@ -1220,7 +1279,7 @@ class WalletService {
     var sepcialcoinType;
     var abiHex;
     if (walletInfo.tickerName == 'USDTX') {
-      sepcialcoinType = await getCoinTypeIdByName('TRX');
+      sepcialcoinType = await getCoinTypeIdByName('USDT');
       abiHex = getDepositFuncABI(
           sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
           coinName: walletInfo.tickerName,

@@ -644,7 +644,13 @@ getOfficalAddress(String coinName, {String tokenType = ''}) {
         environment['addresses']['exchangilyOfficial'][0]['address'];
     print('fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
     return fabTokensOfficialAddress;
-  } else if (coinName == 'ETH' || tokenType == 'ETH') {
+  }
+   if (tokenType == 'TRX') {
+    String trxTokensOfficialAddress =
+        environment['addresses']['exchangilyOfficial'][9]['address'];
+    print('TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');
+    return trxTokensOfficialAddress;
+  }  else if (coinName == 'ETH' || tokenType == 'ETH') {
     var ethTokenOfficialAddress =
         environment['addresses']['exchangilyOfficial'][3]['address'];
 
