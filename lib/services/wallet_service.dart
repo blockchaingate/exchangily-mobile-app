@@ -187,6 +187,10 @@ class WalletService {
         tickerName.toUpperCase() == 'FABE') {
       tickerName = 'FAB(ERC20)';
       logoTicker = 'FABE';
+    }  else if (tickerName.toUpperCase() == 'TRON_USDT' ||
+        tickerName.toUpperCase() == 'USDTX') {
+      tickerName = 'USDT(TRC20)';
+      logoTicker = 'USDTX';
     } else {}
     return {"tickerName": tickerName, "logoTicker": logoTicker};
   }
@@ -1058,7 +1062,8 @@ class WalletService {
       String tokenType,
       double amount,
       kanbanPrice,
-      kanbanGasLimit) async {
+      kanbanGasLimit,
+      isSpeicalTronTokenWithdraw) async {
     var keyPairKanban = getExgKeyPair(seed);
     var addressInKanban = keyPairKanban["address"];
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
@@ -1122,6 +1127,12 @@ class WalletService {
           isSpecialDeposit: true, chain: tokenType, coinName: coinName);
 
       log.e('cointype $coinType -- abihex $abiHex');
+    } else if (isSpeicalTronTokenWithdraw) {
+       addressInWallet = btcToBase58Address(addressInWallet);
+      abiHex = getWithdrawFuncABI(
+          coinType, amountInLink, addressInWallet,
+          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+      log.e('cointype $coinType -- abihex $abiHex');
     } else {
       abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
     }
@@ -1167,7 +1178,7 @@ class WalletService {
     log.i(
         'AMount in link $amountInLink -- coin name $coinName -- token type $tokenType');
     var addressInWallet = coinAddress;
-  addressInWallet = btcToBase58Address(addressInWallet);
+    addressInWallet = btcToBase58Address(addressInWallet);
 
     int coinType;
     await getCoinTypeIdByName(coinName).then((value) => coinType = value);
@@ -1305,8 +1316,6 @@ class WalletService {
         kanbanGasLimit);
     debugPrint('txKanbanHex $txKanbanHex');
     var res = await submitDeposit(txHex, txKanbanHex);
-
-    res['txids'] = txids;
     return res;
 
     // TRON deposit ends here

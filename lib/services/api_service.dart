@@ -45,10 +45,31 @@ class ApiService {
   final blockchaingateUrl = environment['endpoints']['blockchaingate'];
 
 /*----------------------------------------------------------------------
+                Get Tron Ts wallet balance
+----------------------------------------------------------------------*/
+
+  Future getTronTsWalletBalance(String address) async {
+    var body = {"address": address,"visible":true};
+  
+    log.i('getTronTsWalletBalance url $TronGetAccountUrl - body $body');
+    try {
+      var response = await client.post(TronGetAccountUrl, body: jsonEncode(body));
+      var json = jsonDecode(response.body);
+      if (json != null) {
+        log.e('getTronTsWalletBalance $json}');
+        return json;
+      }
+    } catch (err) {
+      log.e('getTronTsWalletBalance CATCH $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
                 Get Tron Tx Latest Block
 ----------------------------------------------------------------------*/
 
-Future getTronLatestBlock() async {
+  Future getTronLatestBlock() async {
     log.i('getBanner url $GetTronLatestBlockUrl');
 
     try {

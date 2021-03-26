@@ -297,7 +297,7 @@ class WalletFeaturesView extends StatelessWidget {
                   Expanded(
                     flex: 4,
                     child: Text(
-                      '${walletInfo.tickerName} ' +
+                      '${model.specialTicker} ' +
                           AppLocalizations.of(context).totalBalance,
                       style: Theme.of(context)
                           .textTheme
@@ -340,7 +340,7 @@ class WalletFeaturesView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                      '${walletInfo.tickerName} '.toUpperCase() +
+                      '${model.specialTicker} '.toUpperCase() +
                           AppLocalizations.of(context).walletbalance,
                       style: Theme.of(context).textTheme.subtitle1),
                   Text(AppLocalizations.of(context).inExchange,

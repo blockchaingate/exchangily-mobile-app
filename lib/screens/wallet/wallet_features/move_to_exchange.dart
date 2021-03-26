@@ -105,11 +105,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                     padding: EdgeInsets.symmetric(
                       horizontal: 3,
                     ),
-                    child: Text('${model.coinName}'.toUpperCase(),
+                    child: Text('${model.specialTicker}'.toUpperCase(),
                         style: Theme.of(context).textTheme.subtitle2),
                   )
                 ],
-              ),
+              ), UIHelper.verticalSpaceSmall,
 
               Container(
                 child: walletInfo.tickerName == 'TRX' ||
@@ -143,7 +143,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         .copyWith(fontWeight: FontWeight.w300)),
                               )
                             ],
-                          ),
+                          ), UIHelper.verticalSpaceSmall,
                           // Kanaban Gas Fee Row
                           Row(
                             children: <Widget>[

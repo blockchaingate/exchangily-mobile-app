@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -231,9 +232,24 @@ class RedepositViewModel extends FutureViewModel {
     log.w('transactionID for submitredeposit:' + transactionID);
     var coinPoolAddress = await getCoinPoolAddress();
     //var signedMess = {'r': r, 's': s, 'v': v};
-
+    String ticker = '';
+    bool isSpecial = false;
+    try {
+      await tokenListDatabaseService
+          .getTickerNameByCoinType(coinType)
+          .then((ticker) {
+        ticker = ticker;
+        log.w('submit redeposit ticker $ticker');
+      });
+      Constants.specialTokens.forEach((specialTokenTicker) {
+        if (ticker == specialTokenTicker) isSpecial = true;
+      });
+    } catch (err) {
+      log.e('no match with special tickers');
+    }
     var abiHex = getDepositFuncABI(coinType, transactionID, amountInLink,
-        keyPairKanban['address'], signedMess);
+        keyPairKanban['address'], signedMess,
+        isSpecialDeposit: isSpecial);
 
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);

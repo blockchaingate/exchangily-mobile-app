@@ -68,16 +68,17 @@ class MoveToWalletViewmodel extends BaseState {
   String updateTickerForErc = '';
   String updateTickerForTrc = '';
   bool isAlert = false;
+  bool isSpeicalTronTokenWithdraw = false;
 
 /*---------------------------------------------------
                       INIT
 --------------------------------------------------- */
   void initState() {
     setBusy(true);
+    print('ticker ${walletInfo.tickerName}');
     sharedService.context = context;
     var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
     var gasLimit = environment["chains"]["KANBAN"]["gasLimit"];
-    setWithdrawLimit();
     kanbanGasPriceTextController.text = gasPrice.toString();
     kanbanGasLimitTextController.text = gasLimit.toString();
 
@@ -100,10 +101,10 @@ class MoveToWalletViewmodel extends BaseState {
       _groupValue = 'FAB';
       isShowFabChainBalance = true;
     }
-    if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+    if (walletInfo.tickerName == 'USDTX') {
       _groupValue = 'TRX';
-      isShowTrxTsWalletBalance = true;
     }
+    setWithdrawLimit(walletInfo.tickerName);
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
 
@@ -301,26 +302,28 @@ class MoveToWalletViewmodel extends BaseState {
     setBusy(false);
   }
 
-  /*---------------------------------------------------
-                      Set Withdraw Limit
+/*---------------------------------------------------
+                Set Withdraw Limit
 --------------------------------------------------- */
-  setWithdrawLimit() async {
+
+  setWithdrawLimit(String ticker) async {
     setBusy(true);
-    withdrawLimit = environment["minimumWithdraw"][walletInfo.tickerName];
+    withdrawLimit = environment["minimumWithdraw"][ticker];
     print('wl $withdrawLimit');
     if (withdrawLimit == null) {
       await apiService.getTokenList().then((token) {
         token.forEach((token) {
-          if (token.tickerName == walletInfo.tickerName)
+          if (token.tickerName == ticker)
             withdrawLimit = double.parse(token.minWithdraw);
         });
       });
       if (withdrawLimit == null) {
         await tokenListDatabaseService
-            .getByTickerName(walletInfo.tickerName)
+            .getByTickerName(ticker)
             .then((token) => withdrawLimit = double.parse(token.minWithdraw));
       }
     }
+    log.i('withdrawLimit $withdrawLimit');
     setBusy(false);
   }
 
@@ -363,43 +366,48 @@ class MoveToWalletViewmodel extends BaseState {
         walletInfo.tickerName == 'EXG') {
       tickerName = 'EXG';
       isWithdrawChoice = true;
-      // } else if (walletInfo.tickerName == 'USDTX' ||
-      //     walletInfo.tickerName == 'TRX') {
-      //   tickerName = 'TRX';
-      //   isWithdrawChoice = true;
-    } else
+    } else if (walletInfo.tickerName == 'USDT' 
+    //|| walletInfo.tickerName == 'USDTX'
+    
+    ) {
+      tickerName = 'USDT';
+      isWithdrawChoice = true;
+      isShowTrxTsWalletBalance = true;
+      isShowFabChainBalance = false;
+    } else {
       tickerName = walletInfo.tickerName;
+    }
     await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
       walletInfo.inExchange = res.unlockedAmount;
-      log.w('exchange balance check ${walletInfo.inExchange}');
+      log.w('single coin exchange balance check ${walletInfo.inExchange}');
     });
+
     if (isWithdrawChoice) {
       await getEthChainBalance();
-      tickerName == 'FAB'
-          ? await getFabBalance()
-          : await getFabChainBalance(tickerName);
-      // tickerName == 'TRX'
-      //     ? await getTrxTsWalletBalance()
-      //     : await getTrx20TsWalletBalance();
+      if (tickerName == 'USDT')
+        await getTrxTsWalletBalance();
+      else {
+        tickerName == 'FAB'
+            ? await getFabBalance()
+            : await getFabChainBalance(tickerName);
+      }
     }
-    // log.w('chainBalances $chainBalances');
     setBusy(false);
   }
 
 /*----------------------------------------------------------------------
-                        TRX 20 Balance
+                        TRX 20 TS Wallet Balance
 ----------------------------------------------------------------------*/
   getTrxTsWalletBalance() async {
     setBusy(true);
-    String fabAddress = getOfficalAddress('FAB');
-    await walletService.coinBalanceByAddress('TRX', fabAddress, '').then((res) {
-      log.e('fab res $res');
-      trxTsWalletBalance = res['balance'];
+    String trxOfficialddress = getOfficalAddress('TRX');
+    await apiService.getTronTsWalletBalance(trxOfficialddress).then((res) {
+      trxTsWalletBalance = res['balance'] / 1e6;
+      log.e('getTrxTsWalletBalance $trxTsWalletBalance');
     });
     setBusy(false);
   }
 
-  getTrx20TsWalletBalance() async {}
 /*----------------------------------------------------------------------
                         Fab Chain Balance
 ----------------------------------------------------------------------*/
@@ -485,20 +493,23 @@ class MoveToWalletViewmodel extends BaseState {
       updateTickerForErc = 'BSTE';
     } else if (walletInfo.tickerName == 'EXG') {
       updateTickerForErc = 'EXGE';
-    } else if (walletInfo.tickerName == 'TRX') {
-      updateTickerForTrc = 'USDTX';
-    } else {
+    }
+    // else if (walletInfo.tickerName == 'TRX') {
+    //   updateTickerForTrc = 'USDTX';
+    // }
+    else {
       updateTickerForErc = walletInfo.tickerName;
     }
     await getEthTokenBalanceByAddress(officialAddress, updateTickerForErc)
         .then((res) {
       log.e('getEthChainBalance $res');
-      ethChainBalance =
-          walletInfo.tickerName == 'FABE' || walletInfo.tickerName == 'FAB'
-              ? res['balanceIe8']
-              : res['tokenBalanceIe18'];
+      ethChainBalance = walletInfo.tickerName == 'FABE' ||
+              walletInfo.tickerName == 'FAB' ||
+              walletInfo.tickerName == 'USDT'
+          ? res['balanceIe8']
+          : res['tokenBalanceIe18'];
       //  chainBalances.add({'eth': res['balance']});
-      // log.w(chainBalances);
+      log.w('ethChainBalance $ethChainBalance');
     });
     setBusy(false);
   }
@@ -513,26 +524,29 @@ class MoveToWalletViewmodel extends BaseState {
     _groupValue = value;
     if (value == 'FAB') {
       isShowFabChainBalance = true;
+      isShowTrxTsWalletBalance = false;
       if (walletInfo.tickerName != 'FAB') walletInfo.tokenType = 'FAB';
       if (walletInfo.tickerName == 'FAB') walletInfo.tokenType = '';
       updateTickerForErc = walletInfo.tickerName;
       log.i('chain type ${walletInfo.tokenType}');
-      setWithdrawLimit();
+      setWithdrawLimit(walletInfo.tickerName);
     } else if (value == 'TRX') {
       isShowTrxTsWalletBalance = true;
       if (walletInfo.tickerName != 'TRX') walletInfo.tokenType = 'TRX';
-      if (walletInfo.tickerName == 'TRX') walletInfo.tokenType = '';
       updateTickerForTrc = walletInfo.tickerName;
+      isSpeicalTronTokenWithdraw = true;
+      walletInfo.tokenType = 'TRX';
       log.i('chain type ${walletInfo.tokenType}');
-      setWithdrawLimit();
-    } 
+      setWithdrawLimit('USDTX');
+    }
     // else if (walletInfo.tickerName == 'TRX' && !isShowTrxTsWalletBalance) {
     //   await tokenListDatabaseService
     //       .getByTickerName('USDTX')
     //       .then((token) => withdrawLimit = double.parse(token.minWithdraw));
     //   log.i('withdrawLimit $withdrawLimit');
-    // } 
+    // }
     else {
+      isShowTrxTsWalletBalance = false;
       isShowFabChainBalance = false;
       walletInfo.tokenType = 'ETH';
       log.i('chain type ${walletInfo.tokenType}');
@@ -551,7 +565,8 @@ class MoveToWalletViewmodel extends BaseState {
             .getByTickerName('BSTE')
             .then((token) => withdrawLimit = double.parse(token.minWithdraw));
         log.i('withdrawLimit $withdrawLimit');
-      }
+      } else
+        setWithdrawLimit(walletInfo.tickerName);
       setBusy(false);
     }
   }
@@ -604,7 +619,9 @@ class MoveToWalletViewmodel extends BaseState {
       return;
     }
 
-    if (!isShowTrxTsWalletBalance && isShowFabChainBalance && amount > fabChainBalance) {
+    if (!isShowTrxTsWalletBalance &&
+        isShowFabChainBalance &&
+        amount > fabChainBalance) {
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
@@ -614,7 +631,19 @@ class MoveToWalletViewmodel extends BaseState {
 
     /// show warning like amount should be less than ts wallet balance
     /// instead of displaying the generic error
-    if (!isShowTrxTsWalletBalance && !isShowFabChainBalance && amount > ethChainBalance) {
+    if (!isShowTrxTsWalletBalance &&
+        !isShowFabChainBalance &&
+        amount > ethChainBalance) {
+      sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
+          isWarning: false);
+      setBusy(false);
+      return;
+    }
+
+    if (isShowTrxTsWalletBalance &&
+        !isShowFabChainBalance &&
+        amount > trxTsWalletBalance) {
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
@@ -640,11 +669,20 @@ class MoveToWalletViewmodel extends BaseState {
         coinAddress = exgAddress;
         tokenType = 'FAB';
         log.i('coin address is exg address');
-      } else if (coinName == 'FAB' && !isShowFabChainBalance) {
+      }
+
+      /// Ticker is FAB but fab chain balance is false then
+      /// take coin address is ETH wallet address
+      else if (coinName == 'FAB' && !isShowFabChainBalance) {
         await walletDataBaseService
             .getBytickerName('ETH')
             .then((wallet) => coinAddress = wallet.address);
         log.i('coin address is ETH address');
+      } else if (coinName == 'USDT' && isShowTrxTsWalletBalance) {
+        await walletDataBaseService
+            .getBytickerName('TRX')
+            .then((wallet) => coinAddress = wallet.address);
+        log.i('coin address is TRX address');
       } else {
         coinAddress = walletInfo.address;
         log.i('coin address is its own wallet info address');
@@ -675,7 +713,7 @@ class MoveToWalletViewmodel extends BaseState {
         // withdraw function
         await walletService
             .withdrawDo(seed, coinName, coinAddress, tokenType, amount,
-                kanbanPrice, kanbanGasLimit)
+                kanbanPrice, kanbanGasLimit, isSpeicalTronTokenWithdraw)
             .then((ret) {
           log.w(ret);
           bool success = ret["success"];

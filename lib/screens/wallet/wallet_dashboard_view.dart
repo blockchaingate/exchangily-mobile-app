@@ -459,6 +459,9 @@ class WalletDashboardView extends StatelessWidget {
     } else if (tickerName.toUpperCase() == 'FABE') {
       tickerName = 'FAB(ERC20)';
       logoTicker = 'FABE';
+    } else if (tickerName.toUpperCase() == 'USDTX') {
+      tickerName = 'USDT(TRC20)';
+      logoTicker = 'USDTX';
     } else {
       logoTicker = tickerName;
     }

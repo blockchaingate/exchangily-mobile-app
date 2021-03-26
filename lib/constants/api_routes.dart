@@ -9,6 +9,7 @@ const String baseBlockchainGateV2Url = isProduction
     ? 'https://api.blockchaingate.com/v2/'
     : 'https://test.blockchaingate.com/v2/';
 
+const String TronBaseApiUrl = 'https://api.trongrid.io/';
 /*----------------------------------------------------------------------
                         Bindpay
 ----------------------------------------------------------------------*/
@@ -20,8 +21,17 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
                         Wallet
 ----------------------------------------------------------------------*/
 
-const String BroadcasrTronTransactionUrl  = "https://api.trongrid.io/wallet/broadcasthex";
-const String GetTronLatestBlockUrl = 'https://api.trongrid.io/wallet/getnowblock';
+const String TronGetAccountUrl = TronBaseApiUrl + "wallet/getaccount";
+//  const requestURL = `${TRON_API_ENDPOINT}/wallet/getaccount`;
+// const requestBody = {
+//   address,
+//   visible: true
+// };
+
+const String BroadcasrTronTransactionUrl =
+    TronBaseApiUrl + "wallet/broadcasthex";
+const String GetTronLatestBlockUrl = TronBaseApiUrl + 'wallet/getnowblock';
+
 const String WalletBalancesApiRoute = 'walletBalances';
 const String SingleWalletBalanceApiRoute = 'singleCoinWalletBalance';
 const String WalletCoinsLogoUrl = "https://www.exchangily.com/assets/coins/";

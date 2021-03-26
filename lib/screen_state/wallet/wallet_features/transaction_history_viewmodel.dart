@@ -94,8 +94,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
         // element.tickerName = 'EXG(ERC20)';
         transactionHistoryToShowInView.add(element);
       }
-      // else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
-      //     tickerName == 'DSCE') transactionHistoryToShowInView.add(element);
+      else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
+          tickerName == 'USDTX') transactionHistoryToShowInView.add(element);
     });
 
     if (txHistoryFromDb != null)

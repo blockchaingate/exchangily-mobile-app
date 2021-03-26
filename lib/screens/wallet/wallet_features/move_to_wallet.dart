@@ -86,11 +86,24 @@ class MoveToWalletScreen extends StatelessWidget {
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true),
                           decoration: InputDecoration(
-                              suffix: Text(
-                                  AppLocalizations.of(context).minimumAmount +
-                                      ': ' +
-                                      model.withdrawLimit.toString(),
-                                  style: Theme.of(context).textTheme.headline6),
+                              suffix: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                      AppLocalizations.of(context)
+                                              .minimumAmount + ':',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                  Text(
+                                      model.withdrawLimit == null
+                                          ? AppLocalizations.of(context).loading
+                                          : model.withdrawLimit.toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6),
+                                ],
+                              ),
                               enabledBorder: OutlineInputBorder(
                                   borderSide: new BorderSide(
                                       color: Color(0XFF871fff), width: 1.0)),
@@ -117,7 +130,7 @@ class MoveToWalletScreen extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                               horizontal: 3,
                             ),
-                            child: Text('$coinName'.toUpperCase(),
+                            child: Text('${model.specialTicker}'.toUpperCase(),
                                 style: Theme.of(context).textTheme.subtitle2),
                           ),
                           model.isWithdrawChoice
@@ -294,13 +307,13 @@ class MoveToWalletScreen extends StatelessWidget {
                           )),
 
                       UIHelper.verticalSpaceSmall,
-
+// withdraw choice radio
                       model.isWithdrawChoice
                           ? Container(
                               child: Row(
                               children: [
-                                // for (var chainBalance in model.chainBalances)
-                                model.isShowTrxTsWalletBalance
+                                model.isShowTrxTsWalletBalance ||
+                                        model.walletInfo.tickerName == "USDT"
                                     ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -337,6 +350,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                               value: 'FAB'),
                                         ],
                                       ),
+
+                                      // erc20 radio button
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -353,6 +368,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                         value: 'ETH'),
                                   ],
                                 ),
+
+                                // TS wallet balance show
                                 Expanded(
                                   child: Column(
                                     children: [
@@ -391,9 +408,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                               : Container()
                                         ],
                                       )),
-                                      model.walletInfo.tickerName == 'TRX' ||
-                                              model.walletInfo.tickerName ==
-                                                  ' USDTX'
+
+                                      // show ts wallet balance for tron chain
+                                      model.walletInfo.tickerName == 'USDT'
                                           ? Container(
                                               margin:
                                                   EdgeInsets.only(left: 5.0),
@@ -422,7 +439,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                                                   .textTheme
                                                                   .headline6,
                                                         )
-                                                  : Container())
+                                                  : Container(
+                                                      child: Text(AppLocalizations.of(context).loading)))
                                           : Container(
                                               margin:
                                                   EdgeInsets.only(left: 5.0),
@@ -449,7 +467,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                                                   .textTheme
                                                                   .headline6,
                                                         )
-                                                  : Container()),
+                                                  : Container(child:Text(AppLocalizations.of(context).loading))),
                                     ],
                                   ),
                                 ),
