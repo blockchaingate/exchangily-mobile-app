@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
 import 'package:decimal/decimal.dart';
 import 'package:intl/intl.dart';
-
+import 'package:bs58check/bs58check.dart' as Base58;
 /*
 toBitInt(num, [zeroLength]) {
   var numString = num.toString();
@@ -111,6 +111,15 @@ number2Buffer(num) {
   }
   return buffer;
 }
+/*----------------------------------------------------------------------
+                    Convert fab to hex
+----------------------------------------------------------------------*/
+
+  String convertFabAddressToHex(String fabAddress) {
+    var decoded = Base58.decode(fabAddress);
+    String hexString = HEX.encode(decoded);
+    return hexString;
+  }
 
 stringToUint8List(String s) {
   List<int> list = utf8.encode(s);

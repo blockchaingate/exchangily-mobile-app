@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2021-03-03T17:21:06.215194",
+  "@@last_modified": "2021-03-30T12:19:07.894993",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1134,6 +1134,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "receiveAddress": "Receive Address",
+  "@receiveAddress": {
+    "description": "campaign_recieve_address",
+    "type": "text",
+    "placeholders": {}
+  },
   "balance": "Balance",
   "@balance": {
     "description": "campaign_balance",
@@ -1965,6 +1971,24 @@
   "specialExchangeBalanceNote": "The displayed exchange balance is shared for coins that exist on multiple blockchains. Withdraws may be made to the chain of your choice.",
   "@specialExchangeBalanceNote": {
     "description": "special_exchange_balance_note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "fee": "Fee",
+  "@fee": {
+    "description": "fee",
+    "type": "text",
+    "placeholders": {}
+  },
+  "updateWallet": "Update wallet",
+  "@updateWallet": {
+    "description": "update_wallet_dashboard",
+    "type": "text",
+    "placeholders": {}
+  },
+  "sameBalanceNote": "Same balance as",
+  "@sameBalanceNote": {
+    "description": "sameBalanceNote",
     "type": "text",
     "placeholders": {}
   }

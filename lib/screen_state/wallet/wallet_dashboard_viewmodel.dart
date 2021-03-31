@@ -29,6 +29,7 @@ import 'package:exchangilymobileapp/services/db/decimal_config_database_service.
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
+import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -37,6 +38,8 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
+    as TronAddressUtil;
 
 import 'package:flutter/material.dart';
 
@@ -70,6 +73,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
   var storageService = locator<LocalStorageService>();
+  final dialogService = locator<DialogService>();
 
   BuildContext context;
   List<WalletInfo> walletInfo;
@@ -115,6 +119,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   get isShowCaseView => _isShowCaseView;
 
   int unreadMsgNum = 0;
+  bool isUpdateWallet = false;
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -140,6 +145,55 @@ class WalletDashboardViewModel extends BaseViewModel {
     );
   }
 
+/*----------------------------------------------------------------------
+                Update wallet with new native coins
+----------------------------------------------------------------------*/
+
+  checkToUpdateWallet() async {
+    setBusy(true);
+    await walletDatabaseService.getBytickerName('TRX').then((wallet) {
+      if (wallet != null) {
+        log.w('${wallet.toJson()} present');
+        isUpdateWallet = false;
+      } else {
+        isUpdateWallet = true;
+      }
+    });
+    setBusy(false);
+  }
+
+  // add trx if not present in wallet
+  updateWallet() async {
+    setBusy(true);
+    String mnemonic = '';
+    await dialogService
+        .showDialog(
+            title: AppLocalizations.of(context).enterPassword,
+            description:
+                AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+            buttonTitle: AppLocalizations.of(context).confirm)
+        .then((res) async {
+      if (res.confirmed) {
+        mnemonic = res.returnedText;
+        var address = TronAddressUtil.generateTrxAddress(mnemonic);
+        WalletInfo wi = new WalletInfo(
+            id: null,
+            tickerName: 'TRX',
+            tokenType: '',
+            address: address,
+            availableBalance: 0.0,
+            lockedBalance: 0.0,
+            usdValue: 0.0,
+            name: 'Tron');
+
+        log.i("new wallet trx generated in update wallet ${wi.toJson()}");
+        await walletDatabaseService.insert(wi);
+    await refreshBalance();
+    isUpdateWallet = false;
+      }
+    });
+    setBusy(false);
+  }
 /*----------------------------------------------------------------------
                         Check Announcement
 ----------------------------------------------------------------------*/
@@ -1127,42 +1181,8 @@ class WalletDashboardViewModel extends BaseViewModel {
       formattedUsdValueListCopy =
           formattedUsdValueList.map((element) => element).toList();
     }
+    await checkToUpdateWallet();
     setBusy(false);
-  }
-
-/*----------------------------------------------------------------------
-                Save Locally
-----------------------------------------------------------------------*/
-  saveTokenLocally() async {
-    // await tokenListDatabaseService.getByName('CNB').then((newToken) {
-    //   List<String> tokenList = [];
-
-    //   var x = jsonEncode(newToken);
-    //   print('encode $x');
-    //   tokenList.add(x);
-    //   log.i('tokenList $tokenList');
-    //   storageService.tokenList = tokenList;
-    //   storageService.tokenList.forEach((element) {
-    //     print(element);
-    //     var t = jsonDecode(element);
-    //     Token token = Token.fromJson(t);
-    //     print(token.tickerName);
-    //   });
-    // });
-
-    // var x = storageService.tokenList;
-    // print(x);
-
-    // storageService.tokenList.forEach((element) {
-    //   print(element);
-    //   var json = jsonDecode(element);
-    //   Token token = Token.fromJson(json);
-    //   if (token.tokenType == 131075) print(token.tickerName);
-    // tickerName = token.tickerName;
-    // });
-
-    String mne = "";
-    walletService.generateTrxAddress(mne);
   }
 
   // Old way to get balances

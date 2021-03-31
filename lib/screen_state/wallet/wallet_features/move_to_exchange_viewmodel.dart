@@ -60,7 +60,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   void initState() async {
     setBusy(true);
     coinName = walletInfo.tickerName;
-    coinName = walletInfo.tickerName;
+    if(coinName == 'FAB') walletInfo.tokenType = '';
     tokenType = walletInfo.tokenType;
     if (coinName != 'TRX' && coinName != 'USDTX') {
       setFee();
@@ -149,28 +149,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
     return gasAmount;
   }
 
-/*---------------------------------------------------
-                      Check Pass
---------------------------------------------------- */
-  convert() {
-    const prefix = 0x15;
-    setBusy(true);
-    Uint8List messagePrefix = utf8.encode(prefix.toString());
-    res = messagePrefix;
-    //CryptoWeb3.hexToDartInt(prefix.toString());
-    var a = CryptoWeb3.bytesToHex(res);
-    print('a $a');
-    setBusy(false);
-
-    var originalMsg =
-        '00070000d9dbc3bd11fc6b7c6b5f20d86efe280be19eb17672db2f1e9eaa35120c149e8200000000000000000000000000000000000000000000000003782dace9d9000000000000000000000000000014dd8fd0efe3d72d7329463a7ff7b18770009f76';
-    var originalMshHexToBytes = CryptoWeb3.hexToBytes(originalMsg);
-    log.w('originalMshHexToBytes $originalMshHexToBytes');
-
-    var originalMshHexToAsciiBytes = ascii.encode(originalMsg);
-    log.e('originalMshHexToAsciiBytes $originalMshHexToAsciiBytes');
-  }
-
   checkPass() async {
     setBusy(true);
 
@@ -204,7 +182,18 @@ class MoveToExchangeViewModel extends BaseViewModel {
         amount.isNegative) {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-          AppLocalizations.of(context).pleaseEnterValidNumber,
+          AppLocalizations.of(context).insufficientBalance,
+          isWarning: false);
+      setBusy(false);
+      return;
+    }
+
+    if (walletInfo.tickerName == 'USDTX' &&
+        walletInfo.availableBalance < 15.0) {
+      log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
+      sharedService.alertDialog(
+          '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
+          AppLocalizations.of(context).insufficientBalance,
           isWarning: false);
       setBusy(false);
       return;
@@ -282,8 +271,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
             amountController.text = '';
             String txId = res['data']['transactionID'];
 
-            var allTxids = res["txids"];
-            walletService.addTxids(allTxids);
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
             message = txId.toString();
@@ -294,10 +281,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
             );
           } else {
             if (res.containsKey("error") && res["error"] != null) {
-              serverError = res['error'];
+              serverError = res['error'].toString();
               isShowErrorDetailsButton = true;
             } else if (res["message"] != null) {
-              serverError = res['message'];
+              serverError = res['message'].toString();
               isShowErrorDetailsButton = true;
             }
           }
@@ -338,10 +325,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
             message = txId.toString();
           } else {
             if (ret.containsKey("error") && ret["error"] != null) {
-              serverError = ret['error'];
+              serverError = ret['error'].toString();
               isShowErrorDetailsButton = true;
             } else if (ret["message"] != null) {
-              serverError = ret['message'];
+              serverError = ret['message'].toString();
               isShowErrorDetailsButton = true;
             }
           }

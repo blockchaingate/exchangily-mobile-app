@@ -140,6 +140,8 @@ Future<Map<String, dynamic>> sendKanbanRawTransaction(
     var response = await client.post(url, body: data);
     print('response from sendKanbanRawTransaction=');
     print(response.body);
+    if(response.body.contains('TS crosschain withdraw verification failed'))
+    return {'success':false,'data':response.body};
     Map<String, dynamic> res = jsonDecode(response.body);
     return res;
   } catch (e) {

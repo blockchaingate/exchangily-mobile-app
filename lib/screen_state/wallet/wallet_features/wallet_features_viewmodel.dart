@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -42,7 +43,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
   BuildContext context;
   var errDepositItem;
   String specialTicker = '';
-
+  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   List<WalletFeatureName> features = new List();
 
   init() {
@@ -51,6 +52,15 @@ class WalletFeaturesViewModel extends BaseViewModel {
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)["tickerName"];
     log.i('wi object to check name ${walletInfo.toJson()}');
+    refreshBalance();
+  }
+
+  getDecimalData() async {
+    setBusy(true);
+    singlePairDecimalConfig =
+        await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
+    log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
+    setBusy(false);
   }
 
   getWalletFeatures() {
@@ -99,18 +109,22 @@ class WalletFeaturesViewModel extends BaseViewModel {
 
   refreshBalance() async {
     setBusy(true);
+
     String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     //  await getExchangeBal();
     await apiService
         .getSingleWalletBalance(
             fabAddress, walletInfo.tickerName, walletInfo.address)
-        .then((walletBalance) {
+        .then((walletBalance) async {
       log.e(walletBalance[0].coin);
       var availableBalance = walletBalance[0].balance;
       walletInfo.availableBalance = availableBalance;
       var lockedBalance = walletBalance[0].lockBalance;
       walletInfo.lockedBalance = lockedBalance;
-      walletInfo.inExchange = walletBalance[0].unlockedExchangeBalance;
+      if (!specialTicker.contains('('))
+        walletInfo.inExchange = walletBalance[0].unlockedExchangeBalance;
+      else
+        await getExchangeBalForSpecialTokens();
       double currentUsdValue = walletBalance[0].usdValue.usd;
       log.e(
           'market price $currentUsdValue -- available bal $availableBalance -- inExchange ${walletInfo.inExchange} -- locked bal $lockedBalance');
@@ -145,10 +159,26 @@ class WalletFeaturesViewModel extends BaseViewModel {
   }
 
   // get exchange balance for single coin
-  getExchangeBal() async {
-    await apiService
-        .getSingleCoinExchangeBalance(walletInfo.tickerName)
-        .then((res) {
+  getExchangeBalForSpecialTokens() async {
+    String tickerName = '';
+    if (walletInfo.tickerName == 'DSCE' || walletInfo.tickerName == 'DSC') {
+      tickerName = 'DSC';
+    } else if (walletInfo.tickerName == 'BSTE' ||
+        walletInfo.tickerName == 'BST') {
+      tickerName = 'BST';
+    } else if (walletInfo.tickerName == 'FABE' ||
+        walletInfo.tickerName == 'FAB') {
+      tickerName = 'FAB';
+    } else if (walletInfo.tickerName == 'EXGE' ||
+        walletInfo.tickerName == 'EXG') {
+      tickerName = 'EXG';
+    } else if (walletInfo.tickerName == 'USDT') {
+      tickerName = 'USDT';
+    } else if (walletInfo.tickerName == 'USDTX') {
+      tickerName = 'USDT';
+    } else
+      tickerName = walletInfo.tickerName;
+    await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
       if (res != null) {
         walletInfo.inExchange = res.unlockedAmount;
         log.w('exchange bal ${walletInfo.inExchange}');

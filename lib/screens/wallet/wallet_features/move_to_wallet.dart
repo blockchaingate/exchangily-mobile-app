@@ -130,7 +130,8 @@ class MoveToWalletScreen extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                               horizontal: 3,
                             ),
-                            child: Text('${model.specialTicker}'.toUpperCase(),
+                            child:walletInfo.tickerName == 'USDTX'?Text('USDT'.toUpperCase(),
+                                style: Theme.of(context).textTheme.subtitle2): Text('${model.specialTicker}'.toUpperCase(),
                                 style: Theme.of(context).textTheme.subtitle2),
                           ),
                           model.isWithdrawChoice
@@ -153,6 +154,20 @@ class MoveToWalletScreen extends StatelessWidget {
 
                       UIHelper.verticalSpaceSmall,
                       // Kanban Gas Fee
+                      walletInfo.tickerName == 'TRX' ||
+                        walletInfo.tickerName == 'USDTX' || model.isShowTrxTsWalletBalance
+                    ? Container(
+                        padding: EdgeInsets.only(top: 10, bottom: 0),
+                        alignment: Alignment.topLeft,
+                        child: walletInfo.tickerName == 'TRX'? Text(
+                            '${AppLocalizations.of(context).gasFee}: 1 TRX',
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.headline6):Text(
+                            '${AppLocalizations.of(context).gasFee}: 15 TRX',
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.headline6),
+                      )
+                    :
                       Row(
                         children: <Widget>[
                           Text(AppLocalizations.of(context).kanbanGasFee,
@@ -313,7 +328,7 @@ class MoveToWalletScreen extends StatelessWidget {
                               child: Row(
                               children: [
                                 model.isShowTrxTsWalletBalance ||
-                                        model.walletInfo.tickerName == "USDT"
+                                        model.walletInfo.tickerName == "USDT" ||  model.walletInfo.tickerName == "USDTX"
                                     ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -410,7 +425,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                       )),
 
                                       // show ts wallet balance for tron chain
-                                      model.walletInfo.tickerName == 'USDT'
+                                      model.walletInfo.tickerName == 'USDT' || model.walletInfo.tickerName == 'USDTX'
                                           ? Container(
                                               margin:
                                                   EdgeInsets.only(left: 5.0),

@@ -30,7 +30,9 @@ class SendWalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double bal = walletInfo.availableBalance;
-    String tickerName = walletInfo.tickerName;
+
+    String tickerName = '';
+    walletInfo.tickerName == 'USDTX'? tickerName = 'USDT(TRC20)' :tickerName = walletInfo.tickerName;
     String tokenType = walletInfo.tokenType;
     return BaseScreen<SendScreenState>(
         onModelReady: (model) {
@@ -208,18 +210,23 @@ class SendWalletScreen extends StatelessWidget {
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: tickerName == 'TRX' || tickerName == 'USDTX'
+                          child: walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'
                               ? Container(
                                   padding: EdgeInsets.only(top: 10, bottom: 0),
                                   alignment: Alignment.topLeft,
-                                  child: Text(
-                                      '${AppLocalizations.of(context).fee}: 15 TRX',
-                                      textAlign: TextAlign.left,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5
-                                          .copyWith(
-                                              fontWeight: FontWeight.w400)),
+                                  child: walletInfo.tickerName == 'TRX'
+                                      ? Text(
+                                          '${AppLocalizations.of(context).gasFee}: 1 TRX',
+                                          textAlign: TextAlign.left,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6)
+                                      : Text(
+                                          '${AppLocalizations.of(context).gasFee}: 15 TRX',
+                                          textAlign: TextAlign.left,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
                                 )
                               : Column(
                                   children: <Widget>[
@@ -572,7 +579,7 @@ class SendWalletScreen extends StatelessWidget {
                                         Theme.of(context).textTheme.headline6),
                               )
                             : Container(),
-                             UIHelper.verticalSpaceSmall,
+                        UIHelper.verticalSpaceSmall,
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
                                     Send Button Container

@@ -117,8 +117,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                     ? Container(
                         padding: EdgeInsets.only(top: 10, bottom: 0),
                         alignment: Alignment.topLeft,
-                        child: Text(
-                            '${AppLocalizations.of(context).fee}: 15 TRX',
+                        child: walletInfo.tickerName == 'TRX'? Text(
+                            '${AppLocalizations.of(context).gasFee}: 1 TRX',
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.headline6):Text(
+                            '${AppLocalizations.of(context).gasFee}: 15 TRX',
                             textAlign: TextAlign.left,
                             style: Theme.of(context).textTheme.headline6),
                       )
@@ -504,20 +507,7 @@ class MoveToExchangeScreen extends StatelessWidget {
             ],
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: SizedBox(
-          child: Column(
-            children: [
-              FlatButton(
-                child: Text('Click'),
-                onPressed: () {
-                  model.convert();
-                },
-              ),
-              Text(model.res.toString())
-            ],
-          ),
-        ),
+   
       ),
     );
   }

@@ -1973,5 +1973,23 @@
         "description": "special_exchange_balance_note",
         "type": "text",
         "placeholders": {}
+    },
+    "fee": "Fee",
+    "@fee": {
+        "description": "fee",
+        "type": "text",
+        "placeholders": {}
+    },
+    "updateWallet": "Update wallet",
+    "@updateWallet": {
+        "description": "update_wallet_dashboard",
+        "type": "text",
+        "placeholders": {}
+    },
+    "sameBalanceNote": "Same balance as",
+    "@sameBalanceNote": {
+        "description": "sameBalanceNote",
+        "type": "text",
+        "placeholders": {}
     }
 }

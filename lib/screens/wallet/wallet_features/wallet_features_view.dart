@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -85,7 +86,7 @@ class WalletFeaturesView extends StatelessWidget {
                   Container(
                       padding:
                           EdgeInsets.symmetric(vertical: 0, horizontal: 25),
-                      height: 120,
+                      height: 135,
                       alignment: FractionalOffset(0.0, 2.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -102,7 +103,7 @@ class WalletFeaturesView extends StatelessWidget {
                                   size: 17,
                                   color: globals.white,
                                 ),
-                                Text('${walletInfo.name}',
+                                Text('${walletInfo.name ?? ''}',
                                     style:
                                         Theme.of(context).textTheme.subtitle1)
                               ],
@@ -283,84 +284,100 @@ class WalletFeaturesView extends StatelessWidget {
 
   // Build Total Balance Card
 
-  Widget _buildTotalBalanceCard(context, model, walletInfo) => Card(
+  Widget _buildTotalBalanceCard(
+      context, WalletFeaturesViewModel model, walletInfo) {
+    String message = AppLocalizations.of(context).sameBalanceNote;
+    String nativeTicker = model.specialTicker.split('(')[0];
+    return Card(
         elevation: model.elevation,
         color: globals.walletCardColor,
         child: Container(
-          padding: EdgeInsets.all(10),
+          //  padding: EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Expanded(
-                    flex: 4,
-                    child: Text(
-                      '${model.specialTicker} ' +
-                          AppLocalizations.of(context).totalBalance,
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(color: globals.buyPrice),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: Text(
+                        //  '${model.specialTicker} ' +
+                        AppLocalizations.of(context).totalBalance,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(color: globals.buyPrice),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: InkWell(
-                      onTap: () async {
-                        await model.refreshBalance();
-                      },
-                      child: model.isBusy
-                          ? model.sharedService.loadingIndicator()
-                          : Center(
-                              child: Icon(
-                                Icons.refresh,
-                                color: globals.white,
-                                size: 18,
+                    Expanded(
+                      flex: 2,
+                      child: InkWell(
+                        onTap: () async {
+                          await model.refreshBalance();
+                        },
+                        child: model.isBusy
+                            ? model.sharedService.loadingIndicator()
+                            : Center(
+                                child: Icon(
+                                  Icons.refresh,
+                                  color: globals.white,
+                                  size: 18,
+                                ),
                               ),
-                            ),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 4,
-                    child: Text(
-                      '${model.walletInfo.usdValue.toStringAsFixed(2)} USD',
-                      textAlign: TextAlign.right,
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          .copyWith(color: globals.buyPrice),
-                    ),
-                  )
-                ],
+                    Expanded(
+                      flex: 4,
+                      child: Text(
+                        '${model.walletInfo.usdValue.toStringAsFixed(2)} USD',
+                        textAlign: TextAlign.right,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle1
+                            .copyWith(color: globals.buyPrice),
+                      ),
+                    )
+                  ],
+                ),
               ),
               // Middle column row containes wallet balance and in exchnage text
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text(
-                      '${model.specialTicker} '.toUpperCase() +
-                          AppLocalizations.of(context).walletbalance,
-                      style: Theme.of(context).textTheme.subtitle1),
-                  Text(AppLocalizations.of(context).inExchange,
-                      style: Theme.of(context).textTheme.subtitle1)
-                ],
+              Container(
+                color: primaryColor.withAlpha(27),
+                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                        //  '${model.specialTicker} '.toUpperCase() +
+                        AppLocalizations.of(context).walletbalance,
+                        style: Theme.of(context).textTheme.subtitle1),
+                    Text(
+                        '${model.walletInfo.availableBalance.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)} ${model.specialTicker}',
+                        style: Theme.of(context).textTheme.bodyText1),
+                  ],
+                ),
               ),
               // Last column row contains wallet balance and exchange balance
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('${model.walletInfo.availableBalance}',
-                      style: Theme.of(context).textTheme.subtitle1),
-                  Text('${model.walletInfo.inExchange}',
-                      style: Theme.of(context).textTheme.subtitle1)
-                ],
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                        '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') ? '\n' + message + ' ' + nativeTicker : ''}',
+                        style: Theme.of(context).textTheme.subtitle1),
+                    Text('${model.walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
+                        style: Theme.of(context).textTheme.subtitle1),
+                  ],
+                ),
               )
             ],
           ),
-        ),
-      );
+        ));
+  }
 
   // Features Card
 

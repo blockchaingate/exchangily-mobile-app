@@ -20,7 +20,7 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
-
+const String TronUsdtAccountBalanceUrl = TronBaseApiUrl + "wallet/triggerconstantcontract";
 const String TronGetAccountUrl = TronBaseApiUrl + "wallet/getaccount";
 //  const requestURL = `${TRON_API_ENDPOINT}/wallet/getaccount`;
 // const requestBody = {

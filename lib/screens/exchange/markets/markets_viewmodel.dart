@@ -96,7 +96,6 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
 
       log.e(' priceList.prices length before ${priceList.prices.length}');
       List<String> coinsToRemove = [
-        'TRX',
         'IOST',
         'REPUSDT',
         'WINGSUSDT',

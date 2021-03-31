@@ -489,7 +489,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   Launch URL
 ----------------------------------------------------------------------*/
   launchUrl(String txId, String chain, bool isKanban) async {
-    copyAddress(txId);
+   // copyAddress(txId);
     if (isKanban) {
       String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
       log.i('Kanban - explorer url - $exchangilyExplorerUrl');
@@ -516,7 +516,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
       String dogeExplorerUrl = DogeExplorerUrl + txId;
       log.i('doge - chainame $chain explorer url - $dogeExplorerUrl');
       openExplorer(dogeExplorerUrl);
-    } else if (chain.toUpperCase() == 'TRON') {
+    } else if (chain.toUpperCase() == 'TRON' || chain.toUpperCase() == 'TRX') {
+      if(txId.startsWith('0x')){
+       txId= txId.substring(2);
+      }
       String tronExplorerUrl = TronExplorerUrl + txId;
       log.i('tron - chainame $chain explorer url - $tronExplorerUrl');
       openExplorer(tronExplorerUrl);

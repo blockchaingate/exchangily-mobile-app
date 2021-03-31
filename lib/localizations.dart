@@ -977,7 +977,7 @@ class AppLocalizations {
 
   String get receiveAddress {
     return Intl.message('Receive Address',
-        name: 'recieveAddress', desc: 'campaign_recieve_address');
+        name: 'receiveAddress', desc: 'campaign_recieve_address');
   }
 
   String get balance {
@@ -1726,6 +1726,14 @@ class AppLocalizations {
 
   String get fee {
     return Intl.message('Fee', name: 'fee', desc: 'fee');
+  }
+
+   String get updateWallet {
+    return Intl.message('Update wallet', name: 'updateWallet', desc: 'update_wallet_dashboard');
+  }
+
+    String get sameBalanceNote {
+    return Intl.message('Same balance as', name: 'sameBalanceNote', desc: 'sameBalanceNote');
   }
 
   // Share page pending translation added by Jack

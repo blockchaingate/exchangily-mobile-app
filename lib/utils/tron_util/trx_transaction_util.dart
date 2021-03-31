@@ -28,23 +28,23 @@ Future generateTrxTransactionContract(
     @required String tickerName,
     @required bool isBroadcast}) async {
   int decimal = 0;
-  print(
-      'tickername $tickerName -- from $fromAddr -- to $toAddr -- amount $amount --  isTrxUsdt $isTrxUsdt -- private key $privateKey');
+ // print(
+ //     'tickername $tickerName -- from $fromAddr -- to $toAddr -- amount $amount --  isTrxUsdt $isTrxUsdt -- private key $privateKey');
   String contractAddress = '';
   final tokenListDatabaseService = locator<TokenListDatabaseService>();
   final apiService = locator<ApiService>();
   List<int> fromAddress = bs58check.decode(fromAddr);
 
-  print('base58 fromAddress to Hex ${StringUtil.uint8ListToHex(fromAddress)}');
+ // print('base58 fromAddress to Hex ${StringUtil.uint8ListToHex(fromAddress)}');
   List<int> toAddress = bs58check.decode(toAddr);
-  print(
-      'base58 address toAddress to hex ${StringUtil.uint8ListToHex(toAddress)}');
+ // print(
+  //    'base58 address toAddress to hex ${StringUtil.uint8ListToHex(toAddress)}');
   // 4103b01c144f4e41c22b411c2997fbcdfae4fc9c2e
 
   var amountToBigInt = BigInt.from(amount * 1e6);
   Int64 bigIntAmountToInt64 = Int64.parseInt(amountToBigInt.toString());
 
-  print('original amount - $amount and int64 res $bigIntAmountToInt64');
+ // print('original amount - $amount and int64 res $bigIntAmountToInt64');
 
   var trans;
 
@@ -58,21 +58,21 @@ Future generateTrxTransactionContract(
         if (token != null) {
           contractAddress = token.contract;
           decimal = token.decimal;
-          print('token from token database ${token.toJson()}');
+       //   print('token from token database ${token.toJson()}');
         } else {
           await apiService.getTokenListUpdates().then((tokenList) {
             tokenList.forEach((token) {
               if (token.tickerName == 'USDTX') {
                 contractAddress = token.contract;
                 decimal = token.decimal;
-                print('token from api ${token.toJson()}');
+              //  print('token from api ${token.toJson()}');
               }
             });
           });
         }
       });
     }
-    print('contract address $contractAddress');
+  //  print('contract address $contractAddress');
   }
   if (isTrxUsdt) {
     var transferAbi = 'a9059cbb';
@@ -85,24 +85,24 @@ Future generateTrxTransactionContract(
     }
     // if address length is > 20 bytes then trim checksum(last 8 bytes)
     if (decodedHexToAddress.length > 40) {
-      print(
-          ' decodedHexToAddress.length ${decodedHexToAddress.length} is more than 40');
+    //  print(
+    //      ' decodedHexToAddress.length ${decodedHexToAddress.length} is more than 40');
       int difference = decodedHexToAddress.length - 40;
       decodedHexToAddress = decodedHexToAddress.substring(
           0, decodedHexToAddress.length - difference);
     }
     var dataToAddress = StringUtil.fixLength(decodedHexToAddress, 64);
     // 00000000000000000000000003b01c144f4e41c22b411c2997fbcdfae4fc9c2e
-    print('dataToAddress ${dataToAddress.length} -- $dataToAddress');
+  //  print('dataToAddress ${dataToAddress.length} -- $dataToAddress');
 
 // AMOUNT
     var hexDataAmount = NumberUtil().intToHex(amountToBigInt);
     var dataAmount = StringUtil.fixLength(hexDataAmount.toString(), 64);
 // 00000000000000000000000000000000000000000000000000000000002dc6c0
-    print('dataAmount ${dataAmount.length} -- $dataAmount');
-    print('bigint amount $amountToBigInt -- hex amount $dataAmount');
+ //   print('dataAmount ${dataAmount.length} -- $dataAmount');
+ //   print('bigint amount $amountToBigInt -- hex amount $dataAmount');
     var data = transferAbi + dataToAddress + dataAmount;
-    print('data $data');
+ //   print('data $data');
 
 // Trigger Smart Contract
     trans = Tron.TriggerSmartContract(
@@ -112,13 +112,13 @@ Future generateTrxTransactionContract(
       contractAddress: StringUtil.hexToUint8List(contractAddress),
     );
   } else {
-    print('in else $fromAddress -- $toAddress -- $bigIntAmountToInt64 ');
+  //  print('in else $fromAddress -- $toAddress -- $bigIntAmountToInt64 ');
     trans = Tron.TransferContract(
         ownerAddress: fromAddress,
         toAddress: toAddress,
         amount: bigIntAmountToInt64);
   }
-  print('trans $trans');
+ // print('trans $trans');
 //buf, _ := proto.Marshal(&trans)
   var transToUint8List = trans.writeToBuffer();
   //print('transToUint8List $transToUint8List');
@@ -137,17 +137,17 @@ Future generateTrxTransactionContract(
   parameter.typeUrl =
       "type.googleapis.com/protocol." + transferContractType.toString();
 
-  print('PARAMETER $parameter');
+  //print('PARAMETER $parameter');
 
   Tron.Transaction_Contract contract = new Tron.Transaction_Contract();
   contract.parameter = parameter;
 
   contract.type = transferContractType;
-  print('contract -- $contract');
+ // print('contract -- $contract');
 
   var contractBuffer = contract.writeToBuffer();
   var contractBufferToHex = StringUtil.uint8ListToHex(contractBuffer);
-  debugPrint('contractBufferToHex $contractBufferToHex');
+ // debugPrint('contractBufferToHex $contractBufferToHex');
   // gen raw tx
   var res = _generateTrxRawTransaction(
       contract: contract,
@@ -203,8 +203,8 @@ _generateTrxRawTransaction(
         res['block_header']['raw_data']['timestamp'];
     var blockNumber = //28483896;
         res['block_header']['raw_data']['number'];
-    print(
-        'BLOCK HASH $blockHash -- Time stamp of latest block $timestampOfLatestBlock -- block number $blockNumber');
+   // print(
+   //     'BLOCK HASH $blockHash -- Time stamp of latest block $timestampOfLatestBlock -- block number $blockNumber');
     refBlockHash = calculateTrxRwTxRefBlockHash(blockHash);
     refBlockBytes = calculateTrxRawTxRefBlockBytes(blockNumber);
     timestamp = calculateTrxRwTxInt64Timestamp();
@@ -230,13 +230,13 @@ _generateTrxRawTransaction(
           expiration: expiration,
           timestamp: timestamp);
 
-  debugPrint('txRaw ${rawTx.writeToJson()}');
+  //debugPrint('txRaw ${rawTx.writeToJson()}');
   Uint8List txRawBuffer = rawTx.writeToBuffer();
-  debugPrint('txRawBuffer $txRawBuffer');
+  //debugPrint('txRawBuffer $txRawBuffer');
   // String rawTxBufferToHex = StringUtil.uint8ListToHex(txRawBuffer);
 //  debugPrint('txRawBufferToHex $rawTxBufferToHex');
   var hashedRawTxBuffer = CryptoHash.sha256.convert(txRawBuffer);
-  print('hashedRawTxBuffer $hashedRawTxBuffer');
+ // print('hashedRawTxBuffer $hashedRawTxBuffer');
 
   // CryptoWeb3.MsgSignature
   var signature = //CryptoWeb3.sign(hashedRawTxBuffer.bytes, privateKey);
@@ -245,7 +245,7 @@ _generateTrxRawTransaction(
   // var rsvInList = constructTrxSigntureList(signature);
   // fill transaction object
   //  sendTrxTx(rawTx, [], signature);
-  print('signature $signature');
+  //print('signature $signature');
   var transaction =
       Tron.Transaction(rawData: rawTx, ret: [], signature: signature
         
@@ -253,7 +253,7 @@ _generateTrxRawTransaction(
   var txBuffer = transaction.writeToBuffer();
   var rawTxBufferHex = StringUtil.uint8ListToHex(txBuffer);
 
-  print('txBufferHex $rawTxBufferHex');
+ // print('txBufferHex $rawTxBufferHex');
 
   var broadcastTronTransactionRes;
   if (isBroadcast)
@@ -274,8 +274,8 @@ _generateTrxRawTransaction(
 Future broadcastTronTransaction(transactionHex) async {
   final client = new http.Client();
   Map<String, dynamic> body = {"transaction": transactionHex};
-  print(
-      'broadcasrTronTransaction $BroadcasrTronTransactionUrl -- body ${jsonEncode(body)}');
+ // print(
+  //    'broadcasrTronTransaction $BroadcasrTronTransactionUrl -- body ${jsonEncode(body)}');
   try {
     var response =
         await client.post(BroadcasrTronTransactionUrl, body: jsonEncode(body));
@@ -308,19 +308,19 @@ List<Uint8List> constructTrxSigntureList(CryptoWeb3.MsgSignature signature) {
     v = Uint8List.fromList([0].toList());
   }
   bytesBuilder.add(v);
-  print('bytesBuilder ${bytesBuilder.toBytes()}');
+ // print('bytesBuilder ${bytesBuilder.toBytes()}');
 
   // Uint8List.fromList(vIntList);
   List<Uint8List> rsvList = [];
   rsvList.add(bytesBuilder.toBytes());
-  print('rsvList $rsvList');
+ // print('rsvList $rsvList');
   return rsvList.toList();
 }
 
 // timestamp
 Int64 calculateTrxRwTxInt64Timestamp() {
   var res = Int64.parseInt(DateTime.now().millisecondsSinceEpoch.toString());
-  print('calculateTrxRwTxInt64Timestamp res $res');
+ // print('calculateTrxRwTxInt64Timestamp res $res');
   return res;
 }
 
@@ -328,7 +328,7 @@ Int64 calculateTrxRwTxInt64Timestamp() {
 Int64 calculateTrxRwTxExpiration(int timestamp) {
   var v = timestamp + 1 * 60 * 60 * 1000; // + Int64(i)
   var res = Int64.parseInt(v.toString());
-  print('calculateTrxRwTxExpiration res $res');
+ // print('calculateTrxRwTxExpiration res $res');
   return res;
 }
 
@@ -340,14 +340,14 @@ Int64 calculateTrxRwTxExpiration(int timestamp) {
 List<int> calculateTrxRawTxRefBlockBytes(int source) {
   var res;
   //source = 28333801;
-  print('source $source');
+ // print('source $source');
   var hexBlockNumber = source.toRadixString(16);
-  print('hexBlockNumber $hexBlockNumber');
+//  print('hexBlockNumber $hexBlockNumber');
   var length = hexBlockNumber.length;
   var last4BytesHexBlockNumber = hexBlockNumber.substring(length - 4);
-  print('last4Bytes $last4BytesHexBlockNumber');
+//  print('last4Bytes $last4BytesHexBlockNumber');
 
-  print(Endian.host == Endian.little);
+//  print(Endian.host == Endian.little);
   res = StringUtil.hexToUint8List(last4BytesHexBlockNumber);
 
   print('res $res');
@@ -358,10 +358,10 @@ List<int> calculateTrxRawTxRefBlockBytes(int source) {
 // take first 8 or last 8 bytes from 16 bytes
 calculateTrxRwTxRefBlockHash(blockHash) {
   var x = StringUtil.hexToUint8List(blockHash);
-  print('x $x');
+ // print('x $x');
   var last8Bytes = x.sublist(8, 16);
-  print('last8Bytes $last8Bytes');
+ // print('last8Bytes $last8Bytes');
   var refBlockHashInHex = StringUtil.uint8ListToHex(last8Bytes);
-  print('refBlockHashInHex $refBlockHashInHex');
+//  print('refBlockHashInHex $refBlockHashInHex');
   return last8Bytes;
 }

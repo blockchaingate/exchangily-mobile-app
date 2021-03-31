@@ -187,7 +187,7 @@ class WalletService {
         tickerName.toUpperCase() == 'FABE') {
       tickerName = 'FAB(ERC20)';
       logoTicker = 'FABE';
-    }  else if (tickerName.toUpperCase() == 'TRON_USDT' ||
+    } else if (tickerName.toUpperCase() == 'TRON_USDT' ||
         tickerName.toUpperCase() == 'USDTX') {
       tickerName = 'USDT(TRC20)';
       logoTicker = 'USDTX';
@@ -1105,33 +1105,32 @@ class WalletService {
       sepcialcoinType = await getCoinTypeIdByName('DSC');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+          isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'BSTE' || coinName == 'BST') {
       sepcialcoinType = await getCoinTypeIdByName('BST');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+          isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'EXGE' || coinName == 'EXG') {
       sepcialcoinType = await getCoinTypeIdByName('EXG');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+          isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'FABE' ||
         (coinName == 'FAB' && tokenType == 'ETH')) {
       sepcialcoinType = await getCoinTypeIdByName('FAB');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+          isSpecialDeposit: true, chain: tokenType);
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (isSpeicalTronTokenWithdraw) {
-       addressInWallet = btcToBase58Address(addressInWallet);
-      abiHex = getWithdrawFuncABI(
-          coinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+      addressInWallet = btcToBase58Address(addressInWallet);
+      abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet,
+          isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
       abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
@@ -1149,13 +1148,15 @@ class WalletService {
         kanbanGasLimit);
 
     var res = await sendKanbanRawTransaction(txKanbanHex);
-
+    if (res['transactionHash'] == null) {
+      return res;
+    }
     if (res['transactionHash'] != '') {
       res['success'] = true;
       res['data'] = res;
     } else {
       res['success'] = false;
-      res['data'] = 'error';
+      res['data'] = res;
     }
     return res;
   }
@@ -1190,7 +1191,7 @@ class WalletService {
       sepcialcoinType = await getCoinTypeIdByName('TRX');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
-          isSpecialDeposit: true, chain: tokenType, coinName: coinName);
+          isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
       abiHex = getWithdrawFuncABI(coinType, amountInLink, addressInWallet);

@@ -12,6 +12,7 @@
 */
 
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
@@ -21,6 +22,7 @@ import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
+import 'package:flutter/material.dart';
 
 import '../utils/string_util.dart' as stringUtils;
 import 'package:exchangilymobileapp/logger.dart';
@@ -49,11 +51,12 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future getTronTsWalletBalance(String address) async {
-    var body = {"address": address,"visible":true};
-  
+    var body = {"address": address, "visible": true};
+
     log.i('getTronTsWalletBalance url $TronGetAccountUrl - body $body');
     try {
-      var response = await client.post(TronGetAccountUrl, body: jsonEncode(body));
+      var response =
+          await client.post(TronGetAccountUrl, body: jsonEncode(body));
       var json = jsonDecode(response.body);
       if (json != null) {
         log.e('getTronTsWalletBalance $json}');
@@ -61,6 +64,49 @@ class ApiService {
       }
     } catch (err) {
       log.e('getTronTsWalletBalance CATCH $err');
+      throw Exception(err);
+    }
+  }
+
+/*----------------------------------------------------------------------
+                Get Tron USDT Ts wallet balance
+----------------------------------------------------------------------*/
+
+  Future getTronUsdtTsWalletBalance(
+      String officialTrxAddress, String smartContractAddress) async {
+    String officialTrxAddressToHex =
+        stringUtils.convertFabAddressToHex(officialTrxAddress);
+    var abiHex =
+        stringUtils.fixLength(officialTrxAddressToHex.substring(2), 64);
+    print('addressToHex $officialTrxAddress');
+    print('abi hex $abiHex');
+    var body = {
+      "contract_address": smartContractAddress,
+      "function_selector": 'balanceOf(address)',
+      "owner_address": '410000000000000000000000000000000000000000',
+      "parameter": abiHex
+    };
+
+    debugPrint(
+        'getTronTsWalletBalance url $TronUsdtAccountBalanceUrl - body $body');
+    try {
+      var response =
+          await client.post(TronUsdtAccountBalanceUrl, body: jsonEncode(body));
+      var json = jsonDecode(response.body);
+      if (json != null) {
+        log.e('getTronUsdtTsWalletBalance $json}');
+        var balanceInHex = json["constant_result"][0];
+        print('balanceInHex $balanceInHex');
+        // var hexToBytesBalance =
+        //     stringUtils.hexToUint8List(balanceInHex[0]);
+        //       print('hexToBytesBalance $hexToBytesBalance');
+        var res = int.parse(balanceInHex,radix:16) ;
+        //stringUtils.uint8ListToHex(hexToBytesBalance);
+          print('res $res');
+        return res;
+      }
+    } catch (err) {
+      log.e('getTronUsdtTsWalletBalance CATCH $err');
       throw Exception(err);
     }
   }

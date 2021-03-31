@@ -335,7 +335,7 @@ class SettingsViewmodel extends BaseViewModel {
 /*-------------------------------------------------------------------------------------
                       Change wallet language
 -------------------------------------------------------------------------------------*/
-  changeWalletLanguage(updatedLanguageValue) async {
+  changeWalletLanguage(String updatedLanguageValue) async {
     setBusy(true);
 
     //remove cached announcement Data in different language
@@ -350,7 +350,7 @@ class SettingsViewmodel extends BaseViewModel {
       key = languages.keys
           .firstWhere((k) => languages[k] == updatedLanguageValue);
       log.i('key in changeWalletLanguage $key');
-    }
+    }else key = updatedLanguageValue;
 // selected language should be English,Chinese or other language selected not its lang code
     selectedLanguage = key.isEmpty ? updatedLanguageValue : languages[key];
     log.w('selectedLanguage $selectedLanguage');

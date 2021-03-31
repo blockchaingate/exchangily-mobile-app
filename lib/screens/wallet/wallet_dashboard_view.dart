@@ -304,7 +304,14 @@ class WalletDashboardView extends StatelessWidget {
                         ),
 
                         UIHelper.verticalSpaceSmall,
-
+                        model.isUpdateWallet
+                            ? Container(
+                                child: FlatButton(
+                                child: Text(
+                                    AppLocalizations.of(context).updateWallet),
+                                onPressed: () => model.updateWallet(),
+                              ))
+                            : Container(),
 /*------------------------------------------------------------------------------
                                 Build Wallet List Container
 -------------------------------------------------------------------------------*/

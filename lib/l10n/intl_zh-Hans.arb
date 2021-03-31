@@ -2032,5 +2032,23 @@
         "description": "special_exchange_balance_note",
         "type": "text",
         "placeholders": {}
+    },
+    "fee": "交易费  ",
+    "@fee": {
+        "description": "fee",
+        "type": "text",
+        "placeholders": {}
+    },
+    "updateWallet": "刷新钱包",
+    "@updateWallet": {
+        "description": "update_wallet_dashboard",
+        "type": "text",
+        "placeholders": {}
+    },
+    "sameBalanceNote": "余额等于",
+    "@sameBalanceNote": {
+        "description": "sameBalanceNote",
+        "type": "text",
+        "placeholders": {}
     }
 }

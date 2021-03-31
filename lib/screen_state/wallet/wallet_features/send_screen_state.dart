@@ -226,9 +226,11 @@ class SendScreenState extends BaseState {
                 tickerName: walletInfo.tickerName,
                 isBroadcast: true)
             .then((res) {
-          if (res['code'] == 'SUCCESS') {
+          log.i('send screen state ${walletInfo.tickerName} res: $res');
+          var txRes = res['broadcastTronTransactionRes'];
+          if (txRes['code'] == 'SUCCESS') {
             log.w('trx tx res $res');
-            txHash = res['txid'];
+            txHash = txRes['txid'];
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
             sharedService.alertDialog(
@@ -237,7 +239,16 @@ class SendScreenState extends BaseState {
             );
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
-          } else {}
+          } else if (res['broadcastTronTransactionRes']['result'] == 'false') {
+            String errMsg =
+                res['broadcastTronTransactionRes']['message'].toString();
+            log.e('In Catch error - $errMsg');
+
+            isShowErrorDetailsButton = true;
+            isShowDetailsMessage = true;
+            serverError = errMsg;
+            setState(ViewState.Idle);
+          }
           setState(ViewState.Idle);
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
@@ -408,6 +419,13 @@ class SendScreenState extends BaseState {
     txHash = '';
     errorMessage = '';
     //walletInfo = walletInfo;
+    if (sendAmountTextController.text == '') {
+      print('amount empty');
+      sharedService.alertDialog(AppLocalizations.of(context).amountMissing,
+          AppLocalizations.of(context).invalidAmount,
+          isWarning: false);
+      return;
+    }
     amount = double.tryParse(sendAmountTextController.text);
     toAddress = receiverWalletAddressTextController.text;
     gasPrice = int.tryParse(gasPriceTextController.text);
@@ -419,14 +437,17 @@ class SendScreenState extends BaseState {
       sharedService.alertDialog(AppLocalizations.of(context).emptyAddress,
           AppLocalizations.of(context).pleaseEnterAnAddress,
           isWarning: false);
-    } else if ((walletInfo.tickerName == 'TRX' ||
-            walletInfo.tickerName == 'USDTX') &&
-        !walletInfo.address.startsWith('T')) {
+      return;
+    }
+    if ((walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') &&
+        !toAddress.startsWith('T')) {
       print('invalid tron address');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAddress,
           AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress,
           isWarning: false);
-    } else if (amount == null ||
+      return;
+    }
+    if (amount == null ||
         amount == 0 ||
         amount.isNegative ||
         !checkSendAmount ||
@@ -435,6 +456,18 @@ class SendScreenState extends BaseState {
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
+      return;
+    }
+
+    if (walletInfo.tickerName == 'USDTX' &&
+        walletInfo.availableBalance < 15.0) {
+      log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
+      sharedService.alertDialog(
+          '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
+          AppLocalizations.of(context).insufficientBalance,
+          isWarning: false);
+      setBusy(false);
+      return;
     }
     // else if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
     //   sharedService.showInfoFlushbar(
@@ -445,13 +478,12 @@ class SendScreenState extends BaseState {
     //       context);
     //   return;
     // }
-    else {
-      print('else');
-      FocusScope.of(context).requestFocus(FocusNode());
-      sendTransaction();
-      // await updateBalance(widget.walletInfo.address);
-      // widget.walletInfo.availableBalance = model.updatedBal['balance'];
-    }
+
+    print('else');
+    FocusScope.of(context).requestFocus(FocusNode());
+    sendTransaction();
+    // await updateBalance(widget.walletInfo.address);
+    // widget.walletInfo.availableBalance = model.updatedBal['balance'];
   }
 
 /*----------------------------------------------------------------------

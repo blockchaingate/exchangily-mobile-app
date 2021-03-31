@@ -407,7 +407,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 109;
 				DEVELOPMENT_TEAM = WH4GG84M87;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -420,7 +420,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 2.0.12;
+				MARKETING_VERSION = 2.0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.exchangily.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "App Store Distribution Profile";
@@ -550,7 +550,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 109;
 				DEVELOPMENT_TEAM = WH4GG84M87;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -563,7 +563,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 2.0.12;
+				MARKETING_VERSION = 2.0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.exchangily.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "App Store Distribution Profile";
@@ -583,7 +583,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 109;
 				DEVELOPMENT_TEAM = WH4GG84M87;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -596,7 +596,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 2.0.12;
+				MARKETING_VERSION = 2.0.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.exchangily.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Provisioning profile with no push notifications";

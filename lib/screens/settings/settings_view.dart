@@ -183,89 +183,149 @@ class SettingsContainer extends StatelessWidget {
               elevation: 5,
               color: globals.walletCardColor,
               child: Theme.of(context).platform == TargetPlatform.iOS
-                  ? Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: CupertinoPicker(
-                              diameterRatio: 1.3,
-                              offAxisFraction: 5,
-                              scrollController: model.scrollController,
-                              itemExtent: 50,
-                              onSelectedItemChanged: (int value) {
-                                String lang = '';
-                                if (value == 1) {
-                                  lang = 'en';
-                                } else if (value == 2) {
-                                  lang = 'zh';
-                                }
-                                model.changeWalletLanguage(lang);
-                              },
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 3.0),
-                                      child: Icon(
-                                        Icons.language,
-                                        color: grey,
-                                        size: 18,
-                                      ),
-                                    ),
-                                    UIHelper.horizontalSpaceSmall,
-                                    Text(
-                                      AppLocalizations.of(context)
-                                          .changeWalletLanguage,
-                                      style:
-                                          Theme.of(context).textTheme.headline5,
-                                    ),
-                                  ],
-                                ),
-                                Center(
-                                  child: Text(
-                                    "English",
+                  ? Column(
+                    children: [
+                      Container(margin:EdgeInsets.all(5.0),child: Text(AppLocalizations.of(context).changeWalletLanguage,
                                     style:
-                                        Theme.of(context).textTheme.headline5,
-                                  ),
-                                ),
-                                Center(
-                                  child: Text(
-                                    "简体中文",
-                                    style:
-                                        Theme.of(context).textTheme.headline5,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ]),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_up,
-                                    color: primaryColor,
-                                    size: 12,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 5.0),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_down,
-                                    color: primaryColor,
-                                    size: 12,
-                                  ),
-                                ),
-                              ]),
-                        )
-                      ],
-                    )
+                                        Theme.of(context).textTheme.subtitle2)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Text('English'
+                              ,
+                                        style:
+                                            Theme.of(context).textTheme.headline5
+                              ),
+                              Checkbox(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                               
+                                  activeColor: globals.primaryColor,
+                                onChanged: (bool value) {
+                                  String lang = '';
+                                  if (value) {
+                                    lang = 'en';
+                                  } else
+                                    lang = 'zh';
+
+                                  model.changeWalletLanguage(lang);
+                                },
+                                value: model.selectedLanguage == "English",
+                              )
+                            ],
+                          ),
+                          UIHelper.horizontalSpaceSmall,
+                          Row(
+                            children: [
+                              Text('Chinese',
+                                     style:
+                                            Theme.of(context).textTheme.headline5),
+                              Checkbox(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                 
+                                  activeColor: globals.primaryColor,
+                                onChanged: (bool value) {
+                                  String lang = '';
+                                  if (!value) {
+                                    lang = 'en';
+                                  } else
+                                    lang = 'zh';
+
+                                  model.changeWalletLanguage(lang);
+                                },
+                                value: model.selectedLanguage == "简体中文",
+                              )
+                            ],
+                          )
+                        ]),
+                    ],
+                  )
+                  // Row(
+                  //     children: [
+                  //       Expanded(
+                  //         flex: 2,
+                  //         child: CupertinoPicker(
+                  //             diameterRatio: 1.3,
+                  //             offAxisFraction: 5,
+                  //             scrollController: model.scrollController,
+                  //             itemExtent: 50,
+                  //             onSelectedItemChanged: (int value) {
+                  //               String lang = '';
+                  //               if (value == 1) {
+                  //                 lang = 'en';
+                  //               } else if (value == 2) {
+                  //                 lang = 'zh';
+                  //               }
+                  //               model.changeWalletLanguage(lang);
+                  //             },
+                  //             children: [
+                  //               Row(
+                  //                 mainAxisAlignment: MainAxisAlignment.end,
+                  //                 children: [
+                  //                   Padding(
+                  //                     padding:
+                  //                         const EdgeInsets.only(right: 3.0),
+                  //                     child: Icon(
+                  //                       Icons.language,
+                  //                       color: grey,
+                  //                       size: 18,
+                  //                     ),
+                  //                   ),
+                  //                   UIHelper.horizontalSpaceSmall,
+                  //                   Text(
+                  //                     AppLocalizations.of(context)
+                  //                         .changeWalletLanguage,
+                  //                     style:
+                  //                         Theme.of(context).textTheme.headline5,
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //               Center(
+                  //                 child: Text(
+                  //                   "English",
+                  //                   style:
+                  //                       Theme.of(context).textTheme.headline5,
+                  //                 ),
+                  //               ),
+                  //               Center(
+                  //                 child: Text(
+                  //                   "简体中文",
+                  //                   style:
+                  //                       Theme.of(context).textTheme.headline5,
+                  //                   textAlign: TextAlign.center,
+                  //                 ),
+                  //               ),
+                  //             ]),
+                  //       ),
+                  //       Expanded(
+                  //         flex: 1,
+                  //         child: Column(
+                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                  //             mainAxisAlignment: MainAxisAlignment.start,
+                  //             children: [
+                  //               Padding(
+                  //                 padding: const EdgeInsets.only(left: 5.0),
+                  //                 child: Icon(
+                  //                   Icons.keyboard_arrow_up,
+                  //                   color: primaryColor,
+                  //                   size: 12,
+                  //                 ),
+                  //               ),
+                  //               Padding(
+                  //                 padding: const EdgeInsets.only(left: 5.0),
+                  //                 child: Icon(
+                  //                   Icons.keyboard_arrow_down,
+                  //                   color: primaryColor,
+                  //                   size: 12,
+                  //                 ),
+                  //               ),
+                  //             ]),
+                  //       )
+                  //     ],
+                  //   )
                   : Center(
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton(

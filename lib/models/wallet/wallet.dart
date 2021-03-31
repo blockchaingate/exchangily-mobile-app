@@ -137,13 +137,19 @@ class WalletInfo {
   double get availableBalance => _availableBalance;
 
   set availableBalance(double availableBalance) {
-    this._availableBalance = availableBalance;
+    if (availableBalance.isNegative)
+      this._availableBalance = 0.0;
+    else
+      this._availableBalance = availableBalance;
   }
 
   double get usdValue => _usdValue;
 
   set usdValue(double usdValue) {
-    this._usdValue = usdValue;
+    if (usdValue.isNegative)
+      this._usdValue = 0.0;
+    else
+      this._usdValue = usdValue;
   }
 
   String get name => _name;
