@@ -47,7 +47,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:protoc_plugin/protoc.dart';
 
@@ -104,8 +104,8 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<String> formattedUsdValueListCopy = [];
 
   final searchCoinTextController = TextEditingController();
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //     FlutterLocalNotificationsPlugin();
 
   //vars for announcement
   bool hasApiError = false;
@@ -1321,17 +1321,17 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 }
 
-Future<void> _showNotification() async {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+// Future<void> _showNotification() async {
+//   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+//       FlutterLocalNotificationsPlugin();
 
-  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-      'your channel id', 'your channel name', 'your channel description',
-      importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
-  var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-  var platformChannelSpecifics = NotificationDetails(
-      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-  await flutterLocalNotificationsPlugin.show(0, 'Test Server Warning',
-      'You are using Test Server!', platformChannelSpecifics,
-      payload: 'item x');
-}
+//   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+//       'your channel id', 'your channel name', 'your channel description',
+//       importance: Importance.Max, priority: Priority.High, ticker: 'ticker');
+//   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+//   var platformChannelSpecifics = NotificationDetails(
+//       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+//   await flutterLocalNotificationsPlugin.show(0, 'Test Server Warning',
+//       'You are using Test Server!', platformChannelSpecifics,
+//       payload: 'item x');
+// }

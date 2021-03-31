@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:device_preview/device_preview.dart';
+// import 'package:device_preview/device_preview.dart';
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/Managers/life_cycle_manager.dart';
 import 'package:exchangilymobileapp/routes.dart';

@@ -162,18 +162,18 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                                             .lang]["title"],
                                                                   )));
                                                   break;
-                                                case "video":
-                                                  return Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              VideoPage(
-                                                                  videoObj: model
-                                                                              .campaignInfoList[
-                                                                          index]
-                                                                      [model
-                                                                          .lang])));
-                                                  break;
+                                                // case "video":
+                                                //   return Navigator.push(
+                                                //       context,
+                                                //       MaterialPageRoute(
+                                                //           builder: (context) =>
+                                                //               VideoPage(
+                                                //                   videoObj: model
+                                                //                               .campaignInfoList[
+                                                //                           index]
+                                                //                       [model
+                                                //                           .lang])));
+                                                //   break;
                                                 case "youtube":
                                                   return Navigator.push(
                                                       context,

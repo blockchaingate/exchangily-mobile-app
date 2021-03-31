@@ -54,64 +54,63 @@ class Carousel extends StatelessWidget {
                         onTap: () {
                           // print("Event type: " + imageData[index]["type"]);
 
-                          if(!imageData[index].containsKey("type")){
+                          if (!imageData[index].containsKey("type")) {
                             imageData[index].containsKey("route") &&
-                                      imageData[index]["route"].length > 0
-                                  ? Navigator.pushNamed(
-                                      context, imageData[index]["route"],
-                                      arguments: imageData[index]["arguments"])
-                                  : null;
-                          }else{
+                                    imageData[index]["route"].length > 0
+                                ? Navigator.pushNamed(
+                                    context, imageData[index]["route"],
+                                    arguments: imageData[index]["arguments"])
+                                : null;
+                          } else {
                             switch (imageData[index]["type"]) {
-                            case "flutterPage":
-                              return imageData[index].containsKey("route") &&
-                                      imageData[index]["route"].length > 0
-                                  ? Navigator.pushNamed(
-                                      context, imageData[index]["route"],
-                                      arguments: imageData[index]["arguments"])
-                                  : null;
-                              break;
-                            case "webPage":
-                              return Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => WebViewPage(
-                                            url: imageData[index][model.lang]
-                                                ["url"],
-                                            title: imageData[index][model.lang]
-                                                ["title"],
-                                          )));
-                              break;
-                            case "video":
-                              return Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => VideoPage(
-                                          videoObj: imageData[index]
-                                              [model.lang])));
-                              break;
-                            case "youtube":
-                              return Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => YoutubePage(
-                                          videoObj: imageData[index]
-                                              [model.lang])));
-                              break;
-                            case "youtubeList":
-                              return Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => YoutubeListPage(
-                                          videoObj: imageData[index]
-                                              [model.lang])));
-                              break;
-                            default:
-                              return null;
+                              case "flutterPage":
+                                return imageData[index].containsKey("route") &&
+                                        imageData[index]["route"].length > 0
+                                    ? Navigator.pushNamed(
+                                        context, imageData[index]["route"],
+                                        arguments: imageData[index]
+                                            ["arguments"])
+                                    : null;
+                                break;
+                              case "webPage":
+                                return Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => WebViewPage(
+                                              url: imageData[index][model.lang]
+                                                  ["url"],
+                                              title: imageData[index]
+                                                  [model.lang]["title"],
+                                            )));
+                                break;
+                              // case "video":
+                              //   return Navigator.push(
+                              //       context,
+                              //       MaterialPageRoute(
+                              //           builder: (context) => VideoPage(
+                              //               videoObj: imageData[index]
+                              //                   [model.lang])));
+                              //   break;
+                              case "youtube":
+                                return Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => YoutubePage(
+                                            videoObj: imageData[index]
+                                                [model.lang])));
+                                break;
+                              case "youtubeList":
+                                return Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => YoutubeListPage(
+                                            videoObj: imageData[index]
+                                                [model.lang])));
+                                break;
+                              default:
+                                return null;
+                            }
                           }
-                          }
-
-                          
                         },
                       ),
                     ),
