@@ -66,7 +66,7 @@ dependencies:
   stacked: ^1.7.7
 
   # Path Provider
-  path_provider: 1.4.2
+  path_provider: 1.6.18
 
   # Random String
   random_string: ^2.0.1
@@ -108,7 +108,7 @@ dependencies:
   rflutter_alert: ^1.0.3
 
   # Shared Preferences
-  shared_preferences: ^0.5.4+1
+  shared_preferences: 0.5.12+4
 
   # Loading animation
   shimmer: ^1.0.1
@@ -120,7 +120,7 @@ dependencies:
   path: ^1.6.4
 
   # Build version
-  package_info: 0.4.0+16
+  package_info: 2.0.0
 
   # Pull to refresh
   pull_to_refresh: ^1.6.4
@@ -144,7 +144,7 @@ dependencies:
   drop_cap_text: ^1.0.7
 
   # launch the app in the app stores
-  launch_review: ^2.0.0
+  launch_review: ^3.0.1
 
   # To open web url's
   # ERROR
@@ -191,10 +191,10 @@ dependencies:
   #pagination_view: ^1.0.3+2
 
   # Overlay notification
-  overlay_support: ^1.0.5
+  overlay_support: ^1.2.0
 
   # Reload app
-  flutter_phoenix: ^0.1.0
+  #flutter_phoenix: ^0.1.0
 
   # auto size text
   auto_size_text: ^2.1.0
@@ -207,7 +207,7 @@ dependencies:
 
 dev_dependencies:
   # intl_translation: ^0.17.10+1
-  intl: 
+  intl:
   # flutter_launcher_icons: ^0.7.0
 
   flutter_test:

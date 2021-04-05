@@ -24,7 +24,6 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -350,7 +349,8 @@ class SettingsViewmodel extends BaseViewModel {
       key = languages.keys
           .firstWhere((k) => languages[k] == updatedLanguageValue);
       log.i('key in changeWalletLanguage $key');
-    }else key = updatedLanguageValue;
+    } else
+      key = updatedLanguageValue;
 // selected language should be English,Chinese or other language selected not its lang code
     selectedLanguage = key.isEmpty ? updatedLanguageValue : languages[key];
     log.w('selectedLanguage $selectedLanguage');
