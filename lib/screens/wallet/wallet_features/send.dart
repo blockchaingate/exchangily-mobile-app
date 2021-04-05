@@ -32,7 +32,9 @@ class SendWalletScreen extends StatelessWidget {
     double bal = walletInfo.availableBalance;
 
     String tickerName = '';
-    walletInfo.tickerName == 'USDTX'? tickerName = 'USDT(TRC20)' :tickerName = walletInfo.tickerName;
+    walletInfo.tickerName == 'USDTX'
+        ? tickerName = 'USDT(TRC20)'
+        : tickerName = walletInfo.tickerName;
     String tokenType = walletInfo.tokenType;
     return BaseScreen<SendScreenState>(
         onModelReady: (model) {
@@ -210,7 +212,8 @@ class SendWalletScreen extends StatelessWidget {
 --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'
+                          child: walletInfo.tickerName == 'TRX' ||
+                                  walletInfo.tickerName == 'USDTX'
                               ? Container(
                                   padding: EdgeInsets.only(top: 10, bottom: 0),
                                   alignment: Alignment.topLeft,

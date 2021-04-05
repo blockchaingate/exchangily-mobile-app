@@ -20,8 +20,6 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
-import 'package:web3dart/crypto.dart' as CryptoWeb3;
-import 'dart:convert';
 
 class MoveToExchangeViewModel extends BaseViewModel {
   final log = getLogger('MoveToExchangeViewModel');
@@ -60,7 +58,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   void initState() async {
     setBusy(true);
     coinName = walletInfo.tickerName;
-    if(coinName == 'FAB') walletInfo.tokenType = '';
+    if (coinName == 'FAB') walletInfo.tokenType = '';
     tokenType = walletInfo.tokenType;
     if (coinName != 'TRX' && coinName != 'USDTX') {
       setFee();
@@ -188,15 +186,21 @@ class MoveToExchangeViewModel extends BaseViewModel {
       return;
     }
 
-    if (walletInfo.tickerName == 'USDTX' &&
-        walletInfo.availableBalance < 15.0) {
+    if (walletInfo.tickerName == 'USDTX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
-      sharedService.alertDialog(
-          '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
-          AppLocalizations.of(context).insufficientBalance,
-          isWarning: false);
-      setBusy(false);
-      return;
+      bool isCorrectAmount = true;
+      await walletService
+          .checkCoinWalletBalance(amount, 'TRX')
+          .then((res) => isCorrectAmount = res);
+
+      if (!isCorrectAmount) {
+        sharedService.alertDialog(
+            '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
+            'TRX ${AppLocalizations.of(context).insufficientBalance}',
+            isWarning: false);
+        setBusy(false);
+        return;
+      }
     }
 
     message = '';
@@ -256,6 +260,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
       // TRON Transaction
       if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
+        setBusy(true);
         log.i('depositing tron ${walletInfo.tickerName}');
 
         await walletService
@@ -277,7 +282,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
             sharedService.alertDialog(
               AppLocalizations.of(context).sendTransactionComplete,
-              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+              '$specialTicker ${AppLocalizations.of(context).isOnItsWay}',
             );
           } else {
             if (res.containsKey("error") && res["error"] != null) {

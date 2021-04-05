@@ -283,8 +283,3 @@ Map productionConfig = {
 };
 
 final environment = isProduction ? productionConfig : devConfig;
-
-// class EnvironmentConfig extends Constants {
-//   static const String CAMPAIGN_TEST_URL = 'https://test.blockchaingate.com/v2/';
-//   static const String CAMPAIGN_PROD_URL = 'https://blockchaingate.com/v2/';
-// }

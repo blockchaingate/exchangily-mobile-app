@@ -167,6 +167,35 @@ class WalletService {
   Completer<DialogResponse> _completer;
 
 /*----------------------------------------------------------------------
+                Check coin wallet balance
+----------------------------------------------------------------------*/
+
+  Future<bool> checkCoinWalletBalance(double amount, String tickerName) async {
+    bool isCorrectAmount = true;
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    String trxAddress = await walletDatabaseService
+        .getBytickerName('TRX')
+        .then((wallet) => wallet.address);
+    log.w('trxAddress $trxAddress');
+    await _apiService
+        .getSingleWalletBalance(fabAddress, 'TRX', trxAddress)
+        .then((walletBalance) {
+      if (walletBalance != null) {
+        log.w(walletBalance[0].balance);
+        if (walletBalance[0].balance < amount)
+          isCorrectAmount = false;
+        else
+          isCorrectAmount = true;
+      }
+    }).catchError((err) {
+      log.e(err);
+
+      throw Exception(err);
+    });
+    return isCorrectAmount;
+  }
+
+/*----------------------------------------------------------------------
                 Update special tokens tickername in UI
 ----------------------------------------------------------------------*/
   updateSpecialTokensTickerNameForTxHistory(String tickerName) {
@@ -1188,7 +1217,7 @@ class WalletService {
     var sepcialcoinType;
     var abiHex;
     if (coinName == 'USDTX') {
-      sepcialcoinType = await getCoinTypeIdByName('TRX');
+      sepcialcoinType = await getCoinTypeIdByName('USDT');
       abiHex = getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);

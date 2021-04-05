@@ -233,9 +233,14 @@ class SendScreenState extends BaseState {
             txHash = txRes['txid'];
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
+
+            String t = '';
+            walletInfo.tickerName == 'USDTX'
+                ? t = 'USDT(TRC20)'
+                : t = walletInfo.tickerName;
             sharedService.alertDialog(
               AppLocalizations.of(context).sendTransactionComplete,
-              '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
+              '$t ${AppLocalizations.of(context).isOnItsWay}',
             );
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
@@ -459,25 +464,22 @@ class SendScreenState extends BaseState {
       return;
     }
 
-    if (walletInfo.tickerName == 'USDTX' &&
-        walletInfo.availableBalance < 15.0) {
+    if (walletInfo.tickerName == 'USDTX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
-      sharedService.alertDialog(
-          '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
-          AppLocalizations.of(context).insufficientBalance,
-          isWarning: false);
-      setBusy(false);
-      return;
+      bool isCorrectAmount = true;
+      await walletService
+          .checkCoinWalletBalance(amount, 'TRX')
+          .then((res) => isCorrectAmount = res);
+
+      if (!isCorrectAmount) {
+        sharedService.alertDialog(
+            '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
+            'TRX ${AppLocalizations.of(context).insufficientBalance}',
+            isWarning: false);
+        setBusy(false);
+        return;
+      }
     }
-    // else if (amount < environment["minimumWithdraw"][walletInfo.tickerName]) {
-    //   sharedService.showInfoFlushbar(
-    //       AppLocalizations.of(context).minimumAmountError,
-    //       AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
-    //       Icons.cancel,
-    //       globals.red,
-    //       context);
-    //   return;
-    // }
 
     print('else');
     FocusScope.of(context).requestFocus(FocusNode());

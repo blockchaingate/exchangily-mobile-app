@@ -49,7 +49,6 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:protoc_plugin/protoc.dart';
 
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shared_preferences/shared_preferences.dart';
