@@ -59,7 +59,7 @@ import 'package:stacked/stacked.dart';
 import 'package:json_diff/json_diff.dart';
 
 class WalletDashboardViewModel extends BaseViewModel {
-  final log = getLogger('WalletDahsboardScreenState');
+  final log = getLogger('WalletDashboardViewModel');
 
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
@@ -188,8 +188,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
         log.i("new wallet trx generated in update wallet ${wi.toJson()}");
         await walletDatabaseService.insert(wi);
-    await refreshBalance();
-    isUpdateWallet = false;
+        await refreshBalance();
+        isUpdateWallet = false;
       }
     });
     setBusy(false);
