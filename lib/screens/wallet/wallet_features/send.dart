@@ -10,6 +10,9 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
+import 'dart:io';
+
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -596,21 +599,42 @@ class SendWalletScreen extends StatelessWidget {
                           child: model.state == ViewState.Busy
                               ? Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: Theme.of(context).platform ==
-                                          TargetPlatform.iOS
+                                  child: Platform.isIOS
                                       ? CupertinoActivityIndicator()
-                                      : CircularProgressIndicator(),
+                                      : SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            backgroundColor: primaryColor,
+                                          ),
+                                        ),
                                 )
-                              : RaisedButton(
-                                  disabledColor: model.checkSendAmount
-                                      ? globals.grey
-                                      : globals.green,
-                                  child: Text(AppLocalizations.of(context).send,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline4
-                                          .copyWith(
-                                              fontWeight: FontWeight.w400)),
+                              : OutlinedButton(
+                                  style: ButtonStyle(
+                                      // minimumSize:
+                                      //     MaterialStateProperty.all<Size>(
+                                      //         Size.fromWidth(15.0)),
+                                      padding: MaterialStateProperty.all<
+                                              EdgeInsetsGeometry>(
+                                          EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 5)),
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                              primaryColor)),
+                                  // disabledColor: model.checkSendAmount
+                                  //     ? globals.grey
+                                  //     : globals.green,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                        AppLocalizations.of(context).send,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline4
+                                            .copyWith(
+                                                fontWeight: FontWeight.w400)),
+                                  ),
                                   onPressed: () {
                                     print('Send pressed');
                                     model.checkFields(context);

@@ -20,13 +20,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 
 import 'package:overlay_support/overlay_support.dart';
 
@@ -93,8 +92,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
           tickerName == 'EXGE') {
         // element.tickerName = 'EXG(ERC20)';
         transactionHistoryToShowInView.add(element);
-      }
-      else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
+      } else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
           tickerName == 'USDTX') transactionHistoryToShowInView.add(element);
     });
 
@@ -186,7 +184,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     setBusy(false);
     if (transactionHistory.chainName.isEmpty ||
         transactionHistory.chainName == null) {
-      transactionHistory.chainName = walletInfo.tokenType;
+      transactionHistory.chainName = walletInfo.tickerName;
       log.i(
           'transactionHistory.chainName empty so showing wallet token type ${walletInfo.tokenType}');
     }
@@ -468,7 +466,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                         ],
                       ),
                       UIHelper.verticalSpaceMedium,
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
                           setBusy(true);
                           Navigator.of(context).pop();
@@ -489,7 +487,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                   Launch URL
 ----------------------------------------------------------------------*/
   launchUrl(String txId, String chain, bool isKanban) async {
-   // copyAddress(txId);
+    // copyAddress(txId);
     if (isKanban) {
       String exchangilyExplorerUrl = ExchangilyExplorerUrl + txId;
       log.i('Kanban - explorer url - $exchangilyExplorerUrl');
@@ -517,8 +515,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
       log.i('doge - chainame $chain explorer url - $dogeExplorerUrl');
       openExplorer(dogeExplorerUrl);
     } else if (chain.toUpperCase() == 'TRON' || chain.toUpperCase() == 'TRX') {
-      if(txId.startsWith('0x')){
-       txId= txId.substring(2);
+      if (txId.startsWith('0x')) {
+        txId = txId.substring(2);
       }
       String tronExplorerUrl = TronExplorerUrl + txId;
       log.i('tron - chainame $chain explorer url - $tronExplorerUrl');
