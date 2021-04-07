@@ -68,12 +68,7 @@ class MoveToExchangeScreen extends StatelessWidget {
               TextField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 onChanged: (String amount) {
-                  if (walletInfo.tickerName != 'TRX' &&
-                      walletInfo.tickerName != 'USDTX') {
-                    print(walletInfo.tickerName);
-                    print('not trx');
-                    model.updateTransFee();
-                  }
+                  model.updateTransFee();
                 },
                 decoration: InputDecoration(
                   // suffix: Text(
@@ -109,25 +104,30 @@ class MoveToExchangeScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.subtitle2),
                   )
                 ],
-              ), UIHelper.verticalSpaceSmall,
+              ),
+              UIHelper.verticalSpaceSmall,
 
               Container(
-                child: walletInfo.tickerName == 'TRX' ||
-                        walletInfo.tickerName == 'USDTX'
-                    ? Container(
-                        padding: EdgeInsets.only(top: 10, bottom: 0),
-                        alignment: Alignment.topLeft,
-                        child: walletInfo.tickerName == 'TRX'? Text(
-                            '${AppLocalizations.of(context).gasFee}: 1 TRX',
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.headline6):Text(
-                            '${AppLocalizations.of(context).gasFee}: 15 TRX',
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.headline6),
-                      )
-                    : Column(
-                        children: [
-                          Row(
+                child: Column(
+                  children: [
+                    walletInfo.tickerName == 'TRX' ||
+                            walletInfo.tickerName == 'USDTX'
+                        ? Container(
+                            padding: EdgeInsets.only(top: 10, bottom: 0),
+                            alignment: Alignment.topLeft,
+                            child: walletInfo.tickerName == 'TRX'
+                                ? Text(
+                                    '${AppLocalizations.of(context).gasFee}: 1 TRX',
+                                    textAlign: TextAlign.left,
+                                    style:
+                                        Theme.of(context).textTheme.headline6)
+                                : Text(
+                                    '${AppLocalizations.of(context).gasFee}: 15 TRX',
+                                    textAlign: TextAlign.left,
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                          )
+                        : Row(
                             children: <Widget>[
                               Text(AppLocalizations.of(context).gasFee,
                                   style: Theme.of(context)
@@ -146,30 +146,31 @@ class MoveToExchangeScreen extends StatelessWidget {
                                         .copyWith(fontWeight: FontWeight.w300)),
                               )
                             ],
-                          ), UIHelper.verticalSpaceSmall,
-                          // Kanaban Gas Fee Row
-                          Row(
-                            children: <Widget>[
-                              Text(AppLocalizations.of(context).kanbanGasFee,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(fontWeight: FontWeight.w300)),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left:
-                                        5), // padding left to keep some space from the text
-                                child: Text(
-                                    '${model.kanbanTransFee.toStringAsFixed(4)}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(fontWeight: FontWeight.w300)),
-                              )
-                            ],
                           ),
-                        ],
-                      ),
+                    UIHelper.verticalSpaceSmall,
+                    // Kanaban Gas Fee Row
+                    Row(
+                      children: <Widget>[
+                        Text(AppLocalizations.of(context).kanbanGasFee,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline5
+                                .copyWith(fontWeight: FontWeight.w300)),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left:
+                                  5), // padding left to keep some space from the text
+                          child: Text(
+                              '${model.kanbanTransFee.toStringAsFixed(4)}',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline5
+                                  .copyWith(fontWeight: FontWeight.w300)),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
 
               // Switch Row
@@ -507,7 +508,6 @@ class MoveToExchangeScreen extends StatelessWidget {
             ],
           ),
         ),
-   
       ),
     );
   }

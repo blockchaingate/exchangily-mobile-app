@@ -1728,12 +1728,18 @@ class AppLocalizations {
     return Intl.message('Fee', name: 'fee', desc: 'fee');
   }
 
-   String get updateWallet {
-    return Intl.message('Update wallet', name: 'updateWallet', desc: 'update_wallet_dashboard');
+  String get updateWallet {
+    return Intl.message('Update wallet',
+        name: 'updateWallet', desc: 'update_wallet_dashboard');
   }
 
-    String get sameBalanceNote {
-    return Intl.message('Same balance as', name: 'sameBalanceNote', desc: 'sameBalanceNote');
+  String get sameBalanceNote {
+    return Intl.message('Same balance as',
+        name: 'sameBalanceNote', desc: 'sameBalanceNote');
+  }
+
+  String get noEvent {
+    return Intl.message('No Event', name: 'noEvent', desc: 'noEvent');
   }
 
   // Share page pending translation added by Jack

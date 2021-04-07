@@ -308,7 +308,7 @@ class MoveToWalletViewmodel extends BaseState {
   setWithdrawLimit(String ticker) async {
     setBusy(true);
     withdrawLimit = environment["minimumWithdraw"][ticker];
-   
+
     if (withdrawLimit == null) {
       await apiService.getTokenList().then((token) {
         token.forEach((token) {
@@ -319,14 +319,15 @@ class MoveToWalletViewmodel extends BaseState {
       if (withdrawLimit == null) {
         await apiService.getTokenListUpdates().then((token) {
           token.forEach((token) async {
-        //    await tokenListDatabaseService.insert(token);
+            //    await tokenListDatabaseService.insert(token);
             if (token.tickerName == ticker)
               withdrawLimit = double.parse(token.minWithdraw);
           });
         });
-      ///  await tokenListDatabaseService
-       //     .getByTickerName(ticker)
-         //   .then((token) => withdrawLimit = double.parse(token.minWithdraw));
+
+        ///  await tokenListDatabaseService
+        //     .getByTickerName(ticker)
+        //   .then((token) => withdrawLimit = double.parse(token.minWithdraw));
       }
     }
     log.i('withdrawLimit $withdrawLimit');
@@ -570,7 +571,7 @@ class MoveToWalletViewmodel extends BaseState {
       if (walletInfo.tickerName != 'TRX') walletInfo.tokenType = 'TRX';
 
       isSpeicalTronTokenWithdraw = true;
-      walletInfo.tokenType = 'TRX';
+      //  walletInfo.tokenType = 'TRX';
       log.i('chain type ${walletInfo.tokenType}');
       setWithdrawLimit('USDTX');
     }
@@ -586,18 +587,14 @@ class MoveToWalletViewmodel extends BaseState {
       walletInfo.tokenType = 'ETH';
       log.i('chain type ${walletInfo.tokenType}');
       if (walletInfo.tickerName == 'FAB' && !isShowFabChainBalance) {
-         setWithdrawLimit('FABE');
-       
+        setWithdrawLimit('FABE');
       } else if (walletInfo.tickerName == 'DSC' && !isShowFabChainBalance) {
         setWithdrawLimit('DSCE');
-       
       } else if (walletInfo.tickerName == 'BST' && !isShowFabChainBalance) {
-         setWithdrawLimit('BSTE');
-       
-      }   else if (walletInfo.tickerName == 'EXG' && !isShowFabChainBalance) {
-         setWithdrawLimit('EXGE');
-       
-      }else if (walletInfo.tickerName == 'USDTX' &&
+        setWithdrawLimit('BSTE');
+      } else if (walletInfo.tickerName == 'EXG' && !isShowFabChainBalance) {
+        setWithdrawLimit('EXGE');
+      } else if (walletInfo.tickerName == 'USDTX' &&
           !isShowTrxTsWalletBalance) {
         setWithdrawLimit('USDT');
       } else
@@ -709,7 +706,7 @@ class MoveToWalletViewmodel extends BaseState {
         }
 
         /// Ticker is FAB but fab chain balance is false then
-        /// take coin address is ETH wallet address
+        /// take coin address as ETH wallet address because coin is an erc20
         else if (coinName == 'FAB' && !isShowFabChainBalance) {
           await walletDataBaseService
               .getBytickerName('ETH')

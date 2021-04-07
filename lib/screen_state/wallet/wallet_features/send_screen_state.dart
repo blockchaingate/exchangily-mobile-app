@@ -110,7 +110,7 @@ class SendScreenState extends BaseState {
       gasLimitTextController.text =
           environment["chains"]["FAB"]["gasLimit"].toString();
     }
-    //  getGasBalance();
+    refreshBalance();
     setState(ViewState.Idle);
   }
 
@@ -244,6 +244,7 @@ class SendScreenState extends BaseState {
             );
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
+            refreshBalance();
           } else if (res['broadcastTronTransactionRes']['result'] == 'false') {
             String errMsg =
                 res['broadcastTronTransactionRes']['message'].toString();
@@ -297,6 +298,7 @@ class SendScreenState extends BaseState {
             walletService.addTxids(allTxids);
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
+            refreshBalance();
           } else if (txHash == '' && errorMessage == '') {
             log.e('Both TxHash and Error Message are empty $errorMessage');
             sharedService.alertDialog(

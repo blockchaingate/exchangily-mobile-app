@@ -1257,11 +1257,13 @@ class WalletService {
       WalletInfo walletInfo,
       double amount,
       bool isTrxUsdt,
-      bool isBroadcast}) async {
+      bool isBroadcast,
+      @required options}) async {
     log.i(
         'menmonic $mnemonic -- amount $amount -- istrxusdt $isTrxUsdt -- isBroadcast $isBroadcast');
-    int kanbanGasPrice = environment['chains']['KANBAN']['gasPrice'];
-    int kanbanGasLimit = environment['chains']['KANBAN']['gasLimit'];
+    int kanbanGasPrice = options['kanbanGasPrice'];
+    int kanbanGasLimit = options['kanbanGasLimit'];
+
     print('kanbanGasPrice $kanbanGasPrice');
     print('kanbanGasLimit $kanbanGasLimit');
     var officalAddress = getOfficalAddress(walletInfo.tickerName,

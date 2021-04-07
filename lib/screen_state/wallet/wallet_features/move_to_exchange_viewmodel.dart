@@ -60,10 +60,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
     coinName = walletInfo.tickerName;
     if (coinName == 'FAB') walletInfo.tokenType = '';
     tokenType = walletInfo.tokenType;
-    if (coinName != 'TRX' && coinName != 'USDTX') {
-      setFee();
-      await getGas();
-    }
+    //   if (coinName != 'TRX' && coinName != 'USDTX') {
+    setFee();
+    await getGas();
+    //  }
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
     refreshBalance();
@@ -186,13 +186,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
       return;
     }
 
-    if (walletInfo.tickerName == 'USDTX') {
+    if (walletInfo.tickerName == 'USDTX' || walletInfo.tickerName == 'TRX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
       await walletService
-          .checkCoinWalletBalance(amount, 'TRX')
+          .checkCoinWalletBalance(15, 'TRX')
           .then((res) => isCorrectAmount = res);
-
+      log.w('isCorrectAmount $isCorrectAmount');
       if (!isCorrectAmount) {
         sharedService.alertDialog(
             '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
@@ -269,7 +269,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
                 walletInfo: walletInfo,
                 amount: amount,
                 isTrxUsdt: walletInfo.tickerName == 'USDTX' ? true : false,
-                isBroadcast: false)
+                isBroadcast: false,
+                options: option)
             .then((res) {
           bool success = res["success"];
           if (success) {

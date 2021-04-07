@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
-import 'package:exchangilymobileapp/constants/route_names.dart';
 
 class TransactionHistoryView extends StatelessWidget {
   final String tickerName;

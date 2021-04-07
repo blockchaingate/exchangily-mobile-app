@@ -35,7 +35,6 @@ class CampaignInstructionScreen extends StatelessWidget {
           child: Scaffold(
               // appBar: AppBar(title: Text("instruction")),
 
-              
               // floatingActionButtonLocation:
               //     FloatingActionButtonLocation.centerDocked,
               // floatingActionButton: Container(
@@ -98,8 +97,12 @@ class CampaignInstructionScreen extends StatelessWidget {
                           ),
                         )
                       : model.campaignInfoList.length == 0
-                          ? Container(
-                              child: model.sharedService.loadingIndicator())
+                          ? Center(
+                              child: Container(child: Text('....')
+                                  // Text(AppLocalizations.of(context).event),
+
+                                  ),
+                            )
                           : ListView.builder(
                               padding: EdgeInsets.fromLTRB(10, 10, 10, 60),
                               itemCount: model.campaignInfoList.length,
@@ -228,9 +231,12 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                     children: <Widget>[
                                                       Text(
                                                           model.campaignInfoList[
-                                                                      index]
-                                                                  [model.lang]
-                                                              ["title"]?? '',
+                                                                          index]
+                                                                      [
+                                                                      model
+                                                                          .lang]
+                                                                  ["title"] ??
+                                                              '',
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
@@ -244,19 +250,19 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                       ),
                                                       Text(
                                                           model.campaignInfoList[
-                                                                          index]
+                                                                              index]
+                                                                          [model
+                                                                              .lang]
                                                                       [
-                                                                      model
-                                                                          .lang]
-                                                                  [
-                                                                  "startDate"] +
-                                                              " - " +
-                                                              model.campaignInfoList[
-                                                                          index]
+                                                                      "startDate"] +
+                                                                  " - " +
+                                                                  model.campaignInfoList[
+                                                                              index]
+                                                                          [model
+                                                                              .lang]
                                                                       [
-                                                                      model
-                                                                          .lang]
-                                                                  ["endDate"]?? '',
+                                                                      "endDate"] ??
+                                                              '',
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                           )),
@@ -265,9 +271,12 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                       ),
                                                       Text(
                                                           model.campaignInfoList[
-                                                                      index]
-                                                                  [model.lang]
-                                                              ["desc"]?? '',
+                                                                          index]
+                                                                      [
+                                                                      model
+                                                                          .lang]
+                                                                  ["desc"] ??
+                                                              '',
                                                           maxLines: 4,
                                                           overflow: TextOverflow
                                                               .ellipsis,

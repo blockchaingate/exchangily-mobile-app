@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
+import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
@@ -18,6 +19,8 @@ class CampaignInstructionsScreenState extends BaseState {
   CampaignService campaignService = locator<CampaignService>();
   SharedService sharedService = locator<SharedService>();
   PdfViewerService pdfViewerService = locator<PdfViewerService>();
+  UserSettingsDatabaseService userSettingsDatabaseService =
+      locator<UserSettingsDatabaseService>();
 
   CampaignUserData userData;
   BuildContext context;
@@ -58,14 +61,18 @@ class CampaignInstructionsScreenState extends BaseState {
       /// if login token is null then
       /// show the svg images
     } else {
-      lang = localStorageService.language;
-      if (lang == '') lang = 'en';
-      print('lang $lang');
+      // lang = localStorageService.language;
+      await userSettingsDatabaseService.getLanguage().then((value) {
+        print('value $value');
+        lang = value;
+      });
+      if (lang == '' || lang == null) lang = 'en';
+      log.i('lang $lang');
       var eventContent;
 
       eventContent = await apiService.getEvents();
 
-      log.i("Got Event!!!");
+      log.i("Got Event!!! $eventContent");
       if (eventContent == "error") {
         log.wtf("Got API Error!!!");
         hasApiError = true;
@@ -76,6 +83,7 @@ class CampaignInstructionsScreenState extends BaseState {
       }
 
       log.i("Got Event End!!!");
+      setBusy(false);
     }
     //get campaign info in selected language
     log.i("setBusy(false);!!!");
