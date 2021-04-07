@@ -1209,7 +1209,7 @@
       "@pendingConfirmDeposit": {     "description": "pending_confirm_deposit",      "type": "text",      "placeholders": {}   },
       "pleaseConfirmYour": "請確認您的向交易所轉",
       "@pleaseConfirmYour": {     "description": "please_confirm_your",      "type": "text",      "placeholders": {}   },
-      "deposit": "操作",
+      "deposit": "转交易所",
       "@deposit": {     "description": "deposit",      "type": "text",      "placeholders": {}   },
       "insufficientGasAmount": "燃料餘額不足",
       "@insufficientGasAmount": {     "description": "Insufficient gas amount",      "type": "text",      "placeholders": {}   },

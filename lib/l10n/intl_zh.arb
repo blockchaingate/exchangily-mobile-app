@@ -1547,7 +1547,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "deposit": "操作",
+    "deposit": "转交易所",
     "@deposit": {
         "description": "deposit",
         "type": "text",
