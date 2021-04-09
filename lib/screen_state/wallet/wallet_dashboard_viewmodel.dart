@@ -40,6 +40,7 @@ import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as TronAddressUtil;
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 
@@ -156,14 +157,90 @@ class WalletDashboardViewModel extends BaseViewModel {
         isUpdateWallet = false;
       } else {
         isUpdateWallet = true;
+        showUpdateWalletDialog();
       }
     });
     setBusy(false);
   }
 
+/*---------------------------------------------------
+          Update Info dialog
+--------------------------------------------------- */
+
+  showUpdateWalletDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Platform.isIOS
+            ? Theme(
+                data: ThemeData.dark(),
+                child: CupertinoAlertDialog(
+                  title: Container(
+                    margin: EdgeInsets.only(bottom: 5.0),
+                    child: Center(
+                        child: Text(
+                      '${AppLocalizations.of(context).appUpdateNotice}',
+                      style: Theme.of(context).textTheme.headline4.copyWith(
+                          color: primaryColor, fontWeight: FontWeight.w500),
+                    )),
+                  ),
+                  content: Container(
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(true);
+                            updateWallet();
+                          },
+                          child: Text(AppLocalizations.of(context).updateNow))),
+                  actions: <Widget>[],
+                ))
+            : AlertDialog(
+                titlePadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.all(5.0),
+                elevation: 5,
+                backgroundColor: walletCardColor.withOpacity(0.85),
+                title: Container(
+                  padding: EdgeInsets.all(10.0),
+                  color: secondaryColor.withOpacity(0.5),
+                  child: Center(
+                      child: Text(
+                          '${AppLocalizations.of(context).appUpdateNotice}')),
+                ),
+                titleTextStyle: Theme.of(context)
+                    .textTheme
+                    .headline4
+                    .copyWith(fontWeight: FontWeight.bold),
+                contentTextStyle: TextStyle(color: grey),
+                content: Container(
+                  padding: EdgeInsets.all(5.0),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        OutlinedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  primaryColor)),
+                          onPressed: () {
+                            //  Navigator.of(context).pop();
+                            updateWallet().then((res) {
+                              if (res) Navigator.of(context).pop();
+                            });
+                          },
+                          child: Text(AppLocalizations.of(context).updateNow,
+                              style: Theme.of(context).textTheme.headline5),
+                        ),
+                      ]),
+                ));
+      },
+    );
+  }
+
   // add trx if not present in wallet
-  updateWallet() async {
+  Future<bool> updateWallet() async {
     setBusy(true);
+    bool isSuccess = false;
     String mnemonic = '';
     await dialogService
         .showDialog(
@@ -189,9 +266,14 @@ class WalletDashboardViewModel extends BaseViewModel {
         await walletDatabaseService.insert(wi);
         await refreshBalance();
         isUpdateWallet = false;
+        isSuccess = true;
+      } else if (res.returnedText == 'Closed') {
+        showUpdateWalletDialog();
+        setBusy(false);
       }
     });
     setBusy(false);
+    return isSuccess;
   }
 /*----------------------------------------------------------------------
                         Check Announcement

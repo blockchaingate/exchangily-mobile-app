@@ -430,9 +430,14 @@ class SharedService {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          OutlineButton(
-                            color: globals.red,
-                            padding: EdgeInsets.all(0),
+                          OutlinedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(globals.red),
+                              padding:
+                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
+                                      EdgeInsets.all(0)),
+                            ),
                             child: Center(
                               child: Text(
                                 isLater

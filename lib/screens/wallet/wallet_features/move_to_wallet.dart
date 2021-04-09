@@ -30,9 +30,6 @@ class MoveToWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //  double bal = walletInfo.inExchange;
-    String coinName = walletInfo.tickerName;
-
     return BaseScreen<MoveToWalletViewmodel>(
       onModelReady: (model) {
         model.context = context;
@@ -91,7 +88,8 @@ class MoveToWalletScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                       AppLocalizations.of(context)
-                                              .minimumAmount + ':',
+                                              .minimumAmount +
+                                          ':',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6),
@@ -130,9 +128,13 @@ class MoveToWalletScreen extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                               horizontal: 3,
                             ),
-                            child:walletInfo.tickerName == 'USDTX'?Text('USDT'.toUpperCase(),
-                                style: Theme.of(context).textTheme.subtitle2): Text('${model.specialTicker}'.toUpperCase(),
-                                style: Theme.of(context).textTheme.subtitle2),
+                            child: walletInfo.tickerName == 'USDTX'
+                                ? Text('USDT'.toUpperCase(),
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2)
+                                : Text('${model.specialTicker}'.toUpperCase(),
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2),
                           ),
                           model.isWithdrawChoice
                               ? SizedBox(
@@ -154,20 +156,26 @@ class MoveToWalletScreen extends StatelessWidget {
 
                       UIHelper.verticalSpaceSmall,
                       // Kanban Gas Fee
-                      walletInfo.tickerName == 'TRX' ||
-                        walletInfo.tickerName == 'USDTX' || model.isShowTrxTsWalletBalance
-                    ? Container(
-                        padding: EdgeInsets.only(top: 10, bottom: 0),
-                        alignment: Alignment.topLeft,
-                        child: walletInfo.tickerName == 'TRX'? Text(
-                            '${AppLocalizations.of(context).gasFee}: 1 TRX',
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.headline6):Text(
-                            '${AppLocalizations.of(context).gasFee}: 15 TRX',
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.headline6),
-                      )
-                    :
+                      // walletInfo.tickerName == 'TRX' ||
+                      //         walletInfo.tickerName == 'USDTX' ||
+                      //         model.isShowTrxTsWalletBalance
+                      //     ? Container(
+                      //         padding: EdgeInsets.only(top: 10, bottom: 0),
+                      //         alignment: Alignment.topLeft,
+                      //         child: walletInfo.tickerName == 'TRX'
+                      //             ? Text(
+                      //                 '${AppLocalizations.of(context).gasFee}: 1 TRX',
+                      //                 textAlign: TextAlign.left,
+                      //                 style:
+                      //                     Theme.of(context).textTheme.headline6)
+                      //             : Text(
+                      //                 '${AppLocalizations.of(context).gasFee}: 15 TRX',
+                      //                 textAlign: TextAlign.left,
+                      //                 style: Theme.of(context)
+                      //                     .textTheme
+                      //                     .headline6),
+                      //       )
+                      //     : Container(),
                       Row(
                         children: <Widget>[
                           Text(AppLocalizations.of(context).kanbanGasFee,
@@ -328,7 +336,8 @@ class MoveToWalletScreen extends StatelessWidget {
                               child: Row(
                               children: [
                                 model.isShowTrxTsWalletBalance ||
-                                        model.walletInfo.tickerName == "USDT" ||  model.walletInfo.tickerName == "USDTX"
+                                        model.walletInfo.tickerName == "USDT" ||
+                                        model.walletInfo.tickerName == "USDTX"
                                     ? Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -356,6 +365,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   .textTheme
                                                   .headline6),
                                           Radio(
+                                            //  model.groupValue == 'FAB'? fillColor: MaterialStateColor
+                                            //       .resolveWith(
+                                            //           (states) => Colors.blue),
                                               activeColor: globals.primaryColor,
                                               onChanged: (value) {
                                                 model.radioButtonSelection(
@@ -366,7 +378,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                         ],
                                       ),
 
-                                      // erc20 radio button
+                                // erc20 radio button
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -425,7 +437,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                       )),
 
                                       // show ts wallet balance for tron chain
-                                      model.walletInfo.tickerName == 'USDT' || model.walletInfo.tickerName == 'USDTX'
+                                      model.walletInfo.tickerName == 'USDT' ||
+                                              model.walletInfo.tickerName ==
+                                                  'USDTX'
                                           ? Container(
                                               margin:
                                                   EdgeInsets.only(left: 5.0),
@@ -455,7 +469,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                                                   .headline6,
                                                         )
                                                   : Container(
-                                                      child: Text(AppLocalizations.of(context).loading)))
+                                                      child: Text(
+                                                          AppLocalizations.of(context)
+                                                              .loading)))
                                           : Container(
                                               margin:
                                                   EdgeInsets.only(left: 5.0),
@@ -482,7 +498,10 @@ class MoveToWalletScreen extends StatelessWidget {
                                                                   .textTheme
                                                                   .headline6,
                                                         )
-                                                  : Container(child:Text(AppLocalizations.of(context).loading))),
+                                                  : Container(
+                                                      child: Text(
+                                                          AppLocalizations.of(context)
+                                                              .loading))),
                                     ],
                                   ),
                                 ),
