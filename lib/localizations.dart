@@ -1742,6 +1742,11 @@ class AppLocalizations {
     return Intl.message('No Event', name: 'noEvent', desc: 'noEvent');
   }
 
+  String get applications {
+    return Intl.message('Applications',
+        name: 'applications', desc: 'applications_settings');
+  }
+
   // Share page pending translation added by Jack
 }
 

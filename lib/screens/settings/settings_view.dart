@@ -184,65 +184,66 @@ class SettingsContainer extends StatelessWidget {
               color: globals.walletCardColor,
               child: Theme.of(context).platform == TargetPlatform.iOS
                   ? Column(
-                    children: [
-                      Container(margin:EdgeInsets.all(5.0),child: Text(AppLocalizations.of(context).changeWalletLanguage,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle2)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
+                      children: [
+                        Container(
+                            margin: EdgeInsets.all(5.0),
+                            child: Text(
+                                AppLocalizations.of(context)
+                                    .changeWalletLanguage,
+                                style: Theme.of(context).textTheme.subtitle2)),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('English'
-                              ,
-                                        style:
-                                            Theme.of(context).textTheme.headline5
+                              Row(
+                                children: [
+                                  Text('English',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                  Checkbox(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    activeColor: globals.primaryColor,
+                                    onChanged: (bool value) {
+                                      String lang = '';
+                                      if (value) {
+                                        lang = 'en';
+                                      } else
+                                        lang = 'zh';
+
+                                      model.changeWalletLanguage(lang);
+                                    },
+                                    value: model.selectedLanguage == "English",
+                                  )
+                                ],
                               ),
-                              Checkbox(
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                               
-                                  activeColor: globals.primaryColor,
-                                onChanged: (bool value) {
-                                  String lang = '';
-                                  if (value) {
-                                    lang = 'en';
-                                  } else
-                                    lang = 'zh';
+                              UIHelper.horizontalSpaceSmall,
+                              Row(
+                                children: [
+                                  Text('Chinese',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                  Checkbox(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    activeColor: globals.primaryColor,
+                                    onChanged: (bool value) {
+                                      String lang = '';
+                                      if (!value) {
+                                        lang = 'en';
+                                      } else
+                                        lang = 'zh';
 
-                                  model.changeWalletLanguage(lang);
-                                },
-                                value: model.selectedLanguage == "English",
+                                      model.changeWalletLanguage(lang);
+                                    },
+                                    value: model.selectedLanguage == "简体中文",
+                                  )
+                                ],
                               )
-                            ],
-                          ),
-                          UIHelper.horizontalSpaceSmall,
-                          Row(
-                            children: [
-                              Text('Chinese',
-                                     style:
-                                            Theme.of(context).textTheme.headline5),
-                              Checkbox(
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                 
-                                  activeColor: globals.primaryColor,
-                                onChanged: (bool value) {
-                                  String lang = '';
-                                  if (!value) {
-                                    lang = 'en';
-                                  } else
-                                    lang = 'zh';
-
-                                  model.changeWalletLanguage(lang);
-                                },
-                                value: model.selectedLanguage == "简体中文",
-                              )
-                            ],
-                          )
-                        ]),
-                    ],
-                  )
+                            ]),
+                      ],
+                    )
                   // Row(
                   //     children: [
                   //       Expanded(
@@ -502,7 +503,30 @@ class SettingsContainer extends StatelessWidget {
                     ],
                   ),
                 )),
-
+            InkWell(
+              splashColor: globals.primaryColor,
+              child: Card(
+                elevation: 4,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  color: globals.walletCardColor,
+                  padding: EdgeInsets.all(10),
+                  // height: 100,
+                  child:
+                      // !model.isShowCaseOnce
+                      //     ? Showcase(
+                      //         key: model.one,
+                      //         description: 'Delete wallet from this device',
+                      //         child: deleteWalletRow(context),
+                      //       )
+                      //     :
+                      applicationsRow(context),
+                ),
+              ),
+              onTap: ()  {
+                 model.showApplicationOptions();
+              },
+            ),
             //Card(child: Container(child: Text(model.test))),
             // Version Code
             Card(
@@ -582,6 +606,27 @@ class SettingsContainer extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline5,
               ),
+      ],
+    );
+  }
+
+  Row applicationsRow(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 3.0),
+          child: Icon(
+            Icons.apps,
+            color: globals.primaryColor,
+            size: 18,
+          ),
+        ),
+        Text(
+          AppLocalizations.of(context).applications,
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.headline5,
+        ),
       ],
     );
   }

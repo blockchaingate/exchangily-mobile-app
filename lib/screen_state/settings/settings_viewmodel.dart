@@ -22,6 +22,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,6 +91,38 @@ class SettingsViewmodel extends BaseViewModel {
     await setLanguageFromDb();
     await selectDefaultWalletLanguage();
     setBusy(false);
+  }
+
+/*-------------------------------------------------------------------------------------
+                      Show Application Options
+-------------------------------------------------------------------------------------*/
+  showApplicationOptions() {
+    return showCupertinoModalPopup(
+        context: context,
+        builder: (context) => CupertinoActionSheet(
+              title: Text('Choose application'),
+              actions: [
+                CupertinoActionSheetAction(
+                  child: Text('Wallet'),
+                  onPressed: () => {},
+                ),
+                  CupertinoActionSheetAction(
+                  child: Text('Exchange'),
+                  onPressed: () => {},
+                )
+              ,
+                CupertinoActionSheetAction(
+                  child: Text('Bindpay'),
+                  onPressed: () => {},
+                )
+              
+              ],
+              
+              cancelButton: CupertinoActionSheetAction(
+                child: Text(AppLocalizations.of(context).cancel),
+                onPressed: () => navigationService.goBack(),
+              ),
+            ));
   }
 
 /*-------------------------------------------------------------------------------------
