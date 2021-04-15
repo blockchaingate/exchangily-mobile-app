@@ -222,9 +222,9 @@ class WalletDashboardViewModel extends BaseViewModel {
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   primaryColor)),
-                          onPressed: () {
+                          onPressed: () async{
                             //  Navigator.of(context).pop();
-                            updateWallet().then((res) {
+                          await  updateWallet().then((res) {
                               if (res) Navigator.of(context).pop();
                             });
                           },

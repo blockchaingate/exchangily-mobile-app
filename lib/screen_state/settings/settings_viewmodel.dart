@@ -264,7 +264,7 @@ class SettingsViewmodel extends BaseViewModel {
         log.e('all keys after clearing ${prefs.getKeys()}');
 
         Navigator.pushNamed(context, '/');
-      } else if (res.returnedText == 'Closed') {
+      } else if (res.returnedText == 'Closed' && !res.confirmed) {
         log.e('Dialog Closed By User');
         isDeleting = false;
         setBusy(false);
