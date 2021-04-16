@@ -18,9 +18,18 @@ const String OrdersTextApiRoute = "orders";
 const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 
 /*----------------------------------------------------------------------
+                        Campaign
+----------------------------------------------------------------------*/
+const String campaignListUrl = baseBlockchainGateV2Url + 'campaigns';
+
+const String create7StarOrderUrl =
+    baseBlockchainGateV2Url + '7star-order/create';
+
+/*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
-const String TronUsdtAccountBalanceUrl = TronBaseApiUrl + "wallet/triggerconstantcontract";
+const String TronUsdtAccountBalanceUrl =
+    TronBaseApiUrl + "wallet/triggerconstantcontract";
 const String TronGetAccountUrl = TronBaseApiUrl + "wallet/getaccount";
 //  const requestURL = `${TRON_API_ENDPOINT}/wallet/getaccount`;
 // const requestBody = {
