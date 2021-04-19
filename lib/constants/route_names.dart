@@ -28,13 +28,15 @@ const String TransactionHistoryViewRoute = '/transactionHistory';
                         Exchange Routes
 ----------------------------------------------------------------------*/
 const String ExchangeTradeViewRoute = '/exchangeTrade';
+
 /*----------------------------------------------------------------------
-                        Navigation Routes
+                      Bottom Navigation Routes
 ----------------------------------------------------------------------*/
 const String DashboardViewRoute = '/dashboard';
 const String MarketsViewRoute = '/markets';
 const String BindpayViewRoute = '/bindpay';
 const String InstructionsViewRoute = '/campaignInstructions';
+const String CampaignListDashboardViewRoute = '/campaignListDashboard';
 const String SettingViewRoute = '/settings';
 
 /*----------------------------------------------------------------------
@@ -49,4 +51,11 @@ const String TeamRewardDetailsViewRoute = '/teamRewardDetails';
 const String TeamReferralViewRoute = '/teamReferral';
 
 const String MyReferralViewRoute = '/myReferral';
+const String CampaignLoginViewRoute = '/campaignLogin';
 const String RegisterAccountViewRoute = '/registerAccount';
+
+const String CampaignDashboardViewRoute = '/campaignDashboard';
+
+/*----------------------------------------------------------------------
+                      Campaign Routes V2
+----------------------------------------------------------------------*/

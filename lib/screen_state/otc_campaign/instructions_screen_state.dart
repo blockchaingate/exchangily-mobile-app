@@ -1,3 +1,4 @@
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/campaign/user_data.dart';
@@ -45,11 +46,11 @@ class CampaignInstructionsScreenState extends BaseState {
           await campaignService.getUserDataFromDatabase().then((res) {
             if (res != null) {
               userData = res;
-              navigateTo('/campaignDashboard');
+              navigateTo(CampaignDashboardViewRoute);
             }
           });
         } else if (res == null) {
-          navigateTo('/campaignLogin',
+          navigateTo(CampaignLoginViewRoute,
               errorMessage: AppLocalizations.of(context).sessionExpired);
         }
       }).catchError((err) {
@@ -96,6 +97,6 @@ class CampaignInstructionsScreenState extends BaseState {
   }
 
   onBackButtonPressed() async {
-    navigationService.navigateUsingpopAndPushedNamed('/dashboard');
+    navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
   }
 }

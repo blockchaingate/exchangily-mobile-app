@@ -22,6 +22,11 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 ----------------------------------------------------------------------*/
 const String campaignListUrl = baseBlockchainGateV2Url + 'campaigns';
 
+///Body parameters:
+//         walletAdd:  string; // user wallet's FAB address
+//         amount: number;   // the amount to pay;
+//         currency: string; // the currency or coin to pay
+//         referral:  string;  // ref wallet address
 const String create7StarOrderUrl =
     baseBlockchainGateV2Url + '7star-order/create';
 

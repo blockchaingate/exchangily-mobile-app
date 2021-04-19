@@ -198,7 +198,7 @@ class WalletBalanceList {
   WalletBalanceList({this.walletBalances});
 
   factory WalletBalanceList.fromJson(List<dynamic> parsedJson) {
-    List<WalletBalance> balanceList = new List<WalletBalance>();
+    List<WalletBalance> balanceList = [];
     balanceList = parsedJson.map((i) => WalletBalance.fromJson(i)).toList();
     return new WalletBalanceList(walletBalances: balanceList);
   }

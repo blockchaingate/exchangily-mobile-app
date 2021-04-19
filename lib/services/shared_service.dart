@@ -177,9 +177,20 @@ class SharedService {
       Rounded gradient button box decoration
 --------------------------------------------------- */
 
-  Decoration gradientBoxDecoration() {
+  Decoration circularGradientBoxDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(25)),
+      gradient: LinearGradient(
+        colors: [Colors.redAccent, Colors.yellow],
+        begin: FractionalOffset.topLeft,
+        end: FractionalOffset.bottomRight,
+      ),
+    );
+  }
+
+  Decoration rectangularGradientBoxDecoration() {
+    return BoxDecoration(
+      // borderRadius: BorderRadius.all(Radius.circular(25)),
       gradient: LinearGradient(
         colors: [Colors.redAccent, Colors.yellow],
         begin: FractionalOffset.topLeft,
@@ -260,7 +271,7 @@ class SharedService {
   String getCurrentRouteName(BuildContext context) {
     String routeName = '';
     routeName = ModalRoute.of(context).settings.name;
-    print('$routeName in bottom Nav');
+    log.w('getCurrentRouteName $routeName in bottom Nav');
     return routeName;
   }
 
@@ -274,6 +285,10 @@ class SharedService {
 
     navigationService.navigateUsingpopAndPushedNamed(route);
   }
+
+/*-------------------------------------------------------------------------------------
+                          Close App
+-------------------------------------------------------------------------------------*/
 
   Future<bool> closeApp() async {
     return showDialog(

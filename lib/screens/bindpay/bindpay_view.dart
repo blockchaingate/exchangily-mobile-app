@@ -316,8 +316,8 @@ class BindpayView extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Container(
-                              decoration:
-                                  model.sharedService.gradientBoxDecoration(),
+                              decoration: model.sharedService
+                                  .circularGradientBoxDecoration(),
                               child: FlatButton(
                                 textColor: Colors.white,
                                 onPressed: () {

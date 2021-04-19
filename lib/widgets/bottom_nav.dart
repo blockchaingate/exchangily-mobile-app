@@ -12,7 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/constants/route_names.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart' as RouteNames;
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -76,37 +76,36 @@ class BottomNavBar extends StatelessWidget {
 
         switch (idx) {
           case 0:
-            if (currentRouteName != 'WalletDashboardScreen')
-              navigationService
-                  .navigateUsingPushReplacementNamed(DashboardViewRoute);
+            if (currentRouteName != RouteNames.DashboardViewRoute)
+              navigationService.navigateUsingPushReplacementNamed(
+                  RouteNames.DashboardViewRoute);
             break;
 
           case 1:
-            if (currentRouteName != 'MarketsView')
+            if (currentRouteName != RouteNames.MarketsViewRoute)
               navigationService.navigateUsingPushReplacementNamed(
-                  MarketsViewRoute,
+                  RouteNames.MarketsViewRoute,
                   arguments: false);
             break;
           case 2:
-            if (currentRouteName != 'BindpayView')
-              navigationService
-                  .navigateUsingPushReplacementNamed(BindpayViewRoute);
+            if (currentRouteName != RouteNames.BindpayViewRoute)
+              navigationService.navigateUsingPushReplacementNamed(
+                  RouteNames.BindpayViewRoute);
             break;
           // case 2:
           // if (currentRouteName != 'OtcScreen')
           //   Navigator.pushNamed(context, '/otc');
           //   break;
           case 3:
-            if (currentRouteName != 'CampaignInstructionScreen')
-              navigationService
-                  .navigateUsingPushReplacementNamed(InstructionsViewRoute);
+            if (currentRouteName != RouteNames.CampaignListDashboardViewRoute)
+              navigationService.navigateUsingPushReplacementNamed(
+                  RouteNames.CampaignListDashboardViewRoute);
             break;
           case 4:
-            if (currentRouteName != 'SettingsScreen')
+            if (currentRouteName != RouteNames.SettingViewRoute)
               navigationService
-                  .navigateUsingpopAndPushedNamed(SettingViewRoute);
-            else if (ModalRoute.of(context).settings.name == 'SettingsScreen')
-              return null;
+                  .navigateUsingpopAndPushedNamed(RouteNames.SettingViewRoute);
+
             break;
         }
       },

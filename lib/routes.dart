@@ -11,7 +11,7 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/constants/route_names.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart' as RouteNames;
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/bindpay/bindpay_view.dart';
@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
 import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
+import 'package:exchangilymobileapp/screens/campaign/campaign_list_dashboard_view.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_single.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/instructions_screen.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/login_screen.dart';
@@ -72,23 +73,23 @@ class RouteGenerator {
                           Wallet Setup
 ----------------------------------------------------------------------*/
 
-      case ChooseWalletLanguageViewRoute:
+      case RouteNames.ChooseWalletLanguageViewRoute:
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageView());
-      case WalletSetupViewRoute:
+      case RouteNames.WalletSetupViewRoute:
         return MaterialPageRoute(builder: (_) => WalletSetupScreen());
 
-      case ImportWalletViewRoute:
+      case RouteNames.ImportWalletViewRoute:
         return MaterialPageRoute(builder: (_) => ImportWalletScreen());
 
-      case BackupMnemonicViewRoute:
+      case RouteNames.BackupMnemonicViewRoute:
         return MaterialPageRoute(builder: (_) => BackupMnemonicWalletScreen());
 
-      case ConfirmMnemonicViewRoute:
+      case RouteNames.ConfirmMnemonicViewRoute:
         return MaterialPageRoute(
             builder: (_) => ConfirmMnemonictWalletScreen(
                 randomMnemonicListFromRoute: args));
 
-      case CreatePasswordViewRoute:
+      case RouteNames.CreatePasswordViewRoute:
         return MaterialPageRoute(
             builder: (_) =>
                 CreatePasswordScreen(randomMnemonicFromRoute: args));
@@ -97,45 +98,45 @@ class RouteGenerator {
                           Wallet Routes
 ----------------------------------------------------------------------*/
 
-      case DashboardViewRoute:
+      case RouteNames.DashboardViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'WalletDashboardScreen'),
+            settings: RouteSettings(name: RouteNames.DashboardViewRoute),
             builder: (_) => WalletDashboardView());
 
-      case AddGasViewRoute:
+      case RouteNames.AddGasViewRoute:
         return MaterialPageRoute(builder: (_) => AddGas());
 
-      case SmartContractViewRoute:
+      case RouteNames.SmartContractViewRoute:
         return MaterialPageRoute(builder: (_) => SmartContract());
 
-      case DepositViewRoute:
+      case RouteNames.DepositViewRoute:
         return MaterialPageRoute(
             builder: (_) => MoveToExchangeScreen(walletInfo: args));
 
-      case RedepositViewRoute:
+      case RouteNames.RedepositViewRoute:
         return MaterialPageRoute(builder: (_) => Redeposit(walletInfo: args));
 
-      case WithdrawViewRoute:
+      case RouteNames.WithdrawViewRoute:
         return MaterialPageRoute(
             builder: (_) => MoveToWalletScreen(walletInfo: args));
 
-      case WalletFeaturesViewRoute:
+      case RouteNames.WalletFeaturesViewRoute:
         return MaterialPageRoute(
             builder: (_) => WalletFeaturesView(walletInfo: args));
 
-      case ReceiveViewRoute:
+      case RouteNames.ReceiveViewRoute:
         return MaterialPageRoute(
             builder: (_) => ReceiveWalletScreen(
                   walletInfo: args,
                 ));
 
-      case SendViewRoute:
+      case RouteNames.SendViewRoute:
         return MaterialPageRoute(
             builder: (_) => SendWalletScreen(
                   walletInfo: args,
                 ));
 
-      case TransactionHistoryViewRoute:
+      case RouteNames.TransactionHistoryViewRoute:
         return MaterialPageRoute(
             builder: (_) => TransactionHistoryView(
                   tickerName: args,
@@ -145,9 +146,9 @@ class RouteGenerator {
                           Exchange Routes
 ----------------------------------------------------------------------*/
 
-      case MarketsViewRoute:
+      case RouteNames.MarketsViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'MarketsView'),
+            settings: RouteSettings(name: RouteNames.MarketsViewRoute),
             builder: (_) => MarketsView(hideSlider: args));
 
       case '/exchangeTrade':
@@ -157,6 +158,15 @@ class RouteGenerator {
       case '/myExchangeOrders':
         return MaterialPageRoute(
             builder: (_) => MyOrdersView(tickerName: args));
+
+/*----------------------------------------------------------------------
+                          Campaign V2 Routes
+----------------------------------------------------------------------*/
+      case RouteNames.CampaignListDashboardViewRoute:
+        return MaterialPageRoute(
+            settings:
+                RouteSettings(name: RouteNames.CampaignListDashboardViewRoute),
+            builder: (_) => CampaignListDashboardView());
 
 /*----------------------------------------------------------------------
                           Campaign Routes
@@ -217,17 +227,17 @@ class RouteGenerator {
 /*----------------------------------------------------------------------
                       Bindpay Routes
 ----------------------------------------------------------------------*/
-      case BindpayViewRoute:
+      case RouteNames.BindpayViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'BindpayView'),
+            settings: RouteSettings(name: RouteNames.BindpayViewRoute),
             builder: (_) => BindpayView());
 
 /*----------------------------------------------------------------------
                       Navigation Routes
 ----------------------------------------------------------------------*/
-      case SettingViewRoute:
+      case RouteNames.SettingViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'SettingsScreen'),
+            settings: RouteSettings(name: RouteNames.SettingViewRoute),
             builder: (_) => SettingsView());
 
       /// OTC Screen
