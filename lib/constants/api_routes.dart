@@ -22,6 +22,9 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 ----------------------------------------------------------------------*/
 const String campaignListUrl = baseBlockchainGateV2Url + 'campaigns';
 
+const String campaignParticipateStatusUrl =
+    baseBlockchainGateV2Url + '7sar-order/address-campaign/';
+// exg address: 16RWDm7PvEog5j3T8i7eqGDPWZTLqaKuH2/ campaign id: 1
 ///Body parameters:
 //         walletAdd:  string; // user wallet's FAB address
 //         amount: number;   // the amount to pay;

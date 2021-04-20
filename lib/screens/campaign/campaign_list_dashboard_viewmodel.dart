@@ -10,6 +10,7 @@ class CampaignListDashboardViewModel extends FutureViewModel {
   final apiService = locator<ApiService>();
   final sharedService = locator<SharedService>();
   List<CampaignV2> campaigns = [];
+  bool hasParticipated = false;
 
   @override
   Future futureToRun() {
@@ -19,7 +20,7 @@ class CampaignListDashboardViewModel extends FutureViewModel {
   @override
   void onData(data) {
     campaigns = data;
-    log.w('campaigns $campaigns');
+    log.i('campaigns ${campaigns[1].imageUrl}');
   }
 
   @override

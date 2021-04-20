@@ -1014,11 +1014,10 @@ class ApiService {
     String url = ApiRoutes.campaignListUrl;
     try {
       final res = await http.get(url);
-      log.w('getCampaigns ${jsonDecode(res.body)}');
+      log.w('getCampaigns json ${jsonDecode(res.body)}');
       var json = jsonDecode(res.body);
       if (res.statusCode == 200 || res.statusCode == 201) {
         CampaignList campaignList = CampaignList.fromJson(json);
-        log.i('campaignList ${campaignList.campaignV2List[1].toJson()}');
         return campaignList.campaignV2List;
       } else {
         log.e("error: " + res.body);
