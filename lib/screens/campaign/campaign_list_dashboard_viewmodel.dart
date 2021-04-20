@@ -23,6 +23,10 @@ class CampaignListDashboardViewModel extends FutureViewModel {
     log.i('campaigns ${campaigns[1].imageUrl}');
   }
 
+checCampaignEntryStatus(){
+
+}
+
   @override
   void onError(error) {
     log.e('error $error');

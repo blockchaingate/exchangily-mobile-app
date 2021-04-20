@@ -1010,6 +1010,26 @@ class ApiService {
                             Campaign
 ----------------------------------------------------------------------*/
 
+
+  Future getCampaignsEntryStatus() async {
+    String url = ApiRoutes.campaignEntryStatusUrl;
+    try {
+      final res = await http.get(url);
+      log.w('getCampaignsEntryStatus json ${jsonDecode(res.body)}');
+      var json = jsonDecode(res.body);
+      if (res.statusCode == 200 || res.statusCode == 201) {
+        CampaignList campaignList = CampaignList.fromJson(json);
+        return campaignList.campaignV2List;
+      } else {
+        log.e("error: " + res.body);
+        return "error";
+      }
+    } catch (e) {
+      log.e('getCampaignsEntryStatus failed to load the data from the API $e');
+      return "error";
+    }
+  }
+
   Future getCampaignsV2() async {
     String url = ApiRoutes.campaignListUrl;
     try {
