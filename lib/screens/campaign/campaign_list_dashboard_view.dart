@@ -105,16 +105,32 @@ class CampaignListDashboardView extends StatelessWidget {
                       flex: 2, child: Text(model.campaigns[index].dateCreated)),
                 ],
               ),
+              Row(
+                children: [
+                  Expanded(flex: 1, child: Text('Status:')),
+                  UIHelper.horizontalSpaceSmall,
+                  if (model.campaigns[index].status == 1)
+                    Expanded(flex: 2, child: Text('Active'))
+                  else if (model.campaigns[index].status == 2)
+                    Expanded(flex: 2, child: Text('Waiting'))
+                ],
+              ),
               UIHelper.verticalSpaceSmall,
               // Show if user participated then don't show
               // other wise show the button to participate
-              model.hasParticipated
-                  ? Container()
+              model.campaigns[index].hasJoined != null &&
+                      model.campaigns[index].hasJoined
+                  ? Center(
+                      child: OutlinedButton(
+                          child: Text('Go to dashboard',
+                              style: TextStyle(color: primaryColor)),
+                          onPressed: () => {}))
                   : Center(
                       child: OutlinedButton(
                           child: Text('Click here to participate',
-                              style: TextStyle(color: primaryColor)),
-                          onPressed: () => {}))
+                              style: TextStyle(color: green)),
+                          onPressed: () =>
+                              {model.placeOrder(model.campaigns[index].id)}))
             ],
           ),
         ),

@@ -14,24 +14,25 @@ class CampaignV2 {
   List<LocalizeText> titleLan;
   List<dynamic> subTitleLan;
   List<dynamic> grade;
+  bool hasJoined;
 
-  CampaignV2({
-    this.levelRewardRate,
-    this.rules,
-    this.jurisdictions,
-    this.id,
-    this.status,
-    this.lastUpdated,
-    this.dateCreated,
-    this.sloganLan,
-    this.descLan,
-    this.avatarUrl,
-    this.imageUrl,
-    this.name,
-    this.titleLan,
-    this.subTitleLan,
-    this.grade,
-  });
+  CampaignV2(
+      {this.levelRewardRate,
+      this.rules,
+      this.jurisdictions,
+      this.id,
+      this.status,
+      this.lastUpdated,
+      this.dateCreated,
+      this.sloganLan,
+      this.descLan,
+      this.avatarUrl,
+      this.imageUrl,
+      this.name,
+      this.titleLan,
+      this.subTitleLan,
+      this.grade,
+      this.hasJoined});
 
   factory CampaignV2.fromJson(Map<String, dynamic> json) {
     List<LocalizeText> sloganLanTextList = [];
@@ -80,6 +81,7 @@ class CampaignV2 {
       'titleLan': titleLan?.map((e) => e?.toJson())?.toList(),
       'subTitleLan': subTitleLan,
       'grade': grade,
+      'hasJoined': hasJoined
     };
   }
 }

@@ -13,7 +13,8 @@
 
 import 'dart:convert';
 import 'package:exchangilymobileapp/constants/api_routes.dart' as ApiRoutes;
-import 'package:exchangilymobileapp/models/campaign/campaign_v2_model.dart';
+import 'package:exchangilymobileapp/models/campaign/campaign_v2/campaign_participate_model.dart';
+import 'package:exchangilymobileapp/models/campaign/campaign_v2/campaign_v2_model.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
@@ -1010,16 +1011,22 @@ class ApiService {
                             Campaign
 ----------------------------------------------------------------------*/
 
-
-  Future getCampaignsEntryStatus() async {
+  Future getCampaignsEntryStatus(int campaignId, String exgAddress) async {
     String url = ApiRoutes.campaignEntryStatusUrl;
+
+    String finalUrl = '$url$exgAddress/$campaignId';
+    log.i('getCampaignsEntryStatus url $finalUrl');
     try {
-      final res = await http.get(url);
-      log.w('getCampaignsEntryStatus json ${jsonDecode(res.body)}');
-      var json = jsonDecode(res.body);
+      final res = await http.get(finalUrl);
+      log.w('getCampaignsEntryStatus json ${(res.body)}');
       if (res.statusCode == 200 || res.statusCode == 201) {
-        CampaignList campaignList = CampaignList.fromJson(json);
-        return campaignList.campaignV2List;
+        if (res.body != 'no order') {
+          var json = jsonDecode(res.body);
+          CampaignParticipate campaignEntryDart =
+              CampaignParticipate.fromJson(json);
+          return campaignEntryDart;
+        }
+        return null;
       } else {
         log.e("error: " + res.body);
         return "error";
