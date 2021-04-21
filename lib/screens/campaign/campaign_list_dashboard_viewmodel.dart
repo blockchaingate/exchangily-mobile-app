@@ -21,6 +21,7 @@ class CampaignListDashboardViewModel extends FutureViewModel {
   List<CampaignV2> campaigns = [];
   bool isDialogUp = false;
   BuildContext context;
+  bool isDUSD = false;
 
   @override
   Future futureToRun() {
@@ -184,7 +185,7 @@ class CampaignListDashboardViewModel extends FutureViewModel {
                     color: secondaryColor.withOpacity(0.5),
                     child: Center(
                         child: Text(
-                            '${AppLocalizations.of(context).transactionDetails}')),
+                            '${AppLocalizations.of(context).orderDetails}')),
                   ),
                   titleTextStyle: Theme.of(context)
                       .textTheme
@@ -193,7 +194,77 @@ class CampaignListDashboardViewModel extends FutureViewModel {
                   contentTextStyle: TextStyle(color: grey),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      UIHelper.verticalSpaceSmall,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          UIHelper.horizontalSpaceSmall,
+                          Expanded(
+                            child: Text(
+                              'Amount:',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(color: Colors.blue),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              '2000 USD',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(color: Colors.blue),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          UIHelper.horizontalSpaceSmall,
+                          Expanded(
+                            child: Text(
+                              'Pay by:',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1
+                                  .copyWith(color: Colors.blue),
+                            ),
+                          ),
+                          Expanded(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: RadioListTile(
+                                    activeColor: primaryColor,
+                                    title: Text('USDT',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(color: Colors.blue)),
+                                    groupValue: null,
+                                    value: null,
+                                    onChanged: (Null value) {},
+                                  ),
+                                  // RadioListTile(
+                                  //   title: Text('DUSD'),
+                                  //   groupValue: null,
+                                  //   value: null,
+                                  //   onChanged: (Null value) {},
+                                  // ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Official address
+                          Container(child: Text('USDT or DUSD address '))
+                        ],
+                      ),
                       UIHelper.verticalSpaceMedium,
                       Center(
                         child: TextButton(
