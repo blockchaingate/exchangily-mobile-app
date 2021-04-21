@@ -12,7 +12,7 @@ class CampaignListDashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => CampaignListDashboardViewModel(),
-        onModelReady: (model) async {},
+        onModelReady: (model) async {model.context=context;},
         builder: (context, CampaignListDashboardViewModel model, child) {
           return Scaffold(
             appBar: AppBar(
@@ -109,10 +109,12 @@ class CampaignListDashboardView extends StatelessWidget {
                 children: [
                   Expanded(flex: 1, child: Text('Status:')),
                   UIHelper.horizontalSpaceSmall,
-                  if (model.campaigns[index].status == 1)
+                  if (model.campaigns[index].status == 0)
+                    Expanded(flex: 2, child: Text('Waiting to start'))
+                  else if (model.campaigns[index].status == 1)
                     Expanded(flex: 2, child: Text('Active'))
                   else if (model.campaigns[index].status == 2)
-                    Expanded(flex: 2, child: Text('Waiting'))
+                    Expanded(flex: 2, child: Text('Ended'))
                 ],
               ),
               UIHelper.verticalSpaceSmall,
@@ -130,7 +132,7 @@ class CampaignListDashboardView extends StatelessWidget {
                           child: Text('Click here to participate',
                               style: TextStyle(color: green)),
                           onPressed: () =>
-                              {model.placeOrder(model.campaigns[index].id)}))
+                              model.placeOrderDialog(model.campaigns[index].id)))
             ],
           ),
         ),
