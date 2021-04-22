@@ -77,7 +77,9 @@ class AddGas extends StatelessWidget {
                         hintStyle: Theme.of(context).textTheme.headline6,
                       ),
                       controller: model.amountController,
-                      style: TextStyle(fontSize: 16.0, color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color: model.isAmountInvalid ? red : Colors.white),
                     ),
                     UIHelper.verticalSpaceSmall,
                     // Balance
@@ -106,6 +108,18 @@ class AddGas extends StatelessWidget {
                       Text(model.transFee.toString(),
                           style: TextStyle(fontSize: 13.0, color: Colors.white))
                     ]),
+                    // Slider
+                    // Slider(
+                    //   divisions: 100,
+                    //   label: '${model.sliderValue.toStringAsFixed(2)}%',
+                    //   activeColor: primaryColor,
+                    //   min: 0.0,
+                    //   max: 100.0,
+                    //   onChanged: (newValue) {
+                    //     model.sliderOnchange(newValue);
+                    //   },
+                    //   value: model.sliderValue,
+                    // ),
                     // Advance
                     Row(children: <Widget>[
                       Text(AppLocalizations.of(context).advance,
