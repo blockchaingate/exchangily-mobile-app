@@ -280,8 +280,6 @@ class SettingsViewmodel extends BaseViewModel {
       log.e(error);
       isDeleting = false;
       setBusy(false);
-
-      return false;
     });
     log.i('model busy $busy');
     isDeleting = false;

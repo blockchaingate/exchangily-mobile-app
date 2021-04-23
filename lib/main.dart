@@ -35,7 +35,7 @@ Future<void> main() async {
   // debugRepaintRainbowEnabled = true;
   try {
     await serviceLocator();
-    Logger.level = Level.nothing;
+    Logger.level = Level.info;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
     // Force user to use only portrait mode until the development of other screen size design
@@ -90,7 +90,7 @@ class MyApp extends StatelessWidget {
             title: 'Exchangily Wallet',
             theme: ThemeData(
               // added unselectedWidgetColor to update inactive radio button's color
-              unselectedWidgetColor:Colors.white,
+              unselectedWidgetColor: Colors.white,
               disabledColor: globals.grey.withAlpha(100),
               primaryColor: globals.primaryColor,
               accentColor: globals.secondaryColor,

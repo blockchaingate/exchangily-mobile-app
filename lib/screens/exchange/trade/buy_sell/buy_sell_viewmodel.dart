@@ -13,6 +13,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -39,6 +40,7 @@ import 'package:exchangilymobileapp/utils/abi_util.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:keccak/keccak.dart';
@@ -539,74 +541,79 @@ class BuySellViewModel extends StreamViewModel {
   Future placeBuySellOrder() async {
     setBusy(true);
     isReloadMyOrders = false;
-    var res = await _dialogService.showDialog(
-        title: AppLocalizations.of(context).enterPassword,
-        description:
-            AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
-        buttonTitle: AppLocalizations.of(context).confirm);
-    if (res.confirmed) {
-      String mnemonic = res.returnedText;
-      Uint8List seed = walletService.generateSeed(mnemonic);
+    await _dialogService
+        .showDialog(
+            title: AppLocalizations.of(context).enterPassword,
+            description:
+                AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
+            buttonTitle: AppLocalizations.of(context).confirm)
+        .then((res) async {
+      if (res.confirmed) {
+        String mnemonic = res.returnedText;
+        Uint8List seed = walletService.generateSeed(mnemonic);
 
-      var txHex = await txHexforPlaceOrder(seed);
-      log.e('txhex $txHex');
-      var resKanban = await sendKanbanRawTransaction(txHex);
-      log.e('resKanban $resKanban');
-      if (resKanban != null && resKanban['transactionHash'] != null) {
-        showSimpleNotification(
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(AppLocalizations.of(context).orderCreatedSuccessfully,
-                  style: Theme.of(context).textTheme.headline5),
-              Text('txid:' + resKanban['transactionHash'],
-                  style: Theme.of(context).textTheme.headline6),
-            ],
-          ),
-          position: NotificationPosition.bottom,
-        );
-        // Future.delayed(new Duration(seconds: 2), () {
-        //   getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
-        //   // isReloadMyOrders = true;
-        // });
-        Timer.periodic(Duration(seconds: 3), (timer) async {
-          var res =
-              await tradeService.getTxStatus(resKanban["transactionHash"]);
-          if (res != null) {
-            log.i('RES $res');
-            String status = res['status'];
-            if (status == '0x1') {
-              setBusy(true);
-              log.e('isReloadMyOrders $isReloadMyOrders -- isBusy $isBusy');
-              isReloadMyOrders = true;
-              getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
-              Future.delayed(new Duration(milliseconds: 500), () {
+        var txHex = await txHexforPlaceOrder(seed);
+        log.e('txhex $txHex');
+        var resKanban = await sendKanbanRawTransaction(txHex);
+        log.e('resKanban $resKanban');
+        if (resKanban != null && resKanban['transactionHash'] != null) {
+          showSimpleNotification(
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(AppLocalizations.of(context).orderCreatedSuccessfully,
+                    style: Theme.of(context).textTheme.headline5),
+                Text('txid:' + resKanban['transactionHash'],
+                    style: Theme.of(context).textTheme.headline6),
+              ],
+            ),
+            position: NotificationPosition.bottom,
+          );
+          // Future.delayed(new Duration(seconds: 2), () {
+          //   getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+          //   // isReloadMyOrders = true;
+          // });
+          Timer.periodic(Duration(seconds: 3), (timer) async {
+            var res =
+                await tradeService.getTxStatus(resKanban["transactionHash"]);
+            if (res != null) {
+              log.i('RES $res');
+              String status = res['status'];
+              if (status == '0x1') {
                 setBusy(true);
-                isReloadMyOrders = false;
-                log.e('isReloadMyOrders $isReloadMyOrders');
+                log.e('isReloadMyOrders $isReloadMyOrders -- isBusy $isBusy');
+                isReloadMyOrders = true;
+                getSingleCoinExchangeBalanceFromAll(
+                    targetCoinName, baseCoinName);
+                Future.delayed(new Duration(milliseconds: 500), () {
+                  setBusy(true);
+                  isReloadMyOrders = false;
+                  log.e('isReloadMyOrders $isReloadMyOrders');
+                  setBusy(false);
+                });
                 setBusy(false);
-              });
-              setBusy(false);
+              }
+              log.e('isReloadMyOrders $isReloadMyOrders');
+              log.i('timer cancelled');
+              timer.cancel();
             }
-            log.e('isReloadMyOrders $isReloadMyOrders');
-            log.i('timer cancelled');
-            timer.cancel();
-          }
-        });
-      } else {
-        walletService.showInfoFlushbar(
-            AppLocalizations.of(context).placeOrderTransactionFailed,
-            resKanban.toString(),
-            Icons.cancel,
-            red,
-            context);
-      }
-    } else {
-      if (res.returnedText != 'Closed') {
-        showNotification(context);
+          });
+        } else {
+          walletService.showInfoFlushbar(
+              AppLocalizations.of(context).placeOrderTransactionFailed,
+              resKanban.toString(),
+              Icons.cancel,
+              red,
+              context);
+        }
+      } else if (res.returnedText != 'Closed') {
         setBusy(false);
+      } else {
+        log.e('Wrong pass');
+        setBusy(false);
+        showNotification(context);
       }
-    }
+    });
     setBusy(false);
   }
 
@@ -664,16 +671,19 @@ class BuySellViewModel extends StreamViewModel {
   }
 
 /* ---------------------------------------------------
-            Slider Onchange
+                 Slider Onchange
 --------------------------------------------------- */
+
   sliderOnchange(newValue) {
     setBusy(true);
     sliderValue = newValue;
     var targetCoinbalance =
         targetCoinExchangeBalance.unlockedAmount; // usd bal for buy
+    targetCoinbalance = NumberUtil().roundDown(targetCoinbalance);
     //  targetCoinWalletData.inExchange;
     var baseCoinbalance =
         baseCoinExchangeBalance.unlockedAmount; //coin(asset) bal for sell
+    baseCoinbalance = NumberUtil().roundDown(baseCoinbalance);
     //baseCoinWalletData
     //  .inExchange;
     if (quantity.isNaN) quantity = 0.0;
@@ -692,11 +702,15 @@ class BuySellViewModel extends StreamViewModel {
         log.i(transactionAmount);
         log.e(changeQuantityWithSlider);
       } else {
+        print('base balance $baseCoinbalance');
         var changeBalanceWithSlider = baseCoinbalance * sliderValue / 100;
         quantity = changeBalanceWithSlider / price;
-        transactionAmount = quantity * price;
-        quantityTextController.text =
+        String roundedQtyString =
             quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
+        double roundedQtyDouble = double.parse(roundedQtyString);
+        roundedQtyDouble = NumberUtil().roundDown(roundedQtyDouble);
+        transactionAmount = roundedQtyDouble * price;
+        quantityTextController.text = roundedQtyDouble.toString();
         updateTransFee();
         log.w('Slider value $sliderValue');
         log.i('calculated tx amount $transactionAmount');
