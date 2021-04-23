@@ -606,7 +606,8 @@ class BuySellViewModel extends StreamViewModel {
               red,
               context);
         }
-      } else if (res.returnedText != 'Closed') {
+      } else if (res.returnedText == 'Closed' && !res.confirmed) {
+        log.e('Dialog Closed By User');
         setBusy(false);
       } else {
         log.e('Wrong pass');
@@ -679,11 +680,12 @@ class BuySellViewModel extends StreamViewModel {
     sliderValue = newValue;
     var targetCoinbalance =
         targetCoinExchangeBalance.unlockedAmount; // usd bal for buy
-    targetCoinbalance = NumberUtil().roundDown(targetCoinbalance);
+
+    //   targetCoinbalance = NumberUtil().roundDownLastDigit(targetCoinbalance);
     //  targetCoinWalletData.inExchange;
     var baseCoinbalance =
         baseCoinExchangeBalance.unlockedAmount; //coin(asset) bal for sell
-    baseCoinbalance = NumberUtil().roundDown(baseCoinbalance);
+    //  baseCoinbalance = NumberUtil().roundDownLastDigit(baseCoinbalance);
     //baseCoinWalletData
     //  .inExchange;
     if (quantity.isNaN) quantity = 0.0;
@@ -693,26 +695,34 @@ class BuySellViewModel extends StreamViewModel {
         !quantity.isNegative) {
       if (!bidOrAsk) {
         var changeQuantityWithSlider = targetCoinbalance * sliderValue / 100;
-        print('changeQuantityWithSlider $changeQuantityWithSlider');
         quantity = changeQuantityWithSlider;
-        transactionAmount = quantity * price;
-        quantityTextController.text =
-            quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
-        updateTransFee();
-        log.i(transactionAmount);
-        log.e(changeQuantityWithSlider);
-      } else {
-        print('base balance $baseCoinbalance');
-        var changeBalanceWithSlider = baseCoinbalance * sliderValue / 100;
-        quantity = changeBalanceWithSlider / price;
-        String roundedQtyString =
-            quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
+
+        String roundedQtyString = NumberUtil()
+            .truncateDoubleWithoutRouding(quantity,
+                precision: singlePairDecimalConfig.qtyDecimal)
+            .toString();
         double roundedQtyDouble = double.parse(roundedQtyString);
-        roundedQtyDouble = NumberUtil().roundDown(roundedQtyDouble);
+        roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
+
         transactionAmount = roundedQtyDouble * price;
         quantityTextController.text = roundedQtyDouble.toString();
         updateTransFee();
-        log.w('Slider value $sliderValue');
+        log.i('transactionAmount $transactionAmount');
+        log.e('changeQuantityWithSlider $changeQuantityWithSlider');
+      } else {
+        log.w('base balance $baseCoinbalance');
+        var changeBalanceWithSlider = baseCoinbalance * sliderValue / 100;
+        quantity = changeBalanceWithSlider / price;
+        String roundedQtyString = NumberUtil()
+            .truncateDoubleWithoutRouding(quantity,
+                precision: singlePairDecimalConfig.qtyDecimal)
+            .toString();
+        double roundedQtyDouble = double.parse(roundedQtyString);
+        roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
+        transactionAmount = roundedQtyDouble * price;
+        quantityTextController.text = roundedQtyDouble.toString();
+        updateTransFee();
+
         log.i('calculated tx amount $transactionAmount');
         log.e('Balance change with slider $changeBalanceWithSlider');
       }

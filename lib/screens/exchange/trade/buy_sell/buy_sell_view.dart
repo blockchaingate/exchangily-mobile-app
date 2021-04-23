@@ -486,8 +486,11 @@ Column buildVerticalOrderbookColumn(
                           EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       color: Color(bidOrAsk ? 0xFF264559 : 0xFF502649),
                       child: Text(
-                          order.quantity.toStringAsFixed(
-                              model.singlePairDecimalConfig.qtyDecimal),
+                          NumberUtil()
+                              .truncateDoubleWithoutRouding(order.quantity,
+                                  precision:
+                                      model.singlePairDecimalConfig.qtyDecimal)
+                              .toString(),
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: Colors.white,
@@ -646,13 +649,13 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
             Expanded(
               child: model.bidOrAsk == true
                   ? Text(
-                      "${model.transactionAmount.toStringAsFixed(model.singlePairDecimalConfig.priceDecimal)}" +
+                      "${NumberUtil().truncateDoubleWithoutRouding(model.transactionAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
                           " " +
                           model.baseCoinName,
                       textAlign: TextAlign.end,
                       style: TextStyle(color: Colors.grey, fontSize: 12.0))
                   : Text(
-                      "${model.transactionAmount.toStringAsFixed(model.singlePairDecimalConfig.priceDecimal)}" +
+                      "${NumberUtil().truncateDoubleWithoutRouding(model.transactionAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
                           " " +
                           model.baseCoinName,
                       textAlign: TextAlign.end,
@@ -836,14 +839,14 @@ class BalanceRowWidget extends StatelessWidget {
             ?
             // ?  model.baseCoinExchangeBalance.unlockAmount == null?textDemoWidget():
             Text(
-                "${model.baseCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.singlePairDecimalConfig.priceDecimal)}" +
+                "${NumberUtil().truncateDoubleWithoutRouding(model.baseCoinExchangeBalance.unlockedAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
                     " " +
                     model.baseCoinName,
                 style: TextStyle(color: primaryColor, fontSize: 13.0))
             :
             // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
             Text(
-                "${model.targetCoinExchangeBalance.unlockedAmount.toStringAsFixed(model.singlePairDecimalConfig.priceDecimal) ?? 0.0}" +
+                "${NumberUtil().truncateDoubleWithoutRouding(model.targetCoinExchangeBalance.unlockedAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
                     " " +
                     model.targetCoinName,
                 style: TextStyle(color: primaryColor, fontSize: 13.0))

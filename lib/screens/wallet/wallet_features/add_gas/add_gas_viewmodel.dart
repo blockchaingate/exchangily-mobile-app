@@ -13,6 +13,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -46,6 +47,7 @@ class AddGasViewModel extends FutureViewModel {
   int satoshisPerBytes = 14;
   var bytesPerInput;
   var feePerInput;
+  double fabBalance = 0.0;
 
   @override
   Future futureToRun() async {
@@ -53,19 +55,20 @@ class AddGasViewModel extends FutureViewModel {
     return walletService.gasBalance(exgAddress);
   }
 
-  init() {
+  init() async {
     setBusy(true);
     gasLimitTextController.text =
         environment["chains"]["FAB"]["gasLimit"].toString();
     gasPriceTextController.text = '50';
     bytesPerInput = environment["chains"]["FAB"]["bytesPerInput"];
     feePerInput = bytesPerInput * satoshisPerBytes;
+    fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     getSliderReady();
+    await getFabBalance();
     setBusy(false);
   }
 
   getSliderReady() async {
-    fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     utxos = await apiService.getFabUtxos(fabAddress);
     scarContractAddress = await getScarAddress();
     scarContractAddress = trimHexPrefix(scarContractAddress);
@@ -108,7 +111,23 @@ class AddGasViewModel extends FutureViewModel {
   void onData(data) {
     log.w(data);
     setBusy(true);
+
     gasBalance = data;
+    setBusy(false);
+  }
+
+  getFabBalance() async {
+    setBusy(true);
+    await apiService
+        .getSingleWalletBalance(fabAddress, 'FAB', fabAddress)
+        .then((walletBalance) {
+      if (walletBalance != null) {
+        fabBalance = NumberUtil().truncateDoubleWithoutRouding(
+            walletBalance[0].balance,
+            precision: 6);
+      }
+    });
+
     setBusy(false);
   }
 
@@ -117,7 +136,7 @@ class AddGasViewModel extends FutureViewModel {
     if (isAmountInvalid) {
       sharedService.showInfoFlushbar(
           AppLocalizations.of(context).notice,
-          AppLocalizations.of(context).invalidAmount,
+          "FAB ${AppLocalizations.of(context).insufficientBalance}",
           Icons.cancel,
           red,
           context);

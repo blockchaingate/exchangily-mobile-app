@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -253,9 +254,12 @@ class OrderDetailsView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   orderRow(
-                      orders[index]
-                          .quantity
-                          .toStringAsFixed(decimalConfig.qtyDecimal),
+                      NumberUtil()
+                          .truncateDoubleWithoutRouding(
+                            orders[index].quantity,
+                            precision: decimalConfig.qtyDecimal,
+                          )
+                          .toString(),
                       TextAlign.start,
                       grey),
                   orderRow(
@@ -275,9 +279,12 @@ class OrderDetailsView extends StatelessWidget {
                       TextAlign.start,
                       sellPrice),
                   orderRow(
-                      orders[index]
-                          .quantity
-                          .toStringAsFixed(decimalConfig.qtyDecimal),
+                      NumberUtil()
+                          .truncateDoubleWithoutRouding(
+                            orders[index].quantity,
+                            precision: decimalConfig.qtyDecimal,
+                          )
+                          .toString(),
                       TextAlign.end,
                       grey),
                 ],
