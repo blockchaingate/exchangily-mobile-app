@@ -1526,14 +1526,14 @@ class WalletService {
                 Future Add Gas Do
 ----------------------------------------------------------------------*/
 
-  Future<Map<String, dynamic>> addGasDo(seed, double amount) async {
+  Future<Map<String, dynamic>> addGasDo(seed, double amount, {options}) async {
     var satoshisPerBytes = 14;
     var scarContractAddress = await getScarAddress();
     scarContractAddress = stringUtils.trimHexPrefix(scarContractAddress);
 
     var fxnDepositCallHex = '4a58db19';
-    var contractInfo = await getFabSmartContract(
-        scarContractAddress, fxnDepositCallHex, 800000, 50);
+    var contractInfo = await getFabSmartContract(scarContractAddress,
+        fxnDepositCallHex, options['gasLimit'], options['gasPrice']);
 
     var res1 = await getFabTransactionHex(seed, [0], contractInfo['contract'],
         amount, contractInfo['totalFee'], satoshisPerBytes, [], false);

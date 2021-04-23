@@ -269,7 +269,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "warningBackupMnemonic": "请仔细记录并妥善保管下列十二个助记词，不可丢失，不能让其他任何要知道，不要通过微信、QQ、电子邮件等任何工具发送，否则你将失去钱包中的全部资产。",
+    "warningBackupMnemonic": "请仔细记录并妥善保管下列十二个助记词，不可丢失，不能让其他任何人知道，不要通过微信、QQ、电子邮件等任何工具发送，否则你将失去钱包中的全部资产。",
     "@warningBackupMnemonic": {
         "description": "warning_backup_mnemonic",
         "type": "text",

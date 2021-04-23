@@ -401,7 +401,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("将资金转入交易区以进行交易或使用闪付功能"),
         "walletbalance": MessageLookupByLibrary.simpleMessage("钱包余额"),
         "warningBackupMnemonic": MessageLookupByLibrary.simpleMessage(
-            "请仔细记录并妥善保管下列十二个助记词，不可丢失，不能让其他任何要知道，不要通过微信、QQ、电子邮件等任何工具发送，否则你将失去钱包中的全部资产。"),
+            "请仔细记录并妥善保管下列十二个助记词，不可丢失，不能让其他任何人知道，不要通过微信、QQ、电子邮件等任何工具发送，否则你将失去钱包中的全部资产。"),
         "warningImportOrConfirmMnemonic": MessageLookupByLibrary.simpleMessage(
             "请按序重输一遍这12个助记词，以确认您已经准确地备份了它们。"),
         "website": MessageLookupByLibrary.simpleMessage("网站"),
