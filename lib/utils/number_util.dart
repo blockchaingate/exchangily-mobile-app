@@ -8,7 +8,32 @@ class NumberUtil {
   int maxDecimalDigits;
   final log = getLogger('NumberUtil');
 
-    intToHex(source) {
+/*---------------------------------------------------
+               Round down
+--------------------------------------------------- */
+
+  double roundDown(double balance) {
+    double finalBalance = 0.0;
+    int roundDown = 0;
+    String balanceToString = balance.toString();
+    String beforeDecimalBalance = balanceToString.split(".")[0];
+    String afterDecimalBalance = balanceToString.split(".")[1];
+    String lastDecimalDigit =
+        afterDecimalBalance.substring(afterDecimalBalance.length - 1);
+    String secondLastDecimalDigit =
+        afterDecimalBalance.substring(0, afterDecimalBalance.length - 1);
+    if (lastDecimalDigit != '0') {
+      roundDown = int.parse(lastDecimalDigit) - 1;
+    }
+    String res = beforeDecimalBalance +
+        '.' +
+        secondLastDecimalDigit +
+        roundDown.toString();
+    finalBalance = double.parse(res);
+    return finalBalance;
+  }
+
+  intToHex(source) {
     return source.toRadixString(16);
   }
 

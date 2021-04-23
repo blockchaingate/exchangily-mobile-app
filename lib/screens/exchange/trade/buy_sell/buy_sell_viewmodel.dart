@@ -40,6 +40,7 @@ import 'package:exchangilymobileapp/utils/abi_util.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:keccak/keccak.dart';
@@ -670,39 +671,19 @@ class BuySellViewModel extends StreamViewModel {
   }
 
 /* ---------------------------------------------------
-            Slider Onchange
+                 Slider Onchange
 --------------------------------------------------- */
-  double roundDown(double balance) {
-    double finalBalance = 0.0;
-    int roundDown = 0;
-    String balanceToString = balance.toString();
-    String beforeDecimalBalance = balanceToString.split(".")[0];
-    String afterDecimalBalance = balanceToString.split(".")[1];
-    String lastDecimalDigit =
-        afterDecimalBalance.substring(afterDecimalBalance.length - 1);
-    String secondLastDecimalDigit =
-        afterDecimalBalance.substring(0, afterDecimalBalance.length - 1);
-    if (lastDecimalDigit != '0') {
-      roundDown = int.parse(lastDecimalDigit) - 1;
-    }
-    String res = beforeDecimalBalance +
-        '.' +
-        secondLastDecimalDigit +
-        roundDown.toString();
-    finalBalance = double.parse(res);
-    return finalBalance;
-  }
 
   sliderOnchange(newValue) {
     setBusy(true);
     sliderValue = newValue;
     var targetCoinbalance =
         targetCoinExchangeBalance.unlockedAmount; // usd bal for buy
-    targetCoinbalance = roundDown(targetCoinbalance);
+    targetCoinbalance = NumberUtil().roundDown(targetCoinbalance);
     //  targetCoinWalletData.inExchange;
     var baseCoinbalance =
         baseCoinExchangeBalance.unlockedAmount; //coin(asset) bal for sell
-    baseCoinbalance = roundDown(baseCoinbalance);
+    baseCoinbalance = NumberUtil().roundDown(baseCoinbalance);
     //baseCoinWalletData
     //  .inExchange;
     if (quantity.isNaN) quantity = 0.0;
@@ -727,7 +708,7 @@ class BuySellViewModel extends StreamViewModel {
         String roundedQtyString =
             quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
         double roundedQtyDouble = double.parse(roundedQtyString);
-        roundedQtyDouble = roundDown(roundedQtyDouble);
+        roundedQtyDouble = NumberUtil().roundDown(roundedQtyDouble);
         transactionAmount = roundedQtyDouble * price;
         quantityTextController.text = roundedQtyDouble.toString();
         updateTransFee();
