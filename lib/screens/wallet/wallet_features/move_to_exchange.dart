@@ -140,7 +140,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     left:
                                         5), // padding left to keep some space from the text
                                 child: Text(
-                                    '${model.transFee.toStringAsFixed(4)}',
+                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 4).toString()}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
@@ -162,7 +162,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                               left:
                                   5), // padding left to keep some space from the text
                           child: Text(
-                              '${model.kanbanTransFee.toStringAsFixed(4)}',
+                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 4).toString()}',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline5
