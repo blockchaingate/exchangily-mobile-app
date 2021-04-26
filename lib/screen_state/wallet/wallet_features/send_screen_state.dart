@@ -18,6 +18,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -29,6 +30,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
     as TronAddressUtil;
@@ -78,6 +80,7 @@ class SendScreenState extends BaseState {
   final satoshisPerByteTextController = TextEditingController();
   double transFee = 0.0;
   bool transFeeAdvance = false;
+  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
 
   // Init State
   initState() async {
@@ -110,8 +113,17 @@ class SendScreenState extends BaseState {
       gasLimitTextController.text =
           environment["chains"]["FAB"]["gasLimit"].toString();
     }
-    refreshBalance();
+    await getDecimalData();
+    await refreshBalance();
     setState(ViewState.Idle);
+  }
+
+  getDecimalData() async {
+    setBusy(true);
+    singlePairDecimalConfig =
+        await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
+    log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
+    setBusy(false);
   }
 
   showDetailsMessageToggle() {
@@ -244,7 +256,9 @@ class SendScreenState extends BaseState {
             );
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
-            refreshBalance();
+            Future.delayed(new Duration(milliseconds: 3), () {
+              refreshBalance();
+            });
           } else if (res['broadcastTronTransactionRes']['result'] == 'false') {
             String errMsg =
                 res['broadcastTronTransactionRes']['message'].toString();
@@ -298,7 +312,9 @@ class SendScreenState extends BaseState {
             walletService.addTxids(allTxids);
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
-            refreshBalance();
+            Future.delayed(new Duration(milliseconds: 30), () {
+              refreshBalance();
+            });
           } else if (txHash == '' && errorMessage == '') {
             log.e('Both TxHash and Error Message are empty $errorMessage');
             sharedService.alertDialog(
@@ -454,17 +470,19 @@ class SendScreenState extends BaseState {
           isWarning: false);
       return;
     }
+    double totalAmount = amount + transFee;
     if (amount == null ||
         amount == 0 ||
         amount.isNegative ||
         !checkSendAmount ||
-        amount > walletInfo.availableBalance) {
+        totalAmount > walletInfo.availableBalance) {
       print('amount no good');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
       return;
     }
+    amount = NumberUtil().roundDownLastDigit(amount);
 
     if (walletInfo.tickerName == 'USDTX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
@@ -493,13 +511,27 @@ class SendScreenState extends BaseState {
 /*----------------------------------------------------------------------
                     Check Send Amount
 ----------------------------------------------------------------------*/
-  checkAmount(amount) {
+  checkAmount() {
     setState(ViewState.Busy);
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
     log.e(amount);
-    var res = RegexValidator(pattern).isValid(amount);
-    checkSendAmount = res;
-    log.w('check send amount $checkSendAmount');
+    var res = RegexValidator(pattern).isValid(amount.toString());
+
+    if (res) {
+      if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX') {
+        log.i('checkAmount ${walletInfo.tickerName}');
+
+        updateTransFee();
+        double totalAmount = amount + transFee;
+        log.i('total amount $totalAmount');
+        log.w('wallet bal ${walletInfo.availableBalance}');
+        if (totalAmount <= walletInfo.availableBalance)
+          checkSendAmount = true;
+        else
+          checkSendAmount = false;
+      }
+      log.i('check send amount $checkSendAmount');
+    }
     setState(ViewState.Idle);
   }
 
@@ -534,7 +566,7 @@ class SendScreenState extends BaseState {
     setBusy(true);
     var to = CoinUtil.getOfficalAddress(walletInfo.tickerName.toUpperCase(),
         tokenType: walletInfo.tokenType.toUpperCase());
-    var amount = double.tryParse(sendAmountTextController.text);
+    amount = double.tryParse(sendAmountTextController.text);
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);
     var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
@@ -583,15 +615,14 @@ class SendScreenState extends BaseState {
   Future scan() async {
     log.i("Barcode: going to scan");
     setState(ViewState.Busy);
-    log.i("Barcode: set busy");
+
     try {
-      log.i("Barcode: will try");
+      log.i("Barcode: try");
       String barcode = '';
-      log.i("Barcode: will get result");
+
       var result = await BarcodeScanner.scan();
       barcode = result;
-      log.i("Barcode Res: ");
-      log.i(result);
+      log.i("Barcode Res: $result ");
 
       receiverWalletAddressTextController.text = barcode;
       setState(ViewState.Idle);
@@ -616,9 +647,9 @@ class SendScreenState extends BaseState {
       log.i("Barcode FormatException : ");
       // log.i(e.toString());
       setState(ViewState.Idle);
-      sharedService.alertDialog(AppLocalizations.of(context).scanCancelled,
-          AppLocalizations.of(context).userReturnedByPressingBackButton,
-          isWarning: false);
+      // sharedService.alertDialog(AppLocalizations.of(context).scanCancelled,
+      //     AppLocalizations.of(context).userReturnedByPressingBackButton,
+      //     isWarning: false);
     } catch (e) {
       log.i("Barcode error : ");
       log.i(e.toString());
@@ -628,5 +659,6 @@ class SendScreenState extends BaseState {
       // receiverWalletAddressTextController.text =
       //     '${AppLocalizations.of(context).unknownError}: $e';
     }
+    setState(ViewState.Idle);
   }
 }

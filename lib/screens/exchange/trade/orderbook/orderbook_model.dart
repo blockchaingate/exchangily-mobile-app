@@ -11,8 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/utils/string_util.dart';
-
 // Ordertype to map an array of buy/sell from orderbook data
 
 class OrderType {

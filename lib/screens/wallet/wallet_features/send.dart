@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_screen_state.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -32,8 +33,6 @@ class SendWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double bal = walletInfo.availableBalance;
-
     String tickerName = '';
     walletInfo.tickerName == 'USDTX'
         ? tickerName = 'USDT(TRC20)'
@@ -151,16 +150,7 @@ class SendWalletScreen extends StatelessWidget {
                                   controller: model.sendAmountTextController,
                                   onChanged: (String amount) {
                                     model.amount = double.parse(amount);
-                                    model.checkAmount(amount);
-                                    if (model.checkSendAmount == true &&
-                                        model.amount <= bal) {
-                                      if (tickerName != 'TRX' &&
-                                          tickerName != 'USDTX') {
-                                        print(tickerName);
-                                        print('not trx');
-                                        model.updateTransFee();
-                                      }
-                                    }
+                                    model.checkAmount();
                                   },
                                   keyboardType: TextInputType.numberWithOptions(
                                       decimal: true), // numnber keyboard
@@ -175,7 +165,8 @@ class SendWalletScreen extends StatelessWidget {
                                       hintStyle: TextStyle(
                                           fontSize: 14, color: globals.grey)),
                                   style: model.checkSendAmount &&
-                                          model.amount <= bal
+                                          model.amount <=
+                                              walletInfo.availableBalance
                                       ? TextStyle(
                                           color: globals.grey, fontSize: 14)
                                       : TextStyle(
@@ -188,7 +179,7 @@ class SendWalletScreen extends StatelessWidget {
                                       Text(
                                         AppLocalizations.of(context)
                                                 .walletbalance +
-                                            ' $bal ',
+                                            '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.singlePairDecimalConfig.qtyDecimal)} ',
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline6
@@ -199,9 +190,7 @@ class SendWalletScreen extends StatelessWidget {
                                         '$tickerName'.toUpperCase(),
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline5
-                                            .copyWith(
-                                                fontWeight: FontWeight.w400),
+                                            .headline6,
                                       )
                                     ],
                                   ),
@@ -596,50 +585,23 @@ class SendWalletScreen extends StatelessWidget {
                           //     100, // alignment was not working without the height so ;)
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           // alignment: Alignment(0.0, 1.0),
-                          child: model.state == ViewState.Busy
-                              ? Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Platform.isIOS
-                                      ? CupertinoActivityIndicator()
-                                      : SizedBox(
-                                          width: 20,
-                                          height: 20,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            backgroundColor: primaryColor,
-                                          ),
-                                        ),
-                                )
-                              : OutlinedButton(
-                                  style: ButtonStyle(
-                                      // minimumSize:
-                                      //     MaterialStateProperty.all<Size>(
-                                      //         Size.fromWidth(15.0)),
-                                      padding: MaterialStateProperty.all<
-                                              EdgeInsetsGeometry>(
-                                          EdgeInsets.symmetric(
-                                              horizontal: 10, vertical: 5)),
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              primaryColor)),
-                                  // disabledColor: model.checkSendAmount
-                                  //     ? globals.grey
-                                  //     : globals.green,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Text(
-                                        AppLocalizations.of(context).send,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline4
-                                            .copyWith(
-                                                fontWeight: FontWeight.w400)),
-                                  ),
-                                  onPressed: () {
-                                    print('Send pressed');
-                                    model.checkFields(context);
-                                  },
-                                ),
+                          child: MaterialButton(
+                            padding: EdgeInsets.all(15),
+                            color: globals.primaryColor,
+                            textColor: Colors.white,
+                            onPressed: () {
+                              model.checkFields(context);
+                            },
+                            child: model.busy
+                                ? SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child:
+                                        model.sharedService.loadingIndicator())
+                                : Text(AppLocalizations.of(context).send,
+                                    style:
+                                        Theme.of(context).textTheme.headline4),
+                          ),
                         ),
                         UIHelper.verticalSpaceMedium
                       ],

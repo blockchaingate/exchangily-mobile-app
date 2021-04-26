@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -631,7 +632,7 @@ class MoveToWalletViewmodel extends BaseState {
       }
 
       var amount = double.tryParse(amountController.text);
-      if (amount < withdrawLimit) {
+      if ((amount + kanbanTransFee) < withdrawLimit) {
         sharedService.showInfoFlushbar(
             AppLocalizations.of(context).minimumAmountError,
             AppLocalizations.of(context)
@@ -644,7 +645,7 @@ class MoveToWalletViewmodel extends BaseState {
       }
       await getSingleCoinExchangeBal();
       if (amount == null ||
-          amount > walletInfo.inExchange ||
+          (amount + kanbanTransFee) > walletInfo.inExchange ||
           amount == 0 ||
           amount.isNegative) {
         sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
@@ -653,6 +654,7 @@ class MoveToWalletViewmodel extends BaseState {
         setBusy(false);
         return;
       }
+      amount = NumberUtil().roundDownLastDigit(amount);
       if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
           isShowFabChainBalance &&
           amount > fabChainBalance) {

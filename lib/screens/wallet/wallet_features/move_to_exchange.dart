@@ -13,6 +13,7 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -94,7 +95,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                 children: <Widget>[
                   Text(
                       AppLocalizations.of(context).walletbalance +
-                          '  ${model.walletInfo.availableBalance.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
+                          '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}',
                       style: Theme.of(context).textTheme.subtitle2),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -139,7 +140,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     left:
                                         5), // padding left to keep some space from the text
                                 child: Text(
-                                    '${model.transFee.toStringAsFixed(4)}',
+                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 4).toString()}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5
@@ -161,7 +162,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                               left:
                                   5), // padding left to keep some space from the text
                           child: Text(
-                              '${model.kanbanTransFee.toStringAsFixed(4)}',
+                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 4).toString()}',
                               style: Theme.of(context)
                                   .textTheme
                                   .headline5

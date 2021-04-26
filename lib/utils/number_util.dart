@@ -8,14 +8,44 @@ class NumberUtil {
   int maxDecimalDigits;
   final log = getLogger('NumberUtil');
 
+  double truncateDoubleWithoutRouding(double input, {int precision = 2}) {
+    double res = 0.0;
+
+    String decimalPart = input.toString().split('.')[1];
+    // if (input.toString().contains('.')) {
+    // indexOf gives 2 if balance is 54.321299421
+    // as . is after 2 decimal digits
+    // we add precision for example 6
+    // 2+ 6 = 8
+    // 54.32129
+    // we add +1 as we need 6 precisions
+    // 2+6+1 = 9
+    // 54.321299
+    if (decimalPart.length > precision)
+      res = double.parse(
+          '$input'.substring(0, '$input'.indexOf('.') + precision + 1));
+    else {
+      // String tail = '';
+      // for (var i = 0; i < precision - decimalPart.length; i++) {
+      //   tail += '0';
+      // }
+      // String concat = '$input' + tail;
+      // res = double.parse(concat);
+      // log.e('res $res');
+      res = input;
+    }
+    return res;
+  }
+
 /*---------------------------------------------------
                Round down
 --------------------------------------------------- */
 
-  double roundDown(double balance) {
+  double roundDownLastDigit(double input) {
+    log.w('roundDownLastDigit input $input');
     double finalBalance = 0.0;
     int roundDown = 0;
-    String balanceToString = balance.toString();
+    String balanceToString = input.toString();
     String beforeDecimalBalance = balanceToString.split(".")[0];
     String afterDecimalBalance = balanceToString.split(".")[1];
     String lastDecimalDigit =
@@ -30,6 +60,8 @@ class NumberUtil {
         secondLastDecimalDigit +
         roundDown.toString();
     finalBalance = double.parse(res);
+
+    log.w('roundDownLastDigit res $finalBalance');
     return finalBalance;
   }
 

@@ -96,6 +96,19 @@ class AddGas extends StatelessWidget {
                           style: TextStyle(fontSize: 12.0, color: Colors.white))
                     ]),
                     UIHelper.verticalSpaceSmall,
+                    Row(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 2.0, right: 4.0, top: 2.0),
+                        child: Text(
+                            'FAB ${AppLocalizations.of(context).balance}',
+                            style:
+                                TextStyle(fontSize: 12.0, color: Colors.white)),
+                      ),
+                      Text(model.fabBalance.toString(),
+                          style: TextStyle(fontSize: 12.0, color: Colors.white))
+                    ]),
+                    UIHelper.verticalSpaceSmall,
                     // Gas Fee
                     Row(children: [
                       Padding(

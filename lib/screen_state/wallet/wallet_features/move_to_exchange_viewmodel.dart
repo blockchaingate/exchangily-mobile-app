@@ -11,6 +11,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -54,6 +55,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   String serverError = '';
   String specialTicker = '';
   var res;
+  double amount = 0.0;
 
   void initState() async {
     setBusy(true);
@@ -147,6 +149,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     return gasAmount;
   }
 
+/*---------------------------------------------------
+               Check pass and amount
+--------------------------------------------------- */
   checkPass() async {
     setBusy(true);
 
@@ -170,12 +175,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    var amount = double.tryParse(amountController.text);
-
+    // var amount = double.tryParse(amountController.text);
+    // amount = NumberUtil().roundDownLastDigit(amount);
     await refreshBalance();
-
+    double totalAmount = amount + kanbanTransFee + transFee;
     if (amount == null ||
-        amount > walletInfo.availableBalance ||
+        totalAmount > walletInfo.availableBalance ||
         amount == 0 ||
         amount.isNegative) {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
@@ -185,6 +190,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
+    amount = NumberUtil().roundDownLastDigit(amount);
 
     if (walletInfo.tickerName == 'USDTX' || walletInfo.tickerName == 'TRX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
@@ -428,7 +434,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
   updateTransFee() async {
     setBusy(true);
     var to = getOfficalAddress(coinName, tokenType: tokenType);
-    var amount = double.tryParse(amountController.text);
+    amount = double.tryParse(amountController.text);
+
     if (to == null || amount == null || amount <= 0) {
       setBusy(false);
       return;
@@ -470,6 +477,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
         kanbanTransFee = kanbanTransFeeDouble;
         setBusy(false);
       }
+      log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
+      log.i('availableBalance ${walletInfo.availableBalance}');
     }).catchError((onError) {
       setBusy(false);
       log.e(onError);
