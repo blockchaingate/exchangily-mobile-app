@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import "package:flutter/material.dart";
 import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
@@ -36,7 +37,7 @@ class Gas extends StatelessWidget {
         ),
         UIHelper.horizontalSpaceSmall,
         Text(
-          "${AppLocalizations.of(context).gas}: ${gasAmount.toStringAsFixed(8)}",
+          "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(gasAmount, precision: 6)}",
           style:
               Theme.of(context).textTheme.headline5.copyWith(wordSpacing: 1.25),
         ),

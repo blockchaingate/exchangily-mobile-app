@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_wallet_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../localizations.dart';
@@ -122,7 +123,7 @@ class MoveToWalletScreen extends StatelessWidget {
                         children: <Widget>[
                           Text(
                               AppLocalizations.of(context).inExchange +
-                                  ' ${walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
+                                  ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                           Padding(
                             padding: EdgeInsets.symmetric(
@@ -365,9 +366,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                                   .textTheme
                                                   .headline6),
                                           Radio(
-                                            //  model.groupValue == 'FAB'? fillColor: MaterialStateColor
-                                            //       .resolveWith(
-                                            //           (states) => Colors.blue),
+                                              //  model.groupValue == 'FAB'? fillColor: MaterialStateColor
+                                              //       .resolveWith(
+                                              //           (states) => Colors.blue),
                                               activeColor: globals.primaryColor,
                                               onChanged: (value) {
                                                 model.radioButtonSelection(

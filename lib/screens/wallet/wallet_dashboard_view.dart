@@ -19,6 +19,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:exchangilymobileapp/widgets/network_status.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
@@ -242,7 +243,7 @@ class WalletDashboardView extends StatelessWidget {
                                       ),
                                       UIHelper.horizontalSpaceSmall,
                                       Text(
-                                        "${AppLocalizations.of(context).gas}: ${model.gasAmount.toStringAsFixed(8)}",
+                                        "${AppLocalizations.of(context).gas}: ${NumberUtil().truncateDoubleWithoutRouding(model.gasAmount, precision: 6).toString()}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .headline5
@@ -607,7 +608,7 @@ class WalletDashboardView extends StatelessWidget {
                                   baseColor: globals.primaryColor,
                                   highlightColor: globals.white,
                                   child: Text(
-                                    '$assetsInExchange',
+                                    assetsInExchange.toStringAsFixed(4),
                                     textAlign: TextAlign.center,
                                     style:
                                         Theme.of(context).textTheme.headline6,
@@ -617,7 +618,11 @@ class WalletDashboardView extends StatelessWidget {
                                   child: Text(
                                       assetsInExchange == 0
                                           ? '0.0'
-                                          : assetsInExchange.toStringAsFixed(4),
+                                          : NumberUtil()
+                                              .truncateDoubleWithoutRouding(
+                                                  assetsInExchange,
+                                                  precision: 4)
+                                              .toString(),
                                       style: Theme.of(context)
                                           .textTheme
                                           .headline6
@@ -665,7 +670,7 @@ class WalletDashboardView extends StatelessWidget {
                                           baseColor: globals.grey,
                                           highlightColor: globals.white,
                                           child: Text(
-                                            '${usdValue.toStringAsFixed(2)}',
+                                            '${usdValue.toString()}',
                                             style:
                                                 TextStyle(color: globals.green),
                                           ),
