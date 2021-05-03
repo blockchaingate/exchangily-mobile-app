@@ -1742,6 +1742,9 @@ class AppLocalizations {
     return Intl.message('No Event', name: 'noEvent', desc: 'noEvent');
   }
 
+  String get maxAmount {
+    return Intl.message('Max Amount', name: 'maxAmount', desc: 'max_amount');
+  }
   // Share page pending translation added by Jack
 }
 

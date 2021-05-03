@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
@@ -49,7 +51,7 @@ class WalletDashboardView extends StatelessWidget {
           await model.retrieveWalletsFromLocalDatabase();
           await model.init();
         },
-        builder: (context, model, child) {
+        builder: (context, WalletDashboardViewModel model, child) {
           // var connectionStatus = Provider.of<ConnectivityStatus>(context);
           // if (connectionStatus == ConnectivityStatus.Offline)
           //   return NetworkStausView();
@@ -428,8 +430,15 @@ class WalletDashboardView extends StatelessWidget {
               //   color: white,
               //   child: IconButton(
               //     icon: Icon(Icons.arrow_downward),
-              //     onPressed: () {
-              //       model.saveTokenLocally();
+              //     onPressed: () async {
+              //       // model.saveTokenLocally();
+
+              //       var t = await NetworkInterface.list(
+              //           type: InternetAddressType.IPv4);
+              //       print(t[0].addresses[0].address);
+              //       model.apiService.getFreeFab(
+              //           '0xb439bde08c9882b6b1f8aaa4213a51d193dc1eb0');
+
               //       //model.walletService.anotherTest();
               //     },
               //   ),

@@ -15,6 +15,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +66,10 @@ class AddGas extends StatelessWidget {
                             width: 100, height: 100)),
                     SizedBox(height: 30),
                     TextField(
+                      inputFormatters: [
+                        DecimalTextInputFormatter(
+                            decimalRange: 6, activatedNegativeValues: false)
+                      ],
                       keyboardType:
                           TextInputType.numberWithOptions(decimal: true),
                       onChanged: (v) => model.updateTransFee(),
@@ -118,21 +123,21 @@ class AddGas extends StatelessWidget {
                             style:
                                 TextStyle(fontSize: 12.0, color: Colors.white)),
                       ),
-                      Text(model.transFee.toString(),
+                      Text(model.transFee.toString() + ' FAB',
                           style: TextStyle(fontSize: 13.0, color: Colors.white))
                     ]),
                     // Slider
-                    // Slider(
-                    //   divisions: 100,
-                    //   label: '${model.sliderValue.toStringAsFixed(2)}%',
-                    //   activeColor: primaryColor,
-                    //   min: 0.0,
-                    //   max: 100.0,
-                    //   onChanged: (newValue) {
-                    //     model.sliderOnchange(newValue);
-                    //   },
-                    //   value: model.sliderValue,
-                    // ),
+                    Slider(
+                      divisions: 100,
+                      label: '${model.sliderValue.toStringAsFixed(2)}%',
+                      activeColor: primaryColor,
+                      min: 0.0,
+                      max: 100.0,
+                      onChanged: (newValue) {
+                        model.sliderOnchange(newValue);
+                      },
+                      value: model.sliderValue,
+                    ),
                     // Advance
                     Row(children: <Widget>[
                       Text(AppLocalizations.of(context).advance,

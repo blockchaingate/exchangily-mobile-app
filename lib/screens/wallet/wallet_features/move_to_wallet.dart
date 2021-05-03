@@ -189,7 +189,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                 left:
                                     5), // padding left to keep some space from the text
                             child: Text(
-                                '${model.kanbanTransFee.toStringAsFixed(4)}',
+                                '${model.kanbanTransFee.toStringAsFixed(4)} GAS',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headline5

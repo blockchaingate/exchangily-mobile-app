@@ -86,6 +86,10 @@ class ConfirmMnemonicScreenState extends BaseState {
     if (isLocal || listEquals(randomMnemonicList, userTypedMnemonicList)) {
       listToStringMnemonic = randomMnemonicList.join(' ');
       bool isValid = bip39.validateMnemonic(listToStringMnemonic);
+      var args = {
+        'listToStringMnemonic': listToStringMnemonic,
+        'isImport': true
+      };
       if (isValid) {
         Navigator.of(context)
             .pushNamed('/createPassword', arguments: listToStringMnemonic);

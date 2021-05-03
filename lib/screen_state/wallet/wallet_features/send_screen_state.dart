@@ -118,6 +118,18 @@ class SendScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
+  fillMaxAmount() {
+    setBusy(true);
+    sendAmountTextController.text = NumberUtil()
+        .truncateDoubleWithoutRouding(walletInfo.availableBalance,
+            precision: singlePairDecimalConfig.qtyDecimal)
+        .toString();
+    log.i(sendAmountTextController.text);
+    setBusy(false);
+    amount = double.parse(sendAmountTextController.text);
+    checkAmount();
+  }
+
   getDecimalData() async {
     setBusy(true);
     singlePairDecimalConfig =
@@ -470,12 +482,10 @@ class SendScreenState extends BaseState {
           isWarning: false);
       return;
     }
-    double totalAmount = amount + transFee;
-    if (amount == null ||
-        amount == 0 ||
-        amount.isNegative ||
-        !checkSendAmount ||
-        totalAmount > walletInfo.availableBalance) {
+    // double totalAmount = amount + transFee;
+    if (amount == null || amount == 0 || amount.isNegative || !checkSendAmount
+        //  || totalAmount > walletInfo.availableBalance
+        ) {
       print('amount no good');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
@@ -522,7 +532,8 @@ class SendScreenState extends BaseState {
         log.i('checkAmount ${walletInfo.tickerName}');
 
         updateTransFee();
-        double totalAmount = amount + transFee;
+        double totalAmount = amount;
+        // + transFee;
         log.i('total amount $totalAmount');
         log.w('wallet bal ${walletInfo.availableBalance}');
         if (totalAmount <= walletInfo.availableBalance)

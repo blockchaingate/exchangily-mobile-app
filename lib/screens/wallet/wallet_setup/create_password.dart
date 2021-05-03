@@ -15,7 +15,6 @@ import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_screen_state.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../shared/globals.dart' as globals;

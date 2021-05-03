@@ -12,6 +12,8 @@
 */
 
 import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_viewmodel.dart';
+import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/shared/globals.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -90,7 +92,9 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
   }
 
   _loadHtmlFromAssets(TradingChartViewModel model) async {
-    var lang = model.storageService.language;
+    final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
+    var lang = await userSettingsDatabaseService.getLanguage();
+    // var lang = model.storageService.language;
     if (lang == 'en') {
       lang = 'en-US';
     } else if (lang == 'zh') {

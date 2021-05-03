@@ -12,6 +12,7 @@
 */
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
@@ -100,9 +101,9 @@ class ApiService {
         // var hexToBytesBalance =
         //     stringUtils.hexToUint8List(balanceInHex[0]);
         //       print('hexToBytesBalance $hexToBytesBalance');
-        var res = int.parse(balanceInHex,radix:16) ;
+        var res = int.parse(balanceInHex, radix: 16);
         //stringUtils.uint8ListToHex(hexToBytesBalance);
-          print('res $res');
+        print('res $res');
         return res;
       }
     } catch (err) {
@@ -467,10 +468,15 @@ class ApiService {
 ----------------------------------------------------------------------*/
 
   Future getFreeFab(String address) async {
-    String url = getFreeFabUrl + address + '/10.4.5.3';
+    var ipAddress;
+    await NetworkInterface.list(type: InternetAddressType.IPv4)
+        .then((networkData) => ipAddress = networkData[0].addresses[0].address);
+
+    String url = getFreeFabUrl + address + '/' + ipAddress.toString();
+
     log.i('getFreeFab url $url');
     try {
-      var response = await client.get(getFreeFabUrl + address + '/10.4.5.3');
+      var response = await client.get(url);
       var json = jsonDecode(response.body);
       log.w('getFreeFab json $json');
       return json;

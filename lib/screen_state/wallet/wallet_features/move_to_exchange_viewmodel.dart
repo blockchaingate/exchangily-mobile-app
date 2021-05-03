@@ -87,6 +87,18 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  fillMaxAmount() {
+    setBusy(true);
+    amountController.text = NumberUtil()
+        .truncateDoubleWithoutRouding(walletInfo.availableBalance,
+            precision: singlePairDecimalConfig.qtyDecimal)
+        .toString();
+    amount = double.parse(amountController.text);
+    setBusy(false);
+    updateTransFee();
+    print(transFee);
+  }
+
 /*---------------------------------------------------
                       Set fee
 --------------------------------------------------- */
@@ -157,8 +169,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     if (amountController.text.isEmpty) {
       sharedService.showInfoFlushbar(
-          AppLocalizations.of(context).minimumAmountError,
-          AppLocalizations.of(context).yourWithdrawMinimumAmountaIsNotSatisfied,
+          AppLocalizations.of(context).amountMissing,
+          AppLocalizations.of(context).pleaseEnterValidNumber,
           Icons.cancel,
           red,
           context);
@@ -168,19 +180,33 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if ((gasAmount == 0.0 || gasAmount < 0.5) &&
         walletInfo.tickerName != 'TRX' &&
         walletInfo.tickerName != 'USDTX') {
-      sharedService.alertDialog(
-        AppLocalizations.of(context).notice,
-        AppLocalizations.of(context).insufficientGasAmount,
-      );
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).insufficientGasAmount,
+          Icons.cancel,
+          red,
+          context);
+
+      setBusy(false);
+      return;
+    }
+    if (!isValid) {
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).insufficientBalance,
+          Icons.cancel,
+          red,
+          context);
       setBusy(false);
       return;
     }
     // var amount = double.tryParse(amountController.text);
     // amount = NumberUtil().roundDownLastDigit(amount);
     await refreshBalance();
-    double totalAmount = amount + kanbanTransFee + transFee;
+    // double totalAmount = amount + kanbanTransFee + transFee;
     if (amount == null ||
-        totalAmount > walletInfo.availableBalance ||
+        //   totalAmount > walletInfo.availableBalance
+        //  ||
         amount == 0 ||
         amount.isNegative) {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
@@ -437,12 +463,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
     amount = double.tryParse(amountController.text);
 
     if (to == null || amount == null || amount <= 0) {
+      transFee = 0.0;
       setBusy(false);
       return;
     }
     isValid = true;
-    var gasPrice = int.tryParse(gasPriceTextController.text);
-    var gasLimit = int.tryParse(gasLimitTextController.text);
+    var gasPrice = int.tryParse(gasPriceTextController.text) ?? 0;
+    var gasLimit = int.tryParse(gasLimitTextController.text) ?? 0;
     var satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
     var options = {
       "gasPrice": gasPrice,
@@ -477,6 +504,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
         kanbanTransFee = kanbanTransFeeDouble;
         setBusy(false);
       }
+      if (transFee == 0.0) isValid = false;
       log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
       log.i('availableBalance ${walletInfo.availableBalance}');
     }).catchError((onError) {
