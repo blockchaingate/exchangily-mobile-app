@@ -40,6 +40,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/red
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
+import 'package:exchangilymobileapp/screens/campaign/campaign_v2_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
@@ -85,6 +86,7 @@ Future serviceLocator() async {
   // Campaign
   locator.registerLazySingleton(() => CampaignService());
   locator.registerLazySingleton(() => CampaignUserDatabaseService());
+  locator.registerLazySingleton(() => CampaignV2Service());
   // Trade
   locator.registerLazySingleton(() => TradeService());
   locator.registerLazySingleton(() => TransactionHistoryDatabaseService());

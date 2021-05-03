@@ -12,7 +12,10 @@ class CampaignListDashboardView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
         viewModelBuilder: () => CampaignListDashboardViewModel(),
-        onModelReady: (model) async {model.context=context;},
+        onModelReady: (model) async {
+          model.context = context;
+          model.init();
+        },
         builder: (context, CampaignListDashboardViewModel model, child) {
           return Scaffold(
             appBar: AppBar(
@@ -129,10 +132,10 @@ class CampaignListDashboardView extends StatelessWidget {
                           onPressed: () => {}))
                   : Center(
                       child: OutlinedButton(
-                          child: Text('Click here to participate',
+                          child: Text('Create Order',
                               style: TextStyle(color: green)),
-                          onPressed: () =>
-                              model.placeOrderDialog(model.campaigns[index].id)))
+                          onPressed: () => model
+                              .placeOrderDialog(model.campaigns[index].id)))
             ],
           ),
         ),

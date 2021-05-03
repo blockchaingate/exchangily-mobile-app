@@ -35,7 +35,7 @@ Future<void> main() async {
   // debugRepaintRainbowEnabled = true;
   try {
     await serviceLocator();
-    Logger.level = Level.nothing;
+    Logger.level = Level.info;
     SystemChannels.textInput
         .invokeMethod('TextInput.hide'); // Hides keyboard initially
     // Force user to use only portrait mode until the development of other screen size design

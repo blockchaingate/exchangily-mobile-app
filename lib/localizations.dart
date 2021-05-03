@@ -1747,6 +1747,11 @@ class AppLocalizations {
         name: 'applications', desc: 'applications_settings');
   }
 
+  String get officialAddress {
+    return Intl.message('Official Address',
+        name: 'officialAddress', desc: 'official_address_campaign_order');
+  }
+
   // Share page pending translation added by Jack
 }
 
