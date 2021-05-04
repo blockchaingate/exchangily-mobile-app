@@ -521,7 +521,7 @@ class SendScreenState extends BaseState {
 /*----------------------------------------------------------------------
                     Check Send Amount
 ----------------------------------------------------------------------*/
-  checkAmount() {
+  checkAmount() async {
     setState(ViewState.Busy);
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
     log.e(amount);
@@ -532,18 +532,65 @@ class SendScreenState extends BaseState {
         log.i('checkAmount ${walletInfo.tickerName}');
 
         updateTransFee();
-        double totalAmount = amount;
-        // + transFee;
+        double totalAmount = 0.0;
+        if (walletInfo.tickerName == 'FAB')
+          totalAmount = amount + transFee;
+        else
+          totalAmount = amount;
         log.i('total amount $totalAmount');
         log.w('wallet bal ${walletInfo.availableBalance}');
         if (totalAmount <= walletInfo.availableBalance)
           checkSendAmount = true;
         else
           checkSendAmount = false;
+      } else if (walletInfo.tickerName == 'TRX') {
+        if (amount + 1 <= walletInfo.availableBalance)
+          checkSendAmount = true;
+        else
+          checkSendAmount = false;
+      } else if (walletInfo.tickerName == 'USDTX') {
+        double trxBalance = 0.0;
+
+        trxBalance = await getTrxBalance();
+        log.w('checkAmount trx bal $trxBalance');
+        if (amount <= walletInfo.availableBalance && trxBalance > 15)
+          checkSendAmount = true;
+        else {
+          checkSendAmount = false;
+          if (trxBalance < 15)
+            showSimpleNotification(
+                Center(
+                  child: Text(
+                      '${AppLocalizations.of(context).low} TRX ${AppLocalizations.of(context).balance}'),
+                ),
+                position: NotificationPosition.top,
+                background: sellPrice);
+        }
       }
       log.i('check send amount $checkSendAmount');
     }
     setState(ViewState.Idle);
+  }
+
+  Future<double> getTrxBalance() async {
+    double balance = 0.0;
+    String trxWalletAddress = '';
+    await walletDatabaseService
+        .getBytickerName('TRX')
+        .then((wallet) => trxWalletAddress = wallet.address);
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    await apiService
+        .getSingleWalletBalance(fabAddress, 'TRX', trxWalletAddress)
+        .then((walletBalance) {
+      if (walletBalance != null) {
+        balance = walletBalance[0].balance;
+      }
+    }).catchError((err) {
+      log.e(err);
+      setBusy(false);
+      throw Exception(err);
+    });
+    return balance;
   }
 
 /*----------------------------------------------------------------------
