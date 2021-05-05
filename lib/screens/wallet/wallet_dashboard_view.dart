@@ -430,16 +430,8 @@ class WalletDashboardView extends StatelessWidget {
               //   color: white,
               //   child: IconButton(
               //     icon: Icon(Icons.arrow_downward),
-              //     onPressed: () async {
-              //       // model.saveTokenLocally();
-
-              //       var t = await NetworkInterface.list(
-              //           type: InternetAddressType.IPv4);
-              //       print(t[0].addresses[0].address);
-              //       model.apiService.getFreeFab(
-              //           '0xb439bde08c9882b6b1f8aaa4213a51d193dc1eb0');
-
-              //       //model.walletService.anotherTest();
+              //     onPressed: ()  {
+              //      print(Platform.localeName);
               //     },
               //   ),
               // ),

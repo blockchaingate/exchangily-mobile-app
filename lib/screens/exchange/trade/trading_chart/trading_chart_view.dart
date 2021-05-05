@@ -95,6 +95,8 @@ class _LoadHTMLFileToWEbViewState extends State<LoadHTMLFileToWEbView> {
     final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
     var lang = await userSettingsDatabaseService.getLanguage();
     // var lang = model.storageService.language;
+    if (lang == null)
+    lang='en';
     if (lang == 'en') {
       lang = 'en-US';
     } else if (lang == 'zh') {
