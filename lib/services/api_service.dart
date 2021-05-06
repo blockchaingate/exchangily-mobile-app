@@ -13,7 +13,6 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';

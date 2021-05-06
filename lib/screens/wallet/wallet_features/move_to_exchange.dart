@@ -153,7 +153,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     left:
                                         5), // padding left to keep some space from the text
                                 child: Text(
-                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 4).toString()} FAB',
+                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 4).toString()} ${model.feeUnit}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline5

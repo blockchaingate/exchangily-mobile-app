@@ -56,6 +56,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   String specialTicker = '';
   var res;
   double amount = 0.0;
+  String feeUnit = '';
 
   void initState() async {
     setBusy(true);
@@ -70,6 +71,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
         walletInfo.tickerName)['tickerName'];
     refreshBalance();
     await getDecimalData();
+
+    if (coinName == 'BTC') {
+      feeUnit = 'BTC';
+    } else if (coinName == 'ETH' || tokenType == 'ETH') {
+      feeUnit = 'ETH';
+    } else if (coinName == 'FAB') {
+      feeUnit = 'FAB';
+    } else if (tokenType == 'FAB') {
+      feeUnit = 'FAB';
+    }
     setBusy(false);
   }
 
@@ -190,7 +201,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    if (!isValid) {
+    if (!isValid &&
+        walletInfo.tickerName != 'TRX' &&
+        walletInfo.tickerName != 'USDTX') {
       sharedService.showInfoFlushbar(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientBalance,
@@ -218,13 +231,27 @@ class MoveToExchangeViewModel extends BaseViewModel {
     }
     amount = NumberUtil().roundDownLastDigit(amount);
 
-    if (walletInfo.tickerName == 'USDTX' || walletInfo.tickerName == 'TRX') {
+    if (walletInfo.tickerName == 'USDTX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
       await walletService
           .checkCoinWalletBalance(15, 'TRX')
           .then((res) => isCorrectAmount = res);
       log.w('isCorrectAmount $isCorrectAmount');
+      if (!isCorrectAmount) {
+        sharedService.alertDialog(
+            '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
+            'TRX ${AppLocalizations.of(context).insufficientBalance}',
+            isWarning: false);
+        setBusy(false);
+        return;
+      }
+    }
+
+    if (walletInfo.tickerName == 'TRX') {
+      log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
+      bool isCorrectAmount = true;
+      if (amount + 1 > walletInfo.availableBalance) isCorrectAmount = false;
       if (!isCorrectAmount) {
         sharedService.alertDialog(
             '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
@@ -409,10 +436,14 @@ class MoveToExchangeViewModel extends BaseViewModel {
           serverError = onError.toString();
         });
       }
+    } else if (res.returnedText == 'Closed' && !res.confirmed) {
+      log.e('Dialog Closed By User');
+
+      setBusy(false);
     } else {
-      if (res.returnedText != 'Closed') {
-        showNotification(context);
-      }
+      log.e('Wrong pass');
+      setBusy(false);
+      showNotification(context);
     }
     setBusy(false);
   }
@@ -504,8 +535,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
         kanbanTransFee = kanbanTransFeeDouble;
         setBusy(false);
       }
-      if (transFee == 0.0) isValid = false;
-      log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
+      if (walletInfo.tickerName != 'TRX' &&
+          walletInfo.tickerName != 'USDTX') if (transFee == 0.0)
+        isValid = false;
+      //  log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
       log.i('availableBalance ${walletInfo.availableBalance}');
     }).catchError((onError) {
       setBusy(false);

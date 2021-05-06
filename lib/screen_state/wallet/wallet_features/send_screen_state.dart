@@ -81,6 +81,7 @@ class SendScreenState extends BaseState {
   double transFee = 0.0;
   bool transFeeAdvance = false;
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+  String feeUnit = '';
 
   // Init State
   initState() async {
@@ -91,6 +92,7 @@ class SendScreenState extends BaseState {
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
+          feeUnit ='BTC';
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await walletService.getEthGasPrice();
       print('gasPriceReal======');
@@ -102,9 +104,11 @@ class SendScreenState extends BaseState {
         gasLimitTextController.text =
             environment["chains"]["ETH"]["gasLimitToken"].toString();
       }
+       feeUnit ='ETH';
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
+           feeUnit ='FAB';
     } else if (tokenType == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -112,6 +116,7 @@ class SendScreenState extends BaseState {
           environment["chains"]["FAB"]["gasPrice"].toString();
       gasLimitTextController.text =
           environment["chains"]["FAB"]["gasLimit"].toString();
+           feeUnit ='FAB';
     }
     await getDecimalData();
     await refreshBalance();

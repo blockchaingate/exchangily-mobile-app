@@ -1745,6 +1745,11 @@ class AppLocalizations {
   String get maxAmount {
     return Intl.message('Max Amount', name: 'maxAmount', desc: 'max_amount');
   }
+
+   String get networkIssue {
+    return Intl.message('Network issue',
+        name: 'networkIssue', desc: 'networkIssue');
+  }
   // Share page pending translation added by Jack
 }
 
