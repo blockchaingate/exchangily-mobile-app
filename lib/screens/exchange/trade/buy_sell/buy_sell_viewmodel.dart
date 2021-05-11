@@ -468,7 +468,8 @@ class BuySellViewModel extends StreamViewModel {
     var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin,
         targetCoin, quantity, price, timeBeforeExpiration);
 
-    var qtyBigInt = this.toBitInt(quantity);
+    var qtyBigInt = NumberUtil.toBigInt(quantity);
+    // this.toBitInt(quantity);
     var priceBigInt = this.toBitInt(price);
 
     print('qtyBigInt==' + qtyBigInt);
@@ -674,9 +675,12 @@ class BuySellViewModel extends StreamViewModel {
                  Slider Onchange
 --------------------------------------------------- */
 
-  sliderOnchange(newValue) {
+  sliderOnchange(double newValue) {
     setBusy(true);
+    log.i('new slider value $newValue');
     sliderValue = newValue;
+    if (sliderValue == 100) sliderValue = sliderValue - 0.001;
+    log.i('sliderValue $sliderValue');
     var targetCoinbalance =
         targetCoinExchangeBalance.unlockedAmount; // usd bal for buy
 
@@ -705,6 +709,7 @@ class BuySellViewModel extends StreamViewModel {
 
         transactionAmount = roundedQtyDouble * price;
         quantityTextController.text = roundedQtyDouble.toString();
+        quantity = roundedQtyDouble;
         updateTransFee();
         log.i('transactionAmount $transactionAmount');
         log.e('changeQuantityWithSlider $changeQuantityWithSlider');
@@ -720,6 +725,7 @@ class BuySellViewModel extends StreamViewModel {
         roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
         transactionAmount = roundedQtyDouble * price;
         quantityTextController.text = roundedQtyDouble.toString();
+        quantity = roundedQtyDouble;
         updateTransFee();
 
         log.i('calculated tx amount $transactionAmount');

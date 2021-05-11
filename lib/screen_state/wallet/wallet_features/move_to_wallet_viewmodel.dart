@@ -386,8 +386,11 @@ class MoveToWalletViewmodel extends BaseState {
     } else {
       tickerName = walletInfo.tickerName;
     }
-    await apiService.getSingleCoinExchangeBalance(tickerName).then((res) {
-      walletInfo.inExchange = res.unlockedAmount;
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    await apiService
+        .getSingleWalletBalance(fabAddress, tickerName, walletInfo.address)
+        .then((res) {
+      walletInfo.inExchange = res[0].unlockedExchangeBalance;
       log.w('single coin exchange balance check ${walletInfo.inExchange}');
     });
 
@@ -632,7 +635,7 @@ class MoveToWalletViewmodel extends BaseState {
       }
 
       var amount = double.tryParse(amountController.text);
-      if ((amount + kanbanTransFee) < withdrawLimit) {
+      if (amount < withdrawLimit) {
         sharedService.showInfoFlushbar(
             AppLocalizations.of(context).minimumAmountError,
             AppLocalizations.of(context)
@@ -645,7 +648,7 @@ class MoveToWalletViewmodel extends BaseState {
       }
       await getSingleCoinExchangeBal();
       if (amount == null ||
-          (amount + kanbanTransFee) > walletInfo.inExchange ||
+          amount > walletInfo.inExchange ||
           amount == 0 ||
           amount.isNegative) {
         sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
@@ -658,8 +661,10 @@ class MoveToWalletViewmodel extends BaseState {
       if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
           isShowFabChainBalance &&
           amount > fabChainBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-            AppLocalizations.of(context).pleaseEnterValidNumber,
+        sharedService.alertDialog(
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                fabChainBalance.toString(),
+            AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
         setBusy(false);
         return;
@@ -670,8 +675,10 @@ class MoveToWalletViewmodel extends BaseState {
       if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
           !isShowFabChainBalance &&
           amount > ethChainBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-            AppLocalizations.of(context).pleaseEnterValidNumber,
+        sharedService.alertDialog(
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                ethChainBalance.toString(),
+            AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
         setBusy(false);
         return;
@@ -679,8 +686,10 @@ class MoveToWalletViewmodel extends BaseState {
       if (isWithdrawChoice) if (isShowTrxTsWalletBalance &&
           !isShowFabChainBalance &&
           amount > trxTsWalletBalance) {
-        sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
-            AppLocalizations.of(context).pleaseEnterValidNumber,
+        sharedService.alertDialog(
+            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                trxTsWalletBalance.toString(),
+            AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
             isWarning: false);
         setBusy(false);
         return;

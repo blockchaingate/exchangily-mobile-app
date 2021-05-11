@@ -144,20 +144,15 @@ class MoveToExchangeScreen extends StatelessWidget {
                         : Row(
                             children: <Widget>[
                               Text(AppLocalizations.of(context).gasFee,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(fontWeight: FontWeight.w300)),
+                                  style: Theme.of(context).textTheme.headline6),
                               Padding(
                                 padding: EdgeInsets.only(
                                     left:
                                         5), // padding left to keep some space from the text
                                 child: Text(
                                     '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 4).toString()} ${model.feeUnit}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(fontWeight: FontWeight.w300)),
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
                               )
                             ],
                           ),
@@ -166,20 +161,14 @@ class MoveToExchangeScreen extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Text(AppLocalizations.of(context).kanbanGasFee,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(fontWeight: FontWeight.w300)),
+                            style: Theme.of(context).textTheme.headline6),
                         Padding(
                           padding: EdgeInsets.only(
                               left:
                                   5), // padding left to keep some space from the text
                           child: Text(
                               '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 4).toString()} GAS',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.w300)),
+                              style: Theme.of(context).textTheme.headline6),
                         )
                       ],
                     ),
@@ -191,10 +180,7 @@ class MoveToExchangeScreen extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Text(AppLocalizations.of(context).advance,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(fontWeight: FontWeight.w300)),
+                      style: Theme.of(context).textTheme.headline6),
                   Switch(
                     value: model.transFeeAdvance,
                     inactiveTrackColor: globals.grey,

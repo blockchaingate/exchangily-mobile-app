@@ -177,23 +177,106 @@ class MoveToWalletScreen extends StatelessWidget {
                       //                     .headline6),
                       //       )
                       //     : Container(),
+                      //
+                      // // withdraw choice radio
+                      model.isWithdrawChoice
+                          ? Container(
+                              child: Row(
+                                children: [
+                                  model.isShowTrxTsWalletBalance ||
+                                          model.walletInfo.tickerName ==
+                                              "USDT" ||
+                                          model.walletInfo.tickerName == "USDTX"
+                                      ? Row(
+                                          children: <Widget>[
+                                            SizedBox(
+                                              height: 10,
+                                              width: 10,
+                                              child: Radio(
+                                                  activeColor:
+                                                      globals.primaryColor,
+                                                  onChanged: (value) {
+                                                    model.radioButtonSelection(
+                                                        value);
+                                                  },
+                                                  groupValue: model.groupValue,
+                                                  value: 'TRX'),
+                                            ),
+                                            UIHelper.horizontalSpaceSmall,
+                                            Text('TRC20',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6),
+                                          ],
+                                        )
+                                      : Row(
+                                          children: <Widget>[
+                                            SizedBox(
+                                              height: 10,
+                                              width: 20,
+                                              child: Radio(
+                                                  //  model.groupValue == 'FAB'? fillColor: MaterialStateColor
+                                                  //       .resolveWith(
+                                                  //           (states) => Colors.blue),
+                                                  activeColor:
+                                                      globals.primaryColor,
+                                                  onChanged: (value) {
+                                                    model.radioButtonSelection(
+                                                        value);
+                                                  },
+                                                  groupValue: model.groupValue,
+                                                  value: 'FAB'),
+                                            ),
+                                            UIHelper.horizontalSpaceSmall,
+                                            Text('FAB Chain',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6),
+                                          ],
+                                        ),
+                                  UIHelper.horizontalSpaceMedium,
+                                  // erc20 radio button
+                                  Row(
+                                    // mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: 10,
+                                        width: 20,
+                                        child: Radio(
+                                            activeColor: globals.primaryColor,
+                                            onChanged: (value) {
+                                              model.radioButtonSelection(value);
+                                            },
+                                            groupValue: model.groupValue,
+                                            value: 'ETH'),
+                                      ),
+                                      UIHelper.horizontalSpaceSmall,
+                                      Text('ERC20',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+                      // kanban gas fee
+                      model.isWithdrawChoice
+                          ? UIHelper.verticalSpaceLarge
+                          : Container(),
+
                       Row(
                         children: <Widget>[
                           Text(AppLocalizations.of(context).kanbanGasFee,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.w300)),
+                              style: Theme.of(context).textTheme.headline6),
                           Padding(
                             padding: EdgeInsets.only(
                                 left:
                                     5), // padding left to keep some space from the text
                             child: Text(
                                 '${model.kanbanTransFee.toStringAsFixed(4)} GAS',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline5
-                                    .copyWith(fontWeight: FontWeight.w300)),
+                                style: Theme.of(context).textTheme.headline6),
                           )
                         ],
                       ),
@@ -202,20 +285,20 @@ class MoveToWalletScreen extends StatelessWidget {
                       Row(
                         children: <Widget>[
                           Text(AppLocalizations.of(context).advance,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.w300)),
-                          Switch(
-                            value: model.transFeeAdvance,
-                            inactiveTrackColor: globals.grey,
-                            dragStartBehavior: DragStartBehavior.start,
-                            activeColor: globals.primaryColor,
-                            onChanged: (bool isOn) {
-                              model.setBusy(true);
-                              model.transFeeAdvance = isOn;
-                              model.setBusy(false);
-                            },
+                              style: Theme.of(context).textTheme.headline6),
+                          SizedBox(
+                            height: 15,
+                            child: Switch(
+                              value: model.transFeeAdvance,
+                              inactiveTrackColor: globals.grey,
+                              dragStartBehavior: DragStartBehavior.start,
+                              activeColor: globals.primaryColor,
+                              onChanged: (bool isOn) {
+                                model.setBusy(true);
+                                model.transFeeAdvance = isOn;
+                                model.setBusy(false);
+                              },
+                            ),
                           )
                         ],
                       ),
@@ -331,184 +414,117 @@ class MoveToWalletScreen extends StatelessWidget {
                           )),
 
                       UIHelper.verticalSpaceSmall,
-// withdraw choice radio
-                      model.isWithdrawChoice
-                          ? Container(
-                              child: Row(
-                              children: [
-                                model.isShowTrxTsWalletBalance ||
-                                        model.walletInfo.tickerName == "USDT" ||
-                                        model.walletInfo.tickerName == "USDTX"
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text('TRC20',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6),
-                                          Radio(
-                                              activeColor: globals.primaryColor,
-                                              onChanged: (value) {
-                                                model.radioButtonSelection(
-                                                    value);
-                                              },
-                                              groupValue: model.groupValue,
-                                              value: 'TRX'),
-                                        ],
-                                      )
-                                    : Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text('FAB Chain',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline6),
-                                          Radio(
-                                              //  model.groupValue == 'FAB'? fillColor: MaterialStateColor
-                                              //       .resolveWith(
-                                              //           (states) => Colors.blue),
-                                              activeColor: globals.primaryColor,
-                                              onChanged: (value) {
-                                                model.radioButtonSelection(
-                                                    value);
-                                              },
-                                              groupValue: model.groupValue,
-                                              value: 'FAB'),
-                                        ],
-                                      ),
 
-                                // erc20 radio button
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text('ERC20',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6),
-                                    Radio(
-                                        activeColor: globals.primaryColor,
-                                        onChanged: (value) {
-                                          model.radioButtonSelection(value);
-                                        },
-                                        groupValue: model.groupValue,
-                                        value: 'ETH'),
-                                  ],
-                                ),
+                      // TS wallet balance show
+                      // Expanded(
+                      //   child: Column(
+                      //     children: [
+                      //       Container(
+                      //           child: Row(
+                      //         mainAxisAlignment:
+                      //             MainAxisAlignment.center,
+                      //         children: [
+                      //           Text(
+                      //             'TS ${AppLocalizations.of(context).wallet}',
+                      //             style: Theme.of(context)
+                      //                 .textTheme
+                      //                 .subtitle2,
+                      //           ),
+                      //           Text(
+                      //             '${AppLocalizations.of(context).balance}: ',
+                      //             style: Theme.of(context)
+                      //                 .textTheme
+                      //                 .subtitle2,
+                      //           ),
+                      //           model.isWithdrawChoice
+                      //               ? SizedBox(
+                      //                   width: 20,
+                      //                   height: 20,
+                      //                   child: IconButton(
+                      //                       padding: EdgeInsets.zero,
+                      //                       icon: Icon(
+                      //                         Icons.info_outline,
+                      //                         color: primaryColor,
+                      //                         size: 16,
+                      //                       ),
+                      //                       onPressed: () =>
+                      //                           model.showInfoDialog(
+                      //                               true)),
+                      //                 )
+                      //               : Container()
+                      //         ],
+                      //       )),
 
-                                // TS wallet balance show
-                                Expanded(
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                          child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'TS ${AppLocalizations.of(context).wallet}',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2,
-                                          ),
-                                          Text(
-                                            '${AppLocalizations.of(context).balance}: ',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle2,
-                                          ),
-                                          model.isWithdrawChoice
-                                              ? SizedBox(
-                                                  width: 20,
-                                                  height: 20,
-                                                  child: IconButton(
-                                                      padding: EdgeInsets.zero,
-                                                      icon: Icon(
-                                                        Icons.info_outline,
-                                                        color: primaryColor,
-                                                        size: 16,
-                                                      ),
-                                                      onPressed: () =>
-                                                          model.showInfoDialog(
-                                                              true)),
-                                                )
-                                              : Container()
-                                        ],
-                                      )),
+                      //       // show ts wallet balance for tron chain
+                      //       model.walletInfo.tickerName == 'USDT' ||
+                      //               model.walletInfo.tickerName ==
+                      //                   'USDTX'
+                      //           ? Container(
+                      //               margin:
+                      //                   EdgeInsets.only(left: 5.0),
+                      //               child: model.trxTsWalletBalance !=
+                      //                           null &&
+                      //                       model.ethChainBalance !=
+                      //                           null
+                      //                   ? model
+                      //                           .isShowTrxTsWalletBalance
+                      //                       ? Text(
+                      //                           model
+                      //                               .trxTsWalletBalance
+                      //                               .toString(),
+                      //                           maxLines: 2,
+                      //                           style:
+                      //                               Theme.of(context)
+                      //                                   .textTheme
+                      //                                   .headline6,
+                      //                         )
+                      //                       : Text(
+                      //                           model.ethChainBalance
+                      //                               .toString(),
+                      //                           maxLines: 2,
+                      //                           style:
+                      //                               Theme.of(context)
+                      //                                   .textTheme
+                      //                                   .headline6,
+                      //                         )
+                      //                   : Container(
+                      //                       child: Text(
+                      //                           AppLocalizations.of(context)
+                      //                               .loading)))
+                      //           : Container(
+                      //               margin:
+                      //                   EdgeInsets.only(left: 5.0),
+                      //               child: model.fabChainBalance !=
+                      //                           null &&
+                      //                       model.ethChainBalance !=
+                      //                           null
+                      //                   ? model.isShowFabChainBalance
+                      //                       ? Text(
+                      //                           model.fabChainBalance
+                      //                               .toString(),
+                      //                           maxLines: 2,
+                      //                           style:
+                      //                               Theme.of(context)
+                      //                                   .textTheme
+                      //                                   .headline6,
+                      //                         )
+                      //                       : Text(
+                      //                           model.ethChainBalance
+                      //                               .toString(),
+                      //                           maxLines: 2,
+                      //                           style:
+                      //                               Theme.of(context)
+                      //                                   .textTheme
+                      //                                   .headline6,
+                      //                         )
+                      //                   : Container(
+                      //                       child: Text(
+                      //                           AppLocalizations.of(context)
+                      //                               .loading))),
+                      //     ],
+                      //   ),
+                      // ),
 
-                                      // show ts wallet balance for tron chain
-                                      model.walletInfo.tickerName == 'USDT' ||
-                                              model.walletInfo.tickerName ==
-                                                  'USDTX'
-                                          ? Container(
-                                              margin:
-                                                  EdgeInsets.only(left: 5.0),
-                                              child: model.trxTsWalletBalance !=
-                                                          null &&
-                                                      model.ethChainBalance !=
-                                                          null
-                                                  ? model
-                                                          .isShowTrxTsWalletBalance
-                                                      ? Text(
-                                                          model
-                                                              .trxTsWalletBalance
-                                                              .toString(),
-                                                          maxLines: 2,
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline6,
-                                                        )
-                                                      : Text(
-                                                          model.ethChainBalance
-                                                              .toString(),
-                                                          maxLines: 2,
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline6,
-                                                        )
-                                                  : Container(
-                                                      child: Text(
-                                                          AppLocalizations.of(context)
-                                                              .loading)))
-                                          : Container(
-                                              margin:
-                                                  EdgeInsets.only(left: 5.0),
-                                              child: model.fabChainBalance !=
-                                                          null &&
-                                                      model.ethChainBalance !=
-                                                          null
-                                                  ? model.isShowFabChainBalance
-                                                      ? Text(
-                                                          model.fabChainBalance
-                                                              .toString(),
-                                                          maxLines: 2,
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline6,
-                                                        )
-                                                      : Text(
-                                                          model.ethChainBalance
-                                                              .toString(),
-                                                          maxLines: 2,
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .headline6,
-                                                        )
-                                                  : Container(
-                                                      child: Text(
-                                                          AppLocalizations.of(context)
-                                                              .loading))),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ))
-                          : Container(),
                       // Success/Error container
                       Container(
                           child: Visibility(
