@@ -92,7 +92,7 @@ class SendScreenState extends BaseState {
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
-          feeUnit ='BTC';
+      feeUnit = 'BTC';
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await walletService.getEthGasPrice();
       print('gasPriceReal======');
@@ -104,11 +104,11 @@ class SendScreenState extends BaseState {
         gasLimitTextController.text =
             environment["chains"]["ETH"]["gasLimitToken"].toString();
       }
-       feeUnit ='ETH';
+      feeUnit = 'ETH';
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
-           feeUnit ='FAB';
+      feeUnit = 'FAB';
     } else if (tokenType == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -116,7 +116,7 @@ class SendScreenState extends BaseState {
           environment["chains"]["FAB"]["gasPrice"].toString();
       gasLimitTextController.text =
           environment["chains"]["FAB"]["gasLimit"].toString();
-           feeUnit ='FAB';
+      feeUnit = 'FAB';
     }
     await getDecimalData();
     await refreshBalance();
@@ -488,9 +488,11 @@ class SendScreenState extends BaseState {
       return;
     }
     // double totalAmount = amount + transFee;
-    if (amount == null || amount == 0 || amount.isNegative || !checkSendAmount
-        //  || totalAmount > walletInfo.availableBalance
-        ) {
+    if (amount == null ||
+        amount == 0 ||
+        amount.isNegative ||
+        !checkSendAmount ||
+        amount > walletInfo.availableBalance) {
       print('amount no good');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
@@ -499,22 +501,22 @@ class SendScreenState extends BaseState {
     }
     amount = NumberUtil().roundDownLastDigit(amount);
 
-    if (walletInfo.tickerName == 'USDTX') {
-      log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
-      bool isCorrectAmount = true;
-      await walletService
-          .checkCoinWalletBalance(amount, 'TRX')
-          .then((res) => isCorrectAmount = res);
+    // if (walletInfo.tickerName == 'USDTX') {
+    //   log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
+    //   // bool isCorrectAmount = true;
+    //   // await walletService
+    //   //     .checkCoinWalletBalance(amount, 'TRX')
+    //   //     .then((res) => isCorrectAmount = res);
 
-      if (!isCorrectAmount) {
-        sharedService.alertDialog(
-            '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
-            'TRX ${AppLocalizations.of(context).insufficientBalance}',
-            isWarning: false);
-        setBusy(false);
-        return;
-      }
-    }
+    //   if (amount >= walletInfo.availableBalance) {
+    //     sharedService.alertDialog(
+    //         '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
+    //         'TRX ${AppLocalizations.of(context).insufficientBalance}',
+    //         isWarning: false);
+    //     setBusy(false);
+    //     return;
+    //   }
+    // }
 
     print('else');
     FocusScope.of(context).requestFocus(FocusNode());
@@ -536,7 +538,7 @@ class SendScreenState extends BaseState {
       if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX') {
         log.i('checkAmount ${walletInfo.tickerName}');
 
-        updateTransFee();
+        await updateTransFee();
         double totalAmount = 0.0;
         if (walletInfo.tickerName == 'FAB')
           totalAmount = amount + transFee;
@@ -626,7 +628,7 @@ class SendScreenState extends BaseState {
 
   updateTransFee() async {
     setState(ViewState.Busy);
-    setBusy(true);
+    log.i('in update trans fee');
     var to = CoinUtil.getOfficalAddress(walletInfo.tickerName.toUpperCase(),
         tokenType: walletInfo.tokenType.toUpperCase());
     amount = double.tryParse(sendAmountTextController.text);
@@ -657,6 +659,7 @@ class SendScreenState extends BaseState {
         .then((ret) {
       if (ret != null && ret['transFee'] != null) {
         transFee = ret['transFee'];
+        log.w('trans fee $ret');
       }
       setState(ViewState.Idle);
     }).catchError((err) {
@@ -668,7 +671,6 @@ class SendScreenState extends BaseState {
           isWarning: false);
     });
     setState(ViewState.Idle);
-    setBusy(false);
   }
 
 /*--------------------------------------------------------

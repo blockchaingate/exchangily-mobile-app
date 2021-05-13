@@ -464,7 +464,7 @@ class BuySellViewModel extends StreamViewModel {
       baseCoin = targetCoin;
       targetCoin = tmp;
     }
-
+    quantity = NumberUtil().roundDownLastDigit(quantity);
     var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin,
         targetCoin, quantity, price, timeBeforeExpiration);
 

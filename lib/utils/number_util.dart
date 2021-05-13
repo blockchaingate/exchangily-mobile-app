@@ -44,7 +44,7 @@ class NumberUtil {
 --------------------------------------------------- */
 
   double roundDownLastDigit(double input) {
-    log.w('roundDownLastDigit input $input');
+    log.w('roundDownLastDigit input val $input');
     double finalBalance = 0.0;
     int roundDown = 0;
     String balanceToString = input.toString();
