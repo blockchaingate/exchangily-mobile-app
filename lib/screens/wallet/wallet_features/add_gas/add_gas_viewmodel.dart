@@ -203,7 +203,8 @@ class AddGasViewModel extends FutureViewModel {
     // Get Utxos
 
     int totalUtxos = utxos.length;
-    totalAmount = amount + extraAmount;
+    totalAmount = amount;
+    //+ extraAmount;
     utxosNeeded = calculateUtxosNeeded(totalAmount, utxos);
     var fee = (utxosNeeded) * feePerInput + (2 * 34 + 10) * satoshisPerBytes;
     transFee = ((Decimal.parse(extraAmount.toString()) +
@@ -220,10 +221,10 @@ class AddGasViewModel extends FutureViewModel {
     setBusy(false);
   }
 
+// calculate how many utxos needed
   int calculateUtxosNeeded(double totalAmount, List utxos) {
     int utxosNeeded = 0;
     sumUtxos = 0.0;
-// calculate how many utxos needed
     int i = 1;
 
     utxos.forEach((utxo) {
@@ -251,32 +252,12 @@ class AddGasViewModel extends FutureViewModel {
   sliderOnchange(newValue) {
     setBusy(true);
     sliderValue = newValue;
+    if (transFee == 0.0) updateTransFee();
 
-    // var baseCoinbalance =
-    //     baseCoinExchangeBalance.unlockedAmount; //coin(asset) bal for sell
-    // baseCoinbalance = roundDown(baseCoinbalance);
-    // //baseCoinWalletData
-    // //  .inExchange;
-
-    // if (amount != null && amount.isNegative) {
-    //   print('base balance $baseCoinbalance');
-
-    var changeAmountWithSlider =
-        ((sumUtxos - transFee) - extraAmount) * sliderValue / 100;
-    //   quantity = changeBalanceWithSlider / price;
-    //   String roundedQtyString =
-    //       quantity.toStringAsFixed(singlePairDecimalConfig.qtyDecimal);
-    // double roundedAmountDouble = double.parse(roundedQtyString);
-    //   roundedQtyDouble = roundDown(roundedQtyDouble);
-    //   transactionAmount = roundedQtyDouble * price;
-    amountController.text = changeAmountWithSlider.toString();
-    //   updateTransFee();
-    //   log.w('Slider value $sliderValue');
-    //   log.i('calculated tx amount $transactionAmount');
-    //   log.e('Balance change with slider $changeBalanceWithSlider');
-    // } else {
-    //   log.e('In sliderOnchange else where quantity $amount null/empty');
-    // }
+    var changeAmountWithSlider = (fabBalance - transFee) * sliderValue / 100;
+    amountController.text = NumberUtil()
+        .truncateDoubleWithoutRouding(changeAmountWithSlider, precision: 6)
+        .toString();
     setBusy(false);
   }
 

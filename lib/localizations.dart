@@ -1742,6 +1742,27 @@ class AppLocalizations {
     return Intl.message('No Event', name: 'noEvent', desc: 'noEvent');
   }
 
+  String get maxAmount {
+    return Intl.message('Max Amount', name: 'maxAmount', desc: 'max_amount');
+  }
+
+  String get networkIssue {
+    return Intl.message('Network issue',
+        name: 'networkIssue', desc: 'networkIssue');
+  }
+
+  String get lowTsWalletBalanceErrorFirstPart {
+    return Intl.message('Current maximum available balance for withdraw is',
+        name: 'lowTsWalletBalanceErrorText',
+        desc: 'lowTsWalletBalanceErrorText');
+  }
+
+  String get lowTsWalletBalanceErrorSecondPart {
+    return Intl.message(
+        'You may reduce your withdraw amount or you may withdraw by using other chain',
+        name: 'lowTsWalletBalanceErrorText',
+        desc: 'lowTsWalletBalanceErrorText');
+  }
   // Share page pending translation added by Jack
 }
 

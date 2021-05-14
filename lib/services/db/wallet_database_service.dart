@@ -139,6 +139,7 @@ class WalletDataBaseService {
     await db
         .delete(tableName, where: "tickerName = ?", whereArgs: [tickerName]);
   }
+  
 
   // Update database
   Future<void> update(WalletInfo walletInfo) async {

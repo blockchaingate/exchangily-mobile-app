@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +16,7 @@ class MarketPairsTabViewState extends BaseState {
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
   LocalStorageService localStorageService = locator<LocalStorageService>();
+  final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
   BuildContext context;
   String lang = 'en';
 
@@ -28,7 +32,19 @@ class MarketPairsTabViewState extends BaseState {
     setBusy(true);
     var result = await apiService.getSliderImages();
 
-    lang = localStorageService.language;
+    await userSettingsDatabaseService.getById(1).then((value) {
+      if (value != null) {
+        print('111 ${value.toJson()}');
+        lang = value.language;
+      }
+    });
+    print('lang $lang --');
+    if (lang == null) {
+      lang = Platform.localeName.substring(0, 2);
+      print('local lang ${Platform.localeName.substring(0, 2)}');
+    }
+    print('-- lang $lang');
+    //  lang = localStorageService.language;
     log.w("Slider from api: $result");
 
     if (result == "error") {

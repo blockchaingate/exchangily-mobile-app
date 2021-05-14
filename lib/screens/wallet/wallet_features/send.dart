@@ -10,10 +10,6 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
-import 'dart:io';
-
-import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
@@ -147,6 +143,7 @@ class SendWalletScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 TextField(
+                                  // change paste text color
                                   controller: model.sendAmountTextController,
                                   onChanged: (String amount) {
                                     model.amount = double.parse(amount);
@@ -175,23 +172,44 @@ class SendWalletScreen extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.symmetric(vertical: 10),
                                   child: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        AppLocalizations.of(context)
-                                                .walletbalance +
-                                            '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.singlePairDecimalConfig.qtyDecimal)} ',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            .copyWith(
-                                                fontWeight: FontWeight.w400),
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            AppLocalizations.of(context)
+                                                    .walletbalance +
+                                                '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.singlePairDecimalConfig.qtyDecimal)} ',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6
+                                                .copyWith(
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                          ),
+                                          Text(
+                                            '$tickerName'.toUpperCase(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline6,
+                                          )
+                                        ],
                                       ),
-                                      Text(
-                                        '$tickerName'.toUpperCase(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6,
-                                      )
+                                      // RichText(
+                                      //   text: TextSpan(
+                                      //     recognizer: TapGestureRecognizer()
+                                      //       ..onTap = () {
+                                      //         model.fillMaxAmount();
+                                      //       },
+                                      //     text: AppLocalizations.of(context)
+                                      //         .maxAmount,
+                                      //     style: Theme.of(context)
+                                      //         .textTheme
+                                      //         .bodyText1
+                                      //         .copyWith(color: primaryColor),
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 )
@@ -255,10 +273,10 @@ class SendWalletScreen extends StatelessWidget {
                                                             strokeWidth: 0.75,
                                                           ))
                                                 : Text(
-                                                    '${model.transFee}',
+                                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 6)}  ${model.feeUnit}',
                                                     style: Theme.of(context)
                                                         .textTheme
-                                                        .headline5
+                                                        .headline6
                                                         .copyWith(
                                                             fontWeight:
                                                                 FontWeight

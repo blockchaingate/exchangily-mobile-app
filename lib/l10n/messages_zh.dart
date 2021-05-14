@@ -309,7 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sendTransactionComplete": MessageLookupByLibrary.simpleMessage("发送完成"),
         "sent": MessageLookupByLibrary.simpleMessage("已发送"),
         "serverBusy": MessageLookupByLibrary.simpleMessage("服务器正忙"),
-        "serverError": MessageLookupByLibrary.simpleMessage("服务端错误"),
+        "serverError": MessageLookupByLibrary.simpleMessage("网络故障"),
         "serverTimeoutPleaseTryAgainLater":
             MessageLookupByLibrary.simpleMessage("服务端超时，请稍候再试"),
         "sessionExpired": MessageLookupByLibrary.simpleMessage("会话超时"),

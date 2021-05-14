@@ -497,7 +497,7 @@
         "type": "text",
         "placeholders": {}
     },
-    "serverError": "服务端错误",
+    "serverError": "网络故障",
     "@serverError": {
         "description": "create_password_serverError",
         "type": "text",

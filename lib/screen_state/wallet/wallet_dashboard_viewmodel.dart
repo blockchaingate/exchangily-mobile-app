@@ -146,7 +146,29 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
 /*----------------------------------------------------------------------
-                           Fav Tab
+                            Move Trx Usdt
+----------------------------------------------------------------------*/
+  moveTrxUsdt() {
+    // get first 6 wallets
+    List<WalletInfo> first6Wallets = walletInfo.sublist(0, 6);
+    // make a copy of trx and trx usdt
+    List<WalletInfo> trxCoins = [];
+    trxCoins
+        .add(walletInfo.singleWhere((element) => element.tickerName == 'TRX'));
+    trxCoins.add(
+        walletInfo.singleWhere((element) => element.tickerName == 'USDTX'));
+    // remove trx and trx usdt from the list
+    walletInfo.removeWhere((element) => element.tickerName == 'TRX');
+    walletInfo.removeWhere((element) => element.tickerName == 'USDTX');
+// wallet after first 6
+    List<WalletInfo> after6Wallets = walletInfo.sublist(6);
+    // clear walletinfo copy
+    //  walletInfo.clear();
+    walletInfo = first6Wallets + trxCoins + after6Wallets;
+  }
+
+/*----------------------------------------------------------------------
+                            Fav Tab
 ----------------------------------------------------------------------*/
 
 /*----------------------------------------------------------------------
@@ -161,7 +183,8 @@ class WalletDashboardViewModel extends BaseViewModel {
         isUpdateWallet = false;
       } else {
         isUpdateWallet = true;
-        showUpdateWalletDialog();
+        // updateWallet();
+        // showUpdateWalletDialog();
       }
     });
     setBusy(false);
@@ -242,9 +265,10 @@ class WalletDashboardViewModel extends BaseViewModel {
   }
 
   // add trx if not present in wallet
-  Future<bool> updateWallet() async {
+  //Future<bool>
+  updateWallet() async {
     setBusy(true);
-    bool isSuccess = false;
+    //  bool isSuccess = false;
     String mnemonic = '';
     await dialogService
         .showDialog(
@@ -267,17 +291,17 @@ class WalletDashboardViewModel extends BaseViewModel {
             name: 'Tron');
 
         log.i("new wallet trx generated in update wallet ${wi.toJson()}");
+        isUpdateWallet = false;
         await walletDatabaseService.insert(wi);
         await refreshBalance();
-        isUpdateWallet = false;
-        isSuccess = true;
+        //   isSuccess = true;
       } else if (res.returnedText == 'Closed') {
-        showUpdateWalletDialog();
+        //  showUpdateWalletDialog();
         setBusy(false);
       }
     });
     setBusy(false);
-    return isSuccess;
+    //return isSuccess;
   }
 /*----------------------------------------------------------------------
                         Check Announcement
@@ -285,8 +309,11 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   checkAnnouncement() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    lang = storageService.language;
-    if (lang == '') lang = 'en';
+    final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
+    var lang = await userSettingsDatabaseService.getLanguage();
+    // lang = storageService.language;
+    if (lang == '' || lang == null)
+      lang = Platform.localeName.substring(0, 2) ?? 'en';
     setlangGlobal(lang);
     // log.w('langGlobal: ' + getlangGlobal());
 
@@ -819,6 +846,10 @@ class WalletDashboardViewModel extends BaseViewModel {
     double holder = 0.0;
     for (var i = 0; i < walletInfo.length; i++) {
       holder += walletInfo[i].usdValue;
+      if(walletInfo[i].tickerName == 'USDTX'){
+        var t = walletInfo[i].usdValue;
+        print('t $t');
+      }
     }
     totalUsdBalance = NumberUtil.currencyFormat(holder, 2);
     log.i('Total usd balance $totalUsdBalance');
@@ -1214,22 +1245,6 @@ class WalletDashboardViewModel extends BaseViewModel {
           }
         } // second if ends
 
-        // get exg address to get free fab
-        await getGas();
-        // check gas and fab balance if 0 then ask for free fab
-        if (gasAmount == 0.0 && fabBalance == 0.0) {
-          String address = await getExgAddressFromWalletDatabase();
-          storageService.isShowCaseView = true;
-          _isShowCaseView = true;
-          var res = await apiService.getFreeFab(address);
-          if (res != null) {
-            isFreeFabNotUsed = res['ok'];
-          }
-        } else {
-          log.i('Fab or gas balance available already');
-          // storageService.isShowCaseView = false;
-        }
-
         calcTotalBal();
 
 // check if any new coins added in api
@@ -1237,10 +1252,10 @@ class WalletDashboardViewModel extends BaseViewModel {
       } // if wallet balance list != null ends
 
       // in else if walletBalances is null then check balance with old method
-      else if (walletBalanceList == null) {
-        log.e('---------------------ELSE old way-----------------------');
-        //  await oldWayToGetBalances(walletService.coinTickers.length);
-      }
+      // else if (walletBalanceList == null) {
+      //   log.e('---------------------ELSE old way-----------------------');
+      //   //  await oldWayToGetBalances(walletService.coinTickers.length);
+      // }
     }).timeout(Duration(seconds: 60), onTimeout: () async {
       log.e('time out');
       walletInfo = walletInfoCopy;
@@ -1266,92 +1281,110 @@ class WalletDashboardViewModel extends BaseViewModel {
       formattedUsdValueListCopy =
           formattedUsdValueList.map((element) => element).toList();
     }
+    // await walletDatabaseService.deleteWalletByTickerName('TRX');
     await checkToUpdateWallet();
-    setBusy(false);
-  }
+   // moveTrxUsdt();
 
-  // Old way to get balances
-  oldWayToGetBalances(int walletInfoCopyLength) async {
-    walletInfo = [];
-    formattedUsdValueList = [];
-    List<String> coinTokenType = walletService.tokenType;
-
-    double walletBal = 0.0;
-    double walletLockedBal = 0.0;
-
-    // For loop starts
-    for (var i = 0; i < walletInfoCopyLength; i++) {
-      String tickerName = walletInfoCopy[i].tickerName;
-      String address = walletInfoCopy[i].address;
-      String name = walletInfoCopy[i].name;
-      // Get coin balance by address
-      await walletService
-          .coinBalanceByAddress(tickerName, address, coinTokenType[i])
-          .then((balance) async {
-        log.e('bal $balance');
-        walletBal = balance['balance'] == -1 ? 0.0 : balance['balance'];
-        walletLockedBal =
-            balance['lockbalance'] == -1 ? 0.0 : balance['lockbalance'];
-
-        // Get coin market price by name
-        double marketPrice =
-            await walletService.getCoinMarketPriceByTickerName(tickerName);
-
-        // Calculate usd balance
-        double usdValue = walletService.calculateCoinUsdBalance(
-            marketPrice, walletBal, walletLockedBal);
-        String holder = NumberUtil.currencyFormat(usdValue, 2);
-        formattedUsdValueList.add(holder);
-        // Adding each coin details in the wallet
-        WalletInfo wi = WalletInfo(
-            id: walletInfoCopy[i].id,
-            tickerName: tickerName,
-            tokenType: coinTokenType[i],
-            address: address,
-            availableBalance: walletBal,
-            lockedBalance: walletLockedBal,
-            usdValue: usdValue,
-            name: name);
-        walletInfo.add(wi);
-        // })
-        // .timeout(Duration(seconds: 25), onTimeout: () async {
-        //   sharedService.alertDialog(
-        //       '', AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
-        //   //  await retrieveWallets();
-        //   log.e('Timeout');
-        //   return;
-      }).catchError((error) async {
-        setBusy(false);
-        sharedService.alertDialog(
-            '', AppLocalizations.of(context).genericError);
-        await retrieveWalletsFromLocalDatabase();
-        log.e('Something went wrong  - $error');
-        return;
-      });
-    } // For loop ends
-
-    calcTotalBal();
-    await getExchangeAssetsBalance();
-    // await updateWalletDatabase();
-    String address = await getExgAddressFromWalletDatabase();
+    // get exg address to get free fab
     await getGas();
     // check gas and fab balance if 0 then ask for free fab
     if (gasAmount == 0.0 && fabBalance == 0.0) {
+      String address = await sharedService.getFABAddressFromWalletDatabase();
+      storageService.isShowCaseView = true;
+      _isShowCaseView = true;
       var res = await apiService.getFreeFab(address);
       if (res != null) {
         isFreeFabNotUsed = res['ok'];
       }
     } else {
       log.i('Fab or gas balance available already');
-      //  storageService.isShowCaseView = true;
+      // storageService.isShowCaseView = false;
     }
-    if (!isProduction) debugVersionPopup();
-    if (walletInfo != null) {
-      walletInfoCopy = [];
-      walletInfoCopy = walletInfo.map((element) => element).toList();
-    }
-    log.w('Fetched wallet data using old methods');
+    setBusy(false);
   }
+
+  // Old way to get balances
+  // oldWayToGetBalances(int walletInfoCopyLength) async {
+  //   walletInfo = [];
+  //   formattedUsdValueList = [];
+  //   List<String> coinTokenType = walletService.tokenType;
+
+  //   double walletBal = 0.0;
+  //   double walletLockedBal = 0.0;
+
+  //   // For loop starts
+  //   for (var i = 0; i < walletInfoCopyLength; i++) {
+  //     String tickerName = walletInfoCopy[i].tickerName;
+  //     String address = walletInfoCopy[i].address;
+  //     String name = walletInfoCopy[i].name;
+  //     // Get coin balance by address
+  //     await walletService
+  //         .coinBalanceByAddress(tickerName, address, coinTokenType[i])
+  //         .then((balance) async {
+  //       log.e('bal $balance');
+  //       walletBal = balance['balance'] == -1 ? 0.0 : balance['balance'];
+  //       walletLockedBal =
+  //           balance['lockbalance'] == -1 ? 0.0 : balance['lockbalance'];
+
+  //       // Get coin market price by name
+  //       double marketPrice =
+  //           await walletService.getCoinMarketPriceByTickerName(tickerName);
+
+  //       // Calculate usd balance
+  //       double usdValue = walletService.calculateCoinUsdBalance(
+  //           marketPrice, walletBal, walletLockedBal);
+  //       String holder = NumberUtil.currencyFormat(usdValue, 2);
+  //       formattedUsdValueList.add(holder);
+  //       // Adding each coin details in the wallet
+  //       WalletInfo wi = WalletInfo(
+  //           id: walletInfoCopy[i].id,
+  //           tickerName: tickerName,
+  //           tokenType: coinTokenType[i],
+  //           address: address,
+  //           availableBalance: walletBal,
+  //           lockedBalance: walletLockedBal,
+  //           usdValue: usdValue,
+  //           name: name);
+  //       walletInfo.add(wi);
+  //       // })
+  //       // .timeout(Duration(seconds: 25), onTimeout: () async {
+  //       //   sharedService.alertDialog(
+  //       //       '', AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater);
+  //       //   //  await retrieveWallets();
+  //       //   log.e('Timeout');
+  //       //   return;
+  //     }).catchError((error) async {
+  //       setBusy(false);
+  //       sharedService.alertDialog(
+  //           '', AppLocalizations.of(context).genericError);
+  //       await retrieveWalletsFromLocalDatabase();
+  //       log.e('Something went wrong  - $error');
+  //       return;
+  //     });
+  //   } // For loop ends
+
+  //   calcTotalBal();
+  //   await getExchangeAssetsBalance();
+  //   // await updateWalletDatabase();
+  //   String address = await getExgAddressFromWalletDatabase();
+  //   await getGas();
+  //   // check gas and fab balance if 0 then ask for free fab
+  //   if (gasAmount == 0.0 && fabBalance == 0.0) {
+  //     var res = await apiService.getFreeFab(address);
+  //     if (res != null) {
+  //       isFreeFabNotUsed = res['ok'];
+  //     }
+  //   } else {
+  //     log.i('Fab or gas balance available already');
+  //     //  storageService.isShowCaseView = true;
+  //   }
+  //   if (!isProduction) debugVersionPopup();
+  //   if (walletInfo != null) {
+  //     walletInfoCopy = [];
+  //     walletInfoCopy = walletInfo.map((element) => element).toList();
+  //   }
+  //   log.w('Fetched wallet data using old methods');
+  // }
 
   // get exchange asset balance
   getExchangeAssetsBalance() async {

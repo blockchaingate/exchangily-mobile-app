@@ -81,6 +81,7 @@ class SendScreenState extends BaseState {
   double transFee = 0.0;
   bool transFeeAdvance = false;
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
+  String feeUnit = '';
 
   // Init State
   initState() async {
@@ -91,6 +92,7 @@ class SendScreenState extends BaseState {
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
+      feeUnit = 'BTC';
     } else if (coinName == 'ETH' || tokenType == 'ETH') {
       var gasPriceReal = await walletService.getEthGasPrice();
       print('gasPriceReal======');
@@ -102,9 +104,11 @@ class SendScreenState extends BaseState {
         gasLimitTextController.text =
             environment["chains"]["ETH"]["gasLimitToken"].toString();
       }
+      feeUnit = 'ETH';
     } else if (coinName == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
+      feeUnit = 'FAB';
     } else if (tokenType == 'FAB') {
       satoshisPerByteTextController.text =
           environment["chains"]["FAB"]["satoshisPerBytes"].toString();
@@ -112,10 +116,23 @@ class SendScreenState extends BaseState {
           environment["chains"]["FAB"]["gasPrice"].toString();
       gasLimitTextController.text =
           environment["chains"]["FAB"]["gasLimit"].toString();
+      feeUnit = 'FAB';
     }
     await getDecimalData();
     await refreshBalance();
     setState(ViewState.Idle);
+  }
+
+  fillMaxAmount() {
+    setBusy(true);
+    sendAmountTextController.text = NumberUtil()
+        .truncateDoubleWithoutRouding(walletInfo.availableBalance,
+            precision: singlePairDecimalConfig.qtyDecimal)
+        .toString();
+    log.i(sendAmountTextController.text);
+    setBusy(false);
+    amount = double.parse(sendAmountTextController.text);
+    checkAmount();
   }
 
   getDecimalData() async {
@@ -470,12 +487,12 @@ class SendScreenState extends BaseState {
           isWarning: false);
       return;
     }
-    double totalAmount = amount + transFee;
+    // double totalAmount = amount + transFee;
     if (amount == null ||
         amount == 0 ||
         amount.isNegative ||
         !checkSendAmount ||
-        totalAmount > walletInfo.availableBalance) {
+        amount > walletInfo.availableBalance) {
       print('amount no good');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
@@ -484,25 +501,26 @@ class SendScreenState extends BaseState {
     }
     amount = NumberUtil().roundDownLastDigit(amount);
 
-    if (walletInfo.tickerName == 'USDTX') {
-      log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
-      bool isCorrectAmount = true;
-      await walletService
-          .checkCoinWalletBalance(amount, 'TRX')
-          .then((res) => isCorrectAmount = res);
+    // if (walletInfo.tickerName == 'USDTX') {
+    //   log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
+    //   // bool isCorrectAmount = true;
+    //   // await walletService
+    //   //     .checkCoinWalletBalance(amount, 'TRX')
+    //   //     .then((res) => isCorrectAmount = res);
 
-      if (!isCorrectAmount) {
-        sharedService.alertDialog(
-            '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
-            'TRX ${AppLocalizations.of(context).insufficientBalance}',
-            isWarning: false);
-        setBusy(false);
-        return;
-      }
-    }
+    //   if (amount >= walletInfo.availableBalance) {
+    //     sharedService.alertDialog(
+    //         '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
+    //         'TRX ${AppLocalizations.of(context).insufficientBalance}',
+    //         isWarning: false);
+    //     setBusy(false);
+    //     return;
+    //   }
+    // }
 
     print('else');
     FocusScope.of(context).requestFocus(FocusNode());
+    if (transFee == 0) await updateTransFee();
     sendTransaction();
     // await updateBalance(widget.walletInfo.address);
     // widget.walletInfo.availableBalance = model.updatedBal['balance'];
@@ -511,7 +529,7 @@ class SendScreenState extends BaseState {
 /*----------------------------------------------------------------------
                     Check Send Amount
 ----------------------------------------------------------------------*/
-  checkAmount() {
+  checkAmount() async {
     setState(ViewState.Busy);
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
     log.e(amount);
@@ -521,18 +539,66 @@ class SendScreenState extends BaseState {
       if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX') {
         log.i('checkAmount ${walletInfo.tickerName}');
 
-        updateTransFee();
-        double totalAmount = amount + transFee;
+        await updateTransFee();
+        double totalAmount = 0.0;
+        if (walletInfo.tickerName == 'FAB')
+          totalAmount = amount + transFee;
+        else
+          totalAmount = amount;
         log.i('total amount $totalAmount');
         log.w('wallet bal ${walletInfo.availableBalance}');
         if (totalAmount <= walletInfo.availableBalance)
           checkSendAmount = true;
         else
           checkSendAmount = false;
+      } else if (walletInfo.tickerName == 'TRX') {
+        if (amount + 1 <= walletInfo.availableBalance)
+          checkSendAmount = true;
+        else
+          checkSendAmount = false;
+      } else if (walletInfo.tickerName == 'USDTX') {
+        double trxBalance = 0.0;
+
+        trxBalance = await getTrxBalance();
+        log.w('checkAmount trx bal $trxBalance');
+        if (amount <= walletInfo.availableBalance && trxBalance > 15)
+          checkSendAmount = true;
+        else {
+          checkSendAmount = false;
+          if (trxBalance < 15)
+            showSimpleNotification(
+                Center(
+                  child: Text(
+                      '${AppLocalizations.of(context).low} TRX ${AppLocalizations.of(context).balance}'),
+                ),
+                position: NotificationPosition.top,
+                background: sellPrice);
+        }
       }
       log.i('check send amount $checkSendAmount');
     }
     setState(ViewState.Idle);
+  }
+
+  Future<double> getTrxBalance() async {
+    double balance = 0.0;
+    String trxWalletAddress = '';
+    await walletDatabaseService
+        .getBytickerName('TRX')
+        .then((wallet) => trxWalletAddress = wallet.address);
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    await apiService
+        .getSingleWalletBalance(fabAddress, 'TRX', trxWalletAddress)
+        .then((walletBalance) {
+      if (walletBalance != null) {
+        balance = walletBalance[0].balance;
+      }
+    }).catchError((err) {
+      log.e(err);
+      setBusy(false);
+      throw Exception(err);
+    });
+    return balance;
   }
 
 /*----------------------------------------------------------------------
@@ -563,7 +629,7 @@ class SendScreenState extends BaseState {
 
   updateTransFee() async {
     setState(ViewState.Busy);
-    setBusy(true);
+    log.i('in update trans fee');
     var to = CoinUtil.getOfficalAddress(walletInfo.tickerName.toUpperCase(),
         tokenType: walletInfo.tokenType.toUpperCase());
     amount = double.tryParse(sendAmountTextController.text);
@@ -594,6 +660,7 @@ class SendScreenState extends BaseState {
         .then((ret) {
       if (ret != null && ret['transFee'] != null) {
         transFee = ret['transFee'];
+        log.w('trans fee $ret');
       }
       setState(ViewState.Idle);
     }).catchError((err) {
@@ -605,7 +672,6 @@ class SendScreenState extends BaseState {
           isWarning: false);
     });
     setState(ViewState.Idle);
-    setBusy(false);
   }
 
 /*--------------------------------------------------------

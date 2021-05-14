@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
@@ -49,7 +51,7 @@ class WalletDashboardView extends StatelessWidget {
           await model.retrieveWalletsFromLocalDatabase();
           await model.init();
         },
-        builder: (context, model, child) {
+        builder: (context, WalletDashboardViewModel model, child) {
           // var connectionStatus = Provider.of<ConnectivityStatus>(context);
           // if (connectionStatus == ConnectivityStatus.Offline)
           //   return NetworkStausView();
@@ -305,14 +307,14 @@ class WalletDashboardView extends StatelessWidget {
                         ),
 
                         UIHelper.verticalSpaceSmall,
-                        // model.isUpdateWallet
-                        //     ? Container(
-                        //         child: TextButton(
-                        //         child: Text(
-                        //             AppLocalizations.of(context).updateWallet),
-                        //         onPressed: () => model.updateWallet(),
-                        //       ))
-                        //     : Container(),
+                        model.isUpdateWallet
+                            ? Container(
+                                child: TextButton(
+                                child: Text(
+                                    AppLocalizations.of(context).updateWallet),
+                                onPressed: () => model.updateWallet(),
+                              ))
+                            : Container(),
 /*------------------------------------------------------------------------------
                                 Build Wallet List Container
 -------------------------------------------------------------------------------*/
@@ -428,9 +430,8 @@ class WalletDashboardView extends StatelessWidget {
               //   color: white,
               //   child: IconButton(
               //     icon: Icon(Icons.arrow_downward),
-              //     onPressed: () {
-              //       model.saveTokenLocally();
-              //       //model.walletService.anotherTest();
+              //     onPressed: ()  {
+              //      print(Platform.localeName);
               //     },
               //   ),
               // ),

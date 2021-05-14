@@ -174,11 +174,11 @@ class WalletService {
     bool isCorrectAmount = true;
     String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     String trxAddress = await walletDatabaseService
-        .getBytickerName('TRX')
+        .getBytickerName(tickerName)
         .then((wallet) => wallet.address);
     log.w('trxAddress $trxAddress');
     await _apiService
-        .getSingleWalletBalance(fabAddress, 'TRX', trxAddress)
+        .getSingleWalletBalance(fabAddress, tickerName, trxAddress)
         .then((walletBalance) {
       if (walletBalance != null) {
         log.w(walletBalance[0].balance);

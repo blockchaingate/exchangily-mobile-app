@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:io';
+
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
@@ -102,7 +104,7 @@ class SettingsViewmodel extends BaseViewModel {
         userSettings.language = res.language;
         log.i('user settings db not null');
       } else {
-        userSettings.language = 'en';
+        userSettings.language = Platform.localeName.substring(0,2);
         isUserSettingsEmpty = true;
         log.i(
             'user settings db null-- isUserSettingsEmpty $isUserSettingsEmpty');

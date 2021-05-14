@@ -10,6 +10,7 @@
 * Author: ken.qiu@exchangily.com and barry_ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -72,6 +73,19 @@ class MoveToExchangeScreen extends StatelessWidget {
                   model.updateTransFee();
                 },
                 decoration: InputDecoration(
+                  // suffix: RichText(
+                  //   text: TextSpan(
+                  //     recognizer: TapGestureRecognizer()
+                  //       ..onTap = () {
+                  //         model.fillMaxAmount();
+                  //       },
+                  //     text: AppLocalizations.of(context).maxAmount,
+                  //     style: Theme.of(context)
+                  //         .textTheme
+                  //         .bodyText1
+                  //         .copyWith(color: primaryColor),
+                  //   ),
+                  // ),
                   // suffix: Text(
                   //     AppLocalizations.of(context).minimumAmount +
                   //         ': ' +
@@ -84,10 +98,9 @@ class MoveToExchangeScreen extends StatelessWidget {
                   hintStyle: TextStyle(fontSize: 14.0, color: Colors.grey),
                 ),
                 controller: model.amountController,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(fontWeight: FontWeight.w300),
+                style: Theme.of(context).textTheme.headline5.copyWith(
+                    fontWeight: FontWeight.w300,
+                    color: model.isValid ? white : red),
               ),
               UIHelper.verticalSpaceSmall,
               // Wallet Balance
@@ -131,20 +144,15 @@ class MoveToExchangeScreen extends StatelessWidget {
                         : Row(
                             children: <Widget>[
                               Text(AppLocalizations.of(context).gasFee,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      .copyWith(fontWeight: FontWeight.w300)),
+                                  style: Theme.of(context).textTheme.headline6),
                               Padding(
                                 padding: EdgeInsets.only(
                                     left:
                                         5), // padding left to keep some space from the text
                                 child: Text(
-                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 4).toString()}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline5
-                                        .copyWith(fontWeight: FontWeight.w300)),
+                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 4).toString()} ${model.feeUnit}',
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
                               )
                             ],
                           ),
@@ -153,20 +161,14 @@ class MoveToExchangeScreen extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Text(AppLocalizations.of(context).kanbanGasFee,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(fontWeight: FontWeight.w300)),
+                            style: Theme.of(context).textTheme.headline6),
                         Padding(
                           padding: EdgeInsets.only(
                               left:
                                   5), // padding left to keep some space from the text
                           child: Text(
-                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 4).toString()}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5
-                                  .copyWith(fontWeight: FontWeight.w300)),
+                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 4).toString()} GAS',
+                              style: Theme.of(context).textTheme.headline6),
                         )
                       ],
                     ),
@@ -178,10 +180,7 @@ class MoveToExchangeScreen extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Text(AppLocalizations.of(context).advance,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          .copyWith(fontWeight: FontWeight.w300)),
+                      style: Theme.of(context).textTheme.headline6),
                   Switch(
                     value: model.transFeeAdvance,
                     inactiveTrackColor: globals.grey,
