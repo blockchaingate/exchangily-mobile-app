@@ -520,6 +520,7 @@ class SendScreenState extends BaseState {
 
     print('else');
     FocusScope.of(context).requestFocus(FocusNode());
+    if (transFee == 0) await updateTransFee();
     sendTransaction();
     // await updateBalance(widget.walletInfo.address);
     // widget.walletInfo.availableBalance = model.updatedBal['balance'];
