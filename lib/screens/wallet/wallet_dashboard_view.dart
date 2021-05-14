@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
@@ -318,6 +319,15 @@ class WalletDashboardView extends StatelessWidget {
 /*------------------------------------------------------------------------------
                                 Build Wallet List Container
 -------------------------------------------------------------------------------*/
+                        CupertinoSegmentedControl(
+                            selectedColor: primaryColor,
+                            children: <int, Widget>{
+                              0: Text('All Coins'),
+                              1: Text('Fav Coins')
+                            },
+                            onValueChanged: (tabValue) =>
+                                model.updateTabSelection(tabValue),
+                            groupValue: model.currentTabSelection),
                         Expanded(
                             child: model.isBusy
                                 ? model.walletInfoCopy == null
@@ -426,15 +436,22 @@ class WalletDashboardView extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              // floatingActionButton: Container(
-              //   color: white,
-              //   child: IconButton(
-              //     icon: Icon(Icons.arrow_downward),
-              //     onPressed: ()  {
-              //      print(Platform.localeName);
-              //     },
-              //   ),
-              // ),
+              floatingActionButton: Container(
+                color: white,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_downward),
+                  onPressed: () {
+                    List<String> t = ['Fab', 'Exg', 'btc'];
+                    String jsonString = json.encode(t);
+                    print('jsonString $jsonString');
+
+                    List<String> listString =
+                        (json.decode(jsonString) as List<dynamic>)
+                            .cast<String>();
+                    print('listString $listString');
+                  },
+                ),
+              ),
             ),
           );
         });

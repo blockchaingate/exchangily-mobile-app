@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:convert';
+
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -19,6 +21,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -31,6 +34,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
 
   WalletInfo walletInfo;
   WalletService walletService = locator<WalletService>();
+  final storageService = locator<LocalStorageService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
   NavigationService navigationService = locator<NavigationService>();
@@ -44,7 +48,8 @@ class WalletFeaturesViewModel extends BaseViewModel {
   var errDepositItem;
   String specialTicker = '';
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
-  List<WalletFeatureName> features = new List();
+  List<WalletFeatureName> features = [];
+  bool isFavorite = false;
 
   init() {
     getWalletFeatures();
@@ -53,6 +58,50 @@ class WalletFeaturesViewModel extends BaseViewModel {
         walletInfo.tickerName)["tickerName"];
     log.i('wi object to check name ${walletInfo.toJson()}');
     refreshBalance();
+    checkIfCoinIsFavorite();
+  }
+
+  checkIfCoinIsFavorite() {
+    String favCoinsJson = storageService.favWalletCoins;
+    List<String> favWalletCoins =
+        (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
+
+    if (favWalletCoins.contains(walletInfo.tickerName)) {
+      setBusy(true);
+      isFavorite = true;
+      setBusy(false);
+    }
+  }
+
+  updateFavWalletCoinsList(String tickerName) {
+    List<String> favWalletCoins = [];
+    String favCoinsJson = storageService.favWalletCoins;
+    print(favCoinsJson);
+    if (favCoinsJson.isNotEmpty) {
+      favWalletCoins =
+          (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
+      favWalletCoins.forEach((favTickerName) {
+        if (favTickerName == tickerName) {}
+      });
+      if (favWalletCoins.contains(tickerName)) {
+        favWalletCoins
+            .removeWhere((favTickerName) => favTickerName == tickerName);
+        setBusy(true);
+        isFavorite = false;
+        setBusy(false);
+      } else {
+        favWalletCoins.add(tickerName);
+        setBusy(true);
+        isFavorite = true;
+        setBusy(false);
+      }
+    } else {
+      favWalletCoins.add(tickerName);
+      setBusy(true);
+      isFavorite = true;
+      setBusy(false);
+    }
+    storageService.favWalletCoins = json.encode(favWalletCoins);
   }
 
   getDecimalData() async {

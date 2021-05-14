@@ -74,6 +74,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       locator<TokenListDatabaseService>();
   var storageService = locator<LocalStorageService>();
   final dialogService = locator<DialogService>();
+  final userDatabaseService = locator<UserSettingsDatabaseService>();
 
   BuildContext context;
   List<WalletInfo> walletInfo;
@@ -120,6 +121,9 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   int unreadMsgNum = 0;
   bool isUpdateWallet = false;
+  List<WalletInfo> favWalletInfoList = [];
+  bool isShowFavCoins = false;
+  int currentTabSelection = 0;
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -135,6 +139,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     showDialogWarning();
     getDecimalPairConfig();
     getConfirmDepositStatus();
+
     setBusy(false);
   }
 
@@ -143,6 +148,32 @@ class WalletDashboardViewModel extends BaseViewModel {
     scrollController.jumpTo(
       scrollController.position.maxScrollExtent,
     );
+  }
+
+  updateTabSelection(int tabValue) {
+    setBusy(true);
+    currentTabSelection = tabValue;
+    log.w('current tab sel $currentTabSelection');
+    setBusy(false);
+  }
+
+  showFavCoins() {
+    setBusyForObject(isShowFavCoins, true);
+    isShowFavCoins = !isShowFavCoins;
+    setBusyForObject(isShowFavCoins, false);
+  }
+
+  buildFavCoinList() {
+    String favCoinsJson = storageService.favWalletCoins;
+    List<String> favWalletCoins =
+        (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
+    for (var i = 0; i <= favWalletCoins.length; i++) {
+      walletInfoCopy.forEach((wallet) {
+        if (wallet.tickerName == favWalletCoins[i]) {
+          favWalletInfoList.add(wallet);
+        }
+      });
+    }
   }
 
 /*----------------------------------------------------------------------
@@ -846,7 +877,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     double holder = 0.0;
     for (var i = 0; i < walletInfo.length; i++) {
       holder += walletInfo[i].usdValue;
-      if(walletInfo[i].tickerName == 'USDTX'){
+      if (walletInfo[i].tickerName == 'USDTX') {
         var t = walletInfo[i].usdValue;
         print('t $t');
       }
@@ -957,6 +988,15 @@ class WalletDashboardViewModel extends BaseViewModel {
   jsonTransformation() {
     var walletBalancesBody = jsonDecode(storageService.walletBalancesBody);
     log.i('Coin address body $walletBalancesBody');
+  }
+
+  buildFavWalletCoinsList(String tickerName) async {
+    List<String> favWalletCoins = [];
+    favWalletCoins.add(tickerName);
+    // UserSettings userSettings = UserSettings(favWalletCoins: [tickerName]);
+    // await userDatabaseService.update(userSettings);
+
+    storageService.favWalletCoins = json.encode(favWalletCoins);
   }
 
 /*----------------------------------------------------------------------
@@ -1283,7 +1323,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     // await walletDatabaseService.deleteWalletByTickerName('TRX');
     await checkToUpdateWallet();
-   // moveTrxUsdt();
+    // moveTrxUsdt();
 
     // get exg address to get free fab
     await getGas();

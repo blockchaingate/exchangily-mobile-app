@@ -369,7 +369,15 @@ class WalletFeaturesView extends StatelessWidget {
                     Text(
                         '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') ? '\n' + message + ' ' + nativeTicker : ''}',
                         style: Theme.of(context).textTheme.subtitle1),
-                    Text('${model.walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
+                    IconButton(
+                      icon: model.isFavorite
+                          ? Icon(Icons.star, color: primaryColor)
+                          : Icon(Icons.star_border_outlined, color: white),
+                      onPressed: () => model.updateFavWalletCoinsList(
+                          model.walletInfo.tickerName),
+                    ),
+                    Text(
+                        '${model.walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
                         style: Theme.of(context).textTheme.subtitle1),
                   ],
                 ),

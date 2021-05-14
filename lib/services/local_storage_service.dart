@@ -16,6 +16,7 @@ class LocalStorageService {
   static const String USServerKey = 'isUSServer';
   static const String WalletBalancesBodyKey = 'walletBalancesBody';
   static const String TokenListKey = 'tokenList';
+  static const String FavWalletCoinsKey = 'favWalletCoinsKey';
 /*----------------------------------------------------------------------
                   Instance
 ----------------------------------------------------------------------*/
@@ -119,6 +120,13 @@ class LocalStorageService {
 
   set walletBalancesBody(String value) =>
       _saveToDisk(WalletBalancesBodyKey, value);
+
+/*----------------------------------------------------------------------
+                Fav wallet coins
+----------------------------------------------------------------------  */
+  String get favWalletCoins => _getFromDisk(FavWalletCoinsKey) ?? '';
+
+  set favWalletCoins(String value) => _saveToDisk(FavWalletCoinsKey, value);
 
 /*----------------------------------------------------------------------
                     Token List
