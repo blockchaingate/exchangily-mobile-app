@@ -77,7 +77,7 @@ String firstCharToUppercase(String value) {
 }
 
 hex2Buffer(hexString) {
-  var buffer = new List<int>();
+  var buffer = [];
   for (var i = 0; i < hexString.length; i += 2) {
     var val = (int.parse(hexString[i], radix: 16) << 4) |
         int.parse(hexString[i + 1], radix: 16);
@@ -94,7 +94,7 @@ trimHexPrefix(String str) {
 }
 
 number2Buffer(num) {
-  var buffer = new List<int>();
+  var buffer = [];
   var neg = (num < 0);
   num = num.abs();
   while (num > 0) {
@@ -115,11 +115,11 @@ number2Buffer(num) {
                     Convert fab to hex
 ----------------------------------------------------------------------*/
 
-  String convertFabAddressToHex(String fabAddress) {
-    var decoded = Base58.decode(fabAddress);
-    String hexString = HEX.encode(decoded);
-    return hexString;
-  }
+String convertFabAddressToHex(String fabAddress) {
+  var decoded = Base58.decode(fabAddress);
+  String hexString = HEX.encode(decoded);
+  return hexString;
+}
 
 stringToUint8List(String s) {
   List<int> list = utf8.encode(s);

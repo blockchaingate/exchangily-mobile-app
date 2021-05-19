@@ -34,16 +34,15 @@ class RedepositViewModel extends FutureViewModel {
   final kanbanGasLimitTextController = TextEditingController();
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
-  // String coinName = '';
-  // String tokenType = '';
+
   String errDepositTransactionID;
-  List errDepositList = new List();
+  List errDepositList = [];
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
 
   WalletInfo walletInfo;
   BuildContext context;
-
+  String errorMessage = '';
   @override
   Future futureToRun() => getErrDeposit();
 
@@ -108,6 +107,9 @@ class RedepositViewModel extends FutureViewModel {
 
   checkPass() async {
     //TransactionHistory transactionByTxId = new TransactionHistory();
+    setBusy(true);
+    errorMessage = '';
+    setBusy(false);
     var res = await dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -165,59 +167,18 @@ class RedepositViewModel extends FutureViewModel {
         log.w('resRedeposit $resRedeposit');
         var newTransactionId = resRedeposit['data']['transactionID'];
 
-        // get transaction from database
-
-        // await transactionHistoryDatabaseService
-        //     .getByKanbanTxId(transactionID)
-        //     .then((transactionByTxId) async {
-        //   if (transactionByTxId != null) {
-        //     // update transaction history status with new txid
-        //     log.i(
-        //         'updating ${transactionByTxId.tickerName} in transaction history db');
-        //     // String date = DateTime.now().toString();
-        //     // TransactionHistory transactionHistory = new TransactionHistory(
-        //     //     id: transactionByTxId.id,
-        //     //     tickerName: walletInfo.tickerName,
-        //     //     address: '',
-        //     //     amount: 0.0,
-        //     //     date: date.toString(),
-        //     //     tickerChainTxId: newTransactionId,
-        //     //     tickerChainTxStatus: 'pending',
-        //     //     quantity: transactionByTxId.quantity,
-        //     //     tag: transactionByTxId.tag);
-
-        //     // await transactionHistoryDatabaseService.update(transactionHistory);
-        //     // walletService.checkDepositTransactionStatus(transactionHistory);
-        //   } else {
-        //     log.e(
-        //         'transactionID $transactionID not found in transaction history db');
-        //     await transactionHistoryDatabaseService.getAll().then((res) {
-        //       List<String> txIdList = [];
-        //       if (res != null) {
-        //         res.forEach((element) {
-        //           txIdList.add(element.kanbanTxId);
-        //         });
-        //       }
-        //       log.e('transaction history tx id list $txIdList');
-        //     });
-        //   }
-        // });
-
-        // sharedService.showInfoFlushbar(
-        //     '${AppLocalizations.of(context).redepositCompleted}',
-        //     '${AppLocalizations.of(context).transactionId}' +
-        //         resRedeposit['data']['transactionID'],
-        //     Icons.cancel,
-        //     globals.white,
-        //     context);
         sharedService.alertDialog(
             AppLocalizations.of(context).redepositCompleted,
             AppLocalizations.of(context).transactionId + newTransactionId,
             path: '/dashboard');
+      } else if (resRedeposit['message'] != '') {
+        setBusy(true);
+        errorMessage = resRedeposit['message'];
+        setBusy(false);
       } else {
         sharedService.showInfoFlushbar(
             AppLocalizations.of(context).redepositFailedError,
-            AppLocalizations.of(context).serverError,
+            AppLocalizations.of(context).networkIssue,
             Icons.cancel,
             red,
             context);
@@ -236,21 +197,21 @@ class RedepositViewModel extends FutureViewModel {
     //var signedMess = {'r': r, 's': s, 'v': v};
     String tickerNameByCointype = '';
     bool isSpecial = false;
-    try {
-      tickerNameByCointype = newCoinTypeMap[coinType];
-      if (tickerNameByCointype == null)
-        await tokenListDatabaseService
-            .getTickerNameByCoinType(coinType)
-            .then((ticker) {
-          tickerNameByCointype = ticker;
-          log.w('submit redeposit ticker $ticker');
-        });
-      Constants.specialTokens.forEach((specialTokenTicker) {
-        if (tickerNameByCointype == specialTokenTicker) isSpecial = true;
+    //  try {
+    tickerNameByCointype = newCoinTypeMap[coinType];
+    if (tickerNameByCointype == null)
+      await tokenListDatabaseService
+          .getTickerNameByCoinType(coinType)
+          .then((ticker) {
+        tickerNameByCointype = ticker;
+        log.w('submit redeposit ticker $ticker');
       });
-    } catch (err) {
-      log.e('no match with special tickers');
-    }
+    Constants.specialTokens.forEach((specialTokenTicker) {
+      if (tickerNameByCointype == specialTokenTicker) isSpecial = true;
+    });
+    // } catch (err) {
+    //   log.e('no match with special tickers');
+    // }
     var abiHex = getDepositFuncABI(coinType, transactionID, amountInLink,
         keyPairKanban['address'], signedMess,
         isSpecialDeposit: isSpecial);

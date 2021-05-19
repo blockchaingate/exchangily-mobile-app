@@ -314,8 +314,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
         'contractAddress': contractAddr,
         'decimal': decimal
       };
-      log.i(
-          '3 - -$seed, -- ${walletInfo.tickerName}, --   $amount, - - $option');
+      log.i('3 - -- ${walletInfo.tickerName}, --   $amount, - - $option');
 
       // TRON Transaction
       if (walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') {
@@ -383,8 +382,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
             amountController.text = '';
             String txId = ret['data']['transactionID'];
 
-            var allTxids = ret["txids"];
-            walletService.addTxids(allTxids);
+            //  var allTxids = ret["txids"];
+            // walletService.addTxids(allTxids);
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
             message = txId.toString();

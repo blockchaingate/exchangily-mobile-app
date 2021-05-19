@@ -20,7 +20,17 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
-const String TronUsdtAccountBalanceUrl = TronBaseApiUrl + "wallet/triggerconstantcontract";
+const String KanbanApiRoute = 'kanban/';
+const String GetScarAddressApiRoute = 'getScarAddress';
+const String GetTransactionCountApiRoute = 'getTransactionCount/';
+const String GetBalanceApiRoute = 'getBalance/';
+const String ResubmitDepositApiRoute = 'resubmitDeposit';
+const String SendRawTxApiRoute = 'sendRawTransaction';
+const String DepositerrApiRoute = 'depositerr/';
+const String SubmitDepositApiRoute = 'submitDeposit';
+
+const String TronUsdtAccountBalanceUrl =
+    TronBaseApiUrl + "wallet/triggerconstantcontract";
 const String TronGetAccountUrl = TronBaseApiUrl + "wallet/getaccount";
 //  const requestURL = `${TRON_API_ENDPOINT}/wallet/getaccount`;
 // const requestBody = {
@@ -127,5 +137,4 @@ const String GetOrdersByTickerApiRoute = 'getordersbytickernamepaged/';
 const String GetSingleCoinExchangeBalApiRoute = 'exchangily/getBalance/';
 const String AssetsBalanceApiRoute = 'exchangily/getBalances/';
 
-const String GetBalanceApiRoute = 'kanban/getBalance/';
 const String OrdersByAddrApiRoute = 'ordersbyaddress/';

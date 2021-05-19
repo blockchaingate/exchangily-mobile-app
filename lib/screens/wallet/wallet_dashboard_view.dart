@@ -10,14 +10,11 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
-
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
@@ -613,23 +610,17 @@ class WalletDashboardView extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              // floatingActionButton: Container(
-              //   color: white,
-              //   child: IconButton(
-              //     icon: Icon(Icons.arrow_downward),
-              //     onPressed: () {
-              //       // List<String> t = ['Fab', 'Exg', 'btc'];
-              //       // String jsonString = json.encode(t);
-              //       // print('jsonString $jsonString');
-
-              //       // List<String> listString =
-              //       //     (json.decode(jsonString) as List<dynamic>)
-              //       //         .cast<String>();
-              //       // print('listString $listString');
-              //       model.buildFavCoinList();
-              //     },
-              //   ),
-              // ),
+              floatingActionButton: Container(
+                color: white,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_downward),
+                  onPressed: () async {
+                    String address = await model.sharedService
+                        .getFABAddressFromWalletDatabase();
+                    print('address $address');
+                  },
+                ),
+              ),
             ),
           );
         });

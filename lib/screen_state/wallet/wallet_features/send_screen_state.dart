@@ -326,8 +326,8 @@ class SendScreenState extends BaseState {
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
             );
-            var allTxids = res["txids"];
-            walletService.addTxids(allTxids);
+            //   var allTxids = res["txids"];
+            //  walletService.addTxids(allTxids);
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
             Future.delayed(new Duration(milliseconds: 30), () {

@@ -242,9 +242,9 @@ class WalletService {
     return newTokens;
   }
 
-  addTxids(allTxids) {
-    txids = [...txids, ...allTxids].toSet().toList();
-  }
+  // addTxids(allTxids) {
+  //   txids = [...txids, ...allTxids].toSet().toList();
+  // }
 
   /*----------------------------------------------------------------------
                     Check Language
