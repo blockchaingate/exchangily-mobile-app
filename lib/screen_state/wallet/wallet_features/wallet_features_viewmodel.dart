@@ -20,6 +20,7 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
@@ -39,6 +40,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
   SharedService sharedService = locator<SharedService>();
   NavigationService navigationService = locator<NavigationService>();
   DialogService dialogService = locator<DialogService>();
+  final tokenListDatabaseService = locator<TokenListDatabaseService>();
 
   final double elevation = 5;
   double containerWidth = 150;
@@ -137,12 +139,19 @@ class WalletFeaturesViewModel extends BaseViewModel {
 
   Future getErrDeposit() async {
     var address = await this.sharedService.getExgAddressFromWalletDatabase();
-    await walletService.getErrDeposit(address).then((result) {
+    await walletService.getErrDeposit(address).then((result) async {
       if (result != null) {
         for (var i = 0; i < result.length; i++) {
           var item = result[i];
           var coinType = item['coinType'];
           String tickerNameByCointype = newCoinTypeMap[coinType];
+          if (tickerNameByCointype == null)
+            await tokenListDatabaseService.getAll().then((tokenList) {
+              if (tokenList != null)
+                tickerNameByCointype = tokenList
+                    .firstWhere((element) => element.tokenType == coinType)
+                    .tickerName;
+            });
           log.w('tickerNameByCointype $tickerNameByCointype');
           if (tickerNameByCointype == walletInfo.tickerName) {
             setBusy(true);

@@ -207,32 +207,33 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     favWalletInfoList.clear();
     String favCoinsJson = storageService.favWalletCoins;
+    if (favCoinsJson != null && favCoinsJson != '') {
+      List<String> favWalletCoins =
+          (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
 
-    List<String> favWalletCoins =
-        (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
+      List<WalletInfo> walletsFromDb = [];
+      await walletDatabaseService
+          .getAll()
+          .then((wallets) => walletsFromDb = wallets);
 
-    List<WalletInfo> walletsFromDb = [];
-    await walletDatabaseService
-        .getAll()
-        .then((wallets) => walletsFromDb = wallets);
-
-    //  try {
-    for (var i = 0; i < favWalletCoins.length; i++) {
-      for (var j = 0; j < walletsFromDb.length; j++) {
-        if (walletsFromDb[j].tickerName == favWalletCoins[i].toString()) {
-          favWalletInfoList.add(walletsFromDb[j]);
-          break;
+      //  try {
+      for (var i = 0; i < favWalletCoins.length; i++) {
+        for (var j = 0; j < walletsFromDb.length; j++) {
+          if (walletsFromDb[j].tickerName == favWalletCoins[i].toString()) {
+            favWalletInfoList.add(walletsFromDb[j]);
+            break;
+          }
         }
+        // log.i('favWalletInfoList ${favWalletInfoList[i].toJson()}');
       }
-      // log.i('favWalletInfoList ${favWalletInfoList[i].toJson()}');
+      log.w('favWalletInfoList length ${favWalletInfoList.length}');
+      //  setBusy(false);
+      //   return;
+      // } catch (err) {
+      //   log.e('favWalletCoins CATCH');
+      //   setBusyForObject(favWalletInfoList, false);
+      // }
     }
-    log.w('favWalletInfoList length ${favWalletInfoList.length}');
-    //  setBusy(false);
-    //   return;
-    // } catch (err) {
-    //   log.e('favWalletCoins CATCH');
-    //   setBusyForObject(favWalletInfoList, false);
-    // }
     setBusyForObject(favWalletInfoList, false);
   }
 

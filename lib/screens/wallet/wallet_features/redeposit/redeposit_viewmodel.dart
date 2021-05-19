@@ -140,8 +140,10 @@ class RedepositViewModel extends FutureViewModel {
       log.w('errDepositItem $errDepositItem');
       var errDepositAmount = double.parse(errDepositItem['amount']);
       log.i('errDepositAmount $errDepositAmount');
-      var amountInLink = BigInt.from(errDepositAmount);
-      print('amountInLink $amountInLink');
+      var amountInBigInt = errDepositAmount.toString().contains('e')
+          ? BigInt.parse(errDepositItem['amount'])
+          : BigInt.from(errDepositAmount);
+      print('amountInLink $amountInBigInt');
       var coinType = errDepositItem['coinType'];
 
       var transactionID = errDepositItem['transactionID'];
@@ -150,14 +152,14 @@ class RedepositViewModel extends FutureViewModel {
       var originalMessage = walletService.getOriginalMessage(
           coinType,
           trimHexPrefix(transactionID),
-          amountInLink,
+          amountInBigInt,
           trimHexPrefix(addressInKanban));
 
       var signedMess = await signedMessage(
           originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
 
-      var resRedeposit = await this.submitredeposit(amountInLink, keyPairKanban,
-          nonce, coinType, transactionID, signedMess);
+      var resRedeposit = await this.submitredeposit(amountInBigInt,
+          keyPairKanban, nonce, coinType, transactionID, signedMess);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
         log.w('resRedeposit $resRedeposit');

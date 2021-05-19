@@ -164,49 +164,20 @@ class WalletFeaturesView extends StatelessWidget {
                       ]),
 
                   model.errDepositItem != null
-                      ? walletInfo.tickerName == 'FAB'
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                  GestureDetector(
-                                      onTap: () async {
-                                        // model.checkPass(context);
-                                      },
-                                      child: Container(
-                                        width: model.containerWidth,
-                                        height: model.containerHeight,
-                                        child: _featuresCard(context, 4, model),
-                                      )),
-                                  Container(
-                                    width: model.containerWidth,
-                                    height: model.containerHeight,
-                                    child: _featuresCard(context, 5, model),
-                                  )
-                                ])
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                  GestureDetector(
-                                      onTap: () async {
-                                        // model.checkPass(context);
-                                      },
-                                      child: Container(
-                                        width: model.containerWidth,
-                                        height: model.containerHeight,
-                                        child: _featuresCard(context, 4, model),
-                                      ))
-                                ])
-                      : walletInfo.tickerName == 'FAB'
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                  Container(
-                                    width: model.containerWidth,
-                                    height: model.containerHeight,
-                                    child: _featuresCard(context, 5, model),
-                                  )
-                                ])
-                          : Container(),
+                      ? Container(
+                          width: model.containerWidth,
+                          height: model.containerHeight,
+                          child: _featuresCard(context, 4, model),
+                        )
+                      : Container(),
+
+                  walletInfo.tickerName == 'FAB'
+                      ? Container(
+                          width: model.containerWidth,
+                          height: model.containerHeight,
+                          child: _featuresCard(context, 5, model),
+                        )
+                      : Container(),
 
                   UIHelper.horizontalSpaceSmall,
                   // Transaction History Column
