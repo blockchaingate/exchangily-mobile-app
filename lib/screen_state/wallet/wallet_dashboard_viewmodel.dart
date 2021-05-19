@@ -958,7 +958,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 /*----------------------------------------------------------------------
                       Get Confirm deposit err
 ----------------------------------------------------------------------*/
-
+// mpvWdFb91gYN1Q1UBfhMEmGn1Amw3BNthZ
   getConfirmDepositStatus() async {
     String address = await walletService.getExgAddressFromWalletDatabase();
     await walletService.getErrDeposit(address).then((result) async {

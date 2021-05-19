@@ -166,6 +166,7 @@ class SendScreenState extends BaseState {
   pasteClipBoardData() async {
     setState(ViewState.Busy);
     ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
+    log.i('paste data ${data.text}');
     receiverWalletAddressTextController.text = data.text;
     toAddress = receiverWalletAddressTextController.text;
     setState(ViewState.Idle);
@@ -313,7 +314,7 @@ class SendScreenState extends BaseState {
             .then((res) async {
           log.w('Result $res');
           txHash = res["txHash"];
-          errorMessage = res["errMsg"];
+          errorMessage = res["errMsg"] ?? '';
 
           if (txHash.isNotEmpty) {
             log.w('Txhash $txHash');
@@ -332,6 +333,7 @@ class SendScreenState extends BaseState {
             Future.delayed(new Duration(milliseconds: 30), () {
               refreshBalance();
             });
+            return txHash;
           } else if (txHash == '' && errorMessage == '') {
             log.e('Both TxHash and Error Message are empty $errorMessage');
             sharedService.alertDialog(
@@ -341,9 +343,18 @@ class SendScreenState extends BaseState {
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
             setState(ViewState.Idle);
+          } else if (txHash.isEmpty && errorMessage.isNotEmpty) {
+            log.e('Error Message $errorMessage');
+            sharedService.alertDialog(
+              "",
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+            );
+            isShowErrorDetailsButton = true;
+            isShowDetailsMessage = true;
+            serverError = errorMessage;
+            setState(ViewState.Idle);
           }
           setState(ViewState.Idle);
-          return txHash;
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           isShowErrorDetailsButton = false;
@@ -353,7 +364,7 @@ class SendScreenState extends BaseState {
               AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
         }).catchError((error) {
           log.e('In Catch error - $error');
-          sharedService.alertDialog(AppLocalizations.of(context).serverError,
+          sharedService.alertDialog(AppLocalizations.of(context).networkIssue,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
               isWarning: false);
           isShowErrorDetailsButton = true;
