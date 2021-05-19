@@ -232,17 +232,19 @@ class RedepositViewModel extends FutureViewModel {
     log.w('transactionID for submitredeposit:' + transactionID);
     var coinPoolAddress = await getCoinPoolAddress();
     //var signedMess = {'r': r, 's': s, 'v': v};
-    String ticker = '';
+    String tickerNameByCointype = '';
     bool isSpecial = false;
     try {
-      await tokenListDatabaseService
-          .getTickerNameByCoinType(coinType)
-          .then((ticker) {
-        ticker = ticker;
-        log.w('submit redeposit ticker $ticker');
-      });
+      tickerNameByCointype = newCoinTypeMap[coinType];
+      if (tickerNameByCointype == null)
+        await tokenListDatabaseService
+            .getTickerNameByCoinType(coinType)
+            .then((ticker) {
+          tickerNameByCointype = ticker;
+          log.w('submit redeposit ticker $ticker');
+        });
       Constants.specialTokens.forEach((specialTokenTicker) {
-        if (ticker == specialTokenTicker) isSpecial = true;
+        if (tickerNameByCointype == specialTokenTicker) isSpecial = true;
       });
     } catch (err) {
       log.e('no match with special tickers');

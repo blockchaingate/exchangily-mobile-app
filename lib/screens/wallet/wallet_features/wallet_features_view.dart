@@ -128,17 +128,10 @@ class WalletFeaturesView extends StatelessWidget {
               ),
             ),
             Container(
-              //   height: 400,
               margin: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  // Padding(
-                  //     padding: EdgeInsets.all(10),
-                  //     child: Text(
-                  //       'Receive and Send Exg',
-                  //       style: Theme.of(context).textTheme.display3,
-                  //     )),
                   UIHelper.horizontalSpaceMedium,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -154,12 +147,7 @@ class WalletFeaturesView extends StatelessWidget {
                           child: _featuresCard(context, 1, model))
                     ],
                   ),
-                  // Padding(
-                  //     padding: EdgeInsets.all(10),
-                  //     child: Text(
-                  //       'Exchange Exg',
-                  //       style: Theme.of(context).textTheme.display3,
-                  //     )),
+
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -366,19 +354,33 @@ class WalletFeaturesView extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                        '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') ? '\n' + message + ' ' + nativeTicker : ''}',
-                        style: Theme.of(context).textTheme.subtitle1),
-                    IconButton(
-                      icon: model.isFavorite
-                          ? Icon(Icons.star, color: primaryColor)
-                          : Icon(Icons.star_border_outlined, color: white),
-                      onPressed: () => model.updateFavWalletCoinsList(
-                          model.walletInfo.tickerName),
+                    Expanded(
+                      flex: 4,
+                      child: Text(
+                          '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') ? '\n' + message + ' ' + nativeTicker : ''}',
+                          style: Theme.of(context).textTheme.subtitle1),
                     ),
-                    Text(
-                        '${model.walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
-                        style: Theme.of(context).textTheme.subtitle1),
+                    Expanded(
+                      flex: 2,
+                      child: SizedBox(
+                        height: 20,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: model.isFavorite
+                              ? Icon(Icons.star, color: primaryColor, size: 20)
+                              : Icon(Icons.star_border_outlined,
+                                  color: white, size: 18),
+                          onPressed: () => model.updateFavWalletCoinsList(
+                              model.walletInfo.tickerName),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        flex: 4,
+                        child: Text(
+                            '${model.walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
+                            textAlign: TextAlign.right,
+                            style: Theme.of(context).textTheme.subtitle1)),
                   ],
                 ),
               )

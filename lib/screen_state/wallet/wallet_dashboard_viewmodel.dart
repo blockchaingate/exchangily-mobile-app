@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
@@ -139,41 +140,100 @@ class WalletDashboardViewModel extends BaseViewModel {
     showDialogWarning();
     getDecimalPairConfig();
     getConfirmDepositStatus();
-
+    buildFavCoinList();
     setBusy(false);
   }
 
 // not in use
-  void endOfCoinList() async {
-    scrollController.jumpTo(
-      scrollController.position.maxScrollExtent,
-    );
-  }
-
-  updateTabSelection(int tabValue) {
+  // void endOfCoinList() async {
+  //   scrollController.jumpTo(
+  //     scrollController.position.maxScrollExtent,
+  //   );
+  // }
+  //
+  updateTabSelection(int tabIndex) {
     setBusy(true);
-    currentTabSelection = tabValue;
-    log.w('current tab sel $currentTabSelection');
+    if (tabIndex == 0)
+      isShowFavCoins = false;
+    else
+      isShowFavCoins = true;
+
+    currentTabSelection = tabIndex;
+    print(
+        'current tab sel $currentTabSelection -- isShowFavCoins $isShowFavCoins');
     setBusy(false);
   }
 
-  showFavCoins() {
-    setBusyForObject(isShowFavCoins, true);
-    isShowFavCoins = !isShowFavCoins;
-    setBusyForObject(isShowFavCoins, false);
+/*----------------------------------------------------------------------
+                    Search Coins By TickerName
+----------------------------------------------------------------------*/
+
+  searchFavCoinsByTickerName(String value) async {
+    setBusyForObject(favWalletInfoList, true);
+    var favWalletInfoListCopy = favWalletInfoList;
+    print('length ${favWalletInfoList.length} -- value $value');
+    try {
+      for (var i = 0; i < favWalletInfoListCopy.length; i++) {
+        print(
+            'favWalletInfoList ${favWalletInfoList[i].tickerName == value.toUpperCase()}');
+        if (favWalletInfoListCopy[i].tickerName == value.toUpperCase() ||
+            favWalletInfoListCopy[i].name == value) {
+          favWalletInfoList = [];
+          log.i('favWalletInfoListCopy ${favWalletInfoListCopy[i].toJson()}');
+          favWalletInfoList.add(favWalletInfoListCopy[i]);
+          setBusyForObject(favWalletInfoList, false);
+          break;
+        } else {
+          favWalletInfoList = [];
+          favWalletInfoList = favWalletInfoListCopy;
+          break;
+        }
+      }
+      print('favWalletInfoList length ${favWalletInfoList.length}');
+    } catch (err) {
+      setBusyForObject(favWalletInfoList, false);
+      log.e('searchFavCoinsByTickerName CATCH');
+    }
+
+    setBusyForObject(favWalletInfoList, false);
   }
 
-  buildFavCoinList() {
+/*----------------------------------------------------------------------
+                    Build Fav Coins List
+----------------------------------------------------------------------*/
+
+  buildFavCoinList() async {
+    setBusyForObject(favWalletInfoList, true);
+
+    favWalletInfoList.clear();
     String favCoinsJson = storageService.favWalletCoins;
+
     List<String> favWalletCoins =
         (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
-    for (var i = 0; i <= favWalletCoins.length; i++) {
-      walletInfoCopy.forEach((wallet) {
-        if (wallet.tickerName == favWalletCoins[i]) {
-          favWalletInfoList.add(wallet);
+
+    List<WalletInfo> walletsFromDb = [];
+    await walletDatabaseService
+        .getAll()
+        .then((wallets) => walletsFromDb = wallets);
+
+    //  try {
+    for (var i = 0; i < favWalletCoins.length; i++) {
+      for (var j = 0; j < walletsFromDb.length; j++) {
+        if (walletsFromDb[j].tickerName == favWalletCoins[i].toString()) {
+          favWalletInfoList.add(walletsFromDb[j]);
+          break;
         }
-      });
+      }
+      // log.i('favWalletInfoList ${favWalletInfoList[i].toJson()}');
     }
+    log.w('favWalletInfoList length ${favWalletInfoList.length}');
+    //  setBusy(false);
+    //   return;
+    // } catch (err) {
+    //   log.e('favWalletCoins CATCH');
+    //   setBusyForObject(favWalletInfoList, false);
+    // }
+    setBusyForObject(favWalletInfoList, false);
   }
 
 /*----------------------------------------------------------------------
@@ -526,7 +586,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   onSingleCoinCardClick(index) {
     FocusScope.of(context).requestFocus(FocusNode());
-    navigationService.navigateTo('/walletFeatures',
+    navigationService.navigateTo(WalletFeaturesViewRoute,
         arguments: walletInfo[index]);
     searchCoinTextController.clear();
     resetWalletInfoObject();
@@ -538,21 +598,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   searchCoinsByTickerName(String value) async {
     setBusy(true);
-    // await apiService.getTokenList().then((tokenList) {
-    //   if (tokenList != null) {
-    //     tokenList.forEach((token) {
-    //       log.w('token ${token.toJson()}');
-    //       if (token.name == value) {
-    //         print('name ${token.name}');
-    //       }
-    //     });
-    //   } else {
-    //     log.e('token list null');
-    //   }
-    // }).catchError((err) {
-    //   log.e('SearchCoinsByTickerName Catch $err');
-    // });
-    //value = value.toUpperCase();
+
     print('length ${walletInfoCopy.length} -- value $value');
     for (var i = 0; i < walletInfoCopy.length; i++)
       if (walletInfoCopy[i].tickerName == value.toUpperCase() ||
@@ -1340,6 +1386,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       log.i('Fab or gas balance available already');
       // storageService.isShowCaseView = false;
     }
+    // buildFavCoinList();
     setBusy(false);
   }
 

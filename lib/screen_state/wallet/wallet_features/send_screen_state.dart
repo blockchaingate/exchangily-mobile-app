@@ -499,6 +499,23 @@ class SendScreenState extends BaseState {
           isWarning: false);
       return;
     }
+
+    if (transFee == 0) {
+      print('fee issue');
+      showSimpleNotification(
+          Center(
+              child: Column(
+            children: [
+              Text(AppLocalizations.of(context).notice,
+                  style: Theme.of(context).textTheme.bodyText2),
+              Text('${AppLocalizations.of(context).gasFee} 0',
+                  style: Theme.of(context).textTheme.headline6),
+            ],
+          )),
+          position: NotificationPosition.top);
+      await updateTransFee();
+      return;
+    }
     amount = NumberUtil().roundDownLastDigit(amount);
 
     // if (walletInfo.tickerName == 'USDTX') {

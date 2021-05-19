@@ -63,13 +63,15 @@ class WalletFeaturesViewModel extends BaseViewModel {
 
   checkIfCoinIsFavorite() {
     String favCoinsJson = storageService.favWalletCoins;
-    List<String> favWalletCoins =
-        (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
+    if (favCoinsJson.isNotEmpty) {
+      List<String> favWalletCoins =
+          (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
 
-    if (favWalletCoins.contains(walletInfo.tickerName)) {
-      setBusy(true);
-      isFavorite = true;
-      setBusy(false);
+      if (favWalletCoins.contains(walletInfo.tickerName)) {
+        setBusy(true);
+        isFavorite = true;
+        setBusy(false);
+      }
     }
   }
 

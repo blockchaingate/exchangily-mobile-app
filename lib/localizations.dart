@@ -1763,6 +1763,15 @@ class AppLocalizations {
         name: 'lowTsWalletBalanceErrorText',
         desc: 'lowTsWalletBalanceErrorText');
   }
+
+  String get allAssets {
+    return Intl.message('All Assets', name: 'allAssets', desc: 'all_assets');
+  }
+
+  String get favAssets {
+    return Intl.message('Favorite Assets',
+        name: 'favAssets', desc: 'fav_assets');
+  }
   // Share page pending translation added by Jack
 }
 
