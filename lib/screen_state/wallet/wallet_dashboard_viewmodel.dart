@@ -141,6 +141,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     getDecimalPairConfig();
     getConfirmDepositStatus();
     buildFavCoinList();
+    currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
     setBusy(false);
   }
 
@@ -159,6 +160,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       isShowFavCoins = true;
 
     currentTabSelection = tabIndex;
+    storageService.isFavCoinTabSelected = isShowFavCoins ? true : false;
     print(
         'current tab sel $currentTabSelection -- isShowFavCoins $isShowFavCoins');
     setBusy(false);
@@ -189,6 +191,9 @@ class WalletDashboardViewModel extends BaseViewModel {
           break;
         }
       }
+      // tabBarViewHeight = MediaQuery.of(context).viewInsets.bottom == 0
+      //     ? MediaQuery.of(context).size.height / 2 - 250
+      //     : MediaQuery.of(context).size.height / 2;
       print('favWalletInfoList length ${favWalletInfoList.length}');
     } catch (err) {
       setBusyForObject(favWalletInfoList, false);
@@ -240,6 +245,14 @@ class WalletDashboardViewModel extends BaseViewModel {
 /*----------------------------------------------------------------------
                             Move Trx Usdt
 ----------------------------------------------------------------------*/
+  moveTronUsdt() {
+    var tronUsdtWalletObj =
+        walletInfo.singleWhere((element) => element.tickerName == 'USDTX');
+    int tronUsdtIndex = walletInfo.indexOf(tronUsdtWalletObj);
+    walletInfo.removeAt(tronUsdtIndex);
+    walletInfo.insert(7, tronUsdtWalletObj);
+  }
+
   moveTrxUsdt() {
     // get first 6 wallets
     List<WalletInfo> first6Wallets = walletInfo.sublist(0, 6);
@@ -624,6 +637,9 @@ class WalletDashboardViewModel extends BaseViewModel {
         //     'in else ${walletInfoCopy[i].tickerName} == ${value.toUpperCase()}');
         resetWalletInfoObject();
       }
+    // tabBarViewHeight = MediaQuery.of(context).viewInsets.bottom != 0
+    //     ? MediaQuery.of(context).size.height / 2 - 250
+    //     : MediaQuery.of(context).size.height / 2;
     setBusy(false);
   }
 
@@ -784,9 +800,11 @@ class WalletDashboardViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           onPressed: () async {
+                                            String fabAddress = await sharedService
+                                                .getFABAddressFromWalletDatabase();
                                             postFreeFabResult = '';
                                             Map data = {
-                                              "address": address,
+                                              "address": fabAddress,
                                               "questionair_id": res['_body']
                                                   ['_id'],
                                               "answer":
@@ -1370,7 +1388,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
     // await walletDatabaseService.deleteWalletByTickerName('TRX');
     await checkToUpdateWallet();
-    // moveTrxUsdt();
+    moveTronUsdt();
 
     // get exg address to get free fab
     await getGas();

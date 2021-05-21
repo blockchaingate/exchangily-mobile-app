@@ -25,20 +25,17 @@ class TxHisotryCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  
-      transaction.tickerName = model.updateTickers(transaction.tickerName);
-     
-   
+    transaction.tickerName = model.updateTickers(transaction.tickerName);
+
     return Card(
         elevation: 4,
         child: Container(
             padding: EdgeInsets.symmetric(vertical: 8.0),
-            color:    walletCardColor,
+            color: walletCardColor,
             child: Row(children: <Widget>[
               Expanded(
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-             
-
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         margin: EdgeInsets.only(left: 4),
@@ -46,14 +43,22 @@ class TxHisotryCardWidget extends StatelessWidget {
                           padding: transaction.tickerName.length > 3
                               ? const EdgeInsets.only(left: 0.0)
                               : const EdgeInsets.only(left: 5.0),
-                          child:transaction.tickerName.contains('(')?  Column(
-                            children: [
-                              Text('${transaction.tickerName.split('(')[0]}',
-                                  style: Theme.of(context).textTheme.headline6),
-                                  Text('${transaction.tickerName.split('(')[1].substring(0,transaction.tickerName.split('(')[1].length-1)}',
-                                  style: Theme.of(context).textTheme.subtitle2),
-                            ],
-                          ):Text('${transaction.tickerName}',
+                          child: transaction.tickerName.contains('(')
+                              ? Column(
+                                  children: [
+                                    Text(
+                                        '${transaction.tickerName.split('(')[0]}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
+                                    Text(
+                                        '${transaction.tickerName.split('(')[1].substring(0, transaction.tickerName.split('(')[1].length - 1)}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle2),
+                                  ],
+                                )
+                              : Text('${transaction.tickerName}',
                                   style: Theme.of(context).textTheme.subtitle2),
                         ),
                       ),
@@ -69,27 +74,24 @@ class TxHisotryCardWidget extends StatelessWidget {
                                 color: buyPrice,
                               ),
                             )
-                          : transaction.tag.toUpperCase()==model.send.toUpperCase()?
-                         
-
-                          Padding(
-                              padding: const EdgeInsets.only(left: 13.0),
-                              child:
-                              
-                               Icon(
-                                FontAwesomeIcons.arrowRight,
-                                size: 11,
-                                color: sellPrice,
-                              ),
-                            )
-                          : Padding(
-                              padding: const EdgeInsets.only(left: 10.0),
-                              child: Icon(
-                                Icons.arrow_upward,
-                                size: 16,
-                                color: sellPrice,
-                              ),
-                            ),
+                          : transaction.tag.toUpperCase() ==
+                                  model.send.toUpperCase()
+                              ? Padding(
+                                  padding: const EdgeInsets.only(left: 13.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.arrowRight,
+                                    size: 11,
+                                    color: sellPrice,
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: Icon(
+                                    Icons.arrow_upward,
+                                    size: 16,
+                                    color: sellPrice,
+                                  ),
+                                ),
 
                       if (transaction.tag.toUpperCase() ==
                           model.withdraw.toUpperCase())
@@ -123,238 +125,193 @@ class TxHisotryCardWidget extends StatelessWidget {
                             textAlign: TextAlign.center,
                           ),
                         ),
-]),
+                    ]),
               ),
 // UIHelper.horizontalSpaceSmall,
-                    // DATE
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-
-                          AutoSizeText(
-                             transaction.date.split(" ")[0],
-                            
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(fontWeight: FontWeight.w400),
-                            minFontSize: 8,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          )
-                         ,
-                          Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Text(
-                              transaction.tag == model.send
-                                  ? transaction.date
-                                      .split(" ")[1]
-                                      .split(".")[0]
-                                  : transaction.date.split(" ")[1],
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle2
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
+              // DATE
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AutoSizeText(
+                      transaction.date.split(" ")[0],
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(fontWeight: FontWeight.w400),
+                      minFontSize: 8,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        transaction.tag == model.send
+                            ? transaction.date.split(" ")[1].split(".")[0]
+                            : transaction.date.split(" ")[1],
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2
+                            .copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
+                  ],
+                ),
+              ),
 
-                    // Quantity
-                    Expanded(
-                      flex: 2,
+              // Quantity
+              Expanded(
+                flex: 2,
+                child: Container(
+                    alignment: Alignment.center,
+                    child: AutoSizeText(
+                      transaction.quantity
+                          .toStringAsFixed(model.decimalConfig.qtyDecimal),
+                      textAlign: TextAlign.right,
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          .copyWith(fontWeight: FontWeight.w400),
+                      minFontSize: 8,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    )),
+              ),
+              UIHelper.horizontalSpaceSmall,
+              // Status
+              transaction.tag != model.send
+                  ? Expanded(
+                      flex: 1,
                       child: Container(
-                          alignment: Alignment.center,
-                          child: AutoSizeText(
-                            transaction.quantity.toStringAsFixed(
-                                model.decimalConfig.qtyDecimal),
-                            textAlign: TextAlign.right,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline5
-                                .copyWith(fontWeight: FontWeight.w400),
-                            minFontSize: 8,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          )),
-                    ),
-                    UIHelper.horizontalSpaceSmall,
-                    // Status
-                    transaction.tag != model.send
-                        ? Expanded(
-                            flex: 1,
-                            child: Container(
-                                child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.start,
-                                    children: [
-     // If deposit is success in both Ticker chain and kanabn chain then show completed
-                          if (transaction.tag
-                                      .toUpperCase() ==
-                                  model.deposit
-                                      .toUpperCase() &&
-                              transaction
-                                      .tickerChainTxStatus ==
-                                  model
-                                      .success &&
-                              transaction
-                                      .kanbanTxStatus ==
-                                  model.success)
-                                Expanded(
-                                                                  child: AutoSizeText(
-                                    firstCharToUppercase(
-                                      AppLocalizations.of(
-                                              context)
-                                          .completed),
-  style: TextStyle(fontSize: customFontSize,color:                                           buyPrice),
-  minFontSize: 8,
-  maxLines: 1,
-  overflow: TextOverflow.ellipsis,
-),
-                                )
-                           
-                                          // If deposit is success in only Ticker chain and not in kanban chain then show sent
-                                       else if (transaction.tag
-                                      .toUpperCase() ==
-                                  model.deposit
-                                      .toUpperCase() &&
-                              transaction
-                                      .tickerChainTxStatus ==
-                                  model
-                                      .success &&
-                              transaction
-                                      .kanbanTxStatus ==
-                                  model.success)
-                            Text(
-                                firstCharToUppercase(
-                                    AppLocalizations.of(
-                                            context)
-                                        .sent),
-                                style: TextStyle(
-                                    fontSize:
-                                        customFontSize,
-                                    color:                                           buyPrice))
-                                        // depsoit pending if ticker chain staus is pending
-                          else if (transaction.tag
-                                      .toUpperCase() ==
-                                  model.deposit
-                                      .toUpperCase()&&transaction
-                                  .tickerChainTxStatus ==
-                              model.pending)
-                            Text(
-                                firstCharToUppercase(
-                                    AppLocalizations.of(
-                                            context)
-                                        .pending),
-                                style: TextStyle(
-                                    fontSize:
-                                        customFontSize,
-                                    color:                                           yellow))
-                          
-                          else if (transaction.tag
-                                      .toUpperCase() ==
-                                  model.deposit
-                                      .toUpperCase()&&transaction
-                                      .kanbanTxStatus ==
-                                  model
-                                      .rejected ||
-                              transaction
-                                      .kanbanTxStatus ==
-                                  model
-                                      .rejected)
-                               
-                            RichText(
-                              text: TextSpan(
-                                  text: AppLocalizations.of(
-                                          context)
-                                      .redeposit,
-                                  style: TextStyle(
-                                      fontSize:
-                                          12,
-                                      decoration:
-                                          TextDecoration
-                                              .underline,
-                                      color: red),
-                                  recognizer:
-                                      TapGestureRecognizer()
-                                        ..onTap =
-                                            () {
-                                          model.navigationService.navigateTo(RedepositViewRoute,
-                                              arguments: model.walletInfo);
-                                        }),
-                            )            // if withdraw status is success on kanban but null on ticker chain then display sent
-                          else if (transaction
-                                      .tag
-                                      .toUpperCase() ==
-                                  model
-                                      .withdraw
-                                      .toUpperCase() &&
-                              transaction
-                                      .kanbanTxStatus ==
-                                  model.success && transaction.tickerChainTxId == '')
-                            Text(
-                                firstCharToUppercase(
-                                    AppLocalizations.of(
-                                            context)
-                                        .sent),
-                                style: TextStyle(
-                                    fontSize:
-                                        customFontSize,
-                                    color: buyPrice))              // if withdraw status is success on kanban but null on ticker chain then display sent
-                          else if (transaction
-                                      .tag
-                                      .toUpperCase() ==
-                                  model
-                                      .withdraw
-                                      .toUpperCase() &&
-                              transaction
-                                      .kanbanTxStatus ==
-                                  model.success && transaction.tickerChainTxStatus.startsWith('sent'))
-                                              Expanded(
-                                                                                              child: AutoSizeText(
+                          child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                            // If deposit is success in both Ticker chain and kanabn chain then show completed
+                            if (transaction.tag.toUpperCase() ==
+                                    model.deposit.toUpperCase() &&
+                                transaction.tickerChainTxStatus ==
+                                    model.success &&
+                                transaction.kanbanTxStatus == model.success)
+                              Expanded(
+                                child: AutoSizeText(
                                   firstCharToUppercase(
-                                    AppLocalizations.of(
-                                            context)
-                                        .completed),
-                                style: TextStyle(fontSize: customFontSize,color:                                           buyPrice),
-                                minFontSize: 8,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                                      AppLocalizations.of(context).completed),
+                                  style: TextStyle(
+                                      fontSize: customFontSize,
+                                      color: buyPrice),
+                                  minFontSize: 8,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                              )
- ])))
-                        : Expanded(
-                            flex: 1,
-                            child: Container(
-                                child: Text(
-                                    firstCharToUppercase(
-                                      AppLocalizations.of(context).sent,
-                                    ),
-                                    textAlign: TextAlign.start,
+                              )
+
+                            // If deposit is success in only Ticker chain and not in kanban chain then show sent
+                            else if (transaction.tag.toUpperCase() ==
+                                    model.deposit.toUpperCase() &&
+                                transaction.tickerChainTxStatus ==
+                                    model.success &&
+                                transaction.kanbanTxStatus == model.success)
+                              Text(
+                                  firstCharToUppercase(
+                                      AppLocalizations.of(context).sent),
+                                  style: TextStyle(
+                                      fontSize: customFontSize,
+                                      color: buyPrice))
+                            // depsoit pending if ticker chain staus is pending
+                            else if (transaction.tag.toUpperCase() ==
+                                    model.deposit.toUpperCase() &&
+                                transaction.tickerChainTxStatus ==
+                                    model.pending)
+                              Text(
+                                  firstCharToUppercase(
+                                      AppLocalizations.of(context).pending),
+                                  style: TextStyle(
+                                      fontSize: customFontSize, color: yellow))
+                            // depsoit pending if ticker chain staus is pending
+                            else if (transaction.tag.toUpperCase() ==
+                                    model.deposit.toUpperCase() &&
+                                transaction.kanbanTxStatus == model.pending)
+                              Text(
+                                  firstCharToUppercase(
+                                      AppLocalizations.of(context).pending),
+                                  style: TextStyle(
+                                      fontSize: customFontSize, color: yellow))
+                            else if (transaction.tag.toUpperCase() ==
+                                        model.deposit.toUpperCase() &&
+                                    transaction.kanbanTxStatus ==
+                                        model.rejected ||
+                                transaction.kanbanTxStatus == model.rejected)
+                              RichText(
+                                text: TextSpan(
+                                    text:
+                                        AppLocalizations.of(context).redeposit,
                                     style: TextStyle(
-                                        fontSize: customFontSize,
-                                        color: buyPrice))),
-                          ),
-                    Expanded(
+                                        fontSize: 12,
+                                        decoration: TextDecoration.underline,
+                                        color: red),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () {
+                                        model.navigationService.navigateTo(
+                                            RedepositViewRoute,
+                                            arguments: model.walletInfo);
+                                      }),
+                              ) // if withdraw status is success on kanban but null on ticker chain then display sent
+                            else if (transaction.tag.toUpperCase() ==
+                                    model.withdraw.toUpperCase() &&
+                                transaction.kanbanTxStatus == model.success &&
+                                transaction.tickerChainTxId == '')
+                              Text(
+                                  firstCharToUppercase(
+                                      AppLocalizations.of(context).sent),
+                                  style: TextStyle(
+                                      fontSize: customFontSize,
+                                      color:
+                                          buyPrice)) // if withdraw status is success on kanban but null on ticker chain then display sent
+                            else if (transaction.tag.toUpperCase() ==
+                                    model.withdraw.toUpperCase() &&
+                                transaction.kanbanTxStatus == model.success &&
+                                transaction.tickerChainTxStatus
+                                    .startsWith('sent'))
+                              Expanded(
+                                child: AutoSizeText(
+                                  firstCharToUppercase(
+                                      AppLocalizations.of(context).completed),
+                                  style: TextStyle(
+                                      fontSize: customFontSize,
+                                      color: buyPrice),
+                                  minFontSize: 8,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
+                          ])))
+                  : Expanded(
                       flex: 1,
                       child: Container(
-                        alignment: Alignment.centerRight,
-                        child: IconButton(
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.more, color: white, size: 14),
-                            onPressed: () {
-                              print('tx histoy ${transaction.toJson()}');
-                              model.showTxDetailDialog(transaction);
-                            }),
-                      ),
-                    )
-                  
+                          child: Text(
+                              firstCharToUppercase(
+                                AppLocalizations.of(context).sent,
+                              ),
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                  fontSize: customFontSize, color: buyPrice))),
+                    ),
+              Expanded(
+                flex: 1,
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: Icon(Icons.more, color: white, size: 14),
+                      onPressed: () {
+                        print('tx histoy ${transaction.toJson()}');
+                        model.showTxDetailDialog(transaction);
+                      }),
+                ),
+              )
             ])));
   }
 }

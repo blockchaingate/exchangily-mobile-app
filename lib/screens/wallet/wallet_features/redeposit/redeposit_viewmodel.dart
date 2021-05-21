@@ -161,7 +161,8 @@ class RedepositViewModel extends FutureViewModel {
           originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
 
       var resRedeposit = await this.submitredeposit(amountInBigInt,
-          keyPairKanban, nonce, coinType, transactionID, signedMess);
+          keyPairKanban, nonce, coinType, transactionID, signedMess,
+          chainType: walletInfo.tokenType);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
         log.w('resRedeposit $resRedeposit');
@@ -169,7 +170,9 @@ class RedepositViewModel extends FutureViewModel {
 
         sharedService.alertDialog(
             AppLocalizations.of(context).redepositCompleted,
-            AppLocalizations.of(context).transactionId + newTransactionId,
+            AppLocalizations.of(context).transactionId +
+                ': ' +
+                newTransactionId,
             path: '/dashboard');
       } else if (resRedeposit['message'] != '') {
         setBusy(true);
@@ -190,31 +193,35 @@ class RedepositViewModel extends FutureViewModel {
     }
   }
 
-  submitredeposit(amountInLink, keyPairKanban, nonce, coinType, transactionID,
-      signedMess) async {
-    log.w('transactionID for submitredeposit:' + transactionID);
+  submitredeposit(
+      amountInLink, keyPairKanban, nonce, coinType, txHash, signedMess,
+      {String chainType: ''}) async {
+    var abiHex;
+    String addressInKanban = keyPairKanban['address'];
+    log.w('transactionID for submitredeposit:' + txHash);
     var coinPoolAddress = await getCoinPoolAddress();
     //var signedMess = {'r': r, 's': s, 'v': v};
-    String tickerNameByCointype = '';
+    String coinName = '';
     bool isSpecial = false;
-    //  try {
-    tickerNameByCointype = newCoinTypeMap[coinType];
-    if (tickerNameByCointype == null)
+    int specialCoinType;
+    coinName = newCoinTypeMap[coinType];
+    if (coinName == null)
       await tokenListDatabaseService
           .getTickerNameByCoinType(coinType)
           .then((ticker) {
-        tickerNameByCointype = ticker;
+        coinName = ticker;
         log.w('submit redeposit ticker $ticker');
       });
     Constants.specialTokens.forEach((specialTokenTicker) {
-      if (tickerNameByCointype == specialTokenTicker) isSpecial = true;
+      if (coinName == specialTokenTicker) isSpecial = true;
     });
-    // } catch (err) {
-    //   log.e('no match with special tickers');
-    // }
-    var abiHex = getDepositFuncABI(coinType, transactionID, amountInLink,
-        keyPairKanban['address'], signedMess,
-        isSpecialDeposit: isSpecial);
+    if (isSpecial) {
+      specialCoinType =
+          await getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
+    }
+    abiHex = getDepositFuncABI(isSpecial ? specialCoinType : coinType, txHash,
+        amountInLink, addressInKanban, signedMess,
+        chain: chainType, isSpecialDeposit: isSpecial);
 
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);

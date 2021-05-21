@@ -337,122 +337,124 @@ class WalletDashboardView extends StatelessWidget {
 /*------------------------------------------------------------------------------
                                 Build Wallet List Container
 -------------------------------------------------------------------------------*/
-                        Platform.isAndroid
-                            ? DefaultTabController(
-                                length: 2,
-                                initialIndex: 0,
-                                child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TabBar(
-                                          labelPadding:
-                                              EdgeInsets.only(bottom: 5),
-                                          onTap: (int tabIndex) {
-                                            model.updateTabSelection(tabIndex);
-                                          },
-                                          indicatorColor: primaryColor,
-                                          indicatorSize:
-                                              TabBarIndicatorSize.tab,
-                                          // Tab Names
+                        //   !Platform.isAndroid
+                        //      ?
+                        SingleChildScrollView(
+                          child: DefaultTabController(
+                            length: 2,
+                            initialIndex: model.currentTabSelection,
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TabBar(
+                                      labelPadding: EdgeInsets.only(bottom: 5),
+                                      onTap: (int tabIndex) {
+                                        model.updateTabSelection(tabIndex);
+                                      },
+                                      indicatorColor: primaryColor,
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      // Tab Names
 
-                                          tabs: [
-                                            Text(
-                                                AppLocalizations.of(context)
-                                                    .allAssets,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        decorationThickness:
-                                                            3)),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(Icons.star,
-                                                    color: primaryColor,
-                                                    size: 18),
-                                              ],
-                                            ),
-                                          ]),
-                                      UIHelper.verticalSpaceSmall,
-                                      // Tabs view container
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.height /
-                                                2,
-                                        child: TabBarView(
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
+                                      tabs: [
+                                        Text(
+                                            AppLocalizations.of(context)
+                                                .allAssets,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                    decorationThickness: 3)),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            // All coins tab
-                                            model.isBusy
-                                                ? Expanded(
-                                                    // margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                                    child: ListView.builder(
-                                                      //itemExtent: 100,
-                                                      shrinkWrap: true,
-                                                      itemCount: model
-                                                          .walletInfoCopy
-                                                          .length,
-                                                      itemBuilder:
-                                                          (BuildContext context,
-                                                              int index) {
-                                                        return _coinDetailsCard(
-                                                            model
-                                                                .walletInfoCopy[
-                                                                    index]
-                                                                .tickerName
-                                                                .toLowerCase(),
+                                            Icon(Icons.star,
+                                                color: primaryColor, size: 18),
+                                          ],
+                                        ),
+                                      ]),
+                                  UIHelper.verticalSpaceSmall,
+                                  // Tabs view container
+                                  Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 2,
+                                    child: TabBarView(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      children: [
+                                        // All coins tab
+                                        model.isBusy
+                                            ? Expanded(
+                                                // margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                                child: ListView.builder(
+                                                  //itemExtent: 100,
+                                                  shrinkWrap: true,
+                                                  itemCount: model
+                                                      .walletInfoCopy.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    return _coinDetailsCard(
+                                                        model
+                                                            .walletInfoCopy[
+                                                                index]
+                                                            .tickerName
+                                                            .toLowerCase(),
+                                                        index,
+                                                        model.walletInfoCopy,
+                                                        model.elevation,
+                                                        context,
+                                                        model);
+                                                  },
+                                                ),
+                                              )
+                                            : Container(
+                                                //   margin: EdgeInsets.symmetric(horizontal: 8.0),
+                                                child: SmartRefresher(
+                                                  enablePullDown: true,
+                                                  header: Theme.of(context)
+                                                              .platform ==
+                                                          TargetPlatform.iOS
+                                                      ? ClassicHeader()
+                                                      : MaterialClassicHeader(),
+                                                  controller:
+                                                      model.refreshController,
+                                                  onRefresh: model.onRefresh,
+                                                  child: ListView.builder(
+                                                    controller:
+                                                        model.scrollController,
+                                                    // itemExtent: 95,
+                                                    shrinkWrap: true,
+                                                    itemCount:
+                                                        model.walletInfo.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      var name = model
+                                                          .walletInfo[index]
+                                                          .tickerName
+                                                          .toLowerCase();
+                                                      var usdVal = model
+                                                          .walletInfo[index]
+                                                          .usdValue;
+
+                                                      return Visibility(
+                                                        // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
+                                                        visible: usdVal >= 0 &&
+                                                            !model
+                                                                .isHideSmallAmountAssets,
+                                                        child: _coinDetailsCard(
+                                                            '$name',
                                                             index,
-                                                            model
-                                                                .walletInfoCopy,
+                                                            model.walletInfo,
                                                             model.elevation,
                                                             context,
-                                                            model);
-                                                      },
-                                                    ),
-                                                  )
-                                                : Container(
-                                                    //   margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                                    child: SmartRefresher(
-                                                      enablePullDown: true,
-                                                      header: Theme.of(context)
-                                                                  .platform ==
-                                                              TargetPlatform.iOS
-                                                          ? ClassicHeader()
-                                                          : MaterialClassicHeader(),
-                                                      controller: model
-                                                          .refreshController,
-                                                      onRefresh:
-                                                          model.onRefresh,
-                                                      child: ListView.builder(
-                                                        controller: model
-                                                            .scrollController,
-                                                        // itemExtent: 95,
-                                                        shrinkWrap: true,
-                                                        itemCount: model
-                                                            .walletInfo.length,
-                                                        itemBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                int index) {
-                                                          var name = model
-                                                              .walletInfo[index]
-                                                              .tickerName
-                                                              .toLowerCase();
-                                                          var usdVal = model
-                                                              .walletInfo[index]
-                                                              .usdValue;
-
-                                                          return Visibility(
-                                                            // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
-                                                            visible: usdVal >=
-                                                                    0 &&
-                                                                !model
-                                                                    .isHideSmallAmountAssets,
+                                                            model),
+                                                        // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
+                                                        replacement: Visibility(
+                                                            visible: model
+                                                                    .isHideSmallAmountAssets &&
+                                                                usdVal != 0,
                                                             child: _coinDetailsCard(
                                                                 '$name',
                                                                 index,
@@ -460,49 +462,37 @@ class WalletDashboardView extends StatelessWidget {
                                                                     .walletInfo,
                                                                 model.elevation,
                                                                 context,
-                                                                model),
-                                                            // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
-                                                            replacement: Visibility(
-                                                                visible: model
-                                                                        .isHideSmallAmountAssets &&
-                                                                    usdVal != 0,
-                                                                child: _coinDetailsCard(
-                                                                    '$name',
-                                                                    index,
-                                                                    model
-                                                                        .walletInfo,
-                                                                    model
-                                                                        .elevation,
-                                                                    context,
-                                                                    model)),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
+                                                                model)),
+                                                      );
+                                                    },
                                                   ),
+                                                ),
+                                              ),
 
-                                            // Fav coins tab
-                                            // Text(model.favWalletInfoList.length
-                                            //     .toString())
-                                            // model.anyObjectsBusy
-                                            //     ? model.sharedService
-                                            //         .loadingIndicator()
-                                            //     :
-                                            FavTab()
-                                          ],
-                                        ),
-                                      ),
-                                    ]),
-                              )
-                            : CupertinoSegmentedControl(
-                                selectedColor: primaryColor,
-                                children: <int, Widget>{
-                                  0: Text('All Coins'),
-                                  1: Text('Fav Coins')
-                                },
-                                onValueChanged: (tabValue) =>
-                                    model.updateTabSelection(tabValue),
-                                groupValue: model.currentTabSelection),
+                                        // Fav coins tab
+                                        // Text(model.favWalletInfoList.length
+                                        //     .toString())
+                                        // model.anyObjectsBusy
+                                        //     ? model.sharedService
+                                        //         .loadingIndicator()
+                                        //     :
+                                        FavTab()
+                                      ],
+                                    ),
+                                  ),
+                                ]),
+                          ),
+                        )
+                        // : CupertinoSegmentedControl(
+                        //     selectedColor: primaryColor,
+                        //     children: <int, Widget>{
+                        //       0: // All coins tab
+                        //          Text('allcoins')
+                        //       1: FavTab()
+                        //     },
+                        //     onValueChanged: (tabValue) =>
+                        //         model.updateTabSelection(tabValue),
+                        //     groupValue: model.currentTabSelection),
                         // Expanded(
                         //   child: model.isBusy
                         //       ? model.walletInfoCopy == null
@@ -610,17 +600,17 @@ class WalletDashboardView extends StatelessWidget {
                 ),
               ),
               bottomNavigationBar: BottomNavBar(count: 0),
-              floatingActionButton: Container(
-                color: white,
-                child: IconButton(
-                  icon: Icon(Icons.arrow_downward),
-                  onPressed: () async {
-                    String address = await model.sharedService
-                        .getFABAddressFromWalletDatabase();
-                    print('address $address');
-                  },
-                ),
-              ),
+              // floatingActionButton: Container(
+              //   color: white,
+              //   child: IconButton(
+              //     icon: Icon(Icons.arrow_downward),
+              //     onPressed: () async {
+              //       String address = await model.sharedService
+              //           .getFABAddressFromWalletDatabase();
+              //       print('address $address');
+              //     },
+              //   ),
+              // ),
             ),
           );
         });

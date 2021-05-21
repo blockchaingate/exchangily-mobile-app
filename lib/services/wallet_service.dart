@@ -1,6 +1,7 @@
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
@@ -1325,16 +1326,14 @@ class WalletService {
       sepcialcoinType = await getCoinTypeIdByName('USDT');
       abiHex = getDepositFuncABI(
           sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
-          coinName: walletInfo.tickerName,
-          chain: walletInfo.tokenType,
-          isSpecialDeposit: true);
+          chain: walletInfo.tokenType, isSpecialDeposit: true);
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
       print('in else');
       abiHex = getDepositFuncABI(
           coinType, txHash, amountInLink, addressInKanban, signedMess,
-          coinName: walletInfo.tickerName, chain: walletInfo.tokenType);
+          chain: walletInfo.tokenType);
       log.i('cointype $coinType -- abihex $abiHex');
     }
     var nonce = await getNonce(addressInKanban);
@@ -1363,7 +1362,6 @@ class WalletService {
     errRes['success'] = false;
 
     var officalAddress = getOfficalAddress(coinName, tokenType: tokenType);
-    print('official address in wallet service deposit do $officalAddress');
     if (officalAddress == null) {
       errRes['data'] = 'no official address';
       return errRes;
@@ -1447,42 +1445,23 @@ class WalletService {
 
     /// assinging coin type accoringly
     /// If special deposits then take the coin type of the respective chain coin
-    var sepcialcoinType;
+    var specialCoinType;
     var abiHex;
-    if (coinName == 'DSCE') {
-      sepcialcoinType = await getCoinTypeIdByName('DSC');
-      abiHex = getDepositFuncABI(
-          sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
-          coinName: coinName, chain: tokenType, isSpecialDeposit: true);
-
-      log.e('cointype $coinType -- abihex $abiHex');
-    } else if (coinName == 'BSTE') {
-      sepcialcoinType = await getCoinTypeIdByName('BST');
-      abiHex = getDepositFuncABI(
-          sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
-          coinName: coinName, chain: tokenType, isSpecialDeposit: true);
-
-      log.e('cointype $coinType -- abihex $abiHex');
-    } else if (coinName == 'EXGE') {
-      sepcialcoinType = await getCoinTypeIdByName('EXG');
-      abiHex = getDepositFuncABI(
-          sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
-          coinName: coinName, chain: tokenType, isSpecialDeposit: true);
-
-      log.e('cointype $coinType -- abihex $abiHex');
-    } else if (coinName == 'FABE') {
-      sepcialcoinType = await getCoinTypeIdByName('FAB');
-      abiHex = getDepositFuncABI(
-          sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
-          coinName: coinName, chain: tokenType, isSpecialDeposit: true);
-
-      log.e('cointype $coinType -- abihex $abiHex');
-    } else {
-      abiHex = getDepositFuncABI(
-          coinType, txHash, amountInLink, addressInKanban, signedMess,
-          coinName: coinName, chain: tokenType);
-      log.i('cointype $coinType -- abihex $abiHex');
+    bool isSpecial = false;
+    Constants.specialTokens.forEach((specialTokenTicker) {
+      if (coinName == specialTokenTicker) isSpecial = true;
+    });
+    if (isSpecial) {
+      specialCoinType =
+          await getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
     }
+
+    var coinTypeUsed = isSpecial ? specialCoinType : coinType;
+    abiHex = getDepositFuncABI(
+        coinTypeUsed, txHash, amountInLink, addressInKanban, signedMess,
+        chain: tokenType, isSpecialDeposit: isSpecial);
+    log.i('coinTypeUsed $coinTypeUsed -- abihex $abiHex');
+
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await signAbiHexWithPrivateKey(
@@ -2579,13 +2558,18 @@ class WalletService {
     // let cFee = 3000 / 1e8 // fee for the transaction
 
     var totalFee = totalAmount;
-    var chunks = new List<dynamic>();
+    var chunks = [];
     log.w('Smart contract Address $contractAddress');
     chunks.add(84);
+
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasLimit)));
+
     chunks.add(Uint8List.fromList(stringUtils.number2Buffer(gasPrice)));
+
     chunks.add(Uint8List.fromList(stringUtils.hex2Buffer(fxnCallHex)));
+
     chunks.add(Uint8List.fromList(stringUtils.hex2Buffer(contractAddress)));
+
     chunks.add(194);
 
     var contract = script.compile(chunks);

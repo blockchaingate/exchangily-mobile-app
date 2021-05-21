@@ -173,7 +173,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   }
 
 /*---------------------------------------------------
-               Check pass and amount
+                Check pass and amount
 --------------------------------------------------- */
   checkPass() async {
     setBusy(true);

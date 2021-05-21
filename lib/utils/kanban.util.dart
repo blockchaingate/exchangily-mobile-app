@@ -84,7 +84,6 @@ Future<Map<String, dynamic>> submitDeposit(
   };
   print('body $body');
 
-  debugPrint('rawKanbanTransaction $rawKanbanTransaction');
   try {
     var client = new http.Client();
     var response = await client.post(url, body: body);

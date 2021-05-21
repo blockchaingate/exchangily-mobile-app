@@ -153,7 +153,7 @@ class ApiService {
 
       var json = jsonDecode(response.body);
       if (json != null) {
-        //  log.w('getTransactionHistoryEvents json $json}');
+        log.w('getTransactionHistoryEvents json $json}');
         if (json['success']) {
           //  log.e('getTransactionHistoryEvents json ${json['data']}');
           var data = json['data'] as List;

@@ -77,7 +77,7 @@ String firstCharToUppercase(String value) {
 }
 
 hex2Buffer(hexString) {
-  var buffer = [];
+  List<int> buffer = [];
   for (var i = 0; i < hexString.length; i += 2) {
     var val = (int.parse(hexString[i], radix: 16) << 4) |
         int.parse(hexString[i + 1], radix: 16);
@@ -93,14 +93,14 @@ trimHexPrefix(String str) {
   return str.trim();
 }
 
-number2Buffer(num) {
-  var buffer = [];
-  var neg = (num < 0);
-  num = num.abs();
-  while (num > 0) {
-    buffer.add(num & 0xff);
+number2Buffer(numVal) {
+  List<int> buffer = [];
+  var neg = (numVal < 0);
+  numVal = numVal.abs();
+  while (numVal > 0) {
+    buffer.add(numVal & 0xff);
 
-    num = num >> 8;
+    numVal = numVal >> 8;
   }
 
   var top = buffer[buffer.length - 1];
@@ -109,6 +109,7 @@ number2Buffer(num) {
   } else if (neg) {
     buffer.add(top | 0x80);
   }
+  print('string_util number2Buffer $buffer');
   return buffer;
 }
 /*----------------------------------------------------------------------

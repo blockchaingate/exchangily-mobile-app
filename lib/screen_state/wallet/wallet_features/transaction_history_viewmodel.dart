@@ -80,7 +80,8 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     txHistoryEvents.forEach((element) {
       if (element.tickerName == tickerName)
         transactionHistoryToShowInView.add(element);
-      if (element.tickerName.toUpperCase() == 'ETH_DSC' && tickerName == 'DSCE')
+      else if (element.tickerName.toUpperCase() == 'ETH_DSC' &&
+          tickerName == 'DSCE')
         transactionHistoryToShowInView.add(element);
       else if (element.tickerName.toUpperCase() == 'ETH_BST' &&
           tickerName == 'BSTE')
@@ -184,7 +185,9 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     setBusy(false);
     if (transactionHistory.chainName.isEmpty ||
         transactionHistory.chainName == null) {
-      transactionHistory.chainName = walletInfo.tickerName;
+      transactionHistory.chainName = walletInfo.tokenType.isEmpty
+          ? walletInfo.tickerName
+          : walletInfo.tokenType;
       log.i(
           'transactionHistory.chainName empty so showing wallet token type ${walletInfo.tokenType}');
     }
