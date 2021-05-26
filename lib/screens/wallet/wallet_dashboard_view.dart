@@ -10,6 +10,7 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
@@ -26,6 +27,7 @@ import 'package:exchangilymobileapp/widgets/network_status.dart';
 import 'package:exchangilymobileapp/widgets/shimmer_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -78,7 +80,7 @@ class WalletDashboardView extends StatelessWidget {
                     //  model.showcaseEvent(context);
                   },
                   builder: Builder(
-                    builder: (context) => Column(
+                    builder: (context) => ListView(
                       children: <Widget>[
 /*-------------------------------------------------------------------------------------
                               Build Background and Logo Container
@@ -356,15 +358,20 @@ class WalletDashboardView extends StatelessWidget {
                                       // Tab Names
 
                                       tabs: [
-                                        Text(
-                                            AppLocalizations.of(context)
-                                                .allAssets,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1
-                                                .copyWith(
-                                                    fontWeight: FontWeight.w500,
-                                                    decorationThickness: 3)),
+                                        Icon(
+                                          FontAwesomeIcons.coins,
+                                          color: white,
+                                          size: 16,
+                                        ),
+                                        // Text(
+                                        //     AppLocalizations.of(context)
+                                        //         .allAssets,
+                                        //     style: Theme.of(context)
+                                        //         .textTheme
+                                        //         .bodyText1
+                                        //         .copyWith(
+                                        //             fontWeight: FontWeight.w500,
+                                        //             decorationThickness: 3)),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -377,97 +384,59 @@ class WalletDashboardView extends StatelessWidget {
                                   UIHelper.verticalSpaceSmall,
                                   // Tabs view container
                                   Container(
-                                    height:
-                                        MediaQuery.of(context).size.height / 2,
+                                    height: MediaQuery.of(context).size.height *
+                                            .55 -
+                                        model.minusHeight,
                                     child: TabBarView(
                                       physics: NeverScrollableScrollPhysics(),
                                       children: [
                                         // All coins tab
                                         model.isBusy
-                                            ? Expanded(
-                                                // margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                                child: ListView.builder(
-                                                  //itemExtent: 100,
-                                                  shrinkWrap: true,
-                                                  itemCount: model
-                                                      .walletInfoCopy.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index) {
-                                                    return _coinDetailsCard(
-                                                        model
-                                                            .walletInfoCopy[
-                                                                index]
-                                                            .tickerName
-                                                            .toLowerCase(),
-                                                        index,
-                                                        model.walletInfoCopy,
-                                                        model.elevation,
-                                                        context,
-                                                        model);
-                                                  },
-                                                ),
-                                              )
-                                            : Container(
-                                                //   margin: EdgeInsets.symmetric(horizontal: 8.0),
-                                                child: SmartRefresher(
-                                                  enablePullDown: true,
-                                                  header: Theme.of(context)
-                                                              .platform ==
-                                                          TargetPlatform.iOS
-                                                      ? ClassicHeader()
-                                                      : MaterialClassicHeader(),
-                                                  controller:
-                                                      model.refreshController,
-                                                  onRefresh: model.onRefresh,
-                                                  child: ListView.builder(
-                                                    controller:
-                                                        model.scrollController,
-                                                    // itemExtent: 95,
-                                                    shrinkWrap: true,
-                                                    itemCount:
-                                                        model.walletInfo.length,
-                                                    itemBuilder:
-                                                        (BuildContext context,
-                                                            int index) {
-                                                      var name = model
-                                                          .walletInfo[index]
+                                            ? ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount: 6,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return _coinDetailsCard(
+                                                      model
+                                                          .walletInfoCopy[index]
                                                           .tickerName
-                                                          .toLowerCase();
-                                                      var usdVal = model
-                                                          .walletInfo[index]
-                                                          .usdValue;
-
-                                                      return Visibility(
-                                                        // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
-                                                        visible: usdVal >= 0 &&
-                                                            !model
-                                                                .isHideSmallAmountAssets,
-                                                        child: _coinDetailsCard(
-                                                            '$name',
-                                                            index,
-                                                            model.walletInfo,
-                                                            model.elevation,
-                                                            context,
-                                                            model),
-                                                        // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
-                                                        replacement: Visibility(
-                                                            visible: model
-                                                                    .isHideSmallAmountAssets &&
-                                                                usdVal != 0,
-                                                            child: _coinDetailsCard(
-                                                                '$name',
-                                                                index,
-                                                                model
-                                                                    .walletInfo,
-                                                                model.elevation,
-                                                                context,
-                                                                model)),
-                                                      );
-                                                    },
-                                                  ),
+                                                          .toLowerCase(),
+                                                      index,
+                                                      model.walletInfoCopy,
+                                                      model.elevation,
+                                                      context,
+                                                      model);
+                                                },
+                                              )
+                                            : SmartRefresher(
+                                                enablePullDown: true,
+                                                header: Theme.of(context)
+                                                            .platform ==
+                                                        TargetPlatform.iOS
+                                                    ? ClassicHeader()
+                                                    : MaterialClassicHeader(),
+                                                controller:
+                                                    model.refreshController,
+                                                onRefresh: model.onRefresh,
+                                                // child: NotificationListener<
+                                                //         ScrollEndNotification>(
+                                                //     onNotification:
+                                                //         (scrollEnd) {
+                                                //       var metrics =
+                                                //           scrollEnd.metrics;
+                                                //       if (metrics.atEdge) {
+                                                //         if (metrics.pixels == 0)
+                                                //           print('At top');
+                                                //         else
+                                                //           print('At bottom');
+                                                //       }
+                                                //       return true;
+                                                //     },
+                                                child: buildListView(model)
+                                                //),
                                                 ),
-                                              ),
 
                                         // Fav coins tab
                                         // Text(model.favWalletInfoList.length
@@ -476,7 +445,7 @@ class WalletDashboardView extends StatelessWidget {
                                         //     ? model.sharedService
                                         //         .loadingIndicator()
                                         //     :
-                                        FavTab()
+                                        FavTab(),
                                       ],
                                     ),
                                   ),
@@ -603,17 +572,41 @@ class WalletDashboardView extends StatelessWidget {
               // floatingActionButton: Container(
               //   color: white,
               //   child: IconButton(
-              //     icon: Icon(Icons.arrow_downward),
+              //     icon: model.isTopOfTheList
+              //         ? Icon(Icons.arrow_downward)
+              //         : Icon(Icons.arrow_upward),
               //     onPressed: () async {
-              //       String address = await model.sharedService
-              //           .getFABAddressFromWalletDatabase();
-              //       print('address $address');
+              //       model.moveDown();
               //     },
               //   ),
               // ),
             ),
           );
         });
+  }
+
+  ListView buildListView(WalletDashboardViewModel model) {
+    return ListView.builder(
+      controller: model.walletsScrollController,
+      shrinkWrap: true,
+      itemCount: model.walletInfo.length,
+      itemBuilder: (BuildContext context, int index) {
+        var name = model.walletInfo[index].tickerName.toLowerCase();
+        var usdVal = model.walletInfo[index].usdValue;
+
+        return Visibility(
+          // Default visible widget will be visible when usdVal is greater than equals to 0 and isHideSmallAmountAssets is false
+          visible: usdVal >= 0 && !model.isHideSmallAmountAssets,
+          child: _coinDetailsCard('$name', index, model.walletInfo,
+              model.elevation, context, model),
+          // Secondary visible widget will be visible when usdVal is not equals to 0 and isHideSmallAmountAssets is true
+          replacement: Visibility(
+              visible: model.isHideSmallAmountAssets && usdVal != 0,
+              child: _coinDetailsCard('$name', index, model.walletInfo,
+                  model.elevation, context, model)),
+        );
+      },
+    );
   }
 }
 
@@ -848,22 +841,23 @@ Widget _coinDetailsCard(
                               Text('\$',
                                   style: TextStyle(color: globals.green)),
                               Expanded(
-                                child: model.formattedUsdValueList.isEmpty ||
-                                        model.formattedUsdValueList == null
-                                    ? Shimmer.fromColors(
-                                        baseColor: globals.grey,
-                                        highlightColor: globals.white,
-                                        child: Text(
-                                          '${walletInfo[index].usdValue.toString()}',
-                                          style:
-                                              TextStyle(color: globals.green),
-                                        ),
-                                      )
-                                    : Text(
-                                        '${model.formattedUsdValueList[index]} USD',
-                                        textAlign: TextAlign.start,
-                                        style: TextStyle(color: globals.green)),
-                              ),
+                                child:
+                                    // model.formattedUsdValueList.isEmpty ||
+                                    //         model.formattedUsdValueList == null
+                                    //     ? Shimmer.fromColors(
+                                    //         baseColor: globals.grey,
+                                    //         highlightColor: globals.white,
+                                    //         child:
+                                    Text(
+                                  '${NumberUtil().truncateDoubleWithoutRouding(walletInfo[index].usdValue, precision: 2).toString()}',
+                                  style: TextStyle(color: globals.green),
+                                ),
+                              )
+                              // : Text(
+                              //     '${model.formattedUsdValueList[index]} USD',
+                              //     textAlign: TextAlign.start,
+                              //     style: TextStyle(color: globals.green)),
+                              // ),
                             ],
                           ),
 
@@ -929,14 +923,14 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
     return Container(
         child: model.favWalletInfoList.isEmpty ||
                 model.favWalletInfoList == null
-            ? Center(
-                child: Text('Favorite list empty'),
-              )
+            ? Center(child: Icon(Icons.hourglass_empty, color: white)
+                //Text('Favorite list empty'),
+                )
             :
             //Text('test'));
             Container(
                 child: ListView.builder(
-                    controller: model.scrollController,
+                    controller: model.walletsScrollController,
                     // itemExtent: 95,
                     shrinkWrap: true,
                     itemCount: model.favWalletInfoList.length,

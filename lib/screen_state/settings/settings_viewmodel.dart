@@ -26,6 +26,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:stacked/stacked.dart';
@@ -104,7 +105,7 @@ class SettingsViewmodel extends BaseViewModel {
         userSettings.language = res.language;
         log.i('user settings db not null');
       } else {
-        userSettings.language = Platform.localeName.substring(0,2);
+        userSettings.language = Platform.localeName.substring(0, 2);
         isUserSettingsEmpty = true;
         log.i(
             'user settings db null-- isUserSettingsEmpty $isUserSettingsEmpty');
@@ -256,14 +257,15 @@ class SettingsViewmodel extends BaseViewModel {
         storageService.isShowCaseView = true;
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
-
         log.e('before wallet removal, local storage has ${prefs.getKeys()}');
+        prefs.clear();
 
         storageService.clearStorage();
-        log.e('before local storage clear ${prefs.getKeys()}');
+        log.e('before local storage service clear ${prefs.getKeys()}');
 
-        prefs.clear();
         log.e('all keys after clearing ${prefs.getKeys()}');
+        await _deleteCacheDir();
+        await _deleteAppDir();
 
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed' && !res.confirmed) {
@@ -283,9 +285,24 @@ class SettingsViewmodel extends BaseViewModel {
       isDeleting = false;
       setBusy(false);
     });
-    log.i('model busy $busy');
     isDeleting = false;
     setBusy(false);
+  }
+
+  Future<void> _deleteCacheDir() async {
+    final cacheDir = await getTemporaryDirectory();
+
+    if (cacheDir.existsSync()) {
+      cacheDir.deleteSync(recursive: true);
+    }
+  }
+
+  Future<void> _deleteAppDir() async {
+    final appDir = await getApplicationSupportDirectory();
+
+    if (appDir.existsSync()) {
+      appDir.deleteSync(recursive: true);
+    }
   }
 
 /*----------------------------------------------------------------------
@@ -325,7 +342,6 @@ class SettingsViewmodel extends BaseViewModel {
       }).catchError((error) {
         log.e(error);
         setBusy(false);
-        return false;
       });
     }
     setBusy(false);

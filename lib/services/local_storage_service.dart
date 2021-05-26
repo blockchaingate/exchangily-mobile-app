@@ -118,7 +118,7 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Wallet balance body
 ----------------------------------------------------------------------  */
-  String get walletBalancesBody => _getFromDisk(WalletBalancesBodyKey) ?? false;
+  String get walletBalancesBody => _getFromDisk(WalletBalancesBodyKey) ?? '';
 
   set walletBalancesBody(String value) =>
       _saveToDisk(WalletBalancesBodyKey, value);

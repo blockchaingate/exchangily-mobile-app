@@ -43,7 +43,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   void initState() {
     super.initState();
     // log.w(widget.walletInfo.toJson());
-    if (widget.walletInfo.tokenType=='FAB') {
+    if (widget.walletInfo.tokenType == 'FAB') {
       convertedToFabAddress = exgToFabAddress(widget.walletInfo.address);
       log.w(
           'convertedToFabAddress from ${widget.walletInfo.address} to $convertedToFabAddress');
@@ -68,7 +68,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              buildCopyAddressContainer(context),
+              buildCopyAddressContainer(context, walletInfo: widget.walletInfo),
               buildQrImageContainer(),
             ],
           ),
@@ -160,7 +160,8 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
 
   --------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-  Container buildCopyAddressContainer(BuildContext context) {
+  Container buildCopyAddressContainer(BuildContext context,
+      {WalletInfo walletInfo}) {
     return Container(
       width: double.infinity,
       height: 150,
@@ -193,7 +194,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     ),
                   ),
                   Text(
-                    AppLocalizations.of(context).copyAddress,
+                    '${AppLocalizations.of(context).copyAddress}',
                     style: Theme.of(context)
                         .textTheme
                         .headline5

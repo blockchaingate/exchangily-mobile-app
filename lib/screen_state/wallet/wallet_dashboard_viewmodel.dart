@@ -102,8 +102,8 @@ class WalletDashboardViewModel extends BaseViewModel {
   String postFreeFabResult = '';
   bool isFreeFabNotUsed = false;
   double fabBalance = 0.0;
-  List<String> formattedUsdValueList = [];
-  List<String> formattedUsdValueListCopy = [];
+  // List<String> formattedUsdValueList = [];
+  // List<String> formattedUsdValueListCopy = [];
 
   final searchCoinTextController = TextEditingController();
   // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -115,7 +115,6 @@ class WalletDashboardViewModel extends BaseViewModel {
   GlobalKey globalKeyOne;
   GlobalKey globalKeyTwo;
   double totalBalanceContainerWidth = 100.0;
-  final scrollController = ScrollController();
 
   bool _isShowCaseView = false;
   get isShowCaseView => _isShowCaseView;
@@ -125,6 +124,11 @@ class WalletDashboardViewModel extends BaseViewModel {
   List<WalletInfo> favWalletInfoList = [];
   bool isShowFavCoins = false;
   int currentTabSelection = 0;
+  ScrollController walletsScrollController = ScrollController();
+  int minusHeight = 25;
+
+  bool isBottomOfTheList = false;
+  bool isTopOfTheList = true;
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -142,16 +146,58 @@ class WalletDashboardViewModel extends BaseViewModel {
     getConfirmDepositStatus();
     buildFavCoinList();
     currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
+    // walletsScrollController.addListener(_scrollListener());
     setBusy(false);
   }
 
-// not in use
-  // void endOfCoinList() async {
-  //   scrollController.jumpTo(
-  //     scrollController.position.maxScrollExtent,
-  //   );
+  // moveDown() {
+  //   walletsScrollController.animateTo(
+  //       walletsScrollController.offset +
+  //           walletsScrollController.position.maxScrollExtent,
+  //       curve: Curves.linear,
+  //       duration: Duration(milliseconds: 500));
   // }
-  //
+
+  // moveUp() {
+  //   walletsScrollController.animateTo(
+  //       walletsScrollController.offset +
+  //           walletsScrollController.position.minScrollExtent,
+  //       curve: Curves.linear,
+  //       duration: Duration(milliseconds: 500));
+  // }
+
+  _scrollListener() {
+    walletsScrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (walletsScrollController.hasClients) {
+        if (walletsScrollController.offset >=
+                walletsScrollController.position.maxScrollExtent &&
+            !walletsScrollController.position.outOfRange) {
+          setBusy(true);
+          print('bottom');
+
+          isBottomOfTheList = true;
+          isTopOfTheList = false;
+          minusHeight = 50;
+          setBusy(false);
+        }
+        if (walletsScrollController.offset <=
+                walletsScrollController.position.minScrollExtent &&
+            !walletsScrollController.position.outOfRange) {
+          setBusy(true);
+          print('top');
+          isTopOfTheList = true;
+          isBottomOfTheList = false;
+          minusHeight = 25;
+          setBusy(false);
+        }
+        if (walletsScrollController.position.outOfRange) {
+          print('bot in');
+        }
+      }
+    });
+  }
+
   updateTabSelection(int tabIndex) {
     setBusy(true);
     if (tabIndex == 0)
@@ -245,12 +291,24 @@ class WalletDashboardViewModel extends BaseViewModel {
 /*----------------------------------------------------------------------
                             Move Trx Usdt
 ----------------------------------------------------------------------*/
-  moveTronUsdt() {
-    var tronUsdtWalletObj =
-        walletInfo.singleWhere((element) => element.tickerName == 'USDTX');
-    int tronUsdtIndex = walletInfo.indexOf(tronUsdtWalletObj);
-    walletInfo.removeAt(tronUsdtIndex);
-    walletInfo.insert(7, tronUsdtWalletObj);
+  moveTronUsdt() async {
+    try {
+      var tronUsdtWalletObj =
+          walletInfo.singleWhere((element) => element.tickerName == 'USDTX');
+      if (tronUsdtWalletObj != null) {
+        int tronUsdtIndex = walletInfo.indexOf(tronUsdtWalletObj);
+        if (tronUsdtIndex != 7) {
+          walletInfo.removeAt(tronUsdtIndex);
+          walletInfo.insert(7, tronUsdtWalletObj);
+        } else {
+          log.i('2nd else movetronusdt tron usdt already at #7');
+        }
+      } else {
+        log.w('1st else movetronusdt cant find tron usdt');
+      }
+    } catch (err) {
+      log.e('movetronusdt Catch $err');
+    }
   }
 
   moveTrxUsdt() {
@@ -621,12 +679,12 @@ class WalletDashboardViewModel extends BaseViewModel {
           ) {
         setBusy(true);
         walletInfo = [];
-        formattedUsdValueList = [];
+        // formattedUsdValueList = [];
         log.e('copy ${walletInfoCopy[i].toJson()}');
 
-        String holder =
-            NumberUtil.currencyFormat(walletInfoCopy[i].usdValue, 2);
-        formattedUsdValueList.add(holder);
+        // String holder =
+        //     NumberUtil.currencyFormat(walletInfoCopy[i].usdValue, 2);
+        // formattedUsdValueList.add(holder);
         walletInfo.add(walletInfoCopy[i]);
         // print(
         //     'matched wallet ${walletInfoCopy[i].toJson()} --  wallet info length ${walletInfo.length}');
@@ -645,9 +703,9 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   resetWalletInfoObject() {
     walletInfo = [];
-    formattedUsdValueList = [];
+    //formattedUsdValueList = [];
     walletInfo = walletInfoCopy;
-    formattedUsdValueList = formattedUsdValueListCopy;
+//    formattedUsdValueList = formattedUsdValueListCopy;
   }
 
   bool isFirstCharacterMatched(String value, int index) {
@@ -811,7 +869,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                   freeFabAnswerTextController
                                                       .text
                                             };
-                                            log.e(data);
+                                            log.e('free fab post data $data');
                                             await apiService
                                                 .postFreeFab(data)
                                                 .then(
@@ -1079,8 +1137,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     double usdValue = walletService.calculateCoinUsdBalance(
         marketPrice, availableBal, lockedBal);
-    String holder = NumberUtil.currencyFormat(usdValue, 2);
-    formattedUsdValueList.add(holder);
+    // String holder = NumberUtil.currencyFormat(usdValue, 2);
+    // formattedUsdValueList.add(holder);
 
     WalletInfo wi = WalletInfo(
         id: null,
@@ -1141,17 +1199,23 @@ class WalletDashboardViewModel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
 
   Future refreshBalance() async {
-    if (!isBusy) setBusy(true);
+    setBusy(true);
     List<String> tickerNamesFromWalletInfoCopy = [];
 
-    await walletDatabaseService.getAll().then((walletList) {
+    await walletDatabaseService.getAll().then((walletList) async {
       walletInfoCopy = [];
-      formattedUsdValueList = [];
+      // formattedUsdValueList = [];
       log.e('wallet list from db length ${walletList.length}');
       final tickers = walletList.map((e) => e.tickerName).toSet();
 
       walletList.retainWhere((element) => tickers.remove(element.tickerName));
       walletInfoCopy = walletList;
+      // if (walletList.length != walletInfoCopy.length) {
+      //   await walletDatabaseService.deleteDb();
+      //   walletInfoCopy.forEach((wallet) async {
+      //     await walletDatabaseService.insert(wallet);
+      //   });
+      // }
     });
     log.i('walletInfo copy list  length ${walletInfoCopy.length}');
 
@@ -1172,6 +1236,17 @@ class WalletDashboardViewModel extends BaseViewModel {
       'trxAddress': '',
       "showEXGAssets": "true"
     };
+    // Map<String, dynamic> walletBalanceBodyFromStorage = {};
+    // try {
+    //   walletBalanceBodyFromStorage =
+    //       jsonDecode(storageService.walletBalancesBody) ?? {};
+    // } catch (err) {
+    //   log.e(err);
+    // }
+    // bool isWalletBalanceBodyFromStorageEmpty =
+    //     walletBalanceBodyFromStorage['btcAddress'] == '' ||
+    //         walletBalanceBodyFromStorage.isEmpty;
+    // if (isWalletBalanceBodyFromStorageEmpty) {
     walletInfoCopy.forEach((wallet) {
       if (wallet.tickerName == 'BTC') {
         walletBalancesBody['btcAddress'] = wallet.address;
@@ -1189,20 +1264,25 @@ class WalletDashboardViewModel extends BaseViewModel {
         walletBalancesBody['trxAddress'] = wallet.address;
       }
     });
-
+    //storageService.walletBalancesBody = json.encode(walletBalancesBody);
+    // }
     // UserSettingsDatabaseService userSettingsDatabaseService =
     //     locator<UserSettingsDatabaseService>();
     // await userSettingsDatabaseService
     //     .insert(UserSettings(walletBalancesBody: walletBalancesBody));
 
-    //storageService.walletBalancesBody = json.encode(walletBalancesBody);
-
+    // walletBalancesBody = walletBalanceBodyFromStorage;
     // ----------------------------------------
     // Calling walletBalances in wallet service
     // ----------------------------------------
     await this
         .apiService
-        .getWalletBalance(walletBalancesBody)
+        .getWalletBalance(
+            //isWalletBalanceBodyFromStorageEmpty
+            // ?
+            walletBalancesBody
+            //  : walletBalanceBodyFromStorage
+            )
         .then((walletBalanceList) async {
       if (walletBalanceList != null) {
         // Loop wallet info list to udpate balances
@@ -1234,8 +1314,8 @@ class WalletDashboardViewModel extends BaseViewModel {
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
                   marketPrice, availableBal, lockedBal);
-              String holder = NumberUtil.currencyFormat(usdValue, 2);
-              formattedUsdValueList.add(holder);
+              // String holder = NumberUtil.currencyFormat(usdValue, 2);
+              // formattedUsdValueList.add(holder);
 
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
@@ -1298,8 +1378,9 @@ class WalletDashboardViewModel extends BaseViewModel {
                       newTokenListFromTokenUpdateApi.length) {
                     await tokenListDatabaseService.deleteDb().whenComplete(() =>
                         log.e(
-                            'ticker database cleared before inserting update token data from api'));
-                    print('x ${existingTokensInTokenDatabase.length}');
+                            'token list database cleared before inserting updated token data from api'));
+                    print(
+                        'existingTokensInTokenDatabase length ${existingTokensInTokenDatabase.length}');
                   }
 
                   /// Fill the token list database with new data from the api
@@ -1310,7 +1391,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                   });
                   // print the new token list database length
                   var t = await tokenListDatabaseService.getAll();
-                  log.i('tokenListDatabaseService length ${t.length}');
+                  log.i(
+                      'tokenListDatabase filled with new tokens: length ${t.length}');
                 }
               }
               newTokenListFromWalletBalances
@@ -1376,16 +1458,16 @@ class WalletDashboardViewModel extends BaseViewModel {
       setBusy(false);
     });
 
-    if (walletInfo != null) {
+    if (walletInfo != null && walletInfo.isNotEmpty) {
       walletInfoCopy = [];
       walletInfoCopy = walletInfo.map((element) => element).toList();
     }
 
-    if (formattedUsdValueList != null) {
-      formattedUsdValueListCopy = [];
-      formattedUsdValueListCopy =
-          formattedUsdValueList.map((element) => element).toList();
-    }
+    // if (formattedUsdValueList != null) {
+    //   formattedUsdValueListCopy = [];
+    //   formattedUsdValueListCopy =
+    //       formattedUsdValueList.map((element) => element).toList();
+    // }
     // await walletDatabaseService.deleteWalletByTickerName('TRX');
     await checkToUpdateWallet();
     moveTronUsdt();

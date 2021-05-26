@@ -580,6 +580,7 @@ class ApiService {
     String url = configService.getKanbanBaseUrl() + WalletBalancesApiRoute;
     log.i('getWalletBalance URL $url');
     log.i('getWalletBalance body $body');
+
     WalletBalanceList balanceList;
     try {
       var response = await client.post(url, body: body);
