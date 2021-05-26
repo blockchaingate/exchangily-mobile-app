@@ -97,8 +97,7 @@ class WalletDashboardView extends StatelessWidget {
                               children: <Widget>[
                                 Expanded(
                                   child: Stack(
-                                    overflow: Overflow.visible,
-                                    children: <Widget>[
+                                    clipBehavior: Clip.none, children: <Widget>[
                                       // Positioned(
                                       //   top: 5,
                                       //   right: 5,
@@ -116,8 +115,7 @@ class WalletDashboardView extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: Stack(
-                                      alignment: Alignment.center,
-                                      overflow: Overflow.visible,
+                                      clipBehavior: Clip.none, alignment: Alignment.center,
                                       children: <Widget>[
                                         Positioned(
                                           top: -10,
@@ -1404,8 +1402,7 @@ class TotalBalanceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      overflow: Overflow.visible,
-      alignment: Alignment.bottomCenter,
+      clipBehavior: Clip.none, alignment: Alignment.bottomCenter,
       children: <Widget>[
         Positioned(
           bottom: -20,

@@ -181,7 +181,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   showTxDetailDialog(TransactionHistory transactionHistory) {
     setBusy(true);
     isDialogUp = true;
-    log.i('showTxDetailDialog isDialogUp ${isDialogUp}');
+    log.i('showTxDetailDialog isDialogUp $isDialogUp');
     setBusy(false);
     if (transactionHistory.chainName.isEmpty ||
         transactionHistory.chainName == null) {

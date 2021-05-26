@@ -680,7 +680,7 @@ class WalletService {
     String kanbanTxId = transaction.kanbanTxId;
     TransactionHistory transactionByTxid = new TransactionHistory();
     Timer.periodic(Duration(seconds: baseTime), (Timer t) async {
-      log.w('Base time $baseTime -- local t.id ${kanbanTxId}');
+      log.w('Base time $baseTime -- local t.id $kanbanTxId');
       await _apiService.withdrawTxStatus().then((res) async {
         if (res != null) {
           // result = res;
@@ -690,7 +690,7 @@ class WalletService {
           res.forEach((singleTx) async {
             var kanbanTxid = singleTx['kanbanTxid'];
             log.w(
-                'res not null -- condition -- k.id $kanbanTxid -- t.id ${kanbanTxId}');
+                'res not null -- condition -- k.id $kanbanTxid -- t.id $kanbanTxId');
 
             // If kanban txid is equals to local txid
             if (singleTx['kanbanTxid'] == kanbanTxId) {
@@ -1668,7 +1668,6 @@ class WalletService {
         return {'txHex': '', 'errMsg': '', 'transFee': transFeeDouble};
       }
       var output2 = BigInt.parse(NumberUtil.toBigInt(amount, 8)).toInt();
-      ;
       amountInTx = BigInt.from(output2);
       if (output1 < 0 || output2 < 0) {
         return {
@@ -1749,7 +1748,7 @@ class WalletService {
 ----------------------------------------------------------------------*/
 
   Future sendCoin(
-      seed, int coin_type, String kbPaymentAddress, double amount) async {
+      seed, int coinType, String kbPaymentAddress, double amount) async {
 // example: sendCoin(seed, 1, 'oV1KxZswBx2AUypQJRDEb2CsW2Dq2Wp4L5', 0.123);
 
     var gasPrice = environment["chains"]["KANBAN"]["gasPrice"];
@@ -1757,7 +1756,7 @@ class WalletService {
     //var amountInLink = BigInt.from(amount * 1e18);
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount, 18));
     var txHex = await txHexforSendCoin(
-        seed, coin_type, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
+        seed, coinType, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
     log.e('txhex $txHex');
     var resKanban = await sendKanbanRawTransaction(txHex);
     print('resKanban=');

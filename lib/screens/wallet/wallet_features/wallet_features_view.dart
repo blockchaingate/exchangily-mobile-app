@@ -112,7 +112,6 @@ class WalletFeaturesView extends StatelessWidget {
                           ),
                           Expanded(
                             child: Stack(
-                              overflow: Overflow.visible,
                               clipBehavior: Clip.antiAlias,
                               alignment: Alignment.bottomCenter,
                               children: <Widget>[

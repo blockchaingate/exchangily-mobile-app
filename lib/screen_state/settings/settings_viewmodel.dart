@@ -110,7 +110,7 @@ class SettingsViewmodel extends BaseViewModel {
         log.i(
             'user settings db null-- isUserSettingsEmpty $isUserSettingsEmpty');
       }
-    }).catchError((err) => log.e('user settings db empty ${err}'));
+    }).catchError((err) => log.e('user settings db empty $err'));
     setBusy(false);
   }
 
