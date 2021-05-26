@@ -10,8 +10,6 @@
 * Author: barry-ruprai@exchangily.com
 *----------------------------------------------------------------------
 */
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -77,7 +75,8 @@ class WalletDashboardView extends StatelessWidget {
                   },
                   onFinish: () {
                     model.storageService.isShowCaseView = false;
-                    //  model.showcaseEvent(context);
+
+                    model.updateShowCaseViewStatus();
                   },
                   builder: Builder(
                     builder: (context) => ListView(
@@ -1572,17 +1571,26 @@ class AddGasRow extends StatelessWidget {
     if (model.isShowCaseView && model.gasAmount < 0.5 && !model.isBusy)
       model.showcaseEvent(context);
     return model.isShowCaseView || model.gasAmount < 0.5
-        ? Showcase(
-            key: model.globalKeyOne,
-            title: AppLocalizations.of(context).note + ':',
-            description:
-                AppLocalizations.of(context).walletDashboardInstruction1,
-            child: TweenAnimationBuilder(
-                duration: Duration(milliseconds: 500),
-                tween: tween,
-                builder: (_, Offset offset, __) {
-                  return Container(child: (Gas(gasAmount: model.gasAmount)));
-                }),
+        ? SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Showcase(
+                  key: model.globalKeyOne,
+                  //  titleTextStyle:TextStyle(decoration:T ),
+                  title: AppLocalizations.of(context).note + ':',
+                  description:
+                      AppLocalizations.of(context).walletDashboardInstruction1,
+                  child: TweenAnimationBuilder(
+                      duration: Duration(milliseconds: 500),
+                      tween: tween,
+                      builder: (_, Offset offset, __) {
+                        return Container(
+                            child: (Gas(gasAmount: model.gasAmount)));
+                      }),
+                ),
+              ],
+            ),
           )
         : Gas(gasAmount: model.gasAmount);
   }

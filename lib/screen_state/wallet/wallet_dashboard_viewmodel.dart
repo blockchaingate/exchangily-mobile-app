@@ -652,6 +652,10 @@ class WalletDashboardViewModel extends BaseViewModel {
       });
   }
 
+  updateShowCaseViewStatus() {
+    _isShowCaseView = false;
+  }
+
 /*----------------------------------------------------------------------
                         On Single Coin Card Click
 ----------------------------------------------------------------------*/
@@ -1477,8 +1481,15 @@ class WalletDashboardViewModel extends BaseViewModel {
     // check gas and fab balance if 0 then ask for free fab
     if (gasAmount == 0.0 && fabBalance == 0.0) {
       String address = await sharedService.getFABAddressFromWalletDatabase();
-      storageService.isShowCaseView = true;
-      _isShowCaseView = true;
+      if (storageService.isShowCaseView != null) {
+        if (storageService.isShowCaseView) {
+          storageService.isShowCaseView = true;
+          _isShowCaseView = true;
+        }
+      } else {
+        storageService.isShowCaseView = true;
+        _isShowCaseView = true;
+      }
       var res = await apiService.getFreeFab(address);
       if (res != null) {
         isFreeFabNotUsed = res['ok'];

@@ -32,7 +32,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
   String route = '';
   @override
   Widget build(BuildContext context) {
-    final List<TextEditingController> controller = new List();
+    final List<TextEditingController> controller = [];
     return BaseScreen<ConfirmMnemonicScreenState>(
       onModelReady: (model) {
         route = 'import';

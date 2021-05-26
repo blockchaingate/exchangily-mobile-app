@@ -23,9 +23,8 @@ import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 
 class CreatePasswordScreen extends StatefulWidget {
-  final String randomMnemonicFromRoute;
-  const CreatePasswordScreen({Key key, this.randomMnemonicFromRoute})
-      : super(key: key);
+  final args;
+  const CreatePasswordScreen({Key key, this.args}) : super(key: key);
 
   @override
   _CreatePasswordScreenState createState() => _CreatePasswordScreenState();
@@ -33,12 +32,11 @@ class CreatePasswordScreen extends StatefulWidget {
 
 class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
   final log = getLogger('CreatePassword');
-
   @override
   Widget build(BuildContext context) {
     return BaseScreen<CreatePasswordScreenState>(
       onModelReady: (model) {
-        model.randomMnemonicFromRoute = widget.randomMnemonicFromRoute;
+        model.randomMnemonicFromRoute = widget.args['mnemonic'];
         model.context = context;
         model.errorMessage = '';
         model.passwordMatch = false;
@@ -71,17 +69,20 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                     UIHelper.verticalSpaceSmall,
                     _buildConfirmPasswordTextField(model),
                     model.password != ''
-                        ? model.passwordMatch && model.password.isNotEmpty
+                        ? model.passwordMatch
                             ? Center(
                                 child: Text(
                                 AppLocalizations.of(context).passwordMatched,
                                 style: TextStyle(color: globals.white),
                               ))
-                            : Center(
-                                child: Text(
-                                    AppLocalizations.of(context)
-                                        .passwordDoesNotMatched,
-                                    style: TextStyle(color: globals.grey)))
+                            : model.password.isEmpty ||
+                                    model.confirmPassword.isEmpty
+                                ? Text('')
+                                : Center(
+                                    child: Text(
+                                        AppLocalizations.of(context)
+                                            .passwordDoesNotMatched,
+                                        style: TextStyle(color: globals.grey)))
                         : Text(''),
                     UIHelper.verticalSpaceSmall,
                     Center(
@@ -98,7 +99,11 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
                               baseColor: globals.primaryColor,
                               highlightColor: globals.grey,
                               child: Text(
-                                AppLocalizations.of(context).creatingWallet,
+                                widget.args['isImport']
+                                    ? AppLocalizations.of(context)
+                                        .importingWallet
+                                    : AppLocalizations.of(context)
+                                        .creatingWallet,
                                 style: Theme.of(context).textTheme.button,
                               ),
                             )
@@ -215,7 +220,9 @@ class _CreatePasswordScreenState extends State<CreatePasswordScreen> {
           model.validatePassword();
         },
         child: Text(
-          AppLocalizations.of(context).createWallet,
+          widget.args['isImport']
+              ? AppLocalizations.of(context).importWallet
+              : AppLocalizations.of(context).createWallet,
           style: Theme.of(context).textTheme.headline4,
         ),
       ),

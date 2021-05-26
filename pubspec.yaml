@@ -1,7 +1,7 @@
 name: exchangilymobileapp
 description: Decentralized Wallet App.
 
-version: 2.0.21+138
+version: 2.0.22+139
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -206,7 +206,7 @@ dependencies:
   protoc_plugin: ^19.3.1
 
 dev_dependencies:
-  # intl_translation: ^0.17.10+1
+  #intl_translation: 0.17.0
   intl:
   # flutter_launcher_icons: ^0.7.0
 

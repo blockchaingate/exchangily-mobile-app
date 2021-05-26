@@ -142,6 +142,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "importMnemonic": MessageLookupByLibrary.simpleMessage("导入助记词"),
         "importMnemonicHint": MessageLookupByLibrary.simpleMessage("请按序输入助记词"),
         "importWallet": MessageLookupByLibrary.simpleMessage("导入已有钱包"),
+        "importingWallet": MessageLookupByLibrary.simpleMessage("导入钱包"),
         "important": MessageLookupByLibrary.simpleMessage("重要提示"),
         "inExchange": MessageLookupByLibrary.simpleMessage("在交易所"),
         "inProgress": MessageLookupByLibrary.simpleMessage("正在处理中"),

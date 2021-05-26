@@ -1772,6 +1772,11 @@ class AppLocalizations {
     return Intl.message('Favorite Assets',
         name: 'favAssets', desc: 'fav_assets');
   }
+
+  String get importingWallet {
+    return Intl.message('Importing Wallet',
+        name: 'importingWallet', desc: 'importing_wallet_create_password');
+  }
   // Share page pending translation added by Jack
 }
 

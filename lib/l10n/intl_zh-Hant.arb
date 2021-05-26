@@ -1652,5 +1652,11 @@
         "description": "special_exchange_balance_note",
         "type": "text",
         "placeholders": {}
+    },
+    "importingWallet": "导入钱包",
+    "@importingWallet": {
+        "description": "importing_wallet_create_password",
+        "type": "text",
+        "placeholders": {}
     }
 }

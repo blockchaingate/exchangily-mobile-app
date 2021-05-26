@@ -1991,5 +1991,11 @@
     "description": "sameBalanceNote",
     "type": "text",
     "placeholders": {}
+  },
+  "importingWallet": "Importing Wallet",
+  "@importingWallet": {
+      "description": "importing_wallet_create_password",
+      "type": "text",
+      "placeholders": {}
   }
 }
