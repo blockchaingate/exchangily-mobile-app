@@ -390,8 +390,6 @@ class WalletService {
         root.derivePath("m/44'/" + ct + "'/0'/0/" + 0.toString());
     print('node $node');
     var privKey = node.privateKey;
-    log.i('priv key $privKey -- length ${privKey.length}');
-    log.w('priv Key ${uint8ListToHex(privKey)}');
     //  var pubKey = node.publicKey;
     //  log.w('pub key $pubKey -- length ${pubKey.length}');
     var uncompressedPubKey =

@@ -205,9 +205,10 @@ dependencies:
   # protoc_plugin
   protoc_plugin: ^19.3.1
 
-dev_dependencies:
   #intl_translation: 0.17.0
-  intl:
+
+dev_dependencies:
+  intl: 0.17.0
   # flutter_launcher_icons: ^0.7.0
 
   flutter_test:
