@@ -153,7 +153,7 @@ class ApiService {
 
       var json = jsonDecode(response.body);
       if (json != null) {
-        //  log.w('getTransactionHistoryEvents json $json}');
+        log.w('getTransactionHistoryEvents json $json}');
         if (json['success']) {
           //  log.e('getTransactionHistoryEvents json ${json['data']}');
           var data = json['data'] as List;
@@ -580,6 +580,7 @@ class ApiService {
     String url = configService.getKanbanBaseUrl() + WalletBalancesApiRoute;
     log.i('getWalletBalance URL $url');
     log.i('getWalletBalance body $body');
+
     WalletBalanceList balanceList;
     try {
       var response = await client.post(url, body: body);
@@ -652,8 +653,10 @@ class ApiService {
   // Get Gas Balance
   Future getGasBalance(String exgAddress) async {
     try {
-      String url =
-          configService.getKanbanBaseUrl() + GetBalanceApiRoute + exgAddress;
+      String url = configService.getKanbanBaseUrl() +
+          KanbanApiRoute +
+          GetBalanceApiRoute +
+          exgAddress;
       log.e('get gas balance url $url');
       final res = await http.get(url);
       log.w(jsonDecode(res.body));

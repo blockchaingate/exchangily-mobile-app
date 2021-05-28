@@ -16,6 +16,9 @@ class LocalStorageService {
   static const String USServerKey = 'isUSServer';
   static const String WalletBalancesBodyKey = 'walletBalancesBody';
   static const String TokenListKey = 'tokenList';
+  static const String FavWalletCoinsKey = 'favWalletCoinsKey';
+  static const String FavCoinTabSelectedKey = 'favCoinTabSelectedKey';
+
 /*----------------------------------------------------------------------
                   Instance
 ----------------------------------------------------------------------*/
@@ -115,10 +118,17 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Wallet balance body
 ----------------------------------------------------------------------  */
-  String get walletBalancesBody => _getFromDisk(WalletBalancesBodyKey) ?? false;
+  String get walletBalancesBody => _getFromDisk(WalletBalancesBodyKey) ?? '';
 
   set walletBalancesBody(String value) =>
       _saveToDisk(WalletBalancesBodyKey, value);
+
+/*----------------------------------------------------------------------
+                Fav wallet coins
+----------------------------------------------------------------------  */
+  String get favWalletCoins => _getFromDisk(FavWalletCoinsKey) ?? '';
+
+  set favWalletCoins(String value) => _saveToDisk(FavWalletCoinsKey, value);
 
 /*----------------------------------------------------------------------
                     Token List
@@ -126,4 +136,12 @@ class LocalStorageService {
   List<String> get tokenList => _getFromDisk(TokenListKey) ?? false;
 
   set tokenList(List<String> value) => _saveToDisk(TokenListKey, value);
+
+/*----------------------------------------------------------------------
+                Showcase View getter/setter
+----------------------------------------------------------------------  */
+  bool get isFavCoinTabSelected => _getFromDisk(FavCoinTabSelectedKey) ?? false;
+
+  set isFavCoinTabSelected(bool value) =>
+      _saveToDisk(FavCoinTabSelectedKey, value);
 }

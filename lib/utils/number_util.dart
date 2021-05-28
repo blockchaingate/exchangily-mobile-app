@@ -22,10 +22,10 @@ class NumberUtil {
       // we add +1 as we need 6 precisions
       // 2+6+1 = 9
       // 54.321299
-      if (decimalPart.length > precision)
+      if (decimalPart.length > precision) {
         res = double.parse(
             '$input'.substring(0, '$input'.indexOf('.') + precision + 1));
-      else {
+      } else {
         // String tail = '';
         // for (var i = 0; i < precision - decimalPart.length; i++) {
         //   tail += '0';

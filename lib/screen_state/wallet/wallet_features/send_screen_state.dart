@@ -123,6 +123,14 @@ class SendScreenState extends BaseState {
     setState(ViewState.Idle);
   }
 
+  bool isTrx() {
+    log.i(
+        'isTrx ${walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'}');
+    return walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX'
+        ? true
+        : false;
+  }
+
   fillMaxAmount() {
     setBusy(true);
     sendAmountTextController.text = NumberUtil()
@@ -166,8 +174,11 @@ class SendScreenState extends BaseState {
   pasteClipBoardData() async {
     setState(ViewState.Busy);
     ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
-    receiverWalletAddressTextController.text = data.text;
-    toAddress = receiverWalletAddressTextController.text;
+    if (data != null) {
+      log.i('paste data ${data.text}');
+      receiverWalletAddressTextController.text = data.text;
+      toAddress = receiverWalletAddressTextController.text;
+    }
     setState(ViewState.Idle);
   }
 
@@ -313,7 +324,7 @@ class SendScreenState extends BaseState {
             .then((res) async {
           log.w('Result $res');
           txHash = res["txHash"];
-          errorMessage = res["errMsg"];
+          errorMessage = res["errMsg"] ?? '';
 
           if (txHash.isNotEmpty) {
             log.w('Txhash $txHash');
@@ -325,13 +336,14 @@ class SendScreenState extends BaseState {
               AppLocalizations.of(context).sendTransactionComplete,
               '$tickerName ${AppLocalizations.of(context).isOnItsWay}',
             );
-            var allTxids = res["txids"];
-            walletService.addTxids(allTxids);
+            //   var allTxids = res["txids"];
+            //  walletService.addTxids(allTxids);
             // add tx to db
             addSendTransactionToDB(walletInfo, amount, txHash);
             Future.delayed(new Duration(milliseconds: 30), () {
               refreshBalance();
             });
+            return txHash;
           } else if (txHash == '' && errorMessage == '') {
             log.e('Both TxHash and Error Message are empty $errorMessage');
             sharedService.alertDialog(
@@ -341,9 +353,18 @@ class SendScreenState extends BaseState {
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
             setState(ViewState.Idle);
+          } else if (txHash.isEmpty && errorMessage.isNotEmpty) {
+            log.e('Error Message $errorMessage');
+            sharedService.alertDialog(
+              "",
+              '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
+            );
+            isShowErrorDetailsButton = true;
+            isShowDetailsMessage = true;
+            serverError = errorMessage;
+            setState(ViewState.Idle);
           }
           setState(ViewState.Idle);
-          return txHash;
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           isShowErrorDetailsButton = false;
@@ -353,7 +374,7 @@ class SendScreenState extends BaseState {
               AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
         }).catchError((error) {
           log.e('In Catch error - $error');
-          sharedService.alertDialog(AppLocalizations.of(context).serverError,
+          sharedService.alertDialog(AppLocalizations.of(context).networkIssue,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
               isWarning: false);
           isShowErrorDetailsButton = true;
@@ -468,10 +489,12 @@ class SendScreenState extends BaseState {
     }
     amount = double.tryParse(sendAmountTextController.text);
     toAddress = receiverWalletAddressTextController.text;
-    gasPrice = int.tryParse(gasPriceTextController.text);
-    gasLimit = int.tryParse(gasLimitTextController.text);
+    if (!isTrx()) {
+      gasPrice = int.tryParse(gasPriceTextController.text);
+      gasLimit = int.tryParse(gasLimitTextController.text);
+    }
     satoshisPerBytes = int.tryParse(satoshisPerByteTextController.text);
-    await refreshBalance();
+    //await refreshBalance();
     if (toAddress == '') {
       print('address empty');
       sharedService.alertDialog(AppLocalizations.of(context).emptyAddress,
@@ -479,8 +502,7 @@ class SendScreenState extends BaseState {
           isWarning: false);
       return;
     }
-    if ((walletInfo.tickerName == 'TRX' || walletInfo.tickerName == 'USDTX') &&
-        !toAddress.startsWith('T')) {
+    if ((isTrx()) && !toAddress.startsWith('T')) {
       print('invalid tron address');
       sharedService.alertDialog(AppLocalizations.of(context).invalidAddress,
           AppLocalizations.of(context).pleaseCorrectTheFormatOfReceiveAddress,
@@ -497,6 +519,23 @@ class SendScreenState extends BaseState {
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
+      return;
+    }
+
+    if (transFee == 0 && !isTrx()) {
+      print('fee issue');
+      showSimpleNotification(
+          Center(
+              child: Column(
+            children: [
+              Text(AppLocalizations.of(context).notice,
+                  style: Theme.of(context).textTheme.bodyText2),
+              Text('${AppLocalizations.of(context).gasFee} 0',
+                  style: Theme.of(context).textTheme.headline6),
+            ],
+          )),
+          position: NotificationPosition.top);
+      await updateTransFee();
       return;
     }
     amount = NumberUtil().roundDownLastDigit(amount);
@@ -520,7 +559,7 @@ class SendScreenState extends BaseState {
 
     print('else');
     FocusScope.of(context).requestFocus(FocusNode());
-    if (transFee == 0) await updateTransFee();
+    if (transFee == 0 && !isTrx()) await updateTransFee();
     sendTransaction();
     // await updateBalance(widget.walletInfo.address);
     // widget.walletInfo.availableBalance = model.updatedBal['balance'];
@@ -536,7 +575,7 @@ class SendScreenState extends BaseState {
     var res = RegexValidator(pattern).isValid(amount.toString());
 
     if (res) {
-      if (walletInfo.tickerName != 'TRX' && walletInfo.tickerName != 'USDTX') {
+      if (!isTrx()) {
         log.i('checkAmount ${walletInfo.tickerName}');
 
         await updateTransFee();
@@ -561,7 +600,7 @@ class SendScreenState extends BaseState {
 
         trxBalance = await getTrxBalance();
         log.w('checkAmount trx bal $trxBalance');
-        if (amount <= walletInfo.availableBalance && trxBalance > 15)
+        if (amount <= walletInfo.availableBalance && trxBalance >= 15)
           checkSendAmount = true;
         else {
           checkSendAmount = false;

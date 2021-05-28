@@ -34,16 +34,15 @@ class RedepositViewModel extends FutureViewModel {
   final kanbanGasLimitTextController = TextEditingController();
   double kanbanTransFee = 0.0;
   bool transFeeAdvance = false;
-  // String coinName = '';
-  // String tokenType = '';
+
   String errDepositTransactionID;
-  List errDepositList = new List();
+  List errDepositList = [];
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
 
   WalletInfo walletInfo;
   BuildContext context;
-
+  String errorMessage = '';
   @override
   Future futureToRun() => getErrDeposit();
 
@@ -108,6 +107,9 @@ class RedepositViewModel extends FutureViewModel {
 
   checkPass() async {
     //TransactionHistory transactionByTxId = new TransactionHistory();
+    setBusy(true);
+    errorMessage = '';
+    setBusy(false);
     var res = await dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -140,8 +142,10 @@ class RedepositViewModel extends FutureViewModel {
       log.w('errDepositItem $errDepositItem');
       var errDepositAmount = double.parse(errDepositItem['amount']);
       log.i('errDepositAmount $errDepositAmount');
-      var amountInLink = BigInt.from(errDepositAmount);
-      print('amountInLink $amountInLink');
+      var amountInBigInt = errDepositAmount.toString().contains('e')
+          ? BigInt.parse(errDepositItem['amount'])
+          : BigInt.from(errDepositAmount);
+      print('amountInLink $amountInBigInt');
       var coinType = errDepositItem['coinType'];
 
       var transactionID = errDepositItem['transactionID'];
@@ -150,72 +154,34 @@ class RedepositViewModel extends FutureViewModel {
       var originalMessage = walletService.getOriginalMessage(
           coinType,
           trimHexPrefix(transactionID),
-          amountInLink,
+          amountInBigInt,
           trimHexPrefix(addressInKanban));
 
       var signedMess = await signedMessage(
           originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
 
-      var resRedeposit = await this.submitredeposit(amountInLink, keyPairKanban,
-          nonce, coinType, transactionID, signedMess);
+      var resRedeposit = await this.submitredeposit(amountInBigInt,
+          keyPairKanban, nonce, coinType, transactionID, signedMess,
+          chainType: walletInfo.tokenType);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
         log.w('resRedeposit $resRedeposit');
         var newTransactionId = resRedeposit['data']['transactionID'];
 
-        // get transaction from database
-
-        // await transactionHistoryDatabaseService
-        //     .getByKanbanTxId(transactionID)
-        //     .then((transactionByTxId) async {
-        //   if (transactionByTxId != null) {
-        //     // update transaction history status with new txid
-        //     log.i(
-        //         'updating ${transactionByTxId.tickerName} in transaction history db');
-        //     // String date = DateTime.now().toString();
-        //     // TransactionHistory transactionHistory = new TransactionHistory(
-        //     //     id: transactionByTxId.id,
-        //     //     tickerName: walletInfo.tickerName,
-        //     //     address: '',
-        //     //     amount: 0.0,
-        //     //     date: date.toString(),
-        //     //     tickerChainTxId: newTransactionId,
-        //     //     tickerChainTxStatus: 'pending',
-        //     //     quantity: transactionByTxId.quantity,
-        //     //     tag: transactionByTxId.tag);
-
-        //     // await transactionHistoryDatabaseService.update(transactionHistory);
-        //     // walletService.checkDepositTransactionStatus(transactionHistory);
-        //   } else {
-        //     log.e(
-        //         'transactionID $transactionID not found in transaction history db');
-        //     await transactionHistoryDatabaseService.getAll().then((res) {
-        //       List<String> txIdList = [];
-        //       if (res != null) {
-        //         res.forEach((element) {
-        //           txIdList.add(element.kanbanTxId);
-        //         });
-        //       }
-        //       log.e('transaction history tx id list $txIdList');
-        //     });
-        //   }
-        // });
-
-        // sharedService.showInfoFlushbar(
-        //     '${AppLocalizations.of(context).redepositCompleted}',
-        //     '${AppLocalizations.of(context).transactionId}' +
-        //         resRedeposit['data']['transactionID'],
-        //     Icons.cancel,
-        //     globals.white,
-        //     context);
         sharedService.alertDialog(
             AppLocalizations.of(context).redepositCompleted,
-            AppLocalizations.of(context).transactionId + newTransactionId,
+            AppLocalizations.of(context).transactionId +
+                ': ' +
+                newTransactionId,
             path: '/dashboard');
+      } else if (resRedeposit['message'] != '') {
+        setBusy(true);
+        errorMessage = resRedeposit['message'];
+        setBusy(false);
       } else {
         sharedService.showInfoFlushbar(
             AppLocalizations.of(context).redepositFailedError,
-            AppLocalizations.of(context).serverError,
+            AppLocalizations.of(context).networkIssue,
             Icons.cancel,
             red,
             context);
@@ -227,29 +193,35 @@ class RedepositViewModel extends FutureViewModel {
     }
   }
 
-  submitredeposit(amountInLink, keyPairKanban, nonce, coinType, transactionID,
-      signedMess) async {
-    log.w('transactionID for submitredeposit:' + transactionID);
+  submitredeposit(
+      amountInLink, keyPairKanban, nonce, coinType, txHash, signedMess,
+      {String chainType: ''}) async {
+    var abiHex;
+    String addressInKanban = keyPairKanban['address'];
+    log.w('transactionID for submitredeposit:' + txHash);
     var coinPoolAddress = await getCoinPoolAddress();
     //var signedMess = {'r': r, 's': s, 'v': v};
-    String ticker = '';
+    String coinName = '';
     bool isSpecial = false;
-    try {
+    int specialCoinType;
+    coinName = newCoinTypeMap[coinType];
+    if (coinName == null)
       await tokenListDatabaseService
           .getTickerNameByCoinType(coinType)
           .then((ticker) {
-        ticker = ticker;
+        coinName = ticker;
         log.w('submit redeposit ticker $ticker');
       });
-      Constants.specialTokens.forEach((specialTokenTicker) {
-        if (ticker == specialTokenTicker) isSpecial = true;
-      });
-    } catch (err) {
-      log.e('no match with special tickers');
+    Constants.specialTokens.forEach((specialTokenTicker) {
+      if (coinName == specialTokenTicker) isSpecial = true;
+    });
+    if (isSpecial) {
+      specialCoinType =
+          await getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
     }
-    var abiHex = getDepositFuncABI(coinType, transactionID, amountInLink,
-        keyPairKanban['address'], signedMess,
-        isSpecialDeposit: isSpecial);
+    abiHex = getDepositFuncABI(isSpecial ? specialCoinType : coinType, txHash,
+        amountInLink, addressInKanban, signedMess,
+        chain: chainType, isSpecialDeposit: isSpecial);
 
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);

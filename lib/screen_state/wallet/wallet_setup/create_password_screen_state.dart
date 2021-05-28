@@ -78,18 +78,22 @@ class CreatePasswordScreenState extends BaseState {
                       Validate Pass
     -------------------------------------------------- */
   bool checkPassword(String pass) {
+    setState(ViewState.Busy);
     password = pass;
     var res = RegexValidator(pattern).isValid(password);
     checkPasswordConditions = res;
+    setState(ViewState.Idle);
     return checkPasswordConditions;
   }
 
   bool checkConfirmPassword(String confirmPass) {
+    setState(ViewState.Busy);
     confirmPassword = confirmPass;
     var res = RegexValidator(pattern).isValid(confirmPass);
     checkConfirmPasswordConditions = res;
     password == confirmPass ? passwordMatch = true : passwordMatch = false;
     if (passwordMatch) errorMessage = '';
+    setState(ViewState.Idle);
     return checkConfirmPasswordConditions;
   }
 
@@ -113,10 +117,6 @@ class CreatePasswordScreenState extends BaseState {
       return;
     } else {
       if (!regex.hasMatch(pass)) {
-        password = '';
-        confirmPassword = '';
-        checkPasswordConditions = false;
-        checkConfirmPasswordConditions = false;
         _walletService.showInfoFlushbar(
             AppLocalizations.of(context).passwordConditionsMismatch,
             AppLocalizations.of(context).passwordConditions,
@@ -126,10 +126,6 @@ class CreatePasswordScreenState extends BaseState {
         setState(ViewState.Idle);
         return;
       } else if (pass != confirmPass) {
-        password = '';
-        confirmPassword = '';
-        checkPasswordConditions = false;
-        checkConfirmPasswordConditions = false;
         _walletService.showInfoFlushbar(
             AppLocalizations.of(context).passwordMismatch,
             AppLocalizations.of(context).passwordRetype,

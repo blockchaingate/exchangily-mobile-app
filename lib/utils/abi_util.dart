@@ -23,7 +23,7 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 // {"success":true,"data":{"transactionID":"3ba8d681cddea5376c9b6ab2963ff243160fa086ec0681a67a3206ad80284d76"}}
 
 getWithdrawFuncABI(coinType, amountInLink, addressInWallet,
-    { String chain = '', bool isSpecialDeposit = false}) {
+    {String chain = '', bool isSpecialDeposit = false}) {
   var abiHex = Constants.WithdrawSignatureAbi;
   if (isSpecialDeposit) {
     var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
@@ -54,7 +54,7 @@ getSendCoinFuncABI(coinType, kbPaymentAddress, amount) {
 
 getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
     String addressInKanban, signedMessage,
-    {String coinName = '', String chain = '', bool isSpecialDeposit = false}) {
+    {String chain = '', bool isSpecialDeposit = false}) {
   var abiHex = Constants.DepositSignatureAbi;
   abiHex += trimHexPrefix(signedMessage["v"]);
   if (isSpecialDeposit) {

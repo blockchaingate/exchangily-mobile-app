@@ -2051,6 +2051,11 @@
         "description": "sameBalanceNote",
         "type": "text",
         "placeholders": {}
+    },
+    "importingWallet": "导入钱包",
+    "@importingWallet": {
+        "description": "importing_wallet_create_password",
+        "type": "text",
+        "placeholders": {}
     }
-
 }

@@ -11,6 +11,8 @@
 *----------------------------------------------------------------------
 */
 
+import 'dart:convert';
+
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
@@ -18,7 +20,9 @@ import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
@@ -31,10 +35,12 @@ class WalletFeaturesViewModel extends BaseViewModel {
 
   WalletInfo walletInfo;
   WalletService walletService = locator<WalletService>();
+  final storageService = locator<LocalStorageService>();
   ApiService apiService = locator<ApiService>();
   SharedService sharedService = locator<SharedService>();
   NavigationService navigationService = locator<NavigationService>();
   DialogService dialogService = locator<DialogService>();
+  final tokenListDatabaseService = locator<TokenListDatabaseService>();
 
   final double elevation = 5;
   double containerWidth = 150;
@@ -44,7 +50,8 @@ class WalletFeaturesViewModel extends BaseViewModel {
   var errDepositItem;
   String specialTicker = '';
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
-  List<WalletFeatureName> features = new List();
+  List<WalletFeatureName> features = [];
+  bool isFavorite = false;
 
   init() {
     getWalletFeatures();
@@ -53,6 +60,52 @@ class WalletFeaturesViewModel extends BaseViewModel {
         walletInfo.tickerName)["tickerName"];
     log.i('wi object to check name ${walletInfo.toJson()}');
     refreshBalance();
+    checkIfCoinIsFavorite();
+  }
+
+  checkIfCoinIsFavorite() {
+    String favCoinsJson = storageService.favWalletCoins;
+    if (favCoinsJson.isNotEmpty) {
+      List<String> favWalletCoins =
+          (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
+
+      if (favWalletCoins.contains(walletInfo.tickerName)) {
+        setBusy(true);
+        isFavorite = true;
+        setBusy(false);
+      }
+    }
+  }
+
+  updateFavWalletCoinsList(String tickerName) {
+    List<String> favWalletCoins = [];
+    String favCoinsJson = storageService.favWalletCoins;
+    print(favCoinsJson);
+    if (favCoinsJson.isNotEmpty) {
+      favWalletCoins =
+          (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
+      favWalletCoins.forEach((favTickerName) {
+        if (favTickerName == tickerName) {}
+      });
+      if (favWalletCoins.contains(tickerName)) {
+        favWalletCoins
+            .removeWhere((favTickerName) => favTickerName == tickerName);
+        setBusy(true);
+        isFavorite = false;
+        setBusy(false);
+      } else {
+        favWalletCoins.add(tickerName);
+        setBusy(true);
+        isFavorite = true;
+        setBusy(false);
+      }
+    } else {
+      favWalletCoins.add(tickerName);
+      setBusy(true);
+      isFavorite = true;
+      setBusy(false);
+    }
+    storageService.favWalletCoins = json.encode(favWalletCoins);
   }
 
   getDecimalData() async {
@@ -86,12 +139,19 @@ class WalletFeaturesViewModel extends BaseViewModel {
 
   Future getErrDeposit() async {
     var address = await this.sharedService.getExgAddressFromWalletDatabase();
-    await walletService.getErrDeposit(address).then((result) {
+    await walletService.getErrDeposit(address).then((result) async {
       if (result != null) {
         for (var i = 0; i < result.length; i++) {
           var item = result[i];
           var coinType = item['coinType'];
           String tickerNameByCointype = newCoinTypeMap[coinType];
+          if (tickerNameByCointype == null)
+            await tokenListDatabaseService.getAll().then((tokenList) {
+              if (tokenList != null)
+                tickerNameByCointype = tokenList
+                    .firstWhere((element) => element.tokenType == coinType)
+                    .tickerName;
+            });
           log.w('tickerNameByCointype $tickerNameByCointype');
           if (tickerNameByCointype == walletInfo.tickerName) {
             setBusy(true);

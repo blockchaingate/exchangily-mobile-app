@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/base_state.dart';
@@ -18,6 +19,7 @@ import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bip39/bip39.dart' as bip39;
+import 'package:overlay_support/overlay_support.dart';
 import '../../../logger.dart';
 import '../../../service_locator.dart';
 
@@ -30,10 +32,10 @@ class ConfirmMnemonicScreenState extends BaseState {
   String listToStringMnemonic = '';
 
   verifyMnemonic(controller, context, count, routeName) {
-    // print("routeName: $routeName");
     userTypedMnemonicList.clear();
     for (var i = 0; i < count; i++) {
-      userTypedMnemonicList.add(controller[i].text);
+      String mnemonicWord = controller[i].text;
+      userTypedMnemonicList.add(mnemonicWord.trim());
     }
 
     if (routeName == 'import') {
@@ -77,37 +79,35 @@ class ConfirmMnemonicScreenState extends BaseState {
   // Import Wallet
 
   importWallet(String stringMnemonic, context) async {
-    Navigator.of(context)
-        .pushNamed('/createPassword', arguments: stringMnemonic);
+    var args = {'mnemonic': stringMnemonic, 'isImport': true};
+    Navigator.of(context).pushNamed('/createPassword', arguments: args);
   }
 
 // Create Wallet
   createWallet(context) {
-    if (isLocal || listEquals(randomMnemonicList, userTypedMnemonicList)) {
+    if (listEquals(randomMnemonicList, userTypedMnemonicList)) {
       listToStringMnemonic = randomMnemonicList.join(' ');
       bool isValid = bip39.validateMnemonic(listToStringMnemonic);
-      var args = {
-        'listToStringMnemonic': listToStringMnemonic,
-        'isImport': true
-      };
       if (isValid) {
-        Navigator.of(context)
-            .pushNamed('/createPassword', arguments: listToStringMnemonic);
+        var args = {'mnemonic': listToStringMnemonic, 'isImport': false};
+        Navigator.of(context).pushNamed('/createPassword', arguments: args);
       } else {
-        _walletService.showInfoFlushbar(
-            AppLocalizations.of(context).invalidMnemonic,
-            AppLocalizations.of(context).pleaseFillAllTheTextFieldsCorrectly,
-            Icons.cancel,
-            Colors.red,
-            context);
+        showSimpleNotification(
+            Text(AppLocalizations.of(context).invalidMnemonic,
+                style:
+                    Theme.of(context).textTheme.headline4.copyWith(color: red)),
+            position: NotificationPosition.bottom,
+            subtitle: Text(AppLocalizations.of(context)
+                .pleaseFillAllTheTextFieldsCorrectly));
       }
     } else {
-      _walletService.showInfoFlushbar(
-          AppLocalizations.of(context).invalidMnemonic,
-          AppLocalizations.of(context).pleaseFillAllTheTextFieldsCorrectly,
-          Icons.cancel,
-          Colors.red,
-          context);
+      showSimpleNotification(
+          Text(AppLocalizations.of(context).invalidMnemonic,
+              style:
+                  Theme.of(context).textTheme.headline4.copyWith(color: red)),
+          position: NotificationPosition.bottom,
+          subtitle: Text(AppLocalizations.of(context)
+              .pleaseFillAllTheTextFieldsCorrectly));
     }
   }
 }

@@ -67,7 +67,7 @@ class ChooseWalletLanguageScreenState extends BaseState {
         isUserSettingsEmpty = true;
         log.i('user settings db null --$res');
       }
-    }).catchError((err) => log.e('user settings db empty ${err}'));
+    }).catchError((err) => log.e('user settings db empty $err'));
     await walletService.updateUserSettingsDb(userSettings, isUserSettingsEmpty);
     storageService.language = languageCode;
     AppLocalizations.load(Locale(languageCode, languageCode.toUpperCase()));

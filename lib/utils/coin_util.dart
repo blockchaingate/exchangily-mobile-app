@@ -63,31 +63,31 @@ signTrxMessage(
 // Uint8List bytePrefixIntToUintList = CryptoWeb3.(
 //   bytePrefixToInt);
 
-
   // const intBytePrefix = 0x15;
   // Uint8List part1PrefixBytes = utf8.encode(intBytePrefix.toString());
   // print('intBytePrefixToHex ${uint8ListToHex(part1PrefixBytes)}');
 
   const messagePrefix = '\u0015TRON Signed Message:\n';
   final prefixBytes = ascii.encode(messagePrefix);
-  print('part2PrefixBytes ascii bytes to hex-- ${CryptoWeb3.bytesToHex(prefixBytes)}');
+  print(
+      'part2PrefixBytes ascii bytes to hex-- ${CryptoWeb3.bytesToHex(prefixBytes)}');
 
   //final prefixBytes = part1PrefixBytes + part2PrefixBytes;
-  print('final prefixBytes bytes ascii bytes to hex-- ${CryptoWeb3.bytesToHex(prefixBytes)}');
-  
+  print(
+      'final prefixBytes bytes ascii bytes to hex-- ${CryptoWeb3.bytesToHex(prefixBytes)}');
+
   print('hash $originalMessage --  hash length ${originalMessage.length}');
 
-  Uint8List originalMessageWithPrefix =
-      Uint8List.fromList(prefixBytes + 
+  Uint8List originalMessageWithPrefix = Uint8List.fromList(prefixBytes +
       //CryptoWeb3.hexToBytes(originalMessage));
-  ascii.encode(originalMessage));
+      ascii.encode(originalMessage));
   print(
       'originalMessageWithPrefix ${CryptoWeb3.bytesToHex(originalMessageWithPrefix)}');
 
   var hashedOriginalMessageWithPrefix =
       CryptoWeb3.keccak256(originalMessageWithPrefix);
 
- print(
+  print(
       'hashedOriginalMessageWithPrefix ${CryptoWeb3.bytesToHex(hashedOriginalMessageWithPrefix)}');
 
   var signature = sign(hashedOriginalMessageWithPrefix, privateKey);
@@ -507,7 +507,7 @@ signedMessage(
   var signedMess;
   if (coinName == 'TRX' || tokenType == 'TRX') {
     var privateKey = TronAddressUtil.generateTrxPrivKeyBySeed(seed);
-    var bytes = CryptoWeb3.hexToBytes(originalMessage);
+    //var bytes = CryptoWeb3.hexToBytes(originalMessage);
 
     signedMess = signTrxMessage(originalMessage, privateKey);
     //signTrxMessage(bytes, privateKey);
@@ -530,7 +530,7 @@ signedMessage(
         root.derivePath("m/44'/" + coinType.toString() + "'/0'/0/0");
     var privateKey = ethCoinChild.privateKey;
     //var credentials = EthPrivateKey.fromHex(privateKey);
-    var credentials = EthPrivateKey(privateKey);
+    //var credentials = EthPrivateKey(privateKey);
 
     var chainId = environment["chains"]["ETH"]["chainId"];
     // chainId = 0;
@@ -645,12 +645,12 @@ getOfficalAddress(String coinName, {String tokenType = ''}) {
     print('fabTokensOfficialAddress $fabTokensOfficialAddress for $coinName');
     return fabTokensOfficialAddress;
   }
-   if (tokenType == 'TRX') {
+  if (tokenType == 'TRX') {
     String trxTokensOfficialAddress =
         environment['addresses']['exchangilyOfficial'][9]['address'];
     print('TRXTokensOfficialAddress $trxTokensOfficialAddress for $coinName');
     return trxTokensOfficialAddress;
-  }  else if (coinName == 'ETH' || tokenType == 'ETH') {
+  } else if (coinName == 'ETH' || tokenType == 'ETH') {
     var ethTokenOfficialAddress =
         environment['addresses']['exchangilyOfficial'][3]['address'];
 

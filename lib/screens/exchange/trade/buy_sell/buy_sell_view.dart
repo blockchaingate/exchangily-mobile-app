@@ -73,8 +73,7 @@ class BuySellView extends StatelessWidget {
               },
               builder: Builder(
                 builder: (context) => Stack(
-                  fit: StackFit.loose,
-                  overflow: Overflow.visible,
+                  clipBehavior: Clip.none, fit: StackFit.loose,
                   alignment: Alignment.center,
                   children: [
                     ListView(children: <Widget>[

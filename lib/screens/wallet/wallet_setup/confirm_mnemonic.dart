@@ -35,7 +35,7 @@ class ConfirmMnemonictWalletScreen extends StatefulWidget {
 class _ConfirmMnemonictWalletScreenState
     extends State<ConfirmMnemonictWalletScreen> {
   final log = getLogger('Confirm Mnemonic');
-  List<TextEditingController> controller = new List();
+  List<TextEditingController> controller = [];
   final int count = 12;
 
   @override
@@ -48,7 +48,8 @@ class _ConfirmMnemonictWalletScreenState
         appBar: AppBar(
             centerTitle: true,
             title: Text(
-              AppLocalizations.of(context).confirm+ ' ' +
+              AppLocalizations.of(context).confirm +
+                  ' ' +
                   AppLocalizations.of(context).mnemonic,
               style: Theme.of(context).textTheme.headline3,
             ),

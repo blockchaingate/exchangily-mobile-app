@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class WalletFeaturesView extends StatelessWidget {
         body: ListView(
           children: <Widget>[
             Container(
-              height: 200,
+              height: 225,
               decoration: BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage(
@@ -75,10 +76,10 @@ class WalletFeaturesView extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                                 onPressed: () {
-                                  Navigator.pop(context);
+                                  //Navigator.pop(context);
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
-                                  // model.navigationService
-                                  //     .navigateTo('/dashboard');
+                                  model.navigationService
+                                      .navigateTo('/dashboard');
                                 }))
                       ],
                     ),
@@ -86,7 +87,7 @@ class WalletFeaturesView extends StatelessWidget {
                   Container(
                       padding:
                           EdgeInsets.symmetric(vertical: 0, horizontal: 25),
-                      height: 135,
+                      height: 153,
                       alignment: FractionalOffset(0.0, 2.0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -111,7 +112,7 @@ class WalletFeaturesView extends StatelessWidget {
                           ),
                           Expanded(
                             child: Stack(
-                              overflow: Overflow.visible,
+                              clipBehavior: Clip.antiAlias,
                               alignment: Alignment.bottomCenter,
                               children: <Widget>[
                                 Positioned(
@@ -128,17 +129,10 @@ class WalletFeaturesView extends StatelessWidget {
               ),
             ),
             Container(
-              //   height: 400,
               margin: EdgeInsets.all(10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  // Padding(
-                  //     padding: EdgeInsets.all(10),
-                  //     child: Text(
-                  //       'Receive and Send Exg',
-                  //       style: Theme.of(context).textTheme.display3,
-                  //     )),
                   UIHelper.horizontalSpaceMedium,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -154,12 +148,7 @@ class WalletFeaturesView extends StatelessWidget {
                           child: _featuresCard(context, 1, model))
                     ],
                   ),
-                  // Padding(
-                  //     padding: EdgeInsets.all(10),
-                  //     child: Text(
-                  //       'Exchange Exg',
-                  //       style: Theme.of(context).textTheme.display3,
-                  //     )),
+
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -176,49 +165,20 @@ class WalletFeaturesView extends StatelessWidget {
                       ]),
 
                   model.errDepositItem != null
-                      ? walletInfo.tickerName == 'FAB'
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                  GestureDetector(
-                                      onTap: () async {
-                                        // model.checkPass(context);
-                                      },
-                                      child: Container(
-                                        width: model.containerWidth,
-                                        height: model.containerHeight,
-                                        child: _featuresCard(context, 4, model),
-                                      )),
-                                  Container(
-                                    width: model.containerWidth,
-                                    height: model.containerHeight,
-                                    child: _featuresCard(context, 5, model),
-                                  )
-                                ])
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                  GestureDetector(
-                                      onTap: () async {
-                                        // model.checkPass(context);
-                                      },
-                                      child: Container(
-                                        width: model.containerWidth,
-                                        height: model.containerHeight,
-                                        child: _featuresCard(context, 4, model),
-                                      ))
-                                ])
-                      : walletInfo.tickerName == 'FAB'
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                  Container(
-                                    width: model.containerWidth,
-                                    height: model.containerHeight,
-                                    child: _featuresCard(context, 5, model),
-                                  )
-                                ])
-                          : Container(),
+                      ? Container(
+                          width: model.containerWidth,
+                          height: model.containerHeight,
+                          child: _featuresCard(context, 4, model),
+                        )
+                      : Container(),
+
+                  walletInfo.tickerName == 'FAB'
+                      ? Container(
+                          width: model.containerWidth,
+                          height: model.containerHeight,
+                          child: _featuresCard(context, 5, model),
+                        )
+                      : Container(),
 
                   UIHelper.horizontalSpaceSmall,
                   // Transaction History Column
@@ -292,7 +252,7 @@ class WalletFeaturesView extends StatelessWidget {
         elevation: model.elevation,
         color: globals.walletCardColor,
         child: Container(
-          //  padding: EdgeInsets.all(10),
+          padding: EdgeInsets.all(5),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -319,7 +279,9 @@ class WalletFeaturesView extends StatelessWidget {
                           await model.refreshBalance();
                         },
                         child: model.isBusy
-                            ? model.sharedService.loadingIndicator()
+                            ? SizedBox(
+                                height: 20,
+                                child: model.sharedService.loadingIndicator())
                             : Center(
                                 child: Icon(
                                   Icons.refresh,
@@ -332,7 +294,7 @@ class WalletFeaturesView extends StatelessWidget {
                     Expanded(
                       flex: 4,
                       child: Text(
-                        '${model.walletInfo.usdValue.toStringAsFixed(2)} USD',
+                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.usdValue).toString()} USD',
                         textAlign: TextAlign.right,
                         style: Theme.of(context)
                             .textTheme
@@ -343,6 +305,7 @@ class WalletFeaturesView extends StatelessWidget {
                   ],
                 ),
               ),
+              UIHelper.verticalSpaceSmall,
               // Middle column row containes wallet balance and in exchnage text
               Container(
                 color: primaryColor.withAlpha(27),
@@ -366,11 +329,33 @@ class WalletFeaturesView extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                        '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') ? '\n' + message + ' ' + nativeTicker : ''}',
-                        style: Theme.of(context).textTheme.subtitle1),
-                    Text('${model.walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
-                        style: Theme.of(context).textTheme.subtitle1),
+                    Expanded(
+                      flex: 4,
+                      child: Text(
+                          '${AppLocalizations.of(context).inExchange} ${model.specialTicker.contains('(') ? '\n' + message + ' ' + nativeTicker : ''}',
+                          style: Theme.of(context).textTheme.subtitle1),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: SizedBox(
+                        height: 20,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          icon: model.isFavorite
+                              ? Icon(Icons.star, color: primaryColor, size: 20)
+                              : Icon(Icons.star_border_outlined,
+                                  color: white, size: 18),
+                          onPressed: () => model.updateFavWalletCoinsList(
+                              model.walletInfo.tickerName),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                        flex: 4,
+                        child: Text(
+                            '${model.walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
+                            textAlign: TextAlign.right,
+                            style: Theme.of(context).textTheme.subtitle1)),
                   ],
                 ),
               )

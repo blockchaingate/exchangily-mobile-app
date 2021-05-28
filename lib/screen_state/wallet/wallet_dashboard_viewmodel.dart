@@ -15,6 +15,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
@@ -74,6 +75,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       locator<TokenListDatabaseService>();
   var storageService = locator<LocalStorageService>();
   final dialogService = locator<DialogService>();
+  final userDatabaseService = locator<UserSettingsDatabaseService>();
 
   BuildContext context;
   List<WalletInfo> walletInfo;
@@ -100,8 +102,8 @@ class WalletDashboardViewModel extends BaseViewModel {
   String postFreeFabResult = '';
   bool isFreeFabNotUsed = false;
   double fabBalance = 0.0;
-  List<String> formattedUsdValueList = [];
-  List<String> formattedUsdValueListCopy = [];
+  // List<String> formattedUsdValueList = [];
+  // List<String> formattedUsdValueListCopy = [];
 
   final searchCoinTextController = TextEditingController();
   // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -113,13 +115,20 @@ class WalletDashboardViewModel extends BaseViewModel {
   GlobalKey globalKeyOne;
   GlobalKey globalKeyTwo;
   double totalBalanceContainerWidth = 100.0;
-  final scrollController = ScrollController();
 
   bool _isShowCaseView = false;
   get isShowCaseView => _isShowCaseView;
 
   int unreadMsgNum = 0;
   bool isUpdateWallet = false;
+  List<WalletInfo> favWalletInfoList = [];
+  bool isShowFavCoins = false;
+  int currentTabSelection = 0;
+  ScrollController walletsScrollController = ScrollController();
+  int minusHeight = 25;
+
+  bool isBottomOfTheList = false;
+  bool isTopOfTheList = true;
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -135,19 +144,173 @@ class WalletDashboardViewModel extends BaseViewModel {
     showDialogWarning();
     getDecimalPairConfig();
     getConfirmDepositStatus();
+    buildFavCoinList();
+    currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
+    // walletsScrollController.addListener(_scrollListener());
     setBusy(false);
   }
 
-// not in use
-  void endOfCoinList() async {
-    scrollController.jumpTo(
-      scrollController.position.maxScrollExtent,
-    );
+  // moveDown() {
+  //   walletsScrollController.animateTo(
+  //       walletsScrollController.offset +
+  //           walletsScrollController.position.maxScrollExtent,
+  //       curve: Curves.linear,
+  //       duration: Duration(milliseconds: 500));
+  // }
+
+  // moveUp() {
+  //   walletsScrollController.animateTo(
+  //       walletsScrollController.offset +
+  //           walletsScrollController.position.minScrollExtent,
+  //       curve: Curves.linear,
+  //       duration: Duration(milliseconds: 500));
+  // }
+
+  _scrollListener() {
+    walletsScrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (walletsScrollController.hasClients) {
+        if (walletsScrollController.offset >=
+                walletsScrollController.position.maxScrollExtent &&
+            !walletsScrollController.position.outOfRange) {
+          setBusy(true);
+          print('bottom');
+
+          isBottomOfTheList = true;
+          isTopOfTheList = false;
+          minusHeight = 50;
+          setBusy(false);
+        }
+        if (walletsScrollController.offset <=
+                walletsScrollController.position.minScrollExtent &&
+            !walletsScrollController.position.outOfRange) {
+          setBusy(true);
+          print('top');
+          isTopOfTheList = true;
+          isBottomOfTheList = false;
+          minusHeight = 25;
+          setBusy(false);
+        }
+        if (walletsScrollController.position.outOfRange) {
+          print('bot in');
+        }
+      }
+    });
+  }
+
+  updateTabSelection(int tabIndex) {
+    setBusy(true);
+    if (tabIndex == 0)
+      isShowFavCoins = false;
+    else
+      isShowFavCoins = true;
+
+    currentTabSelection = tabIndex;
+    storageService.isFavCoinTabSelected = isShowFavCoins ? true : false;
+    print(
+        'current tab sel $currentTabSelection -- isShowFavCoins $isShowFavCoins');
+    setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                    Search Coins By TickerName
+----------------------------------------------------------------------*/
+
+  searchFavCoinsByTickerName(String value) async {
+    setBusyForObject(favWalletInfoList, true);
+    var favWalletInfoListCopy = favWalletInfoList;
+    print('length ${favWalletInfoList.length} -- value $value');
+    try {
+      for (var i = 0; i < favWalletInfoListCopy.length; i++) {
+        print(
+            'favWalletInfoList ${favWalletInfoList[i].tickerName == value.toUpperCase()}');
+        if (favWalletInfoListCopy[i].tickerName == value.toUpperCase() ||
+            favWalletInfoListCopy[i].name == value) {
+          favWalletInfoList = [];
+          log.i('favWalletInfoListCopy ${favWalletInfoListCopy[i].toJson()}');
+          favWalletInfoList.add(favWalletInfoListCopy[i]);
+          setBusyForObject(favWalletInfoList, false);
+          break;
+        } else {
+          favWalletInfoList = [];
+          favWalletInfoList = favWalletInfoListCopy;
+          break;
+        }
+      }
+      // tabBarViewHeight = MediaQuery.of(context).viewInsets.bottom == 0
+      //     ? MediaQuery.of(context).size.height / 2 - 250
+      //     : MediaQuery.of(context).size.height / 2;
+      print('favWalletInfoList length ${favWalletInfoList.length}');
+    } catch (err) {
+      setBusyForObject(favWalletInfoList, false);
+      log.e('searchFavCoinsByTickerName CATCH');
+    }
+
+    setBusyForObject(favWalletInfoList, false);
+  }
+
+/*----------------------------------------------------------------------
+                    Build Fav Coins List
+----------------------------------------------------------------------*/
+
+  buildFavCoinList() async {
+    setBusyForObject(favWalletInfoList, true);
+
+    favWalletInfoList.clear();
+    String favCoinsJson = storageService.favWalletCoins;
+    if (favCoinsJson != null && favCoinsJson != '') {
+      List<String> favWalletCoins =
+          (jsonDecode(favCoinsJson) as List<dynamic>).cast<String>();
+
+      List<WalletInfo> walletsFromDb = [];
+      await walletDatabaseService
+          .getAll()
+          .then((wallets) => walletsFromDb = wallets);
+
+      //  try {
+      for (var i = 0; i < favWalletCoins.length; i++) {
+        for (var j = 0; j < walletsFromDb.length; j++) {
+          if (walletsFromDb[j].tickerName == favWalletCoins[i].toString()) {
+            favWalletInfoList.add(walletsFromDb[j]);
+            break;
+          }
+        }
+        // log.i('favWalletInfoList ${favWalletInfoList[i].toJson()}');
+      }
+      log.w('favWalletInfoList length ${favWalletInfoList.length}');
+      //  setBusy(false);
+      //   return;
+      // } catch (err) {
+      //   log.e('favWalletCoins CATCH');
+      //   setBusyForObject(favWalletInfoList, false);
+      // }
+    }
+    setBusyForObject(favWalletInfoList, false);
   }
 
 /*----------------------------------------------------------------------
                             Move Trx Usdt
 ----------------------------------------------------------------------*/
+  moveTronUsdt() async {
+    try {
+      var tronUsdtWalletObj =
+          walletInfo.singleWhere((element) => element.tickerName == 'USDTX');
+      if (tronUsdtWalletObj != null) {
+        int tronUsdtIndex = walletInfo.indexOf(tronUsdtWalletObj);
+        if (tronUsdtIndex != 7) {
+          walletInfo.removeAt(tronUsdtIndex);
+          walletInfo.insert(7, tronUsdtWalletObj);
+        } else {
+          log.i('2nd else movetronusdt tron usdt already at #7');
+        }
+      } else {
+        log.w('1st else movetronusdt cant find tron usdt');
+      }
+    } catch (err) {
+      log.e('movetronusdt Catch $err');
+    }
+  }
+
   moveTrxUsdt() {
     // get first 6 wallets
     List<WalletInfo> first6Wallets = walletInfo.sublist(0, 6);
@@ -489,13 +652,17 @@ class WalletDashboardViewModel extends BaseViewModel {
       });
   }
 
+  updateShowCaseViewStatus() {
+    _isShowCaseView = false;
+  }
+
 /*----------------------------------------------------------------------
                         On Single Coin Card Click
 ----------------------------------------------------------------------*/
 
   onSingleCoinCardClick(index) {
     FocusScope.of(context).requestFocus(FocusNode());
-    navigationService.navigateTo('/walletFeatures',
+    navigationService.navigateTo(WalletFeaturesViewRoute,
         arguments: walletInfo[index]);
     searchCoinTextController.clear();
     resetWalletInfoObject();
@@ -507,21 +674,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   searchCoinsByTickerName(String value) async {
     setBusy(true);
-    // await apiService.getTokenList().then((tokenList) {
-    //   if (tokenList != null) {
-    //     tokenList.forEach((token) {
-    //       log.w('token ${token.toJson()}');
-    //       if (token.name == value) {
-    //         print('name ${token.name}');
-    //       }
-    //     });
-    //   } else {
-    //     log.e('token list null');
-    //   }
-    // }).catchError((err) {
-    //   log.e('SearchCoinsByTickerName Catch $err');
-    // });
-    //value = value.toUpperCase();
+
     print('length ${walletInfoCopy.length} -- value $value');
     for (var i = 0; i < walletInfoCopy.length; i++)
       if (walletInfoCopy[i].tickerName == value.toUpperCase() ||
@@ -530,12 +683,12 @@ class WalletDashboardViewModel extends BaseViewModel {
           ) {
         setBusy(true);
         walletInfo = [];
-        formattedUsdValueList = [];
+        // formattedUsdValueList = [];
         log.e('copy ${walletInfoCopy[i].toJson()}');
 
-        String holder =
-            NumberUtil.currencyFormat(walletInfoCopy[i].usdValue, 2);
-        formattedUsdValueList.add(holder);
+        // String holder =
+        //     NumberUtil.currencyFormat(walletInfoCopy[i].usdValue, 2);
+        // formattedUsdValueList.add(holder);
         walletInfo.add(walletInfoCopy[i]);
         // print(
         //     'matched wallet ${walletInfoCopy[i].toJson()} --  wallet info length ${walletInfo.length}');
@@ -546,14 +699,17 @@ class WalletDashboardViewModel extends BaseViewModel {
         //     'in else ${walletInfoCopy[i].tickerName} == ${value.toUpperCase()}');
         resetWalletInfoObject();
       }
+    // tabBarViewHeight = MediaQuery.of(context).viewInsets.bottom != 0
+    //     ? MediaQuery.of(context).size.height / 2 - 250
+    //     : MediaQuery.of(context).size.height / 2;
     setBusy(false);
   }
 
   resetWalletInfoObject() {
     walletInfo = [];
-    formattedUsdValueList = [];
+    //formattedUsdValueList = [];
     walletInfo = walletInfoCopy;
-    formattedUsdValueList = formattedUsdValueListCopy;
+//    formattedUsdValueList = formattedUsdValueListCopy;
   }
 
   bool isFirstCharacterMatched(String value, int index) {
@@ -706,16 +862,18 @@ class WalletDashboardViewModel extends BaseViewModel {
                                             ),
                                           ),
                                           onPressed: () async {
+                                            String fabAddress = await sharedService
+                                                .getFABAddressFromWalletDatabase();
                                             postFreeFabResult = '';
                                             Map data = {
-                                              "address": address,
+                                              "address": fabAddress,
                                               "questionair_id": res['_body']
                                                   ['_id'],
                                               "answer":
                                                   freeFabAnswerTextController
                                                       .text
                                             };
-                                            log.e(data);
+                                            log.e('free fab post data $data');
                                             await apiService
                                                 .postFreeFab(data)
                                                 .then(
@@ -846,7 +1004,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     double holder = 0.0;
     for (var i = 0; i < walletInfo.length; i++) {
       holder += walletInfo[i].usdValue;
-      if(walletInfo[i].tickerName == 'USDTX'){
+      if (walletInfo[i].tickerName == 'USDTX') {
         var t = walletInfo[i].usdValue;
         print('t $t');
       }
@@ -881,7 +1039,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 /*----------------------------------------------------------------------
                       Get Confirm deposit err
 ----------------------------------------------------------------------*/
-
+// mpvWdFb91gYN1Q1UBfhMEmGn1Amw3BNthZ
   getConfirmDepositStatus() async {
     String address = await walletService.getExgAddressFromWalletDatabase();
     await walletService.getErrDeposit(address).then((result) async {
@@ -959,6 +1117,15 @@ class WalletDashboardViewModel extends BaseViewModel {
     log.i('Coin address body $walletBalancesBody');
   }
 
+  buildFavWalletCoinsList(String tickerName) async {
+    List<String> favWalletCoins = [];
+    favWalletCoins.add(tickerName);
+    // UserSettings userSettings = UserSettings(favWalletCoins: [tickerName]);
+    // await userDatabaseService.update(userSettings);
+
+    storageService.favWalletCoins = json.encode(favWalletCoins);
+  }
+
 /*----------------------------------------------------------------------
                       Build coin list
 ----------------------------------------------------------------------*/
@@ -974,8 +1141,8 @@ class WalletDashboardViewModel extends BaseViewModel {
 
     double usdValue = walletService.calculateCoinUsdBalance(
         marketPrice, availableBal, lockedBal);
-    String holder = NumberUtil.currencyFormat(usdValue, 2);
-    formattedUsdValueList.add(holder);
+    // String holder = NumberUtil.currencyFormat(usdValue, 2);
+    // formattedUsdValueList.add(holder);
 
     WalletInfo wi = WalletInfo(
         id: null,
@@ -1036,17 +1203,23 @@ class WalletDashboardViewModel extends BaseViewModel {
 -------------------------------------------------------------------------------------*/
 
   Future refreshBalance() async {
-    if (!isBusy) setBusy(true);
+    setBusy(true);
     List<String> tickerNamesFromWalletInfoCopy = [];
 
-    await walletDatabaseService.getAll().then((walletList) {
+    await walletDatabaseService.getAll().then((walletList) async {
       walletInfoCopy = [];
-      formattedUsdValueList = [];
+      // formattedUsdValueList = [];
       log.e('wallet list from db length ${walletList.length}');
       final tickers = walletList.map((e) => e.tickerName).toSet();
 
       walletList.retainWhere((element) => tickers.remove(element.tickerName));
       walletInfoCopy = walletList;
+      // if (walletList.length != walletInfoCopy.length) {
+      //   await walletDatabaseService.deleteDb();
+      //   walletInfoCopy.forEach((wallet) async {
+      //     await walletDatabaseService.insert(wallet);
+      //   });
+      // }
     });
     log.i('walletInfo copy list  length ${walletInfoCopy.length}');
 
@@ -1067,6 +1240,17 @@ class WalletDashboardViewModel extends BaseViewModel {
       'trxAddress': '',
       "showEXGAssets": "true"
     };
+    // Map<String, dynamic> walletBalanceBodyFromStorage = {};
+    // try {
+    //   walletBalanceBodyFromStorage =
+    //       jsonDecode(storageService.walletBalancesBody) ?? {};
+    // } catch (err) {
+    //   log.e(err);
+    // }
+    // bool isWalletBalanceBodyFromStorageEmpty =
+    //     walletBalanceBodyFromStorage['btcAddress'] == '' ||
+    //         walletBalanceBodyFromStorage.isEmpty;
+    // if (isWalletBalanceBodyFromStorageEmpty) {
     walletInfoCopy.forEach((wallet) {
       if (wallet.tickerName == 'BTC') {
         walletBalancesBody['btcAddress'] = wallet.address;
@@ -1084,20 +1268,25 @@ class WalletDashboardViewModel extends BaseViewModel {
         walletBalancesBody['trxAddress'] = wallet.address;
       }
     });
-
+    //storageService.walletBalancesBody = json.encode(walletBalancesBody);
+    // }
     // UserSettingsDatabaseService userSettingsDatabaseService =
     //     locator<UserSettingsDatabaseService>();
     // await userSettingsDatabaseService
     //     .insert(UserSettings(walletBalancesBody: walletBalancesBody));
 
-    //storageService.walletBalancesBody = json.encode(walletBalancesBody);
-
+    // walletBalancesBody = walletBalanceBodyFromStorage;
     // ----------------------------------------
     // Calling walletBalances in wallet service
     // ----------------------------------------
     await this
         .apiService
-        .getWalletBalance(walletBalancesBody)
+        .getWalletBalance(
+            //isWalletBalanceBodyFromStorageEmpty
+            // ?
+            walletBalancesBody
+            //  : walletBalanceBodyFromStorage
+            )
         .then((walletBalanceList) async {
       if (walletBalanceList != null) {
         // Loop wallet info list to udpate balances
@@ -1129,8 +1318,8 @@ class WalletDashboardViewModel extends BaseViewModel {
               // Calculating individual coin USD val
               double usdValue = walletService.calculateCoinUsdBalance(
                   marketPrice, availableBal, lockedBal);
-              String holder = NumberUtil.currencyFormat(usdValue, 2);
-              formattedUsdValueList.add(holder);
+              // String holder = NumberUtil.currencyFormat(usdValue, 2);
+              // formattedUsdValueList.add(holder);
 
               WalletInfo wi = new WalletInfo(
                   id: wallet.id,
@@ -1193,8 +1382,9 @@ class WalletDashboardViewModel extends BaseViewModel {
                       newTokenListFromTokenUpdateApi.length) {
                     await tokenListDatabaseService.deleteDb().whenComplete(() =>
                         log.e(
-                            'ticker database cleared before inserting update token data from api'));
-                    print('x ${existingTokensInTokenDatabase.length}');
+                            'token list database cleared before inserting updated token data from api'));
+                    print(
+                        'existingTokensInTokenDatabase length ${existingTokensInTokenDatabase.length}');
                   }
 
                   /// Fill the token list database with new data from the api
@@ -1205,7 +1395,8 @@ class WalletDashboardViewModel extends BaseViewModel {
                   });
                   // print the new token list database length
                   var t = await tokenListDatabaseService.getAll();
-                  log.i('tokenListDatabaseService length ${t.length}');
+                  log.i(
+                      'tokenListDatabase filled with new tokens: length ${t.length}');
                 }
               }
               newTokenListFromWalletBalances
@@ -1271,27 +1462,34 @@ class WalletDashboardViewModel extends BaseViewModel {
       setBusy(false);
     });
 
-    if (walletInfo != null) {
+    if (walletInfo != null && walletInfo.isNotEmpty) {
       walletInfoCopy = [];
       walletInfoCopy = walletInfo.map((element) => element).toList();
     }
 
-    if (formattedUsdValueList != null) {
-      formattedUsdValueListCopy = [];
-      formattedUsdValueListCopy =
-          formattedUsdValueList.map((element) => element).toList();
-    }
+    // if (formattedUsdValueList != null) {
+    //   formattedUsdValueListCopy = [];
+    //   formattedUsdValueListCopy =
+    //       formattedUsdValueList.map((element) => element).toList();
+    // }
     // await walletDatabaseService.deleteWalletByTickerName('TRX');
     await checkToUpdateWallet();
-   // moveTrxUsdt();
+    moveTronUsdt();
 
     // get exg address to get free fab
     await getGas();
     // check gas and fab balance if 0 then ask for free fab
     if (gasAmount == 0.0 && fabBalance == 0.0) {
       String address = await sharedService.getFABAddressFromWalletDatabase();
-      storageService.isShowCaseView = true;
-      _isShowCaseView = true;
+      if (storageService.isShowCaseView != null) {
+        if (storageService.isShowCaseView) {
+          storageService.isShowCaseView = true;
+          _isShowCaseView = true;
+        }
+      } else {
+        storageService.isShowCaseView = true;
+        _isShowCaseView = true;
+      }
       var res = await apiService.getFreeFab(address);
       if (res != null) {
         isFreeFabNotUsed = res['ok'];
@@ -1300,6 +1498,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       log.i('Fab or gas balance available already');
       // storageService.isShowCaseView = false;
     }
+    // buildFavCoinList();
     setBusy(false);
   }
 
