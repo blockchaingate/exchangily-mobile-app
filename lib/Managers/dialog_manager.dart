@@ -13,6 +13,7 @@
 
 import 'dart:io';
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
@@ -146,6 +147,22 @@ class _DialogManagerState extends State<DialogManager> {
           ],
         ),
         buttons: [
+          DialogButton(
+            color: grey,
+            onPressed: () {
+              controller.text = '';
+              Navigator.of(context).pop();
+              _dialogService.dialogComplete(
+                  DialogResponse(returnedText: 'Closed', confirmed: false));
+            },
+            child: Text(
+              AppLocalizations.of(context).cancel,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  .copyWith(color: Colors.black),
+            ),
+          ),
           DialogButton(
             color: globals.primaryColor,
             onPressed: () {

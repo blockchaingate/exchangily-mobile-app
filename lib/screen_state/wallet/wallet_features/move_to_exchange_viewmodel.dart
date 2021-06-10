@@ -188,9 +188,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    if ((gasAmount == 0.0 || gasAmount < 0.5) &&
-        walletInfo.tickerName != 'TRX' &&
-        walletInfo.tickerName != 'USDTX') {
+    if (gasAmount == 0.0 || gasAmount < 0.5) {
       sharedService.showInfoFlushbar(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
