@@ -150,7 +150,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   }
 
 /*---------------------------------------------------
-               Check pass and amount
+                Check pass and amount
 --------------------------------------------------- */
   checkPass() async {
     setBusy(true);
@@ -165,9 +165,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    if ((gasAmount == 0.0 || gasAmount < 0.5) &&
-        walletInfo.tickerName != 'TRX' &&
-        walletInfo.tickerName != 'USDTX') {
+    if ((gasAmount == 0.0 || gasAmount < 0.5)) {
       sharedService.alertDialog(
         AppLocalizations.of(context).notice,
         AppLocalizations.of(context).insufficientGasAmount,
