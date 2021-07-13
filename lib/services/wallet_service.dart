@@ -174,12 +174,12 @@ class WalletService {
   Future<bool> checkCoinWalletBalance(double amount, String tickerName) async {
     bool isCorrectAmount = true;
     String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
-    String trxAddress = await walletDatabaseService
+    String coinAddress = await walletDatabaseService
         .getBytickerName(tickerName)
         .then((wallet) => wallet.address);
-    log.w('trxAddress $trxAddress');
+    log.w('coinAddress $coinAddress');
     await _apiService
-        .getSingleWalletBalance(fabAddress, tickerName, trxAddress)
+        .getSingleWalletBalance(fabAddress, tickerName, coinAddress)
         .then((walletBalance) {
       if (walletBalance != null) {
         log.w(walletBalance[0].balance);
@@ -1048,6 +1048,8 @@ class WalletService {
   double calculateCoinUsdBalance(
       double marketPrice, double actualWalletBalance, double lockedBalance) {
     if (marketPrice != null) {
+      if (actualWalletBalance.isNegative) actualWalletBalance = 0.0;
+      if (lockedBalance.isNegative) lockedBalance = 0.0;
       log.w(
           'market price $marketPrice -- available bal $actualWalletBalance-- locked bal $lockedBalance');
       coinUsdBalance = marketPrice * (actualWalletBalance + lockedBalance);

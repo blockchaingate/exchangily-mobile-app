@@ -449,15 +449,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
                     Refresh Balance
 ----------------------------------------------------------------------*/
   refreshBalance() async {
-    setBusy(true);
-
     String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     await apiService
         .getSingleWalletBalance(
             fabAddress, walletInfo.tickerName, walletInfo.address)
         .then((walletBalance) {
       if (walletBalance != null) {
-        log.w(walletBalance[0].balance);
+        log.w('refreshed balance ${walletBalance[0].balance}');
         walletInfo.availableBalance = walletBalance[0].balance;
       }
     }).catchError((err) {
@@ -465,7 +463,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       throw Exception(err);
     });
-    setBusy(false);
   }
 /*----------------------------------------------------------------------
                     ShowNotification

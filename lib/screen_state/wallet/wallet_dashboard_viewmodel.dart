@@ -1003,7 +1003,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     totalUsdBalance = '';
     double holder = 0.0;
     for (var i = 0; i < walletInfo.length; i++) {
-      holder += walletInfo[i].usdValue;
+      if (!walletInfo[i].usdValue.isNegative) holder += walletInfo[i].usdValue;
       if (walletInfo[i].tickerName == 'USDTX') {
         var t = walletInfo[i].usdValue;
         print('t $t');
@@ -1082,7 +1082,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   showDialogWarning() {
     log.w('in showDialogWarning isConfirmDeposit $isConfirmDeposit');
-    if (gasAmount < 0.5) {
+    if (gasAmount == 0.0) {
       sharedService.alertDialog(
           AppLocalizations.of(context).insufficientGasAmount,
           AppLocalizations.of(context).pleaseAddGasToTrade);

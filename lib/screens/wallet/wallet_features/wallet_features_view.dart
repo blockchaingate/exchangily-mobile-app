@@ -163,29 +163,35 @@ class WalletFeaturesView extends StatelessWidget {
                           child: _featuresCard(context, 3, model),
                         ),
                       ]),
+                  Column(
+                    //  mainAxisSize: MainAxisSize.max,
+                    //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      model.errDepositItem != null
+                          ? Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 30,
+                              ),
+                              width: MediaQuery.of(context).size.width,
+                              child: _featuresCard(context, 4, model),
+                            )
+                          : Container(),
+                      walletInfo.tickerName == 'FAB'
+                          ? Container(
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              width: MediaQuery.of(context).size.width,
+                              child: _featuresCard(context, 5, model),
+                            )
+                          : Container(),
+                    ],
+                  ),
 
-                  model.errDepositItem != null
-                      ? Container(
-                          width: model.containerWidth,
-                          height: model.containerHeight,
-                          child: _featuresCard(context, 4, model),
-                        )
-                      : Container(),
-
-                  walletInfo.tickerName == 'FAB'
-                      ? Container(
-                          width: model.containerWidth,
-                          height: model.containerHeight,
-                          child: _featuresCard(context, 5, model),
-                        )
-                      : Container(),
-
-                  UIHelper.horizontalSpaceSmall,
                   // Transaction History Column
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 12.0),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                    ),
                     child: Card(
                       color: globals.walletCardColor,
                       elevation: model.elevation,

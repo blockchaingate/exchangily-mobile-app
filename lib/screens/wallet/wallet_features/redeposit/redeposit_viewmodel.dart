@@ -109,7 +109,37 @@ class RedepositViewModel extends FutureViewModel {
     //TransactionHistory transactionByTxId = new TransactionHistory();
     setBusy(true);
     errorMessage = '';
-    setBusy(false);
+    var errDepositItem;
+    for (var i = 0; i < errDepositList.length; i++) {
+      if (errDepositList[i]["transactionID"] == errDepositTransactionID) {
+        errDepositItem = errDepositList[i];
+        break;
+      }
+    }
+
+    if (errDepositItem == null) {
+      sharedService.showInfoFlushbar(
+          '${AppLocalizations.of(context).redepositError}',
+          '${AppLocalizations.of(context).redepositItemNotSelected}',
+          Icons.cancel,
+          red,
+          context);
+    }
+    log.w('errDepositItem $errDepositItem');
+    var errDepositAmount = double.parse(errDepositItem['amount']);
+    log.i('errDepositAmount $errDepositAmount');
+    await walletService
+        .checkCoinWalletBalance(errDepositAmount, walletInfo.tickerName)
+        .then((value) {
+      if (errDepositItem == null) {
+        sharedService.showInfoFlushbar(
+            '${AppLocalizations.of(context).redepositError}',
+            '${AppLocalizations.of(context).invalidAmount}',
+            Icons.cancel,
+            red,
+            context);
+      }
+    });
     var res = await dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -122,26 +152,6 @@ class RedepositViewModel extends FutureViewModel {
       var exgAddress = keyPairKanban['address'];
       var nonce = await getNonce(exgAddress);
 
-      var errDepositItem;
-      for (var i = 0; i < errDepositList.length; i++) {
-        if (errDepositList[i]["transactionID"] == errDepositTransactionID) {
-          errDepositItem = errDepositList[i];
-          break;
-        }
-      }
-
-      if (errDepositItem == null) {
-        sharedService.showInfoFlushbar(
-            '${AppLocalizations.of(context).redepositError}',
-            '${AppLocalizations.of(context).redepositItemNotSelected}',
-            Icons.cancel,
-            red,
-            context);
-      }
-
-      log.w('errDepositItem $errDepositItem');
-      var errDepositAmount = double.parse(errDepositItem['amount']);
-      log.i('errDepositAmount $errDepositAmount');
       var amountInBigInt = errDepositAmount.toString().contains('e')
           ? BigInt.parse(errDepositItem['amount'])
           : BigInt.from(errDepositAmount);

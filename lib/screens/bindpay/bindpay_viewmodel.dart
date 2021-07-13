@@ -341,9 +341,9 @@ class BindpayViewmodel extends FutureViewModel {
                       Show barcode
 ----------------------------------------------------------------------*/
 
-  showBarcode() {
+  showBarcode() async {
     setBusy(true);
-    walletDataBaseService.getBytickerName('FAB').then((coin) {
+    await walletDataBaseService.getBytickerName('FAB').then((coin) {
       String kbAddress = walletService.toKbPaymentAddress(coin.address);
       print('KBADDRESS $kbAddress');
       showDialog(

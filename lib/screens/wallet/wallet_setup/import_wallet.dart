@@ -14,7 +14,7 @@
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
-import 'package:exchangilymobileapp/widgets/verify_mnemonic.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic/verify_mnemonic.dart';
 import 'package:flutter/material.dart';
 import '../../../logger.dart';
 import '../../../shared/globals.dart' as globals;
@@ -46,7 +46,7 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
           padding: EdgeInsets.all(10),
           child: ListView(
             children: <Widget>[
-              VerifyMnemonicWalletScreen(
+              VerifyMnemonicWalletView(
                 mnemonicTextController: controller,
                 count: count,
               ),

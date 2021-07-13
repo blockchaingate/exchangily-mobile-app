@@ -36,11 +36,11 @@ import 'package:exchangilymobileapp/screens/otc_campaign/team/team_rewards_detai
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/transaction_history_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/backup_mnemonic.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_dashboard_view.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_setup/confirm_mnemonic/confirm_mnemonic_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/create_password.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/import_wallet.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_setup/choose_wallet_language.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_exchange.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_exchange_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/receive.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/send.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/wallet_features_view.dart';
@@ -49,7 +49,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';
 
@@ -85,8 +85,8 @@ class RouteGenerator {
 
       case ConfirmMnemonicViewRoute:
         return MaterialPageRoute(
-            builder: (_) => ConfirmMnemonictWalletScreen(
-                randomMnemonicListFromRoute: args));
+            builder: (_) =>
+                ConfirmMnemonicView(randomMnemonicListFromRoute: args));
 
       case CreatePasswordViewRoute:
         return MaterialPageRoute(

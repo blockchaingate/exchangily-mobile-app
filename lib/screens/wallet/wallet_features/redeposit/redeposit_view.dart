@@ -49,6 +49,7 @@ class Redeposit extends StatelessWidget {
         ),
         backgroundColor: Color(0xFF1F2233),
         body: Container(
+          alignment: Alignment.center,
           padding: EdgeInsets.all(20.0),
           child: ListView(
             children: <Widget>[
@@ -91,7 +92,7 @@ class Redeposit extends StatelessWidget {
                     ),
               UIHelper.verticalSpaceSmall,
               Container(
-                padding: EdgeInsets.only(left: 20.0),
+                // padding: EdgeInsets.only(left: 20.0),
                 child: Column(
                   children: <Widget>[
                     Row(
@@ -238,10 +239,12 @@ class Redeposit extends StatelessWidget {
                 onPressed: () {
                   model.checkPass();
                 },
-                child: Text(
-                  AppLocalizations.of(context).confirm,
-                  style: Theme.of(context).textTheme.button,
-                ),
+                child: model.isBusy
+                    ? model.sharedService.loadingIndicator()
+                    : Text(
+                        AppLocalizations.of(context).confirm,
+                        style: Theme.of(context).textTheme.button,
+                      ),
               ),
             ],
           ),

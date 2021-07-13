@@ -97,7 +97,8 @@ class WalletDashboardView extends StatelessWidget {
                               children: <Widget>[
                                 Expanded(
                                   child: Stack(
-                                    clipBehavior: Clip.none, children: <Widget>[
+                                    clipBehavior: Clip.none,
+                                    children: <Widget>[
                                       // Positioned(
                                       //   top: 5,
                                       //   right: 5,
@@ -115,7 +116,8 @@ class WalletDashboardView extends StatelessWidget {
                                 ),
                                 Expanded(
                                   child: Stack(
-                                      clipBehavior: Clip.none, alignment: Alignment.center,
+                                      clipBehavior: Clip.none,
+                                      alignment: Alignment.center,
                                       children: <Widget>[
                                         Positioned(
                                           top: -10,
@@ -391,7 +393,8 @@ class WalletDashboardView extends StatelessWidget {
                                         model.isBusy
                                             ? ListView.builder(
                                                 shrinkWrap: true,
-                                                itemCount: 6,
+                                                itemCount:
+                                                    model.walletInfoCopy.length,
                                                 itemBuilder:
                                                     (BuildContext context,
                                                         int index) {
@@ -1402,7 +1405,8 @@ class TotalBalanceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      clipBehavior: Clip.none, alignment: Alignment.bottomCenter,
+      clipBehavior: Clip.none,
+      alignment: Alignment.bottomCenter,
       children: <Widget>[
         Positioned(
           bottom: -20,
