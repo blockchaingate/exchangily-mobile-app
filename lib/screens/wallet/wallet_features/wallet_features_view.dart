@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -39,7 +40,7 @@ class WalletFeaturesView extends StatelessWidget {
         model.context = context;
         model.init();
       },
-      builder: (context, model, child) => Scaffold(
+      builder: (context, WalletFeaturesViewModel model, child) => Scaffold(
         //  appBar: AppBar(),
         key: key,
         body: ListView(

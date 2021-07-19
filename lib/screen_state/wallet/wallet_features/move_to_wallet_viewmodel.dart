@@ -625,7 +625,7 @@ class MoveToWalletViewmodel extends BaseState {
         return;
       }
       await checkGasBalance();
-      if (gasAmount == 0.0 || gasAmount < 0.5) {
+      if (gasAmount == 0.0) {
         sharedService.alertDialog(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,

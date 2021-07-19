@@ -112,6 +112,16 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     // print(transactionHistoryToShowInView.first.toJson());
   }
 
+  reloadTransactions() async {
+    clearLists();
+    await futureToRun();
+    onData(data);
+  }
+
+  clearLists() {
+    transactionHistoryToShowInView = [];
+  }
+
   getWithdrawDepositTxHistoryEvents() async {
     return await apiService.getTransactionHistoryEvents();
   }
