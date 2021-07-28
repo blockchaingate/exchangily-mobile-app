@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -167,8 +168,10 @@ class TxHisotryCardWidget extends StatelessWidget {
                 child: Container(
                     alignment: Alignment.center,
                     child: AutoSizeText(
-                      transaction.quantity
-                          .toStringAsFixed(model.decimalConfig.qtyDecimal),
+                      NumberUtil()
+                          .truncateDoubleWithoutRouding(transaction.quantity,
+                              precision: model.decimalConfig.qtyDecimal)
+                          .toString(),
                       textAlign: TextAlign.right,
                       style: Theme.of(context)
                           .textTheme

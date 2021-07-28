@@ -40,7 +40,7 @@ class NumberUtil {
   }
 
 /*---------------------------------------------------
-               Round down
+                Round down
 --------------------------------------------------- */
 
   double roundDownLastDigit(double input) {

@@ -18,13 +18,15 @@ class TransactionHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     double customFontSize = 12;
     return ViewModelBuilder<TransactionHistoryViewmodel>.reactive(
+        createNewModelOnInsert: true,
         viewModelBuilder: () =>
             TransactionHistoryViewmodel(tickerName: tickerName),
         onModelReady: (model) async {
           model.context = context;
           model.getWalletFromDb();
         },
-        builder: (context, model, child) => WillPopScope(
+        builder: (context, TransactionHistoryViewmodel model, child) =>
+            WillPopScope(
               onWillPop: () async {
                 print('isDialogUp ${model.isDialogUp}');
                 if (model.isDialogUp) {
@@ -38,6 +40,11 @@ class TransactionHistoryView extends StatelessWidget {
               },
               child: Scaffold(
                 appBar: AppBar(
+                  actions: [
+                    IconButton(
+                        icon: Icon(Icons.refresh),
+                        onPressed: () => model.reloadTransactions())
+                  ],
                   leading: Container(
                       child: IconButton(
                           icon: Icon(Icons.arrow_back),

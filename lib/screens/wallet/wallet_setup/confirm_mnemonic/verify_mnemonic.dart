@@ -11,19 +11,18 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../shared/globals.dart' as globals;
+import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/localizations.dart';
 
-class VerifyMnemonicWalletScreen extends StatelessWidget {
+class VerifyMnemonicWalletView extends StatelessWidget {
   final List<TextEditingController> mnemonicTextController;
   final String validationMessage;
   final int count;
 
-  VerifyMnemonicWalletScreen(
+  VerifyMnemonicWalletView(
       {@required this.mnemonicTextController,
       this.validationMessage,
       this.count});
@@ -34,7 +33,6 @@ class VerifyMnemonicWalletScreen extends StatelessWidget {
       padding: EdgeInsets.all(10),
       child: Column(
         children: <Widget>[
-          UIHelper.verticalSpaceSmall,
           Row(
             children: <Widget>[
               Expanded(
@@ -46,26 +44,18 @@ class VerifyMnemonicWalletScreen extends StatelessWidget {
             ],
           ),
           Container(
-            margin: EdgeInsets.symmetric(
-              vertical: 40,
-            ),
-            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-            child: _textGrid(mnemonicTextController, count),
-          ),
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+              child: GridView.extent(
+                  maxCrossAxisExtent: 125,
+                  padding: const EdgeInsets.all(2),
+                  mainAxisSpacing: 15,
+                  crossAxisSpacing: 10,
+                  shrinkWrap: true,
+                  childAspectRatio: 2,
+                  children: _buildTextGrid(count, mnemonicTextController))),
         ],
       ),
     );
-  }
-
-  Widget _textGrid(controller, _count) {
-    return GridView.extent(
-        maxCrossAxisExtent: 125,
-        padding: const EdgeInsets.all(2),
-        mainAxisSpacing: 15,
-        crossAxisSpacing: 10,
-        shrinkWrap: true,
-        childAspectRatio: 2,
-        children: _buildTextGrid(_count, controller));
   }
 
   List<Container> _buildTextGrid(int count, controller) =>
@@ -75,18 +65,18 @@ class VerifyMnemonicWalletScreen extends StatelessWidget {
         return Container(
             child: TextField(
           inputFormatters: <TextInputFormatter>[
-           // FilteringTextInputFormatter.allow(RegExp(r'([a-z]{0,})$'))
+            // FilteringTextInputFormatter.allow(RegExp(r'([a-z]{0,})$'))
           ],
-          style: TextStyle(color: globals.white),
+          style: TextStyle(color: white),
           controller: controller[i],
           autocorrect: true,
           decoration: InputDecoration(
-            fillColor: globals.primaryColor,
+            fillColor: primaryColor,
             filled: true,
             hintText: '$hintMnemonicWordNumber',
-            hintStyle: TextStyle(color: globals.white),
+            hintStyle: TextStyle(color: white),
             focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: globals.white, width: 2),
+                borderSide: BorderSide(color: white, width: 2),
                 borderRadius: BorderRadius.circular(30.0)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(30.0),

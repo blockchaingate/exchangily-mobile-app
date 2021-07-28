@@ -13,6 +13,7 @@
 
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/material.dart';
 import 'package:hex/hex.dart';
 import 'package:decimal/decimal.dart';
@@ -170,7 +171,9 @@ bigNum2Double(bigNum) {
   var dec =
       Decimal.parse(bigNum.toString()) / Decimal.parse('1000000000000000000');
   if (dec.toDouble() > 999999) {
-    return double.parse(dec.toDouble().toStringAsFixed(8));
+    return double.parse(NumberUtil()
+        .truncateDoubleWithoutRouding(dec.toDouble(), precision: 8)
+        .toString());
   }
   var str = dec.toString();
   var s = str;

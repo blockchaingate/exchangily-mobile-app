@@ -16,6 +16,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -39,7 +40,7 @@ class WalletFeaturesView extends StatelessWidget {
         model.context = context;
         model.init();
       },
-      builder: (context, model, child) => Scaffold(
+      builder: (context, WalletFeaturesViewModel model, child) => Scaffold(
         //  appBar: AppBar(),
         key: key,
         body: ListView(
@@ -163,29 +164,35 @@ class WalletFeaturesView extends StatelessWidget {
                           child: _featuresCard(context, 3, model),
                         ),
                       ]),
+                  Column(
+                    //  mainAxisSize: MainAxisSize.max,
+                    //  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      model.errDepositItem != null
+                          ? Container(
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 30,
+                              ),
+                              width: MediaQuery.of(context).size.width,
+                              child: _featuresCard(context, 4, model),
+                            )
+                          : Container(),
+                      walletInfo.tickerName == 'FAB'
+                          ? Container(
+                              margin: EdgeInsets.symmetric(horizontal: 30),
+                              width: MediaQuery.of(context).size.width,
+                              child: _featuresCard(context, 5, model),
+                            )
+                          : Container(),
+                    ],
+                  ),
 
-                  model.errDepositItem != null
-                      ? Container(
-                          width: model.containerWidth,
-                          height: model.containerHeight,
-                          child: _featuresCard(context, 4, model),
-                        )
-                      : Container(),
-
-                  walletInfo.tickerName == 'FAB'
-                      ? Container(
-                          width: model.containerWidth,
-                          height: model.containerHeight,
-                          child: _featuresCard(context, 5, model),
-                        )
-                      : Container(),
-
-                  UIHelper.horizontalSpaceSmall,
                   // Transaction History Column
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 12.0),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                    ),
                     child: Card(
                       color: globals.walletCardColor,
                       elevation: model.elevation,

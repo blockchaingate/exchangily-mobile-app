@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -18,6 +20,7 @@ import 'package:exchangilymobileapp/utils/coin_util.dart';
 
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -45,12 +48,17 @@ class RedepositViewModel extends FutureViewModel {
   String errorMessage = '';
   @override
   Future futureToRun() => getErrDeposit();
-
+  bool isConfirmButtonPressed = false;
   void init() {}
 
 /*----------------------------------------------------------------------
                       Get Error Deposit
 ----------------------------------------------------------------------*/
+  click(bigInt) {
+    var b = Decimal.parse(bigInt) / Decimal.parse('1e18');
+    print('b $b');
+    print(NumberUtil().roundDownLastDigit(b.toDouble()));
+  }
 
   Future getErrDeposit() async {
     setBusy(true);
@@ -62,6 +70,7 @@ class RedepositViewModel extends FutureViewModel {
         var item = errDepositData[i];
         log.w('errDepositData count $i $item');
         var coinType = item['coinType'];
+
         String tickerNameByCointype = newCoinTypeMap[coinType];
         print('tickerNameByCointype $tickerNameByCointype');
         if (tickerNameByCointype == null)
@@ -78,6 +87,7 @@ class RedepositViewModel extends FutureViewModel {
           errDepositList.add(item);
           log.e(
               'in else if -- coin type $coinType --  tickerNameByCointype $tickerNameByCointype');
+          //click(item['amount']);
         }
       }
     });
@@ -98,7 +108,6 @@ class RedepositViewModel extends FutureViewModel {
     }
 
     setBusy(false);
-    return errDepositList;
   }
 
 /*----------------------------------------------------------------------
@@ -108,8 +117,39 @@ class RedepositViewModel extends FutureViewModel {
   checkPass() async {
     //TransactionHistory transactionByTxId = new TransactionHistory();
     setBusy(true);
+    isConfirmButtonPressed = true;
     errorMessage = '';
-    setBusy(false);
+    var errDepositItem;
+    for (var i = 0; i < errDepositList.length; i++) {
+      if (errDepositList[i]["transactionID"] == errDepositTransactionID) {
+        errDepositItem = errDepositList[i];
+        break;
+      }
+    }
+
+    if (errDepositItem == null) {
+      sharedService.showInfoFlushbar(
+          '${AppLocalizations.of(context).redepositError}',
+          '${AppLocalizations.of(context).redepositItemNotSelected}',
+          Icons.cancel,
+          red,
+          context);
+    }
+    log.w('errDepositItem $errDepositItem');
+    // var errDepositAmount = double.parse(errDepositItem['amount']);
+    // log.i('errDepositAmount $errDepositAmount');
+    // await walletService
+    //     .checkCoinWalletBalance(errDepositAmount, walletInfo.tickerName)
+    //     .then((value) {
+    //   if (errDepositItem == null) {
+    //     sharedService.showInfoFlushbar(
+    //         '${AppLocalizations.of(context).redepositError}',
+    //         '${AppLocalizations.of(context).invalidAmount}',
+    //         Icons.cancel,
+    //         red,
+    //         context);
+    //   }
+    // });
     var res = await dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -122,30 +162,11 @@ class RedepositViewModel extends FutureViewModel {
       var exgAddress = keyPairKanban['address'];
       var nonce = await getNonce(exgAddress);
 
-      var errDepositItem;
-      for (var i = 0; i < errDepositList.length; i++) {
-        if (errDepositList[i]["transactionID"] == errDepositTransactionID) {
-          errDepositItem = errDepositList[i];
-          break;
-        }
-      }
-
-      if (errDepositItem == null) {
-        sharedService.showInfoFlushbar(
-            '${AppLocalizations.of(context).redepositError}',
-            '${AppLocalizations.of(context).redepositItemNotSelected}',
-            Icons.cancel,
-            red,
-            context);
-      }
-
-      log.w('errDepositItem $errDepositItem');
-      var errDepositAmount = double.parse(errDepositItem['amount']);
-      log.i('errDepositAmount $errDepositAmount');
-      var amountInBigInt = errDepositAmount.toString().contains('e')
-          ? BigInt.parse(errDepositItem['amount'])
-          : BigInt.from(errDepositAmount);
-      print('amountInLink $amountInBigInt');
+      var amountInBigInt = BigInt.parse(errDepositItem['amount']);
+      // errDepositAmount.toString().contains('e')
+      //     ? BigInt.parse(errDepositItem['amount'])
+      //     : BigInt.from(errDepositAmount);
+      print('amountInBigInt $amountInBigInt');
       var coinType = errDepositItem['coinType'];
 
       var transactionID = errDepositItem['transactionID'];
@@ -173,11 +194,16 @@ class RedepositViewModel extends FutureViewModel {
             AppLocalizations.of(context).transactionId +
                 ': ' +
                 newTransactionId,
-            path: '/dashboard');
+            path: errDepositList.length == 1 ? WalletFeaturesViewRoute : '',
+            arguments: errDepositList.length == 1 ? walletInfo : null);
+        if (errDepositList.length > 1) {
+          setBusy(true);
+          errDepositList = [];
+          await getErrDeposit();
+          setBusy(false);
+        }
       } else if (resRedeposit['message'] != '') {
-        setBusy(true);
         errorMessage = resRedeposit['message'];
-        setBusy(false);
       } else {
         sharedService.showInfoFlushbar(
             AppLocalizations.of(context).redepositFailedError,
@@ -191,6 +217,8 @@ class RedepositViewModel extends FutureViewModel {
         showNotification(context);
       }
     }
+    isConfirmButtonPressed = false;
+    setBusy(false);
   }
 
   submitredeposit(
