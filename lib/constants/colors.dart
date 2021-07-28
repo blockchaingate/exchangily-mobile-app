@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-var context;
 final Color primaryColor = Color.fromRGBO(135, 31, 255, 1);
 final Color secondaryColor = Color.fromRGBO(31, 33, 51, 1);
 final Color walletCardColor = Color.fromRGBO(43, 43, 75, 1);
@@ -20,4 +19,3 @@ final Color buyPrice = Color(0xFF0da88b);
 final Color red = Colors.red;
 final Color exgLogoColor = Color.fromRGBO(207, 101, 68, .85);
 final Color fabLogoColor = Color.fromRGBO(162, 48, 203, .85);
-final TextStyle styleSubtitle2 = Theme.of(context).textTheme.subtitle2;

@@ -742,6 +742,7 @@ class ApiService {
     } catch (e) {
       log.e(e);
     }
+    log.w('getFabUtxos json $json');
     return json;
   }
 

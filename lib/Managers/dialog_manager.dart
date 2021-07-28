@@ -11,8 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'dart:io';
-
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';

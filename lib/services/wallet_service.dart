@@ -1405,7 +1405,7 @@ class WalletService {
 
     print('amountInTxString===' + amountInTxString);
     print('amountInLinkString===' + amountInLinkString);
-    if (amountInLinkString.indexOf(amountInTxString) == -1) {
+    if (amountInLinkString.indexOf(amountInTxString) != 0) {
       errRes['data'] = 'incorrect amount for two transactions';
       return errRes;
     }
@@ -1786,10 +1786,10 @@ class WalletService {
     var txHex = '';
     var txHash = '';
     var errMsg = '';
-    var utxos = [];
+
     var amountInTx = BigInt.from(0);
     var transFeeDouble = 0.0;
-    var amountSent = 0;
+
     var receivePrivateKeyArr = [];
 
     var tokenType = options['tokenType'] ?? '';
@@ -1913,6 +1913,7 @@ class WalletService {
       }
 
       amountInTx = BigInt.from(output2);
+
       txb.addOutput(toAddress, output2);
       for (var i = 0; i < receivePrivateKeyArr.length; i++) {
         var privateKey = receivePrivateKeyArr[i];

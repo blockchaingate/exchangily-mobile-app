@@ -16,7 +16,6 @@ import 'dart:typed_data';
 
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
@@ -29,7 +28,6 @@ import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
@@ -43,25 +41,27 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart' as CoinUtil;
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:stacked/stacked.dart';
 
-class SendScreenState extends BaseState {
+class SendViewModel extends BaseViewModel {
   final log = getLogger('SendScreenState');
 
   DialogService _dialogService = locator<DialogService>();
   final apiService = locator<ApiService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
-  TransactionHistoryDatabaseService transactionHistoryDatabaseService =
-      locator<TransactionHistoryDatabaseService>();
+  // TransactionHistoryDatabaseService transactionHistoryDatabaseService =
+  //     locator<TransactionHistoryDatabaseService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   TokenListDatabaseService tokenListDatabaseService =
       locator<TokenListDatabaseService>();
+
   BuildContext context;
   var options = {};
   String txHash = '';
   String errorMessage = '';
-  var updatedBal;
+
   String toAddress;
   double amount = 0;
   int gasPrice = 0;
@@ -82,13 +82,27 @@ class SendScreenState extends BaseState {
   bool transFeeAdvance = false;
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   String feeUnit = '';
+  String tickerName = '';
+
+  String tokenType = '';
 
   // Init State
   initState() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     sharedService.context = context;
+    walletInfo.tickerName == 'USDTX'
+        ? tickerName = 'USDT(TRC20)'
+        : tickerName = walletInfo.tickerName;
+    tokenType = walletInfo.tokenType;
     String coinName = walletInfo.tickerName;
-    String tokenType = walletInfo.tokenType;
+    await setFee(coinName);
+
+    await getDecimalData();
+    await refreshBalance();
+    setBusy(false);
+  }
+
+  setFee(String coinName) async {
     if (coinName == 'BTC') {
       satoshisPerByteTextController.text =
           environment["chains"]["BTC"]["satoshisPerBytes"].toString();
@@ -118,9 +132,6 @@ class SendScreenState extends BaseState {
           environment["chains"]["FAB"]["gasLimit"].toString();
       feeUnit = 'FAB';
     }
-    await getDecimalData();
-    await refreshBalance();
-    setState(ViewState.Idle);
   }
 
   bool isTrx() {
@@ -152,13 +163,9 @@ class SendScreenState extends BaseState {
   }
 
   showDetailsMessageToggle() {
-    setState(ViewState.Busy);
+    setBusy(true);
     isShowDetailsMessage = !isShowDetailsMessage;
-    setState(ViewState.Idle);
-  }
-
-  getGasBalance() async {
-    // await walletService.gasBalance(addr)
+    setBusy(false);
   }
 
   // getExgWalletAddr() async {
@@ -172,14 +179,14 @@ class SendScreenState extends BaseState {
   // Paste Clipboard Data In Receiver Address
 
   pasteClipBoardData() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
     if (data != null) {
       log.i('paste data ${data.text}');
       receiverWalletAddressTextController.text = data.text;
       toAddress = receiverWalletAddressTextController.text;
     }
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
@@ -187,7 +194,7 @@ class SendScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   Future sendTransaction() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     var dialogResponse = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -229,6 +236,7 @@ class SendScreenState extends BaseState {
               .then((token) {
             contractAddr = token.contract;
             decimal = token.decimal;
+            log.i('send token address ${token.toJson()}');
           });
         }
         options = {
@@ -295,12 +303,12 @@ class SendScreenState extends BaseState {
             isShowErrorDetailsButton = true;
             isShowDetailsMessage = true;
             serverError = errMsg;
-            setState(ViewState.Idle);
+            setBusy(false);
           }
-          setState(ViewState.Idle);
+          setBusy(false);
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
-          setState(ViewState.Idle);
+          setBusy(false);
           isShowErrorDetailsButton = false;
           isShowDetailsMessage = false;
           sharedService.alertDialog(AppLocalizations.of(context).notice,
@@ -314,7 +322,7 @@ class SendScreenState extends BaseState {
           isShowErrorDetailsButton = true;
           isShowDetailsMessage = true;
           serverError = error.toString();
-          setState(ViewState.Idle);
+          setBusy(false);
         });
       } else {
         // Other coins transaction
@@ -352,7 +360,7 @@ class SendScreenState extends BaseState {
             );
             isShowErrorDetailsButton = false;
             isShowDetailsMessage = false;
-            setState(ViewState.Idle);
+            setBusy(false);
           } else if (txHash.isEmpty && errorMessage.isNotEmpty) {
             log.e('Error Message $errorMessage');
             sharedService.alertDialog(
@@ -362,14 +370,14 @@ class SendScreenState extends BaseState {
             isShowErrorDetailsButton = true;
             isShowDetailsMessage = true;
             serverError = errorMessage;
-            setState(ViewState.Idle);
+            setBusy(false);
           }
-          setState(ViewState.Idle);
+          setBusy(false);
         }).timeout(Duration(seconds: 25), onTimeout: () {
           log.e('In time out');
           isShowErrorDetailsButton = false;
           isShowDetailsMessage = false;
-          setState(ViewState.Idle);
+          setBusy(false);
           return errorMessage =
               AppLocalizations.of(context).serverTimeoutPleaseTryAgainLater;
         }).catchError((error) {
@@ -380,15 +388,15 @@ class SendScreenState extends BaseState {
           isShowErrorDetailsButton = true;
           isShowDetailsMessage = true;
           serverError = error.toString();
-          setState(ViewState.Idle);
+          setBusy(false);
         });
       }
     } else if (dialogResponse.returnedText != 'Closed') {
-      setState(ViewState.Idle);
+      setBusy(false);
       return errorMessage =
           AppLocalizations.of(context).pleaseProvideTheCorrectPassword;
     } else {
-      setState(ViewState.Idle);
+      setBusy(false);
     }
   }
 
@@ -452,7 +460,7 @@ class SendScreenState extends BaseState {
                     Refresh Balance
 ----------------------------------------------------------------------*/
   refreshBalance() async {
-    setState(ViewState.Busy);
+    setBusy(true);
 
     String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     await apiService
@@ -469,7 +477,7 @@ class SendScreenState extends BaseState {
       setBusy(false);
       throw Exception(err);
     });
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
 /*-----------------------------------------------------------------------------------
@@ -536,6 +544,7 @@ class SendScreenState extends BaseState {
           )),
           position: NotificationPosition.top);
       await updateTransFee();
+      setBusy(false);
       return;
     }
     amount = NumberUtil().roundDownLastDigit(amount);
@@ -569,7 +578,7 @@ class SendScreenState extends BaseState {
                     Check Send Amount
 ----------------------------------------------------------------------*/
   checkAmount() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     Pattern pattern = r'^(0|(\d+)|\.(\d+))(\.(\d+))?$';
     log.e(amount);
     var res = RegexValidator(pattern).isValid(amount.toString());
@@ -616,7 +625,7 @@ class SendScreenState extends BaseState {
       }
       log.i('check send amount $checkSendAmount');
     }
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
   Future<double> getTrxBalance() async {
@@ -667,7 +676,7 @@ class SendScreenState extends BaseState {
 ----------------------------------------------------------------------*/
 
   updateTransFee() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     log.i('in update trans fee');
     var to = CoinUtil.getOfficalAddress(walletInfo.tickerName.toUpperCase(),
         tokenType: walletInfo.tokenType.toUpperCase());
@@ -701,16 +710,16 @@ class SendScreenState extends BaseState {
         transFee = ret['transFee'];
         log.w('trans fee $ret');
       }
-      setState(ViewState.Idle);
-    }).catchError((err) {
-      setState(ViewState.Idle);
       setBusy(false);
+    }).catchError((err) {
+      setBusy(false);
+
       log.e(err);
       sharedService.alertDialog(AppLocalizations.of(context).genericError,
           AppLocalizations.of(context).transanctionFailed,
           isWarning: false);
     });
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
 /*--------------------------------------------------------
@@ -719,7 +728,7 @@ class SendScreenState extends BaseState {
 
   Future scan() async {
     log.i("Barcode: going to scan");
-    setState(ViewState.Busy);
+    setBusy(true);
 
     try {
       log.i("Barcode: try");
@@ -730,19 +739,19 @@ class SendScreenState extends BaseState {
       log.i("Barcode Res: $result ");
 
       receiverWalletAddressTextController.text = barcode;
-      setState(ViewState.Idle);
+      setBusy(false);
     } on PlatformException catch (e) {
       log.i("Barcode PlatformException : ");
       log.i(e.toString());
       if (e.code == "PERMISSION_NOT_GRANTED") {
-        setState(ViewState.Idle);
+        setBusy(false);
         sharedService.alertDialog(
             '', AppLocalizations.of(context).userAccessDenied,
             isWarning: false);
         // receiverWalletAddressTextController.text =
         //     AppLocalizations.of(context).userAccessDenied;
       } else {
-        setState(ViewState.Idle);
+        setBusy(false);
         sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
             isWarning: false);
         // receiverWalletAddressTextController.text =
@@ -751,19 +760,19 @@ class SendScreenState extends BaseState {
     } on FormatException {
       log.i("Barcode FormatException : ");
       // log.i(e.toString());
-      setState(ViewState.Idle);
+      setBusy(false);
       // sharedService.alertDialog(AppLocalizations.of(context).scanCancelled,
       //     AppLocalizations.of(context).userReturnedByPressingBackButton,
       //     isWarning: false);
     } catch (e) {
       log.i("Barcode error : ");
       log.i(e.toString());
-      setState(ViewState.Idle);
+      setBusy(false);
       sharedService.alertDialog('', AppLocalizations.of(context).unknownError,
           isWarning: false);
       // receiverWalletAddressTextController.text =
       //     '${AppLocalizations.of(context).unknownError}: $e';
     }
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 }
