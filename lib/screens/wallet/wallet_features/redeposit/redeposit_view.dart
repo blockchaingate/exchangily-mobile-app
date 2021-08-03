@@ -101,7 +101,7 @@ class Redeposit extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             AppLocalizations.of(context).walletbalance +
-                                ' ${walletInfo.availableBalance}',
+                                ' ${model.walletInfo.availableBalance}',
                             style: Theme.of(context).textTheme.headline5,
                           ),
                           Padding(

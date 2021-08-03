@@ -358,7 +358,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
               isWarning: false);
         }).catchError((error) {
           log.e('In Catch error - $error');
-          sharedService.alertDialog(AppLocalizations.of(context).serverError,
+          sharedService.alertDialog(AppLocalizations.of(context).networkIssue,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
               isWarning: false);
 

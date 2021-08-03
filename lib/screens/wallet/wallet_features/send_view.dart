@@ -22,7 +22,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
-
 class SendWalletView extends StatelessWidget {
   final WalletInfo walletInfo;
   const SendWalletView({Key key, this.walletInfo}) : super(key: key);
@@ -82,8 +81,7 @@ class SendWalletView extends StatelessWidget {
                                     decoration: InputDecoration(
                                         enabledBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
-                                                color: grey,
-                                                width: 0.5)),
+                                                color: grey, width: 0.5)),
                                         suffixIcon: IconButton(
                                           icon: Icon(Icons.content_paste),
                                           onPressed: () async {
@@ -149,21 +147,19 @@ class SendWalletView extends StatelessWidget {
                                     decimal: true), // numnber keyboard
                                 decoration: InputDecoration(
                                     focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: primaryColor)),
+                                        borderSide:
+                                            BorderSide(color: primaryColor)),
                                     enabledBorder: UnderlineInputBorder(
                                         borderSide: BorderSide(
                                             color: grey, width: 0.5)),
                                     hintText: '0.00000',
-                                    hintStyle: TextStyle(
-                                        fontSize: 14, color: grey)),
+                                    hintStyle:
+                                        TextStyle(fontSize: 14, color: grey)),
                                 style: model.checkSendAmount &&
                                         model.amount <=
                                             walletInfo.availableBalance
-                                    ? TextStyle(
-                                        color: grey, fontSize: 14)
-                                    : TextStyle(
-                                        color: red, fontSize: 14),
+                                    ? TextStyle(color: grey, fontSize: 14)
+                                    : TextStyle(color: red, fontSize: 14),
                               ),
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10),
@@ -176,7 +172,7 @@ class SendWalletView extends StatelessWidget {
                                         Text(
                                           AppLocalizations.of(context)
                                                   .walletbalance +
-                                              '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.singlePairDecimalConfig.qtyDecimal)} ',
+                                              '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.walletInfo.availableBalance.toString().split(".")[1].length) + NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.unconfirmedBalance, precision: model.walletInfo.unconfirmedBalance.toString().split(".")[1].length)} ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6
@@ -339,19 +335,20 @@ class SendWalletView extends StatelessWidget {
                                                             model
                                                                 .updateTransFee();
                                                           },
-                                                          keyboardType:
-                                                              TextInputType.numberWithOptions(
-                                                                  decimal:
-                                                                      true),
+                                                          keyboardType: TextInputType.numberWithOptions(
+                                                              decimal: true),
                                                           decoration: InputDecoration(
                                                               focusedBorder: UnderlineInputBorder(
-                                                                  borderSide: BorderSide(
-                                                                      color: primaryColor)),
+                                                                  borderSide:
+                                                                      BorderSide(
+                                                                          color:
+                                                                              primaryColor)),
                                                               enabledBorder: UnderlineInputBorder(
                                                                   borderSide: BorderSide(
                                                                       width:
                                                                           0.5,
-                                                                      color:grey)),
+                                                                      color:
+                                                                          grey)),
                                                               hintText:
                                                                   '0.00000',
                                                               hintStyle: Theme.of(context)
@@ -363,7 +360,9 @@ class SendWalletView extends StatelessWidget {
                                                           style: Theme.of(context)
                                                               .textTheme
                                                               .headline6
-                                                              .copyWith(fontWeight: FontWeight.w400)))
+                                                              .copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight.w400)))
                                                 ],
                                               )),
                                           Visibility(
@@ -401,13 +400,19 @@ class SendWalletView extends StatelessWidget {
                                                             .numberWithOptions(
                                                                 decimal: true),
                                                         decoration: InputDecoration(
-                                                            focusedBorder: UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color: primaryColor)),
+                                                            focusedBorder:
+                                                                UnderlineInputBorder(
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                            color:
+                                                                                primaryColor)),
                                                             enabledBorder: UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    width: 0.5,
-                                                                    color:grey)),
+                                                                borderSide:
+                                                                    BorderSide(
+                                                                        width:
+                                                                            0.5,
+                                                                        color:
+                                                                            grey)),
                                                             hintText: '0.00000',
                                                             hintStyle: Theme.of(
                                                                     context)
@@ -459,12 +464,18 @@ class SendWalletView extends StatelessWidget {
                                                             .numberWithOptions(
                                                                 decimal: true),
                                                         decoration: InputDecoration(
-                                                            focusedBorder: UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color:primaryColor)),
-                                                            enabledBorder: UnderlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                    color:grey)),
+                                                            focusedBorder:
+                                                                UnderlineInputBorder(
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                            color:
+                                                                                primaryColor)),
+                                                            enabledBorder:
+                                                                UnderlineInputBorder(
+                                                                    borderSide:
+                                                                        BorderSide(
+                                                                            color:
+                                                                                grey)),
                                                             hintText: '0.00000',
                                                             hintStyle: Theme.of(
                                                                     context)

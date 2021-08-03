@@ -471,6 +471,7 @@ class SendViewModel extends BaseViewModel {
         log.w(walletBalance);
 
         walletInfo.availableBalance = walletBalance[0].balance;
+        walletInfo.unconfirmedBalance = walletBalance[0].unconfirmedBalance;
       }
     }).catchError((err) {
       log.e(err);

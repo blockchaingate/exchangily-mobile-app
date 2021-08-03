@@ -782,7 +782,7 @@ class MoveToWalletViewmodel extends BaseState {
                 success ? "" : AppLocalizations.of(context).serverError,
                 isWarning: false);
           }).catchError((err) {
-            log.e('Withdraw catch $err');
+            log.e('Withdraw catch trx $err');
             isShowErrorDetailsButton = true;
             serverError = err.toString();
           });

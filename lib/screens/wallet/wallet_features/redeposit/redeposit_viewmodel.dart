@@ -10,6 +10,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -32,6 +33,7 @@ class RedepositViewModel extends FutureViewModel {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final apiService = locator<ApiService>();
 
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
@@ -106,8 +108,24 @@ class RedepositViewModel extends FutureViewModel {
       this.errDepositTransactionID = errDepositList[0]["transactionID"];
       this.kanbanTransFee = kanbanTransFee;
     }
-
+    await getSingleWalletBalance();
     setBusy(false);
+  }
+
+/*----------------------------------------------------------------------
+                    Get Single wallet balance
+----------------------------------------------------------------------*/
+
+  getSingleWalletBalance() async {
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    await apiService
+        .getSingleWalletBalance(
+            fabAddress, walletInfo.tickerName, walletInfo.address)
+        .then((res) {
+      if (res != null) {
+        walletInfo.availableBalance = res[0].balance;
+      }
+    });
   }
 
 /*----------------------------------------------------------------------
