@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/localizations.dart';
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -33,7 +34,7 @@ class SmartContract extends StatefulWidget {
 }
 
 class _SmartContractState extends State<SmartContract> {
-  ApiService _api = locator<ApiService>();
+  final log = getLogger('SmartContract');
   String _currentFunction;
   String _smartContractName;
   var abis;
@@ -43,6 +44,7 @@ class _SmartContractState extends State<SmartContract> {
   DialogService _dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
+  var fabUtils = FabUtils();
 
   var inputs = [];
   var payable = false;
@@ -106,7 +108,7 @@ class _SmartContractState extends State<SmartContract> {
   }
 
   onSmartContractAddressChanged(String address) async {
-    var smartContractABI = await getSmartContractABI(address);
+    var smartContractABI = await fabUtils.getSmartContractABI(address);
 
     abis = smartContractABI['abi'];
     functionHex = smartContractABI['functionHex'];
@@ -311,7 +313,7 @@ class _SmartContractState extends State<SmartContract> {
       var errMsg = res1['errMsg'];
       var txHash = '';
       if (txHex != null && txHex != '') {
-        var res = await _api.postFabTx(txHex);
+        var res = await fabUtils.postFabTx(txHex);
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       }

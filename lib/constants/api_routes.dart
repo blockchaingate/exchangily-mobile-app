@@ -20,6 +20,11 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
+
+// FAB //
+
+const String FabTransactionJsonApiRoute = 'gettransactionjson/';
+
 const String KanbanApiRoute = 'kanban/';
 const String GetScarAddressApiRoute = 'getScarAddress';
 const String GetTransactionCountApiRoute = 'getTransactionCount/';

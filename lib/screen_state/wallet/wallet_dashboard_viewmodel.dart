@@ -129,6 +129,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   bool isBottomOfTheList = false;
   bool isTopOfTheList = true;
+  final fabUtils = FabUtils();
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -449,6 +450,7 @@ class WalletDashboardViewModel extends BaseViewModel {
             tokenType: '',
             address: address,
             availableBalance: 0.0,
+            unconfirmedBalance: 0.0,
             lockedBalance: 0.0,
             usdValue: 0.0,
             name: 'Tron');
@@ -874,7 +876,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                                                       .text
                                             };
                                             log.e('free fab post data $data');
-                                            await apiService
+                                            await fabUtils
                                                 .postFreeFab(data)
                                                 .then(
                                               (res) {
@@ -1150,6 +1152,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         tokenType: newToken.chainName,
         address: newCoinAddress,
         availableBalance: newTokenWalletBalance.balance,
+        unconfirmedBalance: newTokenWalletBalance.unconfirmedBalance,
         lockedBalance: newTokenWalletBalance.lockedExchangeBalance,
         usdValue: usdValue,
         name: newToken.coinName,
@@ -1187,7 +1190,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     walletInfo.firstWhere((wallet) {
       if (wallet.tickerName == newToken.chainName) {
         if (newToken.chainName == 'FAB')
-          newCoinAddress = fabToExgAddress(wallet.address);
+          newCoinAddress = fabUtils.fabToExgAddress(wallet.address);
         else
           newCoinAddress = wallet.address;
         log.w('new token ${newToken.tickerName} address $newCoinAddress');
@@ -1305,6 +1308,8 @@ class WalletDashboardViewModel extends BaseViewModel {
               double marketPrice = walletBalanceList[j].usdValue.usd ?? 0.0;
               double availableBal = walletBalanceList[j].balance ?? 0.0;
               double lockedBal = walletBalanceList[j].lockBalance ?? 0.0;
+              double unconfirmedBal =
+                  walletBalanceList[j].unconfirmedBalance ?? 0.0;
 
               // Check if market price error from api then show the notification with ticker name
               // so that user know why USD val for that ticker is 0
@@ -1327,6 +1332,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                   tokenType: wallet.tokenType,
                   address: wallet.address,
                   availableBalance: availableBal,
+                  unconfirmedBalance: unconfirmedBal,
                   lockedBalance: lockedBal,
                   usdValue: usdValue,
                   name: wallet.name,

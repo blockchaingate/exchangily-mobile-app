@@ -23,11 +23,11 @@ import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
-import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
@@ -38,20 +38,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/utils/coin_util.dart' as CoinUtil;
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 
 class SendViewModel extends BaseViewModel {
-  final log = getLogger('SendScreenState');
+  final log = getLogger('SendViewModel');
 
   DialogService _dialogService = locator<DialogService>();
   final apiService = locator<ApiService>();
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
-  // TransactionHistoryDatabaseService transactionHistoryDatabaseService =
-  //     locator<TransactionHistoryDatabaseService>();
   WalletDataBaseService walletDatabaseService =
       locator<WalletDataBaseService>();
   TokenListDatabaseService tokenListDatabaseService =
@@ -85,6 +82,8 @@ class SendViewModel extends BaseViewModel {
   String tickerName = '';
 
   String tokenType = '';
+  final coinUtils = CoinUtils();
+  final fabUtils = FabUtils();
 
   // Init State
   initState() async {
@@ -257,7 +256,8 @@ class SendViewModel extends BaseViewModel {
 
       // Convert FAB to EXG format
       if (walletInfo.tokenType == 'FAB') {
-        if (!toAddress.startsWith('0x')) toAddress = fabToExgAddress(toAddress);
+        if (!toAddress.startsWith('0x'))
+          toAddress = fabUtils.fabToExgAddress(toAddress);
       }
       log.i('OPTIONS before send $options');
 
@@ -468,7 +468,7 @@ class SendViewModel extends BaseViewModel {
             fabAddress, walletInfo.tickerName, walletInfo.address)
         .then((walletBalance) {
       if (walletBalance != null) {
-        log.w(walletBalance);
+        log.w('refreshBalance ${walletBalance[0].toJson()}');
 
         walletInfo.availableBalance = walletBalance[0].balance;
         walletInfo.unconfirmedBalance = walletBalance[0].unconfirmedBalance;
@@ -679,7 +679,7 @@ class SendViewModel extends BaseViewModel {
   updateTransFee() async {
     setBusy(true);
     log.i('in update trans fee');
-    var to = CoinUtil.getOfficalAddress(walletInfo.tickerName.toUpperCase(),
+    var to = coinUtils.getOfficalAddress(walletInfo.tickerName.toUpperCase(),
         tokenType: walletInfo.tokenType.toUpperCase());
     amount = double.tryParse(sendAmountTextController.text);
     var gasPrice = int.tryParse(gasPriceTextController.text);

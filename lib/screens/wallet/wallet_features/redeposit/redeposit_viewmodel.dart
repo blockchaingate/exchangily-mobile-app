@@ -196,7 +196,7 @@ class RedepositViewModel extends FutureViewModel {
           amountInBigInt,
           trimHexPrefix(addressInKanban));
 
-      var signedMess = await signedMessage(
+      var signedMess = await CoinUtils().signedMessage(
           originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
 
       var resRedeposit = await this.submitredeposit(amountInBigInt,
@@ -262,17 +262,22 @@ class RedepositViewModel extends FutureViewModel {
       if (coinName == specialTokenTicker) isSpecial = true;
     });
     if (isSpecial) {
-      specialCoinType =
-          await getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
+      specialCoinType = await CoinUtils()
+          .getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
     }
-    abiHex = getDepositFuncABI(isSpecial ? specialCoinType : coinType, txHash,
-        amountInLink, addressInKanban, signedMess,
-        chain: chainType, isSpecialDeposit: isSpecial);
+    abiHex = AbiUtils().getDepositFuncABI(
+        isSpecial ? specialCoinType : coinType,
+        txHash,
+        amountInLink,
+        addressInKanban,
+        signedMess,
+        chain: chainType,
+        isSpecialDeposit: isSpecial);
 
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
 
-    var txKanbanHex = await signAbiHexWithPrivateKey(
+    var txKanbanHex = await AbiUtils().signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         coinPoolAddress,

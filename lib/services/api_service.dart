@@ -447,22 +447,6 @@ class ApiService {
   }
 
 /*----------------------------------------------------------------------
-                    Post free fab
-----------------------------------------------------------------------*/
-
-  Future postFreeFab(data) async {
-    try {
-      var response = await client.post(postFreeFabUrl, body: data);
-      var json = jsonDecode(response.body);
-      log.w(json);
-      return json;
-    } catch (err) {
-      log.e('postFreeFab $err');
-      throw Exception(err);
-    }
-  }
-
-/*----------------------------------------------------------------------
                     Get free fab
 ----------------------------------------------------------------------*/
 
@@ -746,18 +730,6 @@ class ApiService {
     return json;
   }
 
-  // Get BtcUtxos
-  Future getBtcUtxos(String address) async {
-    var url = btcBaseUrl + GetUtxosApiRoute + address;
-    log.w(url);
-    var json;
-    try {
-      var response = await client.get(url);
-      json = jsonDecode(response.body);
-    } catch (e) {}
-    return json;
-  }
-
   // Get LtcUtxos
   Future getLtcUtxos(String address) async {
     var url = ltcBaseUrl + GetUtxosApiRoute + address;
@@ -939,32 +911,6 @@ class ApiService {
     } catch (e) {
       errMsg = 'connection error';
     }
-    return {'txHash': txHash, 'errMsg': errMsg};
-  }
-
-  // Fab Post Tx
-  Future postFabTx(String txHex) async {
-    var url = fabBaseUrl + PostRawTxApiRoute;
-    var txHash = '';
-    var errMsg = '';
-    if (txHex != '') {
-      var data = {'rawtx': txHex};
-      try {
-        var response = await client.post(url, body: data);
-
-        var json = jsonDecode(response.body);
-        if (json != null) {
-          if ((json['txid'] != null) && (json['txid'] != '')) {
-            txHash = json['txid'];
-          } else if (json['Error'] != '') {
-            errMsg = json['Error'];
-          }
-        }
-      } catch (e) {
-        errMsg = 'connection error';
-      }
-    }
-
     return {'txHash': txHash, 'errMsg': errMsg};
   }
 

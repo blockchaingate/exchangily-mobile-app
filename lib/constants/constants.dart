@@ -1,6 +1,5 @@
 class Constants {
-
-  static const List<String> specialTokens  = [
+  static const List<String> specialTokens = [
     'USDTX',
     'FABE',
     'EXGE',
@@ -37,4 +36,7 @@ class Constants {
   static const String DepositSignatureAbi = "0x379eb862";
   static const String WithdrawSignatureAbi = "0x3295d51e";
   static const String SendSignatureAbi = "0x3faf0a66";
+
+  static const String EthMessagePrefix = '\u0019Ethereum Signed Message:\n';
+  static const String BtcMessagePrefix = '\x18Bitcoin Signed Message:\n';
 }

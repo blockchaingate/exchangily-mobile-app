@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
@@ -69,6 +70,7 @@ class MoveToWalletViewmodel extends BaseState {
   String updateTickerForErc = '';
   bool isAlert = false;
   bool isSpeicalTronTokenWithdraw = false;
+  final coinUtils = CoinUtils();
 
 /*---------------------------------------------------
                       INIT
@@ -415,7 +417,7 @@ class MoveToWalletViewmodel extends BaseState {
 ----------------------------------------------------------------------*/
   getTrxTsWalletBalance() async {
     setBusy(true);
-    String trxOfficialddress = getOfficalAddress('TRX');
+    String trxOfficialddress = coinUtils.getOfficalAddress('TRX');
     await apiService.getTronTsWalletBalance(trxOfficialddress).then((res) {
       trxTsWalletBalance = res['balance'] / 1e6;
       log.e('getTrxTsWalletBalance $trxTsWalletBalance');
@@ -437,7 +439,7 @@ class MoveToWalletViewmodel extends BaseState {
         smartContractAddress = value;
       }
     });
-    String trxOfficialddress = getOfficalAddress('TRX');
+    String trxOfficialddress = coinUtils.getOfficalAddress('TRX');
     await apiService
         .getTronUsdtTsWalletBalance(trxOfficialddress, smartContractAddress)
         .then((res) {
@@ -453,7 +455,7 @@ class MoveToWalletViewmodel extends BaseState {
 
   getFabBalance() async {
     setBusy(true);
-    String fabAddress = getOfficalAddress('FAB');
+    String fabAddress = coinUtils.getOfficalAddress('FAB');
     await walletService.coinBalanceByAddress('FAB', fabAddress, '').then((res) {
       log.e('fab res $res');
       fabChainBalance = res['balance'];
@@ -522,7 +524,7 @@ class MoveToWalletViewmodel extends BaseState {
   getEthChainBalance() async {
     setBusy(true);
     String officialAddress = '';
-    officialAddress = getOfficalAddress('ETH');
+    officialAddress = coinUtils.getOfficalAddress('ETH');
     // call to get token balance
     if (walletInfo.tickerName == 'FAB') {
       updateTickerForErc = 'FABE';

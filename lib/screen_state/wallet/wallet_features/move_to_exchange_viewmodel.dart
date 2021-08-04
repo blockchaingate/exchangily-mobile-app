@@ -57,6 +57,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
   var res;
   double amount = 0.0;
   String feeUnit = '';
+  final coinUtils = CoinUtils();
 
   void initState() async {
     setBusy(true);
@@ -484,7 +485,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
   updateTransFee() async {
     setBusy(true);
-    var to = getOfficalAddress(coinName, tokenType: tokenType);
+    var to = coinUtils.getOfficalAddress(coinName, tokenType: tokenType);
     amount = double.tryParse(amountController.text);
 
     if (to == null || amount == null || amount <= 0) {
