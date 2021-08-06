@@ -20,6 +20,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:stacked/stacked.dart';
 
 class SendWalletView extends StatelessWidget {
@@ -139,6 +140,11 @@ class SendWalletView extends StatelessWidget {
                               TextField(
                                 // change paste text color
                                 controller: model.sendAmountTextController,
+                                inputFormatters: [
+                                  DecimalTextInputFormatter(
+                                      decimalRange: model.decimalLimit,
+                                      activatedNegativeValues: false)
+                                ],
                                 onChanged: (String amount) {
                                   model.amount = double.parse(amount);
                                   model.checkAmount();
@@ -146,6 +152,14 @@ class SendWalletView extends StatelessWidget {
                                 keyboardType: TextInputType.numberWithOptions(
                                     decimal: true), // numnber keyboard
                                 decoration: InputDecoration(
+                                    suffix: Text(
+                                        AppLocalizations.of(context)
+                                                .decimalLimit +
+                                            ': ' +
+                                            model.decimalLimit.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6),
                                     focusedBorder: UnderlineInputBorder(
                                         borderSide:
                                             BorderSide(color: primaryColor)),
@@ -164,6 +178,191 @@ class SendWalletView extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.symmetric(vertical: 10),
                                 child: Row(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 5,
+                                      height: 12,
+                                      child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          icon: Icon(
+                                              MdiIcons.informationOutline,
+                                              size: 12,
+                                              color: green),
+                                          onPressed: () {
+                                            showModalBottomSheet<void>(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return ListView(
+                                                    // padding: const EdgeInsets
+                                                    //         .symmetric(
+                                                    //     vertical: 32.0,
+                                                    //     horizontal: 20),
+                                                    children: [
+                                                      Container(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal:
+                                                                      10,
+                                                                  vertical: 20),
+                                                          color: primaryColor,
+                                                          child: Center(
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .availableBalanceInfoTitle,
+                                                              // textAlign: TextAlign.center,
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .headline4,
+                                                            ),
+                                                          )),
+                                                      UIHelper
+                                                          .verticalSpaceMedium,
+                                                      Container(
+                                                          padding: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal:
+                                                                      20),
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)
+                                                                .availableBalanceInfoContent,
+                                                            style: Theme.of(
+                                                                    context)
+                                                                .textTheme
+                                                                .headline2,
+                                                          ))
+                                                    ],
+                                                  );
+                                                });
+                                          }),
+                                    ),
+                                    UIHelper.horizontalSpaceSmall,
+                                    Text(
+                                      AppLocalizations.of(context).available +
+                                          ' ' +
+                                          AppLocalizations.of(context)
+                                              .walletbalance +
+                                          '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit)} ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline6
+                                          .copyWith(
+                                              fontWeight: FontWeight.w400),
+                                    ),
+                                    Text(
+                                      '${model.tickerName}'.toUpperCase(),
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Unconfirmed balance
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: 5,
+                                        height: 12,
+                                        child: IconButton(
+                                            padding: EdgeInsets.zero,
+                                            icon: Icon(
+                                                MdiIcons.informationOutline,
+                                                size: 12,
+                                                color: yellow),
+                                            onPressed: () {
+                                              showModalBottomSheet<void>(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return ListView(
+                                                      children: [
+                                                        Container(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        10,
+                                                                    vertical:
+                                                                        20),
+                                                            color: primaryColor,
+                                                            child: Center(
+                                                              child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)
+                                                                    .unConfirmedBalanceInfoTitle,
+                                                                // textAlign: TextAlign.center,
+                                                                style: Theme.of(
+                                                                        context)
+                                                                    .textTheme
+                                                                    .headline3,
+                                                              ),
+                                                            )),
+                                                        SizedBox(height: 20),
+                                                        Container(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        20),
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .unConfirmedBalanceInfoContent,
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .headline2,
+                                                            )),
+                                                        UIHelper
+                                                            .verticalSpaceMedium,
+                                                        Container(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        20),
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)
+                                                                  .unConfirmedBalanceInfoExample,
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .headline2,
+                                                            ))
+                                                      ],
+                                                    );
+                                                  });
+                                            }),
+                                      ),
+                                      UIHelper.horizontalSpaceSmall,
+                                      Text(
+                                        AppLocalizations.of(context)
+                                                .unConfirmedBalance +
+                                            '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.unconfirmedBalance, precision: model.decimalLimit)} ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6
+                                            .copyWith(
+                                                fontWeight: FontWeight.w400),
+                                      ),
+                                      Text(
+                                        '${model.tickerName}'.toUpperCase(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline6,
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
@@ -171,8 +370,8 @@ class SendWalletView extends StatelessWidget {
                                       children: <Widget>[
                                         Text(
                                           AppLocalizations.of(context)
-                                                  .walletbalance +
-                                              '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.walletInfo.availableBalance.toString().split(".")[1].length) + NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.unconfirmedBalance, precision: model.walletInfo.unconfirmedBalance.toString().split(".")[1].length)} ',
+                                                  .totalBalance +
+                                              '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.getTotalBalance(), precision: model.decimalLimit)} ',
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6
@@ -187,20 +386,6 @@ class SendWalletView extends StatelessWidget {
                                         )
                                       ],
                                     ),
-                                    // RichText(
-                                    //   text: TextSpan(
-                                    //     recognizer: TapGestureRecognizer()
-                                    //       ..onTap = () {
-                                    //         model.fillMaxAmount();
-                                    //       },
-                                    //     text: AppLocalizations.of(context)
-                                    //         .maxAmount,
-                                    //     style: Theme.of(context)
-                                    //         .textTheme
-                                    //         .bodyText1
-                                    //         .copyWith(color: primaryColor),
-                                    //   ),
-                                    // ),
                                   ],
                                 ),
                               )
@@ -523,7 +708,7 @@ class SendWalletView extends StatelessWidget {
                                           style: TextStyle(
                                               decoration:
                                                   TextDecoration.underline,
-                                              color: primaryColor),
+                                              color: white),
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
                                               model.copyAddress(context);
@@ -532,8 +717,10 @@ class SendWalletView extends StatelessWidget {
                                     UIHelper.verticalSpaceSmall,
                                     Text(
                                       model.txHash,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText2,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyText2
+                                          .copyWith(color: primaryColor),
                                     ),
                                   ],
                                 )
@@ -602,7 +789,7 @@ class SendWalletView extends StatelessWidget {
                                   width: 20,
                                   height: 20,
                                   child: model.sharedService.loadingIndicator())
-                              : Text(AppLocalizations.of(context).send,
+                              : Text(AppLocalizations.of(context).confirm,
                                   style: Theme.of(context).textTheme.headline4),
                         ),
                       ),

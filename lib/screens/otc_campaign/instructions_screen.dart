@@ -240,7 +240,7 @@ class CampaignInstructionScreen extends StatelessWidget {
                                                           style: Theme.of(
                                                                   context)
                                                               .textTheme
-                                                              .headline2
+                                                              .headline3
                                                               .copyWith(
                                                                   fontWeight:
                                                                       FontWeight

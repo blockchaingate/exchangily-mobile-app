@@ -112,9 +112,11 @@ class MyApp extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.25),
                   headline2: TextStyle(
-                      fontSize: 18,
+                      fontSize: 14,
                       color: globals.white,
-                      fontWeight: FontWeight.w300),
+                      letterSpacing: 1,
+                      height: 1.5,
+                      fontWeight: FontWeight.bold),
                   headline3: TextStyle(fontSize: 16, color: globals.white),
                   headline4: TextStyle(
                       fontSize: 15,
@@ -136,7 +138,6 @@ class MyApp extends StatelessWidget {
                       fontSize: 13,
                       color: globals.white,
                       fontWeight: FontWeight.w400),
-                  bodyText2: TextStyle(fontSize: 13, color: globals.red),
                   headline6: TextStyle(
                       fontSize: 10.5,
                       color: globals.white,

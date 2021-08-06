@@ -84,6 +84,7 @@ class SendViewModel extends BaseViewModel {
   String tokenType = '';
   final coinUtils = CoinUtils();
   final fabUtils = FabUtils();
+  int decimalLimit = 8;
 
   // Init State
   initState() async {
@@ -98,6 +99,8 @@ class SendViewModel extends BaseViewModel {
 
     await getDecimalData();
     await refreshBalance();
+    decimalLimit = await walletService.getWalletDecimalLimit(coinName);
+    if (decimalLimit == null) decimalLimit = 8;
     setBusy(false);
   }
 
@@ -596,7 +599,7 @@ class SendViewModel extends BaseViewModel {
           totalAmount = amount;
         log.i('total amount $totalAmount');
         log.w('wallet bal ${walletInfo.availableBalance}');
-        if (totalAmount <= walletInfo.availableBalance)
+        if (totalAmount <= walletInfo.availableBalance && transFee != 0.0)
           checkSendAmount = true;
         else
           checkSendAmount = false;

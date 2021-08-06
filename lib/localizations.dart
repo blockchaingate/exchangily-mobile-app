@@ -1788,6 +1788,45 @@ class AppLocalizations {
     return Intl.message('Decimal limit',
         name: 'decimalLimit', desc: 'decimal_limit');
   }
+
+  String get unConfirmedBalance {
+    return Intl.message('Unconfirmed Balance',
+        name: 'unConfirmedBalance', desc: 'unConfirmed_balance');
+  }
+
+  String get availableBalanceInfoTitle {
+    return Intl.message('Available Balance Info',
+        name: 'availableBalanceInfoTitle',
+        desc: 'available_balance_info_title');
+  }
+
+  String get availableBalanceInfoContent {
+    return Intl.message(
+        'The available balance reflects the total value of your unspent transactions outputs (utxos) for transactions that have already been confirmed on the blockchain so user can only use current available balance for the new transactions until the previous transactions complete',
+        name: 'availableBalanceInfoContent',
+        desc: 'available_balance_info_content');
+  }
+
+  String get unConfirmedBalanceInfoTitle {
+    return Intl.message('Unconfirmed Balance Info',
+        name: 'unConfirmedBalanceInfoTitle',
+        desc: 'unConfirmed_balance_info_title');
+  }
+
+  String get unConfirmedBalanceInfoContent {
+    return Intl.message(
+        'The unconfirmed balance reflects the total value of your unspent transactions outputs (utxos) for transactions that are still pending (not yet confirmed on the blockchain)',
+        name: 'unConfirmedBalanceInfoContent',
+        desc: 'unConfirmed_balance_info_content');
+  }
+
+  String get unConfirmedBalanceInfoExample {
+    return Intl.message(
+        'This is the normal transaction process where unconfirmed funds may be more than the amount user sends. For example, when you purchase 50 dollars worth of groceries in a cash transaction and you give the shopkeeper a 100 dollar bill, then you get your change(50 dollars) back by the shopkeeper',
+        name: 'unConfirmedBalanceInfoExample',
+        desc: 'unConfirmed_balance_info_example');
+  }
+
   // Share page pending translation added by Jack
 }
 

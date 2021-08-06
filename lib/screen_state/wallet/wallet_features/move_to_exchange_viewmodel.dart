@@ -72,7 +72,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
     refreshBalance();
-    await getDecimalData();
 
     if (coinName == 'BTC') {
       feeUnit = 'BTC';
@@ -83,29 +82,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else if (tokenType == 'FAB') {
       feeUnit = 'FAB';
     }
-    await getDecimalData();
+    decimalLimit = await walletService.getWalletDecimalLimit(coinName);
+    if (decimalLimit == null) decimalLimit = 8;
     setBusy(false);
-  }
-
-  // Get decimal data
-  getDecimalData() async {
-    await apiService.getTokenList().then((token) {
-      token.forEach((token) {
-        if (token.tickerName == coinName) decimalLimit = token.decimal;
-      });
-    });
-    if (decimalLimit == null) {
-      await apiService.getTokenListUpdates().then((token) {
-        token.forEach((token) async {
-          //    await tokenListDatabaseService.insert(token);
-          if (token.tickerName == coinName) decimalLimit = token.decimal;
-        });
-      });
-
-      ///  await tokenListDatabaseService
-      //     .getByTickerName(ticker)
-      //   .then((token) => withdrawLimit = double.parse(token.minWithdraw));
-    }
   }
 
   showDetailsMessageToggle() {

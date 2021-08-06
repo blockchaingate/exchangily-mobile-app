@@ -39,19 +39,19 @@ class WalletInfo {
   double _inExchange;
   //PairDecimalConfig _pairDecimalConfig;
 
-  WalletInfo({
-    int id,
-    String tickerName,
-    String tokenType,
-    String address,
-    double lockedBalance,
-    double availableBalance,
-    double unconfirmedBalance,
-    double usdValue,
-    String name,
-    double inExchange,
-    //PairDecimalConfig pairDecimalConfig
-  }) {
+  WalletInfo(
+      {int id,
+      String tickerName,
+      String tokenType,
+      String address,
+      double lockedBalance,
+      double availableBalance,
+      double unconfirmedBalance,
+      double usdValue,
+      String name,
+      double inExchange
+      //PairDecimalConfig pairDecimalConfig
+      }) {
     this._id = id;
     this._tickerName = tickerName;
     this._tokenType = tokenType;
@@ -73,6 +73,8 @@ class WalletInfo {
     //       .map((e) => PairDecimalConfig.fromJson(e))
     //       .toList();
     // }
+    double ab = json['availableBalance'] as double;
+    double ub = json['unconfirmedBalance'] as double;
 
     return new WalletInfo(
       id: json['id'] as int,
@@ -80,12 +82,12 @@ class WalletInfo {
       tokenType: json['tokenType'] as String,
       address: json['address'] as String,
       lockedBalance: json['lockedBalance'],
-      availableBalance: json['availableBalance'] as double,
-
-      unconfirmedBalance: json['unconfirmedBalance'] as double,
+      availableBalance: ab,
+      unconfirmedBalance: ub,
       usdValue: json['usdValue'] as double,
       name: json['name'] as String,
       inExchange: json['inExchange'] as double,
+
       //  pairDecimalConfig:
       //   PairDecimalConfig.fromJson(json['pairDecimalConfig'])
     );
@@ -178,6 +180,10 @@ class WalletInfo {
   // set pairDecimalConfig(PairDecimalConfig pairDecimalConfig) {
   //   this._pairDecimalConfig = pairDecimalConfig;
   // }
+
+  double getTotalBalance() {
+    return availableBalance + unconfirmedBalance;
+  }
 }
 
 class WalletInfoList {

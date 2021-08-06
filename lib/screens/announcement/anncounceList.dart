@@ -31,11 +31,8 @@ class AnnouncementList extends StatelessWidget {
         },
         builder: (context, model, child) => Scaffold(
             appBar: AppBar(
-              title: Text(
-               getlangGlobal()=="en"?
-                'Announcement List'
-               :"公告列表"
-                ),
+              title:
+                  Text(getlangGlobal() == "en" ? 'Announcement List' : "公告列表"),
               centerTitle: true,
             ),
             body: model.busy
@@ -116,11 +113,11 @@ class AnnouncementList extends StatelessWidget {
                                                   child: SizedBox(width: 5)),
                                               Text(
                                                   model.announceList[index]
-                                                          ["category"],
-                                                      //     +
-                                                      // model.announceList[index]
-                                                      //         ['isRead']
-                                                      //     .toString(),
+                                                      ["category"],
+                                                  //     +
+                                                  // model.announceList[index]
+                                                  //         ['isRead']
+                                                  //     .toString(),
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                   )),
@@ -135,7 +132,7 @@ class AnnouncementList extends StatelessWidget {
                                                   ["title"],
                                               style: Theme.of(context)
                                                   .textTheme
-                                                  .headline2
+                                                  .headline3
                                                   .copyWith(
                                                       fontWeight:
                                                           FontWeight.bold)),
