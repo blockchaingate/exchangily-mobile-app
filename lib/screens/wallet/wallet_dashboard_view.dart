@@ -641,6 +641,9 @@ Widget _coinDetailsCard(
   } else if (tickerName.toUpperCase() == 'USDTX') {
     tickerName = 'USDT(TRC20)';
     logoTicker = 'USDTX';
+  } else if (tickerName.toUpperCase() == 'USDT') {
+    tickerName = 'USDT(ERC20)';
+    logoTicker = 'USDT';
   } else {
     logoTicker = tickerName;
   }

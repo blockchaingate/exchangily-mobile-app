@@ -297,9 +297,9 @@ class WalletDashboardViewModel extends BaseViewModel {
           walletInfo.singleWhere((element) => element.tickerName == 'USDTX');
       if (tronUsdtWalletObj != null) {
         int tronUsdtIndex = walletInfo.indexOf(tronUsdtWalletObj);
-        if (tronUsdtIndex != 7) {
+        if (tronUsdtIndex != 5) {
           walletInfo.removeAt(tronUsdtIndex);
-          walletInfo.insert(7, tronUsdtWalletObj);
+          walletInfo.insert(5, tronUsdtWalletObj);
         } else {
           log.i('2nd else movetronusdt tron usdt already at #7');
         }
@@ -311,23 +311,24 @@ class WalletDashboardViewModel extends BaseViewModel {
     }
   }
 
-  moveTrxUsdt() {
-    // get first 6 wallets
-    List<WalletInfo> first6Wallets = walletInfo.sublist(0, 6);
-    // make a copy of trx and trx usdt
-    List<WalletInfo> trxCoins = [];
-    trxCoins
-        .add(walletInfo.singleWhere((element) => element.tickerName == 'TRX'));
-    trxCoins.add(
-        walletInfo.singleWhere((element) => element.tickerName == 'USDTX'));
-    // remove trx and trx usdt from the list
-    walletInfo.removeWhere((element) => element.tickerName == 'TRX');
-    walletInfo.removeWhere((element) => element.tickerName == 'USDTX');
-// wallet after first 6
-    List<WalletInfo> after6Wallets = walletInfo.sublist(6);
-    // clear walletinfo copy
-    //  walletInfo.clear();
-    walletInfo = first6Wallets + trxCoins + after6Wallets;
+  moveTron() {
+    try {
+      var tronWalletObj =
+          walletInfo.singleWhere((element) => element.tickerName == 'TRX');
+      if (tronWalletObj != null) {
+        int tronUsdtIndex = walletInfo.indexOf(tronWalletObj);
+        if (tronUsdtIndex != 7) {
+          walletInfo.removeAt(tronUsdtIndex);
+          walletInfo.insert(7, tronWalletObj);
+        } else {
+          log.i('2nd else moveTron tron usdt already at #7');
+        }
+      } else {
+        log.w('1st else moveTron cant find tron usdt');
+      }
+    } catch (err) {
+      log.e('moveTron Catch $err');
+    }
   }
 
 /*----------------------------------------------------------------------
@@ -1475,7 +1476,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     // await walletDatabaseService.deleteWalletByTickerName('TRX');
     await checkToUpdateWallet();
     moveTronUsdt();
-
+    moveTron();
     // get exg address to get free fab
     await getGas();
     // check gas and fab balance if 0 then ask for free fab
