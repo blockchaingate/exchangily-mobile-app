@@ -14,6 +14,7 @@
 import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
+import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -77,7 +78,15 @@ Future<Map<String, dynamic>> submitDeposit(
   ConfigService configService = locator<ConfigService>();
   var url = configService.getKanbanBaseUrl() + SubmitDepositApiRoute;
   print('submitDeposit url $url');
+  final sharedService = locator<SharedService>();
+  var versionInfo = await sharedService.getLocalAppVersion();
+  print('getAppVersion $versionInfo');
+  String versionName = versionInfo['name'];
+  String buildNumber = versionInfo['buildNumber'];
+  String fullVersion = versionName + '+' + buildNumber;
+  print('fullVersion $fullVersion');
   var body = {
+    'version': fullVersion,
     'rawTransaction': rawTransaction,
     'rawKanbanTransaction': rawKanbanTransaction
   };
@@ -117,12 +126,23 @@ Future<Map<String, dynamic>> submitReDeposit(
     String rawKanbanTransaction) async {
   ConfigService configService = locator<ConfigService>();
   var url = configService.getKanbanBaseUrl() + ResubmitDepositApiRoute;
-  var data = {'rawKanbanTransaction': rawKanbanTransaction};
-  print('URL submitReDeposit $url/$data');
+
+  final sharedService = locator<SharedService>();
+  var versionInfo = await sharedService.getLocalAppVersion();
+  print('getAppVersion $versionInfo');
+  String versionName = versionInfo['name'];
+  String buildNumber = versionInfo['buildNumber'];
+  String fullVersion = versionName + '+' + buildNumber;
+  print('fullVersion $fullVersion');
+  var body = {
+    'version': fullVersion,
+    'rawKanbanTransaction': rawKanbanTransaction
+  };
+  print('URL submitReDeposit $url -- body $body');
 
   try {
     var client = new http.Client();
-    var response = await client.post(url, body: data);
+    var response = await client.post(url, body: body);
     //print('response from sendKanbanRawTransaction=');
     // print(response.body);
     Map<String, dynamic> res = jsonDecode(response.body);
@@ -139,11 +159,22 @@ Future<Map<String, dynamic>> sendKanbanRawTransaction(
   var url =
       configService.getKanbanBaseUrl() + KanbanApiRoute + SendRawTxApiRoute;
   print('URL sendKanbanRawTransaction $url');
-  var data = {'signedTransactionData': rawKanbanTransaction};
 
+  final sharedService = locator<SharedService>();
+  var versionInfo = await sharedService.getLocalAppVersion();
+  String versionName = versionInfo['name'];
+  String buildNumber = versionInfo['buildNumber'];
+  String fullVersion = versionName + '+' + buildNumber;
+  print('fullVersion $fullVersion');
+  var body = {
+    'version': fullVersion,
+    'signedTransactionData': rawKanbanTransaction
+  };
+
+  print('body $body');
   try {
     var client = new http.Client();
-    var response = await client.post(url, body: data);
+    var response = await client.post(url, body: body);
     print('response from sendKanbanRawTransaction=');
     print(response.body);
     if (response.body.contains('TS crosschain withdraw verification failed'))

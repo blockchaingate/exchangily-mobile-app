@@ -39,12 +39,14 @@ class ReceiveWalletScreen extends StatefulWidget {
 
 class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   String convertedToFabAddress = '';
+  final fabUtils = FabUtils();
   @override
   void initState() {
     super.initState();
     // log.w(widget.walletInfo.toJson());
     if (widget.walletInfo.tokenType == 'FAB') {
-      convertedToFabAddress = exgToFabAddress(widget.walletInfo.address);
+      convertedToFabAddress =
+          fabUtils.exgToFabAddress(widget.walletInfo.address);
       log.w(
           'convertedToFabAddress from ${widget.walletInfo.address} to $convertedToFabAddress');
     }

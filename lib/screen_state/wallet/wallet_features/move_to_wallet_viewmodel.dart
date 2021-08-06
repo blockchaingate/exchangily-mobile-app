@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -23,7 +25,6 @@ import 'package:exchangilymobileapp/services/db/token_list_database_service.dart
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/utils/eth_util.dart';
 import 'dart:convert';
-import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:http/http.dart' as http;
 
@@ -69,6 +70,7 @@ class MoveToWalletViewmodel extends BaseState {
   String updateTickerForErc = '';
   bool isAlert = false;
   bool isSpeicalTronTokenWithdraw = false;
+  final coinUtils = CoinUtils();
 
 /*---------------------------------------------------
                       INIT
@@ -392,13 +394,18 @@ class MoveToWalletViewmodel extends BaseState {
         .then((res) {
       walletInfo.inExchange = res[0].unlockedExchangeBalance;
       log.w('single coin exchange balance check ${walletInfo.inExchange}');
+    }).catchError((err) {
+      log.e('Withdraw catch trx $err');
+      isShowErrorDetailsButton = true;
+      serverError = err.toString();
+      return;
     });
 
     if (isWithdrawChoice) {
       await getEthChainBalance();
       if (tickerName == 'USDT' || tickerName == 'USDTX') {
         // if (walletInfo.tickerName == 'USDTX') {
-        await getTrxUsdtTsWalletBalance();
+        if (isProduction) await getTrxUsdtTsWalletBalance();
         // } else
         //   await getTrxTsWalletBalance();
       } else {
@@ -415,7 +422,7 @@ class MoveToWalletViewmodel extends BaseState {
 ----------------------------------------------------------------------*/
   getTrxTsWalletBalance() async {
     setBusy(true);
-    String trxOfficialddress = getOfficalAddress('TRX');
+    String trxOfficialddress = coinUtils.getOfficalAddress('TRX');
     await apiService.getTronTsWalletBalance(trxOfficialddress).then((res) {
       trxTsWalletBalance = res['balance'] / 1e6;
       log.e('getTrxTsWalletBalance $trxTsWalletBalance');
@@ -437,7 +444,7 @@ class MoveToWalletViewmodel extends BaseState {
         smartContractAddress = value;
       }
     });
-    String trxOfficialddress = getOfficalAddress('TRX');
+    String trxOfficialddress = coinUtils.getOfficalAddress('TRX');
     await apiService
         .getTronUsdtTsWalletBalance(trxOfficialddress, smartContractAddress)
         .then((res) {
@@ -453,7 +460,7 @@ class MoveToWalletViewmodel extends BaseState {
 
   getFabBalance() async {
     setBusy(true);
-    String fabAddress = getOfficalAddress('FAB');
+    String fabAddress = coinUtils.getOfficalAddress('FAB');
     await walletService.coinBalanceByAddress('FAB', fabAddress, '').then((res) {
       log.e('fab res $res');
       fabChainBalance = res['balance'];
@@ -522,7 +529,7 @@ class MoveToWalletViewmodel extends BaseState {
   getEthChainBalance() async {
     setBusy(true);
     String officialAddress = '';
-    officialAddress = getOfficalAddress('ETH');
+    officialAddress = coinUtils.getOfficalAddress('ETH');
     // call to get token balance
     if (walletInfo.tickerName == 'FAB') {
       updateTickerForErc = 'FABE';
@@ -782,7 +789,7 @@ class MoveToWalletViewmodel extends BaseState {
                 success ? "" : AppLocalizations.of(context).serverError,
                 isWarning: false);
           }).catchError((err) {
-            log.e('Withdraw catch $err');
+            log.e('Withdraw catch trx $err');
             isShowErrorDetailsButton = true;
             serverError = err.toString();
           });

@@ -39,7 +39,7 @@ class MoveToExchangeScreen extends StatelessWidget {
         model.walletInfo = walletInfo;
         model.initState();
       },
-      builder: (context, model, child) => Scaffold(
+      builder: (context, MoveToExchangeViewModel model, child) => Scaffold(
         appBar: CupertinoNavigationBar(
           padding: EdgeInsetsDirectional.only(start: 0),
           leading: CupertinoButton(
@@ -69,6 +69,11 @@ class MoveToExchangeScreen extends StatelessWidget {
             children: <Widget>[
               TextField(
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  DecimalTextInputFormatter(
+                      decimalRange: model.decimalLimit,
+                      activatedNegativeValues: false)
+                ],
                 onChanged: (String amount) {
                   model.updateTransFee();
                 },
@@ -86,11 +91,11 @@ class MoveToExchangeScreen extends StatelessWidget {
                   //         .copyWith(color: primaryColor),
                   //   ),
                   // ),
-                  // suffix: Text(
-                  //     AppLocalizations.of(context).minimumAmount +
-                  //         ': ' +
-                  //         environment['minimumWithdraw'][coinName].toString(),
-                  //     style: Theme.of(context).textTheme.headline6),
+                  suffix: Text(
+                      AppLocalizations.of(context).decimalLimit +
+                          ': ' +
+                          model.decimalLimit.toString(),
+                      style: Theme.of(context).textTheme.headline6),
                   enabledBorder: OutlineInputBorder(
                       borderSide:
                           BorderSide(color: Color(0XFF871fff), width: 1.0)),

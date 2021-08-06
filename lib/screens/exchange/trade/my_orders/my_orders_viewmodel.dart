@@ -84,6 +84,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
   String _orderCancelledText;
   TextStyle orderCancelledTextStyle;
 
+  final abiUtils = AbiUtils();
+
   init() async {
     log.i('INIT');
     getMyOrdersByTickerName();
@@ -435,7 +437,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
 
     var keyPairKanban = getExgKeyPair(seed);
     var exchangilyAddress = await getExchangilyAddress();
-    var txKanbanHex = await signAbiHexWithPrivateKey(
+    var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         exchangilyAddress,

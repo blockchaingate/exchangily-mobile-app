@@ -117,6 +117,8 @@ class BuySellViewModel extends StreamViewModel {
   bool get isOrderbookLoaded => _isOrderbookLoaded;
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   Orderbook orderbook = new Orderbook();
+  final coinUtils = CoinUtils();
+  final abiUtils = AbiUtils();
 
   @override
   Stream get stream =>
@@ -453,10 +455,13 @@ class BuySellViewModel extends StreamViewModel {
     var timeBeforeExpiration = 423434342432;
     var orderType = 1;
     int baseCoin = 0;
-    await getCoinTypeIdByName(baseCoinName).then((value) => baseCoin = value);
+    await coinUtils
+        .getCoinTypeIdByName(baseCoinName)
+        .then((value) => baseCoin = value);
     log.e('basecoin Hex ==' + baseCoin.toRadixString(16));
     int targetCoin = 0;
-    await getCoinTypeIdByName(targetCoinName)
+    await coinUtils
+        .getCoinTypeIdByName(targetCoinName)
         .then((value) => targetCoin = value);
 
     if (!bidOrAsk) {
@@ -475,12 +480,12 @@ class BuySellViewModel extends StreamViewModel {
     print('qtyBigInt==' + qtyBigInt);
     print('priceBigInt==' + priceBigInt);
 
-    var abiHex = getCreateOrderFuncABI(
+    var abiHex = abiUtils.getCreateOrderFuncABI(
         false,
         bidOrAsk,
         //  orderType,
-        convertDecimalToHex(baseCoin),
-        convertDecimalToHex(targetCoin),
+        coinUtils.convertDecimalToHex(baseCoin),
+        coinUtils.convertDecimalToHex(targetCoin),
         qtyBigInt,
         priceBigInt,
         //   timeBeforeExpiration,
@@ -496,7 +501,7 @@ class BuySellViewModel extends StreamViewModel {
     int kanbanGasPrice = int.parse(kanbanGasPriceTextController.text);
     int kanbanGasLimit = int.parse(kanbanGasLimitTextController.text);
 
-    var txKanbanHex = await signAbiHexWithPrivateKey(
+    var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         exchangilyAddress,

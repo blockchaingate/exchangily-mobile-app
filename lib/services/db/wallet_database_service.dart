@@ -31,10 +31,11 @@ class WalletDataBaseService {
   final String columnAddress = 'address';
   final String columnLockedBalance = 'lockedBalance';
   final String columnAvailableBalance = 'availableBalance';
+  final String columnUnconfirmedBalance = 'unconfirmedBalance';
   final String columnUsdValue = 'usdValue';
   final String columnInExchange = 'inExchange';
 
-  static final _databaseVersion = 2;
+  static final _databaseVersion = 3;
   static Future<Database> _database;
   String path = '';
 
@@ -59,6 +60,7 @@ class WalletDataBaseService {
         $columnAddress TEXT,
         $columnLockedBalance REAL,
         $columnAvailableBalance REAL,
+        $columnUnconfirmedBalance REAL,
         $columnUsdValue REAL,
         $columnInExchange REAL) ''');
   }
@@ -84,10 +86,8 @@ class WalletDataBaseService {
   Future insert(WalletInfo walletInfo) async {
     final Database db = await _database;
 
-
-    int id = await db
-        .insert(tableName, walletInfo.toJson(),
-            conflictAlgorithm: ConflictAlgorithm.replace);
+    int id = await db.insert(tableName, walletInfo.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
 
     return id;
   }
@@ -139,7 +139,6 @@ class WalletDataBaseService {
     await db
         .delete(tableName, where: "tickerName = ?", whereArgs: [tickerName]);
   }
-  
 
   // Update database
   Future<void> update(WalletInfo walletInfo) async {

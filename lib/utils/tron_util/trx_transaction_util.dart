@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
+import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart' as StringUtil;
 import 'package:flutter/material.dart';
@@ -16,7 +17,6 @@ import 'package:fixnum/fixnum.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/protos_gen/any.pb.dart';
 import 'package:exchangilymobileapp/protos_gen/protos/tron.pb.dart' as Tron;
-import 'package:exchangilymobileapp/utils/coin_util.dart' as CoinUtil;
 import 'package:http/http.dart' as http;
 
 Future generateTrxTransactionContract(
@@ -240,7 +240,7 @@ _generateTrxRawTransaction(
 
   // CryptoWeb3.MsgSignature
   var signature = //CryptoWeb3.sign(hashedRawTxBuffer.bytes, privateKey);
-      CoinUtil.signTrxTx(hashedRawTxBuffer.bytes, privateKey);
+      CoinUtils().signTrxTx(hashedRawTxBuffer.bytes, privateKey);
   //signTrxTx(keyPair, digest1.bytes);
   // var rsvInList = constructTrxSigntureList(signature);
   // fill transaction object

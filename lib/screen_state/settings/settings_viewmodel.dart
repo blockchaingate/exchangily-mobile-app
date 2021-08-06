@@ -80,6 +80,7 @@ class SettingsViewmodel extends BaseViewModel {
   Map<String, String> versionInfo;
   UserSettings userSettings = new UserSettings();
   bool isUserSettingsEmpty = false;
+  final coinUtils = CoinUtils();
 
   init() async {
     setBusy(true);
@@ -151,7 +152,9 @@ class SettingsViewmodel extends BaseViewModel {
 // Not in use
   convertDecimalToHex() async {
     int baseCoin = 0;
-    await getCoinTypeIdByName('USDT').then((value) => baseCoin = value);
+    await coinUtils
+        .getCoinTypeIdByName('USDT')
+        .then((value) => baseCoin = value);
     var x = baseCoin.toRadixString(16);
     var t = HEX.encode([baseCoin]);
     log.e('basecoin $baseCoin --  Hex == $t');

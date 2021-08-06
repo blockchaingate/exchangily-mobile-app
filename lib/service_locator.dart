@@ -54,7 +54,7 @@ import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_screen_state.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_exchange_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
 import 'package:exchangilymobileapp/widget_state/carousel_state.dart';
@@ -102,7 +102,7 @@ Future serviceLocator() async {
   locator.registerFactory(() => CreatePasswordScreenState());
   locator.registerFactory(() => WalletDashboardViewModel());
   locator.registerFactory(() => WalletFeaturesViewModel());
-  locator.registerFactory(() => SendScreenState());
+  locator.registerFactory(() => SendViewModel());
   locator.registerFactory(() => SettingsViewmodel());
   //locator.registerFactory(() => LanguageScreenState());
   locator.registerFactory(() => WalletSetupViewmodel());

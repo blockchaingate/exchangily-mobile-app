@@ -1753,14 +1753,14 @@ class AppLocalizations {
 
   String get lowTsWalletBalanceErrorFirstPart {
     return Intl.message('Current maximum available balance for withdraw is',
-        name: 'lowTsWalletBalanceErrorText',
+        name: 'lowTsWalletBalanceErrorFirstPart',
         desc: 'lowTsWalletBalanceErrorText');
   }
 
   String get lowTsWalletBalanceErrorSecondPart {
     return Intl.message(
         'You may reduce your withdraw amount or you may withdraw by using other chain',
-        name: 'lowTsWalletBalanceErrorText',
+        name: 'lowTsWalletBalanceErrorSecondPart',
         desc: 'lowTsWalletBalanceErrorText');
   }
 
@@ -1776,6 +1776,17 @@ class AppLocalizations {
   String get importingWallet {
     return Intl.message('Importing Wallet',
         name: 'importingWallet', desc: 'importing_wallet_create_password');
+  }
+
+  String get incorrectDepositAmountOfTwoTx {
+    return Intl.message('Incorrect amount for two transactions',
+        name: 'incorrectDepositAmountOfTwoTx',
+        desc: 'incorrect_deposit_amount_of_two_tx');
+  }
+
+  String get decimalLimit {
+    return Intl.message('Decimal limit',
+        name: 'decimalLimit', desc: 'decimal_limit');
   }
   // Share page pending translation added by Jack
 }
