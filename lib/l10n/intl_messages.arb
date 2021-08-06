@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2021-03-30T12:19:07.894993",
+  "@@last_modified": "2021-08-06T12:34:57.870468",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1992,10 +1992,64 @@
     "type": "text",
     "placeholders": {}
   },
+  "noEvent": "No Event",
+  "@noEvent": {
+    "description": "noEvent",
+    "type": "text",
+    "placeholders": {}
+  },
+  "maxAmount": "Max Amount",
+  "@maxAmount": {
+    "description": "max_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "networkIssue": "Network issue",
+  "@networkIssue": {
+    "description": "networkIssue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lowTsWalletBalanceErrorFirstPart": "Current maximum available balance for withdraw is",
+  "@lowTsWalletBalanceErrorFirstPart": {
+    "description": "lowTsWalletBalanceErrorText",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lowTsWalletBalanceErrorSecondPart": "You may reduce your withdraw amount or you may withdraw by using other chain",
+  "@lowTsWalletBalanceErrorSecondPart": {
+    "description": "lowTsWalletBalanceErrorText",
+    "type": "text",
+    "placeholders": {}
+  },
+  "allAssets": "All Assets",
+  "@allAssets": {
+    "description": "all_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favAssets": "Favorite Assets",
+  "@favAssets": {
+    "description": "fav_assets",
+    "type": "text",
+    "placeholders": {}
+  },
   "importingWallet": "Importing Wallet",
   "@importingWallet": {
-      "description": "importing_wallet_create_password",
-      "type": "text",
-      "placeholders": {}
+    "description": "importing_wallet_create_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "incorrectDepositAmountOfTwoTx": "Incorrect amount for two transactions",
+  "@incorrectDepositAmountOfTwoTx": {
+    "description": "incorrect_deposit_amount_of_two_tx",
+    "type": "text",
+    "placeholders": {}
+  },
+  "decimalLimit": "Decimal limit",
+  "@decimalLimit": {
+    "description": "decimal_limit",
+    "type": "text",
+    "placeholders": {}
   }
 }

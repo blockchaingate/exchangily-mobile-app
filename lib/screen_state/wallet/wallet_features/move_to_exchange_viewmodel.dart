@@ -18,7 +18,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
-import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 
@@ -58,7 +57,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
   double amount = 0.0;
   String feeUnit = '';
   final coinUtils = CoinUtils();
+  int decimalLimit = 8;
 
+  // Init
   void initState() async {
     setBusy(true);
     coinName = walletInfo.tickerName;
@@ -82,20 +83,34 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else if (tokenType == 'FAB') {
       feeUnit = 'FAB';
     }
+    await getDecimalData();
     setBusy(false);
+  }
+
+  // Get decimal data
+  getDecimalData() async {
+    await apiService.getTokenList().then((token) {
+      token.forEach((token) {
+        if (token.tickerName == coinName) decimalLimit = token.decimal;
+      });
+    });
+    if (decimalLimit == null) {
+      await apiService.getTokenListUpdates().then((token) {
+        token.forEach((token) async {
+          //    await tokenListDatabaseService.insert(token);
+          if (token.tickerName == coinName) decimalLimit = token.decimal;
+        });
+      });
+
+      ///  await tokenListDatabaseService
+      //     .getByTickerName(ticker)
+      //   .then((token) => withdrawLimit = double.parse(token.minWithdraw));
+    }
   }
 
   showDetailsMessageToggle() {
     setBusy(true);
     isShowDetailsMessage = !isShowDetailsMessage;
-    setBusy(false);
-  }
-
-  getDecimalData() async {
-    setBusy(true);
-    singlePairDecimalConfig =
-        await sharedService.getSinglePairDecimalConfig(coinName);
-    log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
     setBusy(false);
   }
 
@@ -212,7 +227,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    // var amount = double.tryParse(amountController.text);
+    amount = double.tryParse(amountController.text);
     // amount = NumberUtil().roundDownLastDigit(amount);
     await refreshBalance();
     // double totalAmount = amount + kanbanTransFee + transFee;
@@ -374,7 +389,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             .depositDo(seed, walletInfo.tickerName, walletInfo.tokenType,
                 amount, option)
             .then((ret) {
-          log.w(ret);
+          log.w('deposit res $ret');
 
           bool success = ret["success"];
           if (success) {
@@ -408,8 +423,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
                     success
                         ? Text("")
                         : ret["data"] != null
-                            ? Text(ret["data"])
-                            : Text(AppLocalizations.of(context).serverError),
+                            ? Text(ret["data"] ==
+                                    'incorrect amount for two transactions'
+                                ? AppLocalizations.of(context)
+                                    .incorrectDepositAmountOfTwoTx
+                                : ret["data"])
+                            : Text(AppLocalizations.of(context).networkIssue),
                   ]),
               position: NotificationPosition.bottom,
               background: primaryColor);
@@ -429,7 +448,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
           sharedService.alertDialog(
               AppLocalizations.of(context).depositTransactionFailed,
-              AppLocalizations.of(context).serverError,
+              AppLocalizations.of(context).networkIssue,
               isWarning: false);
           serverError = onError.toString();
         });
@@ -441,7 +460,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else {
       log.e('Wrong pass');
       setBusy(false);
-      showNotification(context);
+      sharedService.showNotification(context);
     }
     setBusy(false);
   }
@@ -464,20 +483,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       throw Exception(err);
     });
-  }
-/*----------------------------------------------------------------------
-                    ShowNotification
-----------------------------------------------------------------------*/
-
-  showNotification(context) {
-    setBusy(true);
-    sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        globals.red,
-        context);
-    setBusy(false);
   }
 
 /*----------------------------------------------------------------------

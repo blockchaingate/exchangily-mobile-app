@@ -168,6 +168,8 @@ class WalletService {
   Completer<DialogResponse> _completer;
   final fabUtils = FabUtils();
   final btcUtils = BtcUtils();
+  final abiUtils = AbiUtils();
+  final coinUtils = CoinUtils();
 
 /*----------------------------------------------------------------------
                 Check coin wallet balance
@@ -1373,7 +1375,7 @@ class WalletService {
     errRes['success'] = false;
 
     var officalAddress =
-        CoinUtils().getOfficalAddress(coinName, tokenType: tokenType);
+        coinUtils.getOfficalAddress(coinName, tokenType: tokenType);
     if (officalAddress == null) {
       errRes['data'] = 'no official address';
       return errRes;
@@ -1412,6 +1414,8 @@ class WalletService {
 
     var txids = resST['txids'];
     var amountInTx = resST['amountInTx'];
+    // int decimal = 0;
+    //  if (coinName == 'FAB') decimal = 8;
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
 
     var amountInTxString = amountInTx.toString();
@@ -1419,6 +1423,13 @@ class WalletService {
 
     print('amountInTxString===' + amountInTxString);
     print('amountInLinkString===' + amountInLinkString);
+    // 0 means equal
+    // 1 means >
+    // -1 means <
+    // if (amountInLink.compareTo(amountInTx) != 0) {
+    //   errRes['data'] = 'incorrect amount for two transactions';
+    //   return errRes;
+    // }
     if (amountInLinkString.indexOf(amountInTxString) != 0) {
       errRes['data'] = 'incorrect amount for two transactions';
       return errRes;
@@ -1448,8 +1459,8 @@ class WalletService {
         amountInLink,
         stringUtils.trimHexPrefix(addressInKanban));
 
-    var signedMess = await CoinUtils()
-        .signedMessage(originalMessage, seed, coinName, tokenType);
+    var signedMess = await coinUtils.signedMessage(
+        originalMessage, seed, coinName, tokenType);
     log.e('Signed message $signedMess');
     print('coin type $coinType');
     log.w('Original message $originalMessage');
@@ -1464,19 +1475,20 @@ class WalletService {
       if (coinName == specialTokenTicker) isSpecial = true;
     });
     if (isSpecial) {
-      specialCoinType = await CoinUtils()
+      specialCoinType = await coinUtils
           .getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
     }
 
     var coinTypeUsed = isSpecial ? specialCoinType : coinType;
-    abiHex = AbiUtils().getDepositFuncABI(
+    abiHex = abiUtils.getDepositFuncABI(
         coinTypeUsed, txHash, amountInLink, addressInKanban, signedMess,
         chain: tokenType, isSpecialDeposit: isSpecial);
-    log.i('coinTypeUsed $coinTypeUsed -- abihex $abiHex');
+
+    var amountInAbi = abiUtils.getAmountFromDepositAbiHex(abiHex);
 
     var nonce = await getNonce(addressInKanban);
 
-    var txKanbanHex = await AbiUtils().signAbiHexWithPrivateKey(
+    var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         coinPoolAddress,

@@ -28,6 +28,8 @@ import 'package:exchangilymobileapp/constants/constants.dart';
 class AbiUtils {
   final log = getLogger('AbiUtils');
   final fabUtils = FabUtils();
+
+  // withdraw abi
   getWithdrawFuncABI(coinType, amountInLink, addressInWallet,
       {String chain = '', bool isSpecialDeposit = false}) {
     var abiHex = Constants.WithdrawSignatureAbi;
@@ -44,6 +46,10 @@ class AbiUtils {
     return abiHex;
   }
 
+  /// 0x10c43d65 abi
+  /// 000000000000000000000000dcd0f23125f74ef621dfa3310625f8af0dcd971b addr
+  /// 0000000000000000000000000000000000000000000000000000000000000005 coin type
+  /// 000000000000000000000000000000000000000000000000a688906bd8b00000 amount
   getSendCoinFuncABI(coinType, kbPaymentAddress, amount) {
     var abiHex = Constants.SendSignatureAbi;
     var fabAddress = toLegacyAddress(kbPaymentAddress);
@@ -56,8 +62,17 @@ class AbiUtils {
     return abiHex;
   }
 
-//0x10c43d65000000000000000000000000dcd0f23125f74ef621dfa3310625f8af0dcd971b0000000000000000000000000000000000000000000000000000000000000005000000000000000000000000000000000000000000000000a688906bd8b00000
+  /// amountHex
+  /// 912211ee52fe5000 --
 
+  /// abihex
+  /// 0x379eb862 abi prefix
+  /// 1f00000000000000000000000000000000000000000000000000000000020000 signature v + coin type
+  /// d86d8d5d531d800bfbf9b53eb50cbe57d1aac25fb377cf5e8bc11b645e25bb54 txhex
+  /// 000000000000000000000000000000000000000000000000912211ee52fe5000 amount
+  /// 000000000000000000000000d46d7e8d5a9f482aeeb0918bef6a10445159f297 address
+  /// 2857102e23b772dfd59fe9f230bdb48f14844503de678288fde836f85aef2b96 signature r
+  /// 04cd779f635338951c9003b3062e601a551116ca104d878d17edb341b932fc78 signature s
   getDepositFuncABI(int coinType, String txHash, BigInt amountInLink,
       String addressInKanban, signedMessage,
       {String chain = '', bool isSpecialDeposit = false}) {
@@ -67,16 +82,30 @@ class AbiUtils {
       // coin type of coins converting to hex for instance 458753 becomes 00070001
       var hexaDecimalCoinType = fix8LengthCoinType(coinType.toRadixString(16));
       abiHex += specialFixLength(hexaDecimalCoinType, 62, chain);
-    } else
+    } else {
       abiHex += fixLength(coinType.toRadixString(16), 62);
+    }
     abiHex += trimHexPrefix(txHash);
     var amountHex = amountInLink.toRadixString(16);
-    BigInt t = BigInt.parse(amountHex, radix: 16);
+    //  BigInt t = BigInt.parse(amountHex, radix: 16);
     abiHex += fixLength(amountHex, 64);
     abiHex += fixLength(trimHexPrefix(addressInKanban), 64);
     abiHex += trimHexPrefix(signedMessage["r"]);
     abiHex += trimHexPrefix(signedMessage["s"]);
+    log.i('getDepositFuncABI : amountHex $amountHex -- abihex $abiHex');
     return abiHex;
+  }
+
+  getAmountFromDepositAbiHex(String abiHex) {
+    //int abiLength = abiHex.length;
+    String abiHexWithoutPrefix = abiHex.substring(10);
+    //int abiHexWithoutPrefixLength = abiHexWithoutPrefix.length;
+    int amountIndex = 64 * 2;
+    String amountHex =
+        abiHexWithoutPrefix.substring(amountIndex, amountIndex + 64);
+    log.i('getAmountFromDepositAbiHex -- amounthex $amountHex');
+    BigInt amountInTx = BigInt.parse(amountHex, radix: 16);
+    log.w('getAmountFromDepositAbiHex -- amountInTx bigint $amountInTx');
   }
 
   specialFixLength(String hexaDecimalCoinType, int length, String chain) {

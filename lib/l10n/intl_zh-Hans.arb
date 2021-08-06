@@ -2056,5 +2056,17 @@
         "description": "importing_wallet_create_password",
         "type": "text",
         "placeholders": {}
+    },
+    "incorrectDepositAmountOfTwoTx": "两笔交易金额不正确",
+    "@incorrectDepositAmountOfTwoTx": {
+      "description": "incorrect_deposit_amount_of_two_tx",
+      "type": "text",
+      "placeholders": {}
+    },
+    "decimalLimit": "十进制限制",
+    "@decimalLimit": {
+      "description": "decimal_limit",
+      "type": "text",
+      "placeholders": {}
     }
 }

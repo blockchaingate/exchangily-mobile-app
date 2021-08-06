@@ -51,6 +51,7 @@ class RedepositViewModel extends FutureViewModel {
   @override
   Future futureToRun() => getErrDeposit();
   bool isConfirmButtonPressed = false;
+  final abiUtils = AbiUtils();
   void init() {}
 
 /*----------------------------------------------------------------------
@@ -180,11 +181,11 @@ class RedepositViewModel extends FutureViewModel {
       var exgAddress = keyPairKanban['address'];
       var nonce = await getNonce(exgAddress);
 
-      var amountInBigInt = BigInt.parse(errDepositItem['amount']);
+      var amountInBigIntByApi = BigInt.parse(errDepositItem['amount']);
       // errDepositAmount.toString().contains('e')
       //     ? BigInt.parse(errDepositItem['amount'])
       //     : BigInt.from(errDepositAmount);
-      print('amountInBigInt $amountInBigInt');
+      log.i('checkPass errDepositItem amount $amountInBigIntByApi');
       var coinType = errDepositItem['coinType'];
 
       var transactionID = errDepositItem['transactionID'];
@@ -193,15 +194,17 @@ class RedepositViewModel extends FutureViewModel {
       var originalMessage = walletService.getOriginalMessage(
           coinType,
           trimHexPrefix(transactionID),
-          amountInBigInt,
+          amountInBigIntByApi,
           trimHexPrefix(addressInKanban));
 
       var signedMess = await CoinUtils().signedMessage(
           originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
 
-      var resRedeposit = await this.submitredeposit(amountInBigInt,
+      var txKanbanHex = await this.getTxKanbanHex(amountInBigIntByApi,
           keyPairKanban, nonce, coinType, transactionID, signedMess,
           chainType: walletInfo.tokenType);
+
+      var resRedeposit = await submitReDeposit(txKanbanHex);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
         log.w('resRedeposit $resRedeposit');
@@ -239,7 +242,7 @@ class RedepositViewModel extends FutureViewModel {
     setBusy(false);
   }
 
-  submitredeposit(
+  getTxKanbanHex(
       amountInLink, keyPairKanban, nonce, coinType, txHash, signedMess,
       {String chainType: ''}) async {
     var abiHex;
@@ -265,19 +268,14 @@ class RedepositViewModel extends FutureViewModel {
       specialCoinType = await CoinUtils()
           .getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
     }
-    abiHex = AbiUtils().getDepositFuncABI(
-        isSpecial ? specialCoinType : coinType,
-        txHash,
-        amountInLink,
-        addressInKanban,
-        signedMess,
-        chain: chainType,
-        isSpecialDeposit: isSpecial);
-
+    abiHex = abiUtils.getDepositFuncABI(isSpecial ? specialCoinType : coinType,
+        txHash, amountInLink, addressInKanban, signedMess,
+        chain: chainType, isSpecialDeposit: isSpecial);
+    abiUtils.getAmountFromDepositAbiHex(abiHex);
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
 
-    var txKanbanHex = await AbiUtils().signAbiHexWithPrivateKey(
+    var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         coinPoolAddress,
@@ -285,8 +283,7 @@ class RedepositViewModel extends FutureViewModel {
         kanbanPrice,
         kanbanGasLimit);
 
-    var res = await submitReDeposit(txKanbanHex);
-    return res;
+    return txKanbanHex;
   }
 
   showNotification(context) {

@@ -50,6 +50,19 @@ class SharedService {
   WalletDataBaseService walletDataBaseService =
       locator<WalletDataBaseService>();
 
+/*----------------------------------------------------------------------
+                    ShowNotification
+----------------------------------------------------------------------*/
+
+  showNotification(context) {
+    showInfoFlushbar(
+        AppLocalizations.of(context).passwordMismatch,
+        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
+        Icons.cancel,
+        red,
+        context);
+  }
+
 /*--------------------------------------------------------------------------
                   Get contract address from database
 ------------------------------------------------------------------------- */

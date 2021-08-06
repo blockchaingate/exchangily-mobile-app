@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
+import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -24,7 +25,6 @@ import 'package:exchangilymobileapp/services/db/token_list_database_service.dart
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/utils/eth_util.dart';
 import 'dart:convert';
-import 'package:exchangilymobileapp/utils/fab_util.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
 import 'package:http/http.dart' as http;
 
@@ -394,13 +394,18 @@ class MoveToWalletViewmodel extends BaseState {
         .then((res) {
       walletInfo.inExchange = res[0].unlockedExchangeBalance;
       log.w('single coin exchange balance check ${walletInfo.inExchange}');
+    }).catchError((err) {
+      log.e('Withdraw catch trx $err');
+      isShowErrorDetailsButton = true;
+      serverError = err.toString();
+      return;
     });
 
     if (isWithdrawChoice) {
       await getEthChainBalance();
       if (tickerName == 'USDT' || tickerName == 'USDTX') {
         // if (walletInfo.tickerName == 'USDTX') {
-        await getTrxUsdtTsWalletBalance();
+        if (isProduction) await getTrxUsdtTsWalletBalance();
         // } else
         //   await getTrxTsWalletBalance();
       } else {

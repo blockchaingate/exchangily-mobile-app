@@ -663,7 +663,8 @@ Future signedBitcoinMessage(String originalMessage, String wif) async {
       var address = environment['addresses']['exchangilyOfficial']
           .where((addr) => addr['name'] == coinName)
           .toList();
-      String majorsOfficialAddress = address[0]['address'];
+      String majorsOfficialAddress =
+          (address as List).isNotEmpty ? address[0]['address'] : '';
       print('majors official address $majorsOfficialAddress for $coinName');
       return majorsOfficialAddress;
     }
