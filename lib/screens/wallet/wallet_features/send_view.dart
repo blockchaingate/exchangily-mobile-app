@@ -186,7 +186,7 @@ class SendWalletView extends StatelessWidget {
                                           padding: EdgeInsets.zero,
                                           icon: Icon(
                                               MdiIcons.informationOutline,
-                                              size: 12,
+                                              size: 14,
                                               color: green),
                                           onPressed: () {
                                             showModalBottomSheet<void>(
@@ -274,7 +274,7 @@ class SendWalletView extends StatelessWidget {
                                             padding: EdgeInsets.zero,
                                             icon: Icon(
                                                 MdiIcons.informationOutline,
-                                                size: 12,
+                                                size: 14,
                                                 color: yellow),
                                             onPressed: () {
                                               showModalBottomSheet<void>(

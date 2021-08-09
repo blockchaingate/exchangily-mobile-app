@@ -124,14 +124,16 @@ class WalletBalance {
     } else {
       usdVal = UsdValue(usd: 0.0);
     }
+    double ub = NumberUtil().parsedDouble(json['unconfirmedBalance']);
+    if (ub.isNegative) {
+      ub = 0.0;
+    }
     return WalletBalance(
       coin: json['coin'],
       balance: json['balance'] != null
           ? (NumberUtil().parsedDouble(json['balance']))
           : 0.0,
-      unconfirmedBalance: json['unconfirmedBalance'] != null
-          ? (NumberUtil().parsedDouble(json['unconfirmedBalance']))
-          : 0.0,
+      unconfirmedBalance: json['unconfirmedBalance'] != null ? ub : 0.0,
       lockBalance: json['lockBalance'] != null
           ? (NumberUtil().parsedDouble(json['lockBalance']))
           : 0.0,
@@ -210,7 +212,7 @@ class WalletBalanceList {
   WalletBalanceList({this.walletBalances});
 
   factory WalletBalanceList.fromJson(List<dynamic> parsedJson) {
-    List<WalletBalance> balanceList = new List<WalletBalance>();
+    List<WalletBalance> balanceList = [];
     balanceList = parsedJson.map((i) => WalletBalance.fromJson(i)).toList();
     return new WalletBalanceList(walletBalances: balanceList);
   }

@@ -474,7 +474,8 @@ class SendViewModel extends BaseViewModel {
         log.w('refreshBalance ${walletBalance[0].toJson()}');
 
         walletInfo.availableBalance = walletBalance[0].balance;
-        walletInfo.unconfirmedBalance = walletBalance[0].unconfirmedBalance;
+        walletInfo.unconfirmedBalance =
+            walletBalance[0].unconfirmedBalance ?? 0.0;
       }
     }).catchError((err) {
       log.e(err);

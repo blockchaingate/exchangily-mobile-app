@@ -2009,5 +2009,41 @@
       "description": "decimal_limit",
       "type": "text",
       "placeholders": {}
+    },
+    "unConfirmedBalance": "Unconfirmed Balance",
+    "@unConfirmedBalance": {
+      "description": "unConfirmed_balance",
+      "type": "text",
+      "placeholders": {}
+    },
+    "availableBalanceInfoTitle": "Available Balance Info",
+    "@availableBalanceInfoTitle": {
+      "description": "available_balance_info_title",
+      "type": "text",
+      "placeholders": {}
+    },
+    "availableBalanceInfoContent": "The available balance reflects the total value of your unspent transactions outputs (utxos) for transactions that have already been confirmed on the blockchain so user can only use current available balance for the new transactions until the previous transactions complete",
+    "@availableBalanceInfoContent": {
+      "description": "available_balance_info_content",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalanceInfoTitle": "Unconfirmed Balance Info",
+    "@unConfirmedBalanceInfoTitle": {
+      "description": "unConfirmed_balance_info_title",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalanceInfoContent": "The unconfirmed balance reflects the total value of your unspent transactions outputs (utxos) for transactions that are still pending (not yet confirmed on the blockchain)",
+    "@unConfirmedBalanceInfoContent": {
+      "description": "unConfirmed_balance_info_content",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalanceInfoExample": "This is the normal transaction process where unconfirmed funds may be more than the amount user sends. For example, when you purchase 50 dollars worth of groceries in a cash transaction and you give the shopkeeper a 100 dollar bill, then you get your change(50 dollars) back by the shopkeeper",
+    "@unConfirmedBalanceInfoExample": {
+      "description": "unConfirmed_balance_info_example",
+      "type": "text",
+      "placeholders": {}
     }
 }

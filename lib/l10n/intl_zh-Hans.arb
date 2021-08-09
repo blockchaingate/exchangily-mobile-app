@@ -2068,5 +2068,41 @@
       "description": "decimal_limit",
       "type": "text",
       "placeholders": {}
+    },
+    "unConfirmedBalance": "未确认余额",
+    "@unConfirmedBalance": {
+      "description": "unConfirmed_balance",
+      "type": "text",
+      "placeholders": {}
+    },
+    "availableBalanceInfoTitle": "可用余额的详情",
+    "@availableBalanceInfoTitle": {
+      "description": "available_balance_info_title",
+      "type": "text",
+      "placeholders": {}
+    },
+    "availableBalanceInfoContent": "可用余额反映了已在区块链上确认的交易的未花费交易输出 (utxos) 的总价值，因此用户只能将当前可用余额用于新交易，直到之前的交易完成。",
+    "@availableBalanceInfoContent": {
+      "description": "available_balance_info_content",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalanceInfoTitle": "未确认余额的详情",
+    "@unConfirmedBalanceInfoTitle": {
+      "description": "unConfirmed_balance_info_title",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalanceInfoContent": "未确认余额反映你的交易未动用的输出（utxos）的对于那些仍在等待交易的总价值（尚未证实的blockchain）",
+    "@unConfirmedBalanceInfoContent": {
+      "description": "unConfirmed_balance_info_content",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalanceInfoExample": "这是正常的交易过程，其中未经确认的资金可能超过用户发送的金额。 例如，当您在现金交易中购买价值 50 美元的杂货时，您给店主一张 100 美元的钞票，然后店主将零钱找回给您（50 美元）。",
+    "@unConfirmedBalanceInfoExample": {
+      "description": "unConfirmed_balance_info_example",
+      "type": "text",
+      "placeholders": {}
     }
 }
