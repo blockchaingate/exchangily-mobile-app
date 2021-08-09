@@ -181,7 +181,7 @@ class WalletService {
         if (token.tickerName == coinName) res = token.decimal;
       });
     });
-    if (res == null) {
+    if (res == null || res == 0) {
       await apiService.getTokenListUpdates().then((token) {
         token.forEach((token) async {
           //    await tokenListDatabaseService.insert(token);
@@ -242,6 +242,9 @@ class WalletService {
         tickerName.toUpperCase() == 'USDTX') {
       tickerName = 'USDT(TRC20)';
       logoTicker = 'USDTX';
+    } else if (tickerName.toUpperCase() == 'USDT') {
+      tickerName = 'USDT(ERC20)';
+      logoTicker = 'USDT';
     } else {}
     return {"tickerName": tickerName, "logoTicker": logoTicker};
   }
@@ -1291,7 +1294,7 @@ class WalletService {
       bool isBroadcast,
       @required options}) async {
     log.i(
-        'menmonic $mnemonic -- amount $amount -- istrxusdt $isTrxUsdt -- isBroadcast $isBroadcast');
+        'depositTron -- amount $amount -- istrxusdt $isTrxUsdt -- isBroadcast $isBroadcast');
     int kanbanGasPrice = options['kanbanGasPrice'];
     int kanbanGasLimit = options['kanbanGasLimit'];
 

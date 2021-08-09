@@ -216,9 +216,12 @@ class WalletDashboardView extends StatelessWidget {
                                       child: SizedBox(
                                         width: 120,
                                         height: 20,
-                                        child: OutlineButton.icon(
-                                            padding: EdgeInsets.all(0),
-                                            onPressed: model.getFreeFab,
+                                        child: OutlinedButton.icon(
+                                            style: ButtonStyle(
+                                                padding:
+                                                    MaterialStateProperty.all(
+                                                        EdgeInsets.all(0))),
+                                            onPressed: () => model.getFreeFab(),
                                             icon: Icon(
                                               Icons.add,
                                               size: 18,
@@ -957,6 +960,9 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                       } else if (tickerName.toUpperCase() == 'USDTX') {
                         tickerName = 'USDT(TRC20)';
                         logoTicker = 'USDTX';
+                      } else if (tickerName.toUpperCase() == 'USDT') {
+                        tickerName = 'USDT(ERC20)';
+                        logoTicker = 'USDT';
                       } else {
                         logoTicker = tickerName;
                       }

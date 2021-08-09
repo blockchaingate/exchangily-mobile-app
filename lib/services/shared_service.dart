@@ -441,15 +441,15 @@ class SharedService {
                   ? Container(
                       margin: EdgeInsetsDirectional.only(bottom: 10),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           OutlinedButton(
                             style: ButtonStyle(
                               backgroundColor:
                                   MaterialStateProperty.all<Color>(globals.red),
-                              padding:
-                                  MaterialStateProperty.all<EdgeInsetsGeometry>(
-                                      EdgeInsets.all(0)),
+                              // padding:
+                              //     MaterialStateProperty.all<EdgeInsetsGeometry>(
+                              //         EdgeInsets.all(0)),
                             ),
                             child: Center(
                               child: Text(

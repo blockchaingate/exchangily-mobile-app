@@ -302,10 +302,10 @@ class WalletDashboardViewModel extends BaseViewModel {
           walletInfo.removeAt(tronUsdtIndex);
           walletInfo.insert(5, tronUsdtWalletObj);
         } else {
-          log.i('2nd else movetronusdt tron usdt already at #7');
+          log.i('2nd else move tronusdt tron usdt already at #5');
         }
       } else {
-        log.w('1st else movetronusdt cant find tron usdt');
+        log.w('1st else move tronusdt can\'t find tron usdt');
       }
     } catch (err) {
       log.e('movetronusdt Catch $err');
@@ -781,16 +781,20 @@ class WalletDashboardViewModel extends BaseViewModel {
                     child: ListView(
                       children: [
                         AlertDialog(
-                          titlePadding: EdgeInsets.symmetric(vertical: 5),
+                          titlePadding: EdgeInsets.symmetric(vertical: 0),
                           actionsPadding: EdgeInsets.all(0),
                           elevation: 5,
                           titleTextStyle: Theme.of(context).textTheme.headline4,
                           contentTextStyle: TextStyle(color: grey),
                           contentPadding: EdgeInsets.symmetric(horizontal: 10),
                           backgroundColor: walletCardColor.withOpacity(0.95),
-                          title: Text(
-                            AppLocalizations.of(context).question,
-                            textAlign: TextAlign.center,
+                          title: Container(
+                            color: primaryColor,
+                            padding: EdgeInsets.all(5),
+                            child: Text(
+                              AppLocalizations.of(context).question,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                           content: Column(
                             children: <Widget>[
@@ -800,19 +804,31 @@ class WalletDashboardViewModel extends BaseViewModel {
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyText1
-                                    .copyWith(color: red),
+                                    .copyWith(
+                                        color: red,
+                                        fontWeight: FontWeight.bold),
                               ),
+                              UIHelper.verticalSpaceSmall,
                               TextField(
                                 minLines: 1,
                                 style: TextStyle(color: white),
                                 controller: freeFabAnswerTextController,
                                 obscureText: false,
                                 decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: white, width: 1)),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: primaryColor, width: 1)),
+                                  focusColor: primaryColor,
+                                  isDense: true,
                                   icon: Icon(
                                     Icons.question_answer,
-                                    color: primaryColor,
+                                    color: white,
                                   ),
                                 ),
+                                cursorColor: white,
                               ),
                               UIHelper.verticalSpaceSmall,
                               postFreeFabResult != ''
@@ -828,17 +844,22 @@ class WalletDashboardViewModel extends BaseViewModel {
                                         StateSetter setState) {
                                   return Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       // Cancel
-                                      OutlineButton(
-                                          color: primaryColor,
-                                          padding: EdgeInsets.all(0),
+                                      OutlinedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(grey),
+                                            padding: MaterialStateProperty.all(
+                                                EdgeInsets.all(0)),
+                                          ),
                                           child: Center(
                                             child: Text(
                                               AppLocalizations.of(context)
-                                                  .close,
+                                                  .cancel,
                                               style: TextStyle(
-                                                  color: Colors.white,
+                                                  color: Colors.black,
                                                   fontSize: 12),
                                             ),
                                           ),
@@ -852,9 +873,14 @@ class WalletDashboardViewModel extends BaseViewModel {
                                           }),
                                       UIHelper.horizontalSpaceSmall,
                                       // Confirm
-                                      FlatButton(
-                                          color: primaryColor,
-                                          padding: EdgeInsets.all(0),
+                                      TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    primaryColor),
+                                            padding: MaterialStateProperty.all(
+                                                EdgeInsets.all(0)),
+                                          ),
                                           child: Center(
                                             child: Text(
                                               AppLocalizations.of(context)
@@ -1592,7 +1618,10 @@ class WalletDashboardViewModel extends BaseViewModel {
   //   log.w('Fetched wallet data using old methods');
   // }
 
-  // get exchange asset balance
+/*-------------------------------------------------------------------------------------
+                          Get exchange asset balance
+-------------------------------------------------------------------------------------*/
+
   getExchangeAssetsBalance() async {
     String address = await getExgAddressFromWalletDatabase();
     var res = await walletService.getAllExchangeBalances(address);

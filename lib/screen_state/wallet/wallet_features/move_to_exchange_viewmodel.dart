@@ -83,7 +83,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       feeUnit = 'FAB';
     }
     decimalLimit = await walletService.getWalletDecimalLimit(coinName);
-    if (decimalLimit == null) decimalLimit = 8;
+    if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
   }
 

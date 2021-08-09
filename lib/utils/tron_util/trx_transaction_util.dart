@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:exchangilymobileapp/constants/api_routes.dart';
+import 'package:exchangilymobileapp/constants/constants.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
@@ -28,8 +29,7 @@ Future generateTrxTransactionContract(
     @required String tickerName,
     @required bool isBroadcast}) async {
   int decimal = 0;
-  // print(
-  //     'tickername $tickerName -- from $fromAddr -- to $toAddr -- amount $amount --  isTrxUsdt $isTrxUsdt -- private key $privateKey');
+
   String contractAddress = '';
   final tokenListDatabaseService = locator<TokenListDatabaseService>();
   final apiService = locator<ApiService>();
@@ -75,7 +75,7 @@ Future generateTrxTransactionContract(
     //  print('contract address $contractAddress');
   }
   if (isTrxUsdt) {
-    var transferAbi = 'a9059cbb';
+    var transferAbi = Constants.DepositTronUsdtSignatureAbi;
     var decodedHexToAddress = StringUtil.uint8ListToHex(toAddress);
 // 4103b01c144f4e41c22b411c2997fbcdfae4fc9c2e
     if (decodedHexToAddress.startsWith('41') ||
@@ -135,7 +135,7 @@ Future generateTrxTransactionContract(
       : Tron.Transaction_Contract_ContractType.TransferContract;
 
   parameter.typeUrl =
-      "type.googleapis.com/protocol." + transferContractType.toString();
+      Constants.DepositTronTypeProtocol + transferContractType.toString();
 
   //print('PARAMETER $parameter');
 
