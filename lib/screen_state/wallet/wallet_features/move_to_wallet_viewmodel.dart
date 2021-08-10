@@ -346,7 +346,7 @@ class MoveToWalletViewmodel extends BaseState {
     await walletService.gasBalance(address).then((data) {
       gasAmount = data;
       log.i('gas balance $gasAmount');
-      if (gasAmount < 0.5) {
+      if (gasAmount == 0) {
         sharedService.alertDialog(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
@@ -632,7 +632,7 @@ class MoveToWalletViewmodel extends BaseState {
         return;
       }
       await checkGasBalance();
-      if (gasAmount == 0.0) {
+      if (gasAmount == 0.0 || gasAmount < kanbanTransFee) {
         sharedService.alertDialog(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,

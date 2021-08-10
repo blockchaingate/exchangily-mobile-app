@@ -85,6 +85,7 @@ class SendViewModel extends BaseViewModel {
   final coinUtils = CoinUtils();
   final fabUtils = FabUtils();
   int decimalLimit = 8;
+  double gasAmount = 0.0;
 
   // Init State
   initState() async {
@@ -102,6 +103,25 @@ class SendViewModel extends BaseViewModel {
     decimalLimit = await walletService.getWalletDecimalLimit(coinName);
     if (decimalLimit == null) decimalLimit = 8;
     setBusy(false);
+  }
+
+  /*---------------------------------------------------
+                      Get gas
+--------------------------------------------------- */
+
+  getGas() async {
+    String address = await sharedService.getExgAddressFromWalletDatabase();
+    await walletService.gasBalance(address).then((data) {
+      gasAmount = data;
+      if (gasAmount == 0) {
+        sharedService.alertDialog(
+          AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).insufficientGasAmount,
+        );
+      }
+    }).catchError((onError) => log.e(onError));
+    log.w('gas amount $gasAmount');
+    return gasAmount;
   }
 
   setFee(String coinName) async {
@@ -474,8 +494,7 @@ class SendViewModel extends BaseViewModel {
         log.w('refreshBalance ${walletBalance[0].toJson()}');
 
         walletInfo.availableBalance = walletBalance[0].balance;
-        walletInfo.unconfirmedBalance =
-            walletBalance[0].unconfirmedBalance ?? 0.0;
+        walletInfo.unconfirmedBalance = walletBalance[0].unconfirmedBalance;
       }
     }).catchError((err) {
       log.e(err);
@@ -532,6 +551,17 @@ class SendViewModel extends BaseViewModel {
       sharedService.alertDialog(AppLocalizations.of(context).invalidAmount,
           AppLocalizations.of(context).pleaseEnterValidNumber,
           isWarning: false);
+      return;
+    }
+    if (gasAmount == 0.0 || gasAmount < transFee) {
+      sharedService.showInfoFlushbar(
+          AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).insufficientGasAmount,
+          Icons.cancel,
+          red,
+          context);
+
+      setBusy(false);
       return;
     }
 

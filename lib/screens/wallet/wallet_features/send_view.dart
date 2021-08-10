@@ -179,67 +179,73 @@ class SendWalletView extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(vertical: 10),
                                 child: Row(
                                   children: <Widget>[
-                                    SizedBox(
-                                      width: 5,
-                                      height: 12,
-                                      child: IconButton(
-                                          padding: EdgeInsets.zero,
-                                          icon: Icon(
-                                              MdiIcons.informationOutline,
-                                              size: 14,
-                                              color: green),
-                                          onPressed: () {
-                                            showModalBottomSheet<void>(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return ListView(
-                                                    // padding: const EdgeInsets
-                                                    //         .symmetric(
-                                                    //     vertical: 32.0,
-                                                    //     horizontal: 20),
-                                                    children: [
-                                                      Container(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      10,
-                                                                  vertical: 20),
-                                                          color: primaryColor,
-                                                          child: Center(
-                                                            child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .availableBalanceInfoTitle,
-                                                              // textAlign: TextAlign.center,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline4,
-                                                            ),
-                                                          )),
-                                                      UIHelper
-                                                          .verticalSpaceMedium,
-                                                      Container(
-                                                          padding: EdgeInsets
-                                                              .symmetric(
-                                                                  horizontal:
-                                                                      20),
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)
-                                                                .availableBalanceInfoContent,
-                                                            style: Theme.of(
-                                                                    context)
-                                                                .textTheme
-                                                                .headline2,
-                                                          ))
-                                                    ],
-                                                  );
-                                                });
-                                          }),
-                                    ),
-                                    UIHelper.horizontalSpaceSmall,
+                                    model.walletInfo.tickerName == 'FAB'
+                                        ? SizedBox(
+                                            width: 5,
+                                            height: 12,
+                                            child: IconButton(
+                                                padding: EdgeInsets.zero,
+                                                icon: Icon(
+                                                    MdiIcons.informationOutline,
+                                                    size: 14,
+                                                    color: green),
+                                                onPressed: () {
+                                                  showModalBottomSheet<void>(
+                                                      context: context,
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return ListView(
+                                                          // padding: const EdgeInsets
+                                                          //         .symmetric(
+                                                          //     vertical: 32.0,
+                                                          //     horizontal: 20),
+                                                          children: [
+                                                            Container(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            10,
+                                                                        vertical:
+                                                                            20),
+                                                                color:
+                                                                    primaryColor,
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .availableBalanceInfoTitle,
+                                                                    // textAlign: TextAlign.center,
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .headline4,
+                                                                  ),
+                                                                )),
+                                                            UIHelper
+                                                                .verticalSpaceMedium,
+                                                            Container(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            20),
+                                                                child: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)
+                                                                      .availableBalanceInfoContent,
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .headline2,
+                                                                ))
+                                                          ],
+                                                        );
+                                                      });
+                                                }),
+                                          )
+                                        : Container(),
+                                    model.walletInfo.tickerName == 'FAB'
+                                        ? UIHelper.horizontalSpaceSmall
+                                        : Container(),
                                     Text(
                                       AppLocalizations.of(context).available +
                                           ' ' +
@@ -261,134 +267,145 @@ class SendWalletView extends StatelessWidget {
                                 ),
                               ),
                               // Unconfirmed balance
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: <Widget>[
-                                      SizedBox(
-                                        width: 5,
-                                        height: 12,
-                                        child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            icon: Icon(
-                                                MdiIcons.informationOutline,
-                                                size: 14,
-                                                color: yellow),
-                                            onPressed: () {
-                                              showModalBottomSheet<void>(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return ListView(
-                                                      children: [
-                                                        Container(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        10,
-                                                                    vertical:
-                                                                        20),
-                                                            color: primaryColor,
-                                                            child: Center(
-                                                              child: Text(
-                                                                AppLocalizations.of(
-                                                                        context)
-                                                                    .unConfirmedBalanceInfoTitle,
-                                                                // textAlign: TextAlign.center,
-                                                                style: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .headline3,
-                                                              ),
-                                                            )),
-                                                        SizedBox(height: 20),
-                                                        Container(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        20),
-                                                            child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .unConfirmedBalanceInfoContent,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline2,
-                                                            )),
-                                                        UIHelper
-                                                            .verticalSpaceMedium,
-                                                        Container(
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        20),
-                                                            child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)
-                                                                  .unConfirmedBalanceInfoExample,
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .headline2,
-                                                            ))
-                                                      ],
-                                                    );
-                                                  });
-                                            }),
-                                      ),
-                                      UIHelper.horizontalSpaceSmall,
-                                      Text(
-                                        AppLocalizations.of(context)
-                                                .unConfirmedBalance +
-                                            '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.unconfirmedBalance, precision: model.decimalLimit)} ',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6
-                                            .copyWith(
-                                                fontWeight: FontWeight.w400),
-                                      ),
-                                      Text(
-                                        '${model.tickerName}'.toUpperCase(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6,
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: <Widget>[
-                                        Text(
-                                          AppLocalizations.of(context)
-                                                  .totalBalance +
-                                              '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.getTotalBalance(), precision: model.decimalLimit)} ',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w400),
+                              model.walletInfo.tickerName == 'FAB'
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: <Widget>[
+                                            SizedBox(
+                                              width: 5,
+                                              height: 12,
+                                              child: IconButton(
+                                                  padding: EdgeInsets.zero,
+                                                  icon: Icon(
+                                                      MdiIcons
+                                                          .informationOutline,
+                                                      size: 14,
+                                                      color: yellow),
+                                                  onPressed: () {
+                                                    showModalBottomSheet<void>(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return ListView(
+                                                            children: [
+                                                              Container(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                      horizontal:
+                                                                          10,
+                                                                      vertical:
+                                                                          20),
+                                                                  color:
+                                                                      primaryColor,
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      AppLocalizations.of(
+                                                                              context)
+                                                                          .unConfirmedBalanceInfoTitle,
+                                                                      // textAlign: TextAlign.center,
+                                                                      style: Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .headline3,
+                                                                    ),
+                                                                  )),
+                                                              SizedBox(
+                                                                  height: 20),
+                                                              Container(
+                                                                  padding: EdgeInsets
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              20),
+                                                                  child: Text(
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .unConfirmedBalanceInfoContent,
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .headline2,
+                                                                  )),
+                                                              UIHelper
+                                                                  .verticalSpaceMedium,
+                                                              Container(
+                                                                  padding: EdgeInsets
+                                                                      .symmetric(
+                                                                          horizontal:
+                                                                              20),
+                                                                  child: Text(
+                                                                    AppLocalizations.of(
+                                                                            context)
+                                                                        .unConfirmedBalanceInfoExample,
+                                                                    style: Theme.of(
+                                                                            context)
+                                                                        .textTheme
+                                                                        .headline2,
+                                                                  ))
+                                                            ],
+                                                          );
+                                                        });
+                                                  }),
+                                            ),
+                                            UIHelper.horizontalSpaceSmall,
+                                            Text(
+                                              AppLocalizations.of(context)
+                                                      .unConfirmedBalance +
+                                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.unconfirmedBalance, precision: model.decimalLimit)} ',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                            ),
+                                            Text(
+                                              '${model.tickerName}'
+                                                  .toUpperCase(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6,
+                                            )
+                                          ],
                                         ),
-                                        Text(
-                                          '${model.tickerName}'.toUpperCase(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6,
-                                        )
                                       ],
-                                    ),
-                                  ],
-                                ),
-                              )
+                                    )
+                                  : Container(),
+                              model.walletInfo.tickerName == 'FAB'
+                                  ? Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 10),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                AppLocalizations.of(context)
+                                                        .totalBalance +
+                                                    '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.getTotalBalance(), precision: model.decimalLimit)} ',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6
+                                                    .copyWith(
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                              ),
+                                              Text(
+                                                '${model.tickerName}'
+                                                    .toUpperCase(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline6,
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : Container()
                             ],
                           )),
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -156,7 +156,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     String address = await sharedService.getExgAddressFromWalletDatabase();
     await walletService.gasBalance(address).then((data) {
       gasAmount = data;
-      if (gasAmount < 0.5) {
+      if (gasAmount == 0) {
         sharedService.alertDialog(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
@@ -183,7 +183,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    if (gasAmount == 0.0 || gasAmount < 0.5) {
+    if (gasAmount == 0.0 || gasAmount < kanbanTransFee + transFee) {
       sharedService.showInfoFlushbar(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
@@ -211,8 +211,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     await refreshBalance();
     // double totalAmount = amount + kanbanTransFee + transFee;
     if (amount == null ||
-        //   totalAmount > walletInfo.availableBalance
-        //  ||
+        amount > walletInfo.availableBalance ||
         amount == 0 ||
         amount.isNegative) {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
