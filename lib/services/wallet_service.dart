@@ -171,6 +171,14 @@ class WalletService {
   final coinUtils = CoinUtils();
 
 /*----------------------------------------------------------------------
+                      Is tron coin
+----------------------------------------------------------------------*/
+  bool isTrx(String tickerName) {
+    log.i('isTrx ${tickerName == 'TRX' || tickerName == 'USDTX'}');
+    return tickerName == 'TRX' || tickerName == 'USDTX' ? true : false;
+  }
+
+/*----------------------------------------------------------------------
                       Get decimal data
 ----------------------------------------------------------------------*/
 

@@ -28,6 +28,7 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
+import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'
@@ -102,6 +103,7 @@ class SendViewModel extends BaseViewModel {
     await refreshBalance();
     decimalLimit = await walletService.getWalletDecimalLimit(coinName);
     if (decimalLimit == null) decimalLimit = 8;
+    await getGas();
     setBusy(false);
   }
 
@@ -553,6 +555,7 @@ class SendViewModel extends BaseViewModel {
           isWarning: false);
       return;
     }
+
     if (gasAmount == 0.0 || gasAmount < transFee) {
       sharedService.showInfoFlushbar(
           AppLocalizations.of(context).notice,
@@ -582,7 +585,7 @@ class SendViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    amount = NumberUtil().roundDownLastDigit(amount);
+    if (!isTrx()) amount = NumberUtil().roundDownLastDigit(amount);
 
     // if (walletInfo.tickerName == 'USDTX') {
     //   log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');

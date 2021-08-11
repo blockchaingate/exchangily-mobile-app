@@ -664,7 +664,8 @@ class MoveToWalletViewmodel extends BaseState {
         setBusy(false);
         return;
       }
-      amount = NumberUtil().roundDownLastDigit(amount);
+      if (!walletService.isTrx(walletInfo.tickerName))
+        amount = NumberUtil().roundDownLastDigit(amount);
       if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
           isShowFabChainBalance &&
           amount > fabChainBalance) {

@@ -206,7 +206,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
+
     amount = double.tryParse(amountController.text);
+
     // amount = NumberUtil().roundDownLastDigit(amount);
     await refreshBalance();
     // double totalAmount = amount + kanbanTransFee + transFee;
@@ -221,7 +223,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    amount = NumberUtil().roundDownLastDigit(amount);
+    if (!walletService.isTrx(walletInfo.tickerName))
+      amount = NumberUtil().roundDownLastDigit(amount);
 
     if (walletInfo.tickerName == 'USDTX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
@@ -243,7 +246,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (walletInfo.tickerName == 'TRX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
-      if (amount + 1 > walletInfo.availableBalance) isCorrectAmount = false;
+      double trxFee = 1.0;
+      if (amount + trxFee > walletInfo.availableBalance)
+        isCorrectAmount = false;
       if (!isCorrectAmount) {
         sharedService.alertDialog(
             '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
@@ -332,7 +337,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             message = txId.toString();
 
             sharedService.alertDialog(
-              AppLocalizations.of(context).sendTransactionComplete,
+              AppLocalizations.of(context).depositTransactionSuccess,
               '$specialTicker ${AppLocalizations.of(context).isOnItsWay}',
             );
           } else {
