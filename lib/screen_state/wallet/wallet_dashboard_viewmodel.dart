@@ -203,8 +203,10 @@ class WalletDashboardViewModel extends BaseViewModel {
     setBusy(true);
     if (tabIndex == 0)
       isShowFavCoins = false;
-    else
+    else {
       isShowFavCoins = true;
+      buildFavCoinList();
+    }
 
     currentTabSelection = tabIndex;
     storageService.isFavCoinTabSelected = isShowFavCoins ? true : false;
