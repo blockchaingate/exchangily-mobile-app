@@ -52,8 +52,9 @@ class WalletFeaturesViewModel extends BaseViewModel {
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   List<WalletFeatureName> features = [];
   bool isFavorite = false;
+  int decimalLimit = 8;
 
-  init() {
+  init() async {
     getWalletFeatures();
     getErrDeposit();
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
@@ -61,6 +62,11 @@ class WalletFeaturesViewModel extends BaseViewModel {
     log.i('wi object to check name ${walletInfo.toJson()}');
     refreshBalance();
     checkIfCoinIsFavorite();
+    setBusy(true);
+    decimalLimit = await walletService
+        .getSingleCoinWalletDecimalLimit(walletInfo.tickerName);
+    if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
+    setBusy(false);
   }
 
   checkIfCoinIsFavorite() {

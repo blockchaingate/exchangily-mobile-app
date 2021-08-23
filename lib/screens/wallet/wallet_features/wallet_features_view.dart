@@ -80,7 +80,23 @@ class WalletFeaturesView extends StatelessWidget {
                                   // Navigator.of(context, rootNavigator: true).pop('dialog');
                                   model.navigationService
                                       .navigateTo('/dashboard');
-                                }))
+                                })),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: SizedBox(
+                            height: 20,
+                            child: IconButton(
+                              padding: EdgeInsets.zero,
+                              icon: model.isFavorite
+                                  ? Icon(Icons.star,
+                                      color: primaryColor, size: 22)
+                                  : Icon(Icons.star_border_outlined,
+                                      color: yellow, size: 22),
+                              onPressed: () => model.updateFavWalletCoinsList(
+                                  model.walletInfo.tickerName),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -324,7 +340,7 @@ class WalletFeaturesView extends StatelessWidget {
                         AppLocalizations.of(context).walletbalance,
                         style: Theme.of(context).textTheme.subtitle1),
                     Text(
-                        '${model.walletInfo.availableBalance.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)} ${model.specialTicker}',
+                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
                         style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),
@@ -342,24 +358,9 @@ class WalletFeaturesView extends StatelessWidget {
                           style: Theme.of(context).textTheme.subtitle1),
                     ),
                     Expanded(
-                      flex: 2,
-                      child: SizedBox(
-                        height: 20,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: model.isFavorite
-                              ? Icon(Icons.star, color: primaryColor, size: 20)
-                              : Icon(Icons.star_border_outlined,
-                                  color: white, size: 18),
-                          onPressed: () => model.updateFavWalletCoinsList(
-                              model.walletInfo.tickerName),
-                        ),
-                      ),
-                    ),
-                    Expanded(
                         flex: 4,
                         child: Text(
-                            '${model.walletInfo.inExchange.toStringAsFixed(model.singlePairDecimalConfig.qtyDecimal)}',
+                            '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.decimalLimit).toString()} ${model.specialTicker}',
                             textAlign: TextAlign.right,
                             style: Theme.of(context).textTheme.subtitle1)),
                   ],

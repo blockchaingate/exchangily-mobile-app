@@ -83,24 +83,52 @@ class MoveToWalletScreen extends StatelessWidget {
                           },
                           keyboardType:
                               TextInputType.numberWithOptions(decimal: true),
+                          inputFormatters: [
+                            DecimalTextInputFormatter(
+                                decimalRange: model.decimalLimit,
+                                activatedNegativeValues: false)
+                          ],
                           decoration: InputDecoration(
-                              suffix: Row(
-                                mainAxisSize: MainAxisSize.min,
+                              suffix: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                      AppLocalizations.of(context)
-                                              .minimumAmount +
-                                          ':',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6),
-                                  Text(
-                                      model.withdrawLimit == null
-                                          ? AppLocalizations.of(context).loading
-                                          : model.withdrawLimit.toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                          AppLocalizations.of(context)
+                                                  .minimumAmount +
+                                              ': ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                      Text(
+                                          model.withdrawLimit == null
+                                              ? AppLocalizations.of(context)
+                                                  .loading
+                                              : model.withdrawLimit.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                          AppLocalizations.of(context)
+                                                  .decimalLimit +
+                                              ': ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                      Text(model.decimalLimit.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6),
+                                    ],
+                                  ),
                                 ],
                               ),
                               enabledBorder: OutlineInputBorder(
@@ -123,7 +151,7 @@ class MoveToWalletScreen extends StatelessWidget {
                         children: <Widget>[
                           Text(
                               AppLocalizations.of(context).inExchange +
-                                  ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}',
+                                  ' ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.inExchange, precision: model.decimalLimit).toString()}',
                               style: Theme.of(context).textTheme.subtitle2),
                           Padding(
                             padding: EdgeInsets.symmetric(
@@ -263,7 +291,7 @@ class MoveToWalletScreen extends StatelessWidget {
                           : Container(),
                       // kanban gas fee
                       model.isWithdrawChoice
-                          ? UIHelper.verticalSpaceLarge
+                          ? UIHelper.verticalSpaceMedium
                           : Container(),
 
                       Row(
@@ -302,7 +330,7 @@ class MoveToWalletScreen extends StatelessWidget {
                           )
                         ],
                       ),
-
+                      UIHelper.verticalSpaceSmall,
                       Visibility(
                           visible: model.transFeeAdvance,
                           child: Column(
@@ -534,9 +562,11 @@ class MoveToWalletScreen extends StatelessWidget {
                                     MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(model.message != null
-                                      ? model.message
-                                      : ''),
+                                  Text(
+                                    model.message != null ? model.message : '',
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  ),
                                   UIHelper.verticalSpaceSmall,
                                   RichText(
                                     text: TextSpan(
@@ -545,7 +575,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                         style: TextStyle(
                                             decoration:
                                                 TextDecoration.underline,
-                                            color: globals.primaryColor),
+                                            color: primaryColor),
                                         recognizer: TapGestureRecognizer()
                                           ..onTap = () {
                                             model.copyAndShowNotificatio(
@@ -566,8 +596,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                     text: TextSpan(
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText2
+                                            .headline5
                                             .copyWith(
+                                                color: red,
                                                 decoration:
                                                     TextDecoration.underline),
                                         text:
@@ -580,20 +611,20 @@ class MoveToWalletScreen extends StatelessWidget {
                                 ),
                                 !model.isShowDetailsMessage
                                     ? Icon(Icons.arrow_drop_down,
-                                        color: Colors.red, size: 18)
+                                        color: Colors.red, size: 20)
                                     : Icon(Icons.arrow_drop_up,
-                                        color: Colors.red, size: 18)
+                                        color: Colors.red, size: 20)
                               ],
                             )
                           : Container(),
-
+                      UIHelper.verticalSpaceSmall,
                       model.isShowDetailsMessage
                           ? Center(
                               child: Text(model.serverError,
                                   style: Theme.of(context).textTheme.headline6),
                             )
                           : Container(),
-                      UIHelper.verticalSpaceSmall,
+                      UIHelper.verticalSpaceMedium,
                       // Confirm Button
                       MaterialButton(
                         padding: EdgeInsets.all(15),

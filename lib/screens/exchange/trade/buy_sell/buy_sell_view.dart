@@ -73,7 +73,8 @@ class BuySellView extends StatelessWidget {
               },
               builder: Builder(
                 builder: (context) => Stack(
-                  clipBehavior: Clip.none, fit: StackFit.loose,
+                  clipBehavior: Clip.none,
+                  fit: StackFit.loose,
                   alignment: Alignment.center,
                   children: [
                     ListView(children: <Widget>[
@@ -623,7 +624,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         // Slider
         Slider(
           divisions: 100,
-          label: '${model.sliderValue.toStringAsFixed(2)}%',
+          label:
+              '${NumberUtil().truncateDoubleWithoutRouding(model.sliderValue, precision: 2).toString()}%',
           activeColor: primaryColor,
           min: 0.0,
           max: 100.0,
@@ -684,7 +686,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
               padding: EdgeInsets.only(
                   left: 5), // padding left to keep some space from the text
               child: Text(
-                '${model.kanbanTransFee.toStringAsFixed(4)}',
+                '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 4).toString()}',
                 style: new TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
             )
@@ -782,13 +784,13 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
           ),
         ),
         UIHelper.verticalSpaceSmall,
-        RaisedButton(
-            elevation: 4,
-            // animationDuration: Duration(milliseconds: 100),
-            // splashColor: Colors.purpleAccent,
-            padding: const EdgeInsets.all(5.0),
-            textColor: Colors.white,
-            color: model.bidOrAsk ? Color(0xFF0da88b) : Color(0xFFe2103c),
+        ElevatedButton(
+            style: ButtonStyle(
+              padding: MaterialStateProperty.all(EdgeInsets.all(5.0)),
+              backgroundColor: model.bidOrAsk
+                  ? MaterialStateProperty.all(Color(0xFF0da88b))
+                  : MaterialStateProperty.all(Color(0xFFe2103c)),
+            ),
             onPressed: () {
               model.checkPass(context);
             },

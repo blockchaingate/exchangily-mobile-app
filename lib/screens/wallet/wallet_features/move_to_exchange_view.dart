@@ -78,19 +78,6 @@ class MoveToExchangeScreen extends StatelessWidget {
                   model.updateTransFee();
                 },
                 decoration: InputDecoration(
-                  // suffix: RichText(
-                  //   text: TextSpan(
-                  //     recognizer: TapGestureRecognizer()
-                  //       ..onTap = () {
-                  //         model.fillMaxAmount();
-                  //       },
-                  //     text: AppLocalizations.of(context).maxAmount,
-                  //     style: Theme.of(context)
-                  //         .textTheme
-                  //         .bodyText1
-                  //         .copyWith(color: primaryColor),
-                  //   ),
-                  // ),
                   suffix: Text(
                       AppLocalizations.of(context).decimalLimit +
                           ': ' +
@@ -110,18 +97,33 @@ class MoveToExchangeScreen extends StatelessWidget {
               UIHelper.verticalSpaceSmall,
               // Wallet Balance
               Row(
-                children: <Widget>[
-                  Text(
-                      AppLocalizations.of(context).walletbalance +
-                          '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}',
-                      style: Theme.of(context).textTheme.subtitle2),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 3,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: <Widget>[
+                      Text(
+                          AppLocalizations.of(context).walletbalance +
+                              '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()}',
+                          style: Theme.of(context).textTheme.subtitle2),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 3,
+                        ),
+                        child: Text('${model.specialTicker}'.toUpperCase(),
+                            style: Theme.of(context).textTheme.subtitle2),
+                      )
+                    ],
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          model.fillMaxAmount();
+                        },
+                      text: AppLocalizations.of(context).maxAmount,
+                      style: Theme.of(context).textTheme.subtitle2,
                     ),
-                    child: Text('${model.specialTicker}'.toUpperCase(),
-                        style: Theme.of(context).textTheme.subtitle2),
-                  )
+                  ),
                 ],
               ),
               UIHelper.verticalSpaceSmall,
@@ -155,7 +157,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     left:
                                         5), // padding left to keep some space from the text
                                 child: Text(
-                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 4).toString()} ${model.feeUnit}',
+                                    '${NumberUtil().truncateDoubleWithoutRouding(model.transFee, precision: 6).toString()} ${model.feeUnit}',
                                     style:
                                         Theme.of(context).textTheme.headline6),
                               )
@@ -172,7 +174,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                               left:
                                   5), // padding left to keep some space from the text
                           child: Text(
-                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 4).toString()} GAS',
+                              '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 6).toString()} GAS',
                               style: Theme.of(context).textTheme.headline6),
                         )
                       ],
@@ -431,7 +433,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(model.message),
+                          Text(model.message, style: TextStyle(color: grey)),
                           UIHelper.verticalSpaceSmall,
                           RichText(
                             text: TextSpan(
@@ -464,6 +466,7 @@ class MoveToExchangeScreen extends StatelessWidget {
                                     .textTheme
                                     .bodyText2
                                     .copyWith(
+                                        color: red,
                                         decoration: TextDecoration.underline),
                                 text:
                                     '${AppLocalizations.of(context).error} ${AppLocalizations.of(context).details}',

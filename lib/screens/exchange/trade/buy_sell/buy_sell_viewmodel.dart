@@ -119,6 +119,7 @@ class BuySellViewModel extends StreamViewModel {
   Orderbook orderbook = new Orderbook();
   final coinUtils = CoinUtils();
   final abiUtils = AbiUtils();
+  double gasAmount = 0.0;
 
   @override
   Stream get stream =>
@@ -165,7 +166,27 @@ class BuySellViewModel extends StreamViewModel {
     await getDecimalPairConfig();
 
     transFeeAdvance = false;
+    await getGasBalance();
     setBusy(false);
+  }
+
+/*---------------------------------------------------
+                      Get gas balance
+--------------------------------------------------- */
+
+  getGasBalance() async {
+    String address = await sharedService.getExgAddressFromWalletDatabase();
+    await walletService.gasBalance(address).then((data) {
+      gasAmount = data;
+      if (gasAmount == 0) {
+        sharedService.alertDialog(
+          AppLocalizations.of(context).notice,
+          AppLocalizations.of(context).insufficientGasAmount,
+        );
+      }
+    }).catchError((onError) => log.e(onError));
+    log.w('gas amount $gasAmount');
+    return gasAmount;
   }
 
 /*----------------------------------------------------------------------
@@ -469,7 +490,7 @@ class BuySellViewModel extends StreamViewModel {
       baseCoin = targetCoin;
       targetCoin = tmp;
     }
-    quantity = NumberUtil().roundDownLastDigit(quantity);
+    // quantity = NumberUtil().roundDownLastDigit(quantity);
     var orderHash = this.generateOrderHash(bidOrAsk, orderType, baseCoin,
         targetCoin, quantity, price, timeBeforeExpiration);
 
@@ -490,7 +511,7 @@ class BuySellViewModel extends StreamViewModel {
         priceBigInt,
         //   timeBeforeExpiration,
         orderHash);
-    debugPrint('abiHex $abiHex');
+
     sliceAbiHex(abiHex);
     log.e('exg addr $exgAddress');
 
@@ -642,6 +663,22 @@ class BuySellViewModel extends StreamViewModel {
       setBusy(false);
       sharedService.alertDialog("", AppLocalizations.of(context).invalidAmount,
           isWarning: false);
+      return;
+    }
+    if (gasAmount < kanbanTransFee) {
+      setBusy(false);
+      showSimpleNotification(
+        Center(
+          child: Text(AppLocalizations.of(context).insufficientGasBalance,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  .copyWith(fontWeight: FontWeight.w800)),
+        ),
+        background: sellPrice,
+        position: NotificationPosition.bottom,
+      );
+
       return;
     }
 

@@ -171,11 +171,12 @@ class TxHisotryCardWidget extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Container(
-                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    alignment: Alignment.centerRight,
                     child: AutoSizeText(
                       NumberUtil()
                           .truncateDoubleWithoutRouding(transaction.quantity,
-                              precision: model.decimalConfig.qtyDecimal)
+                              precision: model.decimalLimit)
                           .toString(),
                       textAlign: TextAlign.right,
                       style: Theme.of(context)
@@ -184,7 +185,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w400),
                       minFontSize: 8,
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.clip,
                     )),
               ),
               UIHelper.horizontalSpaceSmall,

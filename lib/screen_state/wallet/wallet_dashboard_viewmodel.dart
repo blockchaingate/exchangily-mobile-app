@@ -130,6 +130,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   bool isBottomOfTheList = false;
   bool isTopOfTheList = true;
   final fabUtils = FabUtils();
+  List<Map<String, int>> walletDecimalList = [];
 /*----------------------------------------------------------------------
                     INIT
 ----------------------------------------------------------------------*/
@@ -143,12 +144,53 @@ class WalletDashboardViewModel extends BaseViewModel {
     totalBalanceContainerWidth = 270.0;
     checkAnnouncement();
     showDialogWarning();
-    getDecimalPairConfig();
+    //  getDecimalPairConfig();
     getConfirmDepositStatus();
     buildFavCoinList();
     currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
     // walletsScrollController.addListener(_scrollListener());
+    //   await storeWalletDecimalData();
+
     setBusy(false);
+  }
+// TODO add decimalLimit property in the wallet info and fill it in the refresh balance from local stored decimal data
+
+  storeWalletDecimalData() async {
+    walletDecimalList = [];
+    await apiService.getTokenList().then((token) {
+      token.forEach((token) {
+        walletDecimalList.add({token.tickerName: token.decimal});
+      });
+    });
+
+    await apiService.getTokenListUpdates().then((token) {
+      token.forEach((token) async {
+        walletDecimalList.add({token.tickerName: token.decimal});
+      });
+    });
+
+    // walletInfo.forEach((wallet) async {
+    //   int decimalLimit = 0;
+    //   for (var i = 0; i < walletDecimalList.length; i++) {
+    //     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
+    //     Map<String, int> dataToAdd = {};
+    //     dataToAdd = {wallet.tickerName: decimalLimit};
+    //     walletDecimalList.add(dataToAdd);
+    //   }
+    // });
+    log.i('walletDecimalList $walletDecimalList');
+    int storedDecimalListLength =
+        storageService.getStoredListLength(storageService.walletDecimalList);
+
+    if (walletDecimalList.length != storedDecimalListLength) {
+      log.w('clearing storedDecimalList');
+      if (storedDecimalListLength != 0) storageService.walletDecimalList = '';
+
+      var t = {walletDecimalList.map((e) => jsonEncode(e)).toList()};
+      log.w('json encode decimal data before storing $t');
+      storageService.walletDecimalList = t.toString();
+    }
+    log.i('latest storedDecimalList ${storageService.walletDecimalList}');
   }
 
   // moveDown() {
@@ -1366,7 +1408,12 @@ class WalletDashboardViewModel extends BaseViewModel {
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
               //   log.i('single wallet info object${wi.toJson()}');
-              walletDatabaseService.update(wi);
+              walletDatabaseService.update(wi).catchError((err) async {
+                await walletDatabaseService.deleteDb().whenComplete(() async {
+                  await walletDatabaseService.initDb();
+                  await walletDatabaseService.update(wi);
+                });
+              });
 
               if (!tickerNamesFromWalletInfoCopy.contains(walletInfoTickerName))
                 tickerNamesFromWalletInfoCopy.add(walletInfoTickerName);

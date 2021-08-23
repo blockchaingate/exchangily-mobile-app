@@ -1706,5 +1706,11 @@
       "description": "unConfirmed_balance_info_example",
       "type": "text",
       "placeholders": {}
+    },
+    "insufficientGasBalance": "燃料余额不足",
+    "@insufficientGasBalance": {
+      "description": "Insufficient_gas_balance",
+      "type": "text",
+      "placeholders": {}
     }
 }

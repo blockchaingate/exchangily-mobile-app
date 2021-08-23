@@ -143,13 +143,17 @@ class WalletDataBaseService {
   // Update database
   Future<void> update(WalletInfo walletInfo) async {
     final Database db = await _database;
-    await db.update(
+    await db
+        .update(
       tableName,
       walletInfo.toJson(),
       where: "id = ?",
       whereArgs: [walletInfo.id],
       conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    )
+        .catchError((err) {
+      log.e('update catch $err');
+    });
   }
 
   // Close Database

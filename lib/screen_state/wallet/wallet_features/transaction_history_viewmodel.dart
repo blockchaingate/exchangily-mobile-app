@@ -53,10 +53,11 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   final navigationService = locator<NavigationService>();
   final userSettingsDatabaseService = locator<UserSettingsDatabaseService>();
 
-  PairDecimalConfig decimalConfig = new PairDecimalConfig();
   WalletInfo walletInfo = new WalletInfo();
   bool isChinese = false;
   bool isDialogUp = false;
+  int decimalLimit = 0;
+
   @override
   Future futureToRun() async =>
       // tickerName.isEmpty ?
@@ -72,32 +73,29 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     List<TransactionHistory> txHistoryFromDb = [];
     List<TransactionHistory> txHistoryEvents = [];
     txHistoryFromDb = data;
-    txHistoryEvents = await getWithdrawDepositTxHistoryEvents();
-    if (txHistoryFromDb.isNotEmpty && txHistoryEvents.isNotEmpty)
-      await sharedService
-          .getSinglePairDecimalConfig(tickerName)
-          .then((decimalConfig) => decimalConfig = decimalConfig);
-    txHistoryEvents.forEach((element) {
-      if (element.tickerName == tickerName)
-        transactionHistoryToShowInView.add(element);
-      else if (element.tickerName.toUpperCase() == 'ETH_DSC' &&
-          tickerName == 'DSCE')
-        transactionHistoryToShowInView.add(element);
-      else if (element.tickerName.toUpperCase() == 'ETH_BST' &&
-          tickerName == 'BSTE')
-        transactionHistoryToShowInView.add(element);
-      else if (element.tickerName.toUpperCase() == 'ETH_FAB' &&
-          tickerName == 'FABE')
-        transactionHistoryToShowInView.add(element);
-      else if (element.tickerName.toUpperCase() == 'ETH_EXG' &&
-          tickerName == 'EXGE') {
-        // element.tickerName = 'EXG(ERC20)';
-        transactionHistoryToShowInView.add(element);
-      } else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
-          tickerName == 'USDTX') transactionHistoryToShowInView.add(element);
-    });
+    txHistoryEvents = await apiService.getTransactionHistoryEvents();
+    if (txHistoryEvents.isNotEmpty)
+      txHistoryEvents.forEach((element) {
+        if (element.tickerName == tickerName)
+          transactionHistoryToShowInView.add(element);
+        else if (element.tickerName.toUpperCase() == 'ETH_DSC' &&
+            tickerName == 'DSCE')
+          transactionHistoryToShowInView.add(element);
+        else if (element.tickerName.toUpperCase() == 'ETH_BST' &&
+            tickerName == 'BSTE')
+          transactionHistoryToShowInView.add(element);
+        else if (element.tickerName.toUpperCase() == 'ETH_FAB' &&
+            tickerName == 'FABE')
+          transactionHistoryToShowInView.add(element);
+        else if (element.tickerName.toUpperCase() == 'ETH_EXG' &&
+            tickerName == 'EXGE') {
+          // element.tickerName = 'EXG(ERC20)';
+          transactionHistoryToShowInView.add(element);
+        } else if (element.tickerName.toUpperCase() == 'TRON_USDT' &&
+            tickerName == 'USDTX') transactionHistoryToShowInView.add(element);
+      });
 
-    if (txHistoryFromDb != null)
+    if (txHistoryFromDb != null || txHistoryFromDb.isNotEmpty)
       txHistoryFromDb.forEach((t) async {
         if (t.tag == 'send' && t.tickerName == tickerName)
           transactionHistoryToShowInView.add(t);
@@ -108,6 +106,10 @@ class TransactionHistoryViewmodel extends FutureViewModel {
     await userSettingsDatabaseService.getLanguage().then((value) {
       if (value == 'zh') isChinese = true;
     });
+
+    decimalLimit =
+        await walletService.getSingleCoinWalletDecimalLimit(tickerName);
+    if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
     // print(transactionHistoryToShowInView.first.toJson());
   }
@@ -120,10 +122,6 @@ class TransactionHistoryViewmodel extends FutureViewModel {
 
   clearLists() {
     transactionHistoryToShowInView = [];
-  }
-
-  getWithdrawDepositTxHistoryEvents() async {
-    return await apiService.getTransactionHistoryEvents();
   }
 
   getWalletFromDb() async {

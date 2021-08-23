@@ -48,7 +48,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
   final amountController = TextEditingController();
   bool isValid = false;
   double gasAmount = 0.0;
-  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
   String serverError = '';
@@ -82,7 +81,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else if (tokenType == 'FAB') {
       feeUnit = 'FAB';
     }
-    decimalLimit = await walletService.getWalletDecimalLimit(coinName);
+    decimalLimit =
+        await walletService.getSingleCoinWalletDecimalLimit(coinName);
     if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
   }
@@ -93,16 +93,50 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  fillMaxAmount() {
+/*---------------------------------------------------
+                  Amount After fee
+--------------------------------------------------- */
+  Future<double> amountAfterFee(double amount,
+      {bool isMaxAmount = false}) async {
+    double finalAmount = 0.0;
+    // update transfee is 0
+    if (transFee == 0.0 && !walletService.isTrx(walletInfo.tickerName))
+      await updateTransFee();
+    // if tron coins then assign fee accordingly
+    if (walletService.isTrx(walletInfo.tickerName)) {
+      if (walletInfo.tickerName == 'USDTX') {
+        transFee = 15;
+        finalAmount = amount;
+      }
+
+      if (walletInfo.tickerName == 'TRX') {
+        transFee = 1.0;
+        finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
+      }
+    } else {
+      if (walletInfo.tokenType.isEmpty)
+        finalAmount = amount - transFee;
+      else
+        finalAmount = amount;
+    }
+    return finalAmount;
+  }
+
+/*---------------------------------------------------
+                  Fill Max Amount
+--------------------------------------------------- */
+  fillMaxAmount() async {
     setBusy(true);
+    amount = walletInfo.availableBalance;
+    double finalAmount = 0.0;
+    await amountAfterFee(amount, isMaxAmount: true)
+        .then((resAmount) => finalAmount = resAmount);
+    finalAmount = amount = finalAmount;
     amountController.text = NumberUtil()
-        .truncateDoubleWithoutRouding(walletInfo.availableBalance,
-            precision: singlePairDecimalConfig.qtyDecimal)
+        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
         .toString();
-    amount = double.parse(amountController.text);
+
     setBusy(false);
-    updateTransFee();
-    print(transFee);
   }
 
 /*---------------------------------------------------
@@ -183,7 +217,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    if (gasAmount == 0.0 || gasAmount < kanbanTransFee + transFee) {
+    if (gasAmount == 0.0 || gasAmount < kanbanTransFee) {
       sharedService.showInfoFlushbar(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
@@ -211,9 +245,11 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
     // amount = NumberUtil().roundDownLastDigit(amount);
     await refreshBalance();
-    // double totalAmount = amount + kanbanTransFee + transFee;
+    double finalAmount = 0.0;
+    if (!walletService.isTrx(walletInfo.tickerName))
+      finalAmount = await amountAfterFee(amount);
     if (amount == null ||
-        amount > walletInfo.availableBalance ||
+        finalAmount > walletInfo.availableBalance ||
         amount == 0 ||
         amount.isNegative) {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
@@ -223,9 +259,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    if (!walletService.isTrx(walletInfo.tickerName))
-      amount = NumberUtil().roundDownLastDigit(amount);
+    // if (!walletService.isTrx(walletInfo.tickerName) &&
+    //     walletInfo.tickerName != 'BTC' &&
+    //     walletInfo.tickerName != 'ETH') {
+    //   int decimalLength = NumberUtil.getDecimalLength(amount);
+    //   log.w('decimalLength $decimalLength');
+    //   if (decimalLength == decimalLimit)
+    //     amount = NumberUtil().roundDownLastDigit(amount);
+    // }
 
+// * checking trx balance required
     if (walletInfo.tickerName == 'USDTX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
@@ -370,7 +413,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       else {
         await walletService
             .depositDo(seed, walletInfo.tickerName, walletInfo.tokenType,
-                amount, option)
+                finalAmount, option)
             .then((ret) {
           log.w('deposit res $ret');
 
