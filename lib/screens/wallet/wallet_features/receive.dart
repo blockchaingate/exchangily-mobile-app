@@ -15,6 +15,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
@@ -177,12 +178,22 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               convertedToFabAddress == ''
                   ? widget.walletInfo.address
                   : convertedToFabAddress,
-              style: Theme.of(context).textTheme.bodyText2),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(fontWeight: FontWeight.w800)),
           Container(
             width: 200,
-            child: OutlineButton(
-              borderSide: BorderSide(color: globals.primaryColor, width: 0.5),
-              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+            child: OutlinedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(StadiumBorder(
+                  side: BorderSide(color: primaryColor, width: 2),
+                )),
+                side: MaterialStateProperty.all(
+                    BorderSide(color: primaryColor, width: 0.5)),
+                padding: MaterialStateProperty.all(
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 5)),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -207,7 +218,6 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               onPressed: () {
                 copyAddress();
               },
-              textColor: globals.white,
             ),
           )
         ],

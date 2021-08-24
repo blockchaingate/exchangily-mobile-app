@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -174,7 +176,8 @@ class WalletService {
                       Is tron coin
 ----------------------------------------------------------------------*/
   bool isTrx(String tickerName) {
-    log.i('isTrx ${tickerName == 'TRX' || tickerName == 'USDTX'}');
+    log.i(
+        'tickername $tickerName:  isTrx ${tickerName == 'TRX' || tickerName == 'USDTX'}');
     return tickerName == 'TRX' || tickerName == 'USDTX' ? true : false;
   }
 
@@ -182,13 +185,27 @@ class WalletService {
                       Get decimal data
 ----------------------------------------------------------------------*/
 
-  Future<int> getWalletDecimalLimit(String coinName) async {
+  Future<int> getSingleCoinWalletDecimalLimit(String coinName) async {
     int res = 0;
-    await apiService.getTokenList().then((token) {
-      token.forEach((token) {
-        if (token.tickerName == coinName) res = token.decimal;
+// first look coin in the local storage
+// TODO uncomment code below once savedecimaldata in local storage works in wallet service
+    // List<Map<String, int>> decimalDataFromStorage =
+    //     jsonEncode(storageService.walletDecimalList) as List;
+    // decimalDataFromStorage.forEach((decimalDataList) {
+    //   if (decimalDataList.containsKey(coinName))
+    //     res = decimalDataList[coinName];
+    // });
+
+    // if res not found in local storage then call old token list api
+    if (res == null || res == 0) {
+      await apiService.getTokenList().then((token) {
+        token.forEach((token) {
+          if (token.tickerName == coinName) res = token.decimal;
+        });
       });
-    });
+    }
+
+    // if res not found in local storage then call new token list api
     if (res == null || res == 0) {
       await apiService.getTokenListUpdates().then((token) {
         token.forEach((token) async {
@@ -1204,7 +1221,7 @@ class WalletService {
           .getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
     }
     var coinPoolAddress = await getCoinPoolAddress();
-
+    print('1');
     var nonce = await getNonce(addressInKanban);
 
     var txKanbanHex = await AbiUtils().signAbiHexWithPrivateKey(
@@ -2458,12 +2475,13 @@ class WalletService {
 
       print('res1 in here=');
       print(res1);
+      log.w('res1: $res1');
 
       if (getTransFeeOnly) {
         return {
           'txHex': '',
           'txHash': '',
-          'errMsg': '',
+          'errMsg': res1["errMsg"] ?? '',
           'amountSent': '',
           'transFee': res1["transFee"],
           'amountInTx': amountInTx

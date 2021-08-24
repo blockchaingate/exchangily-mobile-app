@@ -137,6 +137,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputValidation" : MessageLookupByLibrary.simpleMessage("input validation"),
     "insufficientBalance" : MessageLookupByLibrary.simpleMessage("Insufficient Balance"),
     "insufficientGasAmount" : MessageLookupByLibrary.simpleMessage("Insufficient gas amount"),
+    "insufficientGasBalance" : MessageLookupByLibrary.simpleMessage("Insufficient gas balance"),
     "invalidAddress" : MessageLookupByLibrary.simpleMessage("Invalid Address"),
     "invalidAmount" : MessageLookupByLibrary.simpleMessage("Invalid Amount"),
     "invalidMnemonic" : MessageLookupByLibrary.simpleMessage("Invalid Mnemonic"),

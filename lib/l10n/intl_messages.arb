@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2021-08-09T18:36:01.787061",
+  "@@last_modified": "2021-08-19T15:23:49.194199",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -2085,6 +2085,12 @@
   "unConfirmedBalanceInfoExample": "This is the normal transaction process where unconfirmed funds may be more than the amount user sends. For example, when you purchase 50 dollars worth of groceries in a cash transaction and you give the shopkeeper a 100 dollar bill, then you get your change(50 dollars) back by the shopkeeper",
   "@unConfirmedBalanceInfoExample": {
     "description": "unConfirmed_balance_info_example",
+    "type": "text",
+    "placeholders": {}
+  },
+  "insufficientGasBalance": "Insufficient gas balance",
+  "@insufficientGasBalance": {
+    "description": "Insufficient_gas_balance",
     "type": "text",
     "placeholders": {}
   }

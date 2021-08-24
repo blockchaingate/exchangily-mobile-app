@@ -53,7 +53,6 @@ class MoveToWalletViewmodel extends BaseState {
   bool transFeeAdvance = false;
   double gasAmount = 0.0;
   var withdrawLimit;
-  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
   String serverError = '';
@@ -71,11 +70,11 @@ class MoveToWalletViewmodel extends BaseState {
   bool isAlert = false;
   bool isSpeicalTronTokenWithdraw = false;
   final coinUtils = CoinUtils();
-
+  int decimalLimit = 8;
 /*---------------------------------------------------
                       INIT
 --------------------------------------------------- */
-  void initState() {
+  void initState() async {
     setBusy(true);
     print('ticker ${walletInfo.tickerName}');
     sharedService.context = context;
@@ -94,7 +93,7 @@ class MoveToWalletViewmodel extends BaseState {
     }
     checkGasBalance();
     getSingleCoinExchangeBal();
-    getDecimalData();
+
     _groupValue = 'ETH';
     if (walletInfo.tickerName == 'FAB' ||
         walletInfo.tickerName == 'EXG' ||
@@ -109,7 +108,9 @@ class MoveToWalletViewmodel extends BaseState {
     setWithdrawLimit(walletInfo.tickerName);
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
-
+    decimalLimit = await walletService
+        .getSingleCoinWalletDecimalLimit(walletInfo.tickerName);
+    if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
   }
 
@@ -294,17 +295,6 @@ class MoveToWalletViewmodel extends BaseState {
   }
 
 /*---------------------------------------------------
-                      Decimal data
---------------------------------------------------- */
-  getDecimalData() async {
-    setBusy(true);
-    singlePairDecimalConfig =
-        await sharedService.getSinglePairDecimalConfig(walletInfo.tickerName);
-    log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
-    setBusy(false);
-  }
-
-/*---------------------------------------------------
                 Set Withdraw Limit
 --------------------------------------------------- */
 
@@ -357,7 +347,10 @@ class MoveToWalletViewmodel extends BaseState {
     return gasAmount;
   }
 
-  // Check single coin exchange balance
+/*---------------------------------------------------
+               Check single coin exchange balance
+--------------------------------------------------- */
+
   Future getSingleCoinExchangeBal() async {
     setBusy(true);
     String tickerName = '';
@@ -664,8 +657,15 @@ class MoveToWalletViewmodel extends BaseState {
         setBusy(false);
         return;
       }
-      if (!walletService.isTrx(walletInfo.tickerName))
-        amount = NumberUtil().roundDownLastDigit(amount);
+      // if (!walletService.isTrx(walletInfo.tickerName) &&
+      //     walletInfo.tickerName != 'BTC' &&
+      //     walletInfo.tickerName != 'ETH') {
+      //   int decimalLength = NumberUtil.getDecimalLength(amount);
+      //   log.w('decimalLength $decimalLength');
+      //   if (decimalLength == decimalLimit)
+      //     amount = NumberUtil().roundDownLastDigit(amount);
+      // }
+
       if (isWithdrawChoice) if (!isShowTrxTsWalletBalance &&
           isShowFabChainBalance &&
           amount > fabChainBalance) {
@@ -691,16 +691,26 @@ class MoveToWalletViewmodel extends BaseState {
         setBusy(false);
         return;
       }
-      if (isWithdrawChoice) if (isShowTrxTsWalletBalance &&
-          !isShowFabChainBalance &&
-          amount > trxTsWalletBalance) {
-        sharedService.alertDialog(
-            AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
-                trxTsWalletBalance.toString(),
-            AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
-            isWarning: false);
-        setBusy(false);
-        return;
+
+      if (isWithdrawChoice) {
+        if (trxTsWalletBalance == null) {
+          // ! no tron testnet so trx ts wallet balance is null
+          log.i('amount $amount -- ts bal $trxTsWalletBalance');
+          trxTsWalletBalance = 0.0;
+        }
+        if (isShowTrxTsWalletBalance &&
+            !isShowFabChainBalance &&
+            amount > trxTsWalletBalance) {
+          sharedService.alertDialog(
+              AppLocalizations.of(context).lowTsWalletBalanceErrorFirstPart +
+                  ' ' +
+                  trxTsWalletBalance.toString(),
+              AppLocalizations.of(context).lowTsWalletBalanceErrorSecondPart,
+              isWarning: false);
+          isShowErrorDetailsButton = false;
+          setBusy(false);
+          return;
+        }
       }
 
       setMessage('');
@@ -710,6 +720,7 @@ class MoveToWalletViewmodel extends BaseState {
               AppLocalizations.of(context).dialogManagerTypeSamePasswordNote,
           buttonTitle: AppLocalizations.of(context).confirm);
       if (res.confirmed) {
+        isShowErrorDetailsButton = false;
         String exgAddress =
             await sharedService.getExgAddressFromWalletDatabase();
         String mnemonic = res.returnedText;
@@ -831,6 +842,7 @@ class MoveToWalletViewmodel extends BaseState {
         }
       } else if (!res.confirmed && res.returnedText == 'Closed') {
         print('else if close button pressed');
+        isShowErrorDetailsButton = false;
       } else {
         print('else');
         if (res.returnedText != 'Closed') {

@@ -136,6 +136,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputValidation" : MessageLookupByLibrary.simpleMessage("输入验证"),
     "insufficientBalance" : MessageLookupByLibrary.simpleMessage("余额不足"),
     "insufficientGasAmount" : MessageLookupByLibrary.simpleMessage("燃料余额不足"),
+    "insufficientGasBalance" : MessageLookupByLibrary.simpleMessage("燃料余额不足"),
     "invalidAddress" : MessageLookupByLibrary.simpleMessage("输入的地址无效"),
     "invalidAmount" : MessageLookupByLibrary.simpleMessage("数量错误"),
     "invalidMnemonic" : MessageLookupByLibrary.simpleMessage("无效的助记词"),

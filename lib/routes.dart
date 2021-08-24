@@ -48,7 +48,7 @@ import 'package:exchangilymobileapp/screens/wallet/wallet_setup/wallet_setup.dar
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/add_gas/add_gas.dart';
-import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet.dart';
+import 'package:exchangilymobileapp/screens/wallet/wallet_features/move_to_wallet_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_view.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/smart_contract.dart';
 import 'package:exchangilymobileapp/screens/settings/settings_view.dart';

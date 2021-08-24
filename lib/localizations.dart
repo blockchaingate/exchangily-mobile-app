@@ -1827,6 +1827,11 @@ class AppLocalizations {
         desc: 'unConfirmed_balance_info_example');
   }
 
+  String get insufficientGasBalance {
+    return Intl.message('Insufficient gas balance',
+        name: 'insufficientGasBalance', desc: 'Insufficient_gas_balance');
+  }
+
   // Share page pending translation added by Jack
 }
 

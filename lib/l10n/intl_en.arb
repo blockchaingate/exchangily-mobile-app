@@ -2045,5 +2045,11 @@
       "description": "unConfirmed_balance_info_example",
       "type": "text",
       "placeholders": {}
+    },
+    "insufficientGasBalance": "Insufficient gas balance",
+    "@insufficientGasBalance": {
+      "description": "Insufficient_gas_balance",
+      "type": "text",
+      "placeholders": {}
     }
 }

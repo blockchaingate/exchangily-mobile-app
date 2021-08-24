@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +20,7 @@ class LocalStorageService {
   static const String TokenListKey = 'tokenList';
   static const String FavWalletCoinsKey = 'favWalletCoinsKey';
   static const String FavCoinTabSelectedKey = 'favCoinTabSelectedKey';
+  static const String WalletDecimalListKey = 'walletDecimalListKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -72,6 +75,24 @@ class LocalStorageService {
 
     return value;
   }
+
+  int getStoredListLength(String jsonStringData) {
+    int objLength = 0;
+    var obj = jsonDecode(jsonStringData) as List;
+    if (obj != null) {
+      objLength = obj.length;
+      log.w('getStoredListLength $objLength');
+    }
+    return objLength;
+  }
+
+/*----------------------------------------------------------------------
+                Wallet Decimal List
+----------------------------------------------------------------------  */
+  String get walletDecimalList => _getFromDisk(WalletDecimalListKey) ?? '';
+
+  set walletDecimalList(String value) =>
+      _saveToDisk(WalletDecimalListKey, value);
 
 /*----------------------------------------------------------------------
                   Languages getter/setter

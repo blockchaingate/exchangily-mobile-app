@@ -728,9 +728,12 @@ Widget _coinDetailsCard(
                                             .availableBalance
                                             .isNegative
                                         ? '0.0'
-                                        : walletInfo[index]
-                                            .availableBalance
-                                            .toStringAsFixed(4),
+                                        : NumberUtil()
+                                            .truncateDoubleWithoutRouding(
+                                                model.walletInfo[index]
+                                                    .availableBalance,
+                                                precision: 6)
+                                            .toString(),
                                     style:
                                         Theme.of(context).textTheme.headline6),
                               ),
@@ -764,9 +767,12 @@ Widget _coinDetailsCard(
                                 child: Text(
                                     walletInfo[index].lockedBalance.isNegative
                                         ? '0.0'
-                                        : walletInfo[index]
-                                            .lockedBalance
-                                            .toStringAsFixed(4),
+                                        : NumberUtil()
+                                            .truncateDoubleWithoutRouding(
+                                                model.walletInfo[index]
+                                                    .lockedBalance,
+                                                precision: 6)
+                                            .toString(),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline6
@@ -805,7 +811,7 @@ Widget _coinDetailsCard(
                                         : NumberUtil()
                                             .truncateDoubleWithoutRouding(
                                                 walletInfo[index].inExchange,
-                                                precision: 4)
+                                                precision: 6)
                                             .toString(),
                                     style: Theme.of(context)
                                         .textTheme
@@ -827,6 +833,7 @@ Widget _coinDetailsCard(
                   children: <Widget>[
                     model.isBusy
                         ? Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Text('\$',
                                   style: TextStyle(color: globals.green)),
@@ -835,7 +842,7 @@ Widget _coinDetailsCard(
                                   baseColor: globals.grey,
                                   highlightColor: globals.white,
                                   child: Text(
-                                    '${walletInfo[index].usdValue.toStringAsFixed(2)}',
+                                    '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo[index].usdValue, precision: 2).toString()}',
                                     style: TextStyle(color: globals.green),
                                   ),
                                 ),
@@ -843,6 +850,7 @@ Widget _coinDetailsCard(
                             ],
                           )
                         : Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Text('\$',
                                   style: TextStyle(color: globals.green)),
@@ -1057,12 +1065,15 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                 .availableBalance
                                                                 .isNegative
                                                             ? '0.0'
-                                                            : model
-                                                                .favWalletInfoList[
-                                                                    index]
-                                                                .availableBalance
-                                                                .toStringAsFixed(
-                                                                    4),
+                                                            : NumberUtil()
+                                                                .truncateDoubleWithoutRouding(
+                                                                    model
+                                                                        .favWalletInfoList[
+                                                                            index]
+                                                                        .availableBalance,
+                                                                    precision:
+                                                                        6)
+                                                                .toString(),
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline6),
@@ -1107,12 +1118,15 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                 .lockedBalance
                                                                 .isNegative
                                                             ? '0.0'
-                                                            : model
-                                                                .favWalletInfoList[
-                                                                    index]
-                                                                .lockedBalance
-                                                                .toStringAsFixed(
-                                                                    4),
+                                                            : NumberUtil()
+                                                                .truncateDoubleWithoutRouding(
+                                                                    model
+                                                                        .favWalletInfoList[
+                                                                            index]
+                                                                        .lockedBalance,
+                                                                    precision:
+                                                                        6)
+                                                                .toString(),
                                                         style: Theme.of(context)
                                                             .textTheme
                                                             .headline6
@@ -1172,7 +1186,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                                             index]
                                                                         .inExchange,
                                                                     precision:
-                                                                        4)
+                                                                        6)
                                                                 .toString(),
                                                         style: Theme.of(context)
                                                             .textTheme
@@ -1207,7 +1221,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                       highlightColor:
                                                           globals.white,
                                                       child: Text(
-                                                        '${model.favWalletInfoList[index].usdValue.toStringAsFixed(2)}',
+                                                        '${NumberUtil().truncateDoubleWithoutRouding(model.favWalletInfoList[index].usdValue, precision: 2).toString()}',
                                                         style: TextStyle(
                                                             color:
                                                                 globals.green),
@@ -1245,7 +1259,7 @@ class FavTab extends ViewModelBuilderWidget<WalletDashboardViewModel> {
                                                             'FAB' &&
                                                         (model.isShowCaseView ||
                                                             model.gasAmount <
-                                                                0.5) &&
+                                                                0.01) &&
                                                         !model.isBusy
                                                     ? Padding(
                                                         padding:

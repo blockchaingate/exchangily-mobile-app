@@ -43,6 +43,7 @@ class AbiUtils {
     abiHex += fixLength(trimHexPrefix(amountHex), 64);
 
     abiHex += fixLength(trimHexPrefix(addressInWallet), 64);
+    log.i('getWithdrawFuncABIHEx $abiHex');
     return abiHex;
   }
 
