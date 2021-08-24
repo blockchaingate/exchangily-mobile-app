@@ -238,22 +238,28 @@ class SettingsViewmodel extends BaseViewModel {
         log.w('deleting wallet');
         await walletDatabaseService
             .deleteDb()
-            .whenComplete(() => log.e('wallet database deleted!!'));
+            .whenComplete(() => log.e('wallet database deleted!!'))
+            .catchError((err) => log.e('wallet database CATCH $err'));
 
-        await transactionHistoryDatabaseService.deleteDb().whenComplete(
-            () => log.e('trnasaction history database deleted!!'));
+        await transactionHistoryDatabaseService
+            .deleteDb()
+            .whenComplete(() => log.e('trnasaction history database deleted!!'))
+            .catchError((err) => log.e('tx history database CATCH $err'));
 
         await walletService
             .deleteEncryptedData()
-            .whenComplete(() => log.e('encrypted data deleted!!'));
+            .whenComplete(() => log.e('encrypted data deleted!!'))
+            .catchError((err) => log.e('delete encrypted CATCH $err'));
 
         await tokenListDatabaseService
             .deleteDb()
-            .whenComplete(() => log.e('Token list database deleted!!'));
+            .whenComplete(() => log.e('Token list database deleted!!'))
+            .catchError((err) => log.e('token list database CATCH $err'));
 
         await userSettingsDatabaseService
             .deleteDb()
-            .whenComplete(() => log.e('User settings database deleted!!'));
+            .whenComplete(() => log.e('User settings database deleted!!'))
+            .catchError((err) => log.e('user setting database CATCH $err'));
 
         storageService.walletBalancesBody = '';
 
@@ -267,8 +273,10 @@ class SettingsViewmodel extends BaseViewModel {
         log.e('before local storage service clear ${prefs.getKeys()}');
 
         log.e('all keys after clearing ${prefs.getKeys()}');
-        await _deleteCacheDir();
-        await _deleteAppDir();
+        await _deleteCacheDir()
+            .catchError((err) => log.e('delete cache failed $err'));
+        await _deleteAppDir()
+            .catchError((err) => log.e('delete app dir failed $err'));
 
         Navigator.pushNamed(context, '/');
       } else if (res.returnedText == 'Closed' && !res.confirmed) {
