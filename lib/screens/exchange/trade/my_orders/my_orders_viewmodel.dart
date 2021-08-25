@@ -85,6 +85,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
   TextStyle orderCancelledTextStyle;
 
   final abiUtils = AbiUtils();
+  bool isCancelling = false;
 
   init() async {
     log.i('INIT');
@@ -344,6 +345,8 @@ class MyOrdersViewModel extends ReactiveViewModel {
                       Check Password
 -------------------------------------------------------------------------------------*/
   checkPass(context, orderHash) async {
+    setBusyForObject(onClickOrderHash, true);
+    isCancelling = true;
     onClickOrderHash = orderHash;
     var res = await _dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
@@ -378,7 +381,12 @@ class MyOrdersViewModel extends ReactiveViewModel {
               isShowAllOrders
                   ? await getAllMyOrders()
                   : await getMyOrdersByTickerName();
+
               setBusy(false);
+              isCancelling = false;
+              setBusyForObject(onClickOrderHash, false);
+
+              tradeService.setBalanceRefresh(true);
             }
 
             timer.cancel();
@@ -425,6 +433,7 @@ class MyOrdersViewModel extends ReactiveViewModel {
     }
 
     onClickOrderHash = '';
+
     setBusy(false);
   }
 

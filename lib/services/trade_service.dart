@@ -35,8 +35,13 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 class TradeService extends StoppableService with ReactiveServiceMixin {
   TradeService() {
-    listenToReactiveValues(
-        [_price, _quantity, _interval, _isTradingChartModelBusy]);
+    listenToReactiveValues([
+      _price,
+      _quantity,
+      _interval,
+      _isTradingChartModelBusy,
+      _isRefreshBalance
+    ]);
   }
 
   final log = getLogger('TradeService');
@@ -67,6 +72,9 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
 
   Stream tickerStream;
   Stream allPriceStream;
+
+  RxValue<bool> _isRefreshBalance = RxValue<bool>(initial: false);
+  bool get isRefreshBalance => _isRefreshBalance.value;
 
   @override
   void start() {
@@ -104,7 +112,15 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   }
 
 /*----------------------------------------------------------------------
-                    set orderbook loaded status
+                    set balance refresh
+----------------------------------------------------------------------*/
+  void setBalanceRefresh(bool v) {
+    _isRefreshBalance.value = v;
+    log.w('setBalanceRefresh $isRefreshBalance');
+  }
+
+/*----------------------------------------------------------------------
+                    set Trading Chart Interval
 ----------------------------------------------------------------------*/
   void setTradingChartInterval(String v, bool isBusy) {
     _isTradingChartModelBusy.value = isBusy;

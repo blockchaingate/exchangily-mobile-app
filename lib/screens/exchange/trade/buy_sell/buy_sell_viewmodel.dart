@@ -54,13 +54,13 @@ import 'package:convert/convert.dart';
 import 'package:hex/hex.dart';
 import 'dart:core';
 
-class BuySellViewModel extends StreamViewModel {
+class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   final tickerNameFromRoute;
   BuySellViewModel({this.tickerNameFromRoute});
 
-  // @override
-  // List<ReactiveServiceMixin> get reactiveServices => [tradeService];
-  // double get priceFromTradeService => tradeService.price;
+  @override
+  List<ReactiveServiceMixin> get reactiveServices => [tradeService];
+  bool get isRefreshBalance => tradeService.isRefreshBalance;
   // double get quantityFromTradeService => tradeService.quantity;
 
   final log = getLogger('BuySellViewModel');
@@ -189,6 +189,15 @@ class BuySellViewModel extends StreamViewModel {
     return gasAmount;
   }
 
+// /*----------------------------------------------------------------------
+//                     Refresh balance after cancelling order
+// ----------------------------------------------------------------------*/
+  Widget refreshBalanceAfterCancellingOrder() {
+    getSingleCoinExchangeBalanceFromAll(targetCoinName, baseCoinName);
+
+    return sharedService.loadingIndicator();
+  }
+
 /*----------------------------------------------------------------------
                     get orderbook loaded status
 ----------------------------------------------------------------------*/
@@ -220,8 +229,7 @@ class BuySellViewModel extends StreamViewModel {
 ----------------------------------------------------------------------*/
   Future getSingleCoinExchangeBalanceFromAll(
       String targetCoin, String baseCoin) async {
-    setBusy(true);
-    log.e('In get exchange assets');
+    log.e('In getSingleCoinExchangeBalanceFromAll');
 
     targetCoinExchangeBalance =
         await apiService.getSingleCoinExchangeBalance(targetCoin);
@@ -263,7 +271,7 @@ class BuySellViewModel extends StreamViewModel {
         // }
       });
     }
-    setBusy(false);
+    tradeService.setBalanceRefresh(false);
   }
 
   /*----------------------------------------------------------------------
@@ -357,11 +365,6 @@ class BuySellViewModel extends StreamViewModel {
     setBusy(false);
   }
 
-  //
-/* ---------------------------------------------------
-            getPairDecimalConfig
---------------------------------------------------- */
-
 /*----------------------------------------------------------------------
                   Get Decimal Pair Configuration
 ----------------------------------------------------------------------*/
@@ -377,7 +380,7 @@ class BuySellViewModel extends StreamViewModel {
     setBusy(false);
   }
 
-/* ---------------------------------------------------
+/*---------------------------------------------------
             Full screen Stack loading indicator
 --------------------------------------------------- */
   selectBuySellTab(bool value) {
@@ -714,14 +717,14 @@ class BuySellViewModel extends StreamViewModel {
   }
 
 /* ---------------------------------------------------
-                 Slider Onchange
+                  Slider Onchange
 --------------------------------------------------- */
 
   sliderOnchange(double newValue) {
     setBusy(true);
     log.i('new slider value $newValue');
     sliderValue = newValue;
-    if (sliderValue == 100) sliderValue = sliderValue - 0.001;
+    //if (sliderValue == 100) sliderValue = sliderValue - 0.001;
     log.i('sliderValue $sliderValue');
     var targetCoinbalance =
         targetCoinExchangeBalance.unlockedAmount; // usd bal for buy
@@ -742,16 +745,15 @@ class BuySellViewModel extends StreamViewModel {
         var changeQuantityWithSlider = targetCoinbalance * sliderValue / 100;
         quantity = changeQuantityWithSlider;
 
-        String roundedQtyString = NumberUtil()
-            .truncateDoubleWithoutRouding(quantity,
-                precision: singlePairDecimalConfig.qtyDecimal)
-            .toString();
-        double roundedQtyDouble = double.parse(roundedQtyString);
-        roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
+        double formattedQuantity = NumberUtil().truncateDoubleWithoutRouding(
+            quantity,
+            precision: singlePairDecimalConfig.qtyDecimal);
+        // double roundedQtyDouble = double.parse(roundedQtyString);
+        // roundedQtyDouble = NumberUtil().roundDownLastDigit(roundedQtyDouble);
 
-        transactionAmount = roundedQtyDouble * price;
-        quantityTextController.text = roundedQtyDouble.toString();
-        quantity = roundedQtyDouble;
+        transactionAmount = formattedQuantity * price;
+        quantityTextController.text = formattedQuantity.toString();
+        quantity = formattedQuantity;
         updateTransFee();
         log.i('transactionAmount $transactionAmount');
         log.e('changeQuantityWithSlider $changeQuantityWithSlider');

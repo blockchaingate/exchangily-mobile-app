@@ -510,7 +510,7 @@ class WalletService {
   }
 
 /*----------------------------------------------------------------------
-               Generate BCH address
+                Generate BCH address
 ----------------------------------------------------------------------*/
 
   String generateBchAddress(String mnemonic) {
@@ -575,8 +575,8 @@ class WalletService {
     var root = bip32.BIP32.fromSeed(seed);
     for (int i = 0; i < coinTickers.length; i++) {
       var tickerName = coinTickers[i];
-      var addr = await CoinUtils()
-          .getAddressForCoin(root, tickerName, tokenType: tokenType[i]);
+      var addr = await coinUtils.getAddressForCoin(root, tickerName,
+          tokenType: tokenType[i]);
       log.w('name $tickerName - address $addr');
       return addr;
     }
@@ -588,8 +588,8 @@ class WalletService {
   Future coinBalanceByAddress(
       String name, String address, String tokenType) async {
     log.w(' coinBalanceByAddress $name $address $tokenType');
-    var bal = await CoinUtils()
-        .getCoinBalanceByAddress(name, address, tokenType: tokenType);
+    var bal = await coinUtils.getCoinBalanceByAddress(name, address,
+        tokenType: tokenType);
     log.w('coinBalanceByAddress $name - $bal');
 
     // if (bal == null) {
@@ -686,8 +686,8 @@ class WalletService {
         } else if (tickerName == 'TRX') {
           addr = trxAddress;
         } else
-          addr = await CoinUtils()
-              .getAddressForCoin(root, tickerName, tokenType: token);
+          addr = await coinUtils.getAddressForCoin(root, tickerName,
+              tokenType: token);
         WalletInfo wi = new WalletInfo(
             id: null,
             tickerName: tickerName,
@@ -937,10 +937,10 @@ class WalletService {
         String token = tokenType[i];
         var coinMarketPrice = await getCoinMarketPriceByTickerName(name);
         coinUsdMarketPrice.add(coinMarketPrice);
-        String addr = await CoinUtils()
-            .getAddressForCoin(root, tickerName, tokenType: token);
-        var bal = await CoinUtils()
-            .getCoinBalanceByAddress(tickerName, addr, tokenType: token);
+        String addr = await coinUtils.getAddressForCoin(root, tickerName,
+            tokenType: token);
+        var bal = await coinUtils.getCoinBalanceByAddress(tickerName, addr,
+            tokenType: token);
         log.w('bal in wallet service $bal');
         double walletBal = bal['balance'];
         // double walletLockedBal = bal['lockbalance'];
@@ -1177,7 +1177,7 @@ class WalletService {
       addressInWallet = btcUtils.btcToBase58Address(addressInWallet);
     }
     int coinType;
-    await CoinUtils()
+    await coinUtils
         .getCoinTypeIdByName(coinName)
         .then((value) => coinType = value);
     log.i('cointype $coinType');
@@ -1185,46 +1185,46 @@ class WalletService {
     var sepcialcoinType;
     var abiHex;
     if (coinName == 'DSCE' || coinName == 'DSC') {
-      sepcialcoinType = await CoinUtils().getCoinTypeIdByName('DSC');
-      abiHex = AbiUtils().getWithdrawFuncABI(
+      sepcialcoinType = await coinUtils.getCoinTypeIdByName('DSC');
+      abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'BSTE' || coinName == 'BST') {
-      sepcialcoinType = await CoinUtils().getCoinTypeIdByName('BST');
-      abiHex = AbiUtils().getWithdrawFuncABI(
+      sepcialcoinType = await coinUtils.getCoinTypeIdByName('BST');
+      abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'EXGE' || coinName == 'EXG') {
-      sepcialcoinType = await CoinUtils().getCoinTypeIdByName('EXG');
-      abiHex = AbiUtils().getWithdrawFuncABI(
+      sepcialcoinType = await coinUtils.getCoinTypeIdByName('EXG');
+      abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (coinName == 'FABE' ||
         (coinName == 'FAB' && tokenType == 'ETH')) {
-      sepcialcoinType = await CoinUtils().getCoinTypeIdByName('FAB');
-      abiHex = AbiUtils().getWithdrawFuncABI(
+      sepcialcoinType = await coinUtils.getCoinTypeIdByName('FAB');
+      abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else if (isSpeicalTronTokenWithdraw) {
       addressInWallet = btcUtils.btcToBase58Address(addressInWallet);
-      abiHex = AbiUtils().getWithdrawFuncABI(
+      abiHex = abiUtils.getWithdrawFuncABI(
           coinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
-      abiHex = AbiUtils()
-          .getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
+      abiHex =
+          abiUtils.getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
     }
     var coinPoolAddress = await getCoinPoolAddress();
     print('1');
     var nonce = await getNonce(addressInKanban);
 
-    var txKanbanHex = await AbiUtils().signAbiHexWithPrivateKey(
+    var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         coinPoolAddress,
@@ -1267,7 +1267,7 @@ class WalletService {
     addressInWallet = btcUtils.btcToBase58Address(addressInWallet);
 
     int coinType;
-    await CoinUtils()
+    await coinUtils
         .getCoinTypeIdByName(coinName)
         .then((value) => coinType = value);
     log.i('cointype $coinType');
@@ -1275,20 +1275,20 @@ class WalletService {
     var sepcialcoinType;
     var abiHex;
     if (coinName == 'USDTX') {
-      sepcialcoinType = await CoinUtils().getCoinTypeIdByName('USDT');
-      abiHex = AbiUtils().getWithdrawFuncABI(
+      sepcialcoinType = await coinUtils.getCoinTypeIdByName('USDT');
+      abiHex = abiUtils.getWithdrawFuncABI(
           sepcialcoinType, amountInLink, addressInWallet,
           isSpecialDeposit: true, chain: tokenType);
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
-      abiHex = AbiUtils()
-          .getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
+      abiHex =
+          abiUtils.getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
     }
     var coinPoolAddress = await getCoinPoolAddress();
 
     var nonce = await getNonce(addressInKanban);
 
-    var txKanbanHex = await AbiUtils().signAbiHexWithPrivateKey(
+    var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         coinPoolAddress,
@@ -1325,7 +1325,7 @@ class WalletService {
 
     print('kanbanGasPrice $kanbanGasPrice');
     print('kanbanGasLimit $kanbanGasLimit');
-    var officalAddress = CoinUtils().getOfficalAddress(walletInfo.tickerName,
+    var officalAddress = coinUtils.getOfficalAddress(walletInfo.tickerName,
         tokenType: walletInfo.tokenType);
     print('official address in wallet service deposit do $officalAddress');
     if (officalAddress == null) {
@@ -1355,7 +1355,7 @@ class WalletService {
 
 // code  from depositDo
 
-    var coinType = await CoinUtils().getCoinTypeIdByName(walletInfo.tickerName);
+    var coinType = await coinUtils.getCoinTypeIdByName(walletInfo.tickerName);
     log.i('coin type $coinType');
 
     var amountInLink = BigInt.parse(NumberUtil.toBigInt(amount));
@@ -1371,7 +1371,7 @@ class WalletService {
         stringUtils.trimHexPrefix(addressInKanban));
     log.w('Original message $originalMessage');
 
-    var signedMess = await CoinUtils().signedMessage(
+    var signedMess = await coinUtils.signedMessage(
         originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
     log.e('Signed message $signedMess');
     var coinPoolAddress = await getCoinPoolAddress();
@@ -1381,22 +1381,22 @@ class WalletService {
     var sepcialcoinType;
     var abiHex;
     if (walletInfo.tickerName == 'USDTX') {
-      sepcialcoinType = await CoinUtils().getCoinTypeIdByName('USDT');
-      abiHex = AbiUtils().getDepositFuncABI(
+      sepcialcoinType = await coinUtils.getCoinTypeIdByName('USDT');
+      abiHex = abiUtils.getDepositFuncABI(
           sepcialcoinType, txHash, amountInLink, addressInKanban, signedMess,
           chain: walletInfo.tokenType, isSpecialDeposit: true);
 
       log.e('cointype $coinType -- abihex $abiHex');
     } else {
       print('in else');
-      abiHex = AbiUtils().getDepositFuncABI(
+      abiHex = abiUtils.getDepositFuncABI(
           coinType, txHash, amountInLink, addressInKanban, signedMess,
           chain: walletInfo.tokenType);
       log.i('cointype $coinType -- abihex $abiHex');
     }
     var nonce = await getNonce(addressInKanban);
     debugPrint('nonce $nonce');
-    var txKanbanHex = await AbiUtils().signAbiHexWithPrivateKey(
+    var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         coinPoolAddress,
@@ -1488,7 +1488,7 @@ class WalletService {
       }
     }
 
-    var coinType = await CoinUtils().getCoinTypeIdByName(coinName);
+    var coinType = await coinUtils.getCoinTypeIdByName(coinName);
     log.i('coin type $coinType');
     if (coinType == 0) {
       errRes['data'] = 'invalid coinType for ' + coinName;
@@ -1785,7 +1785,7 @@ class WalletService {
   Future txHexforSendCoin(seed, coinType, kbPaymentAddress, amount,
       kanbanGasPrice, kanbanGasLimit) async {
     var abiHex =
-        AbiUtils().getSendCoinFuncABI(coinType, kbPaymentAddress, amount);
+        abiUtils.getSendCoinFuncABI(coinType, kbPaymentAddress, amount);
 
     var keyPairKanban = getExgKeyPair(seed);
     var address = keyPairKanban['address'];
@@ -1793,7 +1793,7 @@ class WalletService {
 
     var coinpoolAddress = await getCoinPoolAddress();
 
-    var txKanbanHex = await AbiUtils().signAbiHexWithPrivateKey(
+    var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         coinpoolAddress,

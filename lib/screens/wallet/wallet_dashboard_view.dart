@@ -842,7 +842,7 @@ Widget _coinDetailsCard(
                                   baseColor: globals.grey,
                                   highlightColor: globals.white,
                                   child: Text(
-                                    '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo[index].usdValue, precision: 2).toString()}',
+                                    '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfoCopy[index].usdValue, precision: 2).toString()}',
                                     style: TextStyle(color: globals.green),
                                   ),
                                 ),

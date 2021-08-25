@@ -88,8 +88,7 @@ class WalletFeaturesView extends StatelessWidget {
                             child: IconButton(
                               padding: EdgeInsets.zero,
                               icon: model.isFavorite
-                                  ? Icon(Icons.star,
-                                      color: primaryColor, size: 22)
+                                  ? Icon(Icons.star, color: white, size: 22)
                                   : Icon(Icons.star_border_outlined,
                                       color: yellow, size: 22),
                               onPressed: () => model.updateFavWalletCoinsList(

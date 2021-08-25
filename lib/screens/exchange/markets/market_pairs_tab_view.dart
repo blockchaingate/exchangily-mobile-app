@@ -1,6 +1,7 @@
 import 'package:exchangilymobileapp/screen_state/market/MarketPairsTabViewState.dart';
 import 'package:exchangilymobileapp/screens/base_screen.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/carousel.dart';
 import 'package:exchangilymobileapp/widgets/loading_animation.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +78,12 @@ class MarketPairsTabView extends StatelessWidget {
                                                     color: Colors.white,
                                                     fontWeight:
                                                         FontWeight.bold)),
-                                            Text(pair.price.toStringAsFixed(2),
+                                            Text(
+                                                NumberUtil()
+                                                    .truncateDoubleWithoutRouding(
+                                                        pair.price,
+                                                        precision: 2)
+                                                    .toString(),
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                 ))

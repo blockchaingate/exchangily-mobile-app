@@ -181,13 +181,13 @@ class SendWalletView extends StatelessWidget {
                                   children: <Widget>[
                                     model.walletInfo.tickerName == 'FAB'
                                         ? SizedBox(
-                                            width: 5,
+                                            width: 12,
                                             height: 12,
                                             child: IconButton(
                                                 padding: EdgeInsets.zero,
                                                 icon: Icon(
                                                     MdiIcons.informationOutline,
-                                                    size: 14,
+                                                    size: 15,
                                                     color: green),
                                                 onPressed: () {
                                                   showModalBottomSheet<void>(
@@ -246,6 +246,7 @@ class SendWalletView extends StatelessWidget {
                                     model.walletInfo.tickerName == 'FAB'
                                         ? UIHelper.horizontalSpaceSmall
                                         : Container(),
+                                    // UIHelper.horizontalSpaceSmall,
                                     Text(
                                       AppLocalizations.of(context).available +
                                           ' ' +
@@ -275,14 +276,14 @@ class SendWalletView extends StatelessWidget {
                                         Row(
                                           children: <Widget>[
                                             SizedBox(
-                                              width: 5,
+                                              width: 12,
                                               height: 12,
                                               child: IconButton(
                                                   padding: EdgeInsets.zero,
                                                   icon: Icon(
                                                       MdiIcons
                                                           .informationOutline,
-                                                      size: 14,
+                                                      size: 15,
                                                       color: yellow),
                                                   onPressed: () {
                                                     showModalBottomSheet<void>(
