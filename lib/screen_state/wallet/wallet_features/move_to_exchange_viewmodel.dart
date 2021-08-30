@@ -114,10 +114,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
         finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
       }
     } else {
-      if (walletInfo.tokenType.isEmpty)
-        finalAmount = amount - transFee;
-      else
-        finalAmount = amount;
+      walletInfo.tokenType.isEmpty &&
+              (amount == walletInfo.availableBalance || isMaxAmount)
+          ? finalAmount = amount - transFee
+          : finalAmount = amount;
     }
     return finalAmount;
   }
@@ -543,33 +543,34 @@ class MoveToExchangeViewModel extends BaseViewModel {
             Decimal.parse(kanbanGasLimit.toString()) /
             Decimal.parse('1e18'))
         .toDouble();
-    await walletService
-        .sendTransaction(
-            walletInfo.tickerName,
-            Uint8List.fromList(
-                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-            [0],
-            [address],
-            to,
-            amount,
-            options,
-            false)
-        .then((ret) {
-      log.w('updateTransFee $ret');
-      if (ret != null && ret['transFee'] != null) {
-        transFee = ret['transFee'];
-        kanbanTransFee = kanbanTransFeeDouble;
+    if (walletService.isTrx(walletInfo.tickerName))
+      await walletService
+          .sendTransaction(
+              walletInfo.tickerName,
+              Uint8List.fromList(
+                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+              [0],
+              [address],
+              to,
+              amount,
+              options,
+              false)
+          .then((ret) {
+        log.w('updateTransFee $ret');
+        if (ret != null && ret['transFee'] != null) {
+          transFee = ret['transFee'];
+          kanbanTransFee = kanbanTransFeeDouble;
+          setBusy(false);
+        }
+        if (walletInfo.tickerName != 'TRX' &&
+            walletInfo.tickerName != 'USDTX' &&
+            transFee == 0.0) isValid = false;
+        //  log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
+        log.i('availableBalance ${walletInfo.availableBalance}');
+      }).catchError((onError) {
         setBusy(false);
-      }
-      if (walletInfo.tickerName != 'TRX' &&
-          walletInfo.tickerName != 'USDTX') if (transFee == 0.0)
-        isValid = false;
-      //  log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
-      log.i('availableBalance ${walletInfo.availableBalance}');
-    }).catchError((onError) {
-      setBusy(false);
-      log.e(onError);
-    });
+        log.e(onError);
+      });
 
     setBusy(false);
   }

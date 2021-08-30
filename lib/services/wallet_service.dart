@@ -454,7 +454,7 @@ class WalletService {
     }
 
     var hash = CryptoWeb3.keccak256(uncompressedPubKey);
-    print('hash $hash');
+    log.w('hash $hash');
 
     log.e('hex ${uint8ListToHex(hash)}');
 // take 20 bytes at the end from hash

@@ -1408,12 +1408,14 @@ class WalletDashboardViewModel extends BaseViewModel {
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
               //   log.i('single wallet info object${wi.toJson()}');
-              walletDatabaseService.update(wi).catchError((err) async {
-                await walletDatabaseService.deleteDb().whenComplete(() async {
-                  await walletDatabaseService.initDb();
-                  await walletDatabaseService.update(wi);
-                });
-              });
+              try {
+                log.i(
+                    'in refresh balance try block for updating wallet database');
+                await walletDatabaseService.update(wi);
+              } catch (err) {
+                log.e(
+                    'in refresh balance catch block for deleting and try re-updating wallet database $err');
+              }
 
               if (!tickerNamesFromWalletInfoCopy.contains(walletInfoTickerName))
                 tickerNamesFromWalletInfoCopy.add(walletInfoTickerName);

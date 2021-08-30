@@ -234,10 +234,10 @@ class SharedService {
         child: Platform.isIOS
             ? Container(
                 decoration: BoxDecoration(
-                    color: grey.withAlpha(125),
+                    color: white.withAlpha(175),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
-                width: 30,
-                height: 30,
+                width: 25,
+                height: 25,
                 child: CupertinoActivityIndicator())
             : SizedBox(
                 width: 20,

@@ -43,10 +43,14 @@ class WalletDataBaseService {
     if (_database != null) return _database;
     var databasePath = await getDatabasesPath();
     path = join(databasePath, _databaseName);
-    log.w(path);
+    log.w('initDB $path');
     _database =
         openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
     return _database;
+  }
+
+  openDB() {
+    openDatabase(path, version: _databaseVersion, onCreate: _onCreate);
   }
 
   void _onCreate(Database db, int version) async {
@@ -143,17 +147,22 @@ class WalletDataBaseService {
   // Update database
   Future<void> update(WalletInfo walletInfo) async {
     final Database db = await _database;
-    await db
-        .update(
-      tableName,
-      walletInfo.toJson(),
-      where: "id = ?",
-      whereArgs: [walletInfo.id],
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    )
-        .catchError((err) {
-      log.e('update catch $err');
-    });
+    try {
+      await db
+          .update(
+        tableName,
+        walletInfo.toJson(),
+        where: "id = ?",
+        whereArgs: [walletInfo.id],
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      )
+          .catchError((err) {
+        log.e('update catch $err');
+      });
+    } finally {
+      await initDb();
+      await update(walletInfo);
+    }
   }
 
   // Close Database
@@ -165,11 +174,15 @@ class WalletDataBaseService {
   // Delete Database
   Future deleteDb() async {
     log.i('database path $path');
-    await deleteDatabase(path);
-    var databasePath = await getDatabasesPath();
-    var p = join(databasePath, _databaseName);
-    log.w(p);
-    log.w('database path after delete $p');
-    _database = null;
+    try {
+      await deleteDatabase(path);
+      var databasePath = await getDatabasesPath();
+      var p = join(databasePath, _databaseName);
+
+      log.w('database path after delete: $p');
+      _database = null;
+    } catch (err) {
+      log.e('deleteDb CATCH $err');
+    }
   }
 }

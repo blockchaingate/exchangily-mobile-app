@@ -486,7 +486,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
                         },
                         child: Text(
                           AppLocalizations.of(context).close,
-                          style: TextStyle(color: red),
+                          style: Theme.of(context).textTheme.button,
                         ),
                       )
                     ],
