@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
-import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 
@@ -131,7 +130,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     double finalAmount = 0.0;
     await amountAfterFee(amount, isMaxAmount: true)
         .then((resAmount) => finalAmount = resAmount);
-    finalAmount = amount = finalAmount;
+    //  finalAmount = amount = finalAmount;
     amountController.text = NumberUtil()
         .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
         .toString();
@@ -543,34 +542,34 @@ class MoveToExchangeViewModel extends BaseViewModel {
             Decimal.parse(kanbanGasLimit.toString()) /
             Decimal.parse('1e18'))
         .toDouble();
-    if (walletService.isTrx(walletInfo.tickerName))
-      await walletService
-          .sendTransaction(
-              walletInfo.tickerName,
-              Uint8List.fromList(
-                  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
-              [0],
-              [address],
-              to,
-              amount,
-              options,
-              false)
-          .then((ret) {
-        log.w('updateTransFee $ret');
-        if (ret != null && ret['transFee'] != null) {
-          transFee = ret['transFee'];
-          kanbanTransFee = kanbanTransFeeDouble;
-          setBusy(false);
-        }
-        if (walletInfo.tickerName != 'TRX' &&
-            walletInfo.tickerName != 'USDTX' &&
-            transFee == 0.0) isValid = false;
-        //  log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
-        log.i('availableBalance ${walletInfo.availableBalance}');
-      }).catchError((onError) {
+
+    await walletService
+        .sendTransaction(
+            walletInfo.tickerName,
+            Uint8List.fromList(
+                [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]),
+            [0],
+            [address],
+            to,
+            amount,
+            options,
+            false)
+        .then((ret) {
+      log.w('updateTransFee $ret');
+      if (ret != null && ret['transFee'] != null) {
+        transFee = ret['transFee'];
+        kanbanTransFee = kanbanTransFeeDouble;
         setBusy(false);
-        log.e(onError);
-      });
+      }
+      if (walletInfo.tickerName != 'TRX' &&
+          walletInfo.tickerName != 'USDTX' &&
+          transFee == 0.0) isValid = false;
+      //  log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
+      log.i('availableBalance ${walletInfo.availableBalance}');
+    }).catchError((onError) {
+      setBusy(false);
+      log.e(onError);
+    });
 
     setBusy(false);
   }
