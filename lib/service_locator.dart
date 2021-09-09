@@ -28,7 +28,7 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wall
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
@@ -45,6 +45,7 @@ import 'package:exchangilymobileapp/services/db/transaction_history_database_ser
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_auth_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
@@ -74,6 +75,7 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => VaultService());
   locator.registerLazySingleton(() => TokenListDatabaseService());
   locator.registerLazySingleton(() => UserSettingsDatabaseService());
+  locator.registerLazySingleton(() => LocalAuthService());
   // Shared
   locator.registerLazySingleton(() => ApiService());
   locator.registerLazySingleton(() => SharedService());

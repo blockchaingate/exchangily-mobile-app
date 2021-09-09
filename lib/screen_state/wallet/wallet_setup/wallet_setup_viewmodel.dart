@@ -11,7 +11,9 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
+import 'package:exchangilymobileapp/services/local_auth_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
@@ -27,6 +29,7 @@ class WalletSetupViewmodel extends BaseViewModel {
   WalletDataBaseService dataBaseService = locator<WalletDataBaseService>();
   WalletService walletService = locator<WalletService>();
   final NavigationService navigationService = locator<NavigationService>();
+  final localAuthService = locator<LocalAuthService>();
   BuildContext context;
   bool isWallet = false;
   String errorMessage = '';
@@ -40,8 +43,11 @@ class WalletSetupViewmodel extends BaseViewModel {
         isWallet = false;
       } else if (res.isNotEmpty) {
         isWallet = true;
-
-        await sharedService.onBackButtonPressed('/dashboard');
+// add here the biometric check
+        await localAuthService.authenticate();
+        if (localAuthService.isAuthenticated)
+          await navigationService
+              .navigateUsingpopAndPushedNamed(DashboardViewRoute);
       }
     }).timeout(Duration(seconds: 20), onTimeout: () {
       log.e('In time out');
