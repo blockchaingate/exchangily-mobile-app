@@ -851,6 +851,7 @@ Widget _coinDetailsCard(
                           )
                         : Row(
                             mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text('\$',
                                   style: TextStyle(color: globals.green)),

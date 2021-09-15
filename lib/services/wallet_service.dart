@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:bitbox/bitbox.dart' as Bitbox;
 import 'package:exchangilymobileapp/constants/colors.dart' as colors;
 import 'package:exchangilymobileapp/constants/colors.dart';

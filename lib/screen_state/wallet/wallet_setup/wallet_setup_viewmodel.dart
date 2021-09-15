@@ -33,7 +33,8 @@ class WalletSetupViewmodel extends BaseViewModel {
   BuildContext context;
   bool isWallet = false;
   String errorMessage = '';
-
+  bool _hasAuthenticated = false;
+  get hasAuthenticated => localAuthService.isAuthenticated;
   Future checkExistingWallet() async {
     setBusy(true);
     await dataBaseService.getAll().then((res) async {
@@ -45,9 +46,15 @@ class WalletSetupViewmodel extends BaseViewModel {
         isWallet = true;
 // add here the biometric check
         await localAuthService.authenticate();
+
         if (localAuthService.isAuthenticated)
           await navigationService
               .navigateUsingpopAndPushedNamed(DashboardViewRoute);
+        else {
+          _hasAuthenticated = localAuthService.isAuthenticated;
+          isWallet = false;
+          setBusy(false);
+        }
       }
     }).timeout(Duration(seconds: 20), onTimeout: () {
       log.e('In time out');

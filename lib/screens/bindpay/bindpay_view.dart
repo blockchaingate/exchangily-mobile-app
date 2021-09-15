@@ -67,7 +67,7 @@ class BindpayView extends StatelessWidget {
                                   width: 12.0))),
                       alignment: Alignment.topCenter,
                       child: Image.asset(
-                        'assets/images/bindpay/bindpay.png',
+                        'assets/images/lightning-remit/lightning-remit.jpg',
                         color: white,
                       )),
                 ),

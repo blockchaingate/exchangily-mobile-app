@@ -1832,6 +1832,10 @@ class AppLocalizations {
         name: 'insufficientGasBalance', desc: 'Insufficient_gas_balance');
   }
 
+  String get unlock {
+    return Intl.message('Unlock', name: 'unlock', desc: 'unlock');
+  }
+
   // Share page pending translation added by Jack
 }
 

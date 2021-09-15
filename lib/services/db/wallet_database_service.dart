@@ -88,6 +88,7 @@ class WalletDataBaseService {
 
 // Insert Data In The Database
   Future insert(WalletInfo walletInfo) async {
+    await initDb();
     final Database db = await _database;
 
     int id = await db.insert(tableName, walletInfo.toJson(),
@@ -147,22 +148,18 @@ class WalletDataBaseService {
   // Update database
   Future<void> update(WalletInfo walletInfo) async {
     final Database db = await _database;
-    try {
-      await db
-          .update(
-        tableName,
-        walletInfo.toJson(),
-        where: "id = ?",
-        whereArgs: [walletInfo.id],
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      )
-          .catchError((err) {
-        log.e('update catch $err');
-      });
-    } finally {
-      await initDb();
-      await update(walletInfo);
-    }
+
+    await db
+        .update(
+      tableName,
+      walletInfo.toJson(),
+      where: "id = ?",
+      whereArgs: [walletInfo.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    )
+        .catchError((err) {
+      log.e('update catch $err');
+    });
   }
 
   // Close Database

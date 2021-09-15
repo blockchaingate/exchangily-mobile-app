@@ -14,7 +14,7 @@ class LocalAuthService {
     await _auth.canCheckBiometrics.then((value) => print(value));
     //   if (_auth.canCheckBiometrics) {
     try {
-      isAuthenticated = await _auth.authenticateWithBiometrics(
+      isAuthenticated = await _auth.authenticate(
         localizedReason: 'authenticate to access',
         useErrorDialogs: true,
         stickyAuth: true,

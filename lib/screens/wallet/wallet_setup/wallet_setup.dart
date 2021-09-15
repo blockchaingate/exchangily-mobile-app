@@ -14,7 +14,6 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_viewmodel.dart';
-import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -100,46 +99,108 @@ class WalletSetupScreen extends StatelessWidget {
                           ),
                         )
                       : Container(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(right: 5),
-                                  child: RaisedButton(
-                                    elevation: 5,
-                                    focusElevation: 5,
-                                    child: Text(
+                          child: Column(
+                            children: [
+                              !model.hasAuthenticated && !model.isBusy
+                                  ? ElevatedButton(
+                                      style: ButtonStyle(
+                                          shape: MaterialStateProperty.all(
+                                            StadiumBorder(
+                                                side: BorderSide(
+                                                    color: Colors.transparent,
+                                                    width: 2)),
+                                          ),
+                                          elevation:
+                                              MaterialStateProperty.all(5)),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 4),
+                                            child: Icon(
+                                              Icons.lock_open_outlined,
+                                              color: white,
+                                              size: 18,
+                                            ),
+                                          ),
+                                          Text(
+                                              AppLocalizations.of(context)
+                                                  .unlock,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4),
+                                        ],
+                                      ),
+                                      onPressed: () {
+                                        model.checkExistingWallet();
+                                      },
+                                    )
+                                  : Container(),
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 5),
+                                      child: ElevatedButton(
+                                        style: ButtonStyle(
+                                          elevation:
+                                              MaterialStateProperty.all(5),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(white),
+                                          shape: MaterialStateProperty.all(
+                                            StadiumBorder(
+                                                side: BorderSide(
+                                                    color: globals.primaryColor,
+                                                    width: 2)),
+                                          ),
+                                        ),
+                                        child: Text(
+                                            AppLocalizations.of(context)
+                                                .createWallet,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4
+                                                .copyWith(
+                                                    color:
+                                                        globals.primaryColor)),
+                                        onPressed: () {
+                                          Navigator.of(context)
+                                              .pushNamed('/backupMnemonic');
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
+                                          elevation:
+                                              MaterialStateProperty.all(5),
+                                          shape: MaterialStateProperty.all(
+                                            StadiumBorder(
+                                                side: BorderSide(
+                                                    color: globals.primaryColor,
+                                                    width: 2)),
+                                          ),
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  primaryColor)),
+                                      child: Text(
                                         AppLocalizations.of(context)
-                                            .createWallet,
+                                            .importWallet,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .headline4),
-                                    onPressed: () {
-                                      Navigator.of(context)
-                                          .pushNamed('/backupMnemonic');
-                                    },
+                                            .headline4,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pushNamed(
+                                            '/importWallet',
+                                            arguments: 'import');
+                                      },
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: RaisedButton(
-                                  elevation: 5,
-                                  shape: StadiumBorder(
-                                      side: BorderSide(
-                                          color: globals.primaryColor,
-                                          width: 2)),
-                                  color: globals.secondaryColor,
-                                  child: Text(
-                                    AppLocalizations.of(context).importWallet,
-                                    style:
-                                        Theme.of(context).textTheme.headline4,
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pushNamed(
-                                        '/importWallet',
-                                        arguments: 'import');
-                                  },
-                                ),
+                                ],
                               ),
                             ],
                           ),

@@ -92,9 +92,7 @@ class WalletDashboardViewModel extends BaseViewModel {
       RefreshController(initialRefresh: false);
   bool isConfirmDeposit = false;
   WalletInfo confirmDepositCoinWallet;
-  List<PairDecimalConfig> pairDecimalConfigList = [];
-  int priceDecimalConfig = 0;
-  int quantityDecimalConfig = 0;
+
   var lang;
 
   var top = 0.0;
@@ -1031,30 +1029,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
   }
 
-/*----------------------------------------------------------------------
-                    Get Pair decimal Config
-----------------------------------------------------------------------*/
-
-  getDecimalPairConfig() async {
-    setBusy(true);
-    pairDecimalConfigList.clear();
-    await apiService.getPairDecimalConfig().then((res) async {
-      if (res != null) {
-        pairDecimalConfigList = res;
-        log.w('getDecimalPairConfig ${pairDecimalConfigList.length}');
-        var data = await decimalConfigDatabaseService.getAll();
-        if (data.length != pairDecimalConfigList.length) {
-          await decimalConfigDatabaseService.deleteDb();
-
-          pairDecimalConfigList.forEach((element) async {
-            await decimalConfigDatabaseService.insert(element);
-          });
-        }
-      }
-    }).catchError((err) => log.e('In get decimal config CATCH. $err'));
-    setBusy(false);
-  }
-
   // Pull to refresh
   void onRefresh() async {
     await refreshBalance();
@@ -1282,16 +1256,17 @@ class WalletDashboardViewModel extends BaseViewModel {
       walletInfoCopy = [];
       // formattedUsdValueList = [];
       log.e('wallet list from db length ${walletList.length}');
+      final dbWalletLength = walletList.length;
       final tickers = walletList.map((e) => e.tickerName).toSet();
 
       walletList.retainWhere((element) => tickers.remove(element.tickerName));
       walletInfoCopy = walletList;
-      // if (walletList.length != walletInfoCopy.length) {
-      //   await walletDatabaseService.deleteDb();
-      //   walletInfoCopy.forEach((wallet) async {
-      //     await walletDatabaseService.insert(wallet);
-      //   });
-      // }
+      if (walletList.length != dbWalletLength) {
+        await walletDatabaseService.deleteDb();
+        walletInfoCopy.forEach((wallet) async {
+          await walletDatabaseService.insert(wallet);
+        });
+      }
     });
     log.i('walletInfo copy list  length ${walletInfoCopy.length}');
 
@@ -1302,63 +1277,53 @@ class WalletDashboardViewModel extends BaseViewModel {
     // var wd = await walletDatabaseService.getAll();
     // log.e('wallet list from db length after deleting and adding ${wd.length}');
     walletInfo = [];
-    Map<String, dynamic> walletBalancesBody = {
-      'btcAddress': '',
-      'ethAddress': '',
-      'fabAddress': '',
-      'ltcAddress': '',
-      'dogeAddress': '',
-      'bchAddress': '',
-      'trxAddress': '',
-      "showEXGAssets": "true"
-    };
-    // Map<String, dynamic> walletBalanceBodyFromStorage = {};
-    // try {
-    //   walletBalanceBodyFromStorage =
-    //       jsonDecode(storageService.walletBalancesBody) ?? {};
-    // } catch (err) {
-    //   log.e(err);
-    // }
-    // bool isWalletBalanceBodyFromStorageEmpty =
-    //     walletBalanceBodyFromStorage['btcAddress'] == '' ||
-    //         walletBalanceBodyFromStorage.isEmpty;
-    // if (isWalletBalanceBodyFromStorageEmpty) {
-    walletInfoCopy.forEach((wallet) {
-      if (wallet.tickerName == 'BTC') {
-        walletBalancesBody['btcAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'ETH') {
-        walletBalancesBody['ethAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'FAB') {
-        walletBalancesBody['fabAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'LTC') {
-        walletBalancesBody['ltcAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'DOGE') {
-        walletBalancesBody['dogeAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'BCH') {
-        walletBalancesBody['bchAddress'] = wallet.address;
-      } else if (wallet.tickerName == 'TRX') {
-        walletBalancesBody['trxAddress'] = wallet.address;
-      }
-    });
-    //storageService.walletBalancesBody = json.encode(walletBalancesBody);
-    // }
-    // UserSettingsDatabaseService userSettingsDatabaseService =
-    //     locator<UserSettingsDatabaseService>();
-    // await userSettingsDatabaseService
-    //     .insert(UserSettings(walletBalancesBody: walletBalancesBody));
 
-    // walletBalancesBody = walletBalanceBodyFromStorage;
+    Map<String, dynamic> walletBalancesBody = {};
+    try {
+      walletBalancesBody = jsonDecode(storageService.walletBalancesBody) ?? {};
+    } catch (err) {
+      log.e(err);
+      bool isWalletBalanceBodyFromStorageEmpty =
+          walletBalancesBody['btcAddress'] == '' || walletBalancesBody.isEmpty;
+      if (isWalletBalanceBodyFromStorageEmpty) {
+        Map<String, dynamic> wbb = {
+          'btcAddress': '',
+          'ethAddress': '',
+          'fabAddress': '',
+          'ltcAddress': '',
+          'dogeAddress': '',
+          'bchAddress': '',
+          'trxAddress': '',
+          "showEXGAssets": "true"
+        };
+        walletInfoCopy.forEach((wallet) {
+          if (wallet.tickerName == 'BTC') {
+            wbb['btcAddress'] = wallet.address;
+          } else if (wallet.tickerName == 'ETH') {
+            wbb['ethAddress'] = wallet.address;
+          } else if (wallet.tickerName == 'FAB') {
+            wbb['fabAddress'] = wallet.address;
+          } else if (wallet.tickerName == 'LTC') {
+            wbb['ltcAddress'] = wallet.address;
+          } else if (wallet.tickerName == 'DOGE') {
+            wbb['dogeAddress'] = wallet.address;
+          } else if (wallet.tickerName == 'BCH') {
+            wbb['bchAddress'] = wallet.address;
+          } else if (wallet.tickerName == 'TRX') {
+            wbb['trxAddress'] = wallet.address;
+          }
+        });
+        storageService.walletBalancesBody = json.encode(wbb);
+        walletBalancesBody = jsonDecode(storageService.walletBalancesBody);
+      }
+    }
+
     // ----------------------------------------
     // Calling walletBalances in wallet service
     // ----------------------------------------
     await this
         .apiService
-        .getWalletBalance(
-            //isWalletBalanceBodyFromStorageEmpty
-            // ?
-            walletBalancesBody
-            //  : walletBalanceBodyFromStorage
-            )
+        .getWalletBalance(walletBalancesBody)
         .then((walletBalanceList) async {
       if (walletBalanceList != null) {
         // Loop wallet info list to udpate balances
@@ -1407,7 +1372,7 @@ class WalletDashboardViewModel extends BaseViewModel {
                   name: wallet.name,
                   inExchange: walletBalanceList[j].unlockedExchangeBalance);
               walletInfo.add(wi);
-              //   log.i('single wallet info object${wi.toJson()}');
+              log.i('single wallet info object${wi.toJson()}');
               try {
                 log.i(
                     'in refresh balance try block for updating wallet database');
