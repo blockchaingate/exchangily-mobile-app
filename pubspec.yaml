@@ -129,7 +129,7 @@ dependencies:
   package_info: ^2.0.2
 
   # Pull to refresh
-  pull_to_refresh: 2.0.0
+  pull_to_refresh: ^2.0.0
 
   # Flutter SVG
   flutter_svg: ^0.19.2+1

@@ -148,6 +148,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     currentTabSelection = storageService.isFavCoinTabSelected ? 1 : 0;
     // walletsScrollController.addListener(_scrollListener());
     //   await storeWalletDecimalData();
+    refreshController = new RefreshController();
 
     setBusy(false);
   }
@@ -1270,12 +1271,6 @@ class WalletDashboardViewModel extends BaseViewModel {
     });
     log.i('walletInfo copy list  length ${walletInfoCopy.length}');
 
-    // await walletDatabaseService.deleteDb();
-    // walletInfo.forEach((element) async {
-    //   await walletDatabaseService.insert(element);
-    // });
-    // var wd = await walletDatabaseService.getAll();
-    // log.e('wallet list from db length after deleting and adding ${wd.length}');
     walletInfo = [];
 
     Map<String, dynamic> walletBalancesBody = {};
@@ -1382,10 +1377,12 @@ class WalletDashboardViewModel extends BaseViewModel {
                     'in refresh balance catch block for deleting and try re-updating wallet database $err');
               }
 
-              if (!tickerNamesFromWalletInfoCopy.contains(walletInfoTickerName))
-                tickerNamesFromWalletInfoCopy.add(walletInfoTickerName);
-              print(
-                  'wallet info copy tickerNames length ${tickerNamesFromWalletInfoCopy.length} -- $tickerNamesFromWalletInfoCopy');
+              // if (!tickerNamesFromWalletInfoCopy
+              //     .contains(walletInfoTickerName)) {
+              //   tickerNamesFromWalletInfoCopy.add(walletInfoTickerName);
+              // }
+              // print(
+              //     'wallet info copy tickerNames length ${tickerNamesFromWalletInfoCopy.length} -- $tickerNamesFromWalletInfoCopy');
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
@@ -1394,7 +1391,7 @@ class WalletDashboardViewModel extends BaseViewModel {
         }); // walletInfo for each ends
 
         //  second if -- starts to add new coins in wallet info list
-        if (tickerNamesFromWalletInfoCopy.length != walletBalanceList.length) {
+        if (walletInfoCopy.length != walletBalanceList.length) {
           log.e(
               'wallet info copy length is ${tickerNamesFromWalletInfoCopy.length} and wallet balances length ${walletBalanceList.length} ');
           List<WalletBalance> newTokenListFromWalletBalances = [];
