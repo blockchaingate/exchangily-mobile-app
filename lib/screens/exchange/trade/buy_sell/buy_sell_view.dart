@@ -22,7 +22,6 @@ import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/foundation.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:showcaseview/showcase_widget.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 

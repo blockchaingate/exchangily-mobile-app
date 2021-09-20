@@ -17,7 +17,6 @@ import 'dart:typed_data';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -781,7 +780,7 @@ class SendViewModel extends BaseViewModel {
       String barcode = '';
 
       var result = await BarcodeScanner.scan();
-      barcode = result;
+      barcode = result.rawContent;
       log.i("Barcode Res: $result ");
 
       receiverWalletAddressTextController.text = barcode;

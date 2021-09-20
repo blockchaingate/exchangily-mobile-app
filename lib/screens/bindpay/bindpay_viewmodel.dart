@@ -6,6 +6,7 @@ import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
+
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
@@ -22,8 +23,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:share/share.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -264,7 +265,7 @@ class BindpayViewmodel extends FutureViewModel {
     try {
       setBusy(true);
       String barcode = '';
-      barcode = await BarcodeScanner.scan();
+      barcode = await BarcodeScanner.scan().then((value) => value.rawContent);
       addressController.text = barcode;
       setBusy(false);
     } on PlatformException catch (e) {
@@ -443,7 +444,7 @@ class BindpayViewmodel extends FutureViewModel {
                                       file
                                           .writeAsBytes(byteData)
                                           .then((onFile) {
-                                        Share.shareFile(onFile,
+                                        Share.shareFiles([onFile.path],
                                             text: kbAddress);
                                       });
                                     });
@@ -562,7 +563,8 @@ class BindpayViewmodel extends FutureViewModel {
                                     .capturePng(globalKey: globalKey)
                                     .then((byteData) {
                                   file.writeAsBytes(byteData).then((onFile) {
-                                    Share.shareFile(onFile, text: kbAddress);
+                                    Share.shareFiles([onFile.path],
+                                        text: kbAddress);
                                   });
                                 });
                               });

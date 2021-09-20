@@ -16,11 +16,10 @@ class OrderService with ReactiveServiceMixin {
   List<OrderModel> _orders = [];
   List<OrderModel> get orders => _orders;
 
-  RxValue<List<OrderModel>> _singlePairOrders =
-      RxValue<List<OrderModel>>(initial: []);
+  RxValue<List<OrderModel>> _singlePairOrders = RxValue<List<OrderModel>>([]);
   List<OrderModel> get singlePairOrders => _singlePairOrders.value;
 
-  RxValue<bool> _isShowAllOrders = RxValue<bool>(initial: false);
+  RxValue<bool> _isShowAllOrders = RxValue<bool>(false);
   bool get isShowAllOrders => _isShowAllOrders.value;
 
   OrderService() {

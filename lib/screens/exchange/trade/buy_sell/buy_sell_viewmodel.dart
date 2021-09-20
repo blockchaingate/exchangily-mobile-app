@@ -45,7 +45,7 @@ import 'package:flutter/material.dart';
 import 'package:keccak/keccak.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:random_string/random_string.dart';
-import 'package:showcaseview/showcase_widget.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 // import 'package:web_socket_channel/io.dart';
 

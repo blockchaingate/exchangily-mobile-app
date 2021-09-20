@@ -26,8 +26,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../shared/globals.dart' as globals;
-import 'package:share/share.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 
 class ReceiveWalletScreen extends StatefulWidget {
@@ -142,7 +142,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     Future.delayed(new Duration(milliseconds: 30), () {
                       _capturePng().then((byteData) {
                         file.writeAsBytes(byteData).then((onFile) {
-                          Share.shareFile(onFile,
+                          Share.shareFiles([onFile.path],
                               text: convertedToFabAddress == ''
                                   ? widget.walletInfo.address
                                   : convertedToFabAddress);
