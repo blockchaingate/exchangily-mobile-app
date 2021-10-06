@@ -81,6 +81,8 @@ class SettingsViewmodel extends BaseViewModel {
   UserSettings userSettings = new UserSettings();
   bool isUserSettingsEmpty = false;
   final coinUtils = CoinUtils();
+  bool _isBiometricAuth = false;
+  get isBiometricAuth => _isBiometricAuth;
 
   init() async {
     setBusy(true);
@@ -94,6 +96,16 @@ class SettingsViewmodel extends BaseViewModel {
     await setLanguageFromDb();
     await selectDefaultWalletLanguage();
     setBusy(false);
+  }
+
+// Set biometric auth
+
+  setBiometricAuth() {
+    setBusyForObject(isBiometricAuth, true);
+    storageService.isBiometricAuthEnabled =
+        !storageService.isBiometricAuthEnabled;
+    _isBiometricAuth = storageService.isBiometricAuthEnabled;
+    setBusyForObject(isBiometricAuth, false);
   }
 
 /*-------------------------------------------------------------------------------------

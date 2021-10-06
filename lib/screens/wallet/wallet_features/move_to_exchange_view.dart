@@ -340,8 +340,10 @@ class MoveToExchangeScreen extends StatelessWidget {
                                             .headline5
                                             .copyWith(
                                                 fontWeight: FontWeight.w300)),
-                                    style: TextStyle(
-                                        color: globals.grey, fontSize: 16),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        .copyWith(fontWeight: FontWeight.w300),
                                   ))
                             ],
                           )),

@@ -21,6 +21,7 @@ class LocalStorageService {
   static const String FavWalletCoinsKey = 'favWalletCoinsKey';
   static const String FavCoinTabSelectedKey = 'favCoinTabSelectedKey';
   static const String WalletDecimalListKey = 'walletDecimalListKey';
+  static const String BiometricAuthKey = 'biometricAuthKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -105,6 +106,13 @@ class LocalStorageService {
 ----------------------------------------------------------------------*/
   bool get isDarkMode => _getFromDisk(DarkModeKey) ?? false;
   set isDarkMode(bool value) => _saveToDisk(DarkModeKey, value);
+
+/*----------------------------------------------------------------------
+                Biometric auth getter/setter
+----------------------------------------------------------------------*/
+  bool get isBiometricAuthEnabled => _getFromDisk(BiometricAuthKey) ?? false;
+  set isBiometricAuthEnabled(bool value) =>
+      _saveToDisk(BiometricAuthKey, value);
 
 /*----------------------------------------------------------------------
                 Notice Dialog getter/setter

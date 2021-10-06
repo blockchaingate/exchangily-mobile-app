@@ -1429,14 +1429,14 @@ class WalletDashboardViewModel extends BaseViewModel {
                             'token list database cleared before inserting updated token data from api'));
                     print(
                         'existingTokensInTokenDatabase length ${existingTokensInTokenDatabase.length}');
+
+                    /// Fill the token list database with new data from the api
+
+                    newTokenListFromTokenUpdateApi
+                        .forEach((singleNewToken) async {
+                      await tokenListDatabaseService.insert(singleNewToken);
+                    });
                   }
-
-                  /// Fill the token list database with new data from the api
-
-                  newTokenListFromTokenUpdateApi
-                      .forEach((singleNewToken) async {
-                    await tokenListDatabaseService.insert(singleNewToken);
-                  });
                   // print the new token list database length
                   var t = await tokenListDatabaseService.getAll();
                   log.i(

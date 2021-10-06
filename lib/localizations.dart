@@ -1836,6 +1836,18 @@ class AppLocalizations {
     return Intl.message('Unlock', name: 'unlock', desc: 'unlock');
   }
 
+  String get enableBiometricAuthentication {
+    return Intl.message('Enable Biometric Authentication',
+        name: 'enableBiometricAuthentication',
+        desc: 'settings_enable_biometric_authentication');
+  }
+
+  String get pleaseSetupDeviceSecurity {
+    return Intl.message('Please setup device security in the settings',
+        name: 'pleaseSetupDeviceSecurity',
+        desc: 'walletsetup_please_setup_device_security');
+  }
+
   // Share page pending translation added by Jack
 }
 

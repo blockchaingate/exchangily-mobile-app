@@ -11,30 +11,35 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/local_auth_service.dart';
+import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../localizations.dart';
 import '../../../service_locator.dart';
 
 class WalletSetupViewmodel extends BaseViewModel {
-  final log = getLogger('WalletSetupScreenState');
+  final log = getLogger('WalletSetupViewmodel');
   SharedService sharedService = locator<SharedService>();
   WalletDataBaseService dataBaseService = locator<WalletDataBaseService>();
   WalletService walletService = locator<WalletService>();
   final NavigationService navigationService = locator<NavigationService>();
   final localAuthService = locator<LocalAuthService>();
+  final storageService = locator<LocalStorageService>();
   BuildContext context;
   bool isWallet = false;
   String errorMessage = '';
   bool _hasAuthenticated = false;
-  get hasAuthenticated => localAuthService.isAuthenticated;
+  get hasAuthenticated => _hasAuthenticated;
+
   Future checkExistingWallet() async {
     setBusy(true);
     await dataBaseService.getAll().then((res) async {
@@ -45,16 +50,32 @@ class WalletSetupViewmodel extends BaseViewModel {
       } else if (res.isNotEmpty) {
         isWallet = true;
 // add here the biometric check
-        await localAuthService.authenticate();
-
-        if (localAuthService.isAuthenticated)
-          await navigationService
-              .navigateUsingpopAndPushedNamed(DashboardViewRoute);
-        else {
-          _hasAuthenticated = localAuthService.isAuthenticated;
-          isWallet = false;
-          setBusy(false);
-        }
+        if (storageService.isBiometricAuthEnabled)
+          await localAuthService.authenticate().then((isAuthenticatedSuccess) {
+            _hasAuthenticated = isAuthenticatedSuccess;
+            if (isAuthenticatedSuccess) {
+              navigationService
+                  .navigateUsingpopAndPushedNamed(DashboardViewRoute);
+              setBusy(false);
+              return;
+            } else {
+              _hasAuthenticated = false;
+              isWallet = false;
+              setBusy(false);
+              if (!localAuthService.isProtectionEnabled) {
+                showSimpleNotification(
+                    Text(
+                        '${AppLocalizations.of(context).pleaseSetupDeviceSecurity}'),
+                    position: NotificationPosition.bottom,
+                    background: red);
+                navigationService
+                    .navigateUsingpopAndPushedNamed(DashboardViewRoute);
+              }
+            }
+          });
+        else
+          navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+        setBusy(false);
       }
     }).timeout(Duration(seconds: 20), onTimeout: () {
       log.e('In time out');
@@ -65,7 +86,7 @@ class WalletSetupViewmodel extends BaseViewModel {
     }).catchError((error) {
       setBusy(false);
       isWallet = false;
-      log.e(error);
+      log.e('catch $error');
     });
     setBusy(false);
   }

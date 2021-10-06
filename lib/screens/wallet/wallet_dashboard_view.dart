@@ -343,108 +343,117 @@ class WalletDashboardView extends StatelessWidget {
 -------------------------------------------------------------------------------*/
                         //   !Platform.isAndroid
                         //      ?
-                        DefaultTabController(
-                          length: 2,
-                          initialIndex: model.currentTabSelection,
-                          child:
-                              Column(mainAxisSize: MainAxisSize.min, children: [
-                            TabBar(
-                                labelPadding: EdgeInsets.only(bottom: 5),
-                                onTap: (int tabIndex) {
-                                  model.updateTabSelection(tabIndex);
-                                },
-                                indicatorColor: primaryColor,
-                                indicatorSize: TabBarIndicatorSize.tab,
-                                // Tab Names
+                        SingleChildScrollView(
+                          child: DefaultTabController(
+                            length: 2,
+                            initialIndex: model.currentTabSelection,
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  TabBar(
+                                      labelPadding: EdgeInsets.only(bottom: 5),
+                                      onTap: (int tabIndex) {
+                                        model.updateTabSelection(tabIndex);
+                                      },
+                                      indicatorColor: primaryColor,
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      // Tab Names
 
-                                tabs: [
-                                  Icon(
-                                    FontAwesomeIcons.coins,
-                                    color: white,
-                                    size: 16,
-                                  ),
-                                  // Text(
-                                  //     AppLocalizations.of(context)
-                                  //         .allAssets,
-                                  //     style: Theme.of(context)
-                                  //         .textTheme
-                                  //         .bodyText1
-                                  //         .copyWith(
-                                  //             fontWeight: FontWeight.w500,
-                                  //             decorationThickness: 3)),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.star,
-                                          color: primaryColor, size: 18),
-                                    ],
+                                      tabs: [
+                                        Icon(
+                                          FontAwesomeIcons.coins,
+                                          color: white,
+                                          size: 16,
+                                        ),
+                                        // Text(
+                                        //     AppLocalizations.of(context)
+                                        //         .allAssets,
+                                        //     style: Theme.of(context)
+                                        //         .textTheme
+                                        //         .bodyText1
+                                        //         .copyWith(
+                                        //             fontWeight: FontWeight.w500,
+                                        //             decorationThickness: 3)),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.star,
+                                                color: primaryColor, size: 18),
+                                          ],
+                                        ),
+                                      ]),
+                                  UIHelper.verticalSpaceSmall,
+                                  // Tabs view container
+                                  Container(
+                                    height: MediaQuery.of(context).size.height *
+                                            .55 -
+                                        model.minusHeight,
+                                    child: TabBarView(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      children: [
+                                        // All coins tab
+                                        model.isBusy
+                                            ? ListView.builder(
+                                                shrinkWrap: true,
+                                                itemCount:
+                                                    model.walletInfoCopy.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return _coinDetailsCard(
+                                                      model
+                                                          .walletInfoCopy[index]
+                                                          .tickerName
+                                                          .toLowerCase(),
+                                                      index,
+                                                      model.walletInfoCopy,
+                                                      model.elevation,
+                                                      context,
+                                                      model);
+                                                },
+                                              )
+                                            : SmartRefresher(
+                                                enablePullDown: true,
+                                                header: Theme.of(context)
+                                                            .platform ==
+                                                        TargetPlatform.iOS
+                                                    ? ClassicHeader()
+                                                    : MaterialClassicHeader(),
+                                                controller:
+                                                    model.refreshController,
+                                                onRefresh: model.onRefresh,
+                                                // child: NotificationListener<
+                                                //         ScrollEndNotification>(
+                                                //     onNotification:
+                                                //         (scrollEnd) {
+                                                //       var metrics =
+                                                //           scrollEnd.metrics;
+                                                //       if (metrics.atEdge) {
+                                                //         if (metrics.pixels == 0)
+                                                //           print('At top');
+                                                //         else
+                                                //           print('At bottom');
+                                                //       }
+                                                //       return true;
+                                                //     },
+                                                child: buildListView(model)
+                                                //),
+                                                ),
+
+                                        // Fav coins tab
+                                        // Text(model.favWalletInfoList.length
+                                        //     .toString())
+                                        // model.anyObjectsBusy
+                                        //     ? model.sharedService
+                                        //         .loadingIndicator()
+                                        //     :
+                                        FavTab(),
+                                      ],
+                                    ),
                                   ),
                                 ]),
-                            UIHelper.verticalSpaceSmall,
-                            // Tabs view container
-                            Container(
-                              height: MediaQuery.of(context).size.height * .55 -
-                                  model.minusHeight,
-                              child: TabBarView(
-                                physics: NeverScrollableScrollPhysics(),
-                                children: [
-                                  // All coins tab
-                                  model.isBusy
-                                      ? ListView.builder(
-                                          shrinkWrap: true,
-                                          itemCount:
-                                              model.walletInfoCopy.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return _coinDetailsCard(
-                                                model.walletInfoCopy[index]
-                                                    .tickerName
-                                                    .toLowerCase(),
-                                                index,
-                                                model.walletInfoCopy,
-                                                model.elevation,
-                                                context,
-                                                model);
-                                          },
-                                        )
-                                      : SmartRefresher(
-                                          enablePullDown: true,
-                                          header: Theme.of(context).platform ==
-                                                  TargetPlatform.iOS
-                                              ? ClassicHeader()
-                                              : MaterialClassicHeader(),
-                                          controller: model.refreshController,
-                                          onRefresh: model.onRefresh,
-                                          // child: NotificationListener<
-                                          //         ScrollEndNotification>(
-                                          //     onNotification:
-                                          //         (scrollEnd) {
-                                          //       var metrics =
-                                          //           scrollEnd.metrics;
-                                          //       if (metrics.atEdge) {
-                                          //         if (metrics.pixels == 0)
-                                          //           print('At top');
-                                          //         else
-                                          //           print('At bottom');
-                                          //       }
-                                          //       return true;
-                                          //     },
-                                          child: buildListView(model)
-                                          //),
-                                          ),
-
-                                  // Fav coins tab
-                                  // Text(model.favWalletInfoList.length
-                                  //     .toString())
-                                  // model.anyObjectsBusy
-                                  //     ? model.sharedService
-                                  //         .loadingIndicator()
-                                  //     :
-                                  FavTab(),
-                                ],
-                              ),
-                            ),
-                          ]),
+                          ),
                         )
                         // : CupertinoSegmentedControl(
                         //     selectedColor: primaryColor,

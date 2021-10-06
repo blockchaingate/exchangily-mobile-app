@@ -1,27 +1,44 @@
+import 'package:exchangilymobileapp/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
 
 class LocalAuthService {
   final _auth = LocalAuthentication();
+  final log = getLogger('LocalAuthService');
   bool _isProtectionEnabled = false;
 
   bool get isProtectionEnabled => _isProtectionEnabled;
-  set isProtectionEnabled(bool enabled) => _isProtectionEnabled = enabled;
 
-  bool isAuthenticated = false;
+  // cancel authentication
+  void cancelAuthentication() {
+    _auth.stopAuthentication();
+  }
 
-  Future<void> authenticate() async {
-    await _auth.canCheckBiometrics.then((value) => print(value));
-    //   if (_auth.canCheckBiometrics) {
+  Future<bool> authenticate() async {
+    bool isAuthenticated = false;
+    // bool isBiometricSecurityAvailable =
+    //     await _auth.canCheckBiometrics.then((value) => value);
+    //  if (isBiometricSecurityAvailable) {
     try {
       isAuthenticated = await _auth.authenticate(
-        localizedReason: 'authenticate to access',
+        localizedReason: 'Authenticate to access the wallet',
         useErrorDialogs: true,
         stickyAuth: true,
       );
+      //    .then((value) => isAuthenticated = value);
+      _isProtectionEnabled = true;
+      log.i('isAuthenticated 1 $isAuthenticated');
     } on PlatformException catch (e) {
-      print(e);
+      if (e.code == auth_error.notAvailable) {
+        // Handle this exception here.
+        _isProtectionEnabled = false;
+      }
+      log.e('catch $e');
     }
-// }
+    //  }
+    //else{await _auth.}
+    log.i('isAuthenticated $isAuthenticated');
+    return isAuthenticated;
   }
 }
