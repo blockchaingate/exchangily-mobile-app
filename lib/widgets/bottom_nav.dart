@@ -51,12 +51,12 @@ class BottomNavBar extends StatelessWidget {
             label: AppLocalizations.of(context).trade),
         BottomNavigationBarItem(
           icon: Image.asset(
-            'assets/images/lightning-remit/lightning-remit.jpg',
+            'assets/images/lightning-remit/lightning-remit-s.png',
             width: 40,
             height: 30,
             color: grey,
           ),
-          label: AppLocalizations.of(context).bindpay,
+          label: AppLocalizations.of(context).lightningRemit,
         ),
         // BottomNavigationBarItem(
         //     icon: Icon(Icons.branding_watermark, size: iconSize),

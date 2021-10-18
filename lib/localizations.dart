@@ -1848,6 +1848,10 @@ class AppLocalizations {
         desc: 'walletsetup_please_setup_device_security');
   }
 
+  String get lightningRemit {
+    return Intl.message("LightningRemit",
+        name: 'lightningRemit', desc: 'lightning_remit');
+  }
   // Share page pending translation added by Jack
 }
 
