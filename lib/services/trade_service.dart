@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/stoppable_service.dart';
+import 'package:exchangilymobileapp/utils/custom_http_utils.dart';
 import 'package:observable_ish/observable_ish.dart';
 import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';
@@ -29,8 +30,6 @@ import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import "package:hex/hex.dart";
-
-import 'package:http/http.dart' as http;
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 
 class TradeService extends StoppableService with ReactiveServiceMixin {
@@ -49,7 +48,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
   ConfigService configService = locator<ConfigService>();
 
   LocalStorageService storageService = locator<LocalStorageService>();
-  final client = new http.Client();
+  var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   //static String basePath = environment['websocket'];
 
   /// To check if orderbook has loaded in orderbook viewmodel

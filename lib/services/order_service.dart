@@ -3,14 +3,14 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
+import 'package:exchangilymobileapp/utils/custom_http_utils.dart';
 import 'package:observable_ish/value/value.dart';
 import 'package:stacked/stacked.dart';
-import 'package:http/http.dart' as http;
 
 class OrderService with ReactiveServiceMixin {
   final log = getLogger('OrderService');
 
-  final client = new http.Client();
+  final client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   ConfigService configService = locator<ConfigService>();
 
   List<OrderModel> _orders = [];

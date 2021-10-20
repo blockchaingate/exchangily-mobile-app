@@ -17,16 +17,14 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
-import 'package:exchangilymobileapp/utils/number_util.dart';
+import 'package:exchangilymobileapp/utils/custom_http_utils.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
-import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/utils/eth_util.dart';
 import 'dart:convert';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
-import 'package:http/http.dart' as http;
 
 class MoveToWalletViewmodel extends BaseState {
   final log = getLogger('MoveToWalletViewmodel');
@@ -70,7 +68,10 @@ class MoveToWalletViewmodel extends BaseState {
   bool isAlert = false;
   bool isSpeicalTronTokenWithdraw = false;
   final coinUtils = CoinUtils();
+  final ethUtils = EthUtils();
   int decimalLimit = 8;
+
+  var httpClient = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
 /*---------------------------------------------------
                       INIT
 --------------------------------------------------- */
@@ -493,7 +494,7 @@ class MoveToWalletViewmodel extends BaseState {
     print(
         'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
 
-    var response = await http.post(url, body: body);
+    var response = await httpClient.post(url, body: body);
     var json = jsonDecode(response.body);
     var unlockBalance = json['executionResult']['output'];
     print('unlocl fab chain balance');
@@ -537,7 +538,8 @@ class MoveToWalletViewmodel extends BaseState {
     } else {
       updateTickerForErc = walletInfo.tickerName;
     }
-    await getEthTokenBalanceByAddress(officialAddress, updateTickerForErc)
+    await ethUtils
+        .getEthTokenBalanceByAddress(officialAddress, updateTickerForErc)
         .then((res) {
       log.e('getEthChainBalance $res');
       if (walletInfo.tickerName == 'USDT' || walletInfo.tickerName == 'USDTX') {

@@ -18,7 +18,9 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/btc_util.dart';
+import 'package:exchangilymobileapp/utils/custom_http_utils.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
+import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/ltc_util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
@@ -34,13 +36,11 @@ import 'package:bip32/bip32.dart' as bip32;
 import 'package:hex/hex.dart';
 import 'dart:typed_data';
 import 'package:web3dart/web3dart.dart';
-import 'package:http/http.dart' as http;
 import '../shared/globals.dart' as globals;
 import '../environments/coins.dart' as coinList;
 import '../utils/abi_util.dart';
 import '../utils/number_util.dart';
 import '../utils/string_util.dart' as stringUtils;
-import '../utils/kanban.util.dart';
 import '../utils/keypair_util.dart';
 import '../utils/eth_util.dart';
 import '../utils/fab_util.dart';
@@ -78,6 +78,7 @@ class WalletService {
 
   double currentTickerUsdValue;
   var txids = [];
+  var httpClient = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
 
   double coinUsdBalance;
   List<String> coinTickers = [
@@ -169,6 +170,9 @@ class WalletService {
   final btcUtils = BtcUtils();
   final abiUtils = AbiUtils();
   final coinUtils = CoinUtils();
+  final ethUtils = EthUtils();
+  final kanbanUtils = KanbanUtils();
+  final ltcUtils = LtcUtils();
 
 /*----------------------------------------------------------------------
                       Is tron coin
@@ -1218,9 +1222,9 @@ class WalletService {
       abiHex =
           abiUtils.getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
     }
-    var coinPoolAddress = await getCoinPoolAddress();
+    var coinPoolAddress = await kanbanUtils.getCoinPoolAddress();
     print('1');
-    var nonce = await getNonce(addressInKanban);
+    var nonce = await kanbanUtils.getNonce(addressInKanban);
 
     var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
@@ -1230,7 +1234,7 @@ class WalletService {
         kanbanPrice,
         kanbanGasLimit);
 
-    var res = await sendKanbanRawTransaction(txKanbanHex);
+    var res = await kanbanUtils.sendKanbanRawTransaction(txKanbanHex);
     if (res['transactionHash'] == null) {
       return res;
     }
@@ -1282,9 +1286,9 @@ class WalletService {
       abiHex =
           abiUtils.getWithdrawFuncABI(coinType, amountInLink, addressInWallet);
     }
-    var coinPoolAddress = await getCoinPoolAddress();
+    var coinPoolAddress = await kanbanUtils.getCoinPoolAddress();
 
-    var nonce = await getNonce(addressInKanban);
+    var nonce = await kanbanUtils.getNonce(addressInKanban);
 
     var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
@@ -1294,7 +1298,7 @@ class WalletService {
         kanbanPrice,
         kanbanGasLimit);
 
-    var res = await sendKanbanRawTransaction(txKanbanHex);
+    var res = await kanbanUtils.sendKanbanRawTransaction(txKanbanHex);
 
     if (res['transactionHash'] != '') {
       res['success'] = true;
@@ -1372,7 +1376,7 @@ class WalletService {
     var signedMess = await coinUtils.signedMessage(
         originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
     log.e('Signed message $signedMess');
-    var coinPoolAddress = await getCoinPoolAddress();
+    var coinPoolAddress = await kanbanUtils.getCoinPoolAddress();
 
     /// assinging coin type accoringly
     /// If special deposits then take the coin type of the respective chain coin
@@ -1392,7 +1396,7 @@ class WalletService {
           chain: walletInfo.tokenType);
       log.i('cointype $coinType -- abihex $abiHex');
     }
-    var nonce = await getNonce(addressInKanban);
+    var nonce = await kanbanUtils.getNonce(addressInKanban);
     debugPrint('nonce $nonce');
     var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
@@ -1402,7 +1406,7 @@ class WalletService {
         kanbanGasPrice,
         kanbanGasLimit);
     debugPrint('txKanbanHex $txKanbanHex');
-    var res = await submitDeposit(txHex, txKanbanHex);
+    var res = await kanbanUtils.submitDeposit(txHex, txKanbanHex);
     return res;
 
     // TRON deposit ends here
@@ -1507,7 +1511,7 @@ class WalletService {
     log.e('Signed message $signedMess');
     print('coin type $coinType');
     log.w('Original message $originalMessage');
-    var coinPoolAddress = await getCoinPoolAddress();
+    var coinPoolAddress = await kanbanUtils.getCoinPoolAddress();
 
     /// assinging coin type accoringly
     /// If special deposits then take the coin type of the respective chain coin
@@ -1529,7 +1533,7 @@ class WalletService {
 
     var amountInAbi = abiUtils.getAmountFromDepositAbiHex(abiHex);
 
-    var nonce = await getNonce(addressInKanban);
+    var nonce = await kanbanUtils.getNonce(addressInKanban);
 
     var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
@@ -1539,7 +1543,7 @@ class WalletService {
         kanbanGasPrice,
         kanbanGasLimit);
 
-    var res = await submitDeposit(txHex, txKanbanHex);
+    var res = await kanbanUtils.submitDeposit(txHex, txKanbanHex);
 
     res['txids'] = txids;
     return res;
@@ -1574,7 +1578,7 @@ class WalletService {
 
   Future<Map<String, dynamic>> addGasDo(seed, double amount, {options}) async {
     var satoshisPerBytes = 14;
-    var scarContractAddress = await getScarAddress();
+    var scarContractAddress = await kanbanUtils.getScarAddress();
     scarContractAddress = stringUtils.trimHexPrefix(scarContractAddress);
 
     var fxnDepositCallHex = '4a58db19';
@@ -1773,7 +1777,7 @@ class WalletService {
                 getErrDeposit
 ----------------------------------------------------------------------*/
   Future getErrDeposit(String address) {
-    return getKanbanErrDeposit(address);
+    return kanbanUtils.getKanbanErrDeposit(address);
   }
 
   toKbPaymentAddress(String fabAddress) {
@@ -1787,9 +1791,9 @@ class WalletService {
 
     var keyPairKanban = getExgKeyPair(seed);
     var address = keyPairKanban['address'];
-    var nonce = await getNonce(address);
+    var nonce = await kanbanUtils.getNonce(address);
 
-    var coinpoolAddress = await getCoinPoolAddress();
+    var coinpoolAddress = await kanbanUtils.getCoinPoolAddress();
 
     var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
@@ -1826,7 +1830,7 @@ class WalletService {
     var txHex = await txHexforSendCoin(
         seed, coinType, kbPaymentAddress, amountInLink, gasPrice, gasLimit);
     log.e('txhex $txHex');
-    var resKanban = await sendKanbanRawTransaction(txHex);
+    var resKanban = await kanbanUtils.sendKanbanRawTransaction(txHex);
     print('resKanban=');
     print(resKanban);
     return resKanban;
@@ -2125,7 +2129,7 @@ class WalletService {
             environment["CoinType"]["LTC"].toString() +
             "'/0'/0/" +
             index.toString());
-        var fromAddress = getLtcAddressForNode(node);
+        var fromAddress = ltcUtils.getLtcAddressForNode(node);
         if (addressList.length > 0) {
           fromAddress = addressList[i];
         }
@@ -2359,7 +2363,6 @@ class WalletService {
       var apiUrl =
           environment["chains"]["ETH"]["infura"]; //Replace with your API
 
-      var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
 
       amountInTx = amountSentInt;
@@ -2383,7 +2386,7 @@ class WalletService {
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {
-        txHash = getTransactionHash(signed);
+        txHash = ethUtils.getTransactionHash(signed);
       }
     } else if (coin == 'FAB') {
       if (bytesPerInput == 0) {
@@ -2576,7 +2579,6 @@ class WalletService {
       var apiUrl =
           environment["chains"]["ETH"]["infura"]; //Replace with your API
 
-      var httpClient = new http.Client();
       var ethClient = new Web3Client(apiUrl, httpClient);
       print('5 $nonce -- $contractAddress -- ${EtherUnit.wei} -- $fxnCallHex');
       final signed = await ethClient.signTransaction(
@@ -2598,7 +2600,7 @@ class WalletService {
         txHash = res['txHash'];
         errMsg = res['errMsg'];
       } else {
-        txHash = getTransactionHash(signed);
+        txHash = ethUtils.getTransactionHash(signed);
       }
     }
     return {

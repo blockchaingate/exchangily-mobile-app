@@ -1,7 +1,8 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
-import 'package:bitcoin_flutter/bitcoin_flutter.dart';
+
 import 'package:exchangilymobileapp/environments/environment.dart';
-import 'package:http/http.dart' as http;
+
+import 'custom_http_utils.dart';
 
 final String ltcBaseUrl = environment["endpoints"]["ltc"];
 
@@ -39,36 +40,39 @@ generateLtcAddress(root, {index = 0}) async {
   return address;
 }
 
+class LtcUtils {
+  var httpClient = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
 // Generate getLtcAddressForNode
-String getLtcAddressForNode(node, {String tickerName}) {
-  return BitcoinFlutter.P2PKH(
-          data: new BitcoinFlutter.PaymentData(pubkey: node.publicKey),
-          network: environment["chains"]["LTC"]["network"])
-      .data
-      .address;
-}
+  String getLtcAddressForNode(node, {String tickerName}) {
+    return BitcoinFlutter.P2PKH(
+            data: new BitcoinFlutter.PaymentData(pubkey: node.publicKey),
+            network: environment["chains"]["LTC"]["network"])
+        .data
+        .address;
+  }
 
 // getLtcTransactionStatus
-Future getLtcTransactionStatus(String txid) async {
-  var response;
-  var url = ltcBaseUrl + 'gettransactionjson/' + txid;
-  var client = new http.Client();
-  try {
-    response = await client.get(url);
-  } catch (e) {}
+  Future getLtcTransactionStatus(String txid) async {
+    var response;
+    var url = ltcBaseUrl + 'gettransactionjson/' + txid;
 
-  return response;
-}
+    try {
+      response = await httpClient.get(url);
+    } catch (e) {}
+
+    return response;
+  }
 
 // getLtcBalanceByAddress
-Future getLtcBalanceByAddress(String address) async {
-  var url = ltcBaseUrl + 'getbalance/' + address;
-  print('ltc_util- getLtcBalanceByAddress url $url');
-  var btcBalance = 0.0;
-  try {
-    var response = await http.get(url);
-    print(response);
-    btcBalance = double.parse(response.body) / 1e8;
-  } catch (e) {}
-  return {'balance': btcBalance, 'lockbalance': 0.0};
+  Future getLtcBalanceByAddress(String address) async {
+    var url = ltcBaseUrl + 'getbalance/' + address;
+    print('ltc_util- getLtcBalanceByAddress url $url');
+    var btcBalance = 0.0;
+    try {
+      var response = await httpClient.get(url);
+      print(response);
+      btcBalance = double.parse(response.body) / 1e8;
+    } catch (e) {}
+    return {'balance': btcBalance, 'lockbalance': 0.0};
+  }
 }

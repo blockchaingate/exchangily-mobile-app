@@ -14,11 +14,11 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
-import 'package:http/http.dart' as http;
+import 'package:exchangilymobileapp/utils/custom_http_utils.dart';
 import 'dart:convert';
 
 mixin KanbanService {
-  var client = new http.Client();
+  var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   final log = getLogger('KanbanService');
   ConfigService configService = locator<ConfigService>();
 

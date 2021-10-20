@@ -48,6 +48,7 @@ class AddGasViewModel extends FutureViewModel {
   var bytesPerInput;
   var feePerInput;
   double fabBalance = 0.0;
+  final kanbanUtils = KanbanUtils();
 
   @override
   Future futureToRun() async {
@@ -70,7 +71,7 @@ class AddGasViewModel extends FutureViewModel {
 
   getSliderReady() async {
     utxos = await apiService.getFabUtxos(fabAddress);
-    scarContractAddress = await getScarAddress();
+    scarContractAddress = await kanbanUtils.getScarAddress();
     scarContractAddress = trimHexPrefix(scarContractAddress);
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);

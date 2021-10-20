@@ -52,6 +52,7 @@ class RedepositViewModel extends FutureViewModel {
   Future futureToRun() => getErrDeposit();
   bool isConfirmButtonPressed = false;
   final abiUtils = AbiUtils();
+  final kanbanUtils = KanbanUtils();
   void init() {}
 
 /*----------------------------------------------------------------------
@@ -179,7 +180,7 @@ class RedepositViewModel extends FutureViewModel {
       Uint8List seed = walletService.generateSeed(mnemonic);
       var keyPairKanban = getExgKeyPair(seed);
       var exgAddress = keyPairKanban['address'];
-      var nonce = await getNonce(exgAddress);
+      var nonce = await kanbanUtils.getNonce(exgAddress);
 
       var amountInBigIntByApi = BigInt.parse(errDepositItem['amount']);
       // errDepositAmount.toString().contains('e')
@@ -204,7 +205,7 @@ class RedepositViewModel extends FutureViewModel {
           keyPairKanban, nonce, coinType, transactionID, signedMess,
           chainType: walletInfo.tokenType);
 
-      var resRedeposit = await submitReDeposit(txKanbanHex);
+      var resRedeposit = await kanbanUtils.submitReDeposit(txKanbanHex);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
         log.w('resRedeposit $resRedeposit');
@@ -248,7 +249,7 @@ class RedepositViewModel extends FutureViewModel {
     var abiHex;
     String addressInKanban = keyPairKanban['address'];
     log.w('transactionID for submitredeposit:' + txHash);
-    var coinPoolAddress = await getCoinPoolAddress();
+    var coinPoolAddress = await kanbanUtils.getCoinPoolAddress();
     //var signedMess = {'r': r, 's': s, 'v': v};
     String coinName = '';
     bool isSpecial = false;

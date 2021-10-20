@@ -119,6 +119,8 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
   Orderbook orderbook = new Orderbook();
   final coinUtils = CoinUtils();
   final abiUtils = AbiUtils();
+
+  final kanbanUtils = KanbanUtils();
   double gasAmount = 0.0;
 
   @override
@@ -518,10 +520,10 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
     sliceAbiHex(abiHex);
     log.e('exg addr $exgAddress');
 
-    var nonce = await getNonce(exgAddress);
+    var nonce = await kanbanUtils.getNonce(exgAddress);
 
     var keyPairKanban = getExgKeyPair(seed);
-    var exchangilyAddress = await getExchangilyAddress();
+    var exchangilyAddress = await kanbanUtils.getExchangilyAddress();
     int kanbanGasPrice = int.parse(kanbanGasPriceTextController.text);
     int kanbanGasLimit = int.parse(kanbanGasLimitTextController.text);
 
@@ -583,7 +585,7 @@ class BuySellViewModel extends StreamViewModel with ReactiveServiceMixin {
 
         var txHex = await txHexforPlaceOrder(seed);
         log.e('txhex $txHex');
-        var resKanban = await sendKanbanRawTransaction(txHex);
+        var resKanban = await kanbanUtils.sendKanbanRawTransaction(txHex);
         log.e('resKanban $resKanban');
         if (resKanban != null && resKanban['transactionHash'] != null) {
           showSimpleNotification(

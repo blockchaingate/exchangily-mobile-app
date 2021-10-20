@@ -16,9 +16,7 @@ import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:exchangilymobileapp/services/shared_service.dart';
-import 'package:http/http.dart' as http;
+
 import '../environments/environment.dart';
 import './string_util.dart';
 import 'dart:convert';
@@ -28,8 +26,10 @@ import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'dart:math';
 
+import 'custom_http_utils.dart';
+
 class FabUtils {
-  final client = new http.Client();
+  var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   final log = getLogger('fab_util');
 
 /*----------------------------------------------------------------------
@@ -83,7 +83,7 @@ class FabUtils {
 
   Future getFabTransactionStatus(String txid) async {
     var url = fabBaseUrl + FabTransactionJsonApiRoute + txid;
-    var client = new http.Client();
+
     var response = await client.get(url);
     print(url);
     log.w(response.body);
@@ -110,7 +110,7 @@ class FabUtils {
     };
     var url = fabBaseUrl + 'callcontract';
     try {
-      var response = await http.post(url, body: data);
+      var response = await client.post(url, body: data);
       var json = jsonDecode(response.body);
       if (json != null &&
           json['executionResult'] != null &&
@@ -258,7 +258,7 @@ class FabUtils {
     var url = fabBaseUrl + 'getbalance/' + address;
     var fabBalance = 0.0;
     try {
-      var response = await http.get(url);
+      var response = await client.get(url);
       fabBalance = double.parse(response.body) / 1e8;
     } catch (e) {
       log.e(e);
@@ -329,7 +329,7 @@ class FabUtils {
     print(
         'Fab_util -- address $address getFabTokenBalanceForABI balance by address url -- $url -- body $body');
     try {
-      var response = await http.post(url, body: body);
+      var response = await client.post(url, body: body);
       var json = jsonDecode(response.body);
       var unlockBalance = json['executionResult']['output'];
 
@@ -355,7 +355,7 @@ class FabUtils {
 
   Future getSmartContractABI(String smartContractAddress) async {
     var url = fabBaseUrl + 'getabiforcontract/' + smartContractAddress;
-    var response = await http.get(url);
+    var response = await client.get(url);
     Map<String, dynamic> resJson = jsonDecode(response.body);
     return resJson;
   }

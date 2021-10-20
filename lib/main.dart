@@ -12,6 +12,8 @@
 */
 
 // import 'package:device_preview/device_preview.dart';
+import 'dart:io';
+
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/Managers/life_cycle_manager.dart';
 import 'package:exchangilymobileapp/enums/connectivity_status.dart';
@@ -34,6 +36,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
   // debugRepaintRainbowEnabled = true;
+  // isrgrootx1.pem
   try {
     await serviceLocator();
     Logger.level = Level.info;
