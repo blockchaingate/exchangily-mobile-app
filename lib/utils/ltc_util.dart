@@ -2,7 +2,7 @@ import 'package:bitcoin_flutter/bitcoin_flutter.dart' as BitcoinFlutter;
 
 import 'package:exchangilymobileapp/environments/environment.dart';
 
-import 'custom_http_utils.dart';
+import 'custom_http_util.dart';
 
 final String ltcBaseUrl = environment["endpoints"]["ltc"];
 

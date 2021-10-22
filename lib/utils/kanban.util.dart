@@ -18,7 +18,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 
 import 'dart:convert';
 
-import 'custom_http_utils.dart';
+import 'custom_http_util.dart';
 
 class KanbanUtils {
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();

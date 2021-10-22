@@ -26,7 +26,7 @@ import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'dart:math';
 
-import 'custom_http_utils.dart';
+import 'custom_http_util.dart';
 
 class FabUtils {
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();

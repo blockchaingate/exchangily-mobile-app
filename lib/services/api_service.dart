@@ -22,7 +22,7 @@ import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
-import 'package:exchangilymobileapp/utils/custom_http_utils.dart';
+import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/string_util.dart' as stringUtils;

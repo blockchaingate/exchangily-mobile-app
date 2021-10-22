@@ -23,7 +23,7 @@ import 'dart:async';
 import 'package:web3dart/web3dart.dart';
 import 'dart:convert';
 
-import 'custom_http_utils.dart';
+import 'custom_http_util.dart';
 
 class EthUtils {
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();

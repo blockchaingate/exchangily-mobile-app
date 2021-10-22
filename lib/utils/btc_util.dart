@@ -23,7 +23,7 @@ import "package:hex/hex.dart";
 import 'package:crypto/crypto.dart';
 import 'package:bs58check/bs58check.dart' as bs58check;
 
-import 'custom_http_utils.dart';
+import 'custom_http_util.dart';
 
 class BtcUtils {
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();

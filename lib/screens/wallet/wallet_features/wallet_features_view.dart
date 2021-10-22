@@ -327,7 +327,7 @@ class WalletFeaturesView extends StatelessWidget {
                 ),
               ),
               UIHelper.verticalSpaceSmall,
-              // Middle column row containes wallet balance and in exchnage text
+              // Middle column row containes wallet balance and in exchange text
               Container(
                 color: primaryColor.withAlpha(27),
                 padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
@@ -340,6 +340,22 @@ class WalletFeaturesView extends StatelessWidget {
                         style: Theme.of(context).textTheme.subtitle1),
                     Text(
                         '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                        style: Theme.of(context).textTheme.bodyText1),
+                  ],
+                ),
+              ),
+              // Middle column row containes unconfirmed wallet balance
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                        //  '${model.specialTicker} '.toUpperCase() +
+                        AppLocalizations.of(context).unConfirmedBalance,
+                        style: Theme.of(context).textTheme.bodyText1),
+                    Text(
+                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.unconfirmedBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
                         style: Theme.of(context).textTheme.bodyText1),
                   ],
                 ),

@@ -21,7 +21,7 @@ import 'package:exchangilymobileapp/screens/exchange/markets/price_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/stoppable_service.dart';
-import 'package:exchangilymobileapp/utils/custom_http_utils.dart';
+import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:observable_ish/observable_ish.dart';
 import 'package:stacked/stacked.dart';
 import 'package:web_socket_channel/io.dart';

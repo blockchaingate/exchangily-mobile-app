@@ -12,7 +12,7 @@ import 'package:exchangilymobileapp/models/campaign/order_info.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
-import 'package:exchangilymobileapp/utils/custom_http_utils.dart';
+import 'package:exchangilymobileapp/utils/custom_http_util.dart';
 import 'package:exchangilymobileapp/models/campaign/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

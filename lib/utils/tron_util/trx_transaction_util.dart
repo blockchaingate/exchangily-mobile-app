@@ -19,7 +19,7 @@ import 'package:bs58check/bs58check.dart' as bs58check;
 import 'package:exchangilymobileapp/protos_gen/any.pb.dart';
 import 'package:exchangilymobileapp/protos_gen/protos/tron.pb.dart' as Tron;
 
-import '../custom_http_utils.dart';
+import '../custom_http_util.dart';
 
 Future generateTrxTransactionContract(
     {@required Uint8List privateKey,

@@ -182,11 +182,11 @@ class WalletFeaturesViewModel extends BaseViewModel {
         .getSingleWalletBalance(
             fabAddress, walletInfo.tickerName, walletInfo.address)
         .then((walletBalance) async {
-      log.e(walletBalance[0].coin);
       var availableBalance = walletBalance[0].balance;
       walletInfo.availableBalance = availableBalance;
       var lockedBalance = walletBalance[0].lockBalance;
       walletInfo.lockedBalance = lockedBalance;
+      walletInfo.unconfirmedBalance = walletBalance[0].unconfirmedBalance;
       if (!specialTicker.contains('('))
         walletInfo.inExchange = walletBalance[0].unlockedExchangeBalance;
       else
