@@ -53,11 +53,26 @@ class WalletSetupViewmodel extends BaseViewModel {
         if (storageService.isBiometricAuthEnabled)
           await localAuthService.authenticate().then((isAuthenticatedSuccess) {
             _hasAuthenticated = isAuthenticatedSuccess;
-            if (isAuthenticatedSuccess) {
+            if (_hasAuthenticated) {
               navigationService
                   .navigateUsingpopAndPushedNamed(DashboardViewRoute);
               setBusy(false);
               return;
+            } else if (!_hasAuthenticated) {
+              isWallet = false;
+              setBusy(false);
+              if (!localAuthService.isLockedOut) {
+                showSimpleNotification(
+                    Text('${AppLocalizations.of(context).lockedOutTemp}'),
+                    position: NotificationPosition.bottom,
+                    background: red);
+              }
+              if (!localAuthService.isLockedOutPerm) {
+                showSimpleNotification(
+                    Text('${AppLocalizations.of(context).lockedOutPerm}'),
+                    position: NotificationPosition.bottom,
+                    background: red);
+              }
             } else {
               _hasAuthenticated = false;
               isWallet = false;

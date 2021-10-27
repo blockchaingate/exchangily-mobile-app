@@ -28,6 +28,8 @@ import 'dart:math';
 
 import 'custom_http_util.dart';
 
+final String fabBaseUrl = environment["endpoints"]["fab"];
+
 class FabUtils {
   var client = CustomHttpUtil.createLetsEncryptUpdatedCertClient();
   final log = getLogger('fab_util');

@@ -81,7 +81,7 @@ class RedepositViewModel extends FutureViewModel {
           await tokenListDatabaseService.getAll().then((tokenList) {
             if (tokenList != null) {
               tickerNameByCointype = tokenList
-                  .firstWhere((element) => element.tokenType == coinType)
+                  .firstWhere((element) => element.coinType == coinType)
                   .tickerName;
               if (tickerNameByCointype == walletInfo.tickerName)
                 errDepositList.add(item);

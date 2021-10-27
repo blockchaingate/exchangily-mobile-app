@@ -372,7 +372,7 @@ class TradeViewModel extends MultipleStreamViewModel with StoppableService {
 -------------------------------------------------------------------------------------*/
 
   Future<String> getExgAddress() async {
-    var exgWallet = await walletDataBaseService.getBytickerName('EXG');
+    var exgWallet = await walletDataBaseService.getWalletBytickerName('EXG');
     return exgWallet.address;
   }
 

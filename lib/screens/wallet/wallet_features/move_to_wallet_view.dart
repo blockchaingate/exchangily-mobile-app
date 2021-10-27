@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 import '../../../localizations.dart';
 import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/constants/colors.dart';
@@ -31,7 +32,8 @@ class MoveToWalletScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScreen<MoveToWalletViewmodel>(
+    return ViewModelBuilder<MoveToWalletViewmodel>.reactive(
+      viewModelBuilder: () => MoveToWalletViewmodel(),
       onModelReady: (model) {
         model.context = context;
         model.walletInfo = walletInfo;
@@ -103,10 +105,11 @@ class MoveToWalletScreen extends StatelessWidget {
                                               .textTheme
                                               .headline6),
                                       Text(
-                                          model.withdrawLimit == null
+                                          model.token.minWithdraw == null
                                               ? AppLocalizations.of(context)
                                                   .loading
-                                              : model.withdrawLimit.toString(),
+                                              : model.token.minWithdraw
+                                                  .toString(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -556,7 +559,7 @@ class MoveToWalletScreen extends StatelessWidget {
                       // Success/Error container
                       Container(
                           child: Visibility(
-                              visible: model.hasMessage,
+                              visible: model.message.isNotEmpty,
                               child: Column(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
@@ -633,7 +636,7 @@ class MoveToWalletScreen extends StatelessWidget {
                         onPressed: () {
                           model.checkPass();
                         },
-                        child: model.busy
+                        child: model.isBusy
                             ? SizedBox(
                                 width: 20,
                                 height: 20,

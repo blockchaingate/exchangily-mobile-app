@@ -1578,6 +1578,13 @@ class AppLocalizations {
             'bindpay_please_transfer_funds_to_exchange_wallet_to_use_bindpay');
   }
 
+  String get pleaseTransferFundsToExchangeWalletToUseLightningRemit {
+    return Intl.message(
+        "Please transfer funds to exchange wallet to use Lightning Remit",
+        name: 'pleaseTransferFundsToExchangeWalletToUseLightningRemit',
+        desc: 'please_transfer_funds_to_exchange_wallet_to_use_LightningRemit');
+  }
+
   String get important {
     return Intl.message("Important",
         name: 'important', desc: 'backup_mnemonic_important');
@@ -1614,7 +1621,7 @@ class AppLocalizations {
 
   String get walletDashboardInstruction2 {
     return Intl.message(
-        'Transfer funds from wallet to exchange to trade and use bindpay',
+        'Transfer funds from wallet to exchange to trade and use lightning remit',
         name: 'walletDashboardInstruction2',
         desc: 'wallet_dashboard_instruction_2');
   }
@@ -1848,11 +1855,26 @@ class AppLocalizations {
         desc: 'walletsetup_please_setup_device_security');
   }
 
-  String get lightningRemit {
-    return Intl.message("LightningRemit",
-        name: 'lightningRemit', desc: 'lightning_remit');
+  String get remit {
+    return Intl.message('Remit', name: 'remit', desc: 'bottom_nav_remit');
   }
-  // Share page pending translation added by Jack
+
+  String get withdrawPopupNote {
+    return Intl.message('Please confirm the coin you want to withdraw',
+        name: 'withdrawPopupNote', desc: 'withdraw_popup_note');
+  }
+
+  String get lockedOutTemp {
+    return Intl.message('Too many failed attempts, please try after sometime.',
+        name: 'lockedOutTemp', desc: 'locked_out_temp');
+  }
+
+  String get lockedOutPerm {
+    return Intl.message(
+        'Too many failed attempts, please try to unlock using Pin orPassword',
+        name: 'lockedOutPerm',
+        desc: 'locked_out_perm');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

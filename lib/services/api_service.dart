@@ -17,9 +17,9 @@ import 'package:exchangilymobileapp/constants/api_routes.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet_balance.dart';
-import 'package:exchangilymobileapp/screens/bindpay/bindpay_history.dart';
 import 'package:exchangilymobileapp/screens/exchange/exchange_balance_model.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_orders/my_order_model.dart';
+import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_history_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/utils/custom_http_util.dart';
@@ -146,7 +146,7 @@ class ApiService {
 
     List<TransactionHistory> transactionHistory = [];
     await walletDatabaseService
-        .getBytickerName('FAB')
+        .getWalletBytickerName('FAB')
         .then((value) => fabAddress = value.address);
 
     String url =
@@ -235,33 +235,34 @@ class ApiService {
   }
 
 /*----------------------------------------------------------------------
-                Get Bindpay History
+                Get LightningRemit History
 ----------------------------------------------------------------------*/
-  Future getBindpayHistoryEvents() async {
+  Future getLightningRemitHistoryEvents() async {
     String fabAddress = '';
 
     List<TransactionHistory> transactionHistory = [];
     await walletDatabaseService
-        .getBytickerName('FAB')
+        .getWalletBytickerName('FAB')
         .then((value) => fabAddress = value.address);
 
-    String url = configService.getKanbanBaseUrl() + BindpayTxHHistoryApiRoute;
+    String url =
+        configService.getKanbanBaseUrl() + LightningRemitTxHHistoryApiRoute;
     Map<String, dynamic> body = {"fabAddress": fabAddress};
 
-    log.i('getBindpayHistoryEvents url $url -- body $body');
+    log.i('getLightningRemitHistoryEvents url $url -- body $body');
 
     try {
       var response = await client.post(url, body: body);
 
       var json = jsonDecode(response.body);
       if (json != null) {
-        log.w('getBindpayHistoryEvents json $json}');
+        log.w('getLightningRemitHistoryEvents json $json}');
         if (json['success']) {
           //   log.e('getTransactionHistoryEvents json ${json['data']}');
           var data = json['data'] as List;
 
           data.forEach((element) {
-            var holder = BindpayHistory.fromJson(element);
+            var holder = LightningRemitHistoryModel.fromJson(element);
             print(holder.toJson());
             var timestamp = holder.time;
 

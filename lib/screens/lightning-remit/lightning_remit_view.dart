@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,14 +12,14 @@ import 'package:stacked/stacked.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class BindpayView extends StatelessWidget {
-  const BindpayView({Key key}) : super(key: key);
+class LightningRemitView extends StatelessWidget {
+  const LightningRemitView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // PersistentBottomSheetController persistentBottomSheetController;
-    return ViewModelBuilder<BindpayViewmodel>.reactive(
-      viewModelBuilder: () => BindpayViewmodel(),
+    return ViewModelBuilder<LightningRemitViewmodel>.reactive(
+      viewModelBuilder: () => LightningRemitViewmodel(),
       onModelReady: (model) {
         model.context = context;
         model.init();
@@ -48,104 +48,15 @@ class BindpayView extends StatelessWidget {
               color: secondaryColor,
               margin: EdgeInsets.only(top: 40),
               child: Stack(children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                      height: 80,
-                      width: 105,
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                color: primaryColor.withAlpha(175),
-                                width: 4.0,
-                              ),
-                              left: BorderSide(
-                                  color: secondaryColor.withAlpha(175),
-                                  width: 12.0),
-                              right: BorderSide(
-                                  color: secondaryColor.withAlpha(175),
-                                  width: 12.0))),
-                      alignment: Alignment.topCenter,
-                      child: Image.asset(
-                        'assets/images/lightning-remit/lightning-remit.jpg',
-                        color: white,
-                      )),
-                ),
                 Container(
                   margin: EdgeInsets.all(10.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-/*----------------------------------------------------------------------------------------------------
-                                        Coin list dropdown
-----------------------------------------------------------------------------------------------------*/
-
-//                       InkWell(
-//                         onTap: () {
-// model.test();
-//                         },
-//                         child: Row(
-//                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                             children: [
-//                               Text('Choose Coin'),
-//                               Icon(Icons.arrow_drop_down)
-//                             ]),
-//                       ),
                       Platform.isIOS
                           ? CoinListBottomSheetFloatingActionButton(
                               model: model)
-                          // Container(
-                          //     color: walletCardColor,
-                          //     child: CupertinoPicker(
-                          //         diameterRatio: 1.3,
-                          //         offAxisFraction: 5,
-                          //         scrollController: model.scrollController,
-                          //         itemExtent: 50,
-                          //         onSelectedItemChanged: (int newValue) {
-                          //           model.updateSelectedTickernameIOS(newValue);
-                          //         },
-                          //         children: [
-                          //           for (var i = 0; i < model.coins.length; i++)
-                          //             Container(
-                          //               margin: EdgeInsets.only(left: 10),
-                          //               child: Row(
-                          //                 children: [
-                          //                   Text(
-                          //                       model.coins[i]['tickerName']
-                          //                           .toString(),
-                          //                       style: Theme.of(context)
-                          //                           .textTheme
-                          //                           .headline5),
-                          //                   UIHelper.horizontalSpaceSmall,
-                          //                   Text(
-                          //                     model.coins[i]['quantity']
-                          //                         .toString(),
-                          //                     style: Theme.of(context)
-                          //                         .textTheme
-                          //                         .headline5
-                          //                         .copyWith(color: grey),
-                          //                   )
-                          //                 ],
-                          //               ),
-                          //             ),
-                          //           //    })
-                          //           model.coins.length > 0
-                          //               ? Container()
-                          //               : SizedBox(
-                          //                   width: double.infinity,
-                          //                   child: Center(
-                          //                     child: Text(
-                          //                       AppLocalizations.of(context)
-                          //                           .insufficientBalance,
-                          //                       style: Theme.of(context)
-                          //                           .textTheme
-                          //                           .bodyText2,
-                          //                     ),
-                          //                   ),
-                          //                 ),
-                          //         ]),
-                          //   )
                           : Container(
                               height: 55,
                               decoration: BoxDecoration(
@@ -359,7 +270,7 @@ class BindpayView extends StatelessWidget {
                             color: primaryColor,
                             // textColor: Colors.white,
                             onPressed: () async {
-                              await model.getBindpayTransactionHistory();
+                              await model.getLightningRemitTransactionHistory();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -401,7 +312,7 @@ class BindpayView extends StatelessWidget {
 class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
   const CoinListBottomSheetFloatingActionButton({Key key, this.model})
       : super(key: key);
-  final BindpayViewmodel model;
+  final LightningRemitViewmodel model;
 
   @override
   Widget build(BuildContext context) {
@@ -448,7 +359,7 @@ class CoinListBottomSheetFloatingActionButton extends StatelessWidget {
 
 class TxHistoryView extends StatelessWidget {
   final List<TransactionHistory> transactionHistory;
-  final BindpayViewmodel model;
+  final LightningRemitViewmodel model;
   TxHistoryView({this.transactionHistory, this.model});
   @override
   Widget build(BuildContext context) {

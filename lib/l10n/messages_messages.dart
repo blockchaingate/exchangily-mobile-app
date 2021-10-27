@@ -260,6 +260,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "registrationSuccessful" : MessageLookupByLibrary.simpleMessage("Registration Successful"),
     "releaseToLoadMore" : MessageLookupByLibrary.simpleMessage(" Release to load more"),
     "reload" : MessageLookupByLibrary.simpleMessage("reload"),
+    "remit" : MessageLookupByLibrary.simpleMessage("Remit"),
     "requireRedeposit" : MessageLookupByLibrary.simpleMessage("Require redeposit"),
     "resetPasswordEmailInstruction" : MessageLookupByLibrary.simpleMessage("Please check your email and follow instructions to reset your account password"),
     "restoringWallet" : MessageLookupByLibrary.simpleMessage("Restoring wallet"),

@@ -101,7 +101,10 @@ class WalletSetupScreen extends StatelessWidget {
                       : Container(
                           child: Column(
                             children: [
-                              !model.hasAuthenticated && !model.isBusy
+                              !model.hasAuthenticated &&
+                                      !model.isBusy &&
+                                      model
+                                          .storageService.isBiometricAuthEnabled
                                   ? ElevatedButton(
                                       style: ButtonStyle(
                                           shape: MaterialStateProperty.all(

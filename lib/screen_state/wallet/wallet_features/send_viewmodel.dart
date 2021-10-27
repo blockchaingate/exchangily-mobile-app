@@ -661,7 +661,7 @@ class SendViewModel extends BaseViewModel {
     double balance = 0.0;
     String trxWalletAddress = '';
     await walletDatabaseService
-        .getBytickerName('TRX')
+        .getWalletBytickerName('TRX')
         .then((wallet) => trxWalletAddress = wallet.address);
 
     await apiService

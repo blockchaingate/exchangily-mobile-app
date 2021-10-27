@@ -491,7 +491,7 @@ class SettingsContainer extends StatelessWidget {
                             activeTrackColor: white,
                             activeColor: primaryColor,
                             inactiveTrackColor: white,
-                            value: model.isBiometricAuth,
+                            value: model.storageService.isBiometricAuthEnabled,
                             onChanged: (value) {
                               model.setBiometricAuth();
                             }),

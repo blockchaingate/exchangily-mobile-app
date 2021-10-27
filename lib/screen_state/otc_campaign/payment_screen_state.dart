@@ -547,7 +547,7 @@ class CampaignPaymentScreenState extends BaseState {
 
   getWallet() async {
     // Get coin details which we are making transaction through like USDT
-    await walletDataBaseService.getBytickerName(_groupValue).then((res) {
+    await walletDataBaseService.getWalletBytickerName(_groupValue).then((res) {
       tickerName = _groupValue;
       walletInfo = res;
       log.w('wallet info ${walletInfo.availableBalance}');
@@ -560,7 +560,7 @@ class CampaignPaymentScreenState extends BaseState {
 
   getExgWalletAddr() async {
     // Get coin details which we are making transaction through like USDT
-    await walletDataBaseService.getBytickerName('EXG').then((res) {
+    await walletDataBaseService.getWalletBytickerName('EXG').then((res) {
       exgWalletAddress = res.address;
       log.w('Exg wallet address $exgWalletAddress');
     });

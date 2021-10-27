@@ -383,7 +383,7 @@ class WalletDashboardViewModel extends BaseViewModel {
 
   checkToUpdateWallet() async {
     setBusy(true);
-    await walletDatabaseService.getBytickerName('TRX').then((wallet) {
+    await walletDatabaseService.getWalletBytickerName('TRX').then((wallet) {
       if (wallet != null) {
         log.w('${wallet.toJson()} present');
         isUpdateWallet = false;
@@ -1063,7 +1063,7 @@ class WalletDashboardViewModel extends BaseViewModel {
   Future<String> getExgAddressFromWalletDatabase() async {
     String address = '';
     await walletDatabaseService
-        .getBytickerName('EXG')
+        .getWalletBytickerName('EXG')
         .then((res) => address = res.address);
     return address;
   }
@@ -1100,7 +1100,7 @@ class WalletDashboardViewModel extends BaseViewModel {
             await tokenListDatabaseService.getAll().then((tokenList) {
               if (tokenList != null)
                 tickerNameByCointype = tokenList
-                    .firstWhere((element) => element.tokenType == coinType)
+                    .firstWhere((element) => element.coinType == coinType)
                     .tickerName;
             });
           log.w('tickerNameByCointype $tickerNameByCointype');

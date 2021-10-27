@@ -2110,5 +2110,17 @@
       "description": "Insufficient_gas_balance",
       "type": "text",
       "placeholders": {}
+    },
+    "receiveAddress": "接收地址",
+    "@receiveAddress": {
+      "description": "campaign_recieve_address",
+      "type": "text",
+      "placeholders": {}
+    },
+    "remit": "汇款",
+    "@remit": {
+      "description": "bottom_nav_remit",
+      "type": "text",
+      "placeholders": {}
     }
 }

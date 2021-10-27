@@ -14,9 +14,9 @@
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/screens/bindpay/bindpay_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_view.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_view.dart';
+import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_view.dart';
 import 'package:exchangilymobileapp/screens/otc/otc.dart';
 import 'package:exchangilymobileapp/screens/otc/otc_details.dart';
 import 'package:exchangilymobileapp/screens/otc_campaign/campaign_dashboard_screen.dart';
@@ -214,12 +214,12 @@ class RouteGenerator {
       // case '/switchLanguage':
       //   return MaterialPageRoute(builder: (_) => LanguageScreen());
 /*----------------------------------------------------------------------
-                      Bindpay Routes
+                      LightningRemit Routes
 ----------------------------------------------------------------------*/
-      case BindpayViewRoute:
+      case LightningRemitViewRoute:
         return MaterialPageRoute(
-            settings: RouteSettings(name: 'BindpayView'),
-            builder: (_) => BindpayView());
+            settings: RouteSettings(name: 'LightningRemitView'),
+            builder: (_) => LightningRemitView());
 
 /*----------------------------------------------------------------------
                       Navigation Routes

@@ -44,11 +44,11 @@ class Token {
   }
 
   factory Token.fromJson(Map<String, dynamic> json) {
-  var mw = json['minWithdraw'];
-  String minWithdraw = mw.toString();
+    var mw = json['minWithdraw'];
+    String minWithdraw = mw.toString();
 
-  var fw = json['minWithdraw'];
-  String feeWithdraw = fw.toString();
+    var fw = json['feeWithdraw'];
+    String feeWithdraw = fw.toString();
 
     return new Token(
         decimal: json['decimal'] as int,
@@ -75,6 +75,18 @@ class Token {
     data['minWithdraw'] = this._minWithdraw;
     data['feeWithdraw'] = this._feeWithdraw;
     return data;
+  }
+
+  void clear() {
+    this._id = null;
+    this._decimal = null;
+    this._coinName = '';
+    this._chainName = '';
+    this._tickerName = '';
+    this._tokenType = null;
+    this._contract = '';
+    this._minWithdraw = '';
+    this._feeWithdraw = '';
   }
 
   int get id => _id;
@@ -107,9 +119,9 @@ class Token {
     this._tickerName = tickerName;
   }
 
-  int get tokenType => _tokenType;
+  int get coinType => _tokenType;
 
-  set tokenType(int tokenType) {
+  set coinType(int tokenType) {
     this._tokenType = tokenType;
   }
 
@@ -137,7 +149,7 @@ class TokenList {
   TokenList({this.tokens});
 
   factory TokenList.fromJson(List<dynamic> parsedJson) {
-    List<Token> tokens = new List<Token>();
+    List<Token> tokens = [];
     tokens = parsedJson.map((i) => Token.fromJson(i)).toList();
     return new TokenList(tokens: tokens);
   }

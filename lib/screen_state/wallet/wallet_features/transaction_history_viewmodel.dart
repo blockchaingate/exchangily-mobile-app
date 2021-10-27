@@ -125,7 +125,7 @@ class TransactionHistoryViewmodel extends FutureViewModel {
   }
 
   getWalletFromDb() async {
-    await walletDataBaseService.getBytickerName(tickerName).then((res) {
+    await walletDataBaseService.getWalletBytickerName(tickerName).then((res) {
       walletInfo = res;
     });
   }

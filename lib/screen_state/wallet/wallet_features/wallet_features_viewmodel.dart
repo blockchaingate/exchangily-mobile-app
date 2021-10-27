@@ -155,7 +155,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
             await tokenListDatabaseService.getAll().then((tokenList) {
               if (tokenList != null)
                 tickerNameByCointype = tokenList
-                    .firstWhere((element) => element.tokenType == coinType)
+                    .firstWhere((element) => element.coinType == coinType)
                     .tickerName;
             });
           log.w('tickerNameByCointype $tickerNameByCointype');

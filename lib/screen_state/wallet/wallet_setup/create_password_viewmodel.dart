@@ -11,6 +11,7 @@
 *----------------------------------------------------------------------
 */
 
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/enums/screen_state.dart';
 import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
@@ -19,17 +20,17 @@ import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
-import 'package:exchangilymobileapp/screen_state/base_state.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
-class CreatePasswordScreenState extends BaseState {
+class CreatePasswordViewModel extends BaseViewModel {
   final WalletService _walletService = locator<WalletService>();
   final VaultService _vaultService = locator<VaultService>();
   final NavigationService navigationService = locator<NavigationService>();
 
   //List<WalletInfo> _walletInfo;
-  final log = getLogger('CreatePasswordScreenState');
+  final log = getLogger('CreatePasswordViewModel');
   bool checkPasswordConditions = false;
   bool passwordMatch = false;
   bool checkConfirmPasswordConditions = false;
@@ -51,17 +52,14 @@ class CreatePasswordScreenState extends BaseState {
     -------------------------------------------------- */
 
   Future createOfflineWallets() async {
-    NavigationService navigationService = locator<NavigationService>();
-    setState(ViewState.Busy);
+    setBusy(true);
     await _vaultService.secureMnemonic(
         context, passTextController.text, randomMnemonicFromRoute);
     await _walletService
         .createOfflineWallets(randomMnemonicFromRoute)
         .then((data) {
-      //  _walletInfo = data;
-      // Navigator.pushNamed(context, '/mainNav', arguments: _walletInfo);
-      //  navigationService.navigateTo('/mainNav', arguments: 0);
-      navigationService.navigateUsingPushNamedAndRemoveUntil('/dashboard');
+      navigationService
+          .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);
       randomMnemonicFromRoute = '';
     }).catchError((onError) {
       passwordMatch = false;
@@ -69,40 +67,45 @@ class CreatePasswordScreenState extends BaseState {
       confirmPassword = '';
       errorMessage = AppLocalizations.of(context).somethingWentWrong;
       log.e(onError);
-      setState(ViewState.Idle);
+      setBusy(false);
     });
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 
 /* ---------------------------------------------------
                       Validate Pass
     -------------------------------------------------- */
   bool checkPassword(String pass) {
-    setState(ViewState.Busy);
+    setBusy(true);
     password = pass;
     var res = RegexValidator(pattern).isValid(password);
     checkPasswordConditions = res;
-    setState(ViewState.Idle);
+    if (confirmPassTextController.text.isNotEmpty)
+      password == confirmPassword
+          ? passwordMatch = true
+          : passwordMatch = false;
+    if (passwordMatch) errorMessage = '';
+    setBusy(false);
     return checkPasswordConditions;
   }
 
   bool checkConfirmPassword(String confirmPass) {
-    setState(ViewState.Busy);
+    setBusy(true);
     confirmPassword = confirmPass;
     var res = RegexValidator(pattern).isValid(confirmPass);
     checkConfirmPasswordConditions = res;
     password == confirmPass ? passwordMatch = true : passwordMatch = false;
     if (passwordMatch) errorMessage = '';
-    setState(ViewState.Idle);
+    setBusy(false);
     return checkConfirmPasswordConditions;
   }
 
   Future validatePassword() async {
-    setState(ViewState.Busy);
+    setBusy(true);
     RegExp regex = new RegExp(pattern);
     String pass = passTextController.text;
     String confirmPass = confirmPassTextController.text;
-    if (pass.isEmpty && isProduction) {
+    if (pass.isEmpty) {
       password = '';
       confirmPassword = '';
       checkPasswordConditions = false;
@@ -113,7 +116,7 @@ class CreatePasswordScreenState extends BaseState {
           Icons.cancel,
           Colors.red,
           context);
-      setState(ViewState.Idle);
+      setBusy(false);
       return;
     } else {
       if (!regex.hasMatch(pass)) {
@@ -123,7 +126,7 @@ class CreatePasswordScreenState extends BaseState {
             Icons.cancel,
             Colors.red,
             context);
-        setState(ViewState.Idle);
+        setBusy(false);
         return;
       } else if (pass != confirmPass) {
         _walletService.showInfoFlushbar(
@@ -132,15 +135,15 @@ class CreatePasswordScreenState extends BaseState {
             Icons.cancel,
             Colors.red,
             context);
-        setState(ViewState.Idle);
+        setBusy(false);
         return;
       } else {
-        setState(ViewState.Busy);
         await createOfflineWallets();
         passTextController.text = '';
         confirmPassTextController.text = '';
+        setBusy(false);
       }
     }
-    setState(ViewState.Idle);
+    setBusy(false);
   }
 }

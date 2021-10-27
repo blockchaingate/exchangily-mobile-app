@@ -101,7 +101,7 @@ class TradeService extends StoppableService with ReactiveServiceMixin {
     storageService.tokenList.forEach((element) {
       var json = jsonDecode(element);
       Token token = Token.fromJson(json);
-      if (token.tokenType == type) {
+      if (token.coinType == type) {
         print(token.tickerName);
         res = token.tickerName;
       }

@@ -110,7 +110,7 @@ class WalletDataBaseService {
   }
 
   // Get Single Wallet By tickerName
-  Future<WalletInfo> getBytickerName(String tickerName) async {
+  Future<WalletInfo> getWalletBytickerName(String tickerName) async {
     final Database db = await _database;
     List<Map> res = await db
         .query(tableName, where: 'tickerName= ?', whereArgs: [tickerName]);

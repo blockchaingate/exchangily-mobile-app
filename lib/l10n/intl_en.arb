@@ -2051,5 +2051,11 @@
       "description": "Insufficient_gas_balance",
       "type": "text",
       "placeholders": {}
+    },
+    "remit": "Remit",
+    "@remit": {
+      "description": "bottom_nav_remit",
+      "type": "text",
+      "placeholders": {}
     }
 }

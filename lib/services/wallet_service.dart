@@ -223,7 +223,7 @@ class WalletService {
     bool isCorrectAmount = true;
     String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     String coinAddress = await walletDatabaseService
-        .getBytickerName(tickerName)
+        .getWalletBytickerName(tickerName)
         .then((wallet) => wallet.address);
     log.w('coinAddress $coinAddress');
     await apiService
@@ -912,7 +912,7 @@ class WalletService {
   Future<String> getExgAddressFromWalletDatabase() async {
     String address = '';
     await walletDatabaseService
-        .getBytickerName('EXG')
+        .getWalletBytickerName('EXG')
         .then((res) => address = res.address);
     return address;
   }
