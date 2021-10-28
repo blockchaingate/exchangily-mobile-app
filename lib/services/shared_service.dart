@@ -295,7 +295,7 @@ class SharedService {
   String getCurrentRouteName(BuildContext context) {
     String routeName = '';
     routeName = ModalRoute.of(context).settings.name;
-    print('$routeName in bottom Nav');
+    log.w('$routeName in getCurrentRouteName');
     return routeName;
   }
 

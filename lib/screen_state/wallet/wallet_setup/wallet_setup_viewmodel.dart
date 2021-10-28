@@ -21,7 +21,6 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../localizations.dart';
 import '../../../service_locator.dart';
@@ -50,45 +49,17 @@ class WalletSetupViewmodel extends BaseViewModel {
       } else if (res.isNotEmpty) {
         isWallet = true;
 // add here the biometric check
-        if (storageService.isBiometricAuthEnabled)
-          await localAuthService.authenticate().then((isAuthenticatedSuccess) {
-            _hasAuthenticated = isAuthenticatedSuccess;
-            if (_hasAuthenticated) {
-              navigationService
-                  .navigateUsingpopAndPushedNamed(DashboardViewRoute);
-              setBusy(false);
-              return;
-            } else if (!_hasAuthenticated) {
-              isWallet = false;
-              setBusy(false);
-              if (!localAuthService.isLockedOut) {
-                showSimpleNotification(
-                    Text('${AppLocalizations.of(context).lockedOutTemp}'),
-                    position: NotificationPosition.bottom,
-                    background: red);
-              }
-              if (!localAuthService.isLockedOutPerm) {
-                showSimpleNotification(
-                    Text('${AppLocalizations.of(context).lockedOutPerm}'),
-                    position: NotificationPosition.bottom,
-                    background: red);
-              }
-            } else {
-              _hasAuthenticated = false;
-              isWallet = false;
-              setBusy(false);
-              if (!localAuthService.isProtectionEnabled) {
-                showSimpleNotification(
-                    Text(
-                        '${AppLocalizations.of(context).pleaseSetupDeviceSecurity}'),
-                    position: NotificationPosition.bottom,
-                    background: red);
-                navigationService
-                    .navigateUsingpopAndPushedNamed(DashboardViewRoute);
-              }
-            }
-          });
-        else
+        if (storageService.isBiometricAuthEnabled) {
+          localAuthService.context = context;
+          if (!localAuthService.isCancelled)
+            await localAuthService.routeAfterAuthCheck();
+          if (localAuthService.isCancelled) {
+            isWallet = false;
+            setBusy(false);
+
+            localAuthService.setIsCancelledValueFalse();
+          }
+        } else
           navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
         setBusy(false);
       }

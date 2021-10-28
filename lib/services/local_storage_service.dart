@@ -22,6 +22,7 @@ class LocalStorageService {
   static const String FavCoinTabSelectedKey = 'favCoinTabSelectedKey';
   static const String WalletDecimalListKey = 'walletDecimalListKey';
   static const String BiometricAuthKey = 'biometricAuthKey';
+  static const String CancelBiometricAuthKey = 'cancelbiometricAuthKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -113,6 +114,12 @@ class LocalStorageService {
   bool get isBiometricAuthEnabled => _getFromDisk(BiometricAuthKey) ?? false;
   set isBiometricAuthEnabled(bool value) =>
       _saveToDisk(BiometricAuthKey, value);
+
+// is cancel biometric authentication
+  bool get hasCancelledBiometricAuth =>
+      _getFromDisk(CancelBiometricAuthKey) ?? false;
+  set hasCancelledBiometricAuth(bool value) =>
+      _saveToDisk(CancelBiometricAuthKey, value);
 
 /*----------------------------------------------------------------------
                 Notice Dialog getter/setter

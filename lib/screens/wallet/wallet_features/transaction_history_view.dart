@@ -21,7 +21,7 @@ class TransactionHistoryView extends StatelessWidget {
         createNewModelOnInsert: true,
         viewModelBuilder: () =>
             TransactionHistoryViewmodel(tickerName: tickerName),
-        onModelReady: (model) async {
+        onModelReady: (TransactionHistoryViewmodel model) async {
           model.context = context;
           model.getWalletFromDb();
         },

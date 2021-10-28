@@ -1875,6 +1875,11 @@ class AppLocalizations {
         name: 'lockedOutPerm',
         desc: 'locked_out_perm');
   }
+
+  String get lockAppNow {
+    return Intl.message('Lock App Now',
+        name: 'lockAppNow', desc: 'lock_app_now');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

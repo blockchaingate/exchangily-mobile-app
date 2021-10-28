@@ -59,14 +59,17 @@ import 'screens/otc_campaign/token_details_screen.dart';
 final log = getLogger('Routes');
 
 class RouteGenerator {
+  static String _lastRoute = '/';
+  static String get lastRoute => _lastRoute;
   static Route<dynamic> generateRoute(RouteSettings settings) {
     log.w(
         'generateRoute | name: ${settings.name} arguments:${settings.arguments}');
     final args = settings.arguments;
+    _lastRoute = settings.name;
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => WalletSetupScreen());
+        return MaterialPageRoute(builder: (_) => WalletSetupView());
 
 /*----------------------------------------------------------------------
                           Wallet Setup
@@ -75,7 +78,7 @@ class RouteGenerator {
       case ChooseWalletLanguageViewRoute:
         return MaterialPageRoute(builder: (_) => ChooseWalletLanguageView());
       case WalletSetupViewRoute:
-        return MaterialPageRoute(builder: (_) => WalletSetupScreen());
+        return MaterialPageRoute(builder: (_) => WalletSetupView());
 
       case ImportWalletViewRoute:
         return MaterialPageRoute(builder: (_) => ImportWalletScreen());

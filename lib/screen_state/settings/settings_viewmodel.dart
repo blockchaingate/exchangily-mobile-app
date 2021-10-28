@@ -13,6 +13,7 @@
 
 import 'dart:io';
 
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
@@ -84,6 +85,9 @@ class SettingsViewmodel extends BaseViewModel {
   bool _isBiometricAuth = false;
   get isBiometricAuth => _isBiometricAuth;
 
+  bool _lockAppNow = false;
+  get lockAppNow => _lockAppNow;
+
   init() async {
     setBusy(true);
 
@@ -96,6 +100,15 @@ class SettingsViewmodel extends BaseViewModel {
     await setLanguageFromDb();
     await selectDefaultWalletLanguage();
     setBusy(false);
+  }
+
+// Set biometric auth
+
+  setLockAppNowValue() {
+    setBusyForObject(lockAppNow, true);
+    _lockAppNow = !_lockAppNow;
+    navigationService.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
+    setBusyForObject(lockAppNow, false);
   }
 
 // Set biometric auth

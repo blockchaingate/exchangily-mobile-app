@@ -20,8 +20,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:stacked/stacked.dart';
 import '../../../shared/globals.dart' as globals;
 
-class WalletSetupScreen extends StatelessWidget {
-  const WalletSetupScreen({Key key}) : super(key: key);
+class WalletSetupView extends StatelessWidget {
+  const WalletSetupView({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

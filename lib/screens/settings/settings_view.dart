@@ -500,6 +500,42 @@ class SettingsContainer extends StatelessWidget {
                     ],
                   ),
                 )),
+            // lock app now
+            Card(
+                elevation: 5,
+                color: globals.walletCardColor,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    //  crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0, right: 8.0),
+                        child: Icon(Icons.lock_outline_rounded,
+                            color: white, size: 18),
+                      ),
+                      Expanded(
+                        child: Text(AppLocalizations.of(context).lockAppNow,
+                            style: Theme.of(context).textTheme.headline5,
+                            textAlign: TextAlign.left),
+                      ),
+                      SizedBox(
+                        height: 20,
+                        child: Switch(
+                            inactiveThumbColor: grey,
+                            activeTrackColor: white,
+                            activeColor: primaryColor,
+                            inactiveTrackColor: white,
+                            value: model.lockAppNow,
+                            onChanged: (value) {
+                              model.setLockAppNowValue();
+                            }),
+                      ),
+                      // ),
+                    ],
+                  ),
+                )),
 // Server url change
             // Card(
             //   child: FlatButton(
