@@ -102,7 +102,8 @@ class WalletSetupView extends StatelessWidget {
                                       !model.isBusy &&
                                       model.storageService
                                           .hasInAppBiometricAuthEnabled &&
-                                      model.isProtectionEnabled
+                                      model.storageService
+                                          .hasPhoneProtectionEnabled
                                   ? ElevatedButton(
                                       style: ButtonStyle(
                                           shape: MaterialStateProperty.all(
@@ -141,7 +142,8 @@ class WalletSetupView extends StatelessWidget {
                                   : Container(),
                               !model.storageService
                                           .hasInAppBiometricAuthEnabled ||
-                                      !model.isProtectionEnabled
+                                      !model.storageService
+                                          .hasPhoneProtectionEnabled
                                   ? Row(
                                       children: <Widget>[
                                         Expanded(

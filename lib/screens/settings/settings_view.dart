@@ -505,7 +505,7 @@ class SettingsContainer extends StatelessWidget {
             // only shows when user enabled the auth
             // and biometric or pin/password is activated
             model.storageService.hasInAppBiometricAuthEnabled &&
-                    model.isProtectionEnabled
+                    model.storageService.hasPhoneProtectionEnabled
                 ? Card(
                     elevation: 5,
                     color: globals.walletCardColor,

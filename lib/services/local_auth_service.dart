@@ -18,9 +18,6 @@ class LocalAuthService {
   final NavigationService navigationService = locator<NavigationService>();
   final localStorageService = locator<LocalStorageService>();
 
-  bool _isProtectionEnabled = false;
-  bool get isProtectionEnabled => _isProtectionEnabled;
-
   bool _isLockedOut = false;
   bool get isLockedOut => _isLockedOut;
 
@@ -64,11 +61,11 @@ class LocalAuthService {
       if (e.code == auth_error.notAvailable ||
           e.code == auth_error.notEnrolled ||
           e.code == auth_error.passcodeNotSet) {
-        _isProtectionEnabled = false;
-
         localStorageService.hasCancelledBiometricAuth = false;
         localStorageService.hasInAppBiometricAuthEnabled = false;
         localStorageService.hasPhoneProtectionEnabled = false;
+      } else if (e.code == 'auth_in_progress') {
+        // auth in progress
       } else if (e.code == auth_error.lockedOut) {
         // Too manu failed attempts and locked out temp
         _isLockedOut = true;
@@ -81,16 +78,18 @@ class LocalAuthService {
     //  }
     //else{await _auth.}
     log.i(
-        'isAuthenticated $isAuthenticated --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  _isProtectionEnabled $_isProtectionEnabled');
+        'isAuthenticated $isAuthenticated --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService.hasPhoneProtectionEnabled}');
     return isAuthenticated;
   }
 
   // checks after authentication
-  routeAfterAuthCheck({String routeName}) async {
+  routeAfterAuthCheck({String routeName = ''}) async {
+    if (routeName.isEmpty) navigationService.currentRoute();
+    if (routeName == null || routeName.isEmpty) routeName = DashboardViewRoute;
     await authenticate().then((isAuthenticatedSuccess) {
       _hasAuthenticated = isAuthenticatedSuccess;
       if (_hasAuthenticated) {
-        navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+        navigationService.navigateUsingpopAndPushedNamed(routeName);
 
         return;
       } else if (!_hasAuthenticated) {
@@ -116,12 +115,12 @@ class LocalAuthService {
           // localStorageService.hasCancelledBiometricAuth = true;
         }
       } else {
-        if (!isProtectionEnabled) {
+        if (!localStorageService.hasPhoneProtectionEnabled) {
           showSimpleNotification(
               Text('${AppLocalizations.of(context).pleaseSetupDeviceSecurity}'),
               position: NotificationPosition.bottom,
               background: red);
-          navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
+          navigationService.navigateUsingpopAndPushedNamed(routeName);
           localStorageService.hasCancelledBiometricAuth = false;
         }
       }

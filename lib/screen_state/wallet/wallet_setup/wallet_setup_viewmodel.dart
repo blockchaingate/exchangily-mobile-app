@@ -38,8 +38,6 @@ class WalletSetupViewmodel extends BaseViewModel {
   bool _hasAuthenticated = false;
   get hasAuthenticated => _hasAuthenticated;
 
-  get isProtectionEnabled => authService.isProtectionEnabled;
-
   init() async {
     await walletService.checkLanguage();
     context = context;
@@ -67,7 +65,7 @@ class WalletSetupViewmodel extends BaseViewModel {
             setBusy(false);
             authService.setIsCancelledValueFalse();
           }
-          if (!authService.isProtectionEnabled)
+          if (!storageService.hasPhoneProtectionEnabled)
             navigationService
                 .navigateUsingpopAndPushedNamed(DashboardViewRoute);
         } else

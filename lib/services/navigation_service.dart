@@ -1,7 +1,6 @@
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get_it/get_it.dart';
 
 class NavigationService {
   final log = getLogger('NavigationService');

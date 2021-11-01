@@ -87,8 +87,6 @@ class SettingsViewmodel extends BaseViewModel {
   bool _isBiometricAuth = false;
   get isBiometricAuth => _isBiometricAuth;
 
-  get isProtectionEnabled => authService.isProtectionEnabled;
-
   bool _lockAppNow = false;
   get lockAppNow => _lockAppNow;
 
@@ -117,11 +115,12 @@ class SettingsViewmodel extends BaseViewModel {
 
   setBiometricAuth() async {
     setBusyForObject(isBiometricAuth, true);
-    await authService.authenticate().then((hasAuthenticated) {
+    await authService.routeAfterAuthCheck().then((hasAuthenticated) {
       if (hasAuthenticated) {
         storageService.hasInAppBiometricAuthEnabled =
             !storageService.hasInAppBiometricAuthEnabled;
         _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
+        storageService.hasPhoneProtectionEnabled = true;
       }
     });
     if (!storageService.hasPhoneProtectionEnabled) {
