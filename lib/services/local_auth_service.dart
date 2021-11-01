@@ -45,16 +45,22 @@ class LocalAuthService {
     return _auth.isDeviceSupported();
   }
 
+  Future<bool> canCheckBiometrics() async {
+    return _auth.canCheckBiometrics;
+  }
+
   Future<bool> authenticate() async {
     bool isAuthenticated = false;
-
+    String currentRouteName = navigationService.currentRoute();
     try {
       isAuthenticated = await _auth.authenticate(
         localizedReason: 'Authenticate to access the wallet',
         useErrorDialogs: true,
         stickyAuth: true,
       );
-
+      localStorageService.hasPhoneProtectionEnabled = true;
+      localStorageService.hasCancelledBiometricAuth = false;
+      localStorageService.hasAppGoneInTheBackgroundKey = false;
       log.i('isAuthenticated 1 $isAuthenticated');
     } on PlatformException catch (e) {
       // when any type of authentication is not set
@@ -66,8 +72,11 @@ class LocalAuthService {
         localStorageService.hasPhoneProtectionEnabled = false;
       } else if (e.code == 'auth_in_progress') {
         // auth in progress
+        return false;
       } else if (e.code == auth_error.lockedOut) {
         // Too manu failed attempts and locked out temp
+        isAuthenticated = false;
+        _isCancelled = false;
         _isLockedOut = true;
       } else if (e.code == auth_error.permanentlyLockedOut) {
         // Too manu failed attempts and locked out permanently, now required password/pin
@@ -83,47 +92,49 @@ class LocalAuthService {
   }
 
   // checks after authentication
-  routeAfterAuthCheck({String routeName = ''}) async {
-    if (routeName.isEmpty) navigationService.currentRoute();
-    if (routeName == null || routeName.isEmpty) routeName = DashboardViewRoute;
-    await authenticate().then((isAuthenticatedSuccess) {
-      _hasAuthenticated = isAuthenticatedSuccess;
+  Future<bool> routeAfterAuthCheck(
+      {String routeName = DashboardViewRoute}) async {
+    // if (routeName.isEmpty) routeName = navigationService.currentRoute();
+    // if (routeName == null ||
+    //     routeName.isEmpty ||
+    //     routeName == '/' ||
+    //     routeName == WalletSetupViewRoute) routeName = DashboardViewRoute;
+    await authenticate().then((isSuccess) {
+      _hasAuthenticated = isSuccess;
       if (_hasAuthenticated) {
+        localStorageService.hasPhoneProtectionEnabled = true;
+        localStorageService.hasCancelledBiometricAuth = false;
         navigationService.navigateUsingpopAndPushedNamed(routeName);
-
-        return;
       } else if (!_hasAuthenticated) {
-        if (isLockedOut) {
-          showSimpleNotification(
-              Text('${AppLocalizations.of(context).lockedOutTemp}'),
-              position: NotificationPosition.bottom,
-              background: red);
-        } else if (isLockedOutPerm) {
-          showSimpleNotification(
-              Text('${AppLocalizations.of(context).lockedOutPerm}'),
-              position: NotificationPosition.bottom,
-              background: red);
-        } else {
-          _isCancelled = true;
-          if (navigationService.currentRoute() != WalletSetupViewRoute) {
-            navigationService
-                .navigateUsingpopAndPushedNamed(WalletSetupViewRoute);
-            //   Future.delayed(new Duration(seconds: 2), () {
-            //     localStorageService.hasCancelledBiometricAuth = false;
-            //   });
-          }
-          // localStorageService.hasCancelledBiometricAuth = true;
-        }
-      } else {
         if (!localStorageService.hasPhoneProtectionEnabled) {
-          showSimpleNotification(
-              Text('${AppLocalizations.of(context).pleaseSetupDeviceSecurity}'),
-              position: NotificationPosition.bottom,
-              background: red);
           navigationService.navigateUsingpopAndPushedNamed(routeName);
           localStorageService.hasCancelledBiometricAuth = false;
+          localStorageService.hasInAppBiometricAuthEnabled = false;
+        } else {
+          if (isLockedOut) {
+            showSimpleNotification(
+                Text('${AppLocalizations.of(context).lockedOutTemp}'),
+                position: NotificationPosition.bottom,
+                background: red);
+          } else if (isLockedOutPerm) {
+            showSimpleNotification(
+                Text('${AppLocalizations.of(context).lockedOutPerm}'),
+                position: NotificationPosition.bottom,
+                background: red);
+          } else {
+            _isCancelled = true;
+            if (navigationService.currentRoute() != WalletSetupViewRoute) {
+              navigationService
+                  .navigateUsingpopAndPushedNamed(WalletSetupViewRoute);
+              //   Future.delayed(new Duration(seconds: 2), () {
+              //     localStorageService.hasCancelledBiometricAuth = false;
+              //   });
+            }
+            // localStorageService.hasCancelledBiometricAuth = true;
+          }
         }
       }
     });
+    return _hasAuthenticated;
   }
 }

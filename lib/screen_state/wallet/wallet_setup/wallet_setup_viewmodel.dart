@@ -58,9 +58,13 @@ class WalletSetupViewmodel extends BaseViewModel {
         isWallet = true;
 // add here the biometric check
         if (storageService.hasInAppBiometricAuthEnabled) {
-          authService.context = context;
-          if (!authService.isCancelled) await authService.routeAfterAuthCheck();
-          if (authService.isCancelled) {
+          _hasAuthenticated = await authService.authenticate();
+          if (_hasAuthenticated) {
+            navigationService
+                .navigateUsingpopAndPushedNamed(DashboardViewRoute);
+            storageService.hasAppGoneInTheBackgroundKey = false;
+          }
+          if (authService.isCancelled || !_hasAuthenticated) {
             isWallet = false;
             setBusy(false);
             authService.setIsCancelledValueFalse();

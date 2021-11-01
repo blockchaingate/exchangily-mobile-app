@@ -115,20 +115,19 @@ class SettingsViewmodel extends BaseViewModel {
 
   setBiometricAuth() async {
     setBusyForObject(isBiometricAuth, true);
-    await authService.routeAfterAuthCheck().then((hasAuthenticated) {
+    await authService
+        .routeAfterAuthCheck(routeName: SettingViewRoute)
+        .then((hasAuthenticated) {
       if (hasAuthenticated) {
         storageService.hasInAppBiometricAuthEnabled =
             !storageService.hasInAppBiometricAuthEnabled;
-        _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
-        storageService.hasPhoneProtectionEnabled = true;
       }
     });
     if (!storageService.hasPhoneProtectionEnabled) {
-      storageService.hasInAppBiometricAuthEnabled = false;
-      _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).pleaseSetupDeviceSecurity);
     }
+    _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
     setBusyForObject(isBiometricAuth, false);
   }
 
