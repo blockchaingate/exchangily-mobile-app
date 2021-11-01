@@ -21,8 +21,9 @@ class LocalStorageService {
   static const String FavWalletCoinsKey = 'favWalletCoinsKey';
   static const String FavCoinTabSelectedKey = 'favCoinTabSelectedKey';
   static const String WalletDecimalListKey = 'walletDecimalListKey';
-  static const String BiometricAuthKey = 'biometricAuthKey';
+  static const String InAppBiometricAuthKey = 'biometricAuthKey';
   static const String CancelBiometricAuthKey = 'cancelbiometricAuthKey';
+  static const String HasPhoneProtectedKey = 'phoneProtectedKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -111,9 +112,15 @@ class LocalStorageService {
 /*----------------------------------------------------------------------
                 Biometric auth getter/setter
 ----------------------------------------------------------------------*/
-  bool get isBiometricAuthEnabled => _getFromDisk(BiometricAuthKey) ?? false;
-  set isBiometricAuthEnabled(bool value) =>
-      _saveToDisk(BiometricAuthKey, value);
+  bool get hasPhoneProtectionEnabled =>
+      _getFromDisk(HasPhoneProtectedKey) ?? false;
+  set hasPhoneProtectionEnabled(bool value) =>
+      _saveToDisk(HasPhoneProtectedKey, value);
+
+  bool get hasInAppBiometricAuthEnabled =>
+      _getFromDisk(InAppBiometricAuthKey) ?? false;
+  set hasInAppBiometricAuthEnabled(bool value) =>
+      _saveToDisk(InAppBiometricAuthKey, value);
 
 // is cancel biometric authentication
   bool get hasCancelledBiometricAuth =>

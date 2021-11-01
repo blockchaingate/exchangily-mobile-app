@@ -27,7 +27,6 @@ import 'package:exchangilymobileapp/services/dialog_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/utils/coin_util.dart';
-import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_validator.dart';
 import 'package:exchangilymobileapp/utils/tron_util/trx_generate_address_util.dart'

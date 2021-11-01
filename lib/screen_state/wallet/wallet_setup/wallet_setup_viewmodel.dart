@@ -11,7 +11,6 @@
 *----------------------------------------------------------------------
 */
 
-import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/services/local_auth_service.dart';
@@ -31,13 +30,24 @@ class WalletSetupViewmodel extends BaseViewModel {
   WalletDataBaseService dataBaseService = locator<WalletDataBaseService>();
   WalletService walletService = locator<WalletService>();
   final NavigationService navigationService = locator<NavigationService>();
-  final localAuthService = locator<LocalAuthService>();
+  final authService = locator<LocalAuthService>();
   final storageService = locator<LocalStorageService>();
   BuildContext context;
   bool isWallet = false;
   String errorMessage = '';
   bool _hasAuthenticated = false;
   get hasAuthenticated => _hasAuthenticated;
+
+  get isProtectionEnabled => authService.isProtectionEnabled;
+
+  init() async {
+    await walletService.checkLanguage();
+    context = context;
+    sharedService.context = context;
+    dataBaseService.initDb();
+
+    await checkExistingWallet();
+  }
 
   Future checkExistingWallet() async {
     setBusy(true);
@@ -49,16 +59,17 @@ class WalletSetupViewmodel extends BaseViewModel {
       } else if (res.isNotEmpty) {
         isWallet = true;
 // add here the biometric check
-        if (storageService.isBiometricAuthEnabled) {
-          localAuthService.context = context;
-          if (!localAuthService.isCancelled)
-            await localAuthService.routeAfterAuthCheck();
-          if (localAuthService.isCancelled) {
+        if (storageService.hasInAppBiometricAuthEnabled) {
+          authService.context = context;
+          if (!authService.isCancelled) await authService.routeAfterAuthCheck();
+          if (authService.isCancelled) {
             isWallet = false;
             setBusy(false);
-
-            localAuthService.setIsCancelledValueFalse();
+            authService.setIsCancelledValueFalse();
           }
+          if (!authService.isProtectionEnabled)
+            navigationService
+                .navigateUsingpopAndPushedNamed(DashboardViewRoute);
         } else
           navigationService.navigateUsingpopAndPushedNamed(DashboardViewRoute);
         setBusy(false);

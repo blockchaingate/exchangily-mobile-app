@@ -2052,9 +2052,51 @@
       "type": "text",
       "placeholders": {}
     },
+    "unlock": "Unlock",
+    "@unlock": {
+      "description": "unlock",
+      "type": "text",
+      "placeholders": {}
+    },
+    "enableBiometricAuthentication": "Enable Biometric Authentication",
+    "@enableBiometricAuthentication": {
+      "description": "settings_enable_biometric_authentication",
+      "type": "text",
+      "placeholders": {}
+    },
+    "pleaseSetupDeviceSecurity": "Please setup the device security either using Pin/Password or Biometric in the phone app settings",
+    "@pleaseSetupDeviceSecurity": {
+      "description": "walletsetup_please_setup_device_security",
+      "type": "text",
+      "placeholders": {}
+    },
     "remit": "Remit",
     "@remit": {
       "description": "bottom_nav_remit",
+      "type": "text",
+      "placeholders": {}
+    },
+    "withdrawPopupNote": "Please confirm the coin you want to withdraw",
+    "@withdrawPopupNote": {
+      "description": "withdraw_popup_note",
+      "type": "text",
+      "placeholders": {}
+    },
+    "lockedOutTemp": "Too many failed attempts, please try after sometime.",
+    "@lockedOutTemp": {
+      "description": "locked_out_temp",
+      "type": "text",
+      "placeholders": {}
+    },
+    "lockedOutPerm": "Too many failed attempts, please try to unlock using Pin or Password",
+    "@lockedOutPerm": {
+      "description": "locked_out_perm",
+      "type": "text",
+      "placeholders": {}
+    },
+    "lockAppNow": "Lock App Now",
+    "@lockAppNow": {
+      "description": "lock_app_now",
       "type": "text",
       "placeholders": {}
     }

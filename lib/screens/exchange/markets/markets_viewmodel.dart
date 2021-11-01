@@ -48,7 +48,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   void start() {
     super.start();
     log.w('market view model starting service');
-    if (localStorageService.isBiometricAuthEnabled)
+    if (localStorageService.hasInAppBiometricAuthEnabled)
       localAuthService.routeAfterAuthCheck();
     // start subscription again
     // if (streamSubscription != null && streamSubscription.isPaused)

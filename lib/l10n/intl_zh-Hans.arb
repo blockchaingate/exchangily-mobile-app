@@ -2117,9 +2117,51 @@
       "type": "text",
       "placeholders": {}
     },
+    "unlock": "解锁",
+    "@unlock": {
+      "description": "unlock",
+      "type": "text",
+      "placeholders": {}
+    },
+    "enableBiometricAuthentication": "启用生物特征认证",
+    "@enableBiometricAuthentication": {
+      "description": "settings_enable_biometric_authentication",
+      "type": "text",
+      "placeholders": {}
+    },
+    "pleaseSetupDeviceSecurity": "请在手机应用程序设置中使用 Pin 密码或生物特征识别设置增加设备安全。",
+    "@pleaseSetupDeviceSecurity": {
+      "description": "walletsetup_please_setup_device_security",
+      "type": "text",
+      "placeholders": {}
+    },
     "remit": "汇款",
     "@remit": {
       "description": "bottom_nav_remit",
+      "type": "text",
+      "placeholders": {}
+    },
+    "withdrawPopupNote": "请确认您要提现的币种",
+    "@withdrawPopupNote": {
+      "description": "withdraw_popup_note",
+      "type": "text",
+      "placeholders": {}
+    },
+    "lockedOutTemp": "失败的尝试太多，请稍后再试。",
+    "@lockedOutTemp": {
+      "description": "locked_out_temp",
+      "type": "text",
+      "placeholders": {}
+    },
+    "lockedOutPerm": "尝试失败次数过多，请尝试使用 Pin 或密码解锁",
+    "@lockedOutPerm": {
+      "description": "locked_out_perm",
+      "type": "text",
+      "placeholders": {}
+    },
+    "lockAppNow": "立即锁定应用",
+    "@lockAppNow": {
+      "description": "lock_app_now",
       "type": "text",
       "placeholders": {}
     }

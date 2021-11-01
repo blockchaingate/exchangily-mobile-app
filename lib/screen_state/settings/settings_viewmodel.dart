@@ -21,6 +21,7 @@ import 'package:exchangilymobileapp/services/db/transaction_history_database_ser
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_auth_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
@@ -77,6 +78,7 @@ class SettingsViewmodel extends BaseViewModel {
   bool isShowCaseOnce;
   String baseServerUrl;
   ConfigService configService = locator<ConfigService>();
+  final authService = locator<LocalAuthService>();
   bool isHKServer;
   Map<String, String> versionInfo;
   UserSettings userSettings = new UserSettings();
@@ -84,6 +86,8 @@ class SettingsViewmodel extends BaseViewModel {
   final coinUtils = CoinUtils();
   bool _isBiometricAuth = false;
   get isBiometricAuth => _isBiometricAuth;
+
+  get isProtectionEnabled => authService.isProtectionEnabled;
 
   bool _lockAppNow = false;
   get lockAppNow => _lockAppNow;
@@ -102,8 +106,6 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
-// Set biometric auth
-
   setLockAppNowValue() {
     setBusyForObject(lockAppNow, true);
     _lockAppNow = !_lockAppNow;
@@ -113,11 +115,21 @@ class SettingsViewmodel extends BaseViewModel {
 
 // Set biometric auth
 
-  setBiometricAuth() {
+  setBiometricAuth() async {
     setBusyForObject(isBiometricAuth, true);
-    storageService.isBiometricAuthEnabled =
-        !storageService.isBiometricAuthEnabled;
-    _isBiometricAuth = storageService.isBiometricAuthEnabled;
+    await authService.authenticate().then((hasAuthenticated) {
+      if (hasAuthenticated) {
+        storageService.hasInAppBiometricAuthEnabled =
+            !storageService.hasInAppBiometricAuthEnabled;
+        _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
+      }
+    });
+    if (!storageService.hasPhoneProtectionEnabled) {
+      storageService.hasInAppBiometricAuthEnabled = false;
+      _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
+      sharedService.sharedSimpleNotification(
+          AppLocalizations.of(context).pleaseSetupDeviceSecurity);
+    }
     setBusyForObject(isBiometricAuth, false);
   }
 

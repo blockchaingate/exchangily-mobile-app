@@ -12,6 +12,7 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_viewmodel.dart';
 import 'package:flutter/cupertino.dart';
@@ -28,11 +29,7 @@ class WalletSetupView extends StatelessWidget {
     return ViewModelBuilder<WalletSetupViewmodel>.reactive(
       viewModelBuilder: () => WalletSetupViewmodel(),
       onModelReady: (model) async {
-        await model.walletService.checkLanguage();
-        model.context = context;
-        model.sharedService.context = context;
-        model.dataBaseService.initDb();
-        await model.checkExistingWallet();
+        model.init();
       },
       builder: (context, model, child) => WillPopScope(
         onWillPop: () {
@@ -103,8 +100,9 @@ class WalletSetupView extends StatelessWidget {
                             children: [
                               !model.hasAuthenticated &&
                                       !model.isBusy &&
-                                      model
-                                          .storageService.isBiometricAuthEnabled
+                                      model.storageService
+                                          .hasInAppBiometricAuthEnabled &&
+                                      model.isProtectionEnabled
                                   ? ElevatedButton(
                                       style: ButtonStyle(
                                           shape: MaterialStateProperty.all(
@@ -141,70 +139,81 @@ class WalletSetupView extends StatelessWidget {
                                       },
                                     )
                                   : Container(),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 5),
-                                      child: ElevatedButton(
-                                        style: ButtonStyle(
-                                          elevation:
-                                              MaterialStateProperty.all(5),
-                                          backgroundColor:
-                                              MaterialStateProperty.all(white),
-                                          shape: MaterialStateProperty.all(
-                                            StadiumBorder(
-                                                side: BorderSide(
-                                                    color: globals.primaryColor,
-                                                    width: 2)),
+                              !model.storageService
+                                          .hasInAppBiometricAuthEnabled ||
+                                      !model.isProtectionEnabled
+                                  ? Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Container(
+                                            margin: EdgeInsets.only(right: 5),
+                                            child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                        5),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        white),
+                                                shape:
+                                                    MaterialStateProperty.all(
+                                                  StadiumBorder(
+                                                      side: BorderSide(
+                                                          color: globals
+                                                              .primaryColor,
+                                                          width: 2)),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                  AppLocalizations.of(context)
+                                                      .createWallet,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline4
+                                                      .copyWith(
+                                                          color: globals
+                                                              .primaryColor)),
+                                              onPressed: () {
+                                                Navigator.of(context).pushNamed(
+                                                    BackupMnemonicViewRoute);
+                                              },
+                                            ),
                                           ),
                                         ),
-                                        child: Text(
-                                            AppLocalizations.of(context)
-                                                .createWallet,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline4
-                                                .copyWith(
-                                                    color:
-                                                        globals.primaryColor)),
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .pushNamed('/backupMnemonic');
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          elevation:
-                                              MaterialStateProperty.all(5),
-                                          shape: MaterialStateProperty.all(
-                                            StadiumBorder(
-                                                side: BorderSide(
-                                                    color: globals.primaryColor,
-                                                    width: 2)),
+                                        Expanded(
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                                elevation:
+                                                    MaterialStateProperty.all(
+                                                        5),
+                                                shape:
+                                                    MaterialStateProperty.all(
+                                                  StadiumBorder(
+                                                      side: BorderSide(
+                                                          color: globals
+                                                              .primaryColor,
+                                                          width: 2)),
+                                                ),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        primaryColor)),
+                                            child: Text(
+                                              AppLocalizations.of(context)
+                                                  .importWallet,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline4,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pushNamed(
+                                                  ImportWalletViewRoute,
+                                                  arguments: 'import');
+                                            },
                                           ),
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  primaryColor)),
-                                      child: Text(
-                                        AppLocalizations.of(context)
-                                            .importWallet,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline4,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pushNamed(
-                                            '/importWallet',
-                                            arguments: 'import');
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                        ),
+                                      ],
+                                    )
+                                  : Container(),
                             ],
                           ),
                         ),

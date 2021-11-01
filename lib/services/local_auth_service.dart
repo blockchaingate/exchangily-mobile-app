@@ -17,8 +17,8 @@ class LocalAuthService {
 
   final NavigationService navigationService = locator<NavigationService>();
   final localStorageService = locator<LocalStorageService>();
-  bool _isProtectionEnabled = false;
 
+  bool _isProtectionEnabled = false;
   bool get isProtectionEnabled => _isProtectionEnabled;
 
   bool _isLockedOut = false;
@@ -44,10 +44,12 @@ class LocalAuthService {
     _isCancelled = false;
   }
 
+  Future<bool> isDeviceSupported() async {
+    return _auth.isDeviceSupported();
+  }
+
   Future<bool> authenticate() async {
     bool isAuthenticated = false;
-    _isProtectionEnabled =
-        await _auth.canCheckBiometrics.then((value) => value);
 
     try {
       isAuthenticated = await _auth.authenticate(
@@ -63,6 +65,10 @@ class LocalAuthService {
           e.code == auth_error.notEnrolled ||
           e.code == auth_error.passcodeNotSet) {
         _isProtectionEnabled = false;
+
+        localStorageService.hasCancelledBiometricAuth = false;
+        localStorageService.hasInAppBiometricAuthEnabled = false;
+        localStorageService.hasPhoneProtectionEnabled = false;
       } else if (e.code == auth_error.lockedOut) {
         // Too manu failed attempts and locked out temp
         _isLockedOut = true;
@@ -110,8 +116,6 @@ class LocalAuthService {
           // localStorageService.hasCancelledBiometricAuth = true;
         }
       } else {
-        _hasAuthenticated = false;
-
         if (!isProtectionEnabled) {
           showSimpleNotification(
               Text('${AppLocalizations.of(context).pleaseSetupDeviceSecurity}'),
