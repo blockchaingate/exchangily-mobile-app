@@ -51,7 +51,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
         'market view model starting service -- hasAppGoneInTheBackgroundKey = ${localStorageService.hasAppGoneInTheBackgroundKey}');
 
     if (localStorageService.hasInAppBiometricAuthEnabled) {
-      bool canCheckBiometrics = await localAuthService.canCheckBiometrics();
+      // bool canCheckBiometrics = await localAuthService.canCheckBiometrics();
       if (
           //canCheckBiometrics &&
           localStorageService.hasAppGoneInTheBackgroundKey)

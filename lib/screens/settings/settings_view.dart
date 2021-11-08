@@ -543,6 +543,7 @@ class SettingsContainer extends StatelessWidget {
                       ),
                     ))
                 : Container(),
+
 // Server url change
             // Card(
             //   child: FlatButton(

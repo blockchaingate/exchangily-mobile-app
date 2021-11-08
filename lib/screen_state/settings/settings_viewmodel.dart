@@ -25,6 +25,7 @@ import 'package:exchangilymobileapp/services/local_auth_service.dart';
 import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/shared_service.dart';
+import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 
 import 'package:flutter/material.dart';
@@ -46,6 +47,7 @@ class SettingsViewmodel extends BaseViewModel {
   final log = getLogger('SettingsState');
   DialogService dialogService = locator<DialogService>();
   WalletService walletService = locator<WalletService>();
+  final _vaultService = locator<VaultService>();
   TransactionHistoryDatabaseService transactionHistoryDatabaseService =
       locator<TransactionHistoryDatabaseService>();
   TokenListDatabaseService tokenListDatabaseService =
@@ -86,7 +88,7 @@ class SettingsViewmodel extends BaseViewModel {
   final coinUtils = CoinUtils();
   bool _isBiometricAuth = false;
   get isBiometricAuth => _isBiometricAuth;
-
+  final t = TextEditingController();
   bool _lockAppNow = false;
   get lockAppNow => _lockAppNow;
 
@@ -281,7 +283,7 @@ class SettingsViewmodel extends BaseViewModel {
             .whenComplete(() => log.e('trnasaction history database deleted!!'))
             .catchError((err) => log.e('tx history database CATCH $err'));
 
-        await walletService
+        await _vaultService
             .deleteEncryptedData()
             .whenComplete(() => log.e('encrypted data deleted!!'))
             .catchError((err) => log.e('delete encrypted CATCH $err'));
@@ -437,8 +439,6 @@ class SettingsViewmodel extends BaseViewModel {
 
     setBusy(false);
   }
-
-  // Pin code
 
   // Change password
 

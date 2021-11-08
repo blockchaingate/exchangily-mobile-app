@@ -7,6 +7,7 @@ import 'package:exchangilymobileapp/services/local_storage_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/auth_strings.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:local_auth/error_codes.dart' as auth_error;
 import 'package:overlay_support/overlay_support.dart';
@@ -49,9 +50,9 @@ class LocalAuthService {
     return _auth.canCheckBiometrics;
   }
 
-  Future<bool> authenticate() async {
+  Future<bool> authenticate({BuildContext context}) async {
     bool isAuthenticated = false;
-    String currentRouteName = navigationService.currentRoute();
+
     try {
       isAuthenticated = await _auth.authenticate(
         localizedReason: 'Authenticate to access the wallet',

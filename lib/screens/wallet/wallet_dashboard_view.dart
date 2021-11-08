@@ -18,6 +18,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/wallet.dart';
 import 'package:exchangilymobileapp/screens/announcement/anncounceList.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
+import 'package:exchangilymobileapp/shared/styles.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/widgets/bottom_nav.dart';
@@ -360,10 +361,22 @@ class WalletDashboardView extends StatelessWidget {
                                       // Tab Names
 
                                       tabs: [
-                                        Icon(
-                                          FontAwesomeIcons.coins,
-                                          color: white,
-                                          size: 16,
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              FontAwesomeIcons.coins,
+                                              color: white,
+                                              size: 16,
+                                            ),
+                                            UIHelper.horizontalSpaceSmall,
+                                            Text(
+                                                model.walletInfoCopy.length
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 10, color: grey))
+                                          ],
                                         ),
                                         // Text(
                                         //     AppLocalizations.of(context)
@@ -380,6 +393,12 @@ class WalletDashboardView extends StatelessWidget {
                                           children: [
                                             Icon(Icons.star,
                                                 color: primaryColor, size: 18),
+                                            UIHelper.horizontalSpaceSmall,
+                                            Text(
+                                                model.favWalletInfoList.length
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 10, color: grey))
                                           ],
                                         ),
                                       ]),

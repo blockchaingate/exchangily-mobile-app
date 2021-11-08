@@ -54,21 +54,21 @@ class CreatePasswordViewModel extends BaseViewModel {
   Future createOfflineWallets() async {
     setBusy(true);
     await _vaultService.secureMnemonic(
-        context, passTextController.text, randomMnemonicFromRoute);
-    await _walletService
-        .createOfflineWallets(randomMnemonicFromRoute)
-        .then((data) {
-      navigationService
-          .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);
-      randomMnemonicFromRoute = '';
-    }).catchError((onError) {
-      passwordMatch = false;
-      password = '';
-      confirmPassword = '';
-      errorMessage = AppLocalizations.of(context).somethingWentWrong;
-      log.e(onError);
-      setBusy(false);
-    });
+        passTextController.text, randomMnemonicFromRoute);
+    // await _walletService
+    //     .createOfflineWallets(randomMnemonicFromRoute)
+    //     .then((data) {
+    //   navigationService
+    //       .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);
+    //   randomMnemonicFromRoute = '';
+    // }).catchError((onError) {
+    //   passwordMatch = false;
+    //   password = '';
+    //   confirmPassword = '';
+    //   errorMessage = AppLocalizations.of(context).somethingWentWrong;
+    //   log.e(onError);
+    //   setBusy(false);
+    // });
     setBusy(false);
   }
 
@@ -138,7 +138,12 @@ class CreatePasswordViewModel extends BaseViewModel {
         setBusy(false);
         return;
       } else {
-        await createOfflineWallets();
+        await createOfflineWallets().catchError((err) {
+          passTextController.text = '';
+          confirmPassTextController.text = '';
+          passwordMatch = false;
+          setBusy(false);
+        });
         passTextController.text = '';
         confirmPassTextController.text = '';
         setBusy(false);

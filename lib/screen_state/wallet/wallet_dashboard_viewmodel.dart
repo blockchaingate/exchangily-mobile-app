@@ -1316,6 +1316,7 @@ class WalletDashboardViewModel extends BaseViewModel {
     // ----------------------------------------
     // Calling walletBalances in wallet service
     // ----------------------------------------
+    bool isLocalWalletLengthEqualApiWallets = false;
     await this
         .apiService
         .getWalletBalance(walletBalancesBody)
@@ -1324,6 +1325,8 @@ class WalletDashboardViewModel extends BaseViewModel {
         // Loop wallet info list to udpate balances
         log.e(
             'walletInfoCopy length ${walletInfoCopy.length} -- balance list length ${walletBalanceList.length}');
+        isLocalWalletLengthEqualApiWallets =
+            walletInfoCopy.length == walletBalanceList.length;
         walletInfoCopy.forEach((wallet) async {
           // Loop wallet balance list from api
           for (var j = 0; j <= walletBalanceList.length; j++) {
@@ -1377,12 +1380,12 @@ class WalletDashboardViewModel extends BaseViewModel {
                     'in refresh balance catch block for deleting and try re-updating wallet database $err');
               }
 
-              // if (!tickerNamesFromWalletInfoCopy
-              //     .contains(walletInfoTickerName)) {
-              //   tickerNamesFromWalletInfoCopy.add(walletInfoTickerName);
-              // }
-              // print(
-              //     'wallet info copy tickerNames length ${tickerNamesFromWalletInfoCopy.length} -- $tickerNamesFromWalletInfoCopy');
+              if (!tickerNamesFromWalletInfoCopy
+                  .contains(walletInfoTickerName)) {
+                tickerNamesFromWalletInfoCopy.add(walletInfoTickerName);
+              }
+              print(
+                  'wallet info copy tickerNames length ${tickerNamesFromWalletInfoCopy.length} -- $tickerNamesFromWalletInfoCopy');
               // break the second j loop of wallet balance list when match found
               break;
             } // If ends
@@ -1391,9 +1394,10 @@ class WalletDashboardViewModel extends BaseViewModel {
         }); // walletInfo for each ends
 
         //  second if -- starts to add new coins in wallet info list
-        if (walletInfoCopy.length != walletBalanceList.length) {
+        if (!isLocalWalletLengthEqualApiWallets &&
+            tickerNamesFromWalletInfoCopy.isNotEmpty) {
           log.e(
-              'wallet info copy length is ${tickerNamesFromWalletInfoCopy.length} and wallet balances length ${walletBalanceList.length} ');
+              'isLocalWalletLengthEqualApiWallets $isLocalWalletLengthEqualApiWallets');
           List<WalletBalance> newTokenListFromWalletBalances = [];
           walletBalanceList.forEach((walletBalanceObj) async {
             bool isOldTicker =
@@ -1414,7 +1418,8 @@ class WalletDashboardViewModel extends BaseViewModel {
             await walletService
                 .getTokenListUpdates()
                 .then((newTokenListFromTokenUpdateApi) async {
-              if (newTokenListFromTokenUpdateApi != null) {
+              if (newTokenListFromTokenUpdateApi != null &&
+                  newTokenListFromTokenUpdateApi.isNotEmpty) {
                 var existingTokensInTokenDatabase =
                     await tokenListDatabaseService.getAll();
                 if (existingTokensInTokenDatabase != null) {

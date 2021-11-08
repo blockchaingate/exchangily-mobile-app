@@ -357,54 +357,7 @@ class WalletService {
     randomMnemonic = bip39.generateMnemonic();
     return randomMnemonic;
   }
-/*----------------------------------------------------------------------
-                Save Encrypted Data to Storage
-----------------------------------------------------------------------*/
 
-  Future saveEncryptedData(String data) async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/my_file.byte');
-      await deleteEncryptedData();
-      await file.writeAsString(data);
-      log.w('Encrypted data saved in storage');
-    } catch (e) {
-      log.e("Couldn't write encrypted datra to file!! $e");
-    }
-  }
-/*----------------------------------------------------------------------
-                Delete Encrypted Data
-----------------------------------------------------------------------*/
-
-  Future deleteEncryptedData() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/my_file.byte');
-    await file
-        .delete()
-        .then((res) => log.w('Previous data in the stored file deleted $res'))
-        .catchError((error) => log.e('Previous data deletion failed $error'));
-  }
-/*----------------------------------------------------------------------
-                Read Encrypted Data from Storage
-----------------------------------------------------------------------*/
-
-  Future<String> readEncryptedData(String userPass) async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/my_file.byte');
-
-      String test = await file.readAsString();
-      prefix0.Encrypted encryptedText = prefix0.Encrypted.fromBase64(test);
-      final key = prefix0.Key.fromLength(32);
-      final iv = prefix0.IV.fromUtf8(userPass);
-      final encrypter = prefix0.Encrypter(prefix0.AES(key));
-      final decrypted = encrypter.decrypt(encryptedText, iv: iv);
-      return Future.value(decrypted);
-    } catch (e) {
-      log.e("Couldn't read file -$e");
-      return Future.value('');
-    }
-  }
 /*----------------------------------------------------------------------
                 Generate Seed
 ----------------------------------------------------------------------*/
