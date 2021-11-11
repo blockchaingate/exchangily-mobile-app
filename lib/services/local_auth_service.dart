@@ -36,6 +36,11 @@ class LocalAuthService {
 
   // cancel authentication
   void cancelAuthentication() {
+    // &&
+
+    //     navigationService.currentRoute() != SettingViewRoute
+    if (localStorageService.hasAppGoneInTheBackgroundKey)
+      navigationService.navigateUsingPushReplacementNamed(WalletSetupViewRoute);
     _auth.stopAuthentication();
   }
 
@@ -55,7 +60,7 @@ class LocalAuthService {
   Future<bool> authenticateApp() async {
     _hasAuthorized = false;
     _authInProgress = true;
-
+    setIsCancelledValueFalse();
     try {
       await _auth
           .authenticate(
@@ -67,9 +72,9 @@ class LocalAuthService {
         _hasAuthorized = res;
         localStorageService.hasPhoneProtectionEnabled = true;
         localStorageService.hasCancelledBiometricAuth = false;
-        _authInProgress = false;
-        localStorageService.hasAppGoneInTheBackgroundKey = false;
-        log.i('_hasAuthorized  $_hasAuthorized');
+        if (_hasAuthorized)
+          localStorageService.hasAppGoneInTheBackgroundKey = false;
+        log.w('_hasAuthorized  $_hasAuthorized');
       });
     } on PlatformException catch (e) {
       _authInProgress = false;
@@ -94,8 +99,8 @@ class LocalAuthService {
 
       log.e('catch $e');
     }
-    log.i(
-        '_hasAuthenticated $_hasAuthorized -- _authInProgress $_authInProgress --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService.hasPhoneProtectionEnabled}');
+    log.w(
+        '_hasAuthenticated $_hasAuthorized -- _authInProgress $_authInProgress --  storageService.hasInAppBiometricAuthEnabled ${localStorageService.hasInAppBiometricAuthEnabled} --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService.hasPhoneProtectionEnabled}');
     if (!isLockedOut && !isLockedOutPerm && !_hasAuthorized) {
       _isCancelled = true;
       localStorageService.hasCancelledBiometricAuth = true;
@@ -103,10 +108,12 @@ class LocalAuthService {
       //   navigationService.navigateUsingpopAndPushedNamed(WalletSetupViewRoute);
       // }
     }
-    if (_isCancelled && localStorageService.hasPhoneProtectionEnabled) {
+    if (_isCancelled &&
+        localStorageService.hasPhoneProtectionEnabled &&
+        localStorageService.hasInAppBiometricAuthEnabled)
       cancelAuthentication();
-    }
 
+    _authInProgress = false;
     log.i(
         '_hasAuthenticated $_hasAuthorized -- _authInProgress $_authInProgress --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService.hasPhoneProtectionEnabled}');
     return _hasAuthorized;

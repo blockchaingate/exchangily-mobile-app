@@ -49,7 +49,6 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
     super.start();
     log.w(
         'market view model starting service -- hasAppGoneInTheBackgroundKey = ${localStorageService.hasAppGoneInTheBackgroundKey} -- auth in progress ${localAuthService.authInProgress}');
-    localStorageService.hasAppGoneInTheBackgroundKey = true;
 
     if (localStorageService.hasInAppBiometricAuthEnabled) {
       // bool canCheckBiometrics = await localAuthService.canCheckBiometrics();
@@ -57,6 +56,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
           localStorageService.hasAppGoneInTheBackgroundKey)
         await localAuthService.authenticateApp();
     }
+    localStorageService.hasAppGoneInTheBackgroundKey = false;
     // start subscription again
     // if (streamSubscription != null && streamSubscription.isPaused)
     //   streamSubscription.resume();
@@ -72,7 +72,7 @@ class MarketsViewModel extends StreamViewModel<dynamic> with StoppableService {
   void stop() async {
     super.stop();
     log.w(' mvm stopping service');
-    localStorageService.hasAppGoneInTheBackgroundKey = false;
+    localStorageService.hasAppGoneInTheBackgroundKey = true;
     //var isEmptyValue = await stream.isEmpty.then((value) => value);
     //log.e('is empty $isEmptyValue -- is broadcasr ${stream.isBroadcast}');
     // print(streamSubscription);
