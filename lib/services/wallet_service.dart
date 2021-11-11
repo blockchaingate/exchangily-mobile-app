@@ -8,7 +8,7 @@ import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/token.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -649,7 +649,6 @@ class WalletService {
             tokenType: token,
             address: addr,
             availableBalance: 0.0,
-            unconfirmedBalance: 0.0,
             lockedBalance: 0.0,
             usdValue: 0.0,
             name: name);

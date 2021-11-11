@@ -14,7 +14,7 @@
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
 
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
@@ -334,9 +334,7 @@ class WalletFeaturesView extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(
-                        //  '${model.specialTicker} '.toUpperCase() +
-                        AppLocalizations.of(context).walletbalance,
+                    Text(AppLocalizations.of(context).walletbalance,
                         style: Theme.of(context).textTheme.subtitle1),
                     Text(
                         '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
@@ -344,22 +342,23 @@ class WalletFeaturesView extends StatelessWidget {
                   ],
                 ),
               ),
-              // Middle column row containes unconfirmed wallet balance
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                        //  '${model.specialTicker} '.toUpperCase() +
-                        AppLocalizations.of(context).unConfirmedBalance,
-                        style: Theme.of(context).textTheme.bodyText1),
-                    Text(
-                        '${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.unconfirmedBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
-                        style: Theme.of(context).textTheme.bodyText1),
-                  ],
-                ),
-              ),
+              // Middle column row containes unconfirmed wallet balance.
+              model.walletInfo.tickerName == 'FAB'
+                  ? Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(AppLocalizations.of(context).unConfirmedBalance,
+                              style: Theme.of(context).textTheme.bodyText1),
+                          Text(
+                              '${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, precision: model.decimalLimit).toString()} ${model.specialTicker}',
+                              style: Theme.of(context).textTheme.bodyText1),
+                        ],
+                      ),
+                    )
+                  : Container(),
               // Last column row contains wallet balance and exchange balance
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),

@@ -18,7 +18,7 @@ import 'package:barcode_scan/barcode_scan.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -86,6 +86,7 @@ class SendViewModel extends BaseViewModel {
   // double gasAmount = 0.0;
   String fabAddress = '';
   String transFeeErrMsg = '';
+  double unconfirmedBalance = 0.0;
 
   // Init State
   initState() async {
@@ -477,7 +478,7 @@ class SendViewModel extends BaseViewModel {
         log.w('refreshBalance ${walletBalance[0].toJson()}');
 
         walletInfo.availableBalance = walletBalance[0].balance;
-        walletInfo.unconfirmedBalance = walletBalance[0].unconfirmedBalance;
+        unconfirmedBalance = walletBalance[0].unconfirmedBalance;
       }
     }).catchError((err) {
       log.e(err);

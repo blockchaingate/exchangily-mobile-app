@@ -13,7 +13,7 @@
 
 import 'dart:io';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:encrypt/encrypt.dart' as encryptLib;
+import 'package:encrypt/encrypt.dart' as EL;
 import 'package:path_provider/path_provider.dart';
 
 class VaultService {
@@ -21,27 +21,47 @@ class VaultService {
 
   Future secureMnemonic(String pass, String mnemonic) async {
     String userTypedKey = pass;
-    final key = encryptLib.Key.fromUtf8(userTypedKey);
-    final iv = encryptLib.IV.fromLength(16);
-    final encrypter = encryptLib.Encrypter(encryptLib.AES(key));
+    int userKeyLength = userTypedKey.length;
+    String fixed32CharKey = '';
+    if (userKeyLength < 32)
+      fixed32CharKey = fixed32Chars(userTypedKey, userKeyLength);
+    final key =
+        EL.Key.fromUtf8(fixed32CharKey.isEmpty ? userTypedKey : fixed32CharKey);
+
+    final iv = EL.IV.fromLength(16);
+    final encrypter = EL.Encrypter(EL.AES(key));
     final encrypted = encrypter.encrypt(mnemonic, iv: iv);
     await saveEncryptedData(encrypted.base64);
   }
-/*----------------------------------------------------------------------
-                Read Encrypted Data from Storage
-----------------------------------------------------------------------*/
 
-  Future<String> decryptData(String userPass) async {
+  String fixed32Chars(String input, int keyLength) {
+    if (input.length < 32) {
+      int diff = 32 - keyLength;
+      for (var i = 0; i < diff; i++) {
+        input += '0';
+      }
+    }
+    return input;
+  }
+
+  //  Read Encrypted Data from Storage
+
+  Future<String> decryptData(String userTypedKey) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/my_file.byte');
 
       String fileContent = await file.readAsString();
-      encryptLib.Encrypted encryptedText =
-          encryptLib.Encrypted.fromBase64(fileContent);
-      final key = encryptLib.Key.fromUtf8(userPass);
-      final iv = encryptLib.IV.fromLength(16);
-      final encrypter = encryptLib.Encrypter(encryptLib.AES(key));
+      EL.Encrypted encryptedText = EL.Encrypted.fromBase64(fileContent);
+
+      int userKeyLength = userTypedKey.length;
+      String fixed32CharKey = '';
+      if (userKeyLength < 32)
+        fixed32CharKey = fixed32Chars(userTypedKey, userKeyLength);
+      final key = EL.Key.fromUtf8(
+          fixed32CharKey.isEmpty ? userTypedKey : fixed32CharKey);
+      final iv = EL.IV.fromLength(16);
+      final encrypter = EL.Encrypter(EL.AES(key));
       final decrypted = encrypter.decrypt(encryptedText, iv: iv);
       return Future.value(decrypted);
     } catch (e) {

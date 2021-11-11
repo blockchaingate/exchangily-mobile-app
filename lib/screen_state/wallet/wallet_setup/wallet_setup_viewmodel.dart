@@ -35,8 +35,7 @@ class WalletSetupViewmodel extends BaseViewModel {
   BuildContext context;
   bool isWallet = false;
   String errorMessage = '';
-  bool _hasAuthenticated = false;
-  get hasAuthenticated => _hasAuthenticated;
+  get hasAuthenticated => authService.hasAuthorized;
 
   init() async {
     await walletService.checkLanguage();
@@ -58,13 +57,13 @@ class WalletSetupViewmodel extends BaseViewModel {
         isWallet = true;
 // add here the biometric check
         if (storageService.hasInAppBiometricAuthEnabled) {
-          _hasAuthenticated = await authService.authenticate();
-          if (_hasAuthenticated) {
+          await authService.authenticateApp();
+          if (hasAuthenticated) {
             navigationService
                 .navigateUsingpopAndPushedNamed(DashboardViewRoute);
             storageService.hasAppGoneInTheBackgroundKey = false;
           }
-          if (authService.isCancelled || !_hasAuthenticated) {
+          if (authService.isCancelled || !hasAuthenticated) {
             isWallet = false;
             setBusy(false);
             authService.setIsCancelledValueFalse();

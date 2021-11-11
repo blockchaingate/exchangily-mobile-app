@@ -12,7 +12,7 @@
 */
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:exchangilymobileapp/utils/number_util.dart';
@@ -353,7 +353,7 @@ class SendWalletView extends StatelessWidget {
                                             Text(
                                               AppLocalizations.of(context)
                                                       .unConfirmedBalance +
-                                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.unconfirmedBalance, precision: model.decimalLimit)} ',
+                                                  '  ${NumberUtil().truncateDoubleWithoutRouding(model.unconfirmedBalance, precision: model.decimalLimit)} ',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline6
@@ -386,7 +386,7 @@ class SendWalletView extends StatelessWidget {
                                               Text(
                                                 AppLocalizations.of(context)
                                                         .totalBalance +
-                                                    '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.getTotalBalance(), precision: model.decimalLimit)} ',
+                                                    '  ${NumberUtil().truncateDoubleWithoutRouding(model.walletInfo.availableBalance + model.unconfirmedBalance, precision: model.decimalLimit)} ',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .headline6

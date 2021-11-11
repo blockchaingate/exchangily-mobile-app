@@ -14,7 +14,7 @@
 import 'dart:async';
 
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -31,7 +31,6 @@ class WalletDataBaseService {
   final String columnAddress = 'address';
   final String columnLockedBalance = 'lockedBalance';
   final String columnAvailableBalance = 'availableBalance';
-  final String columnUnconfirmedBalance = 'unconfirmedBalance';
   final String columnUsdValue = 'usdValue';
   final String columnInExchange = 'inExchange';
 
@@ -64,7 +63,6 @@ class WalletDataBaseService {
         $columnAddress TEXT,
         $columnLockedBalance REAL,
         $columnAvailableBalance REAL,
-        $columnUnconfirmedBalance REAL,
         $columnUsdValue REAL,
         $columnInExchange REAL) ''');
   }

@@ -34,7 +34,6 @@ class WalletInfo {
   String _address;
   double _lockedBalance;
   double _availableBalance;
-  double _unconfirmedBalance;
   double _usdValue;
   double _inExchange;
   //PairDecimalConfig _pairDecimalConfig;
@@ -46,7 +45,6 @@ class WalletInfo {
       String address,
       double lockedBalance,
       double availableBalance,
-      double unconfirmedBalance,
       double usdValue,
       String name,
       double inExchange
@@ -58,7 +56,6 @@ class WalletInfo {
     this._address = address;
     this._lockedBalance = lockedBalance ?? 0.0;
     this._availableBalance = availableBalance ?? 0.0;
-    this._unconfirmedBalance = unconfirmedBalance ?? 0.0;
     this._usdValue = usdValue ?? 0.0;
     this._name = name;
     this._inExchange = inExchange ?? 0.0;
@@ -74,7 +71,6 @@ class WalletInfo {
     //       .toList();
     // }
     double ab = json['availableBalance'] as double;
-    double ub = json['unconfirmedBalance'] as double;
 
     return new WalletInfo(
       id: json['id'] as int,
@@ -83,7 +79,6 @@ class WalletInfo {
       address: json['address'] as String,
       lockedBalance: json['lockedBalance'],
       availableBalance: ab,
-      unconfirmedBalance: ub,
       usdValue: json['usdValue'] as double,
       name: json['name'] as String,
       inExchange: json['inExchange'] as double,
@@ -103,7 +98,6 @@ class WalletInfo {
     data['address'] = this._address;
     data['lockedBalance'] = this._lockedBalance;
     data['availableBalance'] = this._availableBalance;
-    data['unconfirmedBalance'] = this._unconfirmedBalance;
     data['usdValue'] = this._usdValue;
     data['name'] = this._name;
     data['inExchange'] = this._inExchange;
@@ -151,11 +145,6 @@ class WalletInfo {
       this._availableBalance = availableBalance;
   }
 
-  double get unconfirmedBalance => _unconfirmedBalance;
-  set unconfirmedBalance(double unconfirmedBalance) {
-    this._unconfirmedBalance = unconfirmedBalance;
-  }
-
   double get usdValue => _usdValue;
 
   set usdValue(double usdValue) {
@@ -181,9 +170,9 @@ class WalletInfo {
   //   this._pairDecimalConfig = pairDecimalConfig;
   // }
 
-  double getTotalBalance() {
-    return availableBalance + unconfirmedBalance;
-  }
+  // double getTotalBalance() {
+  //   return availableBalance + unconfirmedBalance;
+  // }
 }
 
 class WalletInfoList {

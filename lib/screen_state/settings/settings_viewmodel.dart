@@ -13,6 +13,7 @@
 
 import 'dart:io';
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/models/wallet/user_settings_model.dart';
@@ -117,25 +118,34 @@ class SettingsViewmodel extends BaseViewModel {
 
   setBiometricAuth() async {
     setBusyForObject(isBiometricAuth, true);
-    await authService
-        .routeAfterAuthCheck(routeName: SettingViewRoute)
-        .then((hasAuthenticated) {
-      if (hasAuthenticated) {
-        storageService.hasInAppBiometricAuthEnabled =
-            !storageService.hasInAppBiometricAuthEnabled;
-      }
-    });
+
+    bool hasAuthorized = await authService.authenticateApp();
+
+    if (hasAuthorized) {
+      storageService.hasInAppBiometricAuthEnabled =
+          !storageService.hasInAppBiometricAuthEnabled;
+      storageService.hasPhoneProtectionEnabled = true;
+    } else if (!hasAuthorized) {
+      if (authService.isLockedOut)
+        sharedService.sharedSimpleNotification(
+            AppLocalizations.of(context).lockedOutTemp);
+      else if (authService.isLockedOutPerm)
+        sharedService.sharedSimpleNotification(
+            AppLocalizations.of(context).lockedOutPerm);
+    }
+
     if (!storageService.hasPhoneProtectionEnabled) {
       sharedService.sharedSimpleNotification(
           AppLocalizations.of(context).pleaseSetupDeviceSecurity);
+      storageService.hasCancelledBiometricAuth = false;
+      storageService.hasInAppBiometricAuthEnabled = false;
     }
     _isBiometricAuth = storageService.hasInAppBiometricAuthEnabled;
     setBusyForObject(isBiometricAuth, false);
   }
 
-/*-------------------------------------------------------------------------------------
-                      setLanguageFromDb
--------------------------------------------------------------------------------------*/
+  //                    setLanguageFromDb
+
   setLanguageFromDb() async {
     setBusy(true);
     await userSettingsDatabaseService.getById(1).then((res) {

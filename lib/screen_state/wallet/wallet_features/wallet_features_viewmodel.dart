@@ -17,7 +17,7 @@ import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -53,6 +53,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
   List<WalletFeatureName> features = [];
   bool isFavorite = false;
   int decimalLimit = 8;
+  double unconfirmedBalance = 0.0;
 
   init() async {
     getWalletFeatures();
@@ -170,6 +171,8 @@ class WalletFeaturesViewModel extends BaseViewModel {
 
         log.i('getErrDeposit $result');
       }
+    }).catchError((err) {
+      log.e('Catch error $err');
     });
   }
 
@@ -186,7 +189,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
       walletInfo.availableBalance = availableBalance;
       var lockedBalance = walletBalance[0].lockBalance;
       walletInfo.lockedBalance = lockedBalance;
-      walletInfo.unconfirmedBalance = walletBalance[0].unconfirmedBalance;
+      unconfirmedBalance = walletBalance[0].unconfirmedBalance;
       if (!specialTicker.contains('('))
         walletInfo.inExchange = walletBalance[0].unlockedExchangeBalance;
       else

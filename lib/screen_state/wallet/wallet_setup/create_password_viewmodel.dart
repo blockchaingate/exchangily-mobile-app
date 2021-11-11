@@ -12,8 +12,6 @@
 */
 
 import 'package:exchangilymobileapp/constants/route_names.dart';
-import 'package:exchangilymobileapp/enums/screen_state.dart';
-import 'package:exchangilymobileapp/environments/environment_type.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
@@ -47,28 +45,26 @@ class CreatePasswordViewModel extends BaseViewModel {
   TextEditingController confirmPassTextController = TextEditingController();
   WalletService walletService = locator<WalletService>();
 
-/* ---------------------------------------------------
-                    Create Offline Wallets
-    -------------------------------------------------- */
+  //                Create Offline Wallets
 
   Future createOfflineWallets() async {
     setBusy(true);
     await _vaultService.secureMnemonic(
         passTextController.text, randomMnemonicFromRoute);
-    // await _walletService
-    //     .createOfflineWallets(randomMnemonicFromRoute)
-    //     .then((data) {
-    //   navigationService
-    //       .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);
-    //   randomMnemonicFromRoute = '';
-    // }).catchError((onError) {
-    //   passwordMatch = false;
-    //   password = '';
-    //   confirmPassword = '';
-    //   errorMessage = AppLocalizations.of(context).somethingWentWrong;
-    //   log.e(onError);
-    //   setBusy(false);
-    // });
+    await _walletService
+        .createOfflineWallets(randomMnemonicFromRoute)
+        .then((data) {
+      navigationService
+          .navigateUsingPushNamedAndRemoveUntil(DashboardViewRoute);
+      randomMnemonicFromRoute = '';
+    }).catchError((onError) {
+      passwordMatch = false;
+      password = '';
+      confirmPassword = '';
+      errorMessage = AppLocalizations.of(context).somethingWentWrong;
+      log.e(onError);
+      setBusy(false);
+    });
     setBusy(false);
   }
 

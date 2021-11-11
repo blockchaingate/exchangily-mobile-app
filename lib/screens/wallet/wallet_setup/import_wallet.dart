@@ -40,7 +40,10 @@ class _ImportWalletScreenState extends State<ImportWalletScreen> {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(
             centerTitle: true,
-            title: Text(AppLocalizations.of(context).importWallet),
+            title: Text(
+              AppLocalizations.of(context).importWallet,
+              style: TextStyle(fontSize: 12),
+            ),
             backgroundColor: globals.secondaryColor),
         body: Container(
           padding: EdgeInsets.all(10),
