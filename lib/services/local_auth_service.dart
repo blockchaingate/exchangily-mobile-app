@@ -61,7 +61,7 @@ class LocalAuthService {
           .authenticate(
         localizedReason: 'Authenticate to access the wallet',
         useErrorDialogs: true,
-        stickyAuth: true,
+        //  stickyAuth: true,
       )
           .then((res) {
         _hasAuthorized = res;
@@ -72,6 +72,7 @@ class LocalAuthService {
         log.i('_hasAuthorized  $_hasAuthorized');
       });
     } on PlatformException catch (e) {
+      _authInProgress = false;
       // when any type of authentication is not set
       if (e.code == auth_error.notAvailable ||
           e.code == auth_error.notEnrolled ||
@@ -84,26 +85,30 @@ class LocalAuthService {
         return false;
       } else if (e.code == auth_error.lockedOut) {
         // Too manu failed attempts and locked out temp
-
         _isCancelled = false;
         _isLockedOut = true;
       } else if (e.code == auth_error.permanentlyLockedOut) {
         // Too manu failed attempts and locked out permanently, now required password/pin
         _isLockedOutPerm = true;
       }
-      _authInProgress = false;
+
       log.e('catch $e');
     }
-
+    log.i(
+        '_hasAuthenticated $_hasAuthorized -- _authInProgress $_authInProgress --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService.hasPhoneProtectionEnabled}');
     if (!isLockedOut && !isLockedOutPerm && !_hasAuthorized) {
       _isCancelled = true;
-      if (navigationService.currentRoute() != WalletSetupViewRoute) {
-        navigationService.navigateUsingpopAndPushedNamed(WalletSetupViewRoute);
-      }
+      localStorageService.hasCancelledBiometricAuth = true;
+      // if (navigationService.currentRoute() != WalletSetupViewRoute) {
+      //   navigationService.navigateUsingpopAndPushedNamed(WalletSetupViewRoute);
+      // }
+    }
+    if (_isCancelled && localStorageService.hasPhoneProtectionEnabled) {
+      cancelAuthentication();
     }
 
     log.i(
-        '_hasAuthenticated $_hasAuthorized --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService.hasPhoneProtectionEnabled}');
+        '_hasAuthenticated $_hasAuthorized -- _authInProgress $_authInProgress --  _isLockedOutPerm $_isLockedOutPerm -- _isLockedOut $_isLockedOut --  hasPhoneProtectionEnabled ${localStorageService.hasPhoneProtectionEnabled}');
     return _hasAuthorized;
   }
 }
