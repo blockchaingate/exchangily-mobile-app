@@ -72,6 +72,7 @@ class SettingsView extends StatelessWidget {
               //       )
               : SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
+          // floatingActionButton: TextButton(child:Text('Click'),onPressed: () => model.clickMe(),),
         ),
       ),
     );

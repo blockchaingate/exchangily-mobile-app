@@ -107,6 +107,10 @@ class SettingsViewmodel extends BaseViewModel {
     setBusy(false);
   }
 
+  clickMe() {
+    _vaultService.test('test1234', 'I am plain text');
+  }
+
   setLockAppNowValue() {
     setBusyForObject(lockAppNow, true);
     _lockAppNow = !_lockAppNow;
