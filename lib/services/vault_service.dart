@@ -38,6 +38,16 @@ class VaultService {
     await saveEncryptedData(encrypted.base64);
   }
 
+  Future secureMnemonicV1(String pass, String mnemonic) async {
+    String userTypedKey = pass;
+
+    final key = encrypt.Key.fromLength(32);
+    final iv = encrypt.IV.fromUtf8(userTypedKey);
+    final encrypter = encrypt.Encrypter(encrypt.AES(key));
+    final encrypted = encrypter.encrypt(mnemonic, iv: iv);
+    await saveEncryptedData(encrypted.base64);
+  }
+
   Future test(String pass, String mnemonic) async {
     String userTypedKey = pass;
     int userKeyLength = userTypedKey.length;
@@ -102,7 +112,7 @@ class VaultService {
       String fileContent = await file.readAsString();
       encrypt.Encrypted encryptedText =
           encrypt.Encrypted.fromBase64(fileContent);
-      final key = encrypt.Key.fromLength(16);
+      final key = encrypt.Key.fromLength(32);
       final iv = encrypt.IV.fromUtf8(userTypedKey);
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
       final decrypted = encrypter.decrypt(encryptedText, iv: iv);
