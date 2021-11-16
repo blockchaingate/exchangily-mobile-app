@@ -119,6 +119,25 @@ class VaultService {
       return Future.value(decrypted);
     } catch (e) {
       log.e("Couldn't read file -$e");
+      return await decryptDataV0(userTypedKey);
+    }
+  }
+
+  Future<String> decryptDataV0(String userTypedKey) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/my_file.byte');
+
+      String fileContent = await file.readAsString();
+      encrypt.Encrypted encryptedText =
+          encrypt.Encrypted.fromBase64(fileContent);
+      final key = encrypt.Key.fromLength(16);
+      final iv = encrypt.IV.fromUtf8(userTypedKey);
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final decrypted = encrypter.decrypt(encryptedText, iv: iv);
+      return Future.value(decrypted);
+    } catch (e) {
+      log.e("Couldn't read file -$e");
       return Future.value('');
     }
   }

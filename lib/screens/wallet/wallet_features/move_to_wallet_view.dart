@@ -67,7 +67,7 @@ class MoveToWalletScreen extends StatelessWidget {
                 },
               ),
               middle: Text(
-                  '${AppLocalizations.of(context).move}  ${model.specialTicker}  ${AppLocalizations.of(context).toWallet}',
+                  '${AppLocalizations.of(context).move}  ${model.specialTickerForTxHistory}  ${AppLocalizations.of(context).toWallet}',
                   style: Theme.of(context).textTheme.headline5),
               backgroundColor: Color(0XFF1f2233),
             ),
@@ -87,7 +87,7 @@ class MoveToWalletScreen extends StatelessWidget {
                               TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: [
                             DecimalTextInputFormatter(
-                                decimalRange: model.decimalLimit,
+                                decimalRange: model.token.decimal,
                                 activatedNegativeValues: false)
                           ],
                           decoration: InputDecoration(
@@ -126,7 +126,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
-                                      Text(model.decimalLimit.toString(),
+                                      Text(model.token.decimal.toString(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6),
@@ -164,7 +164,9 @@ class MoveToWalletScreen extends StatelessWidget {
                                 ? Text('USDT'.toUpperCase(),
                                     style:
                                         Theme.of(context).textTheme.subtitle2)
-                                : Text('${model.specialTicker}'.toUpperCase(),
+                                : Text(
+                                    '${model.specialTickerForTxHistory}'
+                                        .toUpperCase(),
                                     style:
                                         Theme.of(context).textTheme.subtitle2),
                           ),
@@ -183,6 +185,7 @@ class MoveToWalletScreen extends StatelessWidget {
                                           model.showInfoDialog(false)),
                                 )
                               : Container()
+                          // min withdraw
                         ],
                       ),
 
@@ -296,7 +299,28 @@ class MoveToWalletScreen extends StatelessWidget {
                       model.isWithdrawChoice
                           ? UIHelper.verticalSpaceMedium
                           : Container(),
-
+                      // withdraw fee
+                      Row(
+                        children: <Widget>[
+                          Text(
+                              AppLocalizations.of(context).withdraw +
+                                  AppLocalizations.of(context).fee,
+                              style: Theme.of(context).textTheme.headline6),
+                          UIHelper.horizontalSpaceSmall,
+                          Padding(
+                            padding: EdgeInsets.only(
+                                left:
+                                    5), // padding left to keep some space from the text
+                            child: model.isBusy
+                                ? Text('..')
+                                : Text(
+                                    '${model.token.feeWithdraw} ${model.specialTickerForTxHistory.contains('(') ? model.specialTickerForTxHistory.split('(')[0] : model.specialTickerForTxHistory}',
+                                    style:
+                                        Theme.of(context).textTheme.headline6),
+                          )
+                        ],
+                      ),
+                      UIHelper.verticalSpaceSmall,
                       Row(
                         children: <Widget>[
                           Text(AppLocalizations.of(context).kanbanGasFee,

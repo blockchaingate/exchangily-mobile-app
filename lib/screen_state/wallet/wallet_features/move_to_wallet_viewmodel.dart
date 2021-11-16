@@ -63,7 +63,7 @@ class MoveToWalletViewmodel extends BaseViewModel {
   get groupValue => _groupValue;
   bool isShowFabChainBalance = false;
   bool isShowTrxTsWalletBalance = false;
-  String specialTicker = '';
+  String specialTickerForTxHistory = '';
   String updateTickerForErc = '';
   bool isAlert = false;
   bool isSpeicalTronTokenWithdraw = false;
@@ -107,20 +107,16 @@ class MoveToWalletViewmodel extends BaseViewModel {
       isShowFabChainBalance = true;
       radioButtonSelection('FAB');
     }
-    if (walletInfo.tickerName == 'USDTX') {
+    if (walletInfo.tickerName == 'USDTX' || walletInfo.tickerName == 'TRX') {
       isShowTrxTsWalletBalance = true;
 
       radioButtonSelection('TRX');
     }
-    specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
-        walletInfo.tickerName)['tickerName'];
+    specialTickerForTxHistory =
+        walletService.updateSpecialTokensTickerNameForTxHistory(
+            walletInfo.tickerName)['tickerName'];
     await checkGasBalance();
     await getSingleCoinExchangeBal();
-
-    decimalLimit = await coinService
-        .getSingleTokenData(walletInfo.tickerName)
-        .then((res) => res.decimal);
-    if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
   }
 
@@ -1047,9 +1043,13 @@ class MoveToWalletViewmodel extends BaseViewModel {
       //   if (walletInfo.tickerName != 'TRX') walletInfo.tokenType = 'TRX';
 
       isSpeicalTronTokenWithdraw = true;
-      tokenType = 'TRX';
       log.i('chain type ${walletInfo.tokenType}');
-      await setWithdrawLimit('USDTX');
+      if (walletInfo.tickerName == 'TRX' && isShowTrxTsWalletBalance)
+        await setWithdrawLimit('TRX');
+      else {
+        await setWithdrawLimit('USDTX');
+        tokenType = 'TRX';
+      }
     }
     // else if (walletInfo.tickerName == 'TRX' && !isShowTrxTsWalletBalance) {
     //   await tokenListDatabaseService
