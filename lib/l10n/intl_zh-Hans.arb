@@ -2056,5 +2056,113 @@
         "description": "importing_wallet_create_password",
         "type": "text",
         "placeholders": {}
+    },
+    "incorrectDepositAmountOfTwoTx": "两笔交易金额不正确",
+    "@incorrectDepositAmountOfTwoTx": {
+      "description": "incorrect_deposit_amount_of_two_tx",
+      "type": "text",
+      "placeholders": {}
+    },
+    "decimalLimit": "十进制限制",
+    "@decimalLimit": {
+      "description": "decimal_limit",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalance": "未确认余额",
+    "@unConfirmedBalance": {
+      "description": "unConfirmed_balance",
+      "type": "text",
+      "placeholders": {}
+    },
+    "availableBalanceInfoTitle": "可用余额的详情",
+    "@availableBalanceInfoTitle": {
+      "description": "available_balance_info_title",
+      "type": "text",
+      "placeholders": {}
+    },
+    "availableBalanceInfoContent": "可用余额反映了已在区块链上确认的交易的未花费交易输出 (utxos) 的总价值，因此用户只能将当前可用余额用于新交易，直到之前的交易完成。",
+    "@availableBalanceInfoContent": {
+      "description": "available_balance_info_content",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalanceInfoTitle": "未确认余额的详情",
+    "@unConfirmedBalanceInfoTitle": {
+      "description": "unConfirmed_balance_info_title",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalanceInfoContent": "未确认余额反映你的交易未动用的输出（utxos）的对于那些仍在等待交易的总价值（尚未证实的blockchain）",
+    "@unConfirmedBalanceInfoContent": {
+      "description": "unConfirmed_balance_info_content",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unConfirmedBalanceInfoExample": "这是正常的交易过程，其中未经确认的资金可能超过用户发送的金额。 例如，当您在现金交易中购买价值 50 美元的杂货时，您给店主一张 100 美元的钞票，然后店主将零钱找回给您（50 美元）。",
+    "@unConfirmedBalanceInfoExample": {
+      "description": "unConfirmed_balance_info_example",
+      "type": "text",
+      "placeholders": {}
+    },
+    "insufficientGasBalance": "燃料余额不足",
+    "@insufficientGasBalance": {
+      "description": "Insufficient_gas_balance",
+      "type": "text",
+      "placeholders": {}
+    },
+    "receiveAddress": "接收地址",
+    "@receiveAddress": {
+      "description": "campaign_recieve_address",
+      "type": "text",
+      "placeholders": {}
+    },
+    "unlock": "解锁",
+    "@unlock": {
+      "description": "unlock",
+      "type": "text",
+      "placeholders": {}
+    },
+    "enableBiometricAuthentication": "启用生物特征认证",
+    "@enableBiometricAuthentication": {
+      "description": "settings_enable_biometric_authentication",
+      "type": "text",
+      "placeholders": {}
+    },
+    "pleaseSetupDeviceSecurity": "请在手机应用程序设置中使用 Pin 密码或生物特征识别设置增加设备安全。",
+    "@pleaseSetupDeviceSecurity": {
+      "description": "walletsetup_please_setup_device_security",
+      "type": "text",
+      "placeholders": {}
+    },
+    "remit": "汇款",
+    "@remit": {
+      "description": "bottom_nav_remit",
+      "type": "text",
+      "placeholders": {}
+    },
+    "withdrawPopupNote": "请确认您要提现的币种",
+    "@withdrawPopupNote": {
+      "description": "withdraw_popup_note",
+      "type": "text",
+      "placeholders": {}
+    },
+    "lockedOutTemp": "失败的尝试太多，请稍后再试。",
+    "@lockedOutTemp": {
+      "description": "locked_out_temp",
+      "type": "text",
+      "placeholders": {}
+    },
+    "lockedOutPerm": "尝试失败次数过多，请尝试使用 Pin 或密码解锁",
+    "@lockedOutPerm": {
+      "description": "locked_out_perm",
+      "type": "text",
+      "placeholders": {}
+    },
+    "lockAppNow": "立即锁定应用",
+    "@lockAppNow": {
+      "description": "lock_app_now",
+      "type": "text",
+      "placeholders": {}
     }
 }

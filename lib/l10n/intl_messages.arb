@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2021-03-30T12:19:07.894993",
+  "@@last_modified": "2021-10-29T10:31:20.975309",
   "title": "Exchangily Wallet",
   "@title": {
     "description": "title_exchangily_app",
@@ -1818,6 +1818,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "pleaseTransferFundsToExchangeWalletToUseLightningRemit": "Please transfer funds to exchange wallet to use Lightning Remit",
+  "@pleaseTransferFundsToExchangeWalletToUseLightningRemit": {
+    "description": "please_transfer_funds_to_exchange_wallet_to_use_LightningRemit",
+    "type": "text",
+    "placeholders": {}
+  },
   "important": "Important",
   "@important": {
     "description": "backup_mnemonic_important",
@@ -1854,7 +1860,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "walletDashboardInstruction2": "Transfer funds from wallet to exchange to trade and use bindpay",
+  "walletDashboardInstruction2": "Transfer funds from wallet to exchange to trade and use lightning remit",
   "@walletDashboardInstruction2": {
     "description": "wallet_dashboard_instruction_2",
     "type": "text",
@@ -1992,10 +1998,154 @@
     "type": "text",
     "placeholders": {}
   },
+  "noEvent": "No Event",
+  "@noEvent": {
+    "description": "noEvent",
+    "type": "text",
+    "placeholders": {}
+  },
+  "maxAmount": "Max Amount",
+  "@maxAmount": {
+    "description": "max_amount",
+    "type": "text",
+    "placeholders": {}
+  },
+  "networkIssue": "Network issue",
+  "@networkIssue": {
+    "description": "networkIssue",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lowTsWalletBalanceErrorFirstPart": "Current maximum available balance for withdraw is",
+  "@lowTsWalletBalanceErrorFirstPart": {
+    "description": "lowTsWalletBalanceErrorText",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lowTsWalletBalanceErrorSecondPart": "You may reduce your withdraw amount or you may withdraw by using other chain",
+  "@lowTsWalletBalanceErrorSecondPart": {
+    "description": "lowTsWalletBalanceErrorText",
+    "type": "text",
+    "placeholders": {}
+  },
+  "allAssets": "All Assets",
+  "@allAssets": {
+    "description": "all_assets",
+    "type": "text",
+    "placeholders": {}
+  },
+  "favAssets": "Favorite Assets",
+  "@favAssets": {
+    "description": "fav_assets",
+    "type": "text",
+    "placeholders": {}
+  },
   "importingWallet": "Importing Wallet",
   "@importingWallet": {
-      "description": "importing_wallet_create_password",
-      "type": "text",
-      "placeholders": {}
+    "description": "importing_wallet_create_password",
+    "type": "text",
+    "placeholders": {}
+  },
+  "incorrectDepositAmountOfTwoTx": "Incorrect amount for two transactions",
+  "@incorrectDepositAmountOfTwoTx": {
+    "description": "incorrect_deposit_amount_of_two_tx",
+    "type": "text",
+    "placeholders": {}
+  },
+  "decimalLimit": "Decimal limit",
+  "@decimalLimit": {
+    "description": "decimal_limit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unConfirmedBalance": "Unconfirmed Balance",
+  "@unConfirmedBalance": {
+    "description": "unConfirmed_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "availableBalanceInfoTitle": "Available Balance Info",
+  "@availableBalanceInfoTitle": {
+    "description": "available_balance_info_title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "availableBalanceInfoContent": "The available balance reflects the total value of your unspent transactions outputs (utxos) for transactions that have already been confirmed on the blockchain so user can only use current available balance for the new transactions until the previous transactions complete",
+  "@availableBalanceInfoContent": {
+    "description": "available_balance_info_content",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unConfirmedBalanceInfoTitle": "Unconfirmed Balance Info",
+  "@unConfirmedBalanceInfoTitle": {
+    "description": "unConfirmed_balance_info_title",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unConfirmedBalanceInfoContent": "The unconfirmed balance reflects the total value of your unspent transactions outputs (utxos) for transactions that are still pending (not yet confirmed on the blockchain)",
+  "@unConfirmedBalanceInfoContent": {
+    "description": "unConfirmed_balance_info_content",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unConfirmedBalanceInfoExample": "This is the normal transaction process where unconfirmed funds may be more than the amount user sends. For example, when you purchase 50 dollars worth of groceries in a cash transaction and you give the shopkeeper a 100 dollar bill, then you get your change(50 dollars) back by the shopkeeper",
+  "@unConfirmedBalanceInfoExample": {
+    "description": "unConfirmed_balance_info_example",
+    "type": "text",
+    "placeholders": {}
+  },
+  "insufficientGasBalance": "Insufficient gas balance",
+  "@insufficientGasBalance": {
+    "description": "Insufficient_gas_balance",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unlock": "Unlock",
+  "@unlock": {
+    "description": "unlock",
+    "type": "text",
+    "placeholders": {}
+  },
+  "enableBiometricAuthentication": "Enable Biometric Authentication",
+  "@enableBiometricAuthentication": {
+    "description": "settings_enable_biometric_authentication",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pleaseSetupDeviceSecurity": "Please setup the device security either using Pin/Password or Biometric in the phone app settings",
+  "@pleaseSetupDeviceSecurity": {
+    "description": "walletsetup_please_setup_device_security",
+    "type": "text",
+    "placeholders": {}
+  },
+  "remit": "Remit",
+  "@remit": {
+    "description": "bottom_nav_remit",
+    "type": "text",
+    "placeholders": {}
+  },
+  "withdrawPopupNote": "Please confirm the coin you want to withdraw",
+  "@withdrawPopupNote": {
+    "description": "withdraw_popup_note",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lockedOutTemp": "Too many failed attempts, please try after sometime.",
+  "@lockedOutTemp": {
+    "description": "locked_out_temp",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lockedOutPerm": "Too many failed attempts, please try to unlock using Pin or Password",
+  "@lockedOutPerm": {
+    "description": "locked_out_perm",
+    "type": "text",
+    "placeholders": {}
+  },
+  "lockAppNow": "Lock App Now",
+  "@lockAppNow": {
+    "description": "lock_app_now",
+    "type": "text",
+    "placeholders": {}
   }
 }

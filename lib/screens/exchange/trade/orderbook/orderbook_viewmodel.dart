@@ -8,7 +8,7 @@ import 'package:exchangilymobileapp/services/shared_service.dart';
 import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:stacked/stacked.dart';
 
-class OrderbookViewModel extends StreamViewModel with ReactiveServiceMixin {
+class OrderbookViewModel extends StreamViewModel {
   final String tickerName;
   OrderbookViewModel({this.tickerName});
 

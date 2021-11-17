@@ -18,13 +18,15 @@ class TransactionHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     double customFontSize = 12;
     return ViewModelBuilder<TransactionHistoryViewmodel>.reactive(
+        createNewModelOnInsert: true,
         viewModelBuilder: () =>
             TransactionHistoryViewmodel(tickerName: tickerName),
-        onModelReady: (model) async {
+        onModelReady: (TransactionHistoryViewmodel model) async {
           model.context = context;
           model.getWalletFromDb();
         },
-        builder: (context, model, child) => WillPopScope(
+        builder: (context, TransactionHistoryViewmodel model, child) =>
+            WillPopScope(
               onWillPop: () async {
                 print('isDialogUp ${model.isDialogUp}');
                 if (model.isDialogUp) {
@@ -38,6 +40,11 @@ class TransactionHistoryView extends StatelessWidget {
               },
               child: Scaffold(
                 appBar: AppBar(
+                  actions: [
+                    IconButton(
+                        icon: Icon(Icons.refresh),
+                        onPressed: () => model.reloadTransactions())
+                  ],
                   leading: Container(
                       child: IconButton(
                           icon: Icon(Icons.arrow_back),
@@ -76,7 +83,6 @@ class TransactionHistoryView extends StatelessWidget {
                                         style: Theme.of(context)
                                             .textTheme
                                             .subtitle2),
-                                    UIHelper.horizontalSpaceMedium,
                                     UIHelper.horizontalSpaceSmall,
                                     Expanded(
                                       flex: 1,
@@ -98,12 +104,15 @@ class TransactionHistoryView extends StatelessWidget {
                                     ),
                                     Expanded(
                                       flex: 1,
-                                      child: Text(
-                                          AppLocalizations.of(context).status,
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subtitle2),
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 10.0),
+                                        child: Text(
+                                            AppLocalizations.of(context).status,
+                                            textAlign: TextAlign.left,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle2),
+                                      ),
                                     ),
                                     Expanded(
                                       flex: 1,

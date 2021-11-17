@@ -28,15 +28,16 @@ import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/choose_wall
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/confirm_mnemonic_screen_state.dart';
 import 'package:exchangilymobileapp/screen_state/settings/settings_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/wallet_features_viewmodel.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_screen_state.dart';
-import 'package:exchangilymobileapp/screens/bindpay/bindpay_viewmodel.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/wallet_setup_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/markets/markets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/my_exchange_assets/my_exchange_assets_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trade_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/buy_sell/buy_sell_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/exchange/trade/trading_chart/trading_chart_viewmodel.dart';
+import 'package:exchangilymobileapp/screens/lightning-remit/lightning_remit_viewmodel.dart';
 import 'package:exchangilymobileapp/screens/wallet/wallet_features/redeposit/redeposit_viewmodel.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
+import 'package:exchangilymobileapp/services/coin_service.dart';
 import 'package:exchangilymobileapp/services/config_service.dart';
 import 'package:exchangilymobileapp/services/db/campaign_user_database_service.dart';
 import 'package:exchangilymobileapp/services/db/decimal_config_database_service.dart';
@@ -45,6 +46,7 @@ import 'package:exchangilymobileapp/services/db/transaction_history_database_ser
 import 'package:exchangilymobileapp/services/db/user_settings_database_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/local_auth_service.dart';
 import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/order_service.dart';
 import 'package:exchangilymobileapp/services/pdf_viewer_service.dart';
@@ -53,8 +55,8 @@ import 'package:exchangilymobileapp/services/trade_service.dart';
 import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/services/campaign_service.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_screen_state.dart';
-import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_screen_state.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_setup/create_password_viewmodel.dart';
+import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/send_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/move_to_exchange_viewmodel.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_dashboard_viewmodel.dart';
 import 'package:exchangilymobileapp/widget_state/carousel_state.dart';
@@ -74,6 +76,8 @@ Future serviceLocator() async {
   locator.registerLazySingleton(() => VaultService());
   locator.registerLazySingleton(() => TokenListDatabaseService());
   locator.registerLazySingleton(() => UserSettingsDatabaseService());
+  locator.registerLazySingleton(() => LocalAuthService());
+  locator.registerLazySingleton(() => CoinService());
   // Shared
   locator.registerLazySingleton(() => ApiService());
   locator.registerLazySingleton(() => SharedService());
@@ -99,10 +103,10 @@ Future serviceLocator() async {
   // Wallet
   locator.registerFactory(() => AnnouncementListScreenState());
   locator.registerFactory(() => ConfirmMnemonicScreenState());
-  locator.registerFactory(() => CreatePasswordScreenState());
+  locator.registerFactory(() => CreatePasswordViewModel());
   locator.registerFactory(() => WalletDashboardViewModel());
   locator.registerFactory(() => WalletFeaturesViewModel());
-  locator.registerFactory(() => SendScreenState());
+  locator.registerFactory(() => SendViewModel());
   locator.registerFactory(() => SettingsViewmodel());
   //locator.registerFactory(() => LanguageScreenState());
   locator.registerFactory(() => WalletSetupViewmodel());
@@ -131,8 +135,8 @@ Future serviceLocator() async {
   locator.registerFactory(() => MarketPairsTabViewState());
   locator.registerFactory(() => TradingChartViewModel());
 
-  // Bindpay
-  locator.registerFactory(() => BindpayViewmodel());
+  // LightningRemit
+  locator.registerFactory(() => LightningRemitViewmodel());
   // Navigation
   locator.registerFactory(() => MainNavState());
 }

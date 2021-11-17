@@ -11,13 +11,13 @@
 *----------------------------------------------------------------------
 */
 
-import 'dart:io';
-
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_request.dart';
 import 'package:exchangilymobileapp/models/dialog/dialog_response.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
+import 'package:exchangilymobileapp/services/vault_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -35,7 +35,7 @@ class DialogManager extends StatefulWidget {
 class _DialogManagerState extends State<DialogManager> {
   final log = getLogger('DialogManager');
   DialogService _dialogService = locator<DialogService>();
-  WalletService _walletService = locator<WalletService>();
+  final _vaultService = locator<VaultService>();
   TextEditingController controller = TextEditingController();
 
   @override
@@ -147,11 +147,27 @@ class _DialogManagerState extends State<DialogManager> {
         ),
         buttons: [
           DialogButton(
+            color: grey,
+            onPressed: () {
+              controller.text = '';
+              Navigator.of(context).pop();
+              _dialogService.dialogComplete(
+                  DialogResponse(returnedText: 'Closed', confirmed: false));
+            },
+            child: Text(
+              AppLocalizations.of(context).cancel,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  .copyWith(color: Colors.black),
+            ),
+          ),
+          DialogButton(
             color: globals.primaryColor,
             onPressed: () {
               if (controller.text != '')
                 FocusScope.of(context).requestFocus(FocusNode());
-              _walletService.readEncryptedData(controller.text).then((data) {
+              _vaultService.decryptData(controller.text).then((data) {
                 if (data != '' && data != null) {
                   _dialogService.dialogComplete(
                       DialogResponse(returnedText: data, confirmed: true));

@@ -84,6 +84,7 @@ class WalletBalance {
 
   String _coin;
   double _balance;
+  double _unconfirmedBalance;
   double _lockBalance;
   UsdValue _usdValue;
   List<DepositErr> _depositErr;
@@ -93,6 +94,7 @@ class WalletBalance {
   WalletBalance(
       {String coin,
       double balance,
+      double unconfirmedBalance,
       double lockBalance,
       UsdValue usdValue,
       List<DepositErr> depositErr,
@@ -100,6 +102,7 @@ class WalletBalance {
       double lockedExchangeBalance}) {
     this._coin = coin;
     this._balance = balance ?? 0.0;
+    this._unconfirmedBalance = unconfirmedBalance ?? 0.0;
     this._lockBalance = lockBalance ?? 0.0;
     this._usdValue = usdValue;
     this._depositErr = depositErr;
@@ -121,11 +124,16 @@ class WalletBalance {
     } else {
       usdVal = UsdValue(usd: 0.0);
     }
+    double ub = NumberUtil().parsedDouble(json['unconfirmedBalance']);
+    if (ub.isNegative) {
+      ub = 0.0;
+    }
     return WalletBalance(
       coin: json['coin'],
       balance: json['balance'] != null
           ? (NumberUtil().parsedDouble(json['balance']))
           : 0.0,
+      unconfirmedBalance: json['unconfirmedBalance'] != null ? ub : 0.0,
       lockBalance: json['lockBalance'] != null
           ? (NumberUtil().parsedDouble(json['lockBalance']))
           : 0.0,
@@ -145,6 +153,7 @@ class WalletBalance {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['coin'] = this._coin;
     data['balance'] = this._balance;
+    data['unconfirmedBalance'] = this._unconfirmedBalance;
     data['lockBalance'] = this._lockBalance;
     if (this._usdValue != null) {
       data['usdValue'] = this._usdValue.toJson();
@@ -165,6 +174,11 @@ class WalletBalance {
   double get balance => _balance;
   set balance(double balance) {
     this._balance = balance;
+  }
+
+  double get unconfirmedBalance => _unconfirmedBalance;
+  set unconfirmedBalance(double unconfirmedBalance) {
+    this._unconfirmedBalance = unconfirmedBalance;
   }
 
   double get lockBalance => _lockBalance;
@@ -198,7 +212,7 @@ class WalletBalanceList {
   WalletBalanceList({this.walletBalances});
 
   factory WalletBalanceList.fromJson(List<dynamic> parsedJson) {
-    List<WalletBalance> balanceList = new List<WalletBalance>();
+    List<WalletBalance> balanceList = [];
     balanceList = parsedJson.map((i) => WalletBalance.fromJson(i)).toList();
     return new WalletBalanceList(walletBalances: balanceList);
   }

@@ -12,8 +12,11 @@
 */
 
 // import 'package:device_preview/device_preview.dart';
+import 'dart:io';
+
 import 'package:exchangilymobileapp/Managers/dialog_manager.dart';
 import 'package:exchangilymobileapp/Managers/life_cycle_manager.dart';
+import 'package:exchangilymobileapp/enums/connectivity_status.dart';
 import 'package:exchangilymobileapp/routes.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/connectivity_service.dart';
@@ -33,6 +36,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPaintSizeEnabled = false;
   // debugRepaintRainbowEnabled = true;
+  // isrgrootx1.pem
   try {
     await serviceLocator();
     Logger.level = Level.nothing;
@@ -59,6 +63,7 @@ class MyApp extends StatelessWidget {
     return StreamProvider(
       create: (BuildContext context) =>
           ConnectivityService().connectionStatusController.stream,
+      initialData: ConnectivityStatus.Cellular,
       child: LifeCycleManager(
         child: OverlaySupport(
           child: MaterialApp(
@@ -112,9 +117,11 @@ class MyApp extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.25),
                   headline2: TextStyle(
-                      fontSize: 18,
+                      fontSize: 14,
                       color: globals.white,
-                      fontWeight: FontWeight.w300),
+                      letterSpacing: 1,
+                      height: 1.5,
+                      fontWeight: FontWeight.bold),
                   headline3: TextStyle(fontSize: 16, color: globals.white),
                   headline4: TextStyle(
                       fontSize: 15,
@@ -136,7 +143,6 @@ class MyApp extends StatelessWidget {
                       fontSize: 13,
                       color: globals.white,
                       fontWeight: FontWeight.w400),
-                  bodyText2: TextStyle(fontSize: 13, color: globals.red),
                   headline6: TextStyle(
                       fontSize: 10.5,
                       color: globals.white,

@@ -5,6 +5,7 @@ import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/models/wallet/transaction_history.dart';
 import 'package:exchangilymobileapp/screen_state/wallet/wallet_features/transaction_history_viewmodel.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -136,7 +137,11 @@ class TxHisotryCardWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AutoSizeText(
-                      transaction.date.split(" ")[0],
+                      transaction.date.split(" ")[0].split("-")[1] +
+                          '-' +
+                          transaction.date.split(" ")[0].split("-")[2] +
+                          '-' +
+                          transaction.date.split(" ")[0].split("-")[0],
                       style: Theme.of(context)
                           .textTheme
                           .headline5
@@ -145,6 +150,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    // Time
                     Padding(
                       padding: const EdgeInsets.only(top: 4.0),
                       child: Text(
@@ -165,10 +171,13 @@ class TxHisotryCardWidget extends StatelessWidget {
               Expanded(
                 flex: 2,
                 child: Container(
-                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    alignment: Alignment.centerRight,
                     child: AutoSizeText(
-                      transaction.quantity
-                          .toStringAsFixed(model.decimalConfig.qtyDecimal),
+                      NumberUtil()
+                          .truncateDoubleWithoutRouding(transaction.quantity,
+                              precision: model.decimalLimit)
+                          .toString(),
                       textAlign: TextAlign.right,
                       style: Theme.of(context)
                           .textTheme
@@ -176,7 +185,7 @@ class TxHisotryCardWidget extends StatelessWidget {
                           .copyWith(fontWeight: FontWeight.w400),
                       minFontSize: 8,
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.clip,
                     )),
               ),
               UIHelper.horizontalSpaceSmall,

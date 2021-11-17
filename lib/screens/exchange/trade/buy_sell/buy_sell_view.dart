@@ -22,7 +22,6 @@ import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter/foundation.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:showcaseview/showcase_widget.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:stacked/stacked.dart';
 
@@ -73,7 +72,8 @@ class BuySellView extends StatelessWidget {
               },
               builder: Builder(
                 builder: (context) => Stack(
-                  clipBehavior: Clip.none, fit: StackFit.loose,
+                  clipBehavior: Clip.none,
+                  fit: StackFit.loose,
                   alignment: Alignment.center,
                   children: [
                     ListView(children: <Widget>[
@@ -623,7 +623,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
         // Slider
         Slider(
           divisions: 100,
-          label: '${model.sliderValue.toStringAsFixed(2)}%',
+          label:
+              '${NumberUtil().truncateDoubleWithoutRouding(model.sliderValue, precision: 2).toString()}%',
           activeColor: primaryColor,
           min: 0.0,
           max: 100.0,
@@ -684,7 +685,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
               padding: EdgeInsets.only(
                   left: 5), // padding left to keep some space from the text
               child: Text(
-                '${model.kanbanTransFee.toStringAsFixed(4)}',
+                '${NumberUtil().truncateDoubleWithoutRouding(model.kanbanTransFee, precision: 4).toString()}',
                 style: new TextStyle(color: Colors.grey, fontSize: 12.0),
               ),
             )
@@ -699,10 +700,11 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
               AppLocalizations.of(context).advance,
               style: new TextStyle(color: Colors.grey, fontSize: 12.0),
             ),
-            SizedBox(
+            Container(
               height: 20,
               child: Transform.scale(
-                scale: 0.75,
+                alignment: Alignment.centerRight,
+                scale: 0.70,
                 child: Switch.adaptive(
                     activeColor: primaryColor,
                     value: model.transFeeAdvance,
@@ -727,7 +729,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context).kanbanGasPrice,
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
@@ -746,8 +748,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                                     borderSide: BorderSide(color: grey)),
                                 hintText: '0.00000',
                                 hintStyle:
-                                    Theme.of(context).textTheme.headline5),
-                            style: Theme.of(context).textTheme.headline5))
+                                    Theme.of(context).textTheme.headline6),
+                            style: Theme.of(context).textTheme.headline6))
                   ],
                 ),
                 //   Kanban gas limit
@@ -755,7 +757,7 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context).kanbanGasLimit,
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headline6,
                     ),
                     UIHelper.horizontalSpaceSmall,
                     Expanded(
@@ -772,8 +774,8 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
                           enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: grey)),
                           hintText: '0.00000',
-                          hintStyle: Theme.of(context).textTheme.headline5),
-                      style: Theme.of(context).textTheme.headline5,
+                          hintStyle: Theme.of(context).textTheme.headline6),
+                      style: Theme.of(context).textTheme.headline6,
                     )),
                   ],
                 ),
@@ -782,21 +784,32 @@ class LeftSideColumnWidgets extends ViewModelWidget<BuySellViewModel> {
           ),
         ),
         UIHelper.verticalSpaceSmall,
-        RaisedButton(
-            elevation: 4,
-            // animationDuration: Duration(milliseconds: 100),
-            // splashColor: Colors.purpleAccent,
-            padding: const EdgeInsets.all(5.0),
-            textColor: Colors.white,
-            color: model.bidOrAsk ? Color(0xFF0da88b) : Color(0xFFe2103c),
-            onPressed: () {
-              model.checkPass(context);
-            },
-            child: Text(
-                model.bidOrAsk
-                    ? AppLocalizations.of(context).buy
-                    : AppLocalizations.of(context).sell,
-                style: Theme.of(context).textTheme.headline4))
+        // buy sell button
+        Container(
+          width: MediaQuery.of(context).size.width / 2.2,
+          child: ElevatedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(StadiumBorder(
+                  side: BorderSide(color: Colors.transparent, width: 2),
+                )),
+                padding: MaterialStateProperty.all(
+                    EdgeInsets.symmetric(horizontal: 12.0)),
+                backgroundColor: model.bidOrAsk
+                    ? MaterialStateProperty.all(Color(0xFF0da88b))
+                    : MaterialStateProperty.all(Color(0xFFe2103c)),
+              ),
+              onPressed: () {
+                model.checkPass(context);
+              },
+              child: model.isBusy
+                  ? Text(AppLocalizations.of(context).loading,
+                      style: Theme.of(context).textTheme.headline4)
+                  : Text(
+                      model.bidOrAsk
+                          ? AppLocalizations.of(context).buy
+                          : AppLocalizations.of(context).sell,
+                      style: Theme.of(context).textTheme.headline4)),
+        )
       ],
     );
   }
@@ -834,21 +847,26 @@ class BalanceRowWidget extends StatelessWidget {
         //     // If true then to avoid error screen, assign/display 0 in both sell and buy tab
 
         //     // If false then show the denominator coin balance by again checking buy and sell tab to display currency accordingly
-        model.bidOrAsk
-            ?
-            // ?  model.baseCoinExchangeBalance.unlockAmount == null?textDemoWidget():
-            Text(
-                "${NumberUtil().truncateDoubleWithoutRouding(model.baseCoinExchangeBalance.unlockedAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
-                    " " +
-                    model.baseCoinName,
-                style: TextStyle(color: primaryColor, fontSize: 13.0))
-            :
-            // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
-            Text(
-                "${NumberUtil().truncateDoubleWithoutRouding(model.targetCoinExchangeBalance.unlockedAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
-                    " " +
-                    model.targetCoinName,
-                style: TextStyle(color: primaryColor, fontSize: 13.0))
+
+        model.isRefreshBalance
+            ? model.refreshBalanceAfterCancellingOrder()
+            : Container(
+                child: model.bidOrAsk
+                    ?
+                    // ?  model.baseCoinExchangeBalance.unlockAmount == null?textDemoWidget():
+                    Text(
+                        "${NumberUtil().truncateDoubleWithoutRouding(model.baseCoinExchangeBalance.unlockedAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
+                            " " +
+                            model.baseCoinName,
+                        style: TextStyle(color: primaryColor, fontSize: 13.0))
+                    :
+                    // ?  model.targetCoinExchangeBalance.unlockAmount == null?textDemoWidget():
+                    Text(
+                        "${NumberUtil().truncateDoubleWithoutRouding(model.targetCoinExchangeBalance.unlockedAmount, precision: model.singlePairDecimalConfig.qtyDecimal).toString()}" +
+                            " " +
+                            model.targetCoinName,
+                        style: TextStyle(color: primaryColor, fontSize: 13.0)),
+              )
       ],
     );
   }

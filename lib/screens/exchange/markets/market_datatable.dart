@@ -125,7 +125,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 //   width: MediaQuery.of(context).size.width * 2 / 11,
                 child: Text(
-                  AppLocalizations.of(context).volume,
+                  '24H ${AppLocalizations.of(context).volume}',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),
@@ -173,7 +173,7 @@ class _MarketDataTableState extends State<MarketDataTable> {
               label: Container(
                 //  width: MediaQuery.of(context).size.width * 2 / 15,
                 child: Text(
-                  AppLocalizations.of(context).change,
+                  '24H ${AppLocalizations.of(context).change}',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ),

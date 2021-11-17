@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +20,11 @@ class LocalStorageService {
   static const String TokenListKey = 'tokenList';
   static const String FavWalletCoinsKey = 'favWalletCoinsKey';
   static const String FavCoinTabSelectedKey = 'favCoinTabSelectedKey';
+  static const String WalletDecimalListKey = 'walletDecimalListKey';
+  static const String InAppBiometricAuthKey = 'biometricAuthKey';
+  static const String CancelBiometricAuthKey = 'cancelbiometricAuthKey';
+  static const String PhoneProtectedKey = 'phoneProtectedKey';
+  static const String AppGoneInTheBackgroundKey = 'appGoneInTheBackgroundKey';
 
 /*----------------------------------------------------------------------
                   Instance
@@ -73,6 +80,24 @@ class LocalStorageService {
     return value;
   }
 
+  int getStoredListLength(String jsonStringData) {
+    int objLength = 0;
+    var obj = jsonDecode(jsonStringData) as List;
+    if (obj != null) {
+      objLength = obj.length;
+      log.w('getStoredListLength $objLength');
+    }
+    return objLength;
+  }
+
+/*----------------------------------------------------------------------
+                Wallet Decimal List
+----------------------------------------------------------------------  */
+  String get walletDecimalList => _getFromDisk(WalletDecimalListKey) ?? '';
+
+  set walletDecimalList(String value) =>
+      _saveToDisk(WalletDecimalListKey, value);
+
 /*----------------------------------------------------------------------
                   Languages getter/setter
 ----------------------------------------------------------------------*/
@@ -84,6 +109,30 @@ class LocalStorageService {
 ----------------------------------------------------------------------*/
   bool get isDarkMode => _getFromDisk(DarkModeKey) ?? false;
   set isDarkMode(bool value) => _saveToDisk(DarkModeKey, value);
+
+/*----------------------------------------------------------------------
+                Biometric auth getter/setter
+----------------------------------------------------------------------*/
+  bool get hasAppGoneInTheBackgroundKey =>
+      _getFromDisk(AppGoneInTheBackgroundKey) ?? false;
+  set hasAppGoneInTheBackgroundKey(bool value) =>
+      _saveToDisk(AppGoneInTheBackgroundKey, value);
+
+  bool get hasPhoneProtectionEnabled =>
+      _getFromDisk(PhoneProtectedKey) ?? false;
+  set hasPhoneProtectionEnabled(bool value) =>
+      _saveToDisk(PhoneProtectedKey, value);
+
+  bool get hasInAppBiometricAuthEnabled =>
+      _getFromDisk(InAppBiometricAuthKey) ?? false;
+  set hasInAppBiometricAuthEnabled(bool value) =>
+      _saveToDisk(InAppBiometricAuthKey, value);
+
+// is cancel biometric authentication
+  bool get hasCancelledBiometricAuth =>
+      _getFromDisk(CancelBiometricAuthKey) ?? false;
+  set hasCancelledBiometricAuth(bool value) =>
+      _saveToDisk(CancelBiometricAuthKey, value);
 
 /*----------------------------------------------------------------------
                 Notice Dialog getter/setter

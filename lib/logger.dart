@@ -22,9 +22,10 @@ class SimpleLogPrinter extends LogPrinter {
   SimpleLogPrinter(this.className);
 
   @override
-  void log(Level level, message, error, StackTrace stackTrace) {
-    var color = PrettyPrinter.levelColors[level];
-    var emoji = PrettyPrinter.levelEmojis[level];
-    print(color('$emoji $className - $message'));
+  List<String> log(LogEvent event) {
+    var color = PrettyPrinter.levelColors[event.level];
+    var emoji = PrettyPrinter.levelEmojis[event.level];
+    print(color('$emoji $className - ${event.message}'));
+    return [];
   }
 }

@@ -1578,6 +1578,13 @@ class AppLocalizations {
             'bindpay_please_transfer_funds_to_exchange_wallet_to_use_bindpay');
   }
 
+  String get pleaseTransferFundsToExchangeWalletToUseLightningRemit {
+    return Intl.message(
+        "Please transfer funds to exchange wallet to use Lightning Remit",
+        name: 'pleaseTransferFundsToExchangeWalletToUseLightningRemit',
+        desc: 'please_transfer_funds_to_exchange_wallet_to_use_LightningRemit');
+  }
+
   String get important {
     return Intl.message("Important",
         name: 'important', desc: 'backup_mnemonic_important');
@@ -1614,7 +1621,7 @@ class AppLocalizations {
 
   String get walletDashboardInstruction2 {
     return Intl.message(
-        'Transfer funds from wallet to exchange to trade and use bindpay',
+        'Transfer funds from wallet to exchange to trade and use lightning remit',
         name: 'walletDashboardInstruction2',
         desc: 'wallet_dashboard_instruction_2');
   }
@@ -1753,14 +1760,14 @@ class AppLocalizations {
 
   String get lowTsWalletBalanceErrorFirstPart {
     return Intl.message('Current maximum available balance for withdraw is',
-        name: 'lowTsWalletBalanceErrorText',
+        name: 'lowTsWalletBalanceErrorFirstPart',
         desc: 'lowTsWalletBalanceErrorText');
   }
 
   String get lowTsWalletBalanceErrorSecondPart {
     return Intl.message(
         'You may reduce your withdraw amount or you may withdraw by using other chain',
-        name: 'lowTsWalletBalanceErrorText',
+        name: 'lowTsWalletBalanceErrorSecondPart',
         desc: 'lowTsWalletBalanceErrorText');
   }
 
@@ -1777,7 +1784,102 @@ class AppLocalizations {
     return Intl.message('Importing Wallet',
         name: 'importingWallet', desc: 'importing_wallet_create_password');
   }
-  // Share page pending translation added by Jack
+
+  String get incorrectDepositAmountOfTwoTx {
+    return Intl.message('Incorrect amount for two transactions',
+        name: 'incorrectDepositAmountOfTwoTx',
+        desc: 'incorrect_deposit_amount_of_two_tx');
+  }
+
+  String get decimalLimit {
+    return Intl.message('Decimal limit',
+        name: 'decimalLimit', desc: 'decimal_limit');
+  }
+
+  String get unConfirmedBalance {
+    return Intl.message('Unconfirmed Balance',
+        name: 'unConfirmedBalance', desc: 'unConfirmed_balance');
+  }
+
+  String get availableBalanceInfoTitle {
+    return Intl.message('Available Balance Info',
+        name: 'availableBalanceInfoTitle',
+        desc: 'available_balance_info_title');
+  }
+
+  String get availableBalanceInfoContent {
+    return Intl.message(
+        'The available balance reflects the total value of your unspent transactions outputs (utxos) for transactions that have already been confirmed on the blockchain so user can only use current available balance for the new transactions until the previous transactions complete',
+        name: 'availableBalanceInfoContent',
+        desc: 'available_balance_info_content');
+  }
+
+  String get unConfirmedBalanceInfoTitle {
+    return Intl.message('Unconfirmed Balance Info',
+        name: 'unConfirmedBalanceInfoTitle',
+        desc: 'unConfirmed_balance_info_title');
+  }
+
+  String get unConfirmedBalanceInfoContent {
+    return Intl.message(
+        'The unconfirmed balance reflects the total value of your unspent transactions outputs (utxos) for transactions that are still pending (not yet confirmed on the blockchain)',
+        name: 'unConfirmedBalanceInfoContent',
+        desc: 'unConfirmed_balance_info_content');
+  }
+
+  String get unConfirmedBalanceInfoExample {
+    return Intl.message(
+        'This is the normal transaction process where unconfirmed funds may be more than the amount user sends. For example, when you purchase 50 dollars worth of groceries in a cash transaction and you give the shopkeeper a 100 dollar bill, then you get your change(50 dollars) back by the shopkeeper',
+        name: 'unConfirmedBalanceInfoExample',
+        desc: 'unConfirmed_balance_info_example');
+  }
+
+  String get insufficientGasBalance {
+    return Intl.message('Insufficient gas balance',
+        name: 'insufficientGasBalance', desc: 'Insufficient_gas_balance');
+  }
+
+  String get unlock {
+    return Intl.message('Unlock', name: 'unlock', desc: 'unlock');
+  }
+
+  String get enableBiometricAuthentication {
+    return Intl.message('Enable Biometric Authentication',
+        name: 'enableBiometricAuthentication',
+        desc: 'settings_enable_biometric_authentication');
+  }
+
+  String get pleaseSetupDeviceSecurity {
+    return Intl.message('Please setup device security in the settings',
+        name: 'pleaseSetupDeviceSecurity',
+        desc: 'walletsetup_please_setup_device_security');
+  }
+
+  String get remit {
+    return Intl.message('Remit', name: 'remit', desc: 'bottom_nav_remit');
+  }
+
+  String get withdrawPopupNote {
+    return Intl.message('Please confirm the coin you want to withdraw',
+        name: 'withdrawPopupNote', desc: 'withdraw_popup_note');
+  }
+
+  String get lockedOutTemp {
+    return Intl.message('Too many failed attempts, please try after sometime.',
+        name: 'lockedOutTemp', desc: 'locked_out_temp');
+  }
+
+  String get lockedOutPerm {
+    return Intl.message(
+        'Too many failed attempts, please try to unlock using Pin orPassword',
+        name: 'lockedOutPerm',
+        desc: 'locked_out_perm');
+  }
+
+  String get lockAppNow {
+    return Intl.message('Lock App Now',
+        name: 'lockAppNow', desc: 'lock_app_now');
+  }
 }
 
 class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -8,6 +8,18 @@ class NumberUtil {
   int maxDecimalDigits;
   final log = getLogger('NumberUtil');
 
+  static int getDecimalLength(double number) {
+    String stringNumber = number.toString();
+    int decimalLength = 0;
+    try {
+      decimalLength = stringNumber.split('.')[1].length;
+      return decimalLength;
+    } catch (err) {
+      print('getDecimalLength no decimal found: error $err');
+      return decimalLength;
+    }
+  }
+
   double truncateDoubleWithoutRouding(double input, {int precision = 2}) {
     double res = 0.0;
     bool isInputContainsE = input.toString().contains('e');
@@ -40,7 +52,7 @@ class NumberUtil {
   }
 
 /*---------------------------------------------------
-               Round down
+                Round down
 --------------------------------------------------- */
 
   double roundDownLastDigit(double input) {

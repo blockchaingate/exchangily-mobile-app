@@ -12,8 +12,10 @@
 */
 
 import 'package:exchangilymobileapp/constants/colors.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/navigation_service.dart';
 import 'package:exchangilymobileapp/services/wallet_service.dart';
 import 'package:exchangilymobileapp/shared/ui_helpers.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,7 @@ class BackupMnemonicWalletScreen extends StatefulWidget {
 class _BackupMnemonicWalletScreenState
     extends State<BackupMnemonicWalletScreen> {
   WalletService walletService = locator<WalletService>();
+  final navigationService = locator<NavigationService>();
   @override
   void initState() {
     super.initState();
@@ -43,127 +46,133 @@ class _BackupMnemonicWalletScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        elevation: 0,
-        title: Text(AppLocalizations.of(context).backupMnemonic,
-            style: Theme.of(context).textTheme.headline3),
-        backgroundColor: globals.secondaryColor,
-        actions: <Widget>[
-          // action button
-          IconButton(
-              icon: Icon(
-                MdiIcons.helpCircleOutline,
-                size: 18,
-              ),
-              onPressed: () {
-                showModalBottomSheet<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ListView(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 32.0, horizontal: 20),
-                        children: [
-                          Container(
-                              child: Text(
-                            AppLocalizations.of(context)
-                                .backupMnemonicNoticeTitle,
-                            // textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headline3,
-                          )),
-                          SizedBox(height: 20),
-                          Container(
-                              // padding: EdgeInsets.symmetric(horizontal: 20),
-                              child: Text(
-                            AppLocalizations.of(context)
-                                .backupMnemonicNoticeContent,
-                            style: Theme.of(context).textTheme.headline5,
-                          ))
-                        ],
-                      );
-                    });
-              }),
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.all(10),
-        child: ListView(
-          // mainAxisSize: MainAxisSize.min,
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            UIHelper.verticalSpaceMedium,
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-              decoration: BoxDecoration(
-                  color: globals.primaryColor,
-                  borderRadius: BorderRadius.circular(30)
-                  // shape: BoxShape.circle
-                  ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    MdiIcons.information,
-                    color: globals.white,
-                    size: 25,
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    AppLocalizations.of(context).important,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1,
-                        fontSize: 16),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                    child: Text(
-                  AppLocalizations.of(context).warningBackupMnemonic,
-                  style: Theme.of(context).textTheme.headline5,
-                )),
-              ],
-            ),
-            UIHelper.verticalSpaceSmall,
-            Container(
-              margin: EdgeInsets.symmetric(
-                vertical: 10,
-              ),
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
-              child: _buttonGrid(),
-            ),
-            // UIHelper.verticalSpaceSmall,
-            Center(
-              child: Container(
-                padding: EdgeInsets.all(15),
-                child: MaterialButton(
-                  color: primaryColor,
-                  child: Text(
-                    AppLocalizations.of(context).confirm,
-                    // style: Theme.of(context).textTheme.headline4,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1,
-                        fontSize: 16),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/confirmMnemonic',
-                        arguments:
-                            BackupMnemonicWalletScreen.randomMnemonicList);
-                  },
+    return WillPopScope(
+      onWillPop: () async {
+        navigationService.navigateTo(WalletSetupViewRoute);
+        return new Future(() => false);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          elevation: 0,
+          title: Text(AppLocalizations.of(context).backupMnemonic,
+              style: Theme.of(context).textTheme.headline3),
+          backgroundColor: globals.secondaryColor,
+          actions: <Widget>[
+            // action button
+            IconButton(
+                icon: Icon(
+                  MdiIcons.helpCircleOutline,
+                  size: 18,
+                ),
+                onPressed: () {
+                  showModalBottomSheet<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ListView(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 32.0, horizontal: 20),
+                          children: [
+                            Container(
+                                child: Text(
+                              AppLocalizations.of(context)
+                                  .backupMnemonicNoticeTitle,
+                              // textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.headline3,
+                            )),
+                            SizedBox(height: 20),
+                            Container(
+                                // padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Text(
+                              AppLocalizations.of(context)
+                                  .backupMnemonicNoticeContent,
+                              style: Theme.of(context).textTheme.headline5,
+                            ))
+                          ],
+                        );
+                      });
+                }),
+          ],
+        ),
+        body: Container(
+          padding: EdgeInsets.all(10),
+          child: ListView(
+            // mainAxisSize: MainAxisSize.min,
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              UIHelper.verticalSpaceMedium,
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                decoration: BoxDecoration(
+                    color: globals.primaryColor,
+                    borderRadius: BorderRadius.circular(30)
+                    // shape: BoxShape.circle
+                    ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      MdiIcons.information,
+                      color: globals.white,
+                      size: 25,
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      AppLocalizations.of(context).important,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1,
+                          fontSize: 16),
+                    )
+                  ],
                 ),
               ),
-            )
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      child: Text(
+                    AppLocalizations.of(context).warningBackupMnemonic,
+                    style: Theme.of(context).textTheme.headline5,
+                  )),
+                ],
+              ),
+              UIHelper.verticalSpaceSmall,
+              Container(
+                margin: EdgeInsets.symmetric(
+                  vertical: 10,
+                ),
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 5),
+                child: _buttonGrid(),
+              ),
+              // UIHelper.verticalSpaceSmall,
+              Center(
+                child: Container(
+                  padding: EdgeInsets.all(15),
+                  child: MaterialButton(
+                    color: primaryColor,
+                    child: Text(
+                      AppLocalizations.of(context).confirm,
+                      // style: Theme.of(context).textTheme.headline4,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1,
+                          fontSize: 16),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/confirmMnemonic',
+                          arguments:
+                              BackupMnemonicWalletScreen.randomMnemonicList);
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

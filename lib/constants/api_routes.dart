@@ -11,7 +11,7 @@ const String baseBlockchainGateV2Url = isProduction
 
 const String TronBaseApiUrl = 'https://api.trongrid.io/';
 /*----------------------------------------------------------------------
-                        Bindpay
+                        LightningRemit
 ----------------------------------------------------------------------*/
 const String ChargeTextApiRoute = "charge";
 const String OrdersTextApiRoute = "orders";
@@ -20,6 +20,11 @@ const String PayOrderApiRoute = OrdersTextApiRoute + "/code/";
 /*----------------------------------------------------------------------
                         Wallet
 ----------------------------------------------------------------------*/
+
+// FAB //
+
+const String FabTransactionJsonApiRoute = 'gettransactionjson/';
+
 const String KanbanApiRoute = 'kanban/';
 const String GetScarAddressApiRoute = 'getScarAddress';
 const String GetTransactionCountApiRoute = 'getTransactionCount/';
@@ -80,7 +85,7 @@ const String GetDecimalPairConfigApiRoute = 'kanban/getpairconfig';
 //final String pairDecimalConfigRoute = 'kanban/getpairconfig';
 const String WithDrawDepositTxHistoryApiRoute = 'getTransactionHistoryEvents';
 // route for getting history for withdraw and deposits
-const String BindpayTxHHistoryApiRoute = 'getTransferHistoryEvents';
+const String LightningRemitTxHHistoryApiRoute = 'getTransferHistoryEvents';
 // route for bindpay transfers
 
 const String RedepositCheckStatusApiRoute = 'checkstatus/';

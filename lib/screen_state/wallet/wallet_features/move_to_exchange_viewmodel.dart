@@ -4,7 +4,7 @@ import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -17,8 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:stacked/stacked.dart';
 import '../../../logger.dart';
-import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
-import '../../../shared/globals.dart' as globals;
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/wallet_database_service.dart';
 
@@ -49,7 +47,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
   final amountController = TextEditingController();
   bool isValid = false;
   double gasAmount = 0.0;
-  PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   bool isShowErrorDetailsButton = false;
   bool isShowDetailsMessage = false;
   String serverError = '';
@@ -57,7 +54,10 @@ class MoveToExchangeViewModel extends BaseViewModel {
   var res;
   double amount = 0.0;
   String feeUnit = '';
+  final coinUtils = CoinUtils();
+  int decimalLimit = 8;
 
+  // Init
   void initState() async {
     setBusy(true);
     coinName = walletInfo.tickerName;
@@ -70,7 +70,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
         walletInfo.tickerName)['tickerName'];
     refreshBalance();
-    await getDecimalData();
 
     if (coinName == 'BTC') {
       feeUnit = 'BTC';
@@ -81,6 +80,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else if (tokenType == 'FAB') {
       feeUnit = 'FAB';
     }
+    decimalLimit =
+        await walletService.getSingleCoinWalletDecimalLimit(coinName);
+    if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
     setBusy(false);
   }
 
@@ -90,24 +92,50 @@ class MoveToExchangeViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  getDecimalData() async {
-    setBusy(true);
-    singlePairDecimalConfig =
-        await sharedService.getSinglePairDecimalConfig(coinName);
-    log.i('singlePairDecimalConfig ${singlePairDecimalConfig.toJson()}');
-    setBusy(false);
+/*---------------------------------------------------
+                  Amount After fee
+--------------------------------------------------- */
+  Future<double> amountAfterFee(double amount,
+      {bool isMaxAmount = false}) async {
+    double finalAmount = 0.0;
+    // update transfee is 0
+    if (transFee == 0.0 && !walletService.isTrx(walletInfo.tickerName))
+      await updateTransFee();
+    // if tron coins then assign fee accordingly
+    if (walletService.isTrx(walletInfo.tickerName)) {
+      if (walletInfo.tickerName == 'USDTX') {
+        transFee = 15;
+        finalAmount = amount;
+      }
+
+      if (walletInfo.tickerName == 'TRX') {
+        transFee = 1.0;
+        finalAmount = isMaxAmount ? amount - transFee : amount + transFee;
+      }
+    } else {
+      walletInfo.tokenType.isEmpty &&
+              (amount == walletInfo.availableBalance || isMaxAmount)
+          ? finalAmount = amount - transFee
+          : finalAmount = amount;
+    }
+    return finalAmount;
   }
 
-  fillMaxAmount() {
+/*---------------------------------------------------
+                  Fill Max Amount
+--------------------------------------------------- */
+  fillMaxAmount() async {
     setBusy(true);
+    amount = walletInfo.availableBalance;
+    double finalAmount = 0.0;
+    await amountAfterFee(amount, isMaxAmount: true)
+        .then((resAmount) => finalAmount = resAmount);
+    //  finalAmount = amount = finalAmount;
     amountController.text = NumberUtil()
-        .truncateDoubleWithoutRouding(walletInfo.availableBalance,
-            precision: singlePairDecimalConfig.qtyDecimal)
+        .truncateDoubleWithoutRouding(finalAmount, precision: decimalLimit)
         .toString();
-    amount = double.parse(amountController.text);
+
     setBusy(false);
-    updateTransFee();
-    print(transFee);
   }
 
 /*---------------------------------------------------
@@ -161,7 +189,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     String address = await sharedService.getExgAddressFromWalletDatabase();
     await walletService.gasBalance(address).then((data) {
       gasAmount = data;
-      if (gasAmount < 0.5) {
+      if (gasAmount == 0) {
         sharedService.alertDialog(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
@@ -188,9 +216,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    if ((gasAmount == 0.0 || gasAmount < 0.5) &&
-        walletInfo.tickerName != 'TRX' &&
-        walletInfo.tickerName != 'USDTX') {
+    if (gasAmount == 0.0 || gasAmount < kanbanTransFee) {
       sharedService.showInfoFlushbar(
           AppLocalizations.of(context).notice,
           AppLocalizations.of(context).insufficientGasAmount,
@@ -213,13 +239,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    // var amount = double.tryParse(amountController.text);
+
+    amount = double.tryParse(amountController.text);
+
     // amount = NumberUtil().roundDownLastDigit(amount);
     await refreshBalance();
-    // double totalAmount = amount + kanbanTransFee + transFee;
+    double finalAmount = 0.0;
+    if (!walletService.isTrx(walletInfo.tickerName))
+      finalAmount = await amountAfterFee(amount);
     if (amount == null ||
-        //   totalAmount > walletInfo.availableBalance
-        //  ||
+        finalAmount > walletInfo.availableBalance ||
         amount == 0 ||
         amount.isNegative) {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
@@ -229,8 +258,16 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       return;
     }
-    amount = NumberUtil().roundDownLastDigit(amount);
+    // if (!walletService.isTrx(walletInfo.tickerName) &&
+    //     walletInfo.tickerName != 'BTC' &&
+    //     walletInfo.tickerName != 'ETH') {
+    //   int decimalLength = NumberUtil.getDecimalLength(amount);
+    //   log.w('decimalLength $decimalLength');
+    //   if (decimalLength == decimalLimit)
+    //     amount = NumberUtil().roundDownLastDigit(amount);
+    // }
 
+// * checking trx balance required
     if (walletInfo.tickerName == 'USDTX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
@@ -251,7 +288,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
     if (walletInfo.tickerName == 'TRX') {
       log.e('amount $amount --- wallet bal: ${walletInfo.availableBalance}');
       bool isCorrectAmount = true;
-      if (amount + 1 > walletInfo.availableBalance) isCorrectAmount = false;
+      double trxFee = 1.0;
+      if (amount + trxFee > walletInfo.availableBalance)
+        isCorrectAmount = false;
       if (!isCorrectAmount) {
         sharedService.alertDialog(
             '${AppLocalizations.of(context).fee} ${AppLocalizations.of(context).notice}',
@@ -340,7 +379,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             message = txId.toString();
 
             sharedService.alertDialog(
-              AppLocalizations.of(context).sendTransactionComplete,
+              AppLocalizations.of(context).depositTransactionSuccess,
               '$specialTicker ${AppLocalizations.of(context).isOnItsWay}',
             );
           } else {
@@ -360,7 +399,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
               isWarning: false);
         }).catchError((error) {
           log.e('In Catch error - $error');
-          sharedService.alertDialog(AppLocalizations.of(context).serverError,
+          sharedService.alertDialog(AppLocalizations.of(context).networkIssue,
               '$tickerName ${AppLocalizations.of(context).transanctionFailed}',
               isWarning: false);
 
@@ -373,9 +412,9 @@ class MoveToExchangeViewModel extends BaseViewModel {
       else {
         await walletService
             .depositDo(seed, walletInfo.tickerName, walletInfo.tokenType,
-                amount, option)
+                finalAmount, option)
             .then((ret) {
-          log.w(ret);
+          log.w('deposit res $ret');
 
           bool success = ret["success"];
           if (success) {
@@ -409,8 +448,12 @@ class MoveToExchangeViewModel extends BaseViewModel {
                     success
                         ? Text("")
                         : ret["data"] != null
-                            ? Text(ret["data"])
-                            : Text(AppLocalizations.of(context).serverError),
+                            ? Text(ret["data"] ==
+                                    'incorrect amount for two transactions'
+                                ? AppLocalizations.of(context)
+                                    .incorrectDepositAmountOfTwoTx
+                                : ret["data"])
+                            : Text(AppLocalizations.of(context).networkIssue),
                   ]),
               position: NotificationPosition.bottom,
               background: primaryColor);
@@ -430,7 +473,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 
           sharedService.alertDialog(
               AppLocalizations.of(context).depositTransactionFailed,
-              AppLocalizations.of(context).serverError,
+              AppLocalizations.of(context).networkIssue,
               isWarning: false);
           serverError = onError.toString();
         });
@@ -442,7 +485,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
     } else {
       log.e('Wrong pass');
       setBusy(false);
-      showNotification(context);
+      sharedService.showNotification(context);
     }
     setBusy(false);
   }
@@ -451,15 +494,13 @@ class MoveToExchangeViewModel extends BaseViewModel {
                     Refresh Balance
 ----------------------------------------------------------------------*/
   refreshBalance() async {
-    setBusy(true);
-
     String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
     await apiService
         .getSingleWalletBalance(
             fabAddress, walletInfo.tickerName, walletInfo.address)
         .then((walletBalance) {
       if (walletBalance != null) {
-        log.w(walletBalance[0].balance);
+        log.w('refreshed balance ${walletBalance[0].balance}');
         walletInfo.availableBalance = walletBalance[0].balance;
       }
     }).catchError((err) {
@@ -467,21 +508,6 @@ class MoveToExchangeViewModel extends BaseViewModel {
       setBusy(false);
       throw Exception(err);
     });
-    setBusy(false);
-  }
-/*----------------------------------------------------------------------
-                    ShowNotification
-----------------------------------------------------------------------*/
-
-  showNotification(context) {
-    setBusy(true);
-    sharedService.showInfoFlushbar(
-        AppLocalizations.of(context).passwordMismatch,
-        AppLocalizations.of(context).pleaseProvideTheCorrectPassword,
-        Icons.cancel,
-        globals.red,
-        context);
-    setBusy(false);
   }
 
 /*----------------------------------------------------------------------
@@ -489,7 +515,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
 ----------------------------------------------------------------------*/
   updateTransFee() async {
     setBusy(true);
-    var to = getOfficalAddress(coinName, tokenType: tokenType);
+    var to = coinUtils.getOfficalAddress(coinName, tokenType: tokenType);
     amount = double.tryParse(amountController.text);
 
     if (to == null || amount == null || amount <= 0) {
@@ -516,6 +542,7 @@ class MoveToExchangeViewModel extends BaseViewModel {
             Decimal.parse(kanbanGasLimit.toString()) /
             Decimal.parse('1e18'))
         .toDouble();
+
     await walletService
         .sendTransaction(
             walletInfo.tickerName,
@@ -535,8 +562,8 @@ class MoveToExchangeViewModel extends BaseViewModel {
         setBusy(false);
       }
       if (walletInfo.tickerName != 'TRX' &&
-          walletInfo.tickerName != 'USDTX') if (transFee == 0.0)
-        isValid = false;
+          walletInfo.tickerName != 'USDTX' &&
+          transFee == 0.0) isValid = false;
       //  log.e('total amount with fee ${amount + kanbanTransFee + transFee}');
       log.i('availableBalance ${walletInfo.availableBalance}');
     }).catchError((onError) {

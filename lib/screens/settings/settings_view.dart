@@ -72,6 +72,7 @@ class SettingsView extends StatelessWidget {
               //       )
               : SettingsContainer(model: model),
           bottomNavigationBar: BottomNavBar(count: 4),
+          // floatingActionButton: TextButton(child:Text('Click'),onPressed: () => model.clickMe(),),
         ),
       ),
     );
@@ -184,65 +185,66 @@ class SettingsContainer extends StatelessWidget {
               color: globals.walletCardColor,
               child: Theme.of(context).platform == TargetPlatform.iOS
                   ? Column(
-                    children: [
-                      Container(margin:EdgeInsets.all(5.0),child: Text(AppLocalizations.of(context).changeWalletLanguage,
-                                    style:
-                                        Theme.of(context).textTheme.subtitle2)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
+                      children: [
+                        Container(
+                            margin: EdgeInsets.all(5.0),
+                            child: Text(
+                                AppLocalizations.of(context)
+                                    .changeWalletLanguage,
+                                style: Theme.of(context).textTheme.subtitle2)),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('English'
-                              ,
-                                        style:
-                                            Theme.of(context).textTheme.headline5
+                              Row(
+                                children: [
+                                  Text('English',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                  Checkbox(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    activeColor: globals.primaryColor,
+                                    onChanged: (bool value) {
+                                      String lang = '';
+                                      if (value) {
+                                        lang = 'en';
+                                      } else
+                                        lang = 'zh';
+
+                                      model.changeWalletLanguage(lang);
+                                    },
+                                    value: model.selectedLanguage == "English",
+                                  )
+                                ],
                               ),
-                              Checkbox(
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                               
-                                  activeColor: globals.primaryColor,
-                                onChanged: (bool value) {
-                                  String lang = '';
-                                  if (value) {
-                                    lang = 'en';
-                                  } else
-                                    lang = 'zh';
+                              UIHelper.horizontalSpaceSmall,
+                              Row(
+                                children: [
+                                  Text('Chinese',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headline5),
+                                  Checkbox(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                    activeColor: globals.primaryColor,
+                                    onChanged: (bool value) {
+                                      String lang = '';
+                                      if (!value) {
+                                        lang = 'en';
+                                      } else
+                                        lang = 'zh';
 
-                                  model.changeWalletLanguage(lang);
-                                },
-                                value: model.selectedLanguage == "English",
+                                      model.changeWalletLanguage(lang);
+                                    },
+                                    value: model.selectedLanguage == "简体中文",
+                                  )
+                                ],
                               )
-                            ],
-                          ),
-                          UIHelper.horizontalSpaceSmall,
-                          Row(
-                            children: [
-                              Text('Chinese',
-                                     style:
-                                            Theme.of(context).textTheme.headline5),
-                              Checkbox(
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                 
-                                  activeColor: globals.primaryColor,
-                                onChanged: (bool value) {
-                                  String lang = '';
-                                  if (!value) {
-                                    lang = 'en';
-                                  } else
-                                    lang = 'zh';
-
-                                  model.changeWalletLanguage(lang);
-                                },
-                                value: model.selectedLanguage == "简体中文",
-                              )
-                            ],
-                          )
-                        ]),
-                    ],
-                  )
+                            ]),
+                      ],
+                    )
                   // Row(
                   //     children: [
                   //       Expanded(
@@ -461,6 +463,88 @@ class SettingsContainer extends StatelessWidget {
                     ],
                   ),
                 )),
+            // Biometric authentication toggle
+            Card(
+                elevation: 5,
+                color: globals.walletCardColor,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    //  crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0, right: 8.0),
+                        child:
+                            Icon(Icons.security_sharp, color: white, size: 18),
+                      ),
+                      Expanded(
+                        child: Text(
+                            AppLocalizations.of(context)
+                                .enableBiometricAuthentication,
+                            style: Theme.of(context).textTheme.headline5,
+                            textAlign: TextAlign.left),
+                      ),
+                      SizedBox(
+                        height: 20,
+                        child: Switch(
+                            inactiveThumbColor: grey,
+                            activeTrackColor: white,
+                            activeColor: primaryColor,
+                            inactiveTrackColor: white,
+                            value: model
+                                .storageService.hasInAppBiometricAuthEnabled,
+                            onChanged: (value) {
+                              model.setBiometricAuth();
+                            }),
+                      ),
+                      // ),
+                    ],
+                  ),
+                )),
+            // lock app now
+            // only shows when user enabled the auth
+            // and biometric or pin/password is activated
+            model.storageService.hasInAppBiometricAuthEnabled &&
+                    model.storageService.hasPhoneProtectionEnabled
+                ? Card(
+                    elevation: 5,
+                    color: globals.walletCardColor,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        //  crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(left: 5.0, right: 8.0),
+                            child: Icon(Icons.lock_outline_rounded,
+                                color: white, size: 18),
+                          ),
+                          Expanded(
+                            child: Text(AppLocalizations.of(context).lockAppNow,
+                                style: Theme.of(context).textTheme.headline5,
+                                textAlign: TextAlign.left),
+                          ),
+                          SizedBox(
+                            height: 20,
+                            child: Switch(
+                                inactiveThumbColor: grey,
+                                activeTrackColor: white,
+                                activeColor: primaryColor,
+                                inactiveTrackColor: white,
+                                value: model.lockAppNow,
+                                onChanged: (value) {
+                                  model.setLockAppNowValue();
+                                }),
+                          ),
+                          // ),
+                        ],
+                      ),
+                    ))
+                : Container(),
+
 // Server url change
             // Card(
             //   child: FlatButton(

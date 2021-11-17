@@ -17,7 +17,7 @@ import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
 import 'package:exchangilymobileapp/models/shared/pair_decimal_config_model.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
 import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
@@ -52,8 +52,10 @@ class WalletFeaturesViewModel extends BaseViewModel {
   PairDecimalConfig singlePairDecimalConfig = new PairDecimalConfig();
   List<WalletFeatureName> features = [];
   bool isFavorite = false;
+  int decimalLimit = 8;
+  double unconfirmedBalance = 0.0;
 
-  init() {
+  init() async {
     getWalletFeatures();
     getErrDeposit();
     specialTicker = walletService.updateSpecialTokensTickerNameForTxHistory(
@@ -61,6 +63,11 @@ class WalletFeaturesViewModel extends BaseViewModel {
     log.i('wi object to check name ${walletInfo.toJson()}');
     refreshBalance();
     checkIfCoinIsFavorite();
+    setBusy(true);
+    decimalLimit = await walletService
+        .getSingleCoinWalletDecimalLimit(walletInfo.tickerName);
+    if (decimalLimit == null || decimalLimit == 0) decimalLimit = 8;
+    setBusy(false);
   }
 
   checkIfCoinIsFavorite() {
@@ -149,7 +156,7 @@ class WalletFeaturesViewModel extends BaseViewModel {
             await tokenListDatabaseService.getAll().then((tokenList) {
               if (tokenList != null)
                 tickerNameByCointype = tokenList
-                    .firstWhere((element) => element.tokenType == coinType)
+                    .firstWhere((element) => element.coinType == coinType)
                     .tickerName;
             });
           log.w('tickerNameByCointype $tickerNameByCointype');
@@ -164,6 +171,8 @@ class WalletFeaturesViewModel extends BaseViewModel {
 
         log.i('getErrDeposit $result');
       }
+    }).catchError((err) {
+      log.e('Catch error $err');
     });
   }
 
@@ -176,11 +185,11 @@ class WalletFeaturesViewModel extends BaseViewModel {
         .getSingleWalletBalance(
             fabAddress, walletInfo.tickerName, walletInfo.address)
         .then((walletBalance) async {
-      log.e(walletBalance[0].coin);
       var availableBalance = walletBalance[0].balance;
       walletInfo.availableBalance = availableBalance;
       var lockedBalance = walletBalance[0].lockBalance;
       walletInfo.lockedBalance = lockedBalance;
+      unconfirmedBalance = walletBalance[0].unconfirmedBalance;
       if (!specialTicker.contains('('))
         walletInfo.inExchange = walletBalance[0].unlockedExchangeBalance;
       else

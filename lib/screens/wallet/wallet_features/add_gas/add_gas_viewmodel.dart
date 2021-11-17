@@ -48,6 +48,7 @@ class AddGasViewModel extends FutureViewModel {
   var bytesPerInput;
   var feePerInput;
   double fabBalance = 0.0;
+  final kanbanUtils = KanbanUtils();
 
   @override
   Future futureToRun() async {
@@ -70,7 +71,7 @@ class AddGasViewModel extends FutureViewModel {
 
   getSliderReady() async {
     utxos = await apiService.getFabUtxos(fabAddress);
-    scarContractAddress = await getScarAddress();
+    scarContractAddress = await kanbanUtils.getScarAddress();
     scarContractAddress = trimHexPrefix(scarContractAddress);
     var gasPrice = int.tryParse(gasPriceTextController.text);
     var gasLimit = int.tryParse(gasLimitTextController.text);
@@ -82,16 +83,16 @@ class AddGasViewModel extends FutureViewModel {
     contractInfo = await walletService.getFabSmartContract(scarContractAddress,
         fxnDepositCallHex, options['gasLimit'], options['gasPrice']);
     extraAmount = contractInfo['totalFee'];
-
-    utxos.forEach((utxo) {
-      var utxoValue = utxo['value'];
-      print(utxoValue);
-      // double utxoValueDouble = bigNum2Double(utxo['value']);
-      // print('utxoValueDouble $utxoValueDouble');
-      var t = Decimal.fromInt(utxoValue) / Decimal.parse('1e8');
-      //  print(' t ${t.toDouble()}');
-      sumUtxos = sumUtxos + t.toDouble();
-    });
+    if (utxos != null)
+      utxos.forEach((utxo) {
+        var utxoValue = utxo['value'];
+        print(utxoValue);
+        // double utxoValueDouble = bigNum2Double(utxo['value']);
+        // print('utxoValueDouble $utxoValueDouble');
+        var t = Decimal.fromInt(utxoValue) / Decimal.parse('1e8');
+        //  print(' t ${t.toDouble()}');
+        sumUtxos = sumUtxos + t.toDouble();
+      });
     double amt = 0.0;
     //for (var i = 0; i < sumUtxos; i + 0.05) {
     // totalAmount =

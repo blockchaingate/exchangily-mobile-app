@@ -1,13 +1,16 @@
 import 'dart:typed_data';
 
+import 'package:decimal/decimal.dart';
 import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/constants/constants.dart';
+import 'package:exchangilymobileapp/constants/route_names.dart';
 import 'package:exchangilymobileapp/environments/coins.dart';
 import 'package:exchangilymobileapp/environments/environment.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:exchangilymobileapp/service_locator.dart';
+import 'package:exchangilymobileapp/services/api_service.dart';
 import 'package:exchangilymobileapp/services/db/token_list_database_service.dart';
 import 'package:exchangilymobileapp/services/db/transaction_history_database_service.dart';
 import 'package:exchangilymobileapp/services/dialog_service.dart';
@@ -18,6 +21,7 @@ import 'package:exchangilymobileapp/utils/coin_util.dart';
 
 import 'package:exchangilymobileapp/utils/kanban.util.dart';
 import 'package:exchangilymobileapp/utils/keypair_util.dart';
+import 'package:exchangilymobileapp/utils/number_util.dart';
 import 'package:exchangilymobileapp/utils/string_util.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -29,6 +33,7 @@ class RedepositViewModel extends FutureViewModel {
   WalletService walletService = locator<WalletService>();
   SharedService sharedService = locator<SharedService>();
   final tokenListDatabaseService = locator<TokenListDatabaseService>();
+  final apiService = locator<ApiService>();
 
   final kanbanGasPriceTextController = TextEditingController();
   final kanbanGasLimitTextController = TextEditingController();
@@ -45,12 +50,19 @@ class RedepositViewModel extends FutureViewModel {
   String errorMessage = '';
   @override
   Future futureToRun() => getErrDeposit();
-
+  bool isConfirmButtonPressed = false;
+  final abiUtils = AbiUtils();
+  final kanbanUtils = KanbanUtils();
   void init() {}
 
 /*----------------------------------------------------------------------
                       Get Error Deposit
 ----------------------------------------------------------------------*/
+  click(bigInt) {
+    var b = Decimal.parse(bigInt) / Decimal.parse('1e18');
+    print('b $b');
+    print(NumberUtil().roundDownLastDigit(b.toDouble()));
+  }
 
   Future getErrDeposit() async {
     setBusy(true);
@@ -62,13 +74,14 @@ class RedepositViewModel extends FutureViewModel {
         var item = errDepositData[i];
         log.w('errDepositData count $i $item');
         var coinType = item['coinType'];
+
         String tickerNameByCointype = newCoinTypeMap[coinType];
         print('tickerNameByCointype $tickerNameByCointype');
         if (tickerNameByCointype == null)
           await tokenListDatabaseService.getAll().then((tokenList) {
             if (tokenList != null) {
               tickerNameByCointype = tokenList
-                  .firstWhere((element) => element.tokenType == coinType)
+                  .firstWhere((element) => element.coinType == coinType)
                   .tickerName;
               if (tickerNameByCointype == walletInfo.tickerName)
                 errDepositList.add(item);
@@ -78,6 +91,7 @@ class RedepositViewModel extends FutureViewModel {
           errDepositList.add(item);
           log.e(
               'in else if -- coin type $coinType --  tickerNameByCointype $tickerNameByCointype');
+          //click(item['amount']);
         }
       }
     });
@@ -96,9 +110,24 @@ class RedepositViewModel extends FutureViewModel {
       this.errDepositTransactionID = errDepositList[0]["transactionID"];
       this.kanbanTransFee = kanbanTransFee;
     }
-
+    await getSingleWalletBalance();
     setBusy(false);
-    return errDepositList;
+  }
+
+/*----------------------------------------------------------------------
+                    Get Single wallet balance
+----------------------------------------------------------------------*/
+
+  getSingleWalletBalance() async {
+    String fabAddress = await sharedService.getFABAddressFromWalletDatabase();
+    await apiService
+        .getSingleWalletBalance(
+            fabAddress, walletInfo.tickerName, walletInfo.address)
+        .then((res) {
+      if (res != null) {
+        walletInfo.availableBalance = res[0].balance;
+      }
+    });
   }
 
 /*----------------------------------------------------------------------
@@ -108,8 +137,39 @@ class RedepositViewModel extends FutureViewModel {
   checkPass() async {
     //TransactionHistory transactionByTxId = new TransactionHistory();
     setBusy(true);
+    isConfirmButtonPressed = true;
     errorMessage = '';
-    setBusy(false);
+    var errDepositItem;
+    for (var i = 0; i < errDepositList.length; i++) {
+      if (errDepositList[i]["transactionID"] == errDepositTransactionID) {
+        errDepositItem = errDepositList[i];
+        break;
+      }
+    }
+
+    if (errDepositItem == null) {
+      sharedService.showInfoFlushbar(
+          '${AppLocalizations.of(context).redepositError}',
+          '${AppLocalizations.of(context).redepositItemNotSelected}',
+          Icons.cancel,
+          red,
+          context);
+    }
+    log.w('errDepositItem $errDepositItem');
+    // var errDepositAmount = double.parse(errDepositItem['amount']);
+    // log.i('errDepositAmount $errDepositAmount');
+    // await walletService
+    //     .checkCoinWalletBalance(errDepositAmount, walletInfo.tickerName)
+    //     .then((value) {
+    //   if (errDepositItem == null) {
+    //     sharedService.showInfoFlushbar(
+    //         '${AppLocalizations.of(context).redepositError}',
+    //         '${AppLocalizations.of(context).invalidAmount}',
+    //         Icons.cancel,
+    //         red,
+    //         context);
+    //   }
+    // });
     var res = await dialogService.showDialog(
         title: AppLocalizations.of(context).enterPassword,
         description:
@@ -120,32 +180,13 @@ class RedepositViewModel extends FutureViewModel {
       Uint8List seed = walletService.generateSeed(mnemonic);
       var keyPairKanban = getExgKeyPair(seed);
       var exgAddress = keyPairKanban['address'];
-      var nonce = await getNonce(exgAddress);
+      var nonce = await kanbanUtils.getNonce(exgAddress);
 
-      var errDepositItem;
-      for (var i = 0; i < errDepositList.length; i++) {
-        if (errDepositList[i]["transactionID"] == errDepositTransactionID) {
-          errDepositItem = errDepositList[i];
-          break;
-        }
-      }
-
-      if (errDepositItem == null) {
-        sharedService.showInfoFlushbar(
-            '${AppLocalizations.of(context).redepositError}',
-            '${AppLocalizations.of(context).redepositItemNotSelected}',
-            Icons.cancel,
-            red,
-            context);
-      }
-
-      log.w('errDepositItem $errDepositItem');
-      var errDepositAmount = double.parse(errDepositItem['amount']);
-      log.i('errDepositAmount $errDepositAmount');
-      var amountInBigInt = errDepositAmount.toString().contains('e')
-          ? BigInt.parse(errDepositItem['amount'])
-          : BigInt.from(errDepositAmount);
-      print('amountInLink $amountInBigInt');
+      var amountInBigIntByApi = BigInt.parse(errDepositItem['amount']);
+      // errDepositAmount.toString().contains('e')
+      //     ? BigInt.parse(errDepositItem['amount'])
+      //     : BigInt.from(errDepositAmount);
+      log.i('checkPass errDepositItem amount $amountInBigIntByApi');
       var coinType = errDepositItem['coinType'];
 
       var transactionID = errDepositItem['transactionID'];
@@ -154,15 +195,17 @@ class RedepositViewModel extends FutureViewModel {
       var originalMessage = walletService.getOriginalMessage(
           coinType,
           trimHexPrefix(transactionID),
-          amountInBigInt,
+          amountInBigIntByApi,
           trimHexPrefix(addressInKanban));
 
-      var signedMess = await signedMessage(
+      var signedMess = await CoinUtils().signedMessage(
           originalMessage, seed, walletInfo.tickerName, walletInfo.tokenType);
 
-      var resRedeposit = await this.submitredeposit(amountInBigInt,
+      var txKanbanHex = await this.getTxKanbanHex(amountInBigIntByApi,
           keyPairKanban, nonce, coinType, transactionID, signedMess,
           chainType: walletInfo.tokenType);
+
+      var resRedeposit = await kanbanUtils.submitReDeposit(txKanbanHex);
 
       if ((resRedeposit != null) && (resRedeposit['success'])) {
         log.w('resRedeposit $resRedeposit');
@@ -173,11 +216,16 @@ class RedepositViewModel extends FutureViewModel {
             AppLocalizations.of(context).transactionId +
                 ': ' +
                 newTransactionId,
-            path: '/dashboard');
+            path: errDepositList.length == 1 ? WalletFeaturesViewRoute : '',
+            arguments: errDepositList.length == 1 ? walletInfo : null);
+        if (errDepositList.length > 1) {
+          setBusy(true);
+          errDepositList = [];
+          await getErrDeposit();
+          setBusy(false);
+        }
       } else if (resRedeposit['message'] != '') {
-        setBusy(true);
         errorMessage = resRedeposit['message'];
-        setBusy(false);
       } else {
         sharedService.showInfoFlushbar(
             AppLocalizations.of(context).redepositFailedError,
@@ -191,15 +239,17 @@ class RedepositViewModel extends FutureViewModel {
         showNotification(context);
       }
     }
+    isConfirmButtonPressed = false;
+    setBusy(false);
   }
 
-  submitredeposit(
+  getTxKanbanHex(
       amountInLink, keyPairKanban, nonce, coinType, txHash, signedMess,
       {String chainType: ''}) async {
     var abiHex;
     String addressInKanban = keyPairKanban['address'];
     log.w('transactionID for submitredeposit:' + txHash);
-    var coinPoolAddress = await getCoinPoolAddress();
+    var coinPoolAddress = await kanbanUtils.getCoinPoolAddress();
     //var signedMess = {'r': r, 's': s, 'v': v};
     String coinName = '';
     bool isSpecial = false;
@@ -216,17 +266,17 @@ class RedepositViewModel extends FutureViewModel {
       if (coinName == specialTokenTicker) isSpecial = true;
     });
     if (isSpecial) {
-      specialCoinType =
-          await getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
+      specialCoinType = await CoinUtils()
+          .getCoinTypeIdByName(coinName.substring(0, coinName.length - 1));
     }
-    abiHex = getDepositFuncABI(isSpecial ? specialCoinType : coinType, txHash,
-        amountInLink, addressInKanban, signedMess,
+    abiHex = abiUtils.getDepositFuncABI(isSpecial ? specialCoinType : coinType,
+        txHash, amountInLink, addressInKanban, signedMess,
         chain: chainType, isSpecialDeposit: isSpecial);
-
+    abiUtils.getAmountFromDepositAbiHex(abiHex);
     var kanbanPrice = int.tryParse(kanbanGasPriceTextController.text);
     var kanbanGasLimit = int.tryParse(kanbanGasLimitTextController.text);
 
-    var txKanbanHex = await signAbiHexWithPrivateKey(
+    var txKanbanHex = await abiUtils.signAbiHexWithPrivateKey(
         abiHex,
         HEX.encode(keyPairKanban["privateKey"]),
         coinPoolAddress,
@@ -234,8 +284,7 @@ class RedepositViewModel extends FutureViewModel {
         kanbanPrice,
         kanbanGasLimit);
 
-    var res = await submitReDeposit(txKanbanHex);
-    return res;
+    return txKanbanHex;
   }
 
   showNotification(context) {

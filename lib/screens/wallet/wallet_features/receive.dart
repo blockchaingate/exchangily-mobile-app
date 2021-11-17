@@ -15,9 +15,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:exchangilymobileapp/constants/colors.dart';
 import 'package:exchangilymobileapp/localizations.dart';
 import 'package:exchangilymobileapp/logger.dart';
-import 'package:exchangilymobileapp/models/wallet/wallet.dart';
+import 'package:exchangilymobileapp/models/wallet/wallet_model.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +26,8 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../../shared/globals.dart' as globals;
-import 'package:share/share.dart';
 import 'package:exchangilymobileapp/utils/fab_util.dart';
 
 class ReceiveWalletScreen extends StatefulWidget {
@@ -39,12 +40,14 @@ class ReceiveWalletScreen extends StatefulWidget {
 
 class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
   String convertedToFabAddress = '';
+  final fabUtils = FabUtils();
   @override
   void initState() {
     super.initState();
     // log.w(widget.walletInfo.toJson());
     if (widget.walletInfo.tokenType == 'FAB') {
-      convertedToFabAddress = exgToFabAddress(widget.walletInfo.address);
+      convertedToFabAddress =
+          fabUtils.exgToFabAddress(widget.walletInfo.address);
       log.w(
           'convertedToFabAddress from ${widget.walletInfo.address} to $convertedToFabAddress');
     }
@@ -139,7 +142,7 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
                     Future.delayed(new Duration(milliseconds: 30), () {
                       _capturePng().then((byteData) {
                         file.writeAsBytes(byteData).then((onFile) {
-                          Share.shareFile(onFile,
+                          Share.shareFiles([onFile.path],
                               text: convertedToFabAddress == ''
                                   ? widget.walletInfo.address
                                   : convertedToFabAddress);
@@ -175,12 +178,22 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               convertedToFabAddress == ''
                   ? widget.walletInfo.address
                   : convertedToFabAddress,
-              style: Theme.of(context).textTheme.bodyText2),
+              style: Theme.of(context)
+                  .textTheme
+                  .headline5
+                  .copyWith(fontWeight: FontWeight.w800)),
           Container(
             width: 200,
-            child: OutlineButton(
-              borderSide: BorderSide(color: globals.primaryColor, width: 0.5),
-              padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+            child: OutlinedButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(StadiumBorder(
+                  side: BorderSide(color: primaryColor, width: 2),
+                )),
+                side: MaterialStateProperty.all(
+                    BorderSide(color: primaryColor, width: 0.5)),
+                padding: MaterialStateProperty.all(
+                    EdgeInsets.symmetric(vertical: 0, horizontal: 5)),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -205,7 +218,6 @@ class _ReceiveWalletScreenState extends State<ReceiveWalletScreen> {
               onPressed: () {
                 copyAddress();
               },
-              textColor: globals.white,
             ),
           )
         ],
